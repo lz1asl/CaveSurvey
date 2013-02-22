@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+
+    <TableLayout android:layout_width="fill_parent"
+                 android:layout_height="wrap_content"
+                 android:gravity="center_horizontal" android:id="@+id/point_upper_table">
+        <TableRow android:layout_width="fill_parent" android:gravity="center">
+            <Button android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" android:onClick="saveButton" android:text="@string/point_save"
+                    android:layout_alignParentTop="false"/>
+
+            <EditText android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:id="@+id/point_up"
+                      android:numeric="decimal"
+                      android:maxLength="10"
+                      android:ems="4" android:layout_column="2"/>
+            <TextView android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                        android:text="@string/point_up" android:layout_column="3"/>
+
+        </TableRow>
+        <TableRow android:layout_width="fill_parent" android:gravity="center">
+            <EditText android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:id="@+id/point_left"
+                      android:numeric="decimal"
+                      android:maxLength="10"
+                      android:ems="4"/>
+            <TextView android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_gravity="center"
+                      android:text="@string/point_left_right" android:layout_column="2"/>
+            <EditText android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:id="@+id/point_right"
+                      android:numeric="decimal"
+                      android:maxLength="10"
+                      android:ems="4" android:layout_column="3"/>
+        </TableRow>
+        <TableRow android:layout_width="fill_parent" android:gravity="center">
+            <TextView android:layout_column="1"/>
+            <EditText android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:id="@+id/point_down"
+                      android:numeric="decimal"
+                      android:maxLength="10"
+                      android:ems="4" android:layout_column="2"/>
+            <TextView android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:text="@string/point_down" android:layout_column="3"/>
+        </TableRow>
+
+    </TableLayout>
+
+    <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/point_upper_table">
+
+        <TableLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/point_central_table"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true">
+            <TableRow android:layout_width="wrap_content"
+                      android:layout_height="wrap_content">
+
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="@string/main_leg"
+                          android:textAppearance="?android:attr/textAppearanceLarge"/>
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:id="@+id/point_curr_leg"
+                          android:gravity="center"
+                          android:textAppearance="?android:attr/textAppearanceLarge"/>
+            </TableRow>
+            <TableRow android:layout_width="wrap_content"
+                      android:layout_height="wrap_content">
+
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="@string/main_table_header_distance"/>
+                <EditText android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:id="@+id/point_distance"
+                          android:numeric="decimal"
+                          android:maxLength="10"
+                          android:ems="5">
+                    <requestFocus/>
+                </EditText>
+                <Button android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/point_read"
+                        android:onClick="readDistance"
+                        android:enabled="false"/>
+            </TableRow>
+            <TableRow android:layout_width="wrap_content"
+                      android:layout_height="wrap_content">
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="@string/main_table_header_azimuth"/>
+                <EditText android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:id="@+id/point_azimuth"
+                          android:numeric="decimal"
+                          android:maxLength="10"
+                          android:ems="5"/>
+                <Button android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/point_read"
+                        android:onClick="readAzimuth"
+                        android:id="@+id/point_read_azimuth"
+                        android:enabled="false"/>
+            </TableRow>
+            <TableRow android:layout_width="wrap_content"
+                      android:layout_height="wrap_content">
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="@string/main_table_header_slope"/>
+                <EditText android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:id="@+id/point_slope"
+                          android:numeric="decimal"
+                          android:maxLength="10"
+                          android:ems="5"/>
+                <Button android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/point_read"
+                        android:onClick="readSlope"
+                        android:enabled="false"/>
+            </TableRow>
+        </TableLayout>
+
+    </RelativeLayout>
+
+
+
+    <TableLayout android:layout_width="fill_parent"
+                 android:layout_height="wrap_content"
+                 android:layout_alignParentBottom="true"
+                 android:gravity="center_horizontal">
+        <TableRow android:gravity="center">
+            <Button android:text="@string/main_add_note" android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:onClick="noteButton"/>
+            <Button android:text="@string/main_add_sketch" android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:onClick="drawingButton"/>
+            <Button android:text="@string/main_add_coordinate" android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:onClick="coordinateButton" android:enabled="false"/>
+            <Button android:text="@string/main_add_photo" android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:onClick="photoButton"/>
+
+            <Button android:text="@string/point_delete" android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:onClick="deleteButton" android:enabled="false"
+                    android:layout_gravity="right"/>
+        </TableRow>
+    </TableLayout>
+
+</RelativeLayout>

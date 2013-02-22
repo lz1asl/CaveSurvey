@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent" android:orientation="vertical">
+
+    <TextView android:id="@+id/note_title" android:text="@string/note_title" android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+    <EditText android:id="@+id/note_text" android:maxLength="20" android:inputType="text" android:lines="1"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:gravity="center_horizontal"
+              android:layout_weight="1"/>
+
+    <Button android:text="@string/note_save" android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:onClick="saveNote"/>
+
+</LinearLayout>

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content" android:orientation="vertical">
+
+    <TableLayout android:layout_width="fill_parent"
+                 android:layout_height="wrap_content">
+
+        <TableRow>
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/info_title"
+                    android:layout_weight="1"
+                    android:gravity="left"
+                    android:textAppearance="?android:attr/textAppearanceLarge"/>
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:id="@+id/infoProjectName"
+                    android:layout_weight="1"
+                    android:textAppearance="?android:attr/textAppearanceLarge"/>
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/info_created"
+                    android:layout_weight="1"
+                    android:gravity="left"/>
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:id="@+id/infoProjectCreated"/>
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/info_legs"
+                    android:layout_weight="1"
+                    android:gravity="left"/>
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:id="@+id/infoNumLegs"/>
+        </TableRow>
+
+        <TableRow >
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/info_num_notes"
+                    android:layout_weight="1"
+                    android:gravity="left"/>
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:id="@+id/infoNumNotes"/>
+        </TableRow>
+
+        <TableRow >
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/info_num_drawings"
+                    android:layout_weight="1"
+                    android:gravity="left"/>
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:id="@+id/infoNumDrawings"/>
+        </TableRow>
+
+        <TableRow >
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/info_num_coordinates"
+                    android:layout_weight="1"
+                    android:gravity="left"/>
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:id="@+id/infoNumCoordinates"/>
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/info_num_photos"
+                    android:layout_weight="1"
+                    android:gravity="left"/>
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:id="@+id/infoNumPhotos"/>
+        </TableRow>
+
+        <TableRow >
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/info_total_distance"
+                    android:layout_weight="1"
+                    android:gravity="left"/>
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:id="@+id/infoRawDistance"/>
+        </TableRow>
+
+    </TableLayout>
+
+    <Button android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/export_title"
+            android:onClick="exportButton"
+            android:layout_margin="20dp" android:layout_gravity="right"/>
+
+</LinearLayout>
