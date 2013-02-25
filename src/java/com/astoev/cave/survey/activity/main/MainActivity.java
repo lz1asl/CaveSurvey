@@ -17,6 +17,8 @@ import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.MainMenuActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
+import com.astoev.cave.survey.activity.home.HomeActivity;
+import com.astoev.cave.survey.activity.map.opengl.Map3DActivity;
 import com.astoev.cave.survey.activity.map.MapActivity;
 import com.astoev.cave.survey.model.Gallery;
 import com.astoev.cave.survey.model.Leg;
@@ -351,6 +353,11 @@ public class MainActivity extends MainMenuActivity {
         startActivity(intent);
     }
 
+    public void plot3dButton(View view) {
+        Intent intent = new Intent(this, Map3DActivity.class);
+        startActivity(intent);
+    }
+
     public void infoButton(View view) {
         Intent intent = new Intent(this, InfoActivity.class);
         startActivity(intent);
@@ -395,5 +402,12 @@ public class MainActivity extends MainMenuActivity {
             UIUtilities.showNotification(this, R.string.error);
         }
 
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        Intent setIntent = new Intent(this, HomeActivity.class);
+        startActivity(setIntent);
     }
 }

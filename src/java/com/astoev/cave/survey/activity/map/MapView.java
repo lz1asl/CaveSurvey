@@ -161,9 +161,13 @@ public class MapView extends View {
 
 
             // borders
+            //top
             canvas.drawLine(spacing, spacing, maxX - spacing, spacing, overlayPaint);
+            //right
             canvas.drawLine(maxX - spacing, spacing, maxX - spacing, maxY - spacing, overlayPaint);
-            canvas.drawLine(maxX - spacing, maxY - 50, spacing, maxY - 50, overlayPaint);
+            // bottom
+            canvas.drawLine(spacing, maxY - spacing, maxX - spacing, maxY - spacing, overlayPaint);
+            //left
             canvas.drawLine(spacing, maxY - spacing, spacing, spacing, overlayPaint);
 
             // north
@@ -175,10 +179,12 @@ public class MapView extends View {
             canvas.drawText("N", northCenter.x + 5, northCenter.y - 10, overlayPaint);
 
             // scale
-            canvas.drawLine(20, maxY - 55, 55, maxY - 55, overlayPaint);
-            canvas.drawLine(20, maxY - 53, 20, maxY - 52, overlayPaint);
-            canvas.drawLine(55, maxY - 53, 55, maxY - 52, overlayPaint);
-            canvas.drawText("Zoom " + scale, 20, maxY - 60, overlayPaint);
+//            canvas.drawLine(20, maxY - 55, 55, maxY - 55, overlayPaint);
+//            canvas.drawLine(20, maxY - 53, 20, maxY - 52, overlayPaint);
+//            canvas.drawLine(55, maxY - 53, 55, maxY - 52, overlayPaint);
+//            canvas.drawLine(55, maxY - 53, 55, maxY - 52, overlayPaint);
+
+            canvas.drawText("x" + (int)scale, 20, 25, overlayPaint);
 
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to draw map activity", e);
@@ -202,7 +208,7 @@ public class MapView extends View {
     }
 
     public boolean canZoomIn() {
-        return scale < 41;
+        return scale < 50;
     }
 
     public void resetMove(float aX, float aY) {

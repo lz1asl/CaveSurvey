@@ -3,9 +3,11 @@ package com.astoev.cave.survey.activity.home;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.MainMenuActivity;
@@ -24,6 +26,14 @@ public class HomeActivity extends MainMenuActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+//        View title = getWindow().findViewById(android.R.id.title);
+//        View titleBar = (View) title.getParent();
+//        titleBar.setBackgroundColor(Color.YELLOW);
+
+        TextView titler = (TextView) findViewById(android.R.id.title);
+        titler.setTextColor(Color.BLACK);
+        titler.setBackgroundColor(Color.YELLOW);
 
         if (mWorkspace.getDBHelper() == null) {
             DatabaseHelper helper = new DatabaseHelper(this);
@@ -95,5 +105,26 @@ public class HomeActivity extends MainMenuActivity {
             Log.e(Constants.LOG_TAG_UI, "Failed to choose project", e);
             UIUtilities.showNotification(this, R.string.error);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        dialogBuilder.setMessage(R.string.menu_exit_confirmation_question)
+                .setCancelable(false)
+                .setPositiveButton(R.string.button_yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Log.i(Constants.LOG_TAG_UI, "Exit app");
+                        mWorkspace.clean();
+                        HomeActivity.this.moveTaskToBack(true);
+                    }
+                })
+                .setNegativeButton(R.string.button_no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alert = dialogBuilder.create();
+        alert.show();
     }
 }

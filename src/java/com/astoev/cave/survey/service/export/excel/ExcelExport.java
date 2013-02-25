@@ -11,11 +11,14 @@ import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.service.Workspace;
 import com.astoev.cave.survey.util.StringUtils;
 import com.j256.ormlite.stmt.QueryBuilder;
+import org.apache.commons.io.IOUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -58,7 +61,9 @@ public class ExcelExport {
             Log.i(Constants.LOG_TAG_SERVICE, "Export folder created");
         }
         SimpleDateFormat dateFormat = new SimpleDateFormat(TIME_PATTERN);
-        File exportFile = new File(saveFolder, mWorkspace.getActiveProject().getName() + NAME_DELIMITER + dateFormat.format(new Date()) + EXCEL_FILE_EXTENSION);
+        String excelFileName = mWorkspace.getActiveProject().getName() + NAME_DELIMITER + dateFormat.format(new Date());
+        File exportFile = new File(saveFolder, excelFileName + EXCEL_FILE_EXTENSION);
+        File resourcesExportFolder = new File(saveFolder, excelFileName);
         Log.i(Constants.LOG_TAG_SERVICE, "Start export to " + exportFile.getAbsolutePath());
 
         Workbook wb = new HSSFWorkbook();
@@ -165,7 +170,8 @@ public class ExcelExport {
                 queryBuilderSketch.where().eq(Sketch.COLUMN_POINT_ID, fromPoint.getId());
                 Sketch existingDrawing = (Sketch) mWorkspace.getDBHelper().getSketchDao().queryForFirst(queryBuilderSketch.prepare());
                 if (null != existingDrawing) {
-                    Log.i(Constants.LOG_TAG_SERVICE, "Exporting drawing");
+                    savePNGResource(resourcesExportFolder, l, existingDrawing.getBitmap());
+                /*    Log.i(Constants.LOG_TAG_SERVICE, "Exporting drawing");
                     //add a picture shape
                     ClientAnchor anchor = helper.createClientAnchor();
 
@@ -180,7 +186,7 @@ public class ExcelExport {
                     Picture pict = drawingPatriarch.createPicture(anchor, pictureIdx);
 
                     //auto-size picture relative to its top-left corner
-//                    pict.resize();
+//                    pict.resize();*/
                 }
 
                 // TODO export GPS
@@ -190,7 +196,8 @@ public class ExcelExport {
                 Photo existingPoint = (Photo) mWorkspace.getDBHelper().getPhotoDao().queryForFirst(queryBuilderPhoto.prepare());
                 if (null != existingPoint) {
                     Log.i(Constants.LOG_TAG_SERVICE, "Exporting photo");
-                    //add a picture shape
+                    saveJPEGResource(resourcesExportFolder, l, existingPoint.getPictureBytes());
+                    /*//add a picture shape
                     ClientAnchor anchor = helper.createClientAnchor();
 
                     int pictureIdx = wb.addPicture(existingPoint.getPictureBytes(), Workbook.PICTURE_TYPE_JPEG);
@@ -201,11 +208,9 @@ public class ExcelExport {
                     anchor.setCol2(15);
                     anchor.setRow1(rowCounter);
                     anchor.setRow2(rowCounter + 3);
-                    drawingPatriarch.createPicture(anchor, pictureIdx);
+                    drawingPatriarch.createPicture(anchor, pictureIdx);*/
 
                 }
-
-
             }
 
             out = new FileOutputStream(exportFile);
@@ -225,6 +230,29 @@ public class ExcelExport {
 
             }
 //            calculatingDialog.dismiss();
+        }
+
+    }
+
+    private void savePNGResource(File resourcesExportFolder, Leg l, byte[] bitmap) throws IOException {
+        saveInternally(resourcesExportFolder, l, bitmap, ".png");
+    }
+
+    private void saveJPEGResource(File resourcesExportFolder, Leg l, byte[] pictureBytes) throws IOException {
+        saveInternally(resourcesExportFolder, l, pictureBytes, ".jpg");
+    }
+
+    private void saveInternally(File exportFolder, Leg l, byte[] content, String extension) throws IOException {
+        if (!exportFolder.exists()) {
+            exportFolder.mkdir();
+        }
+
+        OutputStream out = null;
+        try {
+            out = new FileOutputStream(new File(exportFolder, l.getFromPoint().getName() + extension));
+            IOUtils.write(content, out);
+        } finally {
+            IOUtils.closeQuietly(out);
         }
 
     }

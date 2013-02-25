@@ -53,26 +53,26 @@ public class InfoActivity extends BaseActivity {
                 }
 
                 // notes
-                List<Note> notes = mWorkspace.getDBHelper().getNoteDao().queryForEq(Note.COLUMN_POINT_ID, l.getFromPoint().getId());
-                if (notes != null) {
+                List<Note> notes = mWorkspace.getDBHelper().getNoteDao().queryBuilder().where().eq(Note.COLUMN_POINT_ID, l.getFromPoint().getId()).query();
+                if (notes != null && notes.size() >0) {
                     numNotes += notes.size();
                 }
 
                 // drawings
-                List<Drawing> drawings = mWorkspace.getDBHelper().getSketchDao().queryForEq(Sketch.COLUMN_POINT_ID, l.getFromPoint().getId());
-                if (drawings != null){
+                List<Drawing> drawings = mWorkspace.getDBHelper().getSketchDao().queryBuilder().where().eq(Sketch.COLUMN_POINT_ID, l.getFromPoint().getId()).query();
+                if (drawings != null && drawings.size() > 0){
                     numDrawings += drawings.size();
                 }
 
                 // gps
-                List<Location> locations = mWorkspace.getDBHelper().getLocationDao().queryForEq(Location.COLUMN_POINT_ID, l.getFromPoint().getId());
-                if (locations != null) {
+                List<Location> locations = mWorkspace.getDBHelper().getLocationDao().queryBuilder().where().eq(Location.COLUMN_POINT_ID, l.getFromPoint().getId()).query();
+                if (locations != null && locations.size() >0) {
                     numCoordinates += locations.size();
                 }
 
                 // photo
-                List<Photo>  photos = mWorkspace.getDBHelper().getPhotoDao().queryForEq(Photo.COLUMN_POINT_ID, l.getFromPoint().getId());
-                if (photos != null) {
+                List<Photo>  photos = mWorkspace.getDBHelper().getPhotoDao().queryBuilder().where().eq(Photo.COLUMN_POINT_ID, l.getFromPoint().getId()).query();
+                if (photos != null && photos.size() >0) {
                     numPhotos += photos.size();
                 }
             }

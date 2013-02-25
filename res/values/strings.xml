@@ -28,7 +28,8 @@
     <string name="main_button_change">Select</string>
     <string name="main_button_change_title">Change leg</string>
     <string name="main_button_add">Add</string>
-    <string name="main_button_plot">Plot</string>
+    <string name="main_button_plot">Plot 2D</string>
+    <string name="main_button_plot3d">Plot 3D</string>
     <string name="main_button_info">Info</string>
 
     <string name="main_table_header_from">From</string>
@@ -139,7 +140,7 @@
     <!-- about screen -->
     <string name="about_memo">Paperless survey app</string>
     <string name="about_paldin">http://sk-paldin.eu</string>
-    <string name="about_info">Station names convention :\n1 -> 2 -> 3 : legs\n2 -> 2A, 2 ->2B : deviations\n2 -> 2.1 -> 2.2 : middle points</string>
+    <string name="about_info">Station names convention :\nA1 -> A2 -> A3 : legs in gallery A\nA2 -> B1 : new gallery\nA2 -> A2.1 -> A2.2 : middle points</string>
 
 
     <string name="leg_to">to</string>
