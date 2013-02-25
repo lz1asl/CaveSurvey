@@ -20,6 +20,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HomeActivity extends MainMenuActivity {
+
+    private static boolean isFirstEntry;
+
+
     /**
      * Called when the activity is first created.
      */
@@ -27,20 +31,13 @@ public class HomeActivity extends MainMenuActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        View title = getWindow().findViewById(android.R.id.title);
-//        View titleBar = (View) title.getParent();
-//        titleBar.setBackgroundColor(Color.YELLOW);
-
-        TextView titler = (TextView) findViewById(android.R.id.title);
-        titler.setTextColor(Color.BLACK);
-        titler.setBackgroundColor(Color.YELLOW);
-
         if (mWorkspace.getDBHelper() == null) {
             DatabaseHelper helper = new DatabaseHelper(this);
             mWorkspace.setDBHelper(helper);
         }
 
         setContentView(R.layout.home);
+
         try {
             final List<Project> projects = mWorkspace.getDBHelper().getProjectDao().queryForAll();
 

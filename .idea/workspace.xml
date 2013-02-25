@@ -31,6 +31,7 @@
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/map/opengl/OpenGLRenderer.java" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/map/opengl/Polyline.java" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/java/com/astoev/cave/survey/util/SensorsUtil.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/layout/map3d.xml" />
       <change type="DELETED" beforePath="D:\MyWorkspace\Idea\Workspaces\Android\CaveSurvey\trunk\libs\ormlite-android-4.33.jar" afterPath="" />
       <change type="DELETED" beforePath="D:\MyWorkspace\Idea\Workspaces\Android\CaveSurvey\trunk\libs\ormlite-core-4.33.jar" afterPath="" />
       <change type="DELETED" beforePath="D:\MyWorkspace\Idea\Workspaces\Android\CaveSurvey\trunk\libs\poi-3.7-20101029.jar" afterPath="" />
@@ -73,8 +74,8 @@
     <ignored path="CaveSurvey.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/fragment.java" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1361637925744" ignored="false" />
-    <file path="/HomeActivity.java" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1361740843832" ignored="false" />
-    <file path="/a.dummy" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1361439214483" ignored="false" />
+    <file path="/HomeActivity.java" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1361783745842" ignored="false" />
+    <file path="/a.dummy" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1361783645252" ignored="false" />
     <file path="/info.xml" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1361402679117" ignored="false" />
     <file path="$PROJECT_DIR$/gen/com/astoev/cave/survey/R.java" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1361401847527" ignored="false" />
     <file path="/strings.xml" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1361614534979" ignored="false" />
@@ -82,14 +83,14 @@
     <file path="/StringUtils.java" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1361403160598" ignored="false" />
     <file path="/point.xml" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1361436081899" ignored="false" />
     <file path="/newproject.xml" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1361436226338" ignored="false" />
-    <file path="/main.xml" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1361615086023" ignored="false" />
+    <file path="/main.xml" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1361783660613" ignored="false" />
     <file path="/mainmenu.xml" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1361439200987" ignored="false" />
     <file path="/about.xml" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1361440511621" ignored="false" />
     <file path="/DrawingActivity.java" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1361441376426" ignored="false" />
     <file path="/Point.java" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1361460416396" ignored="false" />
     <file path="/Sketch.java" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1361460539243" ignored="false" />
     <file path="/NewProjectActivity.java" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1361461848148" ignored="false" />
-    <file path="/MainActivity.java" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1361615128863" ignored="false" />
+    <file path="/MainActivity.java" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1361785265278" ignored="false" />
     <file path="/Leg.java" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1361461736676" ignored="false" />
     <file path="/PointUtil.java" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1361461750099" ignored="false" />
     <file path="/Workspace.java" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1361461759800" ignored="false" />
@@ -97,9 +98,14 @@
     <file path="/ExcelExport.java" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1361533435711" ignored="false" />
     <file path="/Location.java" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1361482440247" ignored="false" />
     <file path="/Photo.java" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1361482471494" ignored="false" />
-    <file path="/Map3DActivity.java" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1361615062709" ignored="false" />
-    <file path="/OpenGLRenderer.java" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1361647956768" ignored="false" />
+    <file path="/Map3DActivity.java" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1361809908210" ignored="false" />
+    <file path="/OpenGLRenderer.java" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1361808156034" ignored="false" />
     <file path="/AndroidManifest.xml" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1361740009301" ignored="false" />
+    <file path="/Polyline.java" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1361785753289" ignored="false" />
+    <file path="/BaseActivity.java" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1361783617375" ignored="false" />
+    <file path="/Dummy.txt" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1361786535608" ignored="false" />
+    <file path="/map3D.xml" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1361786424806" ignored="false" />
+    <file path="/map3d.xml" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1361786648275" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -119,23 +125,6 @@
     <disable_hints />
   </component>
   <component name="DebuggerManager">
-    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
-    <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true">
-      <breakpoint url="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/map/MapView.java" line="122" class="com.astoev.cave.survey.activity.map.MapView" package="com.astoev.cave.survey.activity.map">
-        <option name="ENABLED" value="true" />
-        <option name="LOG_ENABLED" value="false" />
-        <option name="LOG_EXPRESSION_ENABLED" value="false" />
-        <option name="SUSPEND_POLICY" value="SuspendAll" />
-        <option name="SUSPEND" value="true" />
-        <option name="COUNT_FILTER_ENABLED" value="false" />
-        <option name="COUNT_FILTER" value="0" />
-        <option name="CONDITION_ENABLED" value="false" />
-        <option name="CLASS_FILTERS_ENABLED" value="false" />
-        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="" />
-        <option name="LOG_MESSAGE" value="" />
-      </breakpoint>
-    </line_breakpoints>
     <breakpoint_any default_suspend_policy="SuspendAll" default_condition_enabled="true">
       <breakpoint>
         <option name="NOTIFY_CAUGHT" value="true" />
@@ -170,6 +159,23 @@
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
     </breakpoint_any>
+    <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true">
+      <breakpoint url="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/map/MapView.java" line="122" class="com.astoev.cave.survey.activity.map.MapView" package="com.astoev.cave.survey.activity.map">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="false" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+    </line_breakpoints>
+    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_rules />
     <ui_properties />
   </component>
@@ -182,7 +188,52 @@
       <file leaf-file-name="MainActivity.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/main/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="61" column="53" selection-start="1985" selection-end="1985" vertical-scroll-proportion="0.0">
+            <state line="342" column="66" selection-start="15046" selection-end="15046" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="PointActivity.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/main/PointActivity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="77" column="21" selection-start="2335" selection-end="2335" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="NoteActivity.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/main/NoteActivity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="28" column="34" selection-start="872" selection-end="872" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Map3DActivity.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/map/opengl/Map3DActivity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="68" column="74" selection-start="2357" selection-end="2357" vertical-scroll-proportion="0.71771216">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="OpenGLRenderer.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/map/opengl/OpenGLRenderer.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="63" column="23" selection-start="1923" selection-end="1935" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MapActivity.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/map/MapActivity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="16" column="81" selection-start="460" selection-end="491" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -191,86 +242,45 @@
       <file leaf-file-name="MapView.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/map/MapView.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="186" column="30" selection-start="7991" selection-end="7991" vertical-scroll-proportion="0.0">
+            <state line="230" column="79" selection-start="8965" selection-end="8965" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="NewProjectActivity.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/home/NewProjectActivity.java">
+      <file leaf-file-name="map.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/res/layout/map.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="28" column="47" selection-start="874" selection-end="874" vertical-scroll-proportion="0.0">
+            <state line="16" column="59" selection-start="224" selection-end="741" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="BaseActivity.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/BaseActivity.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="15" column="22" selection-start="387" selection-end="387" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="MainMenuActivity.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/MainMenuActivity.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="25" column="13" selection-start="745" selection-end="745" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Map3DActivity.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/map/opengl/Map3DActivity.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="25" column="38" selection-start="833" selection-end="833" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="OpenGLRenderer.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/map/opengl/OpenGLRenderer.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="17" column="16" selection-start="453" selection-end="453" vertical-scroll-proportion="-1.4444444">
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="AndroidManifest.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/AndroidManifest.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="9" column="43" selection-start="488" selection-end="488" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="HomeActivity.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/home/HomeActivity.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="32" column="0" selection-start="933" selection-end="1097" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="main.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/res/layout/main.xml">
           <provider editor-type-id="android-designer">
             <state />
           </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="info.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/res/layout/info.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="57" column="41" selection-start="2761" selection-end="2761" vertical-scroll-proportion="-19.38">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
               <folding />
             </state>
+          </provider>
+          <provider editor-type-id="android-designer">
+            <state />
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="map3d.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/res/layout/map3d.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="7" column="39" selection-start="315" selection-end="328" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+          <provider editor-type-id="android-designer">
+            <state />
           </provider>
         </entry>
       </file>
@@ -284,22 +294,22 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/java/com/astoev/cave/survey/model/Location.java" />
-        <option value="$PROJECT_DIR$/src/java/com/astoev/cave/survey/model/Photo.java" />
-        <option value="$PROJECT_DIR$/src/java/com/astoev/cave/survey/service/export/excel/ExcelExport.java" />
         <option value="$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/main/InfoActivity.java" />
         <option value="$PROJECT_DIR$/src/java/com/astoev/cave/survey/service/Workspace.java" />
         <option value="$PROJECT_DIR$/res/values/strings.xml" />
         <option value="$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/map/Map3DActivity.java" />
-        <option value="$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/main/MainActivity.java" />
         <option value="$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/map/OpenGLRenderer.java" />
-        <option value="$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/map/opengl/Polyline.java" />
-        <option value="$PROJECT_DIR$/res/layout/main.xml" />
-        <option value="$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/map/opengl/Map3DActivity.java" />
-        <option value="$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/map/opengl/OpenGLRenderer.java" />
-        <option value="$PROJECT_DIR$/AndroidManifest.xml" />
-        <option value="$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/home/HomeActivity.java" />
         <option value="$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/map/MapView.java" />
+        <option value="$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/BaseActivity.java" />
+        <option value="$PROJECT_DIR$/res/layout/main.xml" />
+        <option value="$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/home/HomeActivity.java" />
+        <option value="$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/main/MainActivity.java" />
+        <option value="$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/map/opengl/Polyline.java" />
+        <option value="$PROJECT_DIR$/AndroidManifest.xml" />
+        <option value="$PROJECT_DIR$/res/layout/map3D.xml" />
+        <option value="$PROJECT_DIR$/res/layout/map3d.xml" />
+        <option value="$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/map/opengl/OpenGLRenderer.java" />
+        <option value="$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/map/opengl/Map3DActivity.java" />
       </list>
     </option>
   </component>
@@ -333,6 +343,12 @@
         <PATH_ELEMENT>
           <option name="myItemId" value="CaveSurvey" />
           <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$ProjectNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$RootNode" />
         </PATH_ELEMENT>
       </PATH>
     </treeState>
@@ -383,16 +399,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope">
-        <subPane subId="Project Files">
-          <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-          </PATH>
-        </subPane>
-      </pane>
       <pane id="PackagesPane">
         <subPane>
           <PATH>
@@ -444,32 +450,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="survey" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="CaveSurvey" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="trunk" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="survey" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="model" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -573,36 +553,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="survey" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="activity" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="home" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="CaveSurvey" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="trunk" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="res" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -621,8 +571,18 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="drawable" />
+              <option name="myItemId" value="layout" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+      <pane id="Scope">
+        <subPane subId="Project Files">
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
@@ -1139,13 +1099,12 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.032367975" sideWeight="0.67348486" order="14" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.582906" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32879046" sideWeight="0.39772728" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.43585238" sideWeight="0.4939394" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.61120546" sideWeight="0.4939394" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.14601019" sideWeight="0.4941435" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.20199692" sideWeight="0.323993" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33409265" sideWeight="0.48287672" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39970717" sideWeight="0.7307061" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.20151515" sideWeight="0.67632025" order="1" side_tool="false" content_ui="combo" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33409092" sideWeight="0.48287672" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39924243" sideWeight="0.7307061" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.20454545" sideWeight="0.38841566" order="1" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32367972" sideWeight="0.3212121" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3242424" sideWeight="0.85398984" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="SVN Repositories" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.61709404" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
@@ -1154,6 +1113,7 @@
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3242424" sideWeight="0.85398984" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.34634975" sideWeight="0.4890625" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3270869" sideWeight="0.39772728" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Android Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32840723" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Android Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.51965815" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
@@ -1244,120 +1204,124 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/model/Leg.java">
+    <entry file="jar://D:/Java/extSDK/android/android-sdk-windows/platforms/android-7/android.jar!/android/view/SurfaceView.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="53" column="30" selection-start="2051" selection-end="2061" vertical-scroll-proportion="0.0">
+        <state line="6" column="13" selection-start="155" selection-end="155" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="jar://D:/Java/extSDK/android/android-sdk-windows/platforms/android-7/android.jar!/android/opengl/GLSurfaceView.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="6" column="55" selection-start="199" selection-end="199" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/layout/main.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="78" column="65" selection-start="3895" selection-end="3895" vertical-scroll-proportion="-26.52">
           <folding />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/model/Gallery.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="37" selection-start="544" selection-end="548" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/service/Workspace.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="68" column="83" selection-start="2604" selection-end="2604" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/values/strings.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="31" column="36" selection-start="1230" selection-end="1230" vertical-scroll-proportion="-2.72">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/drawable/plot3d.jpg">
-      <provider selected="true" editor-type-id="images">
+      <provider editor-type-id="android-designer">
         <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/map/opengl/Polyline.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="68" column="120" selection-start="2235" selection-end="2235" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/AndroidManifest.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="43" selection-start="488" selection-end="488" vertical-scroll-proportion="0.0">
+        <state line="16" column="51" selection-start="881" selection-end="881" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/res/layout/main.xml">
+    <entry file="file://$PROJECT_DIR$/res/layout/note.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
       <provider editor-type-id="android-designer">
         <state />
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/main/NoteActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="57" column="41" selection-start="2761" selection-end="2761" vertical-scroll-proportion="-19.38">
+        <state line="28" column="34" selection-start="872" selection-end="872" vertical-scroll-proportion="0.0">
           <folding />
         </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/layout/info.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/layout/map.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="16" column="59" selection-start="224" selection-end="741" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/layout/map3d.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="7" column="39" selection-start="315" selection-end="328" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
+    </entry>
+    <entry file="jar://D:/Java/extSDK/android/android-sdk-windows/platforms/android-7/android.jar!/android/app/Activity.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="215" column="16" selection-start="9673" selection-end="9673" vertical-scroll-proportion="0.33333334" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/main/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="61" column="53" selection-start="1985" selection-end="1985" vertical-scroll-proportion="0.0">
+        <state line="342" column="66" selection-start="15046" selection-end="15046" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/home/NewProjectActivity.java">
+    <entry file="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/main/PointActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="28" column="47" selection-start="874" selection-end="874" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/home/HomeActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="32" column="0" selection-start="933" selection-end="1097" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/map/MapView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="186" column="30" selection-start="7991" selection-end="7991" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/BaseActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="22" selection-start="387" selection-end="387" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/MainMenuActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="25" column="13" selection-start="745" selection-end="745" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/map/opengl/Map3DActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="25" column="38" selection-start="833" selection-end="833" vertical-scroll-proportion="0.0">
+        <state line="77" column="21" selection-start="2335" selection-end="2335" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/map/opengl/OpenGLRenderer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="17" column="16" selection-start="453" selection-end="453" vertical-scroll-proportion="-1.4444444">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state line="63" column="23" selection-start="1923" selection-end="1935" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/map/MapView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="230" column="79" selection-start="8965" selection-end="8965" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/map/MapActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="16" column="81" selection-start="460" selection-end="491" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/map/opengl/Map3DActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="68" column="74" selection-start="2357" selection-end="2357" vertical-scroll-proportion="0.71771216">
+          <folding />
         </state>
       </provider>
     </entry>

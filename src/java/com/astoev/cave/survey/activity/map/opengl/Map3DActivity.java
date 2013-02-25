@@ -1,10 +1,15 @@
 package com.astoev.cave.survey.activity.map.opengl;
 
-import android.app.Activity;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
-import android.view.Window;
-import android.view.WindowManager;
+import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.ZoomControls;
+import com.astoev.cave.survey.Constants;
+import com.astoev.cave.survey.R;
+import com.astoev.cave.survey.activity.BaseActivity;
+import com.astoev.cave.survey.activity.UIUtilities;
 
 /**
  * Created with IntelliJ IDEA.
@@ -12,19 +17,56 @@ import android.view.WindowManager;
  * Date: 2/23/13
  * Time: 12:19 PM
  * To change this template use File | Settings | File Templates.
- * @see http://www.jayway.com/2009/12/03/opengl-es-tutorial-for-android-part-i/
+ *
+ * @see //www.jayway.com/2009/12/03/opengl-es-tutorial-for-android-part-i/
  */
-public class Map3DActivity extends Activity {
+public class Map3DActivity extends BaseActivity implements View.OnTouchListener {
+
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+
+        try {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.map3d);
+
+            final OpenGLRenderer renderer = new OpenGLRenderer();
+            GLSurfaceView view = (GLSurfaceView) findViewById(R.id.map3dSurface);
+            view.setRenderer(renderer);
 
 
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE); // (NEW)
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-        WindowManager.LayoutParams.FLAG_FULLSCREEN); // (NEW)
+            final ZoomControls zoom = (ZoomControls) findViewById(R.id.map3DZoom);
 
-        GLSurfaceView view = new GLSurfaceView(this);
-        view.setRenderer(new OpenGLRenderer());
-        setContentView(view);
+            zoom.setOnZoomInClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View aView) {
+                    renderer.zoomIn();
+//                zoom.setIsZoomOutEnabled(map.canZoomOut());
+//                zoom.setIsZoomInEnabled(map.canZoomIn());
+                }
+            });
+            zoom.setOnZoomOutClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View aView) {
+                    renderer.zoomOut();
+//                zoom.setIsZoomOutEnabled(map.canZoomOut());
+//                zoom.setIsZoomInEnabled(map.canZoomIn());
+                }
+            });
+        } catch (Exception e) {
+            Log.e(Constants.LOG_TAG_DB, "Failed to render 3d", e);
+            UIUtilities.showNotification(this, R.string.error);
+        }
     }
+
+    @Override
+    public boolean onTouch(View aView, MotionEvent aMotionEvent) {
+
+        if (aMotionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+            // TODO end move
+        } else if (aMotionEvent.getAction() == MotionEvent.ACTION_MOVE) {
+            // TODO perform translation
+        }
+
+        return true;
+    }
+
 }

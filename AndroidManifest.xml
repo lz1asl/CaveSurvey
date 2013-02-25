@@ -21,7 +21,6 @@
         <activity android:name=".activity.main.PointActivity"/>
         <activity android:name=".activity.main.ReadAzimuthActivity"/>
         <activity android:name=".activity.map.opengl.Map3DActivity"/>
-        <activity android:name=".activity.map.opengl.Map3DActivity"/>
     </application>
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
@@ -29,4 +28,4 @@
 
     <uses-sdk android:minSdkVersion="4" android:targetSdkVersion="7"/>
 
-</manifest> 
+</manifest>

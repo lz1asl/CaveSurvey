@@ -110,7 +110,14 @@ public class MainActivity extends MainMenuActivity {
                 row.addView(createTextView(l.getDown(), currentLeg, true));
                 Note note = Leg.getActiveLegNote(l, mWorkspace);
                 if (note != null) {
-                    row.addView(createTextView(note.getText(), currentLeg, true));
+                    String noteText = note.getText();
+
+                    if (noteText.length() > 12) {
+                        row.addView(createTextView(noteText.substring(0, 10) + "...", currentLeg, true));
+                    } else {
+                        row.addView(createTextView(noteText, currentLeg, true));
+                    }
+
                 } else {
                     row.addView(createTextView((String) null, currentLeg, true));
                 }
