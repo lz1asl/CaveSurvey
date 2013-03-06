@@ -35,33 +35,30 @@ public class MapView extends View {
     public static final int CURR_POINT_RADIUS = 8;
     private final static int LABEL_DEVIATION_X = 5;
     private final static int LABEL_DEVIATION_Y = 5;
-
     private static final int[] COLORS = new int[]{Color.RED, Color.BLUE, Color.GRAY, Color.GREEN, Color.YELLOW};
-
-    private Window mWindow;
-
-
     Paint polygonPaint = new Paint();
+    Paint polygonWidthPaint = new Paint();
     Paint overlayPaint = new Paint();
     Paint youAreHerePaint = new Paint();
+    Workspace mWorkspace;
+    private Window mWindow;
     private float scale = 10;
     private int mapCenterMoveX = 0;
     private int mapCenterMoveY = 0;
-
     private float initialMoveX = 0;
     private float initialMoveY = 0;
-
-    Workspace mWorkspace;
 
     public MapView(Context context, AttributeSet attrs) {
         super(context, attrs);
         polygonPaint.setColor(Color.RED);
+        polygonPaint.setStrokeWidth(2);
+        polygonWidthPaint.setColor(Color.RED);
+        polygonWidthPaint.setStrokeWidth(1);
         overlayPaint.setColor(Color.WHITE);
         youAreHerePaint.setColor(Color.WHITE);
         youAreHerePaint.setAlpha(50);
         mWorkspace = Workspace.getCurrentInstance();
     }
-
 
     @Override
     public void onDraw(Canvas canvas) {
@@ -82,7 +79,7 @@ public class MapView extends View {
             List<Leg> legs = mWorkspace.getCurrProjectLegs();
 
             List<Integer> processedLegs = new ArrayList<Integer>();
-            Map<Integer, Point> mapPoints = new HashMap<Integer, Point>();
+            Map<Integer, Point2D> mapPoints = new HashMap<Integer, Point2D>();
             Map<Integer, Integer> galleryColors = new HashMap<Integer, Integer>();
 
             while (processedLegs.size() < legs.size()) {
@@ -98,10 +95,10 @@ public class MapView extends View {
                     } else {
 
                         // first leg ever
-                        Point first;
+                        Point2D first;
 
                         if (processedLegs.size() == 0) {
-                            first = new Point(centerX, centerY);
+                            first = new Point2D(centerX, centerY, l.getLeft(), l.getRight(), l.getAzimuth());
                         } else {
                             first = mapPoints.get(l.getFromPoint().getId());
                         }
@@ -116,8 +113,8 @@ public class MapView extends View {
                             polygonPaint.setColor(galleryColors.get(l.getGalleryId()));
 
                             mWorkspace.getDBHelper().getPointDao().refresh(l.getFromPoint());
-                            canvas.drawText(l.getFromPoint().getName(), mapCenterMoveX + first.x + LABEL_DEVIATION_X, mapCenterMoveY + first.y + LABEL_DEVIATION_Y, polygonPaint);
-                            canvas.drawCircle(mapCenterMoveX + first.x, mapCenterMoveY + first.y, POINT_RADIUS, polygonPaint);
+                            canvas.drawText(l.getFromPoint().getName(), mapCenterMoveX + first.getX() + LABEL_DEVIATION_X, mapCenterMoveY + first.getY() + LABEL_DEVIATION_Y, polygonPaint);
+                            canvas.drawCircle(mapCenterMoveX + first.getX(), mapCenterMoveY + first.getY(), POINT_RADIUS, polygonPaint);
                         }
 
                         float deltaX;
@@ -131,7 +128,17 @@ public class MapView extends View {
                             deltaX = (float) (l.getDistance() * Math.sin(Math.toRadians(getAzimuthInDegrees(l.getAzimuth())))) * scale;
                         }
 
-                        Point second = new Point((int) (first.x + deltaX), (int) (first.y + deltaY));
+                        Point2D second = new Point2D(first.getX() + deltaX, first.getY() + deltaY);
+                        if (l.getLeft() != null) {
+                            second.setLeft(l.getLeft());
+                        }
+                        if (l.getRight() != null) {
+                            second.setRight(l.getRight());
+                        }
+                        if (l.getAzimuth() != null) {
+                            second.setAzimuth(l.getAzimuth());
+                        }
+
                         if (!mapPoints.containsKey(l.getToPoint().getId())) {
                             mapPoints.put(l.getToPoint().getId(), second);
 
@@ -140,19 +147,37 @@ public class MapView extends View {
                                 galleryColors.put(l.getGalleryId(), getNextColor(l.getGalleryId()));
                             }
                             polygonPaint.setColor(galleryColors.get(l.getGalleryId()));
+                            polygonWidthPaint.setColor(galleryColors.get(l.getGalleryId()));
 
 //                            Log.i(Constants.LOG_TAG_UI, "Drawing leg " + l.getFromPoint().getName() + ":" + l.getToPoint().getName() + "-" + l.getGalleryId());
 
                             if (mWorkspace.getActiveLegId().equals(l.getId())) {
                                 // you are here
-                                canvas.drawCircle(mapCenterMoveX + first.x, mapCenterMoveY + first.y, CURR_POINT_RADIUS, youAreHerePaint);
+                                canvas.drawCircle(mapCenterMoveX + first.getX(), mapCenterMoveY + first.getY(), CURR_POINT_RADIUS, youAreHerePaint);
                             }
 
                             mWorkspace.getDBHelper().getPointDao().refresh(l.getToPoint());
-                            canvas.drawText(l.getToPoint().getName(), mapCenterMoveX + second.x + LABEL_DEVIATION_X, mapCenterMoveY + second.y + LABEL_DEVIATION_Y, polygonPaint);
-                            canvas.drawCircle(mapCenterMoveX + second.x, mapCenterMoveY + second.y, POINT_RADIUS, polygonPaint);
+                            canvas.drawText(l.getToPoint().getName(), mapCenterMoveX + second.getX() + LABEL_DEVIATION_X, mapCenterMoveY + second.getY() + LABEL_DEVIATION_Y, polygonPaint);
+                            canvas.drawCircle(mapCenterMoveX + second.getX(), mapCenterMoveY + second.getY(), POINT_RADIUS, polygonPaint);
                         }
-                        canvas.drawLine(mapCenterMoveX + first.x, mapCenterMoveY + first.y, mapCenterMoveX + second.x, mapCenterMoveY + second.y, polygonPaint);
+
+                        // leg
+                        canvas.drawLine(mapCenterMoveX + first.getX(), mapCenterMoveY + first.getY(), mapCenterMoveX + second.getX(), mapCenterMoveY + second.getY(), polygonPaint);
+
+                        // left
+                        if (first.getLeft() > 0) {
+                            deltaY = -(float) (first.getLeft() * Math.cos(Math.toRadians(getAzimuthInDegrees(first.getAzimuth() )- 90))) * scale;
+                            deltaX = (float) (first.getLeft() * Math.sin(Math.toRadians(getAzimuthInDegrees(first.getAzimuth() )- 90))) * scale;
+                            canvas.drawLine(mapCenterMoveX + first.getX(), mapCenterMoveY + first.getY(), mapCenterMoveX + first.getX() + deltaX, mapCenterMoveY + first.getY() + deltaY, polygonWidthPaint);
+                        }
+
+                        // right
+                        if (first.getRight() > 0) {
+                            deltaY = -(float) (first.getRight() * Math.cos(Math.toRadians(getAzimuthInDegrees(first.getAzimuth()) + 90))) * scale;
+                            deltaX = (float) (first.getRight() * Math.sin(Math.toRadians(getAzimuthInDegrees(first.getAzimuth() )+ 90))) * scale;
+                            canvas.drawLine(mapCenterMoveX + first.getX(), mapCenterMoveY + first.getY(), mapCenterMoveX + first.getX() + deltaX, mapCenterMoveY + first.getY() + deltaY, polygonWidthPaint);
+                        }
+
                         processedLegs.add(l.getId());
                     }
 
@@ -197,7 +222,6 @@ public class MapView extends View {
         invalidate();
     }
 
-
     public void zoomIn() {
         scale++;
         invalidate();
@@ -224,11 +248,9 @@ public class MapView extends View {
         invalidate();
     }
 
-
     public void setWindow(Window aWindow) {
         //To change body of created methods use File | Settings | File Templates.
     }
-
 
     private Integer getNextColor(Integer aGalleryId) {
         // assure predictable colors for the galleries, start repeating colors if too many galleries

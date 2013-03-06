@@ -63,6 +63,7 @@ public class OpenGLRenderer implements GLSurfaceView.Renderer {
         gl.glScalef(zoom, zoom, zoom);
         gl.glTranslatef(translation[0], translation[1], translation[2]);
 		// Draw our square.
+        // TODO build list of polylines (for each gallery), calculate their points
 		polyline.draw(gl);
 	}
 

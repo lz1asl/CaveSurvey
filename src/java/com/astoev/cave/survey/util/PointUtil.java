@@ -12,20 +12,17 @@ import java.sql.SQLException;
  * Date: 3/30/12
  * Time: 1:14 AM
  * To change this template use File | Settings | File Templates.
+ * 1-2-3-4-5
+ * 1-A1-a2-a3
+ * 2-b1-b2
+ *
  */
 public class PointUtil {
 
     private static final int START_INDEX = 0;
-    private static final char MIDDLE_POINT_START_CHAR = 'A';
-    private static final char DELIMITER = '.';
-    private static final char LEG_LETTERS[] = new char[26];
 
-    static {
-        int index = 0;
-        for (char c = 'A'; c <= 'Z'; c++) {
-            LEG_LETTERS[index++] = c;
-        }
-    }
+    private static final char DELIMITER = '.';
+
 
     public static Point createFirstPoint() {
         Point p = new Point();
@@ -95,7 +92,7 @@ public class PointUtil {
             // TODO verify name does not exist
         } else {
             // append letter 2 -> 2A
-            point.setName(aPoint.getName() + MIDDLE_POINT_START_CHAR);
+//            point.setName(aPoint.getName() + MIDDLE_POINT_START_CHAR);
             // TODO verify name does not exist
         }
         return point;

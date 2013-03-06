@@ -62,7 +62,8 @@ public class NewProjectActivity extends BaseActivity {
 
                             // gallery
                             Gallery firstGallery = new Gallery();
-                            firstGallery.setName("First");
+                            firstGallery.setName(Gallery.getFirstGalleryName());
+                            firstGallery.setProject(newProject);
                             Integer firstGalleryId = mWorkspace.getDBHelper().getGalleryDao().create(firstGallery);
 
                             // points
