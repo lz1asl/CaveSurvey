@@ -65,9 +65,8 @@ public class Workspace {
     // TODO list need to be sorted, here last id is get, higher number is what we need
     public Point getLastGalleryPoint(Integer aGalleryId) throws SQLException {
         String lastPointInCurrentGalleryQuery = "select max(id) from points where id in(" +
-                "select from_point from legs where gallery_id = " + aGalleryId +
-                " union select to_point from legs where gallery_id = " + aGalleryId + ")";
-
+                "select from_point_id from legs where gallery_id = " + aGalleryId +
+                " union select to_point_id from legs where gallery_id = " + aGalleryId + ")";
         GenericRawResults<String[]> lastPointResults = mDBHelper.getPointDao().queryRaw(lastPointInCurrentGalleryQuery);
         try {
             String[] lastPointIdString = lastPointResults.getResults().get(0);

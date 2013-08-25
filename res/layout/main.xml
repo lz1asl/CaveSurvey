@@ -59,6 +59,7 @@
             <Button android:text="@string/main_button_plot3d" android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:drawableRight="@drawable/plot3d"
+                    android:enabled="false"
                     android:onClick="plot3dButton"/>
             <Button android:text="@string/main_button_info" android:layout_width="fill_parent"
                     android:layout_height="wrap_content"

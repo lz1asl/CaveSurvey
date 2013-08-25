@@ -14,7 +14,7 @@
               android:layout_height="wrap_content"
               android:gravity="left"/>
 
-    <EditText android:maxLength="20" android:inputType="text" android:lines="1" android:layout_width="fill_parent"
+    <EditText android:maxLength="30" android:inputType="text" android:lines="1" android:layout_width="fill_parent"
               android:layout_height="fill_parent"
               android:gravity="center_horizontal"
               android:layout_weight="1"

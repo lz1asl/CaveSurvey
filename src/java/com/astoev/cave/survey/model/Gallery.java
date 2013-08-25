@@ -16,7 +16,7 @@ import java.sql.SQLException;
  * Time: 9:47 PM
  * To change this template use File | Settings | File Templates.
  */
-@DatabaseTable(tableName = "points")
+@DatabaseTable(tableName = "galleries")
 public class Gallery implements Serializable {
 
     public static final String COLUMN_PROJECT_ID = "project_id";
@@ -65,12 +65,12 @@ public class Gallery implements Serializable {
     }
 
     public void setProject(Project aProject) {
-        mProject = mProject;
+        mProject = aProject;
     }
 
     // "" as starting
     public static String getFirstGalleryName() {
-        return "";
+        return "A";
     }
 
     // A -> B ... -> Z -> AA -> AB etc for next galleries

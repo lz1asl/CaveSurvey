@@ -35,7 +35,7 @@ public class MapView extends View {
     public static final int CURR_POINT_RADIUS = 8;
     private final static int LABEL_DEVIATION_X = 5;
     private final static int LABEL_DEVIATION_Y = 5;
-    private static final int[] COLORS = new int[]{Color.RED, Color.BLUE, Color.GRAY, Color.GREEN, Color.YELLOW};
+    private static final int[] COLORS = new int[]{ Color.BLUE, Color.YELLOW, Color.RED, Color.GRAY, Color.GREEN};
     Paint polygonPaint = new Paint();
     Paint polygonWidthPaint = new Paint();
     Paint overlayPaint = new Paint();
@@ -98,7 +98,7 @@ public class MapView extends View {
                         Point2D first;
 
                         if (processedLegs.size() == 0) {
-                            first = new Point2D(centerX, centerY, l.getLeft(), l.getRight(), l.getAzimuth());
+                            first = new Point2D(Float.valueOf(centerX), Float.valueOf(centerY), l.getLeft(), l.getRight(), l.getAzimuth());
                         } else {
                             first = mapPoints.get(l.getFromPoint().getId());
                         }
@@ -165,14 +165,14 @@ public class MapView extends View {
                         canvas.drawLine(mapCenterMoveX + first.getX(), mapCenterMoveY + first.getY(), mapCenterMoveX + second.getX(), mapCenterMoveY + second.getY(), polygonPaint);
 
                         // left
-                        if (first.getLeft() > 0) {
+                        if (first.getLeft() != null && first.getLeft()> 0) {
                             deltaY = -(float) (first.getLeft() * Math.cos(Math.toRadians(getAzimuthInDegrees(first.getAzimuth() )- 90))) * scale;
                             deltaX = (float) (first.getLeft() * Math.sin(Math.toRadians(getAzimuthInDegrees(first.getAzimuth() )- 90))) * scale;
                             canvas.drawLine(mapCenterMoveX + first.getX(), mapCenterMoveY + first.getY(), mapCenterMoveX + first.getX() + deltaX, mapCenterMoveY + first.getY() + deltaY, polygonWidthPaint);
                         }
 
                         // right
-                        if (first.getRight() > 0) {
+                        if (first.getRight() != null && first.getRight()> 0) {
                             deltaY = -(float) (first.getRight() * Math.cos(Math.toRadians(getAzimuthInDegrees(first.getAzimuth()) + 90))) * scale;
                             deltaX = (float) (first.getRight() * Math.sin(Math.toRadians(getAzimuthInDegrees(first.getAzimuth() )+ 90))) * scale;
                             canvas.drawLine(mapCenterMoveX + first.getX(), mapCenterMoveY + first.getY(), mapCenterMoveX + first.getX() + deltaX, mapCenterMoveY + first.getY() + deltaY, polygonWidthPaint);
