@@ -1,11 +1,13 @@
 package com.astoev.cave.survey.activity.main;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
@@ -13,6 +15,7 @@ import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.model.Option;
 import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.service.Workspace;
+import com.astoev.cave.survey.service.bluetooth.BluetoothService;
 
 import java.sql.SQLException;
 
@@ -35,6 +38,8 @@ public class OptionsActivity extends Activity {
         measureMode.setAdapter(adapterMeasureModes);
         if (Option.CODE_MEASURE_MODE.equals(Options.getOptionValue(Option.CODE_SENSOR_BLUETOOTH))) {
             // bluetoth
+            // TODO disable this option if (!BluetoothService.isBluetoothSupported())
+
             measureMode.setSelection(2);
         } else if (Option.CODE_MEASURE_MODE.equals(Options.getOptionValue(Option.CODE_SENSOR_INTERNAL))) {
             // internal
@@ -97,6 +102,22 @@ public class OptionsActivity extends Activity {
         } else {
             azimuthUnits.setSelection(1);
         }
+
+
+        // BT protocol
+        Button btButton = (Button) findViewById(R.id.bt_setup_button);
+        if (!BluetoothService.isBluetoothSupported()) {
+            Log.w(Constants.LOG_TAG_UI, "Bluetooth not supported");
+            btButton.setEnabled(false);
+            btButton.setText(R.string.bt_not_supported);
+        } else {
+            btButton.setEnabled(true);
+        }
+    }
+
+    public void pairBtDevice(View aView) {
+        Intent intent = new Intent(OptionsActivity.this, BTActivity.class);
+        startActivity(intent);
     }
 
 }

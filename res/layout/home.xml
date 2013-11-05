@@ -4,36 +4,15 @@
               android:layout_width="fill_parent"
               android:layout_height="fill_parent">
 
-    <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/home_welcome"
-            android:gravity="center_horizontal"
-            android:textAppearance="?android:attr/textAppearanceLarge"/>
+    <ScrollView android:id="@+id/homeProjects"
+                 android:layout_height="wrap_content"
+                 android:layout_width="fill_parent"/>
 
-    <TextView
-            android:layout_width="fill_parent"
+    <Button android:id="@+id/homeButtonNew"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/home_select"
-            android:gravity="left"/>
-
-    <Button xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/homeButtonNew"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:text="@string/home_button_new"
-            android:gravity="center_horizontal"
+            android:layout_gravity="right"
             android:onClick="newProjectOnClick"/>
-
-    <Button xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/homeButtonLoad"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/home_button_load"
-            android:gravity="center_horizontal"
-            android:onClick="loadProjectOnClick"/>
 
 </LinearLayout>

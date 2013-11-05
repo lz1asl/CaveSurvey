@@ -21,10 +21,18 @@
         <activity android:name=".activity.main.PointActivity"/>
         <activity android:name=".activity.main.ReadAzimuthActivity"/>
         <activity android:name=".activity.map.opengl.Map3DActivity"/>
+        <activity android:name="com.astoev.cave.survey.activity.main.BTActivity"/>
     </application>
 
+    <!-- Store to SD -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
+    <!-- Take photos -->
     <uses-permission android:name="android.permission.CAMERA"/>
+
+    <!-- Bluetooth laser distance meter -->
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
 
     <uses-sdk android:minSdkVersion="4" android:targetSdkVersion="7"/>
 

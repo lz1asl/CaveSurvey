@@ -7,11 +7,11 @@
     <string name="button_no">No</string>
 
     <!-- welcome screen -->
-    <string name="home_welcome">Welcome to CaveSurvey!</string>
-    <string name="home_select">Select project:</string>
-    <string name="home_button_new">New</string>
+    <string name="home_select_project">Projects:</string>
+    <string name="home_no_projects">No projects yet!</string>
+    <string name="home_button_new">+</string>
+    <string name="home_button_open_project">&gt;</string>
     <string name="home_button_new_exists">Project %1$s exists!</string>
-    <string name="home_button_load">Load</string>
 
     <!-- new project screen -->
     <string name="new_title">New project</string>
@@ -156,5 +156,15 @@
 
     <string name="todo">TODO</string>
 
+
+    <!-- bluetooth -->
+    <string name="bt_title">Bluetooth Devices</string>
+    <string name="bt_devices">Devices</string>
+    <string name="bt_search">Search</string>
+    <string name="bt_pair">Pair</string>
+    <string name="bt_paired">Paired</string>
+    <string name="bt_disconnect">Disconnect</string>
+    <string name="bt_not_supported">Bluetooth not supported</string>
+    <string name="bt_not_on">Bluetooth not turned on</string>
 
 </resources>
