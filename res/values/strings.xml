@@ -60,12 +60,12 @@
 
 
     <!-- main menu -->
-    <string name="menu_other_project">Projects...</string>
-    <string name="menu_options">Options</string>
-    <string name="menu_about">About</string>
+    <string name="menu_open">Open</string>
+    <string name="menu_export">Export</string>
+    <string name="menu_help">Help</string>
     <string name="menu_exit">End</string>
 
-    <string name="menu_exit_confirmation_question">Are you sure you want to end survey?</string>
+    <string name="menu_exit_confirmation_question">End survey?</string>
 
     <!-- point -->
     <string name="point_up">&lt;- Up</string>
@@ -112,28 +112,44 @@
     <string name="export_io_error">Failed to write to SD card</string>
 
     <!-- options -->
-    <string name="options_title">Options</string>
+    <string name="measures_title">Measures</string>
 
-    <string name="options_mode">Measure mode</string>
+    <string name="units_mode">Measure mode</string>
     <string-array name="options_modes">
-        <item>Manual</item>
+        <item>Manual enter</item>
         <item>Build-in sensors</item>
         <item>Bluetooth sensors</item>
     </string-array>
 
-    <string name="options_units_distance">Distance</string>
+    <string name="options_units_distance">Read Distance</string>
     <string-array name="distance_units">
         <item>Meters</item>
     </string-array>
-    <string name="options_units_azimuth">Azimuth</string>
+    <string-array name="distance_read_type">
+        <item>Manually</item>
+        <item>From Bluetooth</item>
+    </string-array>
+
+    <string name="options_units_azimuth">Read Azimuth</string>
     <string-array name="azimuth_units">
         <item>Degrees</item>
         <item>Grad</item>
     </string-array>
+    <string-array name="azimuth_read_type">
+        <item>Manually</item>
+        <item>Built-in sensor</item>
+    </string-array>
+
     <string name="options_units_slope">Slope</string>
     <string-array name="slope_units">
         <item>Degrees</item>
         <item>Grad</item>
+    </string-array>
+
+    <string-array name="slope_read_type">
+        <item>Manually</item>
+        <item>Built-in sensor</item>
+        <item>From Bluetooth</item>
     </string-array>
 
 

@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:id="@+id/menuOtherProject"
-    android:title="@string/menu_other_project"/>
-    <item android:id="@+id/menuOptions"
-          android:title="@string/menu_options"/>
-    <item android:id="@+id/menuAbout"
-          android:title="@string/menu_about"/>
-    <item android:id="@+id/menuExit"
-          android:title="@string/menu_exit"/>
+    <item android:id="@+id/menuOpen" android:title="@string/menu_open"/>
+    <item android:id="@+id/menuExport" android:title="@string/menu_export"/>
+    <item android:id="@+id/menuHelp" android:title="@string/menu_help"/>
+    <item android:id="@+id/menuExit" android:title="@string/menu_exit"/>
 
 </menu>

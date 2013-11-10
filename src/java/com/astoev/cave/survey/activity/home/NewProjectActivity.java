@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.BaseActivity;
@@ -31,6 +33,28 @@ public class NewProjectActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.newproject);
+
+        // populate spinners
+
+        // distance
+        prepareSpinner(R.id.options_units_distance, R.array.distance_units);
+        prepareSpinner(R.id.options_distance_type, R.array.distance_read_type);
+
+        // azimuth
+        prepareSpinner(R.id.options_units_azimuth, R.array.azimuth_units);
+        prepareSpinner(R.id.options_azimuth_type, R.array.azimuth_read_type);
+
+        // slope
+        prepareSpinner(R.id.options_units_slope, R.array.slope_units);
+        prepareSpinner(R.id.options_slope_type, R.array.slope_read_type);
+
+    }
+
+    private void prepareSpinner(int aSpinnerId, int aTextArrayId) {
+        Spinner distanceUnitsSpinner = (Spinner) findViewById(aSpinnerId);
+        ArrayAdapter distanceUnitsAdapter = ArrayAdapter.createFromResource(this,aTextArrayId , android.R.layout.simple_spinner_item);
+        distanceUnitsAdapter.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item);
+        distanceUnitsSpinner.setAdapter(distanceUnitsAdapter);
     }
 
     public void createNewProject(View view) {
@@ -77,6 +101,14 @@ public class NewProjectActivity extends BaseActivity {
                             mWorkspace.getDBHelper().getLegDao().create(firstLeg);
 
                             // default units
+
+
+
+
+
+
+
+
                             Option distanceOption = new Option(Option.CODE_DISTANCE_UNITS, Option.UNIT_METERS);
                             mWorkspace.getDBHelper().getOptionsDao().create(distanceOption);
                             Option azimuthOption = new Option(Option.CODE_AZIMUTH_UNITS, Option.UNIT_DEGREES);

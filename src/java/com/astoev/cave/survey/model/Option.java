@@ -41,6 +41,7 @@ public class Option implements Serializable {
 
     @DatabaseField(generatedId = true, columnName = "id")
     private Integer mId;
+    private Integer mProjectId;
     @DatabaseField(columnName = COLUMN_CODE)
     private String mCode;
     @DatabaseField(columnName = "value")
@@ -86,5 +87,13 @@ public class Option implements Serializable {
 
     public void setNote(String aNote) {
         mNote = aNote;
+    }
+
+    public Integer getmProjectId() {
+        return mProjectId;
+    }
+
+    public void setmProjectId(Integer mProjectId) {
+        this.mProjectId = mProjectId;
     }
 }

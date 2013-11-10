@@ -3,21 +3,8 @@ package com.astoev.cave.survey.activity.main;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.Spinner;
-import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
-import com.astoev.cave.survey.activity.UIUtilities;
-import com.astoev.cave.survey.model.Option;
-import com.astoev.cave.survey.service.Options;
-import com.astoev.cave.survey.service.Workspace;
-import com.astoev.cave.survey.service.bluetooth.BluetoothService;
-
-import java.sql.SQLException;
 
 /**
  * Created by IntelliJ IDEA.
@@ -30,9 +17,9 @@ public class OptionsActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.options);
-
+/*
         // measure mode
-        Spinner measureMode = (Spinner) findViewById(R.id.options_mode);
+        Spinner measureMode = (Spinner) findViewById(R.id.options_distance_units);
         ArrayAdapter adapterMeasureModes = ArrayAdapter.createFromResource(this, R.array.options_modes, android.R.layout.simple_spinner_item);
         adapterMeasureModes.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         measureMode.setAdapter(adapterMeasureModes);
@@ -112,7 +99,7 @@ public class OptionsActivity extends Activity {
             btButton.setText(R.string.bt_not_supported);
         } else {
             btButton.setEnabled(true);
-        }
+        }*/
     }
 
     public void pairBtDevice(View aView) {

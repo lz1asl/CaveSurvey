@@ -5,7 +5,8 @@
               android:layout_height="fill_parent"
               android:orientation="vertical">
 
-    <TextView android:text="@string/new_title" android:layout_width="fill_parent"
+    <!-- name -->
+    <TextView android:text="@string/new_title" android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:gravity="center_horizontal"
               android:textAppearance="?android:attr/textAppearanceLarge"/>
@@ -15,10 +16,64 @@
               android:gravity="left"/>
 
     <EditText android:maxLength="30" android:inputType="text" android:lines="1" android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
+              android:layout_height="wrap_content"
               android:gravity="center_horizontal"
-              android:layout_weight="1"
               android:id="@+id/new_projectname"/>
+
+    <!-- units & measure -->
+    <TableLayout android:layout_width="fill_parent" android:layout_height="wrap_content">
+        <TableRow>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                      android:text="@string/measures_title" android:textAppearance="?android:attr/textAppearanceLarge"/>
+        </TableRow>
+
+        <!-- distance -->
+        <TableRow>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/options_units_distance"/>
+        </TableRow>
+        <TableRow>
+            <Spinner
+                    android:id="@+id/options_units_distance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            <Spinner
+                    android:id="@+id/options_distance_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+        </TableRow>
+
+        <!-- azimuth -->
+        <TableRow>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/options_units_azimuth"/>
+        </TableRow>
+        <TableRow>
+            <Spinner
+                    android:id="@+id/options_units_azimuth"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            <Spinner
+                    android:id="@+id/options_azimuth_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+        </TableRow>
+
+        <!-- slope -->
+        <TableRow>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/options_units_slope"/>
+        </TableRow>
+        <TableRow>
+            <Spinner
+                    android:id="@+id/options_units_slope"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            <Spinner
+                    android:id="@+id/options_slope_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+        </TableRow>
+        <TableRow/>
+    </TableLayout>
+
 
     <Button android:text="@string/new_button_create" android:layout_width="fill_parent"
             android:layout_height="wrap_content"
