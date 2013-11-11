@@ -1,5 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AndroidConfiguredLogFilters">
+    <filters>
+      <filter>
+        <option name="logLevel" value="verbose" />
+        <option name="logMessagePattern" value="" />
+        <option name="logTagPattern" value="UI" />
+        <option name="name" value="UI" />
+        <option name="pid" value="" />
+      </filter>
+      <filter>
+        <option name="logLevel" value="verbose" />
+        <option name="logMessagePattern" value="" />
+        <option name="logTagPattern" value="SRVC" />
+        <option name="name" value="SERVICE" />
+        <option name="pid" value="" />
+      </filter>
+    </filters>
+  </component>
   <component name="AndroidDesignerProfile">
     <option name="fullProfile">
       <profile>
@@ -22,6 +40,9 @@
         <option name="visible" value="false" />
       </GlobalState>
     </option>
+  </component>
+  <component name="AndroidLogFilters">
+    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="SERVICE" />
   </component>
   <component name="ChangeListManager">
     <list default="true" readonly="true" id="7cf6bb3e-ee39-4d83-887a-828115e83b6f" name="Default" comment="move to cloudbees">
@@ -83,8 +104,8 @@
     </list>
     <ignored path="CaveSurvey.iws" />
     <ignored path=".idea/workspace.xml" />
-    <file path="/fragment.java" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1383635720701" ignored="false" />
-    <file path="/HomeActivity.java" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1383636928003" ignored="false" />
+    <file path="/fragment.java" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1384118121579" ignored="false" />
+    <file path="/HomeActivity.java" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1384113251342" ignored="false" />
     <file path="/a.dummy" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1361783645252" ignored="false" />
     <file path="/info.xml" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1361402679117" ignored="false" />
     <file path="/strings.xml" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1384000467102" ignored="false" />
@@ -98,7 +119,7 @@
     <file path="/DrawingActivity.java" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1361441376426" ignored="false" />
     <file path="/Point.java" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1361460416396" ignored="false" />
     <file path="/Sketch.java" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1361460539243" ignored="false" />
-    <file path="/NewProjectActivity.java" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1384003017777" ignored="false" />
+    <file path="/NewProjectActivity.java" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1384114936845" ignored="false" />
     <file path="/MainActivity.java" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1361785265278" ignored="false" />
     <file path="/Leg.java" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1361461736676" ignored="false" />
     <file path="/PointUtil.java" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1361895051872" ignored="false" />
@@ -112,24 +133,23 @@
     <file path="/AndroidManifest.xml" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1382561736862" ignored="false" />
     <file path="/Polyline.java" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1361785753289" ignored="false" />
     <file path="/BaseActivity.java" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1361783617375" ignored="false" />
-    <file path="/Dummy.txt" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1383637094227" ignored="false" />
+    <file path="/Dummy.txt" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1384117318392" ignored="false" />
     <file path="/map3D.xml" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1361786424806" ignored="false" />
     <file path="/map3d.xml" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1361786648275" ignored="false" />
     <file path="/Point2D.java" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1366985497646" ignored="false" />
     <file path="/Gallery.java" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1366660720721" ignored="false" />
-    <file path="$PROJECT_DIR$/gen/com/astoev/cave/survey/Manifest.java" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1362005951529" ignored="false" />
     <file path="/GalleryTest.java" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1362008691599" ignored="false" />
     <file path="/pom.xml" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1362006387583" ignored="false" />
-    <file path="$PROJECT_DIR$/gen/com/astoev/cave/survey/R.java" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1366636855600" ignored="false" />
     <file path="/test.js" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1366981614973" ignored="false" />
     <file path="/BluetoothService.java" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1382682459642" ignored="false" />
-    <file path="/bluetooth.xml" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1382736424127" ignored="false" />
-    <file path="/BTActivity.java" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1382737927999" ignored="false" />
+    <file path="/bluetooth.xml" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1384116312990" ignored="false" />
+    <file path="/BTActivity.java" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1384118946331" ignored="false" />
     <file path="/options.xml" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1382598209131" ignored="false" />
     <file path="/OptionsActivity.java" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1384000987744" ignored="false" />
     <file path="/home.xml" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1383636960312" ignored="false" />
     <file path="/MainMenuActivity.java" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1383999754309" ignored="false" />
-    <file path="/Option.java" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1384003572409" ignored="false" />
+    <file path="/Option.java" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1384113957157" ignored="false" />
+    <file path="/Options.java" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1384114224036" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -217,7 +237,7 @@
         <option name="CONDITION" value="" />
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/home/NewProjectActivity.java" line="81" class="com.astoev.cave.survey.activity.home.NewProjectActivity$1" package="com.astoev.cave.survey.activity.home">
+      <breakpoint url="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/home/NewProjectActivity.java" line="87" class="com.astoev.cave.survey.activity.home.NewProjectActivity$1" package="com.astoev.cave.survey.activity.home">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -271,124 +291,115 @@
     <favorites_list name="CaveSurvey" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.56990397">
-      <split-first>
-        <leaf>
-          <file leaf-file-name="point.xml" pinned="false" current="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/res/layout/point.xml">
-              <provider selected="true" editor-type-id="text-editor">
-                <state line="23" column="12" selection-start="1068" selection-end="1257" vertical-scroll-proportion="0.0">
-                  <folding />
-                </state>
-              </provider>
-              <provider editor-type-id="android-designer">
-                <state />
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="Option.java" pinned="false" current="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/model/Option.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state line="91" column="36" selection-start="2512" selection-end="2512" vertical-scroll-proportion="0.9967213">
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="Polyline.java" pinned="false" current="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/map/opengl/Polyline.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="Point.java" pinned="false" current="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/model/Point.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="Leg.java" pinned="false" current="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/model/Leg.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state line="35" column="29" selection-start="1253" selection-end="1391" vertical-scroll-proportion="0.0">
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="options.xml" pinned="false" current="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/res/layout/options.xml">
-              <provider selected="true" editor-type-id="text-editor">
-                <state line="44" column="49" selection-start="264" selection-end="1830" vertical-scroll-proportion="0.0">
-                  <folding />
-                </state>
-              </provider>
-              <provider editor-type-id="android-designer">
-                <state />
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="OptionsActivity.java" pinned="false" current="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/main/OptionsActivity.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state line="79" column="76" selection-start="3564" selection-end="3564" vertical-scroll-proportion="0.0">
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="NewProjectActivity.java" pinned="false" current="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/home/NewProjectActivity.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state line="111" column="59" selection-start="4375" selection-end="4375" vertical-scroll-proportion="0.0">
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="newproject.xml" pinned="false" current="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/res/layout/newproject.xml">
-              <provider selected="true" editor-type-id="text-editor">
-                <state line="38" column="66" selection-start="1804" selection-end="1804" vertical-scroll-proportion="0.0">
-                  <folding />
-                </state>
-              </provider>
-              <provider editor-type-id="android-designer">
-                <state />
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="strings.xml" pinned="false" current="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/res/values/strings.xml">
-              <provider selected="true" editor-type-id="text-editor">
-                <state line="124" column="38" selection-start="5001" selection-end="5015" vertical-scroll-proportion="0.0">
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
-      </split-first>
-      <split-second>
-        <leaf>
-          <file leaf-file-name="strings.xml" pinned="false" current="true" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/res/values/strings.xml">
-              <provider selected="true" editor-type-id="text-editor">
-                <state line="124" column="38" selection-start="5015" selection-end="5015" vertical-scroll-proportion="0.05279503">
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
-      </split-second>
-    </splitter>
+    <leaf>
+      <file leaf-file-name="NewProjectActivity.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/home/NewProjectActivity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="173" column="57" selection-start="8483" selection-end="8483" vertical-scroll-proportion="0.0">
+              <folding>
+                <element signature="e#3025#8578#0" expanded="true" />
+                <element signature="e#8555#8556#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="GalleryTest.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/test/com/astoev/cave/survey/test/GalleryTest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="14" column="63" selection-start="339" selection-end="339" vertical-scroll-proportion="0.0">
+              <folding>
+                <element signature="imports" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="R.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/gen/com/astoev/cave/survey/R.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="5" column="19" selection-start="170" selection-end="170" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ReadAzimuthActivity.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/main/ReadAzimuthActivity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="70" column="52" selection-start="2251" selection-end="2251" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="HomeActivity.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/home/HomeActivity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="110" column="45" selection-start="3928" selection-end="3928" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BTActivity.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/main/BTActivity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="129" column="81" selection-start="5221" selection-end="5221" vertical-scroll-proportion="0.26881722">
+              <folding>
+                <element signature="e#1797#2586#0" expanded="true" />
+                <element signature="e#2575#2576#0" expanded="true" />
+                <element signature="e#4007#4289#0" expanded="true" />
+                <element signature="e#4266#4267#0" expanded="true" />
+                <element signature="e#4437#4723#0" expanded="true" />
+                <element signature="e#4700#4701#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Constants.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/Constants.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="19" column="87" selection-start="493" selection-end="493" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="bluetooth.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/res/layout/bluetooth.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="30" column="43" selection-start="1539" selection-end="1539" vertical-scroll-proportion="-6.14">
+              <folding />
+            </state>
+          </provider>
+          <provider editor-type-id="android-designer">
+            <state />
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Manifest.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/gen/com/astoev/cave/survey/Manifest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="5" column="19" selection-start="177" selection-end="177" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BuildConfig.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/gen/com/astoev/cave/survey/BuildConfig.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="5" column="19" selection-start="132" selection-end="132" vertical-scroll-proportion="0.0">
+              <folding>
+                <element signature="e#0#193#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FindManager">
     <FindUsagesManager>
@@ -398,22 +409,22 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/map/MapView.java" />
-        <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/AndroidManifest.xml" />
         <option value="$PROJECT_DIR$/src/java/com/astoev/cave/survey/service/bluetooth/BluetoothService.java" />
-        <option value="$PROJECT_DIR$/res/layout/bluetooth.xml" />
-        <option value="$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/main/BTActivity.java" />
-        <option value="$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/home/HomeActivity.java" />
-        <option value="$PROJECT_DIR$/res/layout/home.xml" />
         <option value="$PROJECT_DIR$/res/menu/mainmenu.xml" />
         <option value="$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/MainMenuActivity.java" />
         <option value="$PROJECT_DIR$/res/values/strings.xml" />
         <option value="$PROJECT_DIR$/res/layout/options.xml" />
         <option value="$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/main/OptionsActivity.java" />
-        <option value="$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/home/NewProjectActivity.java" />
         <option value="$PROJECT_DIR$/res/layout/newproject.xml" />
+        <option value="$PROJECT_DIR$/res/layout/home.xml" />
+        <option value="$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/home/HomeActivity.java" />
         <option value="$PROJECT_DIR$/src/java/com/astoev/cave/survey/model/Option.java" />
+        <option value="$PROJECT_DIR$/src/java/com/astoev/cave/survey/service/Options.java" />
+        <option value="$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/home/NewProjectActivity.java" />
+        <option value="$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/main/ReadAzimuthActivity.java" />
+        <option value="$PROJECT_DIR$/res/layout/bluetooth.xml" />
+        <option value="$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/main/BTActivity.java" />
       </list>
     </option>
   </component>
@@ -515,13 +526,13 @@
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1" splitterProportion="0.5">
       <flattenPackages />
-      <showMembers />
+      <showMembers ProjectPane="true" />
       <showModules />
       <showLibraryContents />
       <hideEmptyPackages />
       <abbreviatePackageNames />
-      <autoscrollToSource />
-      <autoscrollFromSource />
+      <autoscrollToSource ProjectPane="true" />
+      <autoscrollFromSource ProjectPane="true" />
       <sortByType />
     </navigator>
     <panes>
@@ -625,7 +636,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="model" />
+              <option name="myItemId" value="activity" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -653,6 +664,14 @@
             <PATH_ELEMENT>
               <option name="myItemId" value="activity" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ReadAzimuthActivity" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ClassTreeNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
@@ -711,7 +730,107 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="BTActivity" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ClassTreeNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="CaveSurvey" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="survey" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="activity" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="home" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="CaveSurvey" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="survey" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="activity" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="home" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="HomeActivity" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ClassTreeNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="CaveSurvey" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="CaveSurvey" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="layout" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -746,7 +865,7 @@
     <property name="AndroidRunProguardForReleaseBuild" value="false" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth1" value="117" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth0" value="98" />
-    <property name="project.structure.last.edited" value="Global Libraries" />
+    <property name="project.structure.last.edited" value="SDKs" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth3" value="44" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="OverrideImplement.combined" value="true" />
@@ -797,14 +916,14 @@
       <recent name="java.awt" />
     </key>
   </component>
-  <component name="RunManager" selected="Android Application.CaveSurvey">
+  <component name="RunManager" selected="Android Application.BTActivity">
     <configuration default="false" name="DatabaseConfigUtil" type="Application" factoryName="Application" temporary="true">
       <option name="MAIN_CLASS_NAME" value="com.astoev.cave.survey.service.ormlite.DatabaseConfigUtil" />
-      <option name="VM_PARAMETERS" />
-      <option name="PROGRAM_PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="VM_PARAMETERS" value="" />
+      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ALTERNATIVE_JRE_PATH" value="" />
       <option name="ENABLE_SWING_INSPECTOR" value="false" />
       <option name="ENV_VARIABLES" />
       <option name="PASS_PARENT_ENVS" value="true" />
@@ -812,7 +931,10 @@
       <envs />
       <RunnerSettings RunnerId="Run" />
       <ConfigurationWrapper RunnerId="Run" />
-      <method />
+      <method>
+        <option name="Make" enabled="false" />
+        <option name="MakeNoErrorCheck" enabled="true" />
+      </method>
     </configuration>
     <configuration default="false" name="GalleryTest" type="JUnit" factoryName="JUnit" temporary="true">
       <module name="CaveSurvey" />
@@ -890,6 +1012,22 @@
       <RunnerSettings RunnerId="Run" />
       <ConfigurationWrapper RunnerId="Debug" />
       <ConfigurationWrapper RunnerId="Run" />
+      <method />
+    </configuration>
+    <configuration default="false" name="BTActivity" type="AndroidRunConfigurationType" factoryName="Android Application" temporary="true">
+      <module name="CaveSurvey" />
+      <option name="ACTIVITY_CLASS" value="com.astoev.cave.survey.activity.main.BTActivity" />
+      <option name="MODE" value="specific_activity" />
+      <option name="DEPLOY" value="true" />
+      <option name="TARGET_SELECTION_MODE" value="USB_DEVICE" />
+      <option name="PREFERRED_AVD" value="" />
+      <option name="USE_COMMAND_LINE" value="true" />
+      <option name="COMMAND_LINE" value="" />
+      <option name="WIPE_USER_DATA" value="false" />
+      <option name="DISABLE_BOOT_ANIMATION" value="false" />
+      <option name="NETWORK_SPEED" value="full" />
+      <option name="NETWORK_LATENCY" value="none" />
+      <option name="CLEAR_LOGCAT" value="false" />
       <method />
     </configuration>
     <configuration default="true" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Plugin">
@@ -1066,8 +1204,8 @@
       <option name="ACTIVITY_CLASS" value="com.astoev.cave.survey.activity.home.HomeActivity" />
       <option name="MODE" value="specific_activity" />
       <option name="DEPLOY" value="true" />
-      <option name="TARGET_SELECTION_MODE" value="EMULATOR" />
-      <option name="PREFERRED_AVD" value="4.0.3" />
+      <option name="TARGET_SELECTION_MODE" value="USB_DEVICE" />
+      <option name="PREFERRED_AVD" value="" />
       <option name="USE_COMMAND_LINE" value="true" />
       <option name="COMMAND_LINE" value="" />
       <option name="WIPE_USER_DATA" value="false" />
@@ -1185,21 +1323,23 @@
       <ConfigurationWrapper RunnerId="Run" />
       <method />
     </configuration>
-    <list size="7">
+    <list size="8">
       <item index="0" class="java.lang.String" itemvalue="Android Application.CaveSurvey" />
-      <item index="1" class="java.lang.String" itemvalue="Maven.Maven android deploy" />
-      <item index="2" class="java.lang.String" itemvalue="Maven.maven clean" />
-      <item index="3" class="java.lang.String" itemvalue="Application.DatabaseConfigUtil" />
-      <item index="4" class="java.lang.String" itemvalue="JUnit.GalleryTest" />
-      <item index="5" class="java.lang.String" itemvalue="JUnit.GalleryTest.testNextName" />
-      <item index="6" class="java.lang.String" itemvalue="JUnit.GalleryTest.test1" />
+      <item index="1" class="java.lang.String" itemvalue="Application.DatabaseConfigUtil" />
+      <item index="2" class="java.lang.String" itemvalue="JUnit.GalleryTest" />
+      <item index="3" class="java.lang.String" itemvalue="JUnit.GalleryTest.testNextName" />
+      <item index="4" class="java.lang.String" itemvalue="JUnit.GalleryTest.test1" />
+      <item index="5" class="java.lang.String" itemvalue="Maven.Maven android deploy" />
+      <item index="6" class="java.lang.String" itemvalue="Maven.maven clean" />
+      <item index="7" class="java.lang.String" itemvalue="Android Application.BTActivity" />
     </list>
     <recent_temporary>
-      <list size="4">
-        <item index="0" class="java.lang.String" itemvalue="Application.DatabaseConfigUtil" />
-        <item index="1" class="java.lang.String" itemvalue="JUnit.GalleryTest" />
-        <item index="2" class="java.lang.String" itemvalue="JUnit.GalleryTest.test1" />
-        <item index="3" class="java.lang.String" itemvalue="JUnit.GalleryTest.testNextName" />
+      <list size="5">
+        <item index="0" class="java.lang.String" itemvalue="Android Application.BTActivity" />
+        <item index="1" class="java.lang.String" itemvalue="Application.DatabaseConfigUtil" />
+        <item index="2" class="java.lang.String" itemvalue="JUnit.GalleryTest" />
+        <item index="3" class="java.lang.String" itemvalue="JUnit.GalleryTest.test1" />
+        <item index="4" class="java.lang.String" itemvalue="JUnit.GalleryTest.testNextName" />
       </list>
     </recent_temporary>
     <configuration name="&lt;template&gt;" type="WebApp" default="true" selected="false">
@@ -1292,30 +1432,30 @@
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
     <editor active="false" />
     <layout>
-      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32864675" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3270869" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32954547" sideWeight="0.42589438" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2219662" sideWeight="0.9666081" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.34582624" sideWeight="0.48636365" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.44804087" sideWeight="0.5090909" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33106962" sideWeight="0.35833332" order="14" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3424191" sideWeight="0.44848484" order="14" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.582906" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.31948882" sideWeight="0.38181818" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.42917997" sideWeight="0.6363636" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.14601019" sideWeight="0.4941435" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4770017" sideWeight="0.72727275" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.48040885" sideWeight="0.6363636" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.14480409" sideWeight="0.4941435" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3242424" sideWeight="0.6689304" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33409092" sideWeight="0.42589438" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39924243" sideWeight="0.7307061" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.23939393" sideWeight="0.6575809" order="1" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3424191" sideWeight="0.55151516" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.20757575" sideWeight="0.6575809" order="1" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.5621806" sideWeight="0.55151516" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3242424" sideWeight="0.6678024" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="SVN Repositories" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.61709404" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3242424" sideWeight="0.5587734" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2219662" sideWeight="0.9666081" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.34582624" sideWeight="0.48636365" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Android Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32840723" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Android Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.51965815" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
@@ -1411,16 +1551,105 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/AndroidManifest.xml">
+    <entry file="file://$PROJECT_DIR$/res/layout/newproject.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="55" selection-start="359" selection-end="359" vertical-scroll-proportion="0.0">
+        <state line="38" column="66" selection-start="1804" selection-end="1804" vertical-scroll-proportion="2.44">
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/service/Workspace.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="33" column="38" selection-start="849" selection-end="849" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/res/layout/main.xml">
+    <entry file="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/main/OptionsActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="71" column="25" selection-start="3335" selection-end="3355" vertical-scroll-proportion="0.0" />
+        <state line="55" column="43" selection-start="2663" selection-end="2669" vertical-scroll-proportion="-17.56">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/service/Options.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="49" column="74" selection-start="1529" selection-end="1529" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/model/Option.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="35" column="86" selection-start="1353" selection-end="1353" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/values/strings.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="108" column="88" selection-start="4425" selection-end="4425" vertical-scroll-proportion="12.88">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/home/NewProjectActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="173" column="57" selection-start="8483" selection-end="8483" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="e#3025#8578#0" expanded="true" />
+            <element signature="e#8555#8556#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/com/astoev/cave/survey/test/GalleryTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="14" column="63" selection-start="339" selection-end="339" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gen/com/astoev/cave/survey/BuildConfig.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="5" column="19" selection-start="132" selection-end="132" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="e#0#193#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gen/com/astoev/cave/survey/Manifest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="5" column="19" selection-start="177" selection-end="177" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gen/com/astoev/cave/survey/R.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="5" column="19" selection-start="170" selection-end="170" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/main/ReadAzimuthActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="70" column="52" selection-start="2251" selection-end="2251" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/layout/bluetooth.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="30" column="43" selection-start="1539" selection-end="1539" vertical-scroll-proportion="-6.14">
+          <folding />
+        </state>
       </provider>
       <provider editor-type-id="android-designer">
         <state />
@@ -1428,107 +1657,29 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/home/HomeActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="61" column="55" selection-start="1948" selection-end="1948" vertical-scroll-proportion="0.0">
+        <state line="110" column="45" selection-start="3928" selection-end="3928" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/MainMenuActivity.java">
+    <entry file="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/Constants.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="68" selection-start="1173" selection-end="1173" vertical-scroll-proportion="0.0">
+        <state line="19" column="87" selection-start="493" selection-end="493" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/res/layout/home.xml">
+    <entry file="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/main/BTActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="17" column="98" selection-start="715" selection-end="715" vertical-scroll-proportion="-5.78" />
-      </provider>
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/menu/mainmenu.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="4" column="63" selection-start="242" selection-end="242" vertical-scroll-proportion="-2.72" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/layout/point.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="12" selection-start="1068" selection-end="1257" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/values/strings.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="124" column="38" selection-start="5015" selection-end="5015" vertical-scroll-proportion="0.05279503">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/layout/options.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="44" column="49" selection-start="264" selection-end="1830" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/layout/newproject.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="38" column="66" selection-start="1804" selection-end="1804" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/main/OptionsActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="79" column="76" selection-start="3564" selection-end="3564" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/home/NewProjectActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="111" column="59" selection-start="4375" selection-end="4375" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/map/opengl/Polyline.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/model/Point.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/model/Leg.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="35" column="29" selection-start="1253" selection-end="1391" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/com/astoev/cave/survey/model/Option.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="91" column="36" selection-start="2512" selection-end="2512" vertical-scroll-proportion="0.9967213">
-          <folding />
+        <state line="129" column="81" selection-start="5221" selection-end="5221" vertical-scroll-proportion="0.26881722">
+          <folding>
+            <element signature="e#1797#2586#0" expanded="true" />
+            <element signature="e#2575#2576#0" expanded="true" />
+            <element signature="e#4007#4289#0" expanded="true" />
+            <element signature="e#4266#4267#0" expanded="true" />
+            <element signature="e#4437#4723#0" expanded="true" />
+            <element signature="e#4700#4701#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1573,7 +1724,7 @@
       </state>
       <state key="JdkListConfigurable.UI">
         <settings>
-          <last-edited>1.7</last-edited>
+          <last-edited>Android 4.3 Platform</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
@@ -1585,11 +1736,12 @@
       </state>
       <state key="ModuleStructureConfigurable.UI">
         <settings>
-          <last-edited>Android|CaveSurvey</last-edited>
+          <last-edited>CaveSurvey</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
                 <option value="0.2" />
+                <option value="0.5" />
               </list>
             </option>
           </splitter-proportions>
@@ -1609,7 +1761,7 @@
       </state>
       <state key="ProjectLibrariesConfigurable.UI">
         <settings>
-          <last-edited>junit:junit:4.11</last-edited>
+          <last-edited>junit</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>

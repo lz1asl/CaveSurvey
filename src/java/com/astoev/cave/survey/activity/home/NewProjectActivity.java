@@ -13,6 +13,7 @@ import com.astoev.cave.survey.activity.BaseActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.activity.main.PointActivity;
 import com.astoev.cave.survey.model.*;
+import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.util.PointUtil;
 import com.j256.ormlite.misc.TransactionManager;
 
@@ -51,10 +52,15 @@ public class NewProjectActivity extends BaseActivity {
     }
 
     private void prepareSpinner(int aSpinnerId, int aTextArrayId) {
-        Spinner distanceUnitsSpinner = (Spinner) findViewById(aSpinnerId);
-        ArrayAdapter distanceUnitsAdapter = ArrayAdapter.createFromResource(this,aTextArrayId , android.R.layout.simple_spinner_item);
-        distanceUnitsAdapter.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item);
-        distanceUnitsSpinner.setAdapter(distanceUnitsAdapter);
+        Spinner spinner = (Spinner) findViewById(aSpinnerId);
+        ArrayAdapter adapter = ArrayAdapter.createFromResource(this, aTextArrayId, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+    }
+
+    private int getSpinnerValue(int aSpinnerId) {
+        Spinner spinner = (Spinner) findViewById(aSpinnerId);
+        return spinner.getSelectedItemPosition();
     }
 
     public void createNewProject(View view) {
@@ -83,6 +89,7 @@ public class NewProjectActivity extends BaseActivity {
                             newProject.setName(newProjectName);
                             newProject.setCreationDate(new Date());
                             mWorkspace.getDBHelper().getProjectDao().create(newProject);
+                            mWorkspace.setActiveProject(newProject);
 
                             // gallery
                             Gallery firstGallery = new Gallery();
@@ -100,23 +107,71 @@ public class NewProjectActivity extends BaseActivity {
                             Leg firstLeg = new Leg(startPoint, secondPoint, newProject, firstGalleryId);
                             mWorkspace.getDBHelper().getLegDao().create(firstLeg);
 
-                            // default units
+                            // project units
 
+                            // distance
+                            switch (getSpinnerValue(R.id.options_units_distance)) {
+                                case 0:
+                                    Log.i(Constants.LOG_TAG_UI, "Using meters for distance");
+                                    Options.createOption(Option.CODE_DISTANCE_UNITS, Option.UNIT_METERS);
+                            }
 
+                            switch (getSpinnerValue(R.id.options_distance_type)) {
+                                case 0:
+                                    Log.i(Constants.LOG_TAG_UI, "Read distance manually");
+                                    Options.createOption(Option.CODE_DISTANCE_SENSOR, Option.CODE_SENSOR_NONE);
+                                    break;
+                                case 1:
+                                    Log.i(Constants.LOG_TAG_UI, "Read distance from BT");
+                                    Options.createOption(Option.CODE_DISTANCE_SENSOR, Option.CODE_SENSOR_BLUETOOTH);
+                            }
 
+                            // azimuth
+                            switch (getSpinnerValue(R.id.options_units_azimuth)) {
+                                case 0:
+                                    Log.i(Constants.LOG_TAG_UI, "Using degrees for azimuth");
+                                    Options.createOption(Option.CODE_AZIMUTH_UNITS, Option.UNIT_DEGREES);
+                                    break;
+                                case 1:
+                                    Log.i(Constants.LOG_TAG_UI, "Using grads for azimuth");
+                                    Options.createOption(Option.CODE_AZIMUTH_UNITS, Option.UNIT_GRADS);
+                            }
 
+                            switch (getSpinnerValue(R.id.options_azimuth_type)) {
+                                case 0:
+                                    Log.i(Constants.LOG_TAG_UI, "Read azimuth manually");
+                                    Options.createOption(Option.CODE_AZIMUTH_SENSOR, Option.CODE_SENSOR_NONE);
+                                    break;
+                                case 1:
+                                    Log.i(Constants.LOG_TAG_UI, "Read azimuth from build-in sensor");
+                                    Options.createOption(Option.CODE_AZIMUTH_SENSOR, Option.CODE_SENSOR_INTERNAL);
+                            }
 
+                            // slope
+                            switch (getSpinnerValue(R.id.options_units_slope)) {
+                                case 0:
+                                    Log.i(Constants.LOG_TAG_UI, "Using degrees for slope");
+                                    Options.createOption(Option.CODE_SLOPE_UNITS, Option.UNIT_DEGREES);
+                                    break;
+                                case 1:
+                                    Log.i(Constants.LOG_TAG_UI, "Using grads for slope");
+                                    Options.createOption(Option.CODE_SLOPE_UNITS, Option.UNIT_GRADS);
+                            }
 
+                            switch (getSpinnerValue(R.id.options_slope_type)) {
+                                case 0:
+                                    Log.i(Constants.LOG_TAG_UI, "Read slope manually");
+                                    Options.createOption(Option.CODE_SLOPE_SENSOR, Option.CODE_SENSOR_NONE);
+                                    break;
+                                case 1:
+                                    Log.i(Constants.LOG_TAG_UI, "Read slope from build-in sensor");
+                                    Options.createOption(Option.CODE_SLOPE_SENSOR, Option.CODE_SENSOR_INTERNAL);
+                                    break;
+                                case 2:
+                                    Log.i(Constants.LOG_TAG_UI, "Read slope from BT");
+                                    Options.createOption(Option.CODE_SLOPE_SENSOR, Option.CODE_SENSOR_BLUETOOTH);
+                            }
 
-
-                            Option distanceOption = new Option(Option.CODE_DISTANCE_UNITS, Option.UNIT_METERS);
-                            mWorkspace.getDBHelper().getOptionsDao().create(distanceOption);
-                            Option azimuthOption = new Option(Option.CODE_AZIMUTH_UNITS, Option.UNIT_DEGREES);
-                            mWorkspace.getDBHelper().getOptionsDao().create(azimuthOption);
-                            Option slopeOption = new Option(Option.CODE_SLOPE_UNITS, Option.UNIT_DEGREES);
-                            mWorkspace.getDBHelper().getOptionsDao().create(slopeOption);
-
-                            Log.i(Constants.LOG_TAG_DB, "New project created");
                             return newProject;
                         }
                     });

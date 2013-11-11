@@ -16,10 +16,8 @@
       <sourceFolder url="file://$MODULE_DIR$/gen" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/target/generated-sources/r" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/java" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/test" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
-    <orderEntry type="library" name="junit:junit:4.11" level="project" />
     <orderEntry type="jdk" jdkName="Android 4.3 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="ormlite-android-4.33" level="project" />
@@ -36,6 +34,7 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="junit" level="project" />
   </component>
 </module>
 

@@ -38,10 +38,12 @@ public class Option implements Serializable {
     public static final int MIN_VALUE_SLOPE = -90;
 
     public static final String COLUMN_CODE = "code";
+    public static final String COLUMN_PROJECT_ID = "project_id";
 
     @DatabaseField(generatedId = true, columnName = "id")
     private Integer mId;
-    private Integer mProjectId;
+    @DatabaseField(foreign = true, canBeNull = false, foreignAutoRefresh = true, columnName = COLUMN_PROJECT_ID)
+    private Project mProject;
     @DatabaseField(columnName = COLUMN_CODE)
     private String mCode;
     @DatabaseField(columnName = "value")
@@ -52,9 +54,10 @@ public class Option implements Serializable {
     public Option() {
     }
 
-    public Option(String aCode, String aValue) {
+    public Option(String aCode, String aValue, Project aProject) {
         mCode = aCode;
         mValue = aValue;
+        mProject = aProject;
     }
 
     public Integer getId() {
@@ -89,11 +92,11 @@ public class Option implements Serializable {
         mNote = aNote;
     }
 
-    public Integer getmProjectId() {
-        return mProjectId;
+    public Project getmProject() {
+        return mProject;
     }
 
-    public void setmProjectId(Integer mProjectId) {
-        this.mProjectId = mProjectId;
+    public void setmProject(Project mProject) {
+        this.mProject = mProject;
     }
 }

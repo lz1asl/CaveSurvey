@@ -12,8 +12,10 @@ import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.MainMenuActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
+import com.astoev.cave.survey.activity.main.BTActivity;
 import com.astoev.cave.survey.activity.main.MainActivity;
 import com.astoev.cave.survey.model.Project;
+import com.astoev.cave.survey.service.bluetooth.BluetoothService;
 import com.astoev.cave.survey.service.ormlite.DatabaseHelper;
 
 import java.util.List;
@@ -26,6 +28,19 @@ public class HomeActivity extends MainMenuActivity {
     protected void onResume() {
         super.onResume();
         loadProjects();
+        prepareBT();
+    }
+
+    private void prepareBT() {
+        // BT protocol
+        Button btButton = (Button) findViewById(R.id.bt_setup_button);
+        if (!BluetoothService.isBluetoothSupported()) {
+            Log.w(Constants.LOG_TAG_UI, "Bluetooth not supported");
+            btButton.setEnabled(false);
+            btButton.setText(R.string.bt_not_supported);
+        } else {
+            btButton.setEnabled(true);
+        }
     }
 
     /**
@@ -90,6 +105,11 @@ public class HomeActivity extends MainMenuActivity {
             Log.e(Constants.LOG_TAG_UI, "Failed offer project", e);
             UIUtilities.showNotification(this, R.string.error);
         }
+    }
+
+    public void pairBtDevice(View aView) {
+        Intent intent = new Intent(this, BTActivity.class);
+        startActivity(intent);
     }
 
     public void newProjectOnClick(View view) {

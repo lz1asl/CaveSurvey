@@ -3,7 +3,7 @@ package com.astoev.cave.survey.activity.main;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
+import android.bluetooth.BluetoothServerSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -15,11 +15,14 @@ import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.service.bluetooth.BluetoothService;
+import org.apache.commons.io.IOUtils;
 
-import java.io.IOException;
+import java.io.DataInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -34,6 +37,7 @@ import java.util.UUID;
 public class BTActivity extends Activity {
 
     final List<BluetoothDevice> devices = new ArrayList<BluetoothDevice>();
+    boolean btRunning = true;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +82,11 @@ public class BTActivity extends Activity {
         mBluetoothAdapter.startDiscovery();
     }
 
+    public void disconnect(View aView) {
+        btRunning = false;
+        UIUtilities.showNotification(this, R.string.todo);
+    }
+
     private void refreshDevicesList() {
         TableLayout table = (TableLayout) findViewById(R.id.btDevices);
 
@@ -103,7 +112,7 @@ public class BTActivity extends Activity {
                         public void onReceive(Context context, Intent intent) {
                             UIUtilities.showNotification(BTActivity.this, R.string.bt_paired);
                         }
-                    } ,
+                    },
                             new IntentFilter(BluetoothDevice.ACTION_ACL_CONNECTED));
                     getApplicationContext().registerReceiver(new BroadcastReceiver() {
                         @Override
@@ -113,14 +122,38 @@ public class BTActivity extends Activity {
                     },
                             new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED));
 
+                    new Thread(){
+                        public void run() {
+                            try {
+                                UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
+//                                BluetoothSocket socket = device.createRfcommSocketToServiceRecord(MY_UUID);
+                                BluetoothServerSocket socket = mBluetoothAdapter.device.createRfcommSocketToServiceRecord(MY_UUID);
 
-                    try {
-                        UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
-                        BluetoothSocket socket = device.createRfcommSocketToServiceRecord(MY_UUID);
-                        socket.connect();
-                    } catch (IOException e) {
-                        UIUtilities.showNotification(BTActivity.this, "Connect failed");
-                    }
+                                socket.connect();
+
+                                Log.i(Constants.LOG_TAG_SERVICE, "Connected: " + socket.isConnected());
+                                InputStream in = null;
+                                try {
+                                    in = socket.getInputStream();
+                                    DataInputStream data = new DataInputStream(in);
+                                    while (btRunning) {
+                                        Thread.sleep(5);
+                                        Log.i(Constants.LOG_TAG_SERVICE, "|" + data.readChar() + "|");
+                                    }
+                                } finally {
+                                    IOUtils.closeQuietly(in);
+                                    socket.close();
+                                }
+
+                            } catch (Exception e) {
+                                UIUtilities.showNotification(BTActivity.this, "Connect failed");
+                            }
+
+                            Log.i(Constants.LOG_TAG_SERVICE, "End read thread");
+
+                        }
+                    }.start();
+
                 }
             });
             row.addView(pairButton);

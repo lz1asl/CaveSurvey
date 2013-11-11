@@ -28,7 +28,7 @@
         <Button android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:text="@string/bt_disconnect"
-                android:onClick=""
+                android:onClick="disconnect"
                 android:layout_gravity="center"/>
     </LinearLayout>
 

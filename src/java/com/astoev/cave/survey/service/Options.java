@@ -26,18 +26,25 @@ public class Options {
         }
     }
 
+
+
     public static Option getOption(String aCode) {
 
         try {
             QueryBuilder<Option, Integer> query = Workspace.getCurrentInstance().getDBHelper().getOptionsDao().queryBuilder();
             query.where().eq(Option.COLUMN_CODE, aCode);
+            query.where().eq(Option.COLUMN_PROJECT_ID, Workspace.getCurrentInstance().getActiveProject().getId());
 
-            return (Option) Workspace.getCurrentInstance().getDBHelper().getNoteDao().queryForFirst(query.prepare());
+            return (Option) Workspace.getCurrentInstance().getDBHelper().getOptionsDao().queryForFirst(query.prepare());
         } catch (SQLException e) {
             Log.e(Constants.LOG_TAG_DB, "Failed to get option " + aCode, e);
             return null;
         }
     }
 
+    public static void createOption(String aCode, String aValue) throws SQLException {
+        Option o = new Option(aCode, aValue, Workspace.getCurrentInstance().getActiveProject());
+        Workspace.getCurrentInstance().getDBHelper().getOptionsDao().create(o);
+    }
 
 }
