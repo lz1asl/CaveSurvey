@@ -9,6 +9,7 @@ About
 
 Preparing a cave map is a tough activity. For example if you want to map a gallery you usually pick reference points for the main polyline going trough that gallery. Between every two poins distance, angle and inclination is measured and on each one (and on any other more specific place) distance to the top, bottom and both sides is measured. Usually this is written to a paper sheet, later transformed in to Excel spreadsheet and processed with a variety of existing tools.
 Well, in real life this process is much harder and very error prone. CaveSurvey targets the process of collecting measures and tries to improve it.
+Contact us at cave.survey.project@gmail.com
 
 
 Goal
@@ -62,3 +63,10 @@ For iLDM-150 CEM have specified precision of 1.5mm for the distance and 0.5' fro
 For the Android build-in compass - you have to consult your device manifacturer, but if small and you use short legs there should be no problem (error will distribute and compensate anyway)
 
 If you are paranoic you can still use CaveSurvey in manual mode - type the proper values from the existing tools you use. It will save you the Excel work later.
+
+
+Links
+====
+
+Another Android app is Abris (https://play.google.com/store/apps/details?id=com.shturmsoft.abris&hl=en). They are already alive and have focus on creating the whole map underground. I have to admit they have done a great job, but I'm not confident in drawing stuff with muddy fingers.
+
