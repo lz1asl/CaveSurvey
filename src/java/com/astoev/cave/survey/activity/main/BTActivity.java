@@ -1,9 +1,8 @@
 package com.astoev.cave.survey.activity.main;
 
-import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothServerSocket;
+import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,12 +10,12 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
+import android.widget.Spinner;
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
+import com.astoev.cave.survey.activity.BaseActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.service.bluetooth.BluetoothService;
 import org.apache.commons.io.IOUtils;
@@ -34,52 +33,177 @@ import java.util.UUID;
  * Time: 10:31 AM
  * To change this template use File | Settings | File Templates.
  */
-public class BTActivity extends Activity {
+public class BTActivity extends BaseActivity {
 
     final List<BluetoothDevice> devices = new ArrayList<BluetoothDevice>();
     boolean btRunning = true;
+    BluetoothDevice mPairedDevice;
 
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.bluetooth);
+        try {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.bluetooth);
+
+            if (!BluetoothService.askBluetoothOn(this)) {
+                UIUtilities.showNotification(this, R.string.bt_not_on);
+                finish();
+                return;
+            }
+
+            Button pairButton = (Button) findViewById(R.id.bt_toggle_pair);
+            pairButton.setText(R.string.bt_pair);
+            pairButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Log.i(Constants.LOG_TAG_UI, "Toggle pair");
+                    // Cancel discovery because it's costly and we're about to connect
+                    BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+//                    mBluetoothAdapter.cancelDiscovery();
+
+                    getApplicationContext().registerReceiver(new BroadcastReceiver() {
+                        @Override
+                        public void onReceive(Context context, Intent intent) {
+                            try {
+                                UIUtilities.showNotification(BTActivity.this, R.string.bt_paired);
+                                Button toggle = (Button) findViewById(R.id.bt_toggle_pair);
+                                toggle.setText(R.string.bt_disconnect);
+
+                                Bundle extras = intent.getExtras();
+                                for (String k : extras.keySet()) {
+                                    Log.i(Constants.LOG_TAG_UI, "BT Extra: "+ extras.get(k).toString());
+                                }
+
+                                btRunning = true;
+
+                            } catch (Exception e) {
+                                Log.e(Constants.LOG_TAG_UI, "Failed during pair", e);
+                                UIUtilities.showNotification(BTActivity.this, R.string.error);
+                            }
+                        }
+                    },
+                            new IntentFilter(BluetoothDevice.ACTION_ACL_CONNECTED));
+                    getApplicationContext().registerReceiver(new BroadcastReceiver() {
+                        @Override
+                        public void onReceive(Context context, Intent intent) {
+                            try {
+                                UIUtilities.showNotification(BTActivity.this, R.string.bt_disconnect);
+                                Button toggle = (Button) findViewById(R.id.bt_toggle_pair);
+                                toggle.setText(R.string.bt_pair);
+                                btRunning = false;
+                            } catch (Exception e) {
+                                Log.e(Constants.LOG_TAG_UI, "Failed during disconnect", e);
+                                UIUtilities.showNotification(BTActivity.this, R.string.error);
+                            }
+                        }
+                    },
+                            new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED));
 
 
-        if (!BluetoothService.askBluetoothOn(this)) {
-            UIUtilities.showNotification(this, R.string.bt_not_on);
-            finish();
-            return;
+                    startCommunication();
+                }
+            });
+        } catch (Exception e) {
+            Log.e(Constants.LOG_TAG_UI, "Failed during create", e);
+            UIUtilities.showNotification(BTActivity.this, R.string.error);
         }
+    }
+
+    private void startCommunication() {
+                        new Thread(){
+                    public void run() {
+                        try {
+
+                            Log.i(Constants.LOG_TAG_UI, "Connect thread");
+
+
+                            while(!btRunning) {
+                                Log.i(Constants.LOG_TAG_UI, "wait");
+
+                                sleep(5000);
+                            }
+
+                            Log.i(Constants.LOG_TAG_UI, "Try connect");
+                            Spinner devicesChooser = (Spinner) findViewById(R.id.bt_devices);
+                            BluetoothDevice device = devices.get(devicesChooser.getSelectedItemPosition());
+                            BluetoothSocket socket = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(device.getAddress())
+                                    .createRfcommSocketToServiceRecord(UUID.randomUUID());
+
+//                                BluetoothServerSocket socket = mBluetoothAdapter.device.createRfcommSocketToServiceRecord(MY_UUID);
+
+                            socket.connect();
+
+                            Log.i(Constants.LOG_TAG_UI, "Connected: " + socket.isConnected());
+                            if (!socket.isConnected()) {
+                                Log.i(Constants.LOG_TAG_UI, "Failed to connect ");
+                                return;
+                            }
+                            InputStream in = null;
+                            try {
+                                in = socket.getInputStream();
+                                DataInputStream data = new DataInputStream(in);
+                                while (btRunning) {
+                                    Thread.sleep(2000);
+                                    Log.i(Constants.LOG_TAG_UI, "|" + data.readChar() + "|");
+                                }
+                            } finally {
+                                IOUtils.closeQuietly(in);
+                                socket.close();
+                            }
+                            Log.i(Constants.LOG_TAG_UI, "End read");
+
+                        }
+                        catch (Exception e) {
+                            Log.e(Constants.LOG_TAG_UI, "Failed during connect", e);
+                            UIUtilities.showNotification(BTActivity.this, "Connect failed");
+                        }
+
+                        Log.i(Constants.LOG_TAG_UI, "End read thread");
+                    }
+                }.start();
+
     }
 
     public void searchDevices(View aView) {
 //        ListView lv1 = (ListView) findViewById(R.id.myListView1);
 
-        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        try {
+            BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
 
-        final BroadcastReceiver mReceiver = new BroadcastReceiver() {
-            public void onReceive(Context context, Intent intent) {
-                String action = intent.getAction();
-                // When discovery finds a device
-                if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-                    // Get the BluetoothDevice object from the Intent
-                    BluetoothDevice device = intent.getParcelableExtra(
-                            BluetoothDevice.EXTRA_DEVICE);
-                    Log.i("BlueTooth Testing", device.getName() + "\n"
-                            + device.getAddress());
-                    if (!devices.contains(device)) {
-                        devices.add(device);
+            final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+                public void onReceive(Context context, Intent intent) {
+                    try {
+
+                        String action = intent.getAction();
+                        // When discovery finds a device
+                        if (BluetoothDevice.ACTION_FOUND.equals(action)) {
+                            // Get the BluetoothDevice object from the Intent
+                            BluetoothDevice device = intent.getParcelableExtra(
+                                    BluetoothDevice.EXTRA_DEVICE);
+                            Log.i("BlueTooth Testing", device.getName() + "\n"
+                                    + device.getAddress());
+                            if (!devices.contains(device)) {
+                                devices.add(device);
+                            }
+                            refreshDevicesList();
+                        }
+                    } catch (Exception e) {
+                        Log.e(Constants.LOG_TAG_UI, "Failed during receive", e);
+                        UIUtilities.showNotification(BTActivity.this, R.string.error);
                     }
-                    refreshDevicesList();
                 }
-            }
-        };
+            };
 
-        String aDiscoverable = BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE;
-        startActivityForResult(new Intent(aDiscoverable), 0);
-        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-        registerReceiver(mReceiver, filter);
-        mBluetoothAdapter.startDiscovery();
+            String aDiscoverable = BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE;
+            startActivityForResult(new Intent(aDiscoverable), 0);
+            IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+            registerReceiver(mReceiver, filter);
+            mBluetoothAdapter.startDiscovery();
+        } catch (Exception e) {
+            Log.e(Constants.LOG_TAG_UI, "Failed during search", e);
+            UIUtilities.showNotification(BTActivity.this, R.string.error);
+        }
     }
 
     public void disconnect(View aView) {
@@ -88,76 +212,24 @@ public class BTActivity extends Activity {
     }
 
     private void refreshDevicesList() {
-        TableLayout table = (TableLayout) findViewById(R.id.btDevices);
+        Spinner devicesChooser = (Spinner) findViewById(R.id.bt_devices);
 
-        table.removeAllViews();
+        List<String> devicesList = new ArrayList<String>();
         for (final BluetoothDevice device : devices) {
+            devicesList.add(device.getName() + " : " + device.getAddress());
+        }
 
-            TableRow row = new TableRow(BTActivity.this);
-            TextView label = new TextView(BTActivity.this);
-            label.setText(device.getName() + " : " + device.getAddress());
-            row.addView(label);
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, devicesList);
+        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        devicesChooser.setAdapter(spinnerArrayAdapter);
 
-            Button pairButton = new Button(this);
-            pairButton.setText(R.string.bt_pair);
-            pairButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // Cancel discovery because it's costly and we're about to connect
-                    BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-                    mBluetoothAdapter.cancelDiscovery();
+        Button toggle = (Button) findViewById(R.id.bt_toggle_pair);
+        if (devices.size() > 0) {
 
-                    getApplicationContext().registerReceiver(new BroadcastReceiver() {
-                        @Override
-                        public void onReceive(Context context, Intent intent) {
-                            UIUtilities.showNotification(BTActivity.this, R.string.bt_paired);
-                        }
-                    },
-                            new IntentFilter(BluetoothDevice.ACTION_ACL_CONNECTED));
-                    getApplicationContext().registerReceiver(new BroadcastReceiver() {
-                        @Override
-                        public void onReceive(Context context, Intent intent) {
-                            UIUtilities.showNotification(BTActivity.this, R.string.bt_disconnect);
-                        }
-                    },
-                            new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED));
-
-                    new Thread(){
-                        public void run() {
-                            try {
-                                UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
-//                                BluetoothSocket socket = device.createRfcommSocketToServiceRecord(MY_UUID);
-                                BluetoothServerSocket socket = mBluetoothAdapter.device.createRfcommSocketToServiceRecord(MY_UUID);
-
-                                socket.connect();
-
-                                Log.i(Constants.LOG_TAG_SERVICE, "Connected: " + socket.isConnected());
-                                InputStream in = null;
-                                try {
-                                    in = socket.getInputStream();
-                                    DataInputStream data = new DataInputStream(in);
-                                    while (btRunning) {
-                                        Thread.sleep(5);
-                                        Log.i(Constants.LOG_TAG_SERVICE, "|" + data.readChar() + "|");
-                                    }
-                                } finally {
-                                    IOUtils.closeQuietly(in);
-                                    socket.close();
-                                }
-
-                            } catch (Exception e) {
-                                UIUtilities.showNotification(BTActivity.this, "Connect failed");
-                            }
-
-                            Log.i(Constants.LOG_TAG_SERVICE, "End read thread");
-
-                        }
-                    }.start();
-
-                }
-            });
-            row.addView(pairButton);
-            table.addView(row);
+            toggle.setEnabled(true);
+        } else {
+            toggle.setEnabled(false);
         }
     }
+
 }

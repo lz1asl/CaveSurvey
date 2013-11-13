@@ -10,7 +10,7 @@ package com.astoev.cave.survey;
 public class Constants {
 
     public static final String LOG_TAG_DB = "DB";
-    public static final String LOG_TAG_UI = "UI";
+    public static final String LOG_TAG_UI = "CaveUI";
     public static final String LOG_TAG_SERVICE = "SRVC";
 
     public static final String DATE_FORMAT = "dd.MM.yyyy HH:mm:ss";

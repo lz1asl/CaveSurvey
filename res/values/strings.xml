@@ -61,7 +61,6 @@
 
     <!-- main menu -->
     <string name="menu_open">Open</string>
-    <string name="menu_export">Export</string>
     <string name="menu_help">Help</string>
     <string name="menu_exit">End</string>
 
@@ -160,6 +159,11 @@
 
 
     <string name="leg_to">to</string>
+
+    <!-- info -->
+    <string name="info_distance_in">Distance in </string>
+    <string name="info_azimuth_in">Azimuth in </string>
+    <string name="info_slope_in">Slope in </string>
 
 
     <!-- popup -->

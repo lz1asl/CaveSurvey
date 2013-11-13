@@ -90,6 +90,12 @@ public class InfoActivity extends BaseActivity {
             TextView projectNumPhotos = (TextView) findViewById(R.id.infoNumPhotos);
             projectNumPhotos.setText(StringUtils.intToLabel(numPhotos));
 
+
+            ((TextView)findViewById(R.id.infoDistanceIn)).setText(Options.getOptionValue(Option.CODE_DISTANCE_UNITS));
+            ((TextView)findViewById(R.id.infoAzimuthIn)).setText(Options.getOptionValue(Option.CODE_AZIMUTH_UNITS));
+            ((TextView)findViewById(R.id.infoSlopeIn)).setText(Options.getOptionValue(Option.CODE_SLOPE_UNITS));
+
+
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to render info activity", e);
             UIUtilities.showNotification(this, R.string.error);

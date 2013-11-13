@@ -128,6 +128,38 @@
                     android:id="@+id/infoRawDistance"/>
         </TableRow>
 
+        <!-- measures -->
+        <TableRow >
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/info_distance_in"/>
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/infoDistanceIn"/>
+        </TableRow>
+        <TableRow >
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/info_azimuth_in"/>
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/infoAzimuthIn"/>
+        </TableRow>
+        <TableRow >
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/info_slope_in"/>
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/infoSlopeIn"/>
+        </TableRow>
+
     </TableLayout>
 
     <Button android:layout_height="wrap_content"
