@@ -35,6 +35,7 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="junit" level="project" />
+    <orderEntry type="library" name="com.cem.client.Meterbox.iLDM.Digitech_1.0-dex2jar.src" level="application" />
   </component>
 </module>
 

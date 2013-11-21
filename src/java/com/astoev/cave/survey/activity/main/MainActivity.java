@@ -42,9 +42,10 @@ import java.util.concurrent.Callable;
  */
 public class MainActivity extends MainMenuActivity {
 
-    private static final int[] ADD_ITEM_LABELS = {R.string.main_add_leg,
-            R.string.main_add_branch,
-            R.string.main_add_middlepoint
+    private static final int[] ADD_ITEM_LABELS = {R.string.main_add_leg
+//            ,
+//            R.string.main_add_branch,
+//            R.string.main_add_middlepoint
 //            ,R.string.main_add_custom
     };
 

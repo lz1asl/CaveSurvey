@@ -128,6 +128,7 @@ public class HomeActivity extends MainMenuActivity {
                         Log.i(Constants.LOG_TAG_UI, "Exit app");
                         mWorkspace.clean();
                         HomeActivity.this.moveTaskToBack(true);
+                        System.exit(0);
                     }
                 })
                 .setNegativeButton(R.string.button_no, new DialogInterface.OnClickListener() {
