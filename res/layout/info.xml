@@ -166,6 +166,7 @@
             android:layout_width="wrap_content"
             android:text="@string/export_title"
             android:onClick="exportButton"
+            android:enabled="false"
             android:layout_margin="20dp" android:layout_gravity="right"/>
 
 </LinearLayout>

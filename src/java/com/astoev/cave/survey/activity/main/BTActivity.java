@@ -18,7 +18,6 @@ import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.BaseActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
-import com.astoev.cave.survey.service.bluetooth.BluetoothService;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
@@ -63,7 +62,9 @@ public class BTActivity extends BaseActivity {
             setContentView(R.layout.bluetooth);
 
             // BT disabled?
-            if (!BluetoothService.askBluetoothOn(this)) {
+//            if (!BluetoothService.askBluetoothOn(this)) {
+            if (true) {
+                Log.i(Constants.LOG_TAG_UI, "BT disabled");
                 UIUtilities.showNotification(this, R.string.bt_not_on);
                 finish();
                 return;

@@ -191,26 +191,26 @@ public class ExcelExport {
 
                 // TODO export GPS
 
-                QueryBuilder<Photo, Integer> queryBuilderPhoto = mWorkspace.getDBHelper().getPhotoDao().queryBuilder();
-                queryBuilderPhoto.where().eq(Sketch.COLUMN_POINT_ID, fromPoint.getId());
-                Photo existingPoint = (Photo) mWorkspace.getDBHelper().getPhotoDao().queryForFirst(queryBuilderPhoto.prepare());
-                if (null != existingPoint) {
-                    Log.i(Constants.LOG_TAG_SERVICE, "Exporting photo");
-                    saveJPEGResource(resourcesExportFolder, l, existingPoint.getPictureBytes());
-                    /*//add a picture shape
-                    ClientAnchor anchor = helper.createClientAnchor();
-
-                    int pictureIdx = wb.addPicture(existingPoint.getPictureBytes(), Workbook.PICTURE_TYPE_JPEG);
-
-                    //set top-left corner of the picture,
-                    //subsequent call of Picture#resize() will operate relative to it
-                    anchor.setCol1(13);
-                    anchor.setCol2(15);
-                    anchor.setRow1(rowCounter);
-                    anchor.setRow2(rowCounter + 3);
-                    drawingPatriarch.createPicture(anchor, pictureIdx);*/
-
-                }
+//                QueryBuilder<Photo, Integer> queryBuilderPhoto = mWorkspace.getDBHelper().getPhotoDao().queryBuilder();
+//                queryBuilderPhoto.where().eq(Sketch.COLUMN_POINT_ID, fromPoint.getId());
+//                Photo existingPoint = (Photo) mWorkspace.getDBHelper().getPhotoDao().queryForFirst(queryBuilderPhoto.prepare());
+//                if (null != existingPoint) {
+//                    Log.i(Constants.LOG_TAG_SERVICE, "Exporting photo");
+//                    saveJPEGResource(resourcesExportFolder, l, existingPoint.getPictureBytes());
+//                    /*//add a picture shape
+//                    ClientAnchor anchor = helper.createClientAnchor();
+//
+//                    int pictureIdx = wb.addPicture(existingPoint.getPictureBytes(), Workbook.PICTURE_TYPE_JPEG);
+//
+//                    //set top-left corner of the picture,
+//                    //subsequent call of Picture#resize() will operate relative to it
+//                    anchor.setCol1(13);
+//                    anchor.setCol2(15);
+//                    anchor.setRow1(rowCounter);
+//                    anchor.setRow2(rowCounter + 3);
+//                    drawingPatriarch.createPicture(anchor, pictureIdx);*/
+//
+//                }
             }
 
             out = new FileOutputStream(exportFile);
