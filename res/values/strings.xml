@@ -17,6 +17,7 @@
     <string name="new_title">New project</string>
     <string name="new_button_create">Create</string>
     <string name="new_project_name">Name:</string>
+    <string name="new_project_name_required">Enter name</string>
 
     <!-- load project popup -->
     <string name="load_title">Load Project</string>
@@ -101,8 +102,6 @@
     <string name="info_num_photos"># photos</string>
 
 
-
-
     <string name="export_title">Export</string>
     <string name="export_excel">Excel</string>
     <string name="export_calculate">Calculating...</string>
@@ -155,15 +154,17 @@
     <!-- about screen -->
     <string name="about_memo">Paperless survey app</string>
     <string name="about_paldin">http://sk-paldin.eu</string>
-    <string name="about_info">Station names convention :\nA1 -> A2 -> A3 : legs in gallery A\nA2 -> B1 : new gallery\nA2 -> A2.1 -> A2.2 : middle points</string>
+    <string name="about_info">Station names convention :\nA1 -> A2 -> A3 : legs in gallery A\nA2 -> B1 : new gallery\nA2
+        -> A2.1 -> A2.2 : middle points
+    </string>
 
 
     <string name="leg_to">to</string>
 
     <!-- info -->
-    <string name="info_distance_in">Distance in </string>
-    <string name="info_azimuth_in">Azimuth in </string>
-    <string name="info_slope_in">Slope in </string>
+    <string name="info_distance_in">Distance in</string>
+    <string name="info_azimuth_in">Azimuth in</string>
+    <string name="info_slope_in">Slope in</string>
 
 
     <!-- popup -->

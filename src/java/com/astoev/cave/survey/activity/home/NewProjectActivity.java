@@ -72,11 +72,17 @@ public class NewProjectActivity extends BaseActivity {
 
             EditText projectNameField = (EditText) findViewById(R.id.new_projectname);
             final String newProjectName = projectNameField.getText().toString();
+            if (newProjectName.trim().equals("")) {
+                projectNameField.setHint(R.string.new_project_name_required);
+                projectNameField.setError(getString(R.string.new_project_name_required));
+                return;
+            }
 
             //check existing
             List<Project> sameNameProjects = mWorkspace.getDBHelper().getProjectDao().queryForEq(Project.COLUMN_NAME, newProjectName);
             if (sameNameProjects.size() > 0) {
-                UIUtilities.showNotification(this, R.string.home_button_new_exists, newProjectName);
+                projectNameField.setHint(R.string.home_button_new_exists);
+                projectNameField.setError(getString(R.string.home_button_new_exists, newProjectName));
                 return;
             }
 
