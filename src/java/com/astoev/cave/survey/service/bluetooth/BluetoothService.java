@@ -2,6 +2,16 @@ package com.astoev.cave.survey.service.bluetooth;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.util.Log;
+import android.widget.Button;
+import com.astoev.cave.survey.Constants;
+import com.astoev.cave.survey.R;
+import com.astoev.cave.survey.activity.UIUtilities;
 
 /**
  * Created with IntelliJ IDEA.
@@ -11,6 +21,9 @@ import android.bluetooth.BluetoothAdapter;
  * To change this template use File | Settings | File Templates.
  */
 public class BluetoothService {
+
+    private static ConnectThread mBusyThread = null;
+    private static BluetoothDevice mCurrDevice = null;
 
     public static boolean isBluetoothSupported() {
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -25,24 +38,85 @@ public class BluetoothService {
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         if (!bluetoothAdapter.isEnabled()) {
-//                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-//                aParentActivity.startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-//            aParentActivity.onactivi
-             // TODO
-            /**
-             *  onActivityResult() implementation as the requestCode parameter.
-             If enabling Bluetooth succeeds, your activity receives the RESULT_OK result code in the onActivityResult() callback. If Bluetooth was not enabled due to an error (or the user responded "No") then the result code is RESULT_CANCELED.
-             Optionally, your application can also listen for the ACTION_STATE_CHANGED broadcast Intent, which the system will broadcast whenever the Bluetooth state has changed. This broadcast contains the extra fields EXTRA_STATE and EXTRA_PREVIOUS_STATE, containing the new and old Bluetooth states, respectively. Possible values for these extra fields are STATE_TURNING_ON, STATE_ON, STATE_TURNING_OFF, and STATE_OFF. Listening for this broadcast can be useful to detect changes made to the Bluetooth state while your app is running.
-             */
             return false;
         } else {
             return true;
         }
     }
 
-    public static void discoverDevices() {
+    public static void prepare(final Activity aContext) {
 
-//
-//
+        aContext.registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                try {
+                    UIUtilities.showNotification(aContext, R.string.bt_paired);
+                    Button toggle = (Button) aContext.findViewById(R.id.bt_toggle_pair);
+                    toggle.setText(R.string.bt_disconnect);
+                    Log.i(Constants.LOG_TAG_UI, "Paired with " + mCurrDevice);
+                } catch (Exception e) {
+                    Log.e(Constants.LOG_TAG_UI, "Failed during pair", e);
+                    UIUtilities.showNotification(aContext, R.string.error);
+                }
+            }
+        },
+                new IntentFilter(BluetoothDevice.ACTION_ACL_CONNECTED));
+        aContext.registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                try {
+                    UIUtilities.showNotification(aContext, R.string.bt_disconnect);
+                    Log.i(Constants.LOG_TAG_UI, "Disconnected");
+                    Button toggle = (Button) aContext.findViewById(R.id.bt_toggle_pair);
+                    toggle.setText(R.string.bt_pair);
+                    mCurrDevice = null;
+                    if (mBusyThread != null) {
+                        mBusyThread.cancel();
+                    }
+                } catch (Exception e) {
+                    Log.e(Constants.LOG_TAG_UI, "Failed during disconnect", e);
+                    UIUtilities.showNotification(aContext, R.string.error);
+                }
+            }
+        },
+                new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED));
+
     }
+
+    public static void sendCommand() {
+        new Thread() {
+            public void run() {
+                try {
+                    Log.i(Constants.LOG_TAG_UI, "Test command");
+                    mBusyThread = new ConnectThread(mCurrDevice);
+                    mBusyThread.sendMessage(getMessage());
+                    mBusyThread.start();
+                } catch (Exception e) {
+                    Log.e(Constants.LOG_TAG_UI, "Failed", e);
+                    if (mBusyThread != null) {
+                        mBusyThread.cancel();
+                    }
+                }
+
+            }
+        }.start();
+    }
+
+    public static void disconnect() {
+        if (mBusyThread != null) {
+            mBusyThread.cancel();
+        }
+        mCurrDevice = null;
+
+    }
+
+    public static void selectDevice(BluetoothDevice aDevice) {
+        mCurrDevice = aDevice;
+    }
+
+    private static byte[] getMessage() {
+        // read single measure
+        return ByteUtils.hexStringToByte("D5F0E00D");
+    }
+
 }
