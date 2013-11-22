@@ -109,10 +109,28 @@ public class PointActivity extends MainMenuActivity {
         }
     }
 
-
-    private void saveLeg() {
+    private boolean saveLeg() {
         try {
             Log.i(Constants.LOG_TAG_UI, "Saving leg");
+            // distance
+            EditText distance = (EditText) findViewById(R.id.point_distance);
+            if (distance.getText().toString().trim().equals("")) {
+                distance.setError(getString(R.string.required));
+                return false;
+            }
+            mLegEdited.setDistance(StringUtils.getFromEditTextNotNull(distance));
+
+            // compass
+            EditText azimuth = (EditText) findViewById(R.id.point_azimuth);
+            if (azimuth.getText().toString().trim().equals("")) {
+                azimuth.setError(getString(R.string.required));
+                return false;
+            }
+            mLegEdited.setAzimuth(checkAzimuth(azimuth));
+
+            // slope
+            EditText slope = (EditText) findViewById(R.id.point_slope);
+            mLegEdited.setSlope(StringUtils.getFromEditTextNotNull(slope));
 
             // up
             EditText up = (EditText) findViewById(R.id.point_up);
@@ -130,23 +148,12 @@ public class PointActivity extends MainMenuActivity {
             EditText right = (EditText) findViewById(R.id.point_right);
             mLegEdited.setRight(StringUtils.getFromEditTextNotNull(right));
 
-            // distance
-            EditText distance = (EditText) findViewById(R.id.point_distance);
-            mLegEdited.setDistance(StringUtils.getFromEditTextNotNull(distance));
-
-            // compass
-            EditText azimuth = (EditText) findViewById(R.id.point_azimuth);
-            mLegEdited.setAzimuth(checkAzimuth(azimuth));
-
-            // slope
-            EditText slope = (EditText) findViewById(R.id.point_slope);
-            mLegEdited.setSlope(StringUtils.getFromEditTextNotNull(slope));
-
             // save
             mWorkspace.getDBHelper().getLegDao().update(mLegEdited);
             UIUtilities.showNotification(this, R.string.todo);
 
             Log.i(Constants.LOG_TAG_UI, "Saved");
+            return true;
         } catch (DataException de) {
             Log.e(Constants.LOG_TAG_UI, "Leg not saved", de);
             String message = getString(R.string.popup_bad_input) + " : " + de.getMessage();
@@ -155,8 +162,8 @@ public class PointActivity extends MainMenuActivity {
             UIUtilities.showNotification(this, R.string.error);
             Log.e(Constants.LOG_TAG_UI, "Leg not saved", e);
         }
+        return false;
     }
-
 
     private Float checkAzimuth(EditText aEditText) throws DataException {
         Float azimuth = StringUtils.getFromEditTextNotNull(aEditText);
@@ -186,9 +193,10 @@ public class PointActivity extends MainMenuActivity {
     }
 
     public void saveButton(View view) {
-        saveLeg();
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
+        if (saveLeg()) {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        }
     }
 
     public void drawingButton(View view) {
@@ -237,7 +245,6 @@ public class PointActivity extends MainMenuActivity {
         startActivityForResult(intent, 1);
 
     }
-
 
     // photo is captured
     @Override

@@ -73,7 +73,6 @@ public class NewProjectActivity extends BaseActivity {
             EditText projectNameField = (EditText) findViewById(R.id.new_projectname);
             final String newProjectName = projectNameField.getText().toString();
             if (newProjectName.trim().equals("")) {
-                projectNameField.setHint(R.string.new_project_name_required);
                 projectNameField.setError(getString(R.string.new_project_name_required));
                 return;
             }
