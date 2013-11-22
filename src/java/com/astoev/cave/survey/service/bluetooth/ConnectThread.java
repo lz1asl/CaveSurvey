@@ -71,6 +71,14 @@ public class ConnectThread extends Thread {
             Log.i(Constants.LOG_TAG_UI, "Got bytes " + i);
             Log.i(Constants.LOG_TAG_UI, "Got bytes " + new String(buffer, 0, i));
 
+            Log.i(Constants.LOG_TAG_UI, "error code" + buffer[4]);
+            Log.i(Constants.LOG_TAG_UI, "rec mode" + buffer[5]);
+            Log.i(Constants.LOG_TAG_UI, "location" + buffer[6]);
+            Log.i(Constants.LOG_TAG_UI, "units " + new String[]{" ", "m", "in", "in+", "ft", "ft&in"}[buffer[7]]);
+
+            Log.i(Constants.LOG_TAG_UI, "real measure to go");
+
+
             sleep(100);
 
         } catch (Exception connectException) {
