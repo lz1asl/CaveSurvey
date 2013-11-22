@@ -20,7 +20,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -61,7 +60,7 @@ public class ExcelExport {
             Log.i(Constants.LOG_TAG_SERVICE, "Export folder created");
         }
         SimpleDateFormat dateFormat = new SimpleDateFormat(TIME_PATTERN);
-        String excelFileName = mWorkspace.getActiveProject().getName() + NAME_DELIMITER + dateFormat.format(new Date());
+        String excelFileName = mWorkspace.getActiveProject().getName() + NAME_DELIMITER;// + dateFormat.format(new Date());
         File exportFile = new File(saveFolder, excelFileName + EXCEL_FILE_EXTENSION);
         File resourcesExportFolder = new File(saveFolder, excelFileName);
         Log.i(Constants.LOG_TAG_SERVICE, "Start export to " + exportFile.getAbsolutePath());

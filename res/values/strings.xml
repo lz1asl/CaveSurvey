@@ -5,6 +5,7 @@
     <string name="app_name">CaveSurvey</string>
     <string name="button_yes">Yes</string>
     <string name="button_no">No</string>
+    <string name="required">Required</string>
 
     <!-- welcome screen -->
     <string name="home_select_project">Projects:</string>
