@@ -18,11 +18,10 @@ import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.MainMenuActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.activity.home.HomeActivity;
-import com.astoev.cave.survey.activity.map.opengl.Map3DActivity;
 import com.astoev.cave.survey.activity.map.MapActivity;
+import com.astoev.cave.survey.activity.map.opengl.Map3DActivity;
 import com.astoev.cave.survey.model.Gallery;
 import com.astoev.cave.survey.model.Leg;
-import com.astoev.cave.survey.model.Note;
 import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.util.PointUtil;
 import com.astoev.cave.survey.util.StringUtils;
@@ -105,7 +104,7 @@ public class MainActivity extends MainMenuActivity {
                 row.addView(createTextView(l.getDistance(), currentLeg, true));
                 row.addView(createTextView(l.getAzimuth(), currentLeg, true));
                 row.addView(createTextView(l.getSlope(), currentLeg, true));
-                row.addView(createTextView(l.getLeft(), currentLeg, true));
+                /*row.addView(createTextView(l.getLeft(), currentLeg, true));
                 row.addView(createTextView(l.getRight(), currentLeg, true));
                 row.addView(createTextView(l.getTop(), currentLeg, true));
                 row.addView(createTextView(l.getDown(), currentLeg, true));
@@ -121,7 +120,7 @@ public class MainActivity extends MainMenuActivity {
 
                 } else {
                     row.addView(createTextView((String) null, currentLeg, true));
-                }
+                }*/
 
                 table.addView(row);
             }

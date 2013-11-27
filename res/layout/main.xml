@@ -83,11 +83,11 @@
                     <TextView android:text="@string/main_table_header_distance" android:layout_margin="5dp"/>
                     <TextView android:text="@string/main_table_header_azimuth" android:layout_margin="5dp"/>
                     <TextView android:text="@string/main_table_header_slope" android:layout_margin="5dp"/>
-                    <TextView android:text="@string/main_table_header_left" android:layout_margin="5dp"/>
+                    <!--<TextView android:text="@string/main_table_header_left" android:layout_margin="5dp"/>
                     <TextView android:text="@string/main_table_header_right" android:layout_margin="5dp"/>
                     <TextView android:text="@string/main_table_header_up" android:layout_margin="5dp"/>
                     <TextView android:text="@string/main_table_header_down" android:layout_margin="5dp"/>
-                    <TextView android:text="@string/main_table_header_note" android:layout_margin="5dp"/>
+                    <TextView android:text="@string/main_table_header_note" android:layout_margin="5dp"/>-->
                 </TableRow>
             </TableLayout>
 
