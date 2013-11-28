@@ -61,11 +61,9 @@ public class BTActivity extends BaseActivity {
             Log.i(Constants.LOG_TAG_UI, "Pair");
             Spinner devicesChooser = (Spinner) findViewById(R.id.bt_devices);
             device = devices.get(devicesChooser.getSelectedItemPosition());
-            Log.i(Constants.LOG_TAG_UI, "Try connect to " + device.getName() + ":" + device.getAddress());
+            Log.i(Constants.LOG_TAG_UI, "Try to use " + device.getName() + ":" + device.getAddress());
             BluetoothService.selectDevice(device);
-            BluetoothService.sendCommand();
 
-            Log.i(Constants.LOG_TAG_UI, "Communication started");
         } else {
             Log.i(Constants.LOG_TAG_UI, "Disconnect ");
             BluetoothService.disconnect();

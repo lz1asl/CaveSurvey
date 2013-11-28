@@ -53,21 +53,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7cf6bb3e-ee39-4d83-887a-828115e83b6f" name="Default" comment="files pregenerated?">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libs/junit-4.9.jar" />
-      <change type="DELETED" beforePath="D:\MyWorkspace\Idea\Workspaces\CaveSurvey\.idea\libraries\junit.xml" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/main/BTActivity.java" afterPath="$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/main/BTActivity.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/com/astoev/cave/survey/service/bluetooth/BluetoothService.java" afterPath="$PROJECT_DIR$/src/java/com/astoev/cave/survey/service/bluetooth/BluetoothService.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gen/com/astoev/cave/survey/BuildConfig.java" afterPath="$PROJECT_DIR$/gen/com/astoev/cave/survey/BuildConfig.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CaveSurvey.iml" afterPath="$PROJECT_DIR$/CaveSurvey.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/com/astoev/cave/survey/service/bluetooth/ConnectThread.java" afterPath="$PROJECT_DIR$/src/java/com/astoev/cave/survey/service/bluetooth/ConnectThread.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gen/com/astoev/cave/survey/Manifest.java" afterPath="$PROJECT_DIR$/gen/com/astoev/cave/survey/Manifest.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/home/NewProjectActivity.java" afterPath="$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/home/NewProjectActivity.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/com/astoev/cave/survey/service/Options.java" afterPath="$PROJECT_DIR$/src/java/com/astoev/cave/survey/service/Options.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/main/PointActivity.java" afterPath="$PROJECT_DIR$/src/java/com/astoev/cave/survey/activity/main/PointActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gen/com/astoev/cave/survey/R.java" afterPath="$PROJECT_DIR$/gen/com/astoev/cave/survey/R.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/layout/point.xml" afterPath="$PROJECT_DIR$/res/layout/point.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/project.properties" afterPath="$PROJECT_DIR$/project.properties" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/values/strings.xml" afterPath="$PROJECT_DIR$/res/values/strings.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
@@ -102,7 +94,7 @@
     <file path="/AndroidManifest.xml" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1384291396314" ignored="false" />
     <file path="/Polyline.java" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1361785753289" ignored="false" />
     <file path="/BaseActivity.java" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1384288015817" ignored="false" />
-    <file path="/Dummy.txt" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1385674255462" ignored="false" />
+    <file path="/Dummy.txt" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1385674319131" ignored="false" />
     <file path="/map3D.xml" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1361786424806" ignored="false" />
     <file path="/map3d.xml" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1361786648275" ignored="false" />
     <file path="/Point2D.java" changelist="7cf6bb3e-ee39-4d83-887a-828115e83b6f" time="1366985497646" ignored="false" />
@@ -1531,7 +1523,11 @@
       <created>1385584507825</created>
       <updated>1385584507825</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="project config">
+      <created>1385674322671</created>
+      <updated>1385674322671</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TodoView" selected-index="3">
@@ -1629,7 +1625,7 @@
     <option name="WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN" value="false" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="hide up/down/left/right/note in main table" />
+    <option name="LAST_COMMIT_MESSAGE" value="project config" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -1643,7 +1639,6 @@
     <option name="UPDATE_FILTER_BY_SCOPE" value="false" />
     <option name="SHOW_FILE_HISTORY_AS_TREE" value="false" />
     <option name="FILE_HISTORY_SPLITTER_PROPORTION" value="0.6" />
-    <MESSAGE value="text formatting" />
     <MESSAGE value="UI formatting - main scroll, point view" />
     <MESSAGE value="next point - in a utiliti; will start with gallery index" />
     <MESSAGE value="single gallery editing working" />
@@ -1668,6 +1663,7 @@
     <MESSAGE value="refactor BTActivity to externalize service logic" />
     <MESSAGE value="dump some fields, discover real units" />
     <MESSAGE value="hide up/down/left/right/note in main table" />
+    <MESSAGE value="project config" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />

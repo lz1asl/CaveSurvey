@@ -187,6 +187,7 @@
     <string name="bt_paired">Paired</string>
     <string name="bt_disconnect">Disconnect</string>
     <string name="bt_not_supported">Bluetooth not supported</string>
+    <string name="bt_not_selected">Pair device?</string>
     <string name="bt_not_on">Bluetooth not turned on</string>
 
 </resources>

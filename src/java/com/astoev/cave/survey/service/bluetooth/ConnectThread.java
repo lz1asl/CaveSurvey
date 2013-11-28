@@ -23,6 +23,9 @@ import java.util.UUID;
 public class ConnectThread extends Thread {
 
     private static final String SPP_UUID = "00001101-0000-1000-8000-00805F9B34FB";
+    private static final int REC_MODE_PLUS = 9;
+    private static final int REC_MODE_MINUS = 10;
+
     private BluetoothSocket mSocket;
     private BluetoothDevice mDevice;
     private InputStream mIn;
@@ -73,10 +76,15 @@ public class ConnectThread extends Thread {
 
             Log.i(Constants.LOG_TAG_UI, "error code" + buffer[4]);
             Log.i(Constants.LOG_TAG_UI, "rec mode" + buffer[5]);
-            Log.i(Constants.LOG_TAG_UI, "location" + buffer[6]);
+            Log.i(Constants.LOG_TAG_UI, "measure location" + buffer[6]);
             Log.i(Constants.LOG_TAG_UI, "units " + new String[]{" ", "m", "in", "in+", "ft", "ft&in"}[buffer[7]]);
 
             Log.i(Constants.LOG_TAG_UI, "real measure to go");
+
+//            Log.i(Constants.LOG_TAG_UI, "line 1" + GetLineText(0));
+//            Log.i(Constants.LOG_TAG_UI, "line 1" + GetLineText(1));
+//            Log.i(Constants.LOG_TAG_UI, "line 1" + GetLineText(2));
+//            Log.i(Constants.LOG_TAG_UI, "line 1" + GetLineText(3));
 
 
             sleep(100);

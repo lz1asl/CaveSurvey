@@ -20,7 +20,7 @@
                       android:ems="4" android:layout_column="2"/>
             <TextView android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
-                        android:text="@string/point_up" android:layout_column="3"/>
+                      android:text="@string/point_up" android:layout_column="3"/>
 
         </TableRow>
         <TableRow android:layout_width="fill_parent" android:gravity="center">
@@ -98,7 +98,8 @@
                         android:layout_height="wrap_content"
                         android:text="@string/point_read"
                         android:onClick="readDistance"
-                        android:enabled="false"/>
+                        android:id="@+id/point_read_distance"
+                        android:visibility="invisible"/>
             </TableRow>
             <TableRow android:layout_width="wrap_content"
                       android:layout_height="wrap_content">
@@ -116,7 +117,7 @@
                         android:text="@string/point_read"
                         android:onClick="readAzimuth"
                         android:id="@+id/point_read_azimuth"
-                        android:enabled="false"/>
+                        android:visibility="invisible"/>
             </TableRow>
             <TableRow android:layout_width="wrap_content"
                       android:layout_height="wrap_content">
@@ -133,12 +134,11 @@
                         android:layout_height="wrap_content"
                         android:text="@string/point_read"
                         android:onClick="readSlope"
-                        android:enabled="false"/>
+                        android:visibility="invisible"/>
             </TableRow>
         </TableLayout>
 
     </RelativeLayout>
-
 
 
     <TableLayout android:layout_width="fill_parent"

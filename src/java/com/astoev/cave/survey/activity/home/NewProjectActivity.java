@@ -111,6 +111,8 @@ public class NewProjectActivity extends BaseActivity {
                             // first leg
                             Leg firstLeg = new Leg(startPoint, secondPoint, newProject, firstGalleryId);
                             mWorkspace.getDBHelper().getLegDao().create(firstLeg);
+                            mWorkspace.setActiveLegId(firstLeg.getId());
+
 
                             // project units
 
@@ -182,8 +184,6 @@ public class NewProjectActivity extends BaseActivity {
                     });
 
             if (project != null) {
-                mWorkspace.setActiveProject(project);
-
                 Intent intent = new Intent(NewProjectActivity.this, PointActivity.class);
                 mWorkspace.setActiveLegId(mWorkspace.getActiveOrFirstLeg().getId());
                 intent.putExtra(Constants.LEG_SELECTED, mWorkspace.getActiveLegId());

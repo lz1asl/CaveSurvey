@@ -34,6 +34,10 @@ public class BluetoothService {
         return true;
     }
 
+    public static boolean isDeviceSelected() {
+        return mCurrDevice != null;
+    }
+
     public static boolean askBluetoothOn(Activity aParentActivity) {
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
@@ -83,13 +87,13 @@ public class BluetoothService {
 
     }
 
-    public static void sendCommand() {
+    public static void sendReadDistanceCommand() {
         new Thread() {
             public void run() {
                 try {
                     Log.i(Constants.LOG_TAG_UI, "Test command");
                     mBusyThread = new ConnectThread(mCurrDevice);
-                    mBusyThread.sendMessage(getMessage());
+                    mBusyThread.sendMessage(getReadDistanceMessage());
                     mBusyThread.start();
                 } catch (Exception e) {
                     Log.e(Constants.LOG_TAG_UI, "Failed", e);
@@ -97,7 +101,6 @@ public class BluetoothService {
                         mBusyThread.cancel();
                     }
                 }
-
             }
         }.start();
     }
@@ -114,8 +117,8 @@ public class BluetoothService {
         mCurrDevice = aDevice;
     }
 
-    private static byte[] getMessage() {
-        // read single measure
+    // read single measure
+    private static byte[] getReadDistanceMessage() {
         return ByteUtils.hexStringToByte("D5F0E00D");
     }
 

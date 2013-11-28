@@ -1,5 +1,7 @@
 package com.astoev.cave.survey.activity.main;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -7,6 +9,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import com.astoev.cave.survey.Constants;
@@ -20,11 +23,16 @@ import com.astoev.cave.survey.model.Option;
 import com.astoev.cave.survey.model.Photo;
 import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.service.Options;
+import com.astoev.cave.survey.service.Workspace;
+import com.astoev.cave.survey.service.bluetooth.BluetoothService;
 import com.astoev.cave.survey.util.StringUtils;
+import com.j256.ormlite.stmt.QueryBuilder;
 import org.apache.commons.io.IOUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.sql.SQLException;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -42,18 +50,50 @@ public class PointActivity extends MainMenuActivity {
         setContentView(R.layout.point);
 
         loadPointData();
+
+        setReadButtons();
+    }
+
+    private void setReadButtons() {
+        Log.i(Constants.LOG_TAG_UI, "Projext " + Workspace.getCurrentInstance().getActiveProject().getName());
+
+        try {
+            QueryBuilder<Option, Integer> query = Workspace.getCurrentInstance().getDBHelper().getOptionsDao().queryBuilder();
+            query.where().eq(Option.COLUMN_PROJECT_ID, Workspace.getCurrentInstance().getActiveProject().getId());
+
+            List<Option> options = Workspace.getCurrentInstance().getDBHelper().getOptionsDao().query(query.prepare());
+            for (Option o : options) {
+                Log.i(Constants.LOG_TAG_UI, "Option " + o.getCode() + " : " + o.getValue());
+            }
+        } catch (SQLException e) {
+            Log.e(Constants.LOG_TAG_UI, "options failed ", e);
+        }
+
+        Log.i(Constants.LOG_TAG_UI, "Option-------- " + Options.getOptionValue(Option.CODE_DISTANCE_SENSOR));
+
+        if (!BluetoothService.isBluetoothSupported()) {
+//        if (Option.CODE_SENSOR_BLUETOOTH.equals(Options.getOptionValue(Option.CODE_DISTANCE_SENSOR))) {
+            Button readDistanceButton = (Button) findViewById(R.id.point_read_distance);
+            readDistanceButton.setVisibility(Button.VISIBLE);
+//        }
+        }
+
+
+        // TODO rest of the buttons
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
         loadPointData();
+        setReadButtons();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         loadPointData();
+        setReadButtons();
     }
 
     private void loadPointData() {
@@ -106,6 +146,8 @@ public class PointActivity extends MainMenuActivity {
     private void setNotNull(EditText aEditText, Float aValue) {
         if (aValue != null) {
             aEditText.setText(StringUtils.floatToLabel(aValue));
+        } else {
+            aEditText.setText("");
         }
     }
 
@@ -215,8 +257,36 @@ public class PointActivity extends MainMenuActivity {
     }
 
     public void readDistance(View view) {
-        // TODO
-        UIUtilities.showNotification(this, R.string.todo);
+        if (!ensureDeviceSelected()) {
+            return;
+        }
+
+        BluetoothService.sendReadDistanceCommand();
+        Log.i(Constants.LOG_TAG_UI, "Command sent");
+    }
+
+    private boolean ensureDeviceSelected() {
+        if (BluetoothService.isDeviceSelected()) {
+            return true;
+        }
+
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        dialogBuilder.setMessage(R.string.bt_not_selected)
+                .setCancelable(false)
+                .setPositiveButton(R.string.button_yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Intent intent = new Intent(PointActivity.this, BTActivity.class);
+                        startActivity(intent);
+                    }
+                })
+                .setNegativeButton(R.string.button_no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alert = dialogBuilder.create();
+        alert.show();
+        return false;
     }
 
     public void readAzimuth(View view) {
