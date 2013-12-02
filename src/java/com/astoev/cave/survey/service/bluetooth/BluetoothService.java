@@ -92,6 +92,9 @@ public class BluetoothService {
             public void run() {
                 try {
                     Log.i(Constants.LOG_TAG_UI, "Test command");
+                    if (mBusyThread != null) {
+                        mBusyThread.cancel();
+                    }
                     mBusyThread = new ConnectThread(mCurrDevice);
                     mBusyThread.sendMessage(getReadDistanceMessage());
                     mBusyThread.start();
