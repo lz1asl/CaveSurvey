@@ -81,11 +81,36 @@ public class ConnectThread extends Thread {
 
             Log.i(Constants.LOG_TAG_UI, "real measure to go");
 
-//            Log.i(Constants.LOG_TAG_UI, "line 1" + GetLineText(0));
-//            Log.i(Constants.LOG_TAG_UI, "line 1" + GetLineText(1));
-//            Log.i(Constants.LOG_TAG_UI, "line 1" + GetLineText(2));
-//            Log.i(Constants.LOG_TAG_UI, "line 1" + GetLineText(3));
+            for (int j = 7; j < i; j++) {
+                Log.i(Constants.LOG_TAG_UI, "Byte " + j + " " + buffer[j]);
+                Log.i(Constants.LOG_TAG_UI, "Byte " + j + " " + (256 + buffer[j]) % 256);
+            }
 
+            for (int j = 0; j < 4; j++) {
+                Log.i(Constants.LOG_TAG_UI, "Measure " + j + " " +
+                        (0xFF000000 & buffer[(8 + j * 4)] << 24
+                                | 0xFF0000 & buffer[(9 + j * 4)] << 16
+                                | 0xFF00 & buffer[(10 + j * 4)] << 8
+                                | 0xFF & buffer[(11 + j * 4)]));
+
+            }
+
+           /* if (paramString.equals("°"))
+            {
+                double d7 = paramInt / 10.0D;
+                Object[] arrayOfObject14 = new Object[1];
+                arrayOfObject14[0] = Double.valueOf(d7);
+                return String.format("%.1f", arrayOfObject14);
+            }*/
+
+
+            /*if ((paramString.equals("m")) || (paramString.equals("m²")) || (paramString.equals("m³")))
+            {
+                double d2 = paramInt / 1000.0D;
+                Object[] arrayOfObject9 = new Object[1];
+                arrayOfObject9[0] = Double.valueOf(d2);
+                return String.format("%.3f", arrayOfObject9);
+            }*/
 
             sleep(100);
 
