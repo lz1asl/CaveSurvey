@@ -99,7 +99,7 @@
                         android:text="@string/point_read"
                         android:onClick="readDistance"
                         android:id="@+id/point_read_distance"
-                        android:visibility="invisible"/>
+                        />
             </TableRow>
             <TableRow android:layout_width="wrap_content"
                       android:layout_height="wrap_content">
