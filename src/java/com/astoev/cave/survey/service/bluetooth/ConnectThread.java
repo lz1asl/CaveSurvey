@@ -25,7 +25,6 @@ public class ConnectThread extends Thread {
     private static final String SPP_UUID = "00001101-0000-1000-8000-00805F9B34FB";
     private static final int REC_MODE_PLUS = 9;
     private static final int REC_MODE_MINUS = 10;
-
     private BluetoothSocket mSocket;
     private BluetoothDevice mDevice;
     private InputStream mIn;
@@ -63,61 +62,63 @@ public class ConnectThread extends Thread {
 
         byte[] buffer = new byte[1024];
         Log.i(Constants.LOG_TAG_UI, "Start reading ");
-//            while (running) {
-        try {
-            int i = mIn.read(buffer);
-//                    if (i == -1) {
-//                        // nothing from the stream
-//                        break;
-//                    }
+        while (running) {
+            try {
+                int i = mIn.read(buffer);
 
-            Log.i(Constants.LOG_TAG_UI, "Got bytes " + i);
-            Log.i(Constants.LOG_TAG_UI, "Got bytes " + new String(buffer, 0, i));
 
-            Log.i(Constants.LOG_TAG_UI, "error code" + buffer[4]);
-            Log.i(Constants.LOG_TAG_UI, "rec mode" + buffer[5]);
-            Log.i(Constants.LOG_TAG_UI, "measure location" + buffer[6]);
-            Log.i(Constants.LOG_TAG_UI, "units " + new String[]{" ", "m", "in", "in+", "ft", "ft&in"}[buffer[7]]);
+                if (i < 25) {
+                    Log.i(Constants.LOG_TAG_UI, "Got bytes " + i);
+                    break;
+                }
 
-            Log.i(Constants.LOG_TAG_UI, "real measure to go");
+                if (buffer[24] != 13) {
+                    Log.i(Constants.LOG_TAG_UI, "Data validation failed ");
+                    break;
+                }
 
-            for (int j = 7; j < i; j++) {
-                Log.i(Constants.LOG_TAG_UI, "Byte " + j + " " + buffer[j]);
-                Log.i(Constants.LOG_TAG_UI, "Byte " + j + " " + (256 + buffer[j]) % 256);
+                if (buffer[4] != 0) {
+                    Log.i(Constants.LOG_TAG_UI, "error code" + buffer[4]);
+                    break;
+                }
+                Log.i(Constants.LOG_TAG_UI, "rec mode" + buffer[5]);
+                // 2 from bottom of the devise, 1 from top of the devise
+//                Log.i(Constants.LOG_TAG_UI, "measure location" + buffer[6]);
+
+                Log.d(Constants.LOG_TAG_UI, "units " + new String[]{" ", "m", "in", "in+", "ft", "ft&in"}[buffer[7]]);
+                if (1 != buffer[7]) {
+                    Log.i(Constants.LOG_TAG_UI, "Please measure in meters!");
+                    break;
+                }
+
+                for (int j = 0; j < 4; j++) {
+                    float measure = (0xFF000000 & buffer[(8 + j * 4)] << 24
+                            | 0xFF0000 & buffer[(9 + j * 4)] << 16
+                            | 0xFF00 & buffer[(10 + j * 4)] << 8
+                            | 0xFF & buffer[(11 + j * 4)]);
+                    if (j == 0 && measure > -26843545) {
+                        Log.i(Constants.LOG_TAG_UI, "Got angle " + measure / 10);
+                    }
+
+                    if (j == 2 && measure > -26843545) {
+                        Log.i(Constants.LOG_TAG_UI, "Got distance " + measure / 1000);
+                    }
+
+                }
+
+                sleep(20);
+
+
+            } catch (Exception connectException) {
+                Log.e(Constants.LOG_TAG_UI, "Error client connect", connectException);
+                break;
             }
-
-            for (int j = 0; j < 4; j++) {
-                Log.i(Constants.LOG_TAG_UI, "Measure " + j + " " +
-                        (0xFF000000 & buffer[(8 + j * 4)] << 24
-                                | 0xFF0000 & buffer[(9 + j * 4)] << 16
-                                | 0xFF00 & buffer[(10 + j * 4)] << 8
-                                | 0xFF & buffer[(11 + j * 4)]));
-
+            try {
+                sleep(100);
+            } catch (InterruptedException e) {
+                Log.e(Constants.LOG_TAG_UI, "Error client sleep", e);
             }
-
-           /* if (paramString.equals("°"))
-            {
-                double d7 = paramInt / 10.0D;
-                Object[] arrayOfObject14 = new Object[1];
-                arrayOfObject14[0] = Double.valueOf(d7);
-                return String.format("%.1f", arrayOfObject14);
-            }*/
-
-
-            /*if ((paramString.equals("m")) || (paramString.equals("m²")) || (paramString.equals("m³")))
-            {
-                double d2 = paramInt / 1000.0D;
-                Object[] arrayOfObject9 = new Object[1];
-                arrayOfObject9[0] = Double.valueOf(d2);
-                return String.format("%.3f", arrayOfObject9);
-            }*/
-
-            sleep(100);
-
-        } catch (Exception connectException) {
-            Log.e(Constants.LOG_TAG_UI, "Error client connect", connectException);
         }
-//            }
 
         Log.i(Constants.LOG_TAG_UI, "End client");
     }
@@ -125,10 +126,11 @@ public class ConnectThread extends Thread {
     public void cancel() {
         try {
             Log.i(Constants.LOG_TAG_UI, "Cancel client");
+            running = false;
             if (mSocket != null) {
-                if (mSocket.isConnected()) {
-                    mSocket.close();
-                }
+//                if (mSocket.isConnected()) {
+                mSocket.close();
+//                }
             }
             IOUtils.closeQuietly(mIn);
             IOUtils.closeQuietly(mOut);
