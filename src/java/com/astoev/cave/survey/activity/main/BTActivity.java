@@ -16,6 +16,7 @@ import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.BaseActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
+import com.astoev.cave.survey.activity.home.HomeActivity;
 import com.astoev.cave.survey.service.bluetooth.BluetoothService;
 
 import java.util.ArrayList;
@@ -63,6 +64,10 @@ public class BTActivity extends BaseActivity {
             device = devices.get(devicesChooser.getSelectedItemPosition());
             Log.i(Constants.LOG_TAG_UI, "Try to use " + device.getName() + ":" + device.getAddress());
             BluetoothService.selectDevice(device);
+
+            // no need to stay here
+            Intent intent = new Intent(this, HomeActivity.class);
+            startActivity(intent);
 
         } else {
             Log.i(Constants.LOG_TAG_UI, "Disconnect ");
