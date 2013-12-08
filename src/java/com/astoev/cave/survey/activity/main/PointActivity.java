@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.ResultReceiver;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -39,10 +41,53 @@ import java.io.FileInputStream;
 public class PointActivity extends MainMenuActivity {
 
     private Leg mLegEdited;
+    private ResultReceiver receiver = new ResultReceiver(new Handler()) {
 
-    private static enum Measure {distance, slope, angle, up, down, left, right}
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+            float aMeasure = resultData.getFloat("result");
+            Constants.Measures type = Constants.Measures.valueOf(resultData.getString("type"));
+            switch (type) {
+                case distance:
+                    Log.i(Constants.LOG_TAG_UI, "Got distance " + aMeasure);
+                    populateMeasure(aMeasure, R.id.point_distance);
+                    break;
 
-    ;
+                case angle:
+                    Log.i(Constants.LOG_TAG_UI, "Got angle " + aMeasure);
+                    populateMeasure(aMeasure, R.id.point_azimuth);
+                    break;
+
+                case slope:
+                    Log.i(Constants.LOG_TAG_UI, "Got slope " + aMeasure);
+                    populateMeasure(aMeasure, R.id.point_slope);
+                    break;
+
+                case up:
+                    Log.i(Constants.LOG_TAG_UI, "Got up " + aMeasure);
+                    populateMeasure(aMeasure, R.id.point_up);
+                    break;
+
+                case down:
+                    Log.i(Constants.LOG_TAG_UI, "Got down " + aMeasure);
+                    populateMeasure(aMeasure, R.id.point_down);
+                    break;
+
+                case left:
+                    Log.i(Constants.LOG_TAG_UI, "Got left " + aMeasure);
+                    populateMeasure(aMeasure, R.id.point_left);
+                    break;
+
+                case right:
+                    Log.i(Constants.LOG_TAG_UI, "Got right " + aMeasure);
+                    populateMeasure(aMeasure, R.id.point_right);
+                    break;
+
+                default:
+                    Log.i(Constants.LOG_TAG_UI, "Ignore type " + type);
+            }
+        }
+    };
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,38 +123,38 @@ public class PointActivity extends MainMenuActivity {
             // up
             EditText up = (EditText) findViewById(R.id.point_up);
             setNotNull(up, mLegEdited.getTop());
-            addOnClickListener(up, Measure.up);
+            addOnClickListener(up, Constants.Measures.up);
 
             // down
             EditText down = (EditText) findViewById(R.id.point_down);
             setNotNull(down, mLegEdited.getDown());
-            addOnClickListener(down, Measure.down);
+            addOnClickListener(down, Constants.Measures.down);
 
             // left
             EditText left = (EditText) findViewById(R.id.point_left);
             setNotNull(left, mLegEdited.getLeft());
-            addOnClickListener(left, Measure.left);
+            addOnClickListener(left, Constants.Measures.left);
 
             // right
             EditText right = (EditText) findViewById(R.id.point_right);
             setNotNull(right, mLegEdited.getRight());
-            addOnClickListener(right, Measure.right);
+            addOnClickListener(right, Constants.Measures.right);
 
             // distance
             EditText distance = (EditText) findViewById(R.id.point_distance);
             setNotNull(distance, mLegEdited.getDistance());
-            addOnClickListener(distance, Measure.distance);
+            addOnClickListener(distance, Constants.Measures.distance);
 
             // azimuth
             EditText azimuth = (EditText) findViewById(R.id.point_azimuth);
             setNotNull(azimuth, mLegEdited.getAzimuth());
-            addOnClickListener(azimuth, Measure.angle);
+            addOnClickListener(azimuth, Constants.Measures.angle);
 
             // slope
             EditText slope = (EditText) findViewById(R.id.point_slope);
             slope.setText("0");
             setNotNull(slope, mLegEdited.getSlope());
-            addOnClickListener(slope, Measure.slope);
+            addOnClickListener(slope, Constants.Measures.slope);
 
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to render point", e);
@@ -117,7 +162,7 @@ public class PointActivity extends MainMenuActivity {
         }
     }
 
-    private void addOnClickListener(EditText text, final Measure aMeasure) {
+    private void addOnClickListener(EditText text, final Constants.Measures aMeasure) {
 
         if (BluetoothService.isBluetoothSupported()) {
 
@@ -154,7 +199,7 @@ public class PointActivity extends MainMenuActivity {
         text.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startListening(aMeasure);
+                triggerBluetoothMeasure(aMeasure);
             }
         });
     }
@@ -272,55 +317,10 @@ public class PointActivity extends MainMenuActivity {
         UIUtilities.showNotification(this, R.string.todo);
     }
 
-    private void startListening(Measure aMeasure) {
-        // register listeners
-        // TODO
-        // send command
-        BluetoothService.sendReadDistanceCommand();
+    private void triggerBluetoothMeasure(Constants.Measures aMeasure) {
+        // register listeners & send command
+        BluetoothService.sendReadDistanceCommand(receiver, aMeasure);
         Log.i(Constants.LOG_TAG_UI, "Command sent for " + aMeasure);
-    }
-
-    // TODO call from BTService on message received
-    private void receiveMeasure(float aMeasure, Measure aType) {
-        switch (aType) {
-            case distance:
-                Log.i(Constants.LOG_TAG_UI, "Got distance " + aMeasure);
-                populateMeasure(aMeasure, R.id.point_distance);
-                break;
-
-            case angle:
-                Log.i(Constants.LOG_TAG_UI, "Got angle " + aMeasure);
-                populateMeasure(aMeasure, R.id.point_azimuth);
-                break;
-
-            case slope:
-                Log.i(Constants.LOG_TAG_UI, "Got slope " + aMeasure);
-                populateMeasure(aMeasure, R.id.point_slope);
-                break;
-
-            case up:
-                Log.i(Constants.LOG_TAG_UI, "Got up " + aMeasure);
-                populateMeasure(aMeasure, R.id.point_up);
-                break;
-
-            case down:
-                Log.i(Constants.LOG_TAG_UI, "Got down " + aMeasure);
-                populateMeasure(aMeasure, R.id.point_down);
-                break;
-
-            case left:
-                Log.i(Constants.LOG_TAG_UI, "Got left " + aMeasure);
-                populateMeasure(aMeasure, R.id.point_left);
-                break;
-
-            case right:
-                Log.i(Constants.LOG_TAG_UI, "Got right " + aMeasure);
-                populateMeasure(aMeasure, R.id.point_right);
-                break;
-
-            default:
-                Log.i(Constants.LOG_TAG_UI, "Ignore type " + aType);
-        }
     }
 
     private void populateMeasure(float aMeasure, int anEditTextId) {
@@ -415,6 +415,5 @@ public class PointActivity extends MainMenuActivity {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
-
 
 }

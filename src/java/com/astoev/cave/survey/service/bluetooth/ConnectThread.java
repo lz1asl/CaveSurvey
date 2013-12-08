@@ -4,6 +4,8 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.os.Build;
+import android.os.Bundle;
+import android.os.ResultReceiver;
 import android.util.Log;
 import com.astoev.cave.survey.Constants;
 import org.apache.commons.io.IOUtils;
@@ -30,6 +32,9 @@ public class ConnectThread extends Thread {
     private InputStream mIn;
     private OutputStream mOut;
     private boolean running = true;
+    private ResultReceiver mReceiver = null;
+    private Constants.Measures mMeasure = null;
+
 
     public ConnectThread(BluetoothDevice device) throws IOException {
         mDevice = device;
@@ -98,16 +103,22 @@ public class ConnectThread extends Thread {
                             | 0xFF & buffer[(11 + j * 4)]);
                     if (j == 0 && measure > -26843545) {
                         Log.i(Constants.LOG_TAG_UI, "Got angle " + measure / 10);
+                        Bundle b = new Bundle();
+                        b.putFloat("result", measure / 10);
+                        b.putString("type", Constants.Measures.angle.toString());
+                        mReceiver.send(0, b);
                     }
 
                     if (j == 2 && measure > -26843545) {
                         Log.i(Constants.LOG_TAG_UI, "Got distance " + measure / 1000);
+                        Bundle b = new Bundle();
+                        b.putFloat("result", measure / 1000);
+                        b.putString("type", mMeasure.toString());
+                        mReceiver.send(0, b);
                     }
-
                 }
 
                 sleep(20);
-
 
             } catch (Exception connectException) {
                 Log.e(Constants.LOG_TAG_UI, "Error client connect", connectException);
@@ -137,5 +148,13 @@ public class ConnectThread extends Thread {
         } catch (IOException e) {
             Log.i(Constants.LOG_TAG_UI, "Error cancel client");
         }
+    }
+
+    public void setReceiver(ResultReceiver aReceiver) {
+        this.mReceiver = aReceiver;
+    }
+
+    public void setMeasure(Constants.Measures measure) {
+        this.mMeasure = measure;
     }
 }

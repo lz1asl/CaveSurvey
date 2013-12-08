@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.ResultReceiver;
 import android.util.Log;
 import android.widget.Button;
 import com.astoev.cave.survey.Constants;
@@ -87,7 +88,7 @@ public class BluetoothService {
 
     }
 
-    public static void sendReadDistanceCommand() {
+    public static void sendReadDistanceCommand(final ResultReceiver receiver, final Constants.Measures aMeasure) {
         new Thread() {
             public void run() {
                 try {
@@ -96,6 +97,8 @@ public class BluetoothService {
                         mBusyThread.cancel();
                     }
                     mBusyThread = new ConnectThread(mCurrDevice);
+                    mBusyThread.setReceiver(receiver);
+                    mBusyThread.setMeasure(aMeasure);
                     mBusyThread.sendMessage(getReadDistanceMessage());
                     mBusyThread.start();
                 } catch (Exception e) {
@@ -120,7 +123,7 @@ public class BluetoothService {
         mCurrDevice = aDevice;
     }
 
-    // read single measure
+    // read single measure command
     private static byte[] getReadDistanceMessage() {
         return ByteUtils.hexStringToByte("D5F0E00D");
     }

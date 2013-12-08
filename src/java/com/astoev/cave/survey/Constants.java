@@ -16,4 +16,6 @@ public class Constants {
     public static final String DATE_FORMAT = "dd.MM.yyyy HH:mm:ss";
 
     public static final String LEG_SELECTED = "leg";
+
+    public static enum Measures {distance, slope, angle, up, down, left, right}
 }
