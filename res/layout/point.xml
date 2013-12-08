@@ -94,12 +94,6 @@
                           android:ems="5">
                     <requestFocus/>
                 </EditText>
-                <Button android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/point_read"
-                        android:onClick="readDistance"
-                        android:id="@+id/point_read_distance"
-                        />
             </TableRow>
             <TableRow android:layout_width="wrap_content"
                       android:layout_height="wrap_content">
@@ -112,12 +106,6 @@
                           android:numeric="decimal"
                           android:maxLength="10"
                           android:ems="5"/>
-                <Button android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/point_read"
-                        android:onClick="readAzimuth"
-                        android:id="@+id/point_read_azimuth"
-                        android:visibility="invisible"/>
             </TableRow>
             <TableRow android:layout_width="wrap_content"
                       android:layout_height="wrap_content">
@@ -130,11 +118,6 @@
                           android:numeric="decimal"
                           android:maxLength="10"
                           android:ems="5"/>
-                <Button android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/point_read"
-                        android:onClick="readSlope"
-                        android:visibility="invisible"/>
             </TableRow>
         </TableLayout>
 

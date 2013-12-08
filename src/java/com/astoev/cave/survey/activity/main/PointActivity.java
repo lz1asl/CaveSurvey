@@ -9,7 +9,6 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import com.astoev.cave.survey.Constants;
@@ -23,16 +22,12 @@ import com.astoev.cave.survey.model.Option;
 import com.astoev.cave.survey.model.Photo;
 import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.service.Options;
-import com.astoev.cave.survey.service.Workspace;
 import com.astoev.cave.survey.service.bluetooth.BluetoothService;
 import com.astoev.cave.survey.util.StringUtils;
-import com.j256.ormlite.stmt.QueryBuilder;
 import org.apache.commons.io.IOUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.sql.SQLException;
-import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -45,55 +40,27 @@ public class PointActivity extends MainMenuActivity {
 
     private Leg mLegEdited;
 
+    private static enum Measure {distance, slope, angle, up, down, left, right}
+
+    ;
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.point);
 
         loadPointData();
-
-        setReadButtons();
-    }
-
-    private void setReadButtons() {
-        Log.i(Constants.LOG_TAG_UI, "Projext " + Workspace.getCurrentInstance().getActiveProject().getName());
-
-        try {
-            QueryBuilder<Option, Integer> query = Workspace.getCurrentInstance().getDBHelper().getOptionsDao().queryBuilder();
-            query.where().eq(Option.COLUMN_PROJECT_ID, Workspace.getCurrentInstance().getActiveProject().getId());
-
-            List<Option> options = Workspace.getCurrentInstance().getDBHelper().getOptionsDao().query(query.prepare());
-            for (Option o : options) {
-                Log.i(Constants.LOG_TAG_UI, "Option " + o.getCode() + " : " + o.getValue());
-            }
-        } catch (SQLException e) {
-            Log.e(Constants.LOG_TAG_UI, "options failed ", e);
-        }
-
-        Log.i(Constants.LOG_TAG_UI, "Option-------- " + Options.getOptionValue(Option.CODE_DISTANCE_SENSOR));
-
-        if (!BluetoothService.isBluetoothSupported()) {
-//        if (Option.CODE_SENSOR_BLUETOOTH.equals(Options.getOptionValue(Option.CODE_DISTANCE_SENSOR))) {
-            Button readDistanceButton = (Button) findViewById(R.id.point_read_distance);
-            readDistanceButton.setVisibility(Button.VISIBLE);
-//        }
-        }
-
-
-        // TODO rest of the buttons
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
         loadPointData();
-        setReadButtons();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         loadPointData();
-        setReadButtons();
     }
 
     private void loadPointData() {
@@ -111,36 +78,85 @@ public class PointActivity extends MainMenuActivity {
             // up
             EditText up = (EditText) findViewById(R.id.point_up);
             setNotNull(up, mLegEdited.getTop());
+            addOnClickListener(up, Measure.up);
 
             // down
             EditText down = (EditText) findViewById(R.id.point_down);
             setNotNull(down, mLegEdited.getDown());
+            addOnClickListener(down, Measure.down);
 
             // left
             EditText left = (EditText) findViewById(R.id.point_left);
             setNotNull(left, mLegEdited.getLeft());
+            addOnClickListener(left, Measure.left);
 
             // right
             EditText right = (EditText) findViewById(R.id.point_right);
             setNotNull(right, mLegEdited.getRight());
+            addOnClickListener(right, Measure.right);
 
             // distance
             EditText distance = (EditText) findViewById(R.id.point_distance);
             setNotNull(distance, mLegEdited.getDistance());
+            addOnClickListener(distance, Measure.distance);
 
             // azimuth
             EditText azimuth = (EditText) findViewById(R.id.point_azimuth);
             setNotNull(azimuth, mLegEdited.getAzimuth());
+            addOnClickListener(azimuth, Measure.angle);
 
             // slope
             EditText slope = (EditText) findViewById(R.id.point_slope);
             slope.setText("0");
             setNotNull(slope, mLegEdited.getSlope());
+            addOnClickListener(slope, Measure.slope);
 
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to render point", e);
             UIUtilities.showNotification(this, R.string.error);
         }
+    }
+
+    private void addOnClickListener(EditText text, final Measure aMeasure) {
+
+        if (BluetoothService.isBluetoothSupported()) {
+
+            if (!ensureDeviceSelected()) {
+                return;
+            }
+
+            switch (aMeasure) {
+                case distance:
+                case up:
+                case down:
+                case left:
+                case right:
+                    if (!Option.CODE_SENSOR_BLUETOOTH.equals(Options.getOptionValue(Option.CODE_DISTANCE_SENSOR))) {
+                        return;
+                    }
+                    break;
+
+                case angle:
+                    if (!Option.CODE_SENSOR_BLUETOOTH.equals(Options.getOptionValue(Option.CODE_AZIMUTH_SENSOR))) {
+                        return;
+                    }
+                    break;
+
+                case slope:
+                    if (!Option.CODE_SENSOR_BLUETOOTH.equals(Options.getOptionValue(Option.CODE_SLOPE_SENSOR))) {
+                        return;
+                    }
+                    break;
+            }
+        }
+
+        // supported for the measure, add the listener
+        text.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startListening(aMeasure);
+            }
+        });
     }
 
     private void setNotNull(EditText aEditText, Float aValue) {
@@ -256,13 +272,60 @@ public class PointActivity extends MainMenuActivity {
         UIUtilities.showNotification(this, R.string.todo);
     }
 
-    public void readDistance(View view) {
-        if (!ensureDeviceSelected()) {
-            return;
-        }
-
+    private void startListening(Measure aMeasure) {
+        // register listeners
+        // TODO
+        // send command
         BluetoothService.sendReadDistanceCommand();
-        Log.i(Constants.LOG_TAG_UI, "Command sent");
+        Log.i(Constants.LOG_TAG_UI, "Command sent for " + aMeasure);
+    }
+
+    // TODO call from BTService on message received
+    private void receiveMeasure(float aMeasure, Measure aType) {
+        switch (aType) {
+            case distance:
+                Log.i(Constants.LOG_TAG_UI, "Got distance " + aMeasure);
+                populateMeasure(aMeasure, R.id.point_distance);
+                break;
+
+            case angle:
+                Log.i(Constants.LOG_TAG_UI, "Got angle " + aMeasure);
+                populateMeasure(aMeasure, R.id.point_azimuth);
+                break;
+
+            case slope:
+                Log.i(Constants.LOG_TAG_UI, "Got slope " + aMeasure);
+                populateMeasure(aMeasure, R.id.point_slope);
+                break;
+
+            case up:
+                Log.i(Constants.LOG_TAG_UI, "Got up " + aMeasure);
+                populateMeasure(aMeasure, R.id.point_up);
+                break;
+
+            case down:
+                Log.i(Constants.LOG_TAG_UI, "Got down " + aMeasure);
+                populateMeasure(aMeasure, R.id.point_down);
+                break;
+
+            case left:
+                Log.i(Constants.LOG_TAG_UI, "Got left " + aMeasure);
+                populateMeasure(aMeasure, R.id.point_left);
+                break;
+
+            case right:
+                Log.i(Constants.LOG_TAG_UI, "Got right " + aMeasure);
+                populateMeasure(aMeasure, R.id.point_right);
+                break;
+
+            default:
+                Log.i(Constants.LOG_TAG_UI, "Ignore type " + aType);
+        }
+    }
+
+    private void populateMeasure(float aMeasure, int anEditTextId) {
+        EditText up = (EditText) findViewById(anEditTextId);
+        setNotNull(up, aMeasure);
     }
 
     private boolean ensureDeviceSelected() {
@@ -352,4 +415,6 @@ public class PointActivity extends MainMenuActivity {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
+
+
 }
