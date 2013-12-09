@@ -19,7 +19,6 @@ public class Option implements Serializable {
     public static final String CODE_AZIMUTH_UNITS = "azimuth";
     public static final String CODE_SLOPE_UNITS = "slope";
 
-    public static final String CODE_MEASURE_MODE = "distance_sensor";
     public static final String CODE_AZIMUTH_SENSOR = "azimuth_sensor";
     public static final String CODE_SLOPE_SENSOR = "slope_sensor";
     public static final String CODE_DISTANCE_SENSOR = "distance_sensor";
