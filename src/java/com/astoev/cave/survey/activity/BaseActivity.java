@@ -19,24 +19,25 @@ public abstract class BaseActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-    	this.onCreate(savedInstanceState, true);
-    }
-    
-    /**
-     * onCreate method with flag to show or hide the action bar
-     * 
-     * @param savedInstanceState - saved instance
-     * @param useActionBar	     - flag to show or hide the action bar
-     */
-    protected void onCreate(Bundle savedInstanceState, boolean useActionBar) {
         Log.i(Constants.LOG_TAG_UI, "Creating activity " + this.getClass().getName());
 
         super.onCreate(savedInstanceState);
-        
-        if (!useActionBar){
-        	getSupportActionBar().hide();
-        }
-
     }
+    
+//    /**
+//     * onCreate method with flag to show or hide the action bar
+//     * 
+//     * @param savedInstanceState - saved instance
+//     * @param useActionBar	     - flag to show or hide the action bar
+//     */
+//    protected void onCreate(Bundle savedInstanceState, boolean useActionBar) {
+//        Log.i(Constants.LOG_TAG_UI, "Creating activity " + this.getClass().getName());
+//
+//        super.onCreate(savedInstanceState);
+//        
+//        if (!useActionBar){
+//        	getSupportActionBar().hide();
+//        }
+//    }
 
 }

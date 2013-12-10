@@ -22,7 +22,7 @@
         <activity android:name=".activity.main.OptionsActivity"/>
         <activity android:name=".activity.main.InfoActivity"/>
         <activity android:name=".activity.main.NoteActivity"/>
-        <activity android:name=".activity.map.MapActivity"/>
+        <activity android:name=".activity.map.MapActivity" android:theme="@style/NoActionBar"/>
         <activity android:name=".activity.home.NewProjectActivity"/>
         <activity android:name=".activity.draw.DrawingActivity"/>
         <activity android:name=".activity.main.PointActivity"/>
