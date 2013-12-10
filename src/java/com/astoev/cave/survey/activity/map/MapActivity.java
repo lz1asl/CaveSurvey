@@ -19,7 +19,9 @@ public class MapActivity extends MainMenuActivity implements View.OnTouchListene
     MapView map;
 
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    	// do not need the action bar to save some space
+        super.onCreate(savedInstanceState, false);
+        
         setContentView(R.layout.map);
         map = (MapView) findViewById(R.id.mapSurface);
         map.setOnTouchListener(this);
