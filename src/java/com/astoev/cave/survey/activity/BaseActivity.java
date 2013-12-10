@@ -23,9 +23,9 @@ public abstract class BaseActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         Log.i(Constants.LOG_TAG_UI, "Creating activity " + this.getClass().getName());
 
-        TextView title = (TextView) findViewById(android.R.id.title);
-        title.setTextColor(Color.BLACK);
-        title.setBackgroundColor(Color.YELLOW);
+//        TextView title = (TextView) findViewById(android.R.id.title);
+//        title.setTextColor(Color.BLACK);
+//        title.setBackgroundColor(Color.YELLOW);
 
         super.onCreate(savedInstanceState);
     }
