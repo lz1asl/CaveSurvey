@@ -58,7 +58,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7cf6bb3e-ee39-4d83-887a-828115e83b6f" name="Default" comment="go to home activity after BT devise is selected">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.gitignore" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/.name" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/ant.xml" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/codeStyleSettings.xml" afterPath="" />
@@ -76,6 +75,7 @@
       <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gen/com/astoev/cave/survey/BuildConfig.java" afterPath="$PROJECT_DIR$/gen/com/astoev/cave/survey/BuildConfig.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CaveSurvey.iml" afterPath="$PROJECT_DIR$/CaveSurvey.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/com/astoev/cave/survey/service/Workspace.java" afterPath="$PROJECT_DIR$/src/java/com/astoev/cave/survey/service/Workspace.java" />
@@ -342,7 +342,7 @@
       <file leaf-file-name="pom.xml" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="30" column="105" selection-start="1255" selection-end="1255" vertical-scroll-proportion="0.49196142" vertical-offset="357" max-vertical-offset="2465">
+            <state line="22" column="105" selection-start="955" selection-end="955" vertical-scroll-proportion="0.05466238" vertical-offset="357" max-vertical-offset="2465">
               <folding />
             </state>
           </provider>
@@ -1261,7 +1261,15 @@
       <created>1386624554285</created>
       <updated>1386624554285</updated>
     </task>
-    <option name="localTasksCounter" value="31" />
+    <task id="LOCAL-00031" summary="remove Intellij project files">
+      <created>1386707071295</created>
+      <updated>1386707071295</updated>
+    </task>
+    <task id="LOCAL-00032" summary="excllude eclipse project files">
+      <created>1386707170588</created>
+      <updated>1386707170588</updated>
+    </task>
+    <option name="localTasksCounter" value="33" />
     <servers />
   </component>
   <component name="TodoView" selected-index="3">
@@ -1299,6 +1307,7 @@
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.58059704" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.38699186" sideWeight="0.72727275" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.35772356" sideWeight="0.6363636" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.14477612" sideWeight="0.4941435" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.20468278" sideWeight="0.21787709" order="2" side_tool="true" content_ui="tabs" />
@@ -1314,7 +1323,6 @@
       <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2219662" sideWeight="0.9666081" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.47317073" sideWeight="0.48636365" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.38699186" sideWeight="0.72727275" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Android Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32840723" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Android Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.51965815" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
@@ -1335,8 +1343,6 @@
     <option name="myTodoPanelSettings">
       <TodoPanelSettings />
     </option>
-    <MESSAGE value="preparing azimuth progress dialog" />
-    <MESSAGE value="unnone" />
     <MESSAGE value="move to cloudbees" />
     <MESSAGE value="get to the list of legs on back (fresh project)" />
     <MESSAGE value="improve new project screen - validate empty name, vertical scroll" />
@@ -1360,7 +1366,9 @@
     <MESSAGE value="library versions updated" />
     <MESSAGE value="new config with idea 13" />
     <MESSAGE value="fix wrong option" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix wrong option" />
+    <MESSAGE value="remove Intellij project files" />
+    <MESSAGE value="excllude eclipse project files" />
+    <option name="LAST_COMMIT_MESSAGE" value="excllude eclipse project files" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
@@ -1697,7 +1705,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="30" column="105" selection-start="1255" selection-end="1255" vertical-scroll-proportion="0.49196142" vertical-offset="357" max-vertical-offset="2465">
+        <state line="22" column="105" selection-start="955" selection-end="955" vertical-scroll-proportion="0.05466238" vertical-offset="357" max-vertical-offset="2465">
           <folding />
         </state>
       </provider>
