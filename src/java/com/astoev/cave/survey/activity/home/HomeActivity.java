@@ -5,9 +5,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.*;
+import android.widget.AdapterView.OnItemClickListener;
+
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.MainMenuActivity;
@@ -23,7 +24,7 @@ import java.util.List;
 public class HomeActivity extends MainMenuActivity {
 
     private static boolean isFirstEntry;
-
+    
     @Override
     protected void onResume() {
         super.onResume();
@@ -63,44 +64,45 @@ public class HomeActivity extends MainMenuActivity {
     private void loadProjects() {
         try {
 
-            ScrollView projectsContainer = (ScrollView) findViewById(R.id.homeProjects);
-            projectsContainer.removeAllViews();
-            final List<Project> projects = mWorkspace.getDBHelper().getProjectDao().queryForAll();
+            ListView projectsContainer = (ListView) findViewById(R.id.homeProjects);
+            
+            final List<Project> projectsList = mWorkspace.getDBHelper().getProjectDao().queryForAll();
+            
+            if (projectsList.size() > 0) {
+                Project[] projectsArray = new Project[projectsList.size()];
+                projectsArray = projectsList.toArray(projectsArray);
+            	
+                // populate the projects in the list using adapter
+            	ArrayAdapter<Project> projectsAdapter = new ArrayAdapter<Project>(this, android.R.layout.simple_list_item_1, projectsArray);
+            	projectsContainer.setAdapter(projectsAdapter);
+            	
+            	// item clicked listener
+            	OnItemClickListener projectClickedListener = new OnItemClickListener() {
 
-            if (projects.size() > 0) {
-                TableLayout projectsTable = new TableLayout(this);
-                projectsContainer.addView(projectsTable);
-                for (final Project p : projects) {
-                    TableRow projectRow = new TableRow(this);
+					@Override
+					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                    TextView projectName = new TextView(this);
-                    projectName.setText(p.getName());
+						Project project = (Project)parent.getAdapter().getItem(position);
+						
+                        Log.i(Constants.LOG_TAG_UI, "Selected project " + project.getId());
+                        mWorkspace.setActiveProject(project);
 
-                    projectRow.addView(projectName);
-                    projectsTable.addView(projectRow);
-
-                    Button openProjectButton = new Button(this);
-                    openProjectButton.setText(R.string.home_button_open_project);
-                    openProjectButton.setGravity(Gravity.RIGHT);
-
-                    projectRow.addView(openProjectButton);
-                    openProjectButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Log.i(Constants.LOG_TAG_UI, "Selected project " + p.getId());
-                            mWorkspace.setActiveProject(p);
-
-                            Intent intent = new Intent(HomeActivity.this, MainActivity.class);
-                            startActivity(intent);
-                        }
-                    });
-                }
+                        Intent intent = new Intent(HomeActivity.this, MainActivity.class);
+                        startActivity(intent);
+					}
+				};
+				
+            	projectsContainer.setOnItemClickListener(projectClickedListener);
+            	
             } else {
-                TextView noProjectsLabel = new TextView(this);
-                noProjectsLabel.setText(R.string.home_no_projects);
+            	// no projects - show "No projects" label
+            	String[] value = {getResources().getString(R.string.home_no_projects)};
+            	ArrayAdapter<String> noprojectsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, value);
+            	projectsContainer.setAdapter(noprojectsAdapter);
 
-                projectsContainer.addView(noProjectsLabel);
+                projectsContainer.setAdapter(noprojectsAdapter);
             }
+
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed offer project", e);
             UIUtilities.showNotification(this, R.string.error);

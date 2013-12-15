@@ -73,4 +73,13 @@ public class Project {
         SimpleDateFormat df = new SimpleDateFormat(Constants.DATE_FORMAT);
         return df.format(mCreationDate);
     }
+
+    /**
+     * Returns only the name of the project as we use it inside ArrayAdapter for ListView 
+     */
+	@Override
+	public String toString() {
+		return getName();
+	}
+    
 }
