@@ -20,10 +20,38 @@ import com.astoev.cave.survey.activity.home.HomeActivity;
  */
 public class MainMenuActivity extends BaseActivity {
 
+	/** Constant that shows that there is no child menu item */
+	protected static int NO_CHILD_MENU_ITEMS = 0;
+	
+	/**
+	 * Defines the child activity's additional menu items
+	 * 
+	 * @return menu resource id
+	 */
+	protected int getChildsOptionsMenu(){
+		return NO_CHILD_MENU_ITEMS;
+	}
+	
+	/**
+	 * Helper method that defines if the child class will define its additional menu items
+	 * 
+	 * @return true if the child activity defines its additional menu items
+	 */
+	protected boolean hasChildOptionsMenu(){
+		return true;
+	}
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         Log.d(Constants.LOG_TAG_UI, "Creating main menu");
-        new MenuInflater(this).inflate(R.menu.mainmenu, menu);
+        
+        MenuInflater menuInflater = getMenuInflater();
+        
+        if (hasChildOptionsMenu() && getChildsOptionsMenu() != NO_CHILD_MENU_ITEMS){
+        	menuInflater.inflate(getChildsOptionsMenu(), menu);
+        }
+        
+        menuInflater.inflate(R.menu.mainmenu, menu);
 
         return (super.onCreateOptionsMenu(menu));
     }

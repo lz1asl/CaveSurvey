@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
@@ -21,6 +22,11 @@ import com.astoev.cave.survey.service.ormlite.DatabaseHelper;
 
 import java.util.List;
 
+/**
+ * 
+ * @author astoev
+ * @author jmitrev
+ */
 public class HomeActivity extends MainMenuActivity {
 
     private static boolean isFirstEntry;
@@ -29,20 +35,20 @@ public class HomeActivity extends MainMenuActivity {
     protected void onResume() {
         super.onResume();
         loadProjects();
-        prepareBT();
+//        prepareBT();
     }
 
-    private void prepareBT() {
-        // BT protocol
-        Button btButton = (Button) findViewById(R.id.bt_setup_button);
-        if (!BluetoothService.isBluetoothSupported()) {
-            Log.w(Constants.LOG_TAG_UI, "Bluetooth not supported");
-            btButton.setEnabled(false);
-            btButton.setText(R.string.bt_not_supported);
-        } else {
-            btButton.setEnabled(true);
-        }
-    }
+//    private void prepareBT() {
+//        // BT protocol
+//        Button btButton = (Button) findViewById(R.id.bt_setup_button);
+//        if (!BluetoothService.isBluetoothSupported()) {
+//            Log.w(Constants.LOG_TAG_UI, "Bluetooth not supported");
+//            btButton.setEnabled(false);
+//            btButton.setText(R.string.bt_not_supported);
+//        } else {
+//            btButton.setEnabled(true);
+//        }
+//    }
 
     /**
      * Called when the activity is first created.
@@ -60,8 +66,42 @@ public class HomeActivity extends MainMenuActivity {
 
         loadProjects();
     }
+    
+//    @Override
+//	public boolean onCreateOptionsMenu(Menu menu) {
+//    	Log.d(Constants.LOG_TAG_UI, "Creating home menu");
+//    	MenuInflater menuInflater = getMenuInflater();
+//    	menuInflater.inflate(R.menu.homemenu, menu);
+//    	
+//		return super.onCreateOptionsMenu(menu); 
+//	}
 
-    private void loadProjects() {
+	/**
+	 * @see com.astoev.cave.survey.activity.MainMenuActivity#getChildsOptionsMenu()
+	 */
+	@Override
+	protected int getChildsOptionsMenu() {
+		return R.menu.homemenu;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		Log.i(Constants.LOG_TAG_UI, "Home menu selected - " + item.toString());
+		switch (item.getItemId()) {
+		case R.id.action_new_project:{
+			newProjectOnClick();
+			return true;
+		}
+		case R.id.action_setup_bt : {
+			pairBtDevice();
+			return true;
+		}
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	private void loadProjects() {
         try {
 
             ListView projectsContainer = (ListView) findViewById(R.id.homeProjects);
@@ -109,12 +149,18 @@ public class HomeActivity extends MainMenuActivity {
         }
     }
 
-    public void pairBtDevice(View aView) {
+    /**
+     * Action method that handles click on "Bluetooth device"  button
+     */
+    private void pairBtDevice() {
         Intent intent = new Intent(this, BTActivity.class);
         startActivity(intent);
     }
 
-    public void newProjectOnClick(View view) {
+    /**
+     * Action method that handles click on Add new project button
+     */
+    private void newProjectOnClick() {
         Log.i(Constants.LOG_TAG_UI, "New project");
         Intent intent = new Intent(this, NewProjectActivity.class);
         startActivity(intent);

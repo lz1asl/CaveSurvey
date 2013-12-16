@@ -10,7 +10,7 @@
     <!-- welcome screen -->
     <string name="home_select_project">Projects:</string>
     <string name="home_no_projects">No projects yet!</string>
-    <string name="home_button_new">+</string>
+    <string name="home_new_project">New project</string>
     <string name="home_button_open_project">&gt;</string>
     <string name="home_button_new_exists">Project %1$s exists!</string>
 

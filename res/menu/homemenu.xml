@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:myapp="http://schemas.android.com/apk/res-auto">
+      
+	<item android:id="@+id/action_new_project"
+	      android:icon="@drawable/ic_action_new"
+	      android:title="@string/home_new_project"
+	      android:visible="true"
+	      myapp:showAsAction="ifRoom|withText" />
+	
+	<item android:id="@+id/action_setup_bt"
+	      android:icon="@drawable/ic_action_bluetooth_searching"
+	      android:title="@string/bt_title"
+	      android:visible="true"
+	      myapp:showAsAction="ifRoom|withText"/>
+    
+</menu>
