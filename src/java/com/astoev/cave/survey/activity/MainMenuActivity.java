@@ -33,6 +33,15 @@ public class MainMenuActivity extends BaseActivity {
 	}
 	
 	/**
+	 * Helper method that determines if the base menu should be shown
+	 * 
+	 * @return true if should be shown otherwise false
+	 */
+	protected boolean showBaseOptionsMenu(){
+		return true;
+	}
+	
+	/**
 	 * Helper method that defines if the child class will define its additional menu items
 	 * 
 	 * @return true if the child activity defines its additional menu items
@@ -50,8 +59,9 @@ public class MainMenuActivity extends BaseActivity {
         if (hasChildOptionsMenu() && getChildsOptionsMenu() != NO_CHILD_MENU_ITEMS){
         	menuInflater.inflate(getChildsOptionsMenu(), menu);
         }
-        
-        menuInflater.inflate(R.menu.basemenu, menu);
+        if (showBaseOptionsMenu()){
+        	menuInflater.inflate(R.menu.basemenu, menu);
+        }
 
         return (super.onCreateOptionsMenu(menu));
     }

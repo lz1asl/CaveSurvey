@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:myapp="http://schemas.android.com/apk/res-auto">
+      
+	<item android:id="@+id/note_action_save"
+	      android:icon="@drawable/ic_action_save"
+	      android:title="@string/point_save"
+	      android:visible="true"
+	      myapp:showAsAction="ifRoom|withText"/>
+      
+</menu>

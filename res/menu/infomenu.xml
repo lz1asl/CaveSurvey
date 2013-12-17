@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:myapp="http://schemas.android.com/apk/res-auto">
+      
+	<item android:id="@+id/info_action_export"
+	      android:icon="@drawable/ic_action_import_export"
+	      android:title="@string/export_title"
+	      android:visible="true"
+	      myapp:showAsAction="ifRoom|withText"/>
+      
+</menu>    

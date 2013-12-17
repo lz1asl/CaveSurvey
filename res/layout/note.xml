@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="fill_parent"
               android:layout_height="fill_parent" android:orientation="vertical">
@@ -10,13 +9,14 @@
 
     <EditText android:id="@+id/note_text" android:maxLength="20" android:inputType="text" android:lines="1"
               android:layout_width="fill_parent"
-              android:layout_height="wrap_content"
+              android:layout_height="0dip"
               android:gravity="center_horizontal"
               android:layout_weight="1"/>
-
+<!-- TODO after migrate to Action bar -->    
+<!-- 
     <Button android:text="@string/note_save" android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:onClick="saveNote"/>
-
+ -->
 </LinearLayout>

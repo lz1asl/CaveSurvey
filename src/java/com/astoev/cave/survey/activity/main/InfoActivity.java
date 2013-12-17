@@ -2,11 +2,12 @@ package com.astoev.cave.survey.activity.main;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
-import com.astoev.cave.survey.activity.BaseActivity;
+import com.astoev.cave.survey.activity.MainMenuActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.model.*;
 import com.astoev.cave.survey.service.Options;
@@ -23,7 +24,7 @@ import java.util.List;
  * Time: 11:37 AM
  * To change this template use File | Settings | File Templates.
  */
-public class InfoActivity extends BaseActivity {
+public class InfoActivity extends MainMenuActivity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,6 +103,7 @@ public class InfoActivity extends BaseActivity {
         }
     }
 
+    //TODO remove View attribute after migration to ActionBar
     public void exportButton(View aView) {
 
         try {
@@ -128,4 +130,28 @@ public class InfoActivity extends BaseActivity {
         }
     }
 
+	/**
+	 * @see com.astoev.cave.survey.activity.MainMenuActivity#getChildsOptionsMenu()
+	 */
+	@Override
+	protected int getChildsOptionsMenu() {
+		return R.menu.infomenu;
+	}
+
+	/**
+	 * @see com.astoev.cave.survey.activity.MainMenuActivity#onOptionsItemSelected(android.view.MenuItem)
+	 */
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		Log.i(Constants.LOG_TAG_UI, "Info activity's menu selected - " + item.toString());
+		
+		switch (item.getItemId()) {
+			case R.id.info_action_export:{
+				exportButton(null);
+				return true;
+			}
+			default:
+				return super.onOptionsItemSelected(item);
+		}		
+	}
 }

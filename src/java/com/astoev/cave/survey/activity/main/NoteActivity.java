@@ -3,11 +3,12 @@ package com.astoev.cave.survey.activity.main;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
-import com.astoev.cave.survey.activity.BaseActivity;
+import com.astoev.cave.survey.activity.MainMenuActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Note;
@@ -22,7 +23,7 @@ import java.util.concurrent.Callable;
  * Time: 3:50 AM
  * To change this template use File | Settings | File Templates.
  */
-public class NoteActivity extends BaseActivity {
+public class NoteActivity extends MainMenuActivity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +50,7 @@ public class NoteActivity extends BaseActivity {
         }
     }
 
+    //TODO remove view attribute when migration to action bar is finished
     public void saveNote(View view) {
 
         try {
@@ -97,4 +99,39 @@ public class NoteActivity extends BaseActivity {
             UIUtilities.showNotification(NoteActivity.this, R.string.error);
         }
     }
+
+	/**
+	 * @see com.astoev.cave.survey.activity.MainMenuActivity#getChildsOptionsMenu()
+	 */
+	@Override
+	protected int getChildsOptionsMenu() {
+		return R.menu.notemenu;
+	}
+
+	/**
+	 * Does not want to show the base menu items
+	 * 
+	 * @see com.astoev.cave.survey.activity.MainMenuActivity#showBaseOptionsMenu()
+	 */
+	@Override
+	protected boolean showBaseOptionsMenu() {
+		return false;
+	}
+
+	/**
+	 * @see com.astoev.cave.survey.activity.MainMenuActivity#onOptionsItemSelected(android.view.MenuItem)
+	 */
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		Log.i(Constants.LOG_TAG_UI, "Info activity's menu selected - " + item.toString());
+		
+		switch (item.getItemId()) {
+			case R.id.note_action_save:{
+				saveNote(null);
+				return true;
+			}
+			default:
+				return super.onOptionsItemSelected(item);
+		}
+	}
 }
