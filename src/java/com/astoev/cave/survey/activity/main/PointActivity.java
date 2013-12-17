@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.os.ResultReceiver;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -290,11 +291,13 @@ public class PointActivity extends MainMenuActivity {
         return azimuth;
     }
 
+    //TODO remove View attribute when migrated to ActionBar
     public void noteButton(View view) {
         Intent intent = new Intent(this, NoteActivity.class);
         startActivity(intent);
     }
 
+    //TODO remove View attribute when migrated to ActionBar
     public void saveButton(View view) {
         if (saveLeg()) {
             Intent intent = new Intent(this, MainActivity.class);
@@ -302,16 +305,19 @@ public class PointActivity extends MainMenuActivity {
         }
     }
 
+    // TODO remove View attribute when migrated to ActionBar
     public void drawingButton(View view) {
         Intent intent = new Intent(this, DrawingActivity.class);
         startActivity(intent);
     }
 
+    // TODO remove View attribute when migrated to ActionBar
     public void coordinateButton(View view) {
         // TODO location http://www.tutorialforandroid.com/2009/05/permissions-journey-accesscoarselocatio.html
         UIUtilities.showNotification(this, R.string.todo);
     }
 
+    // TODO remove View attribute when migrated to ActionBar
     public void deleteButton(View view) {
         // TODO
         UIUtilities.showNotification(this, R.string.todo);
@@ -365,6 +371,7 @@ public class PointActivity extends MainMenuActivity {
         UIUtilities.showNotification(this, R.string.todo);
     }
 
+    // TODO remove View attribute when migrated to ActionBar
     public void photoButton(View view) {
         // picture http://www.tutorialforandroid.com/2010/10/take-picture-in-android-with.html
 
@@ -415,5 +422,50 @@ public class PointActivity extends MainMenuActivity {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
+
+	/**
+	 * @see com.astoev.cave.survey.activity.MainMenuActivity#getChildsOptionsMenu()
+	 */
+	@Override
+	protected int getChildsOptionsMenu() {
+		return R.menu.pointmenu;
+	}
+
+	/**
+	 * @see com.astoev.cave.survey.activity.MainMenuActivity#onOptionsItemSelected(android.view.MenuItem)
+	 */
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		Log.i(Constants.LOG_TAG_UI, "Point activity's menu selected - " + item.toString());
+		
+		switch (item.getItemId()) {
+			case R.id.point_action_save:{
+				saveButton(null);
+				return true;
+			}
+			case R.id.point_action_note:{
+				noteButton(null);
+				return true;
+			}
+			case R.id.point_action_draw : {
+				drawingButton(null);
+				return true;
+			}
+			case R.id.point_action_gps : {
+				coordinateButton(null);
+				return true;
+			}
+			case R.id.point_action_photo : {
+				photoButton(null);
+				return true;
+			}
+			case R.id.point_action_delete : {
+				deleteButton(null);
+				return true;
+			}
+			default:
+				return super.onOptionsItemSelected(item);
+		}	
+	}
 
 }

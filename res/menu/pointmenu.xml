@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:myapp="http://schemas.android.com/apk/res-auto">
+    
+	<item android:id="@+id/point_action_save"
+	      android:icon="@drawable/ic_action_save"
+	      android:title="@string/point_save"
+	      android:visible="true"
+	      myapp:showAsAction="ifRoom|withText"/>
+
+	<item android:id="@+id/point_action_note"
+	      android:icon="@drawable/ic_action_labels"
+	      android:title="@string/main_add_note"
+	      android:visible="true"
+	      myapp:showAsAction="ifRoom|withText"/>	
+	
+	<item android:id="@+id/point_action_draw"
+	      android:icon="@drawable/ic_action_edit"
+	      android:title="@string/main_add_sketch"
+	      android:visible="true"
+	      myapp:showAsAction="ifRoom|withText"/>	
+	      
+	<!-- gps photo delete are disabled-->
+
+	<item android:id="@+id/point_action_gps"
+	      android:icon="@drawable/ic_action_place"
+	      android:title="@string/main_add_coordinate"
+	      android:visible="true"
+	      android:enabled="false"
+	      myapp:showAsAction="ifRoom|withText"/>	
+
+	<item android:id="@+id/point_action_photo"
+	      android:icon="@drawable/ic_action_camera"
+	      android:title="@string/main_add_photo"
+	      android:visible="true"
+	      android:enabled="false"
+	      myapp:showAsAction="ifRoom|withText"/>
+	
+	<item android:id="@+id/point_action_delete"
+	      android:icon="@drawable/ic_action_discard"
+	      android:title="@string/point_delete"
+	      android:visible="true"
+	      android:enabled="false"
+	      myapp:showAsAction="ifRoom|withText"/>	
+
+</menu>
