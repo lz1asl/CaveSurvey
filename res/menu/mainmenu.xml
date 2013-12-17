@@ -1,8 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:myapp="http://schemas.android.com/apk/res-auto">
+      
+	<item android:id="@+id/main_action_add"
+	      android:icon="@drawable/ic_action_new"
+	      android:title="@string/main_button_add"
+	      android:visible="true"
+	      myapp:showAsAction="ifRoom|withText"/>
+	
+	<item android:id="@+id/main_action_select"
+	      android:icon="@drawable/ic_action_make_available_offline"
+	      android:title="@string/main_button_change"
+	      android:visible="true"
+	      myapp:showAsAction="ifRoom|withText"/>
+	
+	<item android:id="@+id/main_action_plot2d"
+	      android:icon="@drawable/plot"
+	      android:title="@string/main_button_plot"
+	      android:visible="true"
+	      myapp:showAsAction="ifRoom|withText"/>
 
-    <item android:id="@+id/menuOpen" android:title="@string/menu_open"/>
-    <item android:id="@+id/menuHelp" android:title="@string/menu_help"/>
-    <item android:id="@+id/menuExit" android:title="@string/menu_exit"/>
-
+	<item android:id="@+id/main_action_plot3d"
+	      android:icon="@drawable/plot3d"
+	      android:title="@string/main_button_plot3d"
+	      android:visible="true"
+	      android:enabled="false"
+	      myapp:showAsAction="ifRoom|withText"/>
+	
+	<item android:id="@+id/main_action_info"
+	      android:title="@string/main_button_info"
+	      android:visible="true"
+	      myapp:showAsAction="ifRoom|withText"/>
+	
 </menu>

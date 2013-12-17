@@ -51,7 +51,7 @@ public class MainMenuActivity extends BaseActivity {
         	menuInflater.inflate(getChildsOptionsMenu(), menu);
         }
         
-        menuInflater.inflate(R.menu.mainmenu, menu);
+        menuInflater.inflate(R.menu.basemenu, menu);
 
         return (super.onCreateOptionsMenu(menu));
     }

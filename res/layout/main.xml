@@ -41,12 +41,16 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:id="@+id/mainActiveLeg"/>
+<!-- TODO remove old buttons-->                    
+<!--             
             <Button android:text="@string/main_button_change" android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:onClick="changeButton"/>
+ -->                    
         </TableRow>
-
+<!-- TODO remove old buttons-->                            
+<!-- 
         <TableRow>
 
             <Button android:text="@string/main_button_add" android:layout_width="fill_parent"
@@ -65,8 +69,7 @@
                     android:layout_height="wrap_content"
                     android:onClick="infoButton"/>
         </TableRow>
-
-
+ -->
     </TableLayout>
 
     <HorizontalScrollView android:layout_width="fill_parent" android:layout_height="fill_parent"

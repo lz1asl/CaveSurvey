@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TableLayout;
@@ -148,6 +149,7 @@ public class MainActivity extends MainMenuActivity {
         return edit;
     }
 
+    // TODO remove view param when buttons moved to Action bar 
     public void addButtonClick(View view) {
 
         Log.i(Constants.LOG_TAG_UI, "Adding");
@@ -355,21 +357,25 @@ public class MainActivity extends MainMenuActivity {
         drawTable();
     }
 
+    //TODO remove view param when buttons moved to Action bar
     public void plotButton(View view) {
         Intent intent = new Intent(this, MapActivity.class);
         startActivity(intent);
     }
 
+    // TODO remove view param when buttons moved to Action bar
     public void plot3dButton(View view) {
         Intent intent = new Intent(this, Map3DActivity.class);
         startActivity(intent);
     }
 
+    // TODO remove view param when buttons moved to Action bar
     public void infoButton(View view) {
         Intent intent = new Intent(this, InfoActivity.class);
         startActivity(intent);
     }
 
+    // TODO remove view param when buttons moved to Action bar
     public void changeButton(View view) {
         Log.i(Constants.LOG_TAG_UI, "Change active leg");
         try {
@@ -411,10 +417,52 @@ public class MainActivity extends MainMenuActivity {
 
     }
 
-
     @Override
     public void onBackPressed() {
         Intent setIntent = new Intent(this, HomeActivity.class);
         startActivity(setIntent);
     }
+
+	/**
+	 * @see com.astoev.cave.survey.activity.MainMenuActivity#getChildsOptionsMenu()
+	 */
+	@Override
+	protected int getChildsOptionsMenu() {
+		return R.menu.mainmenu;
+	}
+
+	/**
+	 * @see com.astoev.cave.survey.activity.MainMenuActivity#onOptionsItemSelected(android.view.MenuItem)
+	 */
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		
+		Log.i(Constants.LOG_TAG_UI, "Main activity's menu selected - " + item.toString());
+		
+		switch (item.getItemId()) {
+			case R.id.main_action_add:{
+				addButtonClick(null);
+				return true;
+			}
+			case R.id.main_action_select : {
+				changeButton(null);
+				return true;
+			}
+			case R.id.main_action_plot2d : {
+				plotButton(null);
+				return true;
+			}
+			case R.id.main_action_plot3d :{
+				plot3dButton(null);
+				return true;
+			}
+			case R.id.main_action_info : {
+				infoButton(null);
+				return true;
+			}
+			default:
+				return super.onOptionsItemSelected(item);
+		}
+	}
+    
 }
