@@ -123,7 +123,7 @@ public class NoteActivity extends MainMenuActivity {
 	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		Log.i(Constants.LOG_TAG_UI, "Info activity's menu selected - " + item.toString());
+		Log.i(Constants.LOG_TAG_UI, "Note activity's menu selected - " + item.toString());
 		
 		switch (item.getItemId()) {
 			case R.id.note_action_save:{

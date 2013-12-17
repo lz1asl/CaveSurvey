@@ -25,7 +25,12 @@
         <activity android:name=".activity.map.MapActivity" android:theme="@style/NoActionBar"/>
         <activity android:name=".activity.home.NewProjectActivity"/>
         <activity android:name=".activity.draw.DrawingActivity"/>
-        <activity android:name=".activity.main.PointActivity"/>
+        <activity android:name=".activity.main.PointActivity">
+<!--             
+        	<meta-data android:name="android.support.UI_OPTIONS"
+                   	   android:value="splitActionBarWhenNarrow" />
+ -->                   	   
+        </activity>
         <activity android:name=".activity.main.ReadAzimuthActivity"/>
         <activity android:name=".activity.map.opengl.Map3DActivity"/>
         <activity android:name="com.astoev.cave.survey.activity.main.BTActivity"/>

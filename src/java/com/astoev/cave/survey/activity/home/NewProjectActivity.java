@@ -3,13 +3,14 @@ package com.astoev.cave.survey.activity.home;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
-import com.astoev.cave.survey.activity.BaseActivity;
+import com.astoev.cave.survey.activity.MainMenuActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.activity.main.PointActivity;
 import com.astoev.cave.survey.model.*;
@@ -29,7 +30,7 @@ import java.util.concurrent.Callable;
  * Time: 4:57 PM
  * To change this template use File | Settings | File Templates.
  */
-public class NewProjectActivity extends BaseActivity {
+public class NewProjectActivity extends MainMenuActivity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +54,7 @@ public class NewProjectActivity extends BaseActivity {
 
     private void prepareSpinner(int aSpinnerId, int aTextArrayId) {
         Spinner spinner = (Spinner) findViewById(aSpinnerId);
-        ArrayAdapter adapter = ArrayAdapter.createFromResource(this, aTextArrayId, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, aTextArrayId, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
     }
@@ -63,9 +64,8 @@ public class NewProjectActivity extends BaseActivity {
         return spinner.getSelectedItemPosition();
     }
 
+    //TODO remove view attribute once the Action Bar is implemented 
     public void createNewProject(View view) {
-
-
         try {
 
             Log.v(Constants.LOG_TAG_UI, "Creating project");
@@ -197,4 +197,40 @@ public class NewProjectActivity extends BaseActivity {
             UIUtilities.showNotification(NewProjectActivity.this, R.string.error);
         }
     }
+
+	/**
+	 * @see com.astoev.cave.survey.activity.MainMenuActivity#getChildsOptionsMenu()
+	 */
+	@Override
+	protected int getChildsOptionsMenu() {
+		return R.menu.newprojectmenu;
+	}
+
+	/**
+	 * Don't want to see base menu items
+	 * 
+	 * @see com.astoev.cave.survey.activity.MainMenuActivity#showBaseOptionsMenu()
+	 */
+	@Override
+	protected boolean showBaseOptionsMenu() {
+		return false;
+	}
+
+	/**
+	 * @see com.astoev.cave.survey.activity.MainMenuActivity#onOptionsItemSelected(android.view.MenuItem)
+	 */
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		Log.i(Constants.LOG_TAG_UI, "NewProject activity's menu selected - " + item.toString());
+		
+		switch (item.getItemId()) {
+			case R.id.new_action_create : {
+				createNewProject(null);
+				return true;
+			}
+			default:
+				return super.onOptionsItemSelected(item);
+		}
+	}
+    
 }
