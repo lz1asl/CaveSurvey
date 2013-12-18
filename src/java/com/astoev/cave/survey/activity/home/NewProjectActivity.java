@@ -64,8 +64,7 @@ public class NewProjectActivity extends MainMenuActivity {
         return spinner.getSelectedItemPosition();
     }
 
-    //TODO remove view attribute once the Action Bar is implemented 
-    public void createNewProject(View view) {
+    public void createNewProject() {
         try {
 
             Log.v(Constants.LOG_TAG_UI, "Creating project");
@@ -225,7 +224,7 @@ public class NewProjectActivity extends MainMenuActivity {
 		
 		switch (item.getItemId()) {
 			case R.id.new_action_create : {
-				createNewProject(null);
+				createNewProject();
 				return true;
 			}
 			default:

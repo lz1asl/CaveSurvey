@@ -12,11 +12,4 @@
               android:layout_height="0dip"
               android:gravity="center_horizontal"
               android:layout_weight="1"/>
-<!-- TODO after migrate to Action bar -->    
-<!-- 
-    <Button android:text="@string/note_save" android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:onClick="saveNote"/>
- -->
 </LinearLayout>
