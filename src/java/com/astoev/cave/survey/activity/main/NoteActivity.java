@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
@@ -50,8 +49,7 @@ public class NoteActivity extends MainMenuActivity {
         }
     }
 
-    //TODO remove view attribute when migration to action bar is finished
-    public void saveNote(View view) {
+    public void saveNote() {
 
         try {
 
@@ -127,7 +125,7 @@ public class NoteActivity extends MainMenuActivity {
 		
 		switch (item.getItemId()) {
 			case R.id.note_action_save:{
-				saveNote(null);
+				saveNote();
 				return true;
 			}
 			default:

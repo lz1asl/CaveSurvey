@@ -161,12 +161,5 @@
         </TableRow>
 
     </TableLayout>
-<!-- TODO remove when Aciton Bar implemented -->    
-<!-- 
-    <Button android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:text="@string/export_title"
-            android:onClick="exportButton"
-            android:layout_margin="20dp" android:layout_gravity="right"/>
- -->
+
 </LinearLayout>

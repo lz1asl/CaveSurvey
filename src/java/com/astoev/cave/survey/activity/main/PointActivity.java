@@ -124,38 +124,38 @@ public class PointActivity extends MainMenuActivity {
             // up
             EditText up = (EditText) findViewById(R.id.point_up);
             setNotNull(up, mLegEdited.getTop());
-            addOnClickListener(up, Constants.Measures.up);
+//            addOnClickListener(up, Constants.Measures.up);
 
             // down
             EditText down = (EditText) findViewById(R.id.point_down);
             setNotNull(down, mLegEdited.getDown());
-            addOnClickListener(down, Constants.Measures.down);
+//            addOnClickListener(down, Constants.Measures.down);
 
             // left
             EditText left = (EditText) findViewById(R.id.point_left);
             setNotNull(left, mLegEdited.getLeft());
-            addOnClickListener(left, Constants.Measures.left);
+//            addOnClickListener(left, Constants.Measures.left);
 
             // right
             EditText right = (EditText) findViewById(R.id.point_right);
             setNotNull(right, mLegEdited.getRight());
-            addOnClickListener(right, Constants.Measures.right);
+//            addOnClickListener(right, Constants.Measures.right);
 
             // distance
             EditText distance = (EditText) findViewById(R.id.point_distance);
             setNotNull(distance, mLegEdited.getDistance());
-            addOnClickListener(distance, Constants.Measures.distance);
+//            addOnClickListener(distance, Constants.Measures.distance);
 
             // azimuth
             EditText azimuth = (EditText) findViewById(R.id.point_azimuth);
             setNotNull(azimuth, mLegEdited.getAzimuth());
-            addOnClickListener(azimuth, Constants.Measures.angle);
+//            addOnClickListener(azimuth, Constants.Measures.angle);
 
             // slope
             EditText slope = (EditText) findViewById(R.id.point_slope);
             slope.setText("0");
             setNotNull(slope, mLegEdited.getSlope());
-            addOnClickListener(slope, Constants.Measures.slope);
+//            addOnClickListener(slope, Constants.Measures.slope);
 
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to render point", e);
@@ -291,34 +291,29 @@ public class PointActivity extends MainMenuActivity {
         return azimuth;
     }
 
-    //TODO remove View attribute when migrated to ActionBar
-    public void noteButton(View view) {
+    public void noteButton() {
         Intent intent = new Intent(this, NoteActivity.class);
         startActivity(intent);
     }
 
-    //TODO remove View attribute when migrated to ActionBar
-    public void saveButton(View view) {
+    public void saveButton() {
         if (saveLeg()) {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         }
     }
 
-    // TODO remove View attribute when migrated to ActionBar
-    public void drawingButton(View view) {
+    public void drawingButton() {
         Intent intent = new Intent(this, DrawingActivity.class);
         startActivity(intent);
     }
 
-    // TODO remove View attribute when migrated to ActionBar
-    public void coordinateButton(View view) {
+    public void coordinateButton() {
         // TODO location http://www.tutorialforandroid.com/2009/05/permissions-journey-accesscoarselocatio.html
         UIUtilities.showNotification(this, R.string.todo);
     }
 
-    // TODO remove View attribute when migrated to ActionBar
-    public void deleteButton(View view) {
+    public void deleteButton() {
         // TODO
         UIUtilities.showNotification(this, R.string.todo);
     }
@@ -371,8 +366,7 @@ public class PointActivity extends MainMenuActivity {
         UIUtilities.showNotification(this, R.string.todo);
     }
 
-    // TODO remove View attribute when migrated to ActionBar
-    public void photoButton(View view) {
+    public void photoButton() {
         // picture http://www.tutorialforandroid.com/2010/10/take-picture-in-android-with.html
 
         final File path = new File(Environment.getExternalStorageDirectory(), "CaveSurvey");
@@ -440,27 +434,27 @@ public class PointActivity extends MainMenuActivity {
 		
 		switch (item.getItemId()) {
 			case R.id.point_action_save:{
-				saveButton(null);
+				saveButton();
 				return true;
 			}
 			case R.id.point_action_note:{
-				noteButton(null);
+				noteButton();
 				return true;
 			}
 			case R.id.point_action_draw : {
-				drawingButton(null);
+				drawingButton();
 				return true;
 			}
 			case R.id.point_action_gps : {
-				coordinateButton(null);
+				coordinateButton();
 				return true;
 			}
 			case R.id.point_action_photo : {
-				photoButton(null);
+				photoButton();
 				return true;
 			}
 			case R.id.point_action_delete : {
-				deleteButton(null);
+				deleteButton();
 				return true;
 			}
 			default:

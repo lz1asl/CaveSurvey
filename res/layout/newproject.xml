@@ -74,11 +74,4 @@
         <TableRow/>
     </TableLayout>
 
-<!--  TODO remove when Action Bar implemented -->    
-<!-- 
-    <Button android:text="@string/new_button_create" android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:onClick="createNewProject"/>
- -->
 </LinearLayout>

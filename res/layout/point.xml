@@ -8,12 +8,6 @@
                  android:layout_height="wrap_content"
                  android:gravity="center_horizontal" android:id="@+id/point_upper_table">
         <TableRow android:layout_width="fill_parent" android:gravity="center">
-<!-- TODO: Remove old button -->            
-<!--             
-            <Button android:layout_width="fill_parent"
-                    android:layout_height="wrap_content" android:onClick="saveButton" android:text="@string/point_save"
-                    android:layout_alignParentTop="false"/>
- -->
             <EditText android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
                       android:id="@+id/point_up"
@@ -124,27 +118,4 @@
         </TableLayout>
 
     </RelativeLayout>
-
-<!-- TODO remove old buttons -->
-<!-- 
-    <TableLayout android:layout_width="fill_parent"
-                 android:layout_height="wrap_content"
-                 android:layout_alignParentBottom="true"
-                 android:gravity="center_horizontal">
-        <TableRow android:gravity="center">
-            <Button android:text="@string/main_add_note" android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:onClick="noteButton"/>
-            <Button android:text="@string/main_add_sketch" android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:onClick="drawingButton"/>
-            <Button android:text="@string/main_add_coordinate" android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:onClick="coordinateButton" android:enabled="false"/>
-            <Button android:text="@string/main_add_photo" android:layout_width="wrap_content" android:enabled="false"
-                    android:layout_height="wrap_content" android:onClick="photoButton"/>
-
-            <Button android:text="@string/point_delete" android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:onClick="deleteButton" android:enabled="false"
-                    android:layout_gravity="right"/>
-        </TableRow>
-    </TableLayout>
- -->
 </RelativeLayout>

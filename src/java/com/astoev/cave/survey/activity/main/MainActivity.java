@@ -149,8 +149,7 @@ public class MainActivity extends MainMenuActivity {
         return edit;
     }
 
-    // TODO remove view param when buttons moved to Action bar 
-    public void addButtonClick(View view) {
+    public void addButtonClick() {
 
         Log.i(Constants.LOG_TAG_UI, "Adding");
 
@@ -357,26 +356,22 @@ public class MainActivity extends MainMenuActivity {
         drawTable();
     }
 
-    //TODO remove view param when buttons moved to Action bar
-    public void plotButton(View view) {
+    public void plotButton() {
         Intent intent = new Intent(this, MapActivity.class);
         startActivity(intent);
     }
 
-    // TODO remove view param when buttons moved to Action bar
-    public void plot3dButton(View view) {
+    public void plot3dButton() {
         Intent intent = new Intent(this, Map3DActivity.class);
         startActivity(intent);
     }
 
-    // TODO remove view param when buttons moved to Action bar
-    public void infoButton(View view) {
+    public void infoButton() {
         Intent intent = new Intent(this, InfoActivity.class);
         startActivity(intent);
     }
 
-    // TODO remove view param when buttons moved to Action bar
-    public void changeButton(View view) {
+    public void changeButton() {
         Log.i(Constants.LOG_TAG_UI, "Change active leg");
         try {
 
@@ -441,23 +436,23 @@ public class MainActivity extends MainMenuActivity {
 		
 		switch (item.getItemId()) {
 			case R.id.main_action_add:{
-				addButtonClick(null);
+				addButtonClick();
 				return true;
 			}
 			case R.id.main_action_select : {
-				changeButton(null);
+				changeButton();
 				return true;
 			}
 			case R.id.main_action_plot2d : {
-				plotButton(null);
+				plotButton();
 				return true;
 			}
 			case R.id.main_action_plot3d :{
-				plot3dButton(null);
+				plot3dButton();
 				return true;
 			}
 			case R.id.main_action_info : {
-				infoButton(null);
+				infoButton();
 				return true;
 			}
 			default:

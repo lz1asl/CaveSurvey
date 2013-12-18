@@ -3,7 +3,6 @@ package com.astoev.cave.survey.activity.main;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
@@ -103,18 +102,7 @@ public class InfoActivity extends MainMenuActivity {
         }
     }
 
-    //TODO remove View attribute after migration to ActionBar
-    public void exportButton(View aView) {
-
-        try {
-            exportProject(aView, -1);
-        } catch (Throwable e) {
-            Log.e(Constants.LOG_TAG_UI, "Failed to select export option", e);
-            UIUtilities.showNotification(this, R.string.error);
-        }
-    }
-
-    private void exportProject(View aview, int aItem) {
+    private void exportProject() {
         try {
             Log.i(Constants.LOG_TAG_SERVICE, "Start excel export");
 
@@ -147,7 +135,7 @@ public class InfoActivity extends MainMenuActivity {
 		
 		switch (item.getItemId()) {
 			case R.id.info_action_export:{
-				exportButton(null);
+				exportProject();
 				return true;
 			}
 			default:
