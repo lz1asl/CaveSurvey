@@ -69,11 +69,10 @@ public class MainActivity extends MainMenuActivity {
             TextView activeLegName = (TextView) findViewById(R.id.mainActiveLeg);
             activeLegName.setText(activeLeg.buildLegDescription(this));
 
-            Object o = findViewById(R.id.mainTable);
-            Log.i(Constants.LOG_TAG_UI, "Found " + o);
+            TableLayout table = (TableLayout) findViewById(R.id.mainTable);
+            Log.i(Constants.LOG_TAG_UI, "Found " + table);
 
             // prepare grid
-            TableLayout table = (TableLayout) findViewById(R.id.mainTable);
             table.removeAllViews();
 
             List<Leg> legs = mWorkspace.getCurrProjectLegs();
@@ -443,12 +442,8 @@ public class MainActivity extends MainMenuActivity {
 				changeButton();
 				return true;
 			}
-			case R.id.main_action_plot2d : {
+			case R.id.main_action_map :{
 				plotButton();
-				return true;
-			}
-			case R.id.main_action_plot3d :{
-				plot3dButton();
 				return true;
 			}
 			case R.id.main_action_info : {

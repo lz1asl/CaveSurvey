@@ -2,14 +2,12 @@ package com.astoev.cave.survey.activity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
-import com.astoev.cave.survey.activity.home.HomeActivity;
 
 /**
  * Created by IntelliJ IDEA.
@@ -70,10 +68,6 @@ public class MainMenuActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.i(Constants.LOG_TAG_UI, "Main menu selected - " + item.toString());
         switch (item.getItemId()) {
-            case R.id.menuOpen:
-                Intent intent = new Intent(this, HomeActivity.class);
-                startActivity(intent);
-                return true;
 //            case R.id.menuAbout:
 //                try {
 //                    Dialog dialog = new Dialog(this);
@@ -108,9 +102,8 @@ public class MainMenuActivity extends BaseActivity {
                 alert.show();
                 return true;
             default:
-                UIUtilities.showNotification(this, "TODO " + item.getItemId());
+            	return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 
 }

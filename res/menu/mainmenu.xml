@@ -14,19 +14,19 @@
 	      android:visible="true"
 	      myapp:showAsAction="ifRoom|withText"/>
 	
-	<item android:id="@+id/main_action_plot2d"
-	      android:icon="@drawable/plot"
-	      android:title="@string/main_button_plot"
+	<item android:id="@+id/main_action_map"
+	      android:icon="@drawable/ic_action_map"
+	      android:title="@string/main_button_map"
 	      android:visible="true"
 	      myapp:showAsAction="ifRoom|withText"/>
-
+<!-- 
 	<item android:id="@+id/main_action_plot3d"
 	      android:icon="@drawable/plot3d"
 	      android:title="@string/main_button_plot3d"
 	      android:visible="true"
 	      android:enabled="false"
 	      myapp:showAsAction="ifRoom|withText"/>
-	
+ -->	
 	<item android:id="@+id/main_action_info"
 	      android:title="@string/main_button_info"
 	      android:visible="true"
