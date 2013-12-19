@@ -4,28 +4,8 @@
               android:layout_height="fill_parent" android:layout_width="fill_parent" android:orientation="vertical">
 
 
-    <TableLayout android:layout_centerHorizontal="true"
-                 android:gravity="top"
-                 android:layout_width="fill_parent"
-                 android:layout_height="wrap_content"
-                 android:stretchColumns="1">
-        <TableRow>
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/main_welcome"
-                    android:gravity="center_horizontal"
-                    android:textAppearance="?android:attr/textAppearanceLarge"/>
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:id="@+id/mainProjectName"
-                    android:textAppearance="?android:attr/textAppearanceLarge"/>
-        </TableRow>
-    </TableLayout>
-    <TableLayout android:layout_centerHorizontal="true"
-                 android:gravity="top"
+    <TableLayout android:gravity="center_horizontal"
+        		 android:layout_gravity="top"
                  android:layout_width="fill_parent"
                  android:layout_height="wrap_content"
                  android:stretchColumns="1">
@@ -72,7 +52,7 @@
                         android:scrollbars="vertical">
 
                 <TableLayout android:layout_width="fill_parent"
-                             android:layout_height="fill_parent"
+                             android:layout_height="wrap_content"
                              android:stretchColumns="*"
                              android:id="@+id/mainTable" android:scrollbars="horizontal|vertical">
                 </TableLayout>

@@ -17,7 +17,6 @@ import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.activity.main.BTActivity;
 import com.astoev.cave.survey.activity.main.MainActivity;
 import com.astoev.cave.survey.model.Project;
-import com.astoev.cave.survey.service.bluetooth.BluetoothService;
 import com.astoev.cave.survey.service.ormlite.DatabaseHelper;
 
 import java.util.List;
@@ -31,13 +30,6 @@ public class HomeActivity extends MainMenuActivity {
 
     private static boolean isFirstEntry;
     
-    @Override
-    protected void onResume() {
-        super.onResume();
-        loadProjects();
-//        prepareBT();
-    }
-
 //    private void prepareBT() {
 //        // BT protocol
 //        Button btButton = (Button) findViewById(R.id.bt_setup_button);
@@ -56,26 +48,28 @@ public class HomeActivity extends MainMenuActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setContentView(R.layout.home);
+        
         if (mWorkspace.getDBHelper() == null) {
             DatabaseHelper helper = new DatabaseHelper(this);
             mWorkspace.setDBHelper(helper);
         }
-
-        setContentView(R.layout.home);
-
-        loadProjects();
+        
+//        loadProjects();
     }
     
-//    @Override
-//	public boolean onCreateOptionsMenu(Menu menu) {
-//    	Log.d(Constants.LOG_TAG_UI, "Creating home menu");
-//    	MenuInflater menuInflater = getMenuInflater();
-//    	menuInflater.inflate(R.menu.homemenu, menu);
-//    	
-//		return super.onCreateOptionsMenu(menu); 
-//	}
-
+    @Override
+    protected void onResume() {
+    	// first we reset the ws
+    	mWorkspace.reset();
+    	
+    	// then we call the parent that will set a title depending on the active project
+        super.onResume();
+    	
+        loadProjects();
+//        prepareBT();
+    }
+    
 	/**
 	 * @see com.astoev.cave.survey.activity.MainMenuActivity#getChildsOptionsMenu()
 	 */

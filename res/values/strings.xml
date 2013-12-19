@@ -25,7 +25,9 @@
     <string name="load_no_projects">No project yet</string>
 
     <!-- main screen -->
+<!--     
     <string name="main_welcome">Project</string>
+ -->    
     <string name="main_leg">Current</string>
     <string name="main_button_change">Select</string>
     <string name="main_button_change_title">Change leg</string>

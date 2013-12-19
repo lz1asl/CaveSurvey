@@ -82,6 +82,14 @@ public class Workspace {
         mActiveProject = null;
         instance = null;
     }
+    
+    /**
+     * Keeps the instance but leans the active leg and the active project
+     */
+    public void reset(){
+        mActiveLegId = null;
+        mActiveProject = null;
+    }
 
     public Project getActiveProject() {
         return mActiveProject;
