@@ -17,7 +17,7 @@
     <!-- new project screen -->
     <string name="new_title">New project</string>
     <string name="new_button_create">Create</string>
-    <string name="new_project_name">Name:</string>
+    <string name="new_project_name">Name</string>
     <string name="new_project_name_required">Enter name</string>
 
     <!-- load project popup -->
@@ -139,7 +139,9 @@
     </string-array>
     <string-array name="azimuth_read_type">
         <item>Manually</item>
+<!--         
         <item>Built-in sensor</item>
+ -->        
     </string-array>
 
     <string name="options_units_slope">Slope</string>
