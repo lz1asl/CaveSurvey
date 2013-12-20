@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import com.astoev.cave.survey.Constants;
+import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.service.Workspace;
 
 /**
@@ -23,21 +24,18 @@ public abstract class BaseActivity extends ActionBarActivity {
 
         super.onCreate(savedInstanceState);
     }
-    
-//    /**
-//     * onCreate method with flag to show or hide the action bar
-//     * 
-//     * @param savedInstanceState - saved instance
-//     * @param useActionBar	     - flag to show or hide the action bar
-//     */
-//    protected void onCreate(Bundle savedInstanceState, boolean useActionBar) {
-//        Log.i(Constants.LOG_TAG_UI, "Creating activity " + this.getClass().getName());
-//
-//        super.onCreate(savedInstanceState);
-//        
-//        if (!useActionBar){
-//        	getSupportActionBar().hide();
-//        }
-//    }
 
+	/**
+	 * @see android.support.v4.app.FragmentActivity#onResume()
+	 */
+	@Override
+	protected void onResume() {
+		super.onResume();
+		
+        // set the name of the chosen project as title in the action bar
+        Project activeProject = mWorkspace.getActiveProject();
+        if (activeProject != null){
+        	setTitle(activeProject.getName()); 
+        }
+	}
 }

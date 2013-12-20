@@ -63,9 +63,6 @@ public class MainActivity extends MainMenuActivity {
             mWorkspace.setActiveLegId(activeLeg.getId());
 
             // prepare labels
-            TextView projectName = (TextView) findViewById(R.id.mainProjectName);
-            projectName.setText(mWorkspace.getActiveProject().getName());
-
             TextView activeLegName = (TextView) findViewById(R.id.mainActiveLeg);
             activeLegName.setText(activeLeg.buildLegDescription(this));
 
