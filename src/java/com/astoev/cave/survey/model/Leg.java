@@ -78,7 +78,7 @@ public class Leg implements Serializable {
         Point startPoint = (Point) workspace.getDBHelper().getPointDao().queryForId(getFromPoint().getId());
         Point endPoint = (Point) workspace.getDBHelper().getPointDao().queryForId(getToPoint().getId());
 
-        return startPoint.getName() + " -> " + endPoint.getName();
+        return " " + startPoint.getName() + " -> " + endPoint.getName();
     }
 
     public static Note getActiveLegNote(Leg aActiveLeg, Workspace aWorkspace) throws SQLException {

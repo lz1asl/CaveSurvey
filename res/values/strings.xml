@@ -43,6 +43,7 @@
     <string name="main_table_header_distance_from_start">From start</string>
     <string name="main_table_header_azimuth">Compass</string>
     <string name="main_table_header_slope">Clinometer</string>
+    <string name="main_table_header_more">More</string>
     <string name="main_table_header_left">Left</string>
     <string name="main_table_header_right">Right</string>
     <string name="main_table_header_up">Up</string>
@@ -62,6 +63,10 @@
     <string name="main_add_sketch">Draw</string>
     <string name="main_add_photo">Photo</string>
     <string name="main_add_coordinate">GPS</string>
+    
+    <string name="table_sketch_prefix">S</string>
+    <string name="table_note_prefix">N</string>
+    <string name="table_photo_prefix">P</string>
 
 
     <!-- main menu -->
