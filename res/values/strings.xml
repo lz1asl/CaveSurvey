@@ -17,7 +17,7 @@
     <!-- new project screen -->
     <string name="new_title">New project</string>
     <string name="new_button_create">Create</string>
-    <string name="new_project_name">Name:</string>
+    <string name="new_project_name">Name</string>
     <string name="new_project_name_required">Enter name</string>
 
     <!-- load project popup -->
@@ -39,18 +39,20 @@
 
     <string name="main_table_header_from">From</string>
     <string name="main_table_header_to">To</string>
-    <string name="main_table_header_distance">Length</string>
     <string name="main_table_header_distance_from_start">From start</string>
-    <string name="main_table_header_azimuth">Compass</string>
-    <string name="main_table_header_slope">Clinometer</string>
-    <string name="main_table_header_left">Left</string>
-    <string name="main_table_header_right">Right</string>
-    <string name="main_table_header_up">Up</string>
-    <string name="main_table_header_down">Down</string>
+    <string name="main_table_header_more">More</string>
     <string name="main_table_header_note">Note</string>
     <string name="main_table_header_drawing">Drawing</string>
     <string name="main_table_header_gps">GPS</string>
     <string name="main_table_header_photo">Photo</string>
+    
+    <string name="left">Left</string>
+    <string name="right">Right</string>
+    <string name="up">Up</string>
+    <string name="down">Down</string>
+    <string name="distance">Length</string>
+    <string name="azimuth">Compass</string>
+    <string name="slope">Clinometer</string>
 
     <!-- add popup -->
     <string name="main_add_title">Add new</string>
@@ -62,6 +64,10 @@
     <string name="main_add_sketch">Draw</string>
     <string name="main_add_photo">Photo</string>
     <string name="main_add_coordinate">GPS</string>
+    
+    <string name="table_sketch_prefix">S</string>
+    <string name="table_note_prefix">N</string>
+    <string name="table_photo_prefix">P</string>
 
 
     <!-- main menu -->
@@ -139,7 +145,9 @@
     </string-array>
     <string-array name="azimuth_read_type">
         <item>Manually</item>
+<!--         
         <item>Built-in sensor</item>
+ -->        
     </string-array>
 
     <string name="options_units_slope">Slope</string>

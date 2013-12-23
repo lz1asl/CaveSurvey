@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -23,6 +24,7 @@ import com.astoev.cave.survey.activity.map.MapActivity;
 import com.astoev.cave.survey.activity.map.opengl.Map3DActivity;
 import com.astoev.cave.survey.model.Gallery;
 import com.astoev.cave.survey.model.Leg;
+import com.astoev.cave.survey.model.Note;
 import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.util.PointUtil;
 import com.astoev.cave.survey.util.StringUtils;
@@ -53,7 +55,7 @@ public class MainActivity extends MainMenuActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        drawTable();
+//        drawTable();
 
     }
 
@@ -77,6 +79,8 @@ public class MainActivity extends MainMenuActivity {
             boolean currentLeg;
             for (final Leg l : legs) {
                 TableRow row = new TableRow(this);
+                LayoutParams params = new TableLayout.LayoutParams(0, LayoutParams.WRAP_CONTENT, 1);
+                row.setLayoutParams(params);
                 row.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View aView) {
@@ -101,6 +105,15 @@ public class MainActivity extends MainMenuActivity {
                 row.addView(createTextView(l.getDistance(), currentLeg, true));
                 row.addView(createTextView(l.getAzimuth(), currentLeg, true));
                 row.addView(createTextView(l.getSlope(), currentLeg, true));
+                
+                //TODO build SNP string
+                StringBuilder moreText = new StringBuilder();
+                Note note = Leg.getActiveLegNote(l, mWorkspace);
+                if (note != null){
+                	moreText.append(getString(R.string.table_note_prefix));
+                }
+                //TODO add sketch and photo here
+                row.addView(createTextView(moreText.toString(), currentLeg, true));
                 /*row.addView(createTextView(l.getLeft(), currentLeg, true));
                 row.addView(createTextView(l.getRight(), currentLeg, true));
                 row.addView(createTextView(l.getTop(), currentLeg, true));
@@ -119,7 +132,7 @@ public class MainActivity extends MainMenuActivity {
                     row.addView(createTextView((String) null, currentLeg, true));
                 }*/
 
-                table.addView(row);
+                table.addView(row, params);
             }
             table.invalidate();
         } catch (Exception e) {

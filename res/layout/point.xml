@@ -2,120 +2,127 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
-
-    <TableLayout android:layout_width="fill_parent"
-                 android:layout_height="wrap_content"
-                 android:gravity="center_horizontal" android:id="@+id/point_upper_table">
-        <TableRow android:layout_width="fill_parent" android:gravity="center">
-            <EditText android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:id="@+id/point_up"
-                      android:numeric="decimal"
-                      android:maxLength="10"
-                      android:ems="4" android:layout_column="2"/>
-            <TextView android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:text="@string/point_up" android:layout_column="3"/>
-
-        </TableRow>
-        <TableRow android:layout_width="fill_parent" android:gravity="center">
-            <EditText android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:id="@+id/point_left"
-                      android:numeric="decimal"
-                      android:maxLength="10"
-                      android:ems="4"/>
-            <TextView android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:layout_gravity="center"
-                      android:text="@string/point_left_right" android:layout_column="2"/>
-            <EditText android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:id="@+id/point_right"
-                      android:numeric="decimal"
-                      android:maxLength="10"
-                      android:ems="4" android:layout_column="3"/>
-        </TableRow>
-        <TableRow android:layout_width="fill_parent" android:gravity="center">
-            <TextView android:layout_column="1"/>
-            <EditText android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:id="@+id/point_down"
-                      android:numeric="decimal"
-                      android:maxLength="10"
-                      android:ems="4" android:layout_column="2"/>
-            <TextView android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:text="@string/point_down" android:layout_column="3"/>
-        </TableRow>
-
-    </TableLayout>
-
-    <RelativeLayout
-            android:layout_width="fill_parent"
+                android:layout_height="fill_parent" >
+                
+	<EditText android:id="@+id/point_up"
+	    	  android:hint="@string/up"
+	    	  android:inputType="number"
+	          android:layout_width="wrap_content"
+	          android:layout_height="wrap_content"
+	          android:layout_centerHorizontal="true"
+	          android:layout_alignParentTop="true"
+	          android:maxLength="10"
+	          android:ems="4" 
+	          android:gravity="center"/>
+	
+	<LinearLayout android:id="@+id/layout_left_right"
+	    		  android:layout_width="wrap_content"
+	    		  android:layout_height="wrap_content"
+	    		  android:layout_centerHorizontal="true"
+	    		  android:layout_below="@id/point_up">
+		<EditText android:id="@+id/point_left"
+		    	  android:hint="@string/left"
+		    	  android:inputType="number"
+		    	  android:layout_width="wrap_content"
+		          android:layout_height="wrap_content"
+		          android:layout_marginRight="70dp"
+		          android:gravity="center"
+		          android:maxLength="10"
+		          android:ems="4"/>
+		<EditText android:id="@+id/point_right"
+		    	  android:hint="@string/right"
+		    	  android:inputType="number"
+		    	  android:layout_width="wrap_content"
+		          android:layout_height="wrap_content"
+		          android:gravity="center"
+		          android:maxLength="10"
+		          android:ems="4"/>		
+	</LinearLayout>
+	
+	<EditText android:id="@+id/point_down"
+	   	  android:hint="@string/down"
+	   	  android:inputType="number"
+	   	  android:layout_width="wrap_content"
+	      android:layout_height="wrap_content"
+	      android:layout_centerHorizontal="true"
+	      android:gravity="center"
+	      android:layout_below="@id/layout_left_right"
+	      android:maxLength="10"
+	      android:ems="4"/>
+    
+    <LinearLayout android:id="@+id/point_leg_text"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/point_upper_table">
-
-        <TableLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/point_central_table"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true">
-            <TableRow android:layout_width="wrap_content"
-                      android:layout_height="wrap_content">
-
-                <TextView android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:text="@string/main_leg"
-                          android:textAppearance="?android:attr/textAppearanceLarge"/>
-                <TextView android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:id="@+id/point_curr_leg"
-                          android:gravity="center"
-                          android:textAppearance="?android:attr/textAppearanceLarge"/>
-            </TableRow>
-            <TableRow android:layout_width="wrap_content"
-                      android:layout_height="wrap_content">
-
-                <TextView android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:text="@string/main_table_header_distance"/>
-                <EditText android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:id="@+id/point_distance"
-                          android:numeric="decimal"
-                          android:maxLength="10"
-                          android:ems="5">
-                    <requestFocus/>
-                </EditText>
-            </TableRow>
-            <TableRow android:layout_width="wrap_content"
-                      android:layout_height="wrap_content">
-                <TextView android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:text="@string/main_table_header_azimuth"/>
-                <EditText android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:id="@+id/point_azimuth"
-                          android:numeric="decimal"
-                          android:maxLength="10"
-                          android:ems="5"/>
-            </TableRow>
-            <TableRow android:layout_width="wrap_content"
-                      android:layout_height="wrap_content">
-                <TextView android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:text="@string/main_table_header_slope"/>
-                <EditText android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:id="@+id/point_slope"
-                          android:numeric="decimal"
-                          android:maxLength="10"
-                          android:ems="5"/>
-            </TableRow>
-        </TableLayout>
-
-    </RelativeLayout>
+            android:layout_below="@id/point_down"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true">
+		<TextView android:layout_width="wrap_content"
+		          android:layout_height="wrap_content"
+		          android:text="@string/main_leg"
+		          android:textAppearance="?android:attr/textAppearanceLarge"/>
+		<TextView android:id="@+id/point_curr_leg" 
+		    	  android:layout_width="wrap_content"
+		          android:layout_height="wrap_content"
+		          android:gravity="center"
+		          android:textAppearance="?android:attr/textAppearanceLarge"/>        
+    </LinearLayout>
+    <LinearLayout android:id="@+id/point_dimensions_text"
+        		  android:layout_width="fill_parent"
+        		  android:layout_height="wrap_content"
+        		  android:layout_below="@id/point_leg_text">
+		<TextView android:layout_width="0dp"
+		          android:layout_height="wrap_content"
+		          android:layout_weight="1"
+		          android:gravity="center_horizontal"
+		          android:text="@string/distance"/>
+        <TextView android:layout_width="0dp"
+                  android:layout_height="wrap_content"
+                  android:layout_weight="1"
+                  android:gravity="center_horizontal"
+                  android:text="@string/azimuth"/>
+        <TextView android:layout_width="0dp"
+                  android:layout_height="wrap_content"
+                  android:layout_weight="1"
+                  android:gravity="center_horizontal"
+                  android:text="@string/slope"/>
+    </LinearLayout>
+    <LinearLayout android:id="@+id/point_dimensions_fields"
+        		  android:layout_width="fill_parent"
+        		  android:layout_height="wrap_content"
+        		  android:layout_below="@id/point_dimensions_text">
+		<EditText android:id="@+id/point_distance"
+		          android:inputType="number"
+		          android:layout_width="0dp"
+		          android:layout_height="wrap_content"
+		          android:layout_weight="1"
+		          android:gravity="center"
+		          android:maxLength="10"
+		          android:ems="5">
+		    <requestFocus/>
+		</EditText>
+		<EditText android:id="@+id/point_azimuth" 
+		    	  android:inputType="number"
+		    	  android:layout_width="0dp"
+		          android:layout_height="wrap_content"
+		          android:layout_weight="1"
+		          android:gravity="center"
+		          android:maxLength="10"
+		          android:ems="5"/>
+		<EditText android:id="@+id/point_slope"
+		    	  android:inputType="number" 
+		    	  android:layout_width="0dp"
+		          android:layout_height="wrap_content"
+		          android:layout_weight="1"
+		          android:gravity="center"
+		          android:maxLength="10"
+		          android:ems="5"/>
+    </LinearLayout>
+    <TextView android:id="@+id/point_note_text"
+        	  android:layout_width="fill_parent"
+        	  android:layout_height="fill_parent"
+        	  android:layout_margin="20dp"
+        	  android:layout_below="@id/point_dimensions_fields"
+        	  android:clickable="false"
+        	  android:onClick="noteButton"/>
+    
 </RelativeLayout>
