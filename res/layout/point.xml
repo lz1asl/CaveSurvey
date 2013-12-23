@@ -11,7 +11,7 @@
 	          android:layout_height="wrap_content"
 	          android:layout_centerHorizontal="true"
 	          android:layout_alignParentTop="true"
-	          android:maxLength="10"
+	          android:maxLength="5"
 	          android:ems="4" 
 	          android:gravity="center"/>
 	
@@ -27,7 +27,7 @@
 		          android:layout_height="wrap_content"
 		          android:layout_marginRight="70dp"
 		          android:gravity="center"
-		          android:maxLength="10"
+		          android:maxLength="5"
 		          android:ems="4"/>
 		<EditText android:id="@+id/point_right"
 		    	  android:hint="@string/right"
@@ -35,7 +35,7 @@
 		    	  android:layout_width="wrap_content"
 		          android:layout_height="wrap_content"
 		          android:gravity="center"
-		          android:maxLength="10"
+		          android:maxLength="5"
 		          android:ems="4"/>		
 	</LinearLayout>
 	
@@ -47,7 +47,7 @@
 	      android:layout_centerHorizontal="true"
 	      android:gravity="center"
 	      android:layout_below="@id/layout_left_right"
-	      android:maxLength="10"
+	      android:maxLength="5"
 	      android:ems="4"/>
     
     <LinearLayout android:id="@+id/point_leg_text"
@@ -96,7 +96,7 @@
 		          android:layout_height="wrap_content"
 		          android:layout_weight="1"
 		          android:gravity="center"
-		          android:maxLength="10"
+		          android:maxLength="5"
 		          android:ems="5">
 		    <requestFocus/>
 		</EditText>
@@ -106,15 +106,15 @@
 		          android:layout_height="wrap_content"
 		          android:layout_weight="1"
 		          android:gravity="center"
-		          android:maxLength="10"
+		          android:maxLength="3"
 		          android:ems="5"/>
 		<EditText android:id="@+id/point_slope"
-		    	  android:inputType="numberDecimal"
+		    	  android:inputType="numberDecimal|numberSigned"
 		    	  android:layout_width="0dp"
 		          android:layout_height="wrap_content"
 		          android:layout_weight="1"
 		          android:gravity="center"
-		          android:maxLength="10"
+		          android:maxLength="4"
 		          android:ems="5"/>
     </LinearLayout>
     <TextView android:id="@+id/point_note_text"
