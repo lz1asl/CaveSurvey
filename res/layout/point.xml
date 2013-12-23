@@ -6,7 +6,7 @@
                 
 	<EditText android:id="@+id/point_up"
 	    	  android:hint="@string/up"
-	    	  android:inputType="number"
+	    	  android:inputType="numberDecimal"
 	          android:layout_width="wrap_content"
 	          android:layout_height="wrap_content"
 	          android:layout_centerHorizontal="true"
@@ -22,7 +22,7 @@
 	    		  android:layout_below="@id/point_up">
 		<EditText android:id="@+id/point_left"
 		    	  android:hint="@string/left"
-		    	  android:inputType="number"
+		    	  android:inputType="numberDecimal"
 		    	  android:layout_width="wrap_content"
 		          android:layout_height="wrap_content"
 		          android:layout_marginRight="70dp"
@@ -31,7 +31,7 @@
 		          android:ems="4"/>
 		<EditText android:id="@+id/point_right"
 		    	  android:hint="@string/right"
-		    	  android:inputType="number"
+		    	  android:inputType="numberDecimal"
 		    	  android:layout_width="wrap_content"
 		          android:layout_height="wrap_content"
 		          android:gravity="center"
@@ -41,7 +41,7 @@
 	
 	<EditText android:id="@+id/point_down"
 	   	  android:hint="@string/down"
-	   	  android:inputType="number"
+	   	  android:inputType="numberDecimal"
 	   	  android:layout_width="wrap_content"
 	      android:layout_height="wrap_content"
 	      android:layout_centerHorizontal="true"
@@ -91,7 +91,7 @@
         		  android:layout_height="wrap_content"
         		  android:layout_below="@id/point_dimensions_text">
 		<EditText android:id="@+id/point_distance"
-		          android:inputType="number"
+		          android:inputType="numberDecimal"
 		          android:layout_width="0dp"
 		          android:layout_height="wrap_content"
 		          android:layout_weight="1"
@@ -101,7 +101,7 @@
 		    <requestFocus/>
 		</EditText>
 		<EditText android:id="@+id/point_azimuth" 
-		    	  android:inputType="number"
+		    	  android:inputType="numberDecimal"
 		    	  android:layout_width="0dp"
 		          android:layout_height="wrap_content"
 		          android:layout_weight="1"
@@ -109,7 +109,7 @@
 		          android:maxLength="10"
 		          android:ems="5"/>
 		<EditText android:id="@+id/point_slope"
-		    	  android:inputType="number" 
+		    	  android:inputType="numberDecimal"
 		    	  android:layout_width="0dp"
 		          android:layout_height="wrap_content"
 		          android:layout_weight="1"
