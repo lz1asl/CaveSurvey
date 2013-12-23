@@ -54,9 +54,6 @@ public class MainActivity extends MainMenuActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-
-//        drawTable();
-
     }
 
     private void drawTable() {
@@ -114,24 +111,6 @@ public class MainActivity extends MainMenuActivity {
                 }
                 //TODO add sketch and photo here
                 row.addView(createTextView(moreText.toString(), currentLeg, true));
-                /*row.addView(createTextView(l.getLeft(), currentLeg, true));
-                row.addView(createTextView(l.getRight(), currentLeg, true));
-                row.addView(createTextView(l.getTop(), currentLeg, true));
-                row.addView(createTextView(l.getDown(), currentLeg, true));
-                Note note = Leg.getActiveLegNote(l, mWorkspace);
-                if (note != null) {
-                    String noteText = note.getText();
-
-                    if (noteText.length() > 12) {
-                        row.addView(createTextView(noteText.substring(0, 10) + "...", currentLeg, true));
-                    } else {
-                        row.addView(createTextView(noteText, currentLeg, true));
-                    }
-
-                } else {
-                    row.addView(createTextView((String) null, currentLeg, true));
-                }*/
-
                 table.addView(row, params);
             }
             table.invalidate();
@@ -307,7 +286,7 @@ public class MainActivity extends MainMenuActivity {
 
     private void addLeg(final boolean isDeviation) throws SQLException {
         Log.i(Constants.LOG_TAG_UI, "Creating leg");
-        Integer newLegId = TransactionManager.callInTransaction(mWorkspace.getDBHelper().getConnectionSource(),
+      /*  Integer newLegId = TransactionManager.callInTransaction(mWorkspace.getDBHelper().getConnectionSource(),
                 new Callable<Integer>() {
                     public Integer call() throws Exception {
                         try {
@@ -347,15 +326,15 @@ public class MainActivity extends MainMenuActivity {
                             throw e;
                         }
                     }
-                });
-        if (newLegId != null) {
-            mWorkspace.setActiveLegId(newLegId);
+                });*/
+//        if (newLegId != null) {
+//            mWorkspace.setActiveLegId(newLegId);
             Intent intent = new Intent(MainActivity.this, PointActivity.class);
-            intent.putExtra(Constants.LEG_SELECTED, newLegId);
+//            intent.putExtra(Constants.LEG_SELECTED, newLegId);
             startActivity(intent);
-        } else {
-            UIUtilities.showNotification(this, R.string.error);
-        }
+//        } else {
+//            UIUtilities.showNotification(this, R.string.error);
+//        }
     }
 
     @Override
