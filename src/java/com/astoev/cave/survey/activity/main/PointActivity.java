@@ -21,6 +21,7 @@ import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.activity.draw.DrawingActivity;
 import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.model.Leg;
+import com.astoev.cave.survey.model.Note;
 import com.astoev.cave.survey.model.Option;
 import com.astoev.cave.survey.model.Photo;
 import com.astoev.cave.survey.model.Point;
@@ -94,7 +95,7 @@ public class PointActivity extends MainMenuActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.point);
 
-        loadPointData();
+//        loadPointData();
     }
 
     @Override
@@ -156,6 +157,14 @@ public class PointActivity extends MainMenuActivity {
             slope.setText("0");
             setNotNull(slope, mLegEdited.getSlope());
 //            addOnClickListener(slope, Constants.Measures.slope);
+            
+            // fill note_text with its value
+            Note note = Leg.getActiveLegNote(mLegEdited, mWorkspace);
+            if (note != null && note.getText() != null){
+            	TextView textView = (TextView)findViewById(R.id.point_note_text);
+            	textView.setText(note.getText());
+            	textView.setClickable(true);
+            } 
 
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to render point", e);
@@ -273,7 +282,7 @@ public class PointActivity extends MainMenuActivity {
         Float azimuth = StringUtils.getFromEditTextNotNull(aEditText);
         if (null != azimuth) {
             if (azimuth.floatValue() < 0) {
-                throw new DataException(getString(R.string.main_table_header_azimuth));
+                throw new DataException(getString(R.string.azimuth));
             }
 
             String currAzimuthMeasure = Options.getOptionValue(Option.CODE_AZIMUTH_UNITS);
@@ -284,14 +293,14 @@ public class PointActivity extends MainMenuActivity {
                 maxValue = Option.MAX_VALUE_GRADS;
             }
             if (azimuth.floatValue() > maxValue) {
-                throw new DataException(getString(R.string.main_table_header_azimuth));
+                throw new DataException(getString(R.string.azimuth));
             }
         }
 
         return azimuth;
     }
 
-    public void noteButton() {
+    public void noteButton(View view) {
         Intent intent = new Intent(this, NoteActivity.class);
         startActivity(intent);
     }
@@ -438,7 +447,7 @@ public class PointActivity extends MainMenuActivity {
 				return true;
 			}
 			case R.id.point_action_note:{
-				noteButton();
+				noteButton(null);
 				return true;
 			}
 			case R.id.point_action_draw : {
