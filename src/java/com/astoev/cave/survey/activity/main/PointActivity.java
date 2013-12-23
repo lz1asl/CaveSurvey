@@ -225,40 +225,41 @@ public class PointActivity extends MainMenuActivity {
     private boolean saveLeg() {
         try {
             Log.i(Constants.LOG_TAG_UI, "Saving leg");
-            // distance
+            
+            // start validation
+            boolean valid = true;
             EditText distance = (EditText) findViewById(R.id.point_distance);
-            if (distance.getText().toString().trim().equals("")) {
-                distance.setError(getString(R.string.required));
-                return false;
-            }
-            mLegEdited.setDistance(StringUtils.getFromEditTextNotNull(distance));
-
-            // compass
+            valid = valid && StringUtils.isNonNull(distance);
+            
             EditText azimuth = (EditText) findViewById(R.id.point_azimuth);
-            if (azimuth.getText().toString().trim().equals("")) {
-                azimuth.setError(getString(R.string.required));
-                return false;
-            }
-            mLegEdited.setAzimuth(checkAzimuth(azimuth));
-
-            // slope
+            valid = valid && StringUtils.isNonNull(azimuth);
+            
             EditText slope = (EditText) findViewById(R.id.point_slope);
-            mLegEdited.setSlope(StringUtils.getFromEditTextNotNull(slope));
-
-            // up
+            valid = valid && StringUtils.isNonNull(slope);
+            
             EditText up = (EditText) findViewById(R.id.point_up);
-            mLegEdited.setTop(StringUtils.getFromEditTextNotNull(up));
-
-            // down
+            valid = valid && StringUtils.isNonNull(up);
+            
             EditText down = (EditText) findViewById(R.id.point_down);
-            mLegEdited.setDown(StringUtils.getFromEditTextNotNull(down));
-
-            // left
+            valid = valid && StringUtils.isNonNull(down);
+            
             EditText left = (EditText) findViewById(R.id.point_left);
-            mLegEdited.setLeft(StringUtils.getFromEditTextNotNull(left));
-
-            // right
+            valid = valid && StringUtils.isNonNull(left);
+            
             EditText right = (EditText) findViewById(R.id.point_right);
+            valid = valid && StringUtils.isNonNull(right);
+            
+            if(!valid ){
+            	return false;
+            }
+            
+            // update model
+            mLegEdited.setDistance(StringUtils.getFromEditTextNotNull(distance));
+            mLegEdited.setAzimuth(checkAzimuth(azimuth));
+            mLegEdited.setSlope(StringUtils.getFromEditTextNotNull(slope));
+            mLegEdited.setTop(StringUtils.getFromEditTextNotNull(up));
+            mLegEdited.setDown(StringUtils.getFromEditTextNotNull(down));
+            mLegEdited.setLeft(StringUtils.getFromEditTextNotNull(left));
             mLegEdited.setRight(StringUtils.getFromEditTextNotNull(right));
 
             // save
