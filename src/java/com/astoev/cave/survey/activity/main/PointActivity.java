@@ -14,12 +14,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.MainMenuActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.activity.draw.DrawingActivity;
-import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Note;
 import com.astoev.cave.survey.model.Option;
@@ -27,11 +27,15 @@ import com.astoev.cave.survey.model.Photo;
 import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.service.bluetooth.BluetoothService;
+import com.astoev.cave.survey.util.PointUtil;
 import com.astoev.cave.survey.util.StringUtils;
+import com.j256.ormlite.misc.TransactionManager;
+
 import org.apache.commons.io.IOUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.concurrent.Callable;
 
 /**
  * Created by IntelliJ IDEA.
@@ -42,7 +46,7 @@ import java.io.FileInputStream;
  */
 public class PointActivity extends MainMenuActivity {
 
-    private Leg mLegEdited;
+    private Integer mCurrLeg = null;
     private ResultReceiver receiver = new ResultReceiver(new Handler()) {
 
         @Override
@@ -94,8 +98,6 @@ public class PointActivity extends MainMenuActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.point);
-
-//        loadPointData();
     }
 
     @Override
@@ -115,56 +117,60 @@ public class PointActivity extends MainMenuActivity {
 
         try {
             Bundle extras = getIntent().getExtras();
-            int legId = extras.getInt(Constants.LEG_SELECTED);
-            mLegEdited = (Leg) mWorkspace.getDBHelper().getLegDao().queryForId(legId);
+            if (extras != null) {
+                mCurrLeg = extras.getInt(Constants.LEG_SELECTED);
+                Leg legEdited = (Leg) mWorkspace.getDBHelper().getLegDao().queryForId(mCurrLeg);
 
-            // label
-            TextView leg = (TextView) findViewById(R.id.point_curr_leg);
-            leg.setText(mLegEdited.buildLegDescription(this));
+                // label
+                TextView leg = (TextView) findViewById(R.id.point_curr_leg);
+                leg.setText(legEdited.buildLegDescription(this));
 
-            // up
-            EditText up = (EditText) findViewById(R.id.point_up);
-            setNotNull(up, mLegEdited.getTop());
-//            addOnClickListener(up, Constants.Measures.up);
+                // up
+                EditText up = (EditText) findViewById(R.id.point_up);
+                setNotNull(up, legEdited.getTop());
+                //            addOnClickListener(up, Constants.Measures.up);
 
-            // down
-            EditText down = (EditText) findViewById(R.id.point_down);
-            setNotNull(down, mLegEdited.getDown());
-//            addOnClickListener(down, Constants.Measures.down);
+                // down
+                EditText down = (EditText) findViewById(R.id.point_down);
+                setNotNull(down, legEdited.getDown());
+                //            addOnClickListener(down, Constants.Measures.down);
 
-            // left
-            EditText left = (EditText) findViewById(R.id.point_left);
-            setNotNull(left, mLegEdited.getLeft());
-//            addOnClickListener(left, Constants.Measures.left);
+                // left
+                EditText left = (EditText) findViewById(R.id.point_left);
+                setNotNull(left, legEdited.getLeft());
+                //            addOnClickListener(left, Constants.Measures.left);
 
-            // right
-            EditText right = (EditText) findViewById(R.id.point_right);
-            setNotNull(right, mLegEdited.getRight());
-//            addOnClickListener(right, Constants.Measures.right);
+                // right
+                EditText right = (EditText) findViewById(R.id.point_right);
+                setNotNull(right, legEdited.getRight());
+                //            addOnClickListener(right, Constants.Measures.right);
 
-            // distance
-            EditText distance = (EditText) findViewById(R.id.point_distance);
-            setNotNull(distance, mLegEdited.getDistance());
-//            addOnClickListener(distance, Constants.Measures.distance);
+                // distance
+                EditText distance = (EditText) findViewById(R.id.point_distance);
+                setNotNull(distance, legEdited.getDistance());
+                //            addOnClickListener(distance, Constants.Measures.distance);
 
-            // azimuth
-            EditText azimuth = (EditText) findViewById(R.id.point_azimuth);
-            setNotNull(azimuth, mLegEdited.getAzimuth());
-//            addOnClickListener(azimuth, Constants.Measures.angle);
+                // azimuth
+                EditText azimuth = (EditText) findViewById(R.id.point_azimuth);
+                setNotNull(azimuth, legEdited.getAzimuth());
+                //            addOnClickListener(azimuth, Constants.Measures.angle);
 
-            // slope
-            EditText slope = (EditText) findViewById(R.id.point_slope);
-            slope.setText("0");
-            setNotNull(slope, mLegEdited.getSlope());
-//            addOnClickListener(slope, Constants.Measures.slope);
-            
-            // fill note_text with its value
-            Note note = Leg.getActiveLegNote(mLegEdited, mWorkspace);
-            if (note != null && note.getText() != null){
-            	TextView textView = (TextView)findViewById(R.id.point_note_text);
-            	textView.setText(note.getText());
-            	textView.setClickable(true);
-            } 
+                // slope
+                EditText slope = (EditText) findViewById(R.id.point_slope);
+                slope.setText("0");
+                setNotNull(slope, legEdited.getSlope());
+                //            addOnClickListener(slope, Constants.Measures.slope);
+
+                // fill note_text with its value
+                Note note = Leg.getActiveLegNote(legEdited, mWorkspace);
+                if (note != null && note.getText() != null) {
+                    TextView textView = (TextView) findViewById(R.id.point_note_text);
+                    textView.setText(note.getText());
+                    textView.setClickable(true);
+                }
+            } else {
+                Log.i(Constants.LOG_TAG_UI, "PointView for new point");
+            }
 
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to render point", e);
@@ -224,54 +230,74 @@ public class PointActivity extends MainMenuActivity {
 
     private boolean saveLeg() {
         try {
-            Log.i(Constants.LOG_TAG_UI, "Saving leg");
-            
+
             // start validation
             boolean valid = true;
-            EditText distance = (EditText) findViewById(R.id.point_distance);
-            valid = valid && StringUtils.isNonNull(distance);
-            
-            EditText azimuth = (EditText) findViewById(R.id.point_azimuth);
-            valid = valid && StringUtils.isNonNull(azimuth);
-            
-            EditText slope = (EditText) findViewById(R.id.point_slope);
-            valid = valid && StringUtils.isNonNull(slope);
-            
-            EditText up = (EditText) findViewById(R.id.point_up);
-            valid = valid && StringUtils.isNonNull(up);
-            
-            EditText down = (EditText) findViewById(R.id.point_down);
-            valid = valid && StringUtils.isNonNull(down);
-            
-            EditText left = (EditText) findViewById(R.id.point_left);
-            valid = valid && StringUtils.isNonNull(left);
-            
-            EditText right = (EditText) findViewById(R.id.point_right);
-            valid = valid && StringUtils.isNonNull(right);
-            
+            final EditText distance = (EditText) findViewById(R.id.point_distance);
+            valid = valid && validateNumber(distance, true);
+
+            final EditText azimuth = (EditText) findViewById(R.id.point_azimuth);
+            valid = valid && validateNumber(azimuth, true) && checkAzimuth(azimuth);
+
+            final EditText slope = (EditText) findViewById(R.id.point_slope);
+            valid = valid && validateNumber(slope, false) && checkSlope(slope);
+
+            final EditText up = (EditText) findViewById(R.id.point_up);
+            valid = valid && validateNumber(up, false);
+
+            final EditText down = (EditText) findViewById(R.id.point_down);
+            valid = valid && validateNumber(down, false);
+
+            final EditText left = (EditText) findViewById(R.id.point_left);
+            valid = valid && validateNumber(left, false);
+
+            final EditText right = (EditText) findViewById(R.id.point_right);
+            valid = valid && validateNumber(right, false);
+
             if(!valid ){
-            	return false;
+                return false;
             }
-            
-            // update model
-            mLegEdited.setDistance(StringUtils.getFromEditTextNotNull(distance));
-            mLegEdited.setAzimuth(checkAzimuth(azimuth));
-            mLegEdited.setSlope(StringUtils.getFromEditTextNotNull(slope));
-            mLegEdited.setTop(StringUtils.getFromEditTextNotNull(up));
-            mLegEdited.setDown(StringUtils.getFromEditTextNotNull(down));
-            mLegEdited.setLeft(StringUtils.getFromEditTextNotNull(left));
-            mLegEdited.setRight(StringUtils.getFromEditTextNotNull(right));
 
-            // save
-            mWorkspace.getDBHelper().getLegDao().update(mLegEdited);
-            UIUtilities.showNotification(this, R.string.todo);
+            Log.i(Constants.LOG_TAG_UI, "Saving leg");
 
-            Log.i(Constants.LOG_TAG_UI, "Saved");
+            TransactionManager.callInTransaction(mWorkspace.getDBHelper().getConnectionSource(),
+                    new Callable() {
+                        public Integer call() throws Exception {
+
+                            if (mCurrLeg == null) {
+                                Log.i(Constants.LOG_TAG_UI, "Create new leg");
+                                Leg activeLeg = (Leg) mWorkspace.getDBHelper().getLegDao().queryForId(mWorkspace.getActiveLegId());
+
+                                // another leg, starting from the latest in the gallery
+                                Point newFrom = mWorkspace.getLastGalleryPoint(activeLeg.getGalleryId());
+                                Point newTo = PointUtil.generateNextPoint(activeLeg.getGalleryId());
+                                mWorkspace.getDBHelper().getPointDao().create(newTo);
+
+                                Leg nextLeg = new Leg(newFrom, newTo, mWorkspace.getActiveProject(), activeLeg.getGalleryId());
+
+                                mWorkspace.getDBHelper().getLegDao().create(nextLeg);
+                                mCurrLeg = nextLeg.getId();
+                            }
+
+                            Leg legEdited = (Leg) mWorkspace.getDBHelper().getLegDao().queryForId(mCurrLeg);
+
+                            // update model
+                            legEdited.setDistance(StringUtils.getFromEditTextNotNull(distance));
+                            legEdited.setAzimuth(StringUtils.getFromEditTextNotNull(azimuth));
+                            legEdited.setSlope(StringUtils.getFromEditTextNotNull(slope));
+                            legEdited.setTop(StringUtils.getFromEditTextNotNull(up));
+                            legEdited.setDown(StringUtils.getFromEditTextNotNull(down));
+                            legEdited.setLeft(StringUtils.getFromEditTextNotNull(left));
+                            legEdited.setRight(StringUtils.getFromEditTextNotNull(right));
+
+                            // save
+                            mWorkspace.getDBHelper().getLegDao().update(legEdited);
+
+                            Log.i(Constants.LOG_TAG_UI, "Saved");
+                            return 0;
+                        }
+                    });
             return true;
-        } catch (DataException de) {
-            Log.e(Constants.LOG_TAG_UI, "Leg not saved", de);
-            String message = getString(R.string.popup_bad_input) + " : " + de.getMessage();
-            UIUtilities.showNotification(this, message);
         } catch (Exception e) {
             UIUtilities.showNotification(this, R.string.error);
             Log.e(Constants.LOG_TAG_UI, "Leg not saved", e);
@@ -279,26 +305,66 @@ public class PointActivity extends MainMenuActivity {
         return false;
     }
 
-    private Float checkAzimuth(EditText aEditText) throws DataException {
+    private boolean validateNumber(EditText aEditField, boolean isRequired) {
+        if (StringUtils.isEmpty(aEditField)) {
+            if (isRequired) {
+                aEditField.setError(aEditField.getContext().getString(R.string.required));
+                return false;
+            }
+            return true;
+        } else {
+            try {
+                Float.parseFloat(aEditField.getText().toString().trim());
+                return true;
+            } catch (NumberFormatException nfe) {
+                aEditField.setError(aEditField.getContext().getString(R.string.invalid));
+                return false;
+            }
+        }
+    }
+
+    private boolean checkAzimuth(EditText aEditText) {
         Float azimuth = StringUtils.getFromEditTextNotNull(aEditText);
         if (null != azimuth) {
             if (azimuth.floatValue() < 0) {
-                throw new DataException(getString(R.string.azimuth));
+                aEditText.setError(aEditText.getContext().getString(R.string.invalid));
+                return false;
             }
 
             String currAzimuthMeasure = Options.getOptionValue(Option.CODE_AZIMUTH_UNITS);
             int maxValue;
             if (Option.UNIT_DEGREES.equals(currAzimuthMeasure)) {
-                maxValue = Option.MAX_VALUE_DEGREES;
+                maxValue = Option.MAX_VALUE_AZIMUTH_DEGREES;
             } else { // Option.UNIT_GRADS
-                maxValue = Option.MAX_VALUE_GRADS;
+                maxValue = Option.MAX_VALUE_AZIMUTH_GRADS;
             }
             if (azimuth.floatValue() > maxValue) {
-                throw new DataException(getString(R.string.azimuth));
+                aEditText.setError(aEditText.getContext().getString(R.string.invalid));
+                return false;
             }
         }
 
-        return azimuth;
+        return true;
+    }
+
+    private boolean checkSlope(EditText aEditText) {
+        Float slope = StringUtils.getFromEditTextNotNull(aEditText);
+        if (null != slope) {
+            String currSlopeMeasure = Options.getOptionValue(Option.CODE_SLOPE_UNITS);
+            int maxValue, minValue;
+            if (Option.UNIT_DEGREES.equals(currSlopeMeasure)) {
+                maxValue = Option.MAX_VALUE_SLOPE_DEGREES;
+                minValue = Option.MIN_VALUE_SLOPE_DEGREES;
+            } else { // Option.UNIT_GRADS
+                maxValue = Option.MAX_VALUE_SLOPE_GRADS;
+                minValue = Option.MIN_VALUE_SLOPE_GRADS;
+            }
+            if (slope.floatValue() > maxValue || slope.floatValue() < minValue) {
+                aEditText.setError(aEditText.getContext().getString(R.string.invalid));
+                return false;
+            }
+        }
+        return true;
     }
 
     public void noteButton(View view) {
@@ -404,7 +470,8 @@ public class PointActivity extends MainMenuActivity {
                         Photo photo = new Photo();
                         photo.setPictureBytes(IOUtils.toByteArray(in));
 
-                        Point currPoint = (Point) mWorkspace.getDBHelper().getPointDao().queryForId(mLegEdited.getFromPoint().getId());
+                        Leg legEdited = (Leg) mWorkspace.getDBHelper().getLegDao().queryForId(mCurrLeg);
+                        Point currPoint = (Point) mWorkspace.getDBHelper().getPointDao().queryForId(legEdited.getFromPoint().getId());
                         photo.setPoint(currPoint);
 
                         mWorkspace.getDBHelper().getPhotoDao().create(photo);
@@ -427,49 +494,49 @@ public class PointActivity extends MainMenuActivity {
         startActivity(intent);
     }
 
-	/**
-	 * @see com.astoev.cave.survey.activity.MainMenuActivity#getChildsOptionsMenu()
-	 */
-	@Override
-	protected int getChildsOptionsMenu() {
-		return R.menu.pointmenu;
-	}
+    /**
+     * @see com.astoev.cave.survey.activity.MainMenuActivity#getChildsOptionsMenu()
+     */
+    @Override
+    protected int getChildsOptionsMenu() {
+        return R.menu.pointmenu;
+    }
 
-	/**
-	 * @see com.astoev.cave.survey.activity.MainMenuActivity#onOptionsItemSelected(android.view.MenuItem)
-	 */
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		Log.i(Constants.LOG_TAG_UI, "Point activity's menu selected - " + item.toString());
-		
-		switch (item.getItemId()) {
-			case R.id.point_action_save:{
-				saveButton();
-				return true;
-			}
-			case R.id.point_action_note:{
-				noteButton(null);
-				return true;
-			}
-			case R.id.point_action_draw : {
-				drawingButton();
-				return true;
-			}
-			case R.id.point_action_gps : {
-				coordinateButton();
-				return true;
-			}
-			case R.id.point_action_photo : {
-				photoButton();
-				return true;
-			}
-			case R.id.point_action_delete : {
-				deleteButton();
-				return true;
-			}
-			default:
-				return super.onOptionsItemSelected(item);
-		}	
-	}
+    /**
+     * @see com.astoev.cave.survey.activity.MainMenuActivity#onOptionsItemSelected(android.view.MenuItem)
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.i(Constants.LOG_TAG_UI, "Point activity's menu selected - " + item.toString());
+
+        switch (item.getItemId()) {
+            case R.id.point_action_save: {
+                saveButton();
+                return true;
+            }
+            case R.id.point_action_note: {
+                noteButton(null);
+                return true;
+            }
+            case R.id.point_action_draw: {
+                drawingButton();
+                return true;
+            }
+            case R.id.point_action_gps: {
+                coordinateButton();
+                return true;
+            }
+            case R.id.point_action_photo: {
+                photoButton();
+                return true;
+            }
+            case R.id.point_action_delete: {
+                deleteButton();
+                return true;
+            }
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
 }
