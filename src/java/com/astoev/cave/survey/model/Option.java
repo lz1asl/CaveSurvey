@@ -31,10 +31,12 @@ public class Option implements Serializable {
     public static final String UNIT_DEGREES = "degrees";
     public static final String UNIT_GRADS = "grads";
 
-    public static final int MAX_VALUE_DEGREES = 360;
-    public static final int MAX_VALUE_GRADS = 400;
-    public static final int MAX_VALUE_SLOPE = 90;
-    public static final int MIN_VALUE_SLOPE = -90;
+    public static final int MAX_VALUE_AZIMUTH_DEGREES = 360;
+    public static final int MAX_VALUE_AZIMUTH_GRADS = 400;
+    public static final int MAX_VALUE_SLOPE_DEGREES = 90;
+    public static final int MIN_VALUE_SLOPE_DEGREES = -90;
+    public static final int MAX_VALUE_SLOPE_GRADS = 100;
+    public static final int MIN_VALUE_SLOPE_GRADS = -100;
 
     public static final String COLUMN_CODE = "code";
     public static final String COLUMN_PROJECT_ID = "project_id";

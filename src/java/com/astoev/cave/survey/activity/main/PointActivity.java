@@ -20,7 +20,6 @@ import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.MainMenuActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.activity.draw.DrawingActivity;
-import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Note;
 import com.astoev.cave.survey.model.Option;
@@ -231,19 +230,35 @@ public class PointActivity extends MainMenuActivity {
 
     private boolean saveLeg() {
         try {
-            Log.i(Constants.LOG_TAG_UI, "Saving leg");
 
-            // validations
+            // start validation
+            boolean valid = true;
             final EditText distance = (EditText) findViewById(R.id.point_distance);
-            if (distance.getText().toString().trim().equals("")) {
-                distance.setError(getString(R.string.required));
-                return false;
-            }
+            valid = valid && validateNumber(distance, true);
+
             final EditText azimuth = (EditText) findViewById(R.id.point_azimuth);
-            if (azimuth.getText().toString().trim().equals("")) {
-                azimuth.setError(getString(R.string.required));
+            valid = valid && validateNumber(azimuth, true) && checkAzimuth(azimuth);
+
+            final EditText slope = (EditText) findViewById(R.id.point_slope);
+            valid = valid && validateNumber(slope, false) && checkSlope(slope);
+
+            final EditText up = (EditText) findViewById(R.id.point_up);
+            valid = valid && validateNumber(up, false);
+
+            final EditText down = (EditText) findViewById(R.id.point_down);
+            valid = valid && validateNumber(down, false);
+
+            final EditText left = (EditText) findViewById(R.id.point_left);
+            valid = valid && validateNumber(left, false);
+
+            final EditText right = (EditText) findViewById(R.id.point_right);
+            valid = valid && validateNumber(right, false);
+
+            if(!valid ){
                 return false;
             }
+
+            Log.i(Constants.LOG_TAG_UI, "Saving leg");
 
             TransactionManager.callInTransaction(mWorkspace.getDBHelper().getConnectionSource(),
                     new Callable() {
@@ -265,29 +280,14 @@ public class PointActivity extends MainMenuActivity {
                             }
 
                             Leg legEdited = (Leg) mWorkspace.getDBHelper().getLegDao().queryForId(mCurrLeg);
+
+                            // update model
                             legEdited.setDistance(StringUtils.getFromEditTextNotNull(distance));
-
-                            // compass
-                            legEdited.setAzimuth(checkAzimuth(azimuth));
-
-                            // slope
-                            EditText slope = (EditText) findViewById(R.id.point_slope);
+                            legEdited.setAzimuth(StringUtils.getFromEditTextNotNull(azimuth));
                             legEdited.setSlope(StringUtils.getFromEditTextNotNull(slope));
-
-                            // up
-                            EditText up = (EditText) findViewById(R.id.point_up);
                             legEdited.setTop(StringUtils.getFromEditTextNotNull(up));
-
-                            // down
-                            EditText down = (EditText) findViewById(R.id.point_down);
                             legEdited.setDown(StringUtils.getFromEditTextNotNull(down));
-
-                            // left
-                            EditText left = (EditText) findViewById(R.id.point_left);
                             legEdited.setLeft(StringUtils.getFromEditTextNotNull(left));
-
-                            // right
-                            EditText right = (EditText) findViewById(R.id.point_right);
                             legEdited.setRight(StringUtils.getFromEditTextNotNull(right));
 
                             // save
@@ -305,26 +305,66 @@ public class PointActivity extends MainMenuActivity {
         return false;
     }
 
-    private Float checkAzimuth(EditText aEditText) throws DataException {
+    private boolean validateNumber(EditText aEditField, boolean isRequired) {
+        if (StringUtils.isEmpty(aEditField)) {
+            if (isRequired) {
+                aEditField.setError(aEditField.getContext().getString(R.string.required));
+                return false;
+            }
+            return true;
+        } else {
+            try {
+                Float.parseFloat(aEditField.getText().toString().trim());
+                return true;
+            } catch (NumberFormatException nfe) {
+                aEditField.setError(aEditField.getContext().getString(R.string.invalid));
+                return false;
+            }
+        }
+    }
+
+    private boolean checkAzimuth(EditText aEditText) {
         Float azimuth = StringUtils.getFromEditTextNotNull(aEditText);
         if (null != azimuth) {
             if (azimuth.floatValue() < 0) {
-                throw new DataException(getString(R.string.azimuth));
+                aEditText.setError(aEditText.getContext().getString(R.string.invalid));
+                return false;
             }
 
             String currAzimuthMeasure = Options.getOptionValue(Option.CODE_AZIMUTH_UNITS);
             int maxValue;
             if (Option.UNIT_DEGREES.equals(currAzimuthMeasure)) {
-                maxValue = Option.MAX_VALUE_DEGREES;
+                maxValue = Option.MAX_VALUE_AZIMUTH_DEGREES;
             } else { // Option.UNIT_GRADS
-                maxValue = Option.MAX_VALUE_GRADS;
+                maxValue = Option.MAX_VALUE_AZIMUTH_GRADS;
             }
             if (azimuth.floatValue() > maxValue) {
-                throw new DataException(getString(R.string.azimuth));
+                aEditText.setError(aEditText.getContext().getString(R.string.invalid));
+                return false;
             }
         }
 
-        return azimuth;
+        return true;
+    }
+
+    private boolean checkSlope(EditText aEditText) {
+        Float slope = StringUtils.getFromEditTextNotNull(aEditText);
+        if (null != slope) {
+            String currSlopeMeasure = Options.getOptionValue(Option.CODE_SLOPE_UNITS);
+            int maxValue, minValue;
+            if (Option.UNIT_DEGREES.equals(currSlopeMeasure)) {
+                maxValue = Option.MAX_VALUE_SLOPE_DEGREES;
+                minValue = Option.MIN_VALUE_SLOPE_DEGREES;
+            } else { // Option.UNIT_GRADS
+                maxValue = Option.MAX_VALUE_SLOPE_GRADS;
+                minValue = Option.MIN_VALUE_SLOPE_GRADS;
+            }
+            if (slope.floatValue() > maxValue || slope.floatValue() < minValue) {
+                aEditText.setError(aEditText.getContext().getString(R.string.invalid));
+                return false;
+            }
+        }
+        return true;
     }
 
     public void noteButton(View view) {
