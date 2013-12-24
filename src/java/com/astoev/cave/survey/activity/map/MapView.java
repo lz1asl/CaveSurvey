@@ -8,7 +8,7 @@ import android.graphics.Point;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
+
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.UIUtilities;
@@ -41,7 +41,6 @@ public class MapView extends View {
     Paint overlayPaint = new Paint();
     Paint youAreHerePaint = new Paint();
     Workspace mWorkspace;
-    private Window mWindow;
     private float scale = 10;
     private int mapCenterMoveX = 0;
     private int mapCenterMoveY = 0;
@@ -64,7 +63,6 @@ public class MapView extends View {
     public void onDraw(Canvas canvas) {
 
         try {
-
             // prepare map surface
             int maxX = canvas.getWidth();
             int maxY = canvas.getHeight();
@@ -248,10 +246,6 @@ public class MapView extends View {
         invalidate();
     }
 
-    public void setWindow(Window aWindow) {
-        //To change body of created methods use File | Settings | File Templates.
-    }
-
     private Integer getNextColor(Integer aGalleryId) {
         // assure predictable colors for the galleries, start repeating colors if too many galleries
         int colorIndex = aGalleryId;
@@ -270,7 +264,7 @@ public class MapView extends View {
             return anAzimuth;
         } else {
             // convert from grads to degrees
-            return anAzimuth * Option.MAX_VALUE_DEGREES / Option.MAX_VALUE_GRADS;
+            return anAzimuth * Option.MAX_VALUE_AZIMUTH_DEGREES / Option.MAX_VALUE_AZIMUTH_GRADS;
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.astoev.cave.survey.activity.map;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,7 +25,6 @@ public class MapActivity extends MainMenuActivity implements View.OnTouchListene
         setContentView(R.layout.map);
         map = (MapView) findViewById(R.id.mapSurface);
         map.setOnTouchListener(this);
-        map.setWindow(getWindow());
 
         final ZoomControls zoom = (ZoomControls) findViewById(R.id.mapZoom);
         zoom.setOnZoomInClickListener(new View.OnClickListener() {
@@ -51,15 +51,19 @@ public class MapActivity extends MainMenuActivity implements View.OnTouchListene
     public boolean onTouch(View aView, MotionEvent aMotionEvent) {
 
         if (aMotionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-//            Log.i(Constants.LOG_TAG_UI, "reset initial ");
             map.resetMove(aMotionEvent.getX(), aMotionEvent.getY());
         } else if (aMotionEvent.getAction() == MotionEvent.ACTION_MOVE) {
-//            Log.i(Constants.LOG_TAG_UI, "Move on x " + (aMotionEvent.getX())) ;
             map.move(aMotionEvent.getX(), aMotionEvent.getY());
         }
 
         return true;
     }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
 
+        map = (MapView) findViewById(R.id.mapSurface);
+        map.setOnTouchListener(this);
+    }
 }
