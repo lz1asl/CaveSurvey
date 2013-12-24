@@ -7,7 +7,10 @@
               android:layout_height="wrap_content"
               android:textAppearance="?android:attr/textAppearanceLarge"/>
 
-    <EditText android:id="@+id/note_text" android:maxLength="20" android:inputType="text" android:lines="1"
+    <EditText android:id="@+id/note_text" 
+        	  android:maxLength="512"
+        	  android:scrollbars="vertical"
+        	  android:inputType="textMultiLine"
               android:layout_width="fill_parent"
               android:layout_height="0dip"
               android:gravity="center_horizontal"

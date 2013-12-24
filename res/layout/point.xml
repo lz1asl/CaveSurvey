@@ -119,10 +119,13 @@
     </LinearLayout>
     <TextView android:id="@+id/point_note_text"
         	  android:layout_width="fill_parent"
-        	  android:layout_height="fill_parent"
+        	  android:layout_height="wrap_content"
         	  android:layout_margin="20dp"
         	  android:layout_below="@id/point_dimensions_fields"
         	  android:clickable="false"
-        	  android:onClick="noteButton"/>
+        	  android:onClick="noteButton"
+        	  android:ellipsize="end"
+        	  android:scrollbars="vertical"
+        	  android:fadeScrollbars="false"/>
     
 </RelativeLayout>
