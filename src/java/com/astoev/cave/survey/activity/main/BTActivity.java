@@ -35,6 +35,29 @@ public class BTActivity extends BaseActivity {
     final List<BluetoothDevice> devices = new ArrayList<BluetoothDevice>();
     BluetoothDevice device = null;
 
+    final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        public void onReceive(Context context, Intent intent) {
+            try {
+
+                String action = intent.getAction();
+                // When discovery finds a device
+                if (BluetoothDevice.ACTION_FOUND.equals(action)) {
+                    BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                    Log.i("BlueTooth Testing", device.getName() + "\n" + device.getAddress());
+                    if (!devices.contains(device)) {
+                        devices.add(device);
+                    }
+                    refreshDevicesList();
+                }
+            } catch (Exception e) {
+                Log.e(Constants.LOG_TAG_UI, "Failed during receive", e);
+                UIUtilities.showNotification(BTActivity.this, R.string.error);
+            }
+        }
+    };
+
+    IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+
     public void onCreate(Bundle savedInstanceState) {
         try {
             super.onCreate(savedInstanceState);
@@ -79,30 +102,7 @@ public class BTActivity extends BaseActivity {
 
         try {
             Log.i(Constants.LOG_TAG_UI, "Searching devices");
-
-            final BroadcastReceiver mReceiver = new BroadcastReceiver() {
-                public void onReceive(Context context, Intent intent) {
-                    try {
-
-                        String action = intent.getAction();
-                        // When discovery finds a device
-                        if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-                            BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                            Log.i("BlueTooth Testing", device.getName() + "\n" + device.getAddress());
-                            if (!devices.contains(device)) {
-                                devices.add(device);
-                            }
-                            refreshDevicesList();
-                        }
-                    } catch (Exception e) {
-                        Log.e(Constants.LOG_TAG_UI, "Failed during receive", e);
-                        UIUtilities.showNotification(BTActivity.this, R.string.error);
-                    }
-                }
-            };
-
-            IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-            registerReceiver(mReceiver, filter);
+registerReceiver(mReceiver, filter);
             BluetoothAdapter.getDefaultAdapter().startDiscovery();
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed during search", e);
@@ -130,5 +130,9 @@ public class BTActivity extends BaseActivity {
         }
     }
 
-
+    @Override
+    public void onBackPressed() {
+        unregisterReceiver(mReceiver);
+        super.onBackPressed();
+    }
 }
