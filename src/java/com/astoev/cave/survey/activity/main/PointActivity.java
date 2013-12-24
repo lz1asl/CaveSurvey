@@ -26,6 +26,7 @@ import com.astoev.cave.survey.model.Option;
 import com.astoev.cave.survey.model.Photo;
 import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.service.Options;
+import com.astoev.cave.survey.service.Workspace;
 import com.astoev.cave.survey.service.bluetooth.BluetoothService;
 import com.astoev.cave.survey.util.PointUtil;
 import com.astoev.cave.survey.util.StringUtils;
@@ -35,6 +36,7 @@ import org.apache.commons.io.IOUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.sql.SQLException;
 import java.util.concurrent.Callable;
 
 /**
@@ -130,38 +132,38 @@ public class PointActivity extends MainMenuActivity {
                 // up
                 EditText up = (EditText) findViewById(R.id.point_up);
                 setNotNull(up, legEdited.getTop());
-                //            addOnClickListener(up, Constants.Measures.up);
+                addOnClickListener(up, Constants.Measures.up);
 
                 // down
                 EditText down = (EditText) findViewById(R.id.point_down);
                 setNotNull(down, legEdited.getDown());
-                //            addOnClickListener(down, Constants.Measures.down);
+                addOnClickListener(down, Constants.Measures.down);
 
                 // left
                 EditText left = (EditText) findViewById(R.id.point_left);
                 setNotNull(left, legEdited.getLeft());
-                //            addOnClickListener(left, Constants.Measures.left);
+                addOnClickListener(left, Constants.Measures.left);
 
                 // right
                 EditText right = (EditText) findViewById(R.id.point_right);
                 setNotNull(right, legEdited.getRight());
-                //            addOnClickListener(right, Constants.Measures.right);
+                addOnClickListener(right, Constants.Measures.right);
 
                 // distance
                 EditText distance = (EditText) findViewById(R.id.point_distance);
                 setNotNull(distance, legEdited.getDistance());
-                //            addOnClickListener(distance, Constants.Measures.distance);
+                addOnClickListener(distance, Constants.Measures.distance);
 
                 // azimuth
                 EditText azimuth = (EditText) findViewById(R.id.point_azimuth);
                 setNotNull(azimuth, legEdited.getAzimuth());
-                //            addOnClickListener(azimuth, Constants.Measures.angle);
+                addOnClickListener(azimuth, Constants.Measures.angle);
 
                 // slope
                 EditText slope = (EditText) findViewById(R.id.point_slope);
                 slope.setText("0");
                 setNotNull(slope, legEdited.getSlope());
-                //            addOnClickListener(slope, Constants.Measures.slope);
+                addOnClickListener(slope, Constants.Measures.slope);
 
                 // fill note_text with its value
                 Note note = Leg.getActiveLegNote(legEdited, mWorkspace);
@@ -173,6 +175,14 @@ public class PointActivity extends MainMenuActivity {
                     textView.setText(mNewNote);
                     textView.setClickable(true);
                 }
+
+                // enable deletion for last leg
+//                MenuItem deleteMenuOption = (MenuItem) findViewById(R.id.point_action_delete);
+//                if (legEdited.getId().equals(mWorkspace.getLastLeg())) {
+//                    deleteMenuOption.setEnabled(true);
+//                } else {
+//                    deleteMenuOption.setEnabled(false);
+//                }
             } else {
                 Log.i(Constants.LOG_TAG_UI, "PointView for new point");
             }
@@ -187,10 +197,11 @@ public class PointActivity extends MainMenuActivity {
 
         if (BluetoothService.isBluetoothSupported()) {
 
-            if (!ensureDeviceSelected()) {
+            if (!ensureDeviceSelected(false)) {
                 return;
             }
 
+            Log.i(Constants.LOG_TAG_UI, "Register field? " + aMeasure);
             switch (aMeasure) {
                 case distance:
                 case up:
@@ -216,10 +227,12 @@ public class PointActivity extends MainMenuActivity {
             }
         }
 
+        Log.i(Constants.LOG_TAG_UI, "Add BT listener");
         // supported for the measure, add the listener
         text.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.i(Constants.LOG_TAG_UI, "Send command");
                 triggerBluetoothMeasure(aMeasure);
             }
         });
@@ -259,7 +272,7 @@ public class PointActivity extends MainMenuActivity {
             final EditText right = (EditText) findViewById(R.id.point_right);
             valid = valid && validateNumber(right, false);
 
-            if(!valid ){
+            if (!valid) {
                 return false;
             }
 
@@ -406,8 +419,31 @@ public class PointActivity extends MainMenuActivity {
     }
 
     public void deleteButton() {
-        // TODO
-        UIUtilities.showNotification(this, R.string.todo);
+        try {
+            TransactionManager.callInTransaction(mWorkspace.getDBHelper().getConnectionSource(),
+                    new Callable() {
+                        public Object call() throws Exception {
+                            Log.i(Constants.LOG_TAG_UI, "Delete " + mWorkspace.getActiveLegId());
+
+                            Leg legEdited = (Leg) mWorkspace.getDBHelper().getLegDao().queryForId(mCurrLeg);
+
+                            Note note = Leg.getActiveLegNote(legEdited, mWorkspace);
+                            if (note != null) {
+                                mWorkspace.getDBHelper().getNoteDao().delete(note);
+                            }
+
+                            mWorkspace.getDBHelper().getLegDao().delete(legEdited);
+                            mWorkspace.getDBHelper().getPointDao().delete(legEdited.getToPoint());
+
+                            mWorkspace.setActiveLegId(mWorkspace.getActiveOrFirstLeg().getId());
+
+                            return null;
+                        }
+                    });
+        } catch (Exception e) {
+            Log.e(Constants.LOG_TAG_UI, "Failed to delete point", e);
+            UIUtilities.showNotification(this, R.string.error);
+        }
     }
 
     private void triggerBluetoothMeasure(Constants.Measures aMeasure) {
@@ -421,27 +457,29 @@ public class PointActivity extends MainMenuActivity {
         setNotNull(up, aMeasure);
     }
 
-    private boolean ensureDeviceSelected() {
+    private boolean ensureDeviceSelected(boolean showBTOptions) {
         if (BluetoothService.isDeviceSelected()) {
             return true;
         }
 
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-        dialogBuilder.setMessage(R.string.bt_not_selected)
-                .setCancelable(false)
-                .setPositiveButton(R.string.button_yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        Intent intent = new Intent(PointActivity.this, BTActivity.class);
-                        startActivity(intent);
-                    }
-                })
-                .setNegativeButton(R.string.button_no, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
-        AlertDialog alert = dialogBuilder.create();
-        alert.show();
+        if (showBTOptions) {
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+            dialogBuilder.setMessage(R.string.bt_not_selected)
+                    .setCancelable(false)
+                    .setPositiveButton(R.string.button_yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            Intent intent = new Intent(PointActivity.this, BTActivity.class);
+                            startActivity(intent);
+                        }
+                    })
+                    .setNegativeButton(R.string.button_no, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    });
+            AlertDialog alert = dialogBuilder.create();
+            alert.show();
+        }
         return false;
     }
 

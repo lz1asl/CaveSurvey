@@ -1,6 +1,7 @@
 package com.astoev.cave.survey.service.bluetooth;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -111,7 +112,7 @@ public class ConnectThread extends Thread {
                         Bundle b = new Bundle();
                         b.putFloat("result", measure / 10);
                         b.putString("type", Constants.Measures.angle.toString());
-                        mReceiver.send(0, b);
+                        mReceiver.send(Activity.RESULT_OK, b);
                     }
 
                     if (j == 2 && measure > -26843545) {
@@ -119,7 +120,7 @@ public class ConnectThread extends Thread {
                         Bundle b = new Bundle();
                         b.putFloat("result", measure / 1000);
                         b.putString("type", mMeasure.toString());
-                        mReceiver.send(0, b);
+                        mReceiver.send(Activity.RESULT_OK, b);
                     }
                 }
 
