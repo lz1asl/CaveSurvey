@@ -16,7 +16,7 @@ import com.astoev.cave.survey.R;
  */
 public class StringUtils {
 
-    private static final NumberFormat DECIMAL_FORMAT = new DecimalFormat("#####.##");
+    private static final NumberFormat DECIMAL_FORMAT = new DecimalFormat("#####.###");
     private static final String EMPTY_STRING = "";
 
 
