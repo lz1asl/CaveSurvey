@@ -58,7 +58,7 @@ public class MainActivity extends MainMenuActivity {
 
     private void drawTable() {
         try {
-            Leg activeLeg = mWorkspace.getActiveOrFirstLeg();
+            Leg activeLeg = mWorkspace.getLastLeg();
             mWorkspace.setActiveLegId(activeLeg.getId());
 
             // prepare labels

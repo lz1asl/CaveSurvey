@@ -52,6 +52,14 @@ public class Workspace {
         }
     }
 
+    public Leg getLastLeg() throws SQLException {
+        Log.i(Constants.LOG_TAG_SERVICE, "Search last leg for project " + mActiveProject.getId());
+        QueryBuilder<Leg, Integer> firstLegQuery = mDBHelper.getLegDao().queryBuilder();
+        firstLegQuery.where().eq(Leg.COLUMN_PROJECT_ID, mActiveProject);
+        firstLegQuery.orderBy(Leg.COLUMN_FROM_POINT, false);
+        return (Leg) mDBHelper.getLegDao().queryForFirst(firstLegQuery.prepare());
+    }
+
     public List<Leg> getCurrProjectLegs() throws SQLException {
         QueryBuilder<Leg, Integer> statementBuilder = mDBHelper.getLegDao().queryBuilder();
         statementBuilder.where().eq(Leg.COLUMN_PROJECT_ID, mActiveProject);
