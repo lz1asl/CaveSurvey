@@ -154,12 +154,12 @@ public class MainActivity extends MainMenuActivity {
                 try {
                     if (0 == item) {
                         addLeg(false);
-                    } else if (1 == item) {
-                        addLeg(true);
-                    } else if (2 == item) {
-                        requestLengthAndAddMiddle();
-                    } else if (3 == item) {
-                        UIUtilities.showNotification(MainActivity.this, R.string.todo);
+//                    } else if (1 == item) {
+//                        addLeg(true);
+//                    } else if (2 == item) {
+//                        requestLengthAndAddMiddle();
+//                    } else if (3 == item) {
+//                        UIUtilities.showNotification(MainActivity.this, R.string.todo);
                     }
                 } catch (Exception e) {
                     Log.e(Constants.LOG_TAG_UI, "Error adding", e);

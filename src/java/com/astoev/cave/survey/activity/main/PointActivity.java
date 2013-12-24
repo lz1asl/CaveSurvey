@@ -47,6 +47,7 @@ import java.util.concurrent.Callable;
 public class PointActivity extends MainMenuActivity {
 
     private Integer mCurrLeg = null;
+    private String mNewNote = null;
     private ResultReceiver receiver = new ResultReceiver(new Handler()) {
 
         @Override
@@ -98,6 +99,7 @@ public class PointActivity extends MainMenuActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.point);
+        mNewNote = null;
     }
 
     @Override
@@ -163,9 +165,12 @@ public class PointActivity extends MainMenuActivity {
 
                 // fill note_text with its value
                 Note note = Leg.getActiveLegNote(legEdited, mWorkspace);
+                TextView textView = (TextView) findViewById(R.id.point_note_text);
                 if (note != null && note.getText() != null) {
-                    TextView textView = (TextView) findViewById(R.id.point_note_text);
                     textView.setText(note.getText());
+                    textView.setClickable(true);
+                } else if (mNewNote != null) {
+                    textView.setText(mNewNote);
                     textView.setClickable(true);
                 }
             } else {
@@ -290,8 +295,17 @@ public class PointActivity extends MainMenuActivity {
                             legEdited.setLeft(StringUtils.getFromEditTextNotNull(left));
                             legEdited.setRight(StringUtils.getFromEditTextNotNull(right));
 
-                            // save
+                            // save leg
                             mWorkspace.getDBHelper().getLegDao().update(legEdited);
+
+                            if (mNewNote != null) {
+                                // create new note
+                                Note note = new Note(mNewNote);
+                                note.setPoint(legEdited.getFromPoint());
+                                mWorkspace.getDBHelper().getNoteDao().create(note);
+                            }
+
+                            mWorkspace.setActiveLegId(legEdited.getId());
 
                             Log.i(Constants.LOG_TAG_UI, "Saved");
                             return 0;
@@ -367,9 +381,11 @@ public class PointActivity extends MainMenuActivity {
         return true;
     }
 
-    public void noteButton(View view) {
+    public void noteButton(View aView) {
         Intent intent = new Intent(this, NoteActivity.class);
-        startActivity(intent);
+        intent.putExtra(Constants.LEG_SELECTED, mCurrLeg);
+        intent.putExtra(Constants.LEG_NOTE, mNewNote);
+        startActivityForResult(intent, 2);
     }
 
     public void saveButton() {
@@ -458,7 +474,7 @@ public class PointActivity extends MainMenuActivity {
 
     // photo is captured
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent aData) {
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case 1:
@@ -484,6 +500,11 @@ public class PointActivity extends MainMenuActivity {
                         IOUtils.closeQuietly(in);
                     }
                     break;
+                case 2:
+                    mNewNote = aData.getStringExtra("note");
+                    TextView textView = (TextView) findViewById(R.id.point_note_text);
+                    textView.setText(mNewNote);
+                    textView.setClickable(true);
             }
         }
     }
