@@ -30,18 +30,6 @@ public class HomeActivity extends MainMenuActivity {
 
     private static boolean isFirstEntry;
     
-//    private void prepareBT() {
-//        // BT protocol
-//        Button btButton = (Button) findViewById(R.id.bt_setup_button);
-//        if (!BluetoothService.isBluetoothSupported()) {
-//            Log.w(Constants.LOG_TAG_UI, "Bluetooth not supported");
-//            btButton.setEnabled(false);
-//            btButton.setText(R.string.bt_not_supported);
-//        } else {
-//            btButton.setEnabled(true);
-//        }
-//    }
-
     /**
      * Called when the activity is first created.
      */
@@ -67,7 +55,6 @@ public class HomeActivity extends MainMenuActivity {
         super.onResume();
     	
         loadProjects();
-//        prepareBT();
     }
     
 	/**
@@ -135,6 +122,19 @@ public class HomeActivity extends MainMenuActivity {
             	projectsContainer.setAdapter(noprojectsAdapter);
 
                 projectsContainer.setAdapter(noprojectsAdapter);
+
+                // item clicked listener
+                OnItemClickListener projectClickedListener = new OnItemClickListener() {
+
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                        Intent intent = new Intent(HomeActivity.this, NewProjectActivity.class);
+                        startActivity(intent);
+                    }
+                };
+
+                projectsContainer.setOnItemClickListener(projectClickedListener);
             }
 
         } catch (Exception e) {
