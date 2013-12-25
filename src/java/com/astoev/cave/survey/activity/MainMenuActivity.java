@@ -20,7 +20,7 @@ public class MainMenuActivity extends BaseActivity {
 
 	/** Constant that shows that there is no child menu item */
 	protected static int NO_CHILD_MENU_ITEMS = 0;
-	
+
 	/**
 	 * Defines the child activity's additional menu items
 	 * 

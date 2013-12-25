@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.os.ResultReceiver;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -176,13 +177,6 @@ public class PointActivity extends MainMenuActivity {
                     textView.setClickable(true);
                 }
 
-                // enable deletion for last leg
-//                MenuItem deleteMenuOption = (MenuItem) findViewById(R.id.point_action_delete);
-//                if (legEdited.getId().equals(mWorkspace.getLastLeg())) {
-//                    deleteMenuOption.setEnabled(true);
-//                } else {
-//                    deleteMenuOption.setEnabled(false);
-//                }
             } else {
                 Log.i(Constants.LOG_TAG_UI, "PointView for new point");
             }
@@ -321,6 +315,7 @@ public class PointActivity extends MainMenuActivity {
                             mWorkspace.setActiveLegId(legEdited.getId());
 
                             Log.i(Constants.LOG_TAG_UI, "Saved");
+                            UIUtilities.showNotification(PointActivity.this, R.string.action_saved);
                             return 0;
                         }
                     });
@@ -435,8 +430,10 @@ public class PointActivity extends MainMenuActivity {
                             mWorkspace.getDBHelper().getLegDao().delete(legEdited);
                             mWorkspace.getDBHelper().getPointDao().delete(legEdited.getToPoint());
 
-                            mWorkspace.setActiveLegId(mWorkspace.getActiveOrFirstLeg().getId());
+                            mWorkspace.setActiveLegId(mWorkspace.getLastLeg().getId());
 
+                            UIUtilities.showNotification(PointActivity.this, R.string.action_deleted);
+                            onBackPressed();
                             return null;
                         }
                     });
@@ -598,4 +595,31 @@ public class PointActivity extends MainMenuActivity {
         }
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        // need to call super to prepare menu
+        boolean flag =  super.onPrepareOptionsMenu(menu);
+
+        // enable deletion if already saved
+        if (mCurrLeg != null) {
+            try {
+                Leg legEdited = (Leg) mWorkspace.getDBHelper().getLegDao().queryForId(mCurrLeg);
+                Leg lastLeg = mWorkspace.getLastLeg();
+                if (lastLeg.getId().equals(legEdited.getId())) {
+                    // and only last leg for now
+                    MenuItem deleteMenuOption = menu.findItem(R.id.point_action_delete);
+                    deleteMenuOption.setEnabled(true);
+                    return flag;
+                }
+            } catch (Exception e) {
+                Log.e(Constants.LOG_TAG_UI, "Failed to update menu", e);
+                UIUtilities.showNotification(this, R.string.error);
+            }
+        }
+
+        // delete disabled by default
+        MenuItem deleteMenuOption = menu.findItem(R.id.point_action_delete);
+        deleteMenuOption.setEnabled(false);
+        return flag;
+    }
 }
