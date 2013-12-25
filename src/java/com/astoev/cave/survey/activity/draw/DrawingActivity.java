@@ -20,8 +20,10 @@ import com.astoev.cave.survey.activity.main.MainActivity;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.model.Sketch;
+import com.astoev.cave.survey.util.FileStorageUtil;
 import com.j256.ormlite.stmt.QueryBuilder;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
 
@@ -176,13 +178,15 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
             Point activePoint = activeLeg.getFromPoint();
             mWorkspace.getDBHelper().getPointDao().refresh(activePoint);
 
-            Sketch drawing = new Sketch();
-            drawing.setPoint(activePoint);
-
+            // store to SD
             ByteArrayOutputStream buff = new ByteArrayOutputStream();
             drawingSurface.getBitmap().compress(Bitmap.CompressFormat.PNG, 50, buff);
-            drawing.setBitmap(buff.toByteArray());
+            String path = FileStorageUtil.addProjectMedia(mWorkspace.getActiveProject(), new ByteArrayInputStream(buff.toByteArray()));
 
+            // create DB record
+            Sketch drawing = new Sketch();
+            drawing.setPoint(activePoint);
+            drawing.setBitmap(path.getBytes());
             mWorkspace.getDBHelper().getSketchDao().create(drawing);
 
             UIUtilities.showNotification(this, R.string.sketch_saved);
@@ -190,7 +194,6 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
             // back home
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
-
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed drawing save", e);
             UIUtilities.showNotification(this, R.string.error);

@@ -87,8 +87,15 @@ public class FileStorageUtil {
         }
     }
 
-    public static void addProjectMedia(Project aProject, InputStream aStream) {
+    public static String addProjectMedia(Project aProject, InputStream aStream) {
 
+        // store
+        // TODO
+
+        // add in Gallery
+        // TODO
+
+        return null;
     }
 
     private static File getStorageHome() {
