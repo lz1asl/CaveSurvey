@@ -109,7 +109,7 @@ public class InfoActivity extends MainMenuActivity {
             // export legs
 
             ExcelExport export = new ExcelExport(mWorkspace, this);
-            String exportPath = export.runExport();
+            String exportPath = export.runExport(mWorkspace.getActiveProject());
 
             UIUtilities.showNotification(this, R.string.export_done, exportPath);
         } catch (Exception e) {

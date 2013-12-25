@@ -9,12 +9,15 @@ import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.model.*;
 import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.service.Workspace;
+import com.astoev.cave.survey.util.FileStorageUtil;
 import com.astoev.cave.survey.util.StringUtils;
 import com.j256.ormlite.stmt.QueryBuilder;
 import org.apache.commons.io.IOUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -31,12 +34,6 @@ import java.util.List;
  */
 public class ExcelExport {
 
-    public static final String EXCEL_FILE_EXTENSION = ".xls";
-    public static final String NAME_DELIMITER = "_";
-
-    public static final String EXPORT_FOLDER = "CaveSurvey";
-    public static final String TIME_PATTERN = "yyyyMMdd_HH:mm:ss";
-
     private Workspace mWorkspace;
     private Context mContext;
 
@@ -46,37 +43,15 @@ public class ExcelExport {
         mContext = aContext;
     }
 
-    public String runExport() throws Exception {
+    public String runExport(Project aProject) throws Exception {
 
-        // TODO check sd card state
-        File saveFolder = new File(Environment.getExternalStorageDirectory() + File.separator + EXPORT_FOLDER);
-        Log.i(Constants.LOG_TAG_SERVICE, "Export folder " + saveFolder.getAbsolutePath());
-        if (!saveFolder.exists()) {
-            boolean exportFolderCreated = saveFolder.mkdirs();
-            if (!exportFolderCreated) {
-                UIUtilities.showNotification(mContext, R.string.export_io_error);
-                return null;
-            }
-            Log.i(Constants.LOG_TAG_SERVICE, "Export folder created");
-        }
-        SimpleDateFormat dateFormat = new SimpleDateFormat(TIME_PATTERN);
-        String excelFileName = mWorkspace.getActiveProject().getName() + NAME_DELIMITER;// + dateFormat.format(new Date());
-        File exportFile = new File(saveFolder, excelFileName + EXCEL_FILE_EXTENSION);
-        File resourcesExportFolder = new File(saveFolder, excelFileName);
-        Log.i(Constants.LOG_TAG_SERVICE, "Start export to " + exportFile.getAbsolutePath());
+        Log.i(Constants.LOG_TAG_SERVICE, "Start excel export ");
 
         Workbook wb = new HSSFWorkbook();
 
-
-        FileOutputStream out = null;
-
-//        ProgressDialog calculatingDialog = ProgressDialog.show(mContext, "",
-//                mContext.getString(R.string.export_calculate), true);
-
         try {
-//            calculatingDialog.show();
 
-            Sheet sheet = wb.createSheet(mWorkspace.getActiveProject().getName());
+            Sheet sheet = wb.createSheet(aProject.getName());
             Row headerRow = sheet.createRow(0);
             // header cells
             Cell headerFrom = headerRow.createCell(0);
@@ -110,8 +85,8 @@ public class ExcelExport {
             headerPhoto.setCellValue(mContext.getString(R.string.main_table_header_photo));
 
             // Create the drawing patriarch.  This is the top level container for all shapes.
-            Drawing drawingPatriarch = sheet.createDrawingPatriarch();
-            CreationHelper helper = wb.getCreationHelper();
+//            Drawing drawingPatriarch = sheet.createDrawingPatriarch();
+//            CreationHelper helper = wb.getCreationHelper();
 
             // legs
             List<Leg> legs = mWorkspace.getCurrProjectLegs();
@@ -165,12 +140,12 @@ public class ExcelExport {
                     note.setCellValue(n.getText());
                 }
 
-                QueryBuilder<Sketch, Integer> queryBuilderSketch = mWorkspace.getDBHelper().getSketchDao().queryBuilder();
+                /*QueryBuilder<Sketch, Integer> queryBuilderSketch = mWorkspace.getDBHelper().getSketchDao().queryBuilder();
                 queryBuilderSketch.where().eq(Sketch.COLUMN_POINT_ID, fromPoint.getId());
                 Sketch existingDrawing = (Sketch) mWorkspace.getDBHelper().getSketchDao().queryForFirst(queryBuilderSketch.prepare());
                 if (null != existingDrawing) {
                     savePNGResource(resourcesExportFolder, l, existingDrawing.getBitmap());
-                /*    Log.i(Constants.LOG_TAG_SERVICE, "Exporting drawing");
+                *//*    Log.i(Constants.LOG_TAG_SERVICE, "Exporting drawing");
                     //add a picture shape
                     ClientAnchor anchor = helper.createClientAnchor();
 
@@ -185,8 +160,8 @@ public class ExcelExport {
                     Picture pict = drawingPatriarch.createPicture(anchor, pictureIdx);
 
                     //auto-size picture relative to its top-left corner
-//                    pict.resize();*/
-                }
+//                    pict.resize();*//*
+                }*/
 
                 // TODO export GPS
 
@@ -211,24 +186,13 @@ public class ExcelExport {
 //
 //                }
             }
-
-            out = new FileOutputStream(exportFile);
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
             wb.write(out);
-            out.close();
-            return exportFile.getAbsolutePath();
+            ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
+            return FileStorageUtil.addProjectExport(aProject, in);
         } catch (Exception t) {
             Log.e(Constants.LOG_TAG_SERVICE, "Failed with export", t);
             throw t;
-        } finally {
-            if (out != null) {
-                try {
-                    out.close();
-                } catch (Exception e) {
-                    Log.e(Constants.LOG_TAG_SERVICE, "Failed to close stream", e);
-                }
-
-            }
-//            calculatingDialog.dismiss();
         }
 
     }
