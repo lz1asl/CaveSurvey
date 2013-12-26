@@ -110,6 +110,14 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 
 
     }
+    
+    /**
+     * Helper method that stops the draw thread to save the drawing
+     */
+    public void stopToSave(){
+    	isDrawing = false;
+    	thread.setRunning(false);
+    }
 
     public void undo() {
         isDrawing = true;

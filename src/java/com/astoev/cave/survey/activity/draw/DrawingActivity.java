@@ -110,9 +110,7 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
             currentPaint.setStyle(Paint.Style.STROKE);
             currentPaint.setPathEffect(new DashPathEffect(new float[]{2 * currentSize, 4 * currentSize}, 0));
         }
-
     }
-
 
     public boolean onTouch(View view, MotionEvent motionEvent) {
         if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
@@ -148,7 +146,6 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
         return true;
     }
 
-
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.undoBtn:
@@ -170,9 +167,9 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
         }
     }
 
-
     public void saveDrawing(View aView) {
 
+    	drawingSurface.stopToSave();
         try {
             Leg activeLeg = mWorkspace.getActiveOrFirstLeg();
             Point activePoint = activeLeg.getFromPoint();
@@ -181,7 +178,8 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
             // store to SD
             ByteArrayOutputStream buff = new ByteArrayOutputStream();
             drawingSurface.getBitmap().compress(Bitmap.CompressFormat.PNG, 50, buff);
-            String path = FileStorageUtil.addProjectMedia(mWorkspace.getActiveProject(), new ByteArrayInputStream(buff.toByteArray()));
+            
+			String path = FileStorageUtil.addProjectMedia(this, mWorkspace.getActiveProject(), activePoint, buff.toByteArray());
 
             // create DB record
             Sketch drawing = new Sketch();
@@ -191,13 +189,14 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
 
             UIUtilities.showNotification(this, R.string.sketch_saved);
 
-            // back home
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed drawing save", e);
             UIUtilities.showNotification(this, R.string.error);
         }
+        
+        // back home
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 
     public void pickColor(View aView) {
