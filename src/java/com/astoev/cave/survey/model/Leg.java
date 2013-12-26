@@ -1,8 +1,8 @@
 package com.astoev.cave.survey.model;
 
-import android.content.Context;
 import com.astoev.cave.survey.service.Workspace;
 import com.astoev.cave.survey.util.PointUtil;
+import com.astoev.cave.survey.util.StringUtils;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.table.DatabaseTable;
@@ -72,13 +72,39 @@ public class Leg implements Serializable {
         return leg;
     }
 
-    public String buildLegDescription(Context aContext) throws SQLException {
-
+    /**
+     * Helper method to build string representation of the leg. Shows from and to points.
+     * 
+     * @return String representation
+     * @throws SQLException
+     */
+    public String buildLegDescription() throws SQLException {
+    	return buildLegDescription(false);
+    }
+    
+    /**
+     * Helper method to build string representation of the leg. Shows from and to points.
+     * 
+     * @param shortArg - flag if the representation should be short, without spaces.
+     * @return String representation
+     * @throws SQLException
+     */
+    public String buildLegDescription(boolean shortArg) throws SQLException{
         Workspace workspace = Workspace.getCurrentInstance();
         Point startPoint = (Point) workspace.getDBHelper().getPointDao().queryForId(getFromPoint().getId());
         Point endPoint = (Point) workspace.getDBHelper().getPointDao().queryForId(getToPoint().getId());
-
-        return " " + startPoint.getName() + " -> " + endPoint.getName();
+        
+        StringBuilder builder = new StringBuilder(StringUtils.SPACE);
+        builder.append(startPoint.getName());
+        if (!shortArg){
+        	builder.append(StringUtils.SPACE);
+        }
+        builder.append("->");
+        if (!shortArg){
+        	builder.append(StringUtils.SPACE);
+        }
+        builder.append(endPoint.getName());
+        return builder.toString();
     }
 
     public static Note getActiveLegNote(Leg aActiveLeg, Workspace aWorkspace) throws SQLException {

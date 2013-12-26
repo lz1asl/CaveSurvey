@@ -51,6 +51,19 @@ public class Workspace {
             return (Leg) mDBHelper.getLegDao().queryForFirst(firstLegQuery.prepare());
         }
     }
+    
+    /**
+     * Helper method that queries for the active leg
+     * 
+     * @return active Leg instance or null
+     * @throws SQLException
+     */
+    public Leg getActiveLeg() throws SQLException {
+        if (mActiveLegId != null) {
+            return (Leg) mDBHelper.getLegDao().queryForId(mActiveLegId);
+        }
+        return null;
+    }
 
     public Leg getLastLeg() throws SQLException {
         Log.i(Constants.LOG_TAG_SERVICE, "Search last leg for project " + mActiveProject.getId());

@@ -5,7 +5,17 @@
           android:versionName="1.1">
           
     <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="20"/>
-        
+
+    <!-- Store to SD -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    
+    <!-- Take photos -->
+    <uses-permission android:name="android.permission.CAMERA"/>
+
+    <!-- Bluetooth laser distance meter -->
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    
     <application android:allowBackup="true" 
         	     android:label="@string/app_name" 
         		 android:icon="@drawable/logo" 
@@ -47,15 +57,5 @@
         <activity android:name=".activity.map.opengl.Map3DActivity"/>
         <activity android:name="com.astoev.cave.survey.activity.main.BTActivity"/>
     </application>
-
-    <!-- Store to SD -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-
-    <!-- Take photos -->
-    <uses-permission android:name="android.permission.CAMERA"/>
-
-    <!-- Bluetooth laser distance meter -->
-    <uses-permission android:name="android.permission.BLUETOOTH"/>
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
 
 </manifest>

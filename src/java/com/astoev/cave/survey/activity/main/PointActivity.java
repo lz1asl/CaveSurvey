@@ -27,7 +27,6 @@ import com.astoev.cave.survey.model.Option;
 import com.astoev.cave.survey.model.Photo;
 import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.service.Options;
-import com.astoev.cave.survey.service.Workspace;
 import com.astoev.cave.survey.service.bluetooth.BluetoothService;
 import com.astoev.cave.survey.util.PointUtil;
 import com.astoev.cave.survey.util.StringUtils;
@@ -114,6 +113,19 @@ public class PointActivity extends MainMenuActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        
+        try {
+			Leg activeLeg = mWorkspace.getActiveLeg();
+			if (activeLeg != null){
+				StringBuilder builder = new StringBuilder(getString(R.string.leg));
+				builder.append(activeLeg.buildLegDescription(true));
+				
+				setTitle(builder.toString()); 
+			}
+		} catch (SQLException e) {
+			Log.e(Constants.LOG_TAG_UI, "Failed to create activity's name", e);
+		}
+        
         loadPointData();
     }
 
@@ -128,7 +140,7 @@ public class PointActivity extends MainMenuActivity {
 
                 // label
                 TextView leg = (TextView) findViewById(R.id.point_curr_leg);
-                leg.setText(legEdited.buildLegDescription(this));
+                leg.setText(legEdited.buildLegDescription());
 
                 // up
                 EditText up = (EditText) findViewById(R.id.point_up);

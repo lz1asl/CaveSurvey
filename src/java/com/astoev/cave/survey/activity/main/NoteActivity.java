@@ -40,7 +40,7 @@ public class NoteActivity extends MainMenuActivity {
             Leg activeLeg = (Leg) mWorkspace.getDBHelper().getLegDao().queryForId(mCurrLeg);
 
             if (activeLeg != null) {
-                title.setText(activeLeg.buildLegDescription(this));
+                title.setText(activeLeg.buildLegDescription());
 
                 Note note = Leg.getActiveLegNote(activeLeg, mWorkspace);
                 if (note != null) {

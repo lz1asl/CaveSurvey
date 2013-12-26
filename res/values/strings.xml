@@ -47,6 +47,7 @@
     <string name="main_table_header_gps">GPS</string>
     <string name="main_table_header_photo">Photo</string>
     
+    <string name="leg">Leg</string>
     <string name="left">Left</string>
     <string name="right">Right</string>
     <string name="up">Up</string>
@@ -79,9 +80,6 @@
     <string name="menu_exit_confirmation_question">End survey?</string>
 
     <!-- point -->
-    <string name="point_up">&lt;- Up</string>
-    <string name="point_left_right">&lt;- Left | Right -&gt;</string>
-    <string name="point_down">&lt;- Down</string>
     <string name="point_save">Save</string>
     <string name="point_delete">Delete</string>
     <string name="point_read">Read</string>

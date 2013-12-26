@@ -22,7 +22,6 @@ import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.activity.home.HomeActivity;
 import com.astoev.cave.survey.activity.map.MapActivity;
 import com.astoev.cave.survey.activity.map.opengl.Map3DActivity;
-import com.astoev.cave.survey.model.Gallery;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Note;
 import com.astoev.cave.survey.model.Point;
@@ -63,7 +62,7 @@ public class MainActivity extends MainMenuActivity {
 
             // prepare labels
             TextView activeLegName = (TextView) findViewById(R.id.mainActiveLeg);
-            activeLegName.setText(activeLeg.buildLegDescription(this));
+            activeLegName.setText(activeLeg.buildLegDescription());
 
             TableLayout table = (TableLayout) findViewById(R.id.mainTable);
             Log.i(Constants.LOG_TAG_UI, "Found " + table);
@@ -368,7 +367,7 @@ public class MainActivity extends MainMenuActivity {
             int selectedItem = -1;
             int counter = 0;
             for (Leg l : legs) {
-                itemsList.add(l.buildLegDescription(this));
+                itemsList.add(l.buildLegDescription());
                 if (l.getId() == mWorkspace.getActiveLegId()) {
                     selectedItem = counter;
                 } else {

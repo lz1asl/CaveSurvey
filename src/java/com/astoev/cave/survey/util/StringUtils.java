@@ -5,8 +5,6 @@ import android.widget.EditText;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
-import com.astoev.cave.survey.R;
-
 /**
  * Created by IntelliJ IDEA.
  * User: astoev
@@ -18,6 +16,7 @@ public class StringUtils {
 
     private static final NumberFormat DECIMAL_FORMAT = new DecimalFormat("#####.###");
     private static final String EMPTY_STRING = "";
+    public static final String SPACE = " ";
 
 
     public static String floatToLabel(Float aFloat) {
