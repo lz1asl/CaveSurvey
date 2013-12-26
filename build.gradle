@@ -44,6 +44,10 @@ android {
         instrumentTest.setRoot('src/test')
 //        instrumentTestCompile "junit:junit:4.5+"
     }
+
+    packagingOptions {
+        exclude 'META-INF/LICENSE.txt'
+    }
 }
 
 dependencies {
