@@ -25,6 +25,8 @@ import com.astoev.cave.survey.activity.map.opengl.Map3DActivity;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Note;
 import com.astoev.cave.survey.model.Point;
+import com.astoev.cave.survey.model.Sketch;
+import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.util.PointUtil;
 import com.astoev.cave.survey.util.StringUtils;
 import com.j256.ormlite.misc.TransactionManager;
@@ -104,10 +106,15 @@ public class MainActivity extends MainMenuActivity {
                 
                 //TODO build SNP string
                 StringBuilder moreText = new StringBuilder();
-                Note note = Leg.getActiveLegNote(l, mWorkspace);
+                Sketch sketch = DaoUtil.getScetchByLeg(l, mWorkspace);
+                if (sketch != null){
+                	moreText.append(getString(R.string.table_sketch_prefix));
+                }
+                Note note = DaoUtil.getActiveLegNote(l, mWorkspace);
                 if (note != null){
                 	moreText.append(getString(R.string.table_note_prefix));
                 }
+
                 //TODO add sketch and photo here
                 row.addView(createTextView(moreText.toString(), currentLeg, true));
                 table.addView(row, params);

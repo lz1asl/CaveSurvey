@@ -12,6 +12,7 @@ import com.astoev.cave.survey.activity.MainMenuActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Note;
+import com.astoev.cave.survey.util.DaoUtil;
 import com.j256.ormlite.misc.TransactionManager;
 
 import java.util.concurrent.Callable;
@@ -42,7 +43,7 @@ public class NoteActivity extends MainMenuActivity {
             if (activeLeg != null) {
                 title.setText(activeLeg.buildLegDescription());
 
-                Note note = Leg.getActiveLegNote(activeLeg, mWorkspace);
+                Note note = DaoUtil.getActiveLegNote(activeLeg, mWorkspace);
                 if (note != null) {
                     // load note if any
                     TextView noteText = (TextView) findViewById(R.id.note_text);
@@ -78,7 +79,7 @@ public class NoteActivity extends MainMenuActivity {
                                 try {
                                     Leg activeLeg = (Leg) mWorkspace.getDBHelper().getLegDao().queryForId(mCurrLeg);
 
-                                    Note existingNote = Leg.getActiveLegNote(activeLeg, mWorkspace);
+                                    Note existingNote = DaoUtil.getActiveLegNote(activeLeg, mWorkspace);
 
                                     if (null != existingNote) {
                                         Log.i(Constants.LOG_TAG_DB, "Existing note found");

@@ -4,7 +4,6 @@ import com.astoev.cave.survey.service.Workspace;
 import com.astoev.cave.survey.util.PointUtil;
 import com.astoev.cave.survey.util.StringUtils;
 import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.table.DatabaseTable;
 
 import java.io.Serializable;
@@ -105,12 +104,6 @@ public class Leg implements Serializable {
         }
         builder.append(endPoint.getName());
         return builder.toString();
-    }
-
-    public static Note getActiveLegNote(Leg aActiveLeg, Workspace aWorkspace) throws SQLException {
-        QueryBuilder<Note, Integer> query = aWorkspace.getDBHelper().getNoteDao().queryBuilder();
-        query.where().eq(Note.COLUMN_POINT_ID, aActiveLeg.getFromPoint().getId());
-        return (Note) aWorkspace.getDBHelper().getNoteDao().queryForFirst(query.prepare());
     }
 
     public Integer getId() {

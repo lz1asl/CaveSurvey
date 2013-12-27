@@ -28,6 +28,7 @@ import com.astoev.cave.survey.model.Photo;
 import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.service.bluetooth.BluetoothService;
+import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.util.PointUtil;
 import com.astoev.cave.survey.util.StringUtils;
 import com.j256.ormlite.misc.TransactionManager;
@@ -179,7 +180,7 @@ public class PointActivity extends MainMenuActivity {
                 addOnClickListener(slope, Constants.Measures.slope);
 
                 // fill note_text with its value
-                Note note = Leg.getActiveLegNote(legEdited, mWorkspace);
+                Note note = DaoUtil.getActiveLegNote(legEdited, mWorkspace);
                 TextView textView = (TextView) findViewById(R.id.point_note_text);
                 if (note != null && note.getText() != null) {
                     textView.setText(note.getText());
@@ -434,7 +435,7 @@ public class PointActivity extends MainMenuActivity {
 
                             Leg legEdited = (Leg) mWorkspace.getDBHelper().getLegDao().queryForId(mCurrLeg);
 
-                            Note note = Leg.getActiveLegNote(legEdited, mWorkspace);
+                            Note note = DaoUtil.getActiveLegNote(legEdited, mWorkspace);
                             if (note != null) {
                                 mWorkspace.getDBHelper().getNoteDao().delete(note);
                             }
