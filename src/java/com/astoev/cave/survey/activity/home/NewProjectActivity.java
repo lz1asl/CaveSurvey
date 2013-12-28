@@ -76,14 +76,14 @@ public class NewProjectActivity extends MainMenuActivity {
             }
 
             //check existing
-            List<Project> sameNameProjects = mWorkspace.getDBHelper().getProjectDao().queryForEq(Project.COLUMN_NAME, newProjectName);
+            List<Project> sameNameProjects = getWorkspace().getDBHelper().getProjectDao().queryForEq(Project.COLUMN_NAME, newProjectName);
             if (sameNameProjects.size() > 0) {
                 projectNameField.setHint(R.string.home_button_new_exists);
                 projectNameField.setError(getString(R.string.home_button_new_exists, newProjectName));
                 return;
             }
 
-            Project project = TransactionManager.callInTransaction(mWorkspace.getDBHelper().getConnectionSource(),
+            Project project = TransactionManager.callInTransaction(getWorkspace().getDBHelper().getConnectionSource(),
                     new Callable<Project>() {
                         public Project call() throws SQLException {
 
@@ -91,25 +91,25 @@ public class NewProjectActivity extends MainMenuActivity {
                             Project newProject = new Project();
                             newProject.setName(newProjectName);
                             newProject.setCreationDate(new Date());
-                            mWorkspace.getDBHelper().getProjectDao().create(newProject);
-                            mWorkspace.setActiveProject(newProject);
+                            getWorkspace().getDBHelper().getProjectDao().create(newProject);
+                            getWorkspace().setActiveProject(newProject);
 
                             // gallery
                             Gallery firstGallery = new Gallery();
                             firstGallery.setName(Gallery.getFirstGalleryName());
                             firstGallery.setProject(newProject);
-                            mWorkspace.getDBHelper().getGalleryDao().create(firstGallery);
+                            getWorkspace().getDBHelper().getGalleryDao().create(firstGallery);
 
                             // points
                             Point startPoint = PointUtil.createFirstPoint();
-                            mWorkspace.getDBHelper().getPointDao().create(startPoint);
+                            getWorkspace().getDBHelper().getPointDao().create(startPoint);
                             Point secondPoint = PointUtil.createSecondPoint();
-                            mWorkspace.getDBHelper().getPointDao().create(secondPoint);
+                            getWorkspace().getDBHelper().getPointDao().create(secondPoint);
 
                             // first leg
                             Leg firstLeg = new Leg(startPoint, secondPoint, newProject, firstGallery.getId());
-                            mWorkspace.getDBHelper().getLegDao().create(firstLeg);
-                            mWorkspace.setActiveLegId(firstLeg.getId());
+                            getWorkspace().getDBHelper().getLegDao().create(firstLeg);
+                            getWorkspace().setActiveLegId(firstLeg.getId());
 
 
                             // project units
@@ -183,8 +183,8 @@ public class NewProjectActivity extends MainMenuActivity {
 
             if (project != null) {
                 Intent intent = new Intent(NewProjectActivity.this, PointActivity.class);
-                mWorkspace.setActiveLegId(mWorkspace.getActiveOrFirstLeg().getId());
-                intent.putExtra(Constants.LEG_SELECTED, mWorkspace.getActiveLegId());
+                getWorkspace().setActiveLegId(getWorkspace().getActiveOrFirstLeg().getId());
+                intent.putExtra(Constants.LEG_SELECTED, getWorkspace().getActiveLegId());
                 startActivity(intent);
             } else {
                 Log.e(Constants.LOG_TAG_DB, "No project created");

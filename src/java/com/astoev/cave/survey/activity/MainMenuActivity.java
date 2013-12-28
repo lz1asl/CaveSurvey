@@ -89,7 +89,7 @@ public class MainMenuActivity extends BaseActivity {
                         .setPositiveButton(R.string.button_yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 Log.i(Constants.LOG_TAG_UI, "Exit app");
-                                mWorkspace.clean();
+                                getWorkspace().clean();
                                 MainMenuActivity.this.moveTaskToBack(true);
                             }
                         })

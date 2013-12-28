@@ -18,6 +18,7 @@ import com.astoev.cave.survey.activity.main.BTActivity;
 import com.astoev.cave.survey.activity.main.MainActivity;
 import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.service.ormlite.DatabaseHelper;
+import com.astoev.cave.survey.util.ConfigUtil;
 
 import java.util.List;
 
@@ -37,20 +38,13 @@ public class HomeActivity extends MainMenuActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home);
-        
-        if (mWorkspace.getDBHelper() == null) {
-            DatabaseHelper helper = new DatabaseHelper(this);
-            mWorkspace.setDBHelper(helper);
-        }
-        
-//        loadProjects();
+        ConfigUtil.setContext(getApplicationContext());
     }
     
     @Override
     protected void onResume() {
     	// first we reset the ws
-    	mWorkspace.reset();
-    	
+
     	// then we call the parent that will set a title depending on the active project
         super.onResume();
     	
@@ -87,7 +81,7 @@ public class HomeActivity extends MainMenuActivity {
 
             ListView projectsContainer = (ListView) findViewById(R.id.homeProjects);
             
-            final List<Project> projectsList = mWorkspace.getDBHelper().getProjectDao().queryForAll();
+            final List<Project> projectsList = getWorkspace().getDBHelper().getProjectDao().queryForAll();
             
             if (projectsList.size() > 0) {
                 Project[] projectsArray = new Project[projectsList.size()];
@@ -106,7 +100,7 @@ public class HomeActivity extends MainMenuActivity {
 						Project project = (Project)parent.getAdapter().getItem(position);
 						
                         Log.i(Constants.LOG_TAG_UI, "Selected project " + project.getId());
-                        mWorkspace.setActiveProject(project);
+                        getWorkspace().setActiveProject(project);
 
                         Intent intent = new Intent(HomeActivity.this, MainActivity.class);
                         startActivity(intent);
@@ -168,7 +162,7 @@ public class HomeActivity extends MainMenuActivity {
                 .setPositiveButton(R.string.button_yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Log.i(Constants.LOG_TAG_UI, "Exit app");
-                        mWorkspace.clean();
+                        getWorkspace().clean();
                         HomeActivity.this.moveTaskToBack(true);
                         System.exit(0);
                     }

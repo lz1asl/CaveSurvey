@@ -1,6 +1,7 @@
 package com.astoev.cave.survey.model;
 
 import com.astoev.cave.survey.service.Workspace;
+import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.util.PointUtil;
 import com.astoev.cave.survey.util.StringUtils;
 import com.j256.ormlite.field.DatabaseField;
@@ -20,7 +21,7 @@ import java.sql.SQLException;
 public class Leg implements Serializable {
 
 	private static final long serialVersionUID = 201312130309L;
-	
+
     public static final String COLUMN_PROJECT_ID = "project_id";
     public static final String COLUMN_FROM_POINT = "from_point_id";
     public static final String COLUMN_TO_POINT = "to_point_id";
@@ -72,7 +73,7 @@ public class Leg implements Serializable {
 
         return leg;
     }
-    
+
     public boolean isNew(){
     	return (getId() ==  null);
     }
@@ -102,8 +103,8 @@ public class Leg implements Serializable {
             startPoint = getFromPoint();
             endPoint = getToPoint();
         } else {
-            startPoint = (Point) workspace.getDBHelper().getPointDao().queryForId(getFromPoint().getId());
-            endPoint = (Point) workspace.getDBHelper().getPointDao().queryForId(getToPoint().getId());
+            startPoint = DaoUtil.getPoint(getFromPoint().getId());
+            endPoint = DaoUtil.getPoint(getToPoint().getId());
         }
         
         StringBuilder builder = new StringBuilder(StringUtils.SPACE);

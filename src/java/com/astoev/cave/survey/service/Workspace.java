@@ -1,11 +1,15 @@
 package com.astoev.cave.survey.service;
 
+import android.graphics.Bitmap;
 import android.util.Log;
+
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.service.ormlite.DatabaseHelper;
+import com.astoev.cave.survey.util.ConfigUtil;
+import com.astoev.cave.survey.util.DaoUtil;
 import com.j256.ormlite.dao.GenericRawResults;
 import com.j256.ormlite.stmt.QueryBuilder;
 
@@ -23,13 +27,9 @@ public class Workspace {
 
     private static Workspace instance = null;
 
-    private Project mActiveProject;
-    private Integer mActiveLegId;
-    private DatabaseHelper mDBHelper;
+    private DatabaseHelper mDBHelper = null;
 
-    private Workspace() {
-
-    }
+    private Workspace() {    }
 
     public static Workspace getCurrentInstance() {
         if (instance == null) {
@@ -40,42 +40,83 @@ public class Workspace {
         return instance;
     }
 
+    public Integer getActiveProjectId() {
+        int currProjectId = ConfigUtil.getIntProperty(ConfigUtil.PROP_CURR_PROJECT);
+        if (currProjectId <=0 ) {
+            return null;
+        }
+        return currProjectId;
+    }
+
+    public Project getActiveProject() {
+        Integer currProjectId = getActiveProjectId();
+        if (currProjectId == null ) {
+            return null;
+        }
+
+        try {
+            return DaoUtil.getProject(currProjectId);
+        } catch (SQLException e) {
+            return null;
+        }
+    }
+
+    public void setActiveProject(Project aProject) {
+        ConfigUtil.setIntProperty(ConfigUtil.PROP_CURR_PROJECT, aProject.getId());
+    }
+
+    public void setActiveLeg(Leg aLeg) {
+        setActiveLegId(aLeg.getId());
+    }
+
+    public void setActiveLegId(Integer aId) {
+        ConfigUtil.setIntProperty(ConfigUtil.PROP_CURR_LEG, aId);
+    }
+
+    public Integer getActiveLegId() {
+        return ConfigUtil.getIntProperty(ConfigUtil.PROP_CURR_LEG);
+    }
+
     public Leg getActiveOrFirstLeg() throws SQLException {
-        if (mActiveLegId != null) {
-            return (Leg) mDBHelper.getLegDao().queryForId(mActiveLegId);
+        Integer currLeg = getActiveLegId();
+        if (currLeg != null) {
+            return DaoUtil.getLeg(currLeg);
         } else {
-            Log.i(Constants.LOG_TAG_SERVICE, "Search first leg for project " + mActiveProject.getId());
+            Integer currProject = getActiveProjectId();
+            Log.i(Constants.LOG_TAG_SERVICE, "Search first leg for project " + currProject);
             QueryBuilder<Leg, Integer> firstLegQuery = mDBHelper.getLegDao().queryBuilder();
-            firstLegQuery.where().eq(Leg.COLUMN_PROJECT_ID, mActiveProject);
+            firstLegQuery.where().eq(Leg.COLUMN_PROJECT_ID, currProject);
             firstLegQuery.orderBy(Leg.COLUMN_FROM_POINT, true);
             return (Leg) mDBHelper.getLegDao().queryForFirst(firstLegQuery.prepare());
         }
     }
-    
+
     /**
      * Helper method that queries for the active leg
-     * 
+     *
      * @return active Leg instance or null
      * @throws SQLException
      */
     public Leg getActiveLeg() throws SQLException {
-        if (mActiveLegId != null) {
-            return (Leg) mDBHelper.getLegDao().queryForId(mActiveLegId);
+        Integer currLeg = getActiveLegId();
+        if (currLeg != null) {
+            return DaoUtil.getLeg(currLeg);
         }
         return null;
     }
 
     public Leg getLastLeg() throws SQLException {
-        Log.i(Constants.LOG_TAG_SERVICE, "Search last leg for project " + mActiveProject.getId());
+        int currProjectId = getActiveProjectId();
+        Log.i(Constants.LOG_TAG_SERVICE, "Search last leg for project " + currProjectId);
         QueryBuilder<Leg, Integer> firstLegQuery = mDBHelper.getLegDao().queryBuilder();
-        firstLegQuery.where().eq(Leg.COLUMN_PROJECT_ID, mActiveProject);
+        firstLegQuery.where().eq(Leg.COLUMN_PROJECT_ID, currProjectId);
         firstLegQuery.orderBy(Leg.COLUMN_FROM_POINT, false);
         return (Leg) mDBHelper.getLegDao().queryForFirst(firstLegQuery.prepare());
     }
 
     public List<Leg> getCurrProjectLegs() throws SQLException {
         QueryBuilder<Leg, Integer> statementBuilder = mDBHelper.getLegDao().queryBuilder();
-        statementBuilder.where().eq(Leg.COLUMN_PROJECT_ID, mActiveProject);
+        statementBuilder.where().eq(Leg.COLUMN_PROJECT_ID, getActiveProjectId());
         statementBuilder.orderBy(Leg.COLUMN_FROM_POINT, true);
         statementBuilder.orderBy(Leg.COLUMN_TO_POINT, true);
         statementBuilder.orderBy(Leg.COLUMN_DISTANCE_FROM_START, true);
@@ -91,49 +132,21 @@ public class Workspace {
         GenericRawResults<String[]> lastPointResults = mDBHelper.getPointDao().queryRaw(lastPointInCurrentGalleryQuery);
         try {
             String[] lastPointIdString = lastPointResults.getResults().get(0);
-            return (Point) getDBHelper().getPointDao().queryForId(Integer.parseInt(lastPointIdString[0]));
+            return DaoUtil.getPoint(Integer.parseInt(lastPointIdString[0]));
         } finally {
             lastPointResults.close();
         }
-
     }
 
     public void clean() {
-        mActiveLegId = null;
-        mActiveProject = null;
         instance = null;
-    }
-    
-    /**
-     * Keeps the instance but leans the active leg and the active project
-     */
-    public void reset(){
-        mActiveLegId = null;
-        mActiveProject = null;
-    }
-
-    public Project getActiveProject() {
-        return mActiveProject;
-    }
-
-    public void setActiveProject(Project aActiveProject) {
-        mActiveProject = aActiveProject;
-    }
-
-    public Integer getActiveLegId() {
-        return mActiveLegId;
-    }
-
-    public void setActiveLegId(Integer aActiveLegId) {
-        mActiveLegId = aActiveLegId;
     }
 
     public DatabaseHelper getDBHelper() {
+        if (mDBHelper == null) {
+            mDBHelper = new DatabaseHelper(ConfigUtil.getContext());
+        }
         return mDBHelper;
-    }
-
-    public void setDBHelper(DatabaseHelper aDBHelper) {
-        mDBHelper = aDBHelper;
     }
 
 }

@@ -38,12 +38,12 @@ public class NoteActivity extends MainMenuActivity {
 
             Bundle extras = getIntent().getExtras();
             mCurrLeg = extras.getInt(Constants.LEG_SELECTED);
-            Leg activeLeg = (Leg) mWorkspace.getDBHelper().getLegDao().queryForId(mCurrLeg);
+            Leg activeLeg = DaoUtil.getLeg(mCurrLeg);
 
             if (activeLeg != null) {
                 title.setText(activeLeg.buildLegDescription());
 
-                Note note = DaoUtil.getActiveLegNote(activeLeg, mWorkspace);
+                Note note = DaoUtil.getActiveLegNote(activeLeg);
                 if (note != null) {
                     // load note if any
                     TextView noteText = (TextView) findViewById(R.id.note_text);
@@ -73,24 +73,24 @@ public class NoteActivity extends MainMenuActivity {
             final TextView noteText = (TextView) findViewById(R.id.note_text);
 
             if (mCurrLeg != null) {
-                TransactionManager.callInTransaction(mWorkspace.getDBHelper().getConnectionSource(),
+                TransactionManager.callInTransaction(getWorkspace().getDBHelper().getConnectionSource(),
                         new Callable<Void>() {
                             public Void call() throws Exception {
                                 try {
-                                    Leg activeLeg = (Leg) mWorkspace.getDBHelper().getLegDao().queryForId(mCurrLeg);
+                                    Leg activeLeg = DaoUtil.getLeg(mCurrLeg);
 
-                                    Note existingNote = DaoUtil.getActiveLegNote(activeLeg, mWorkspace);
+                                    Note existingNote = DaoUtil.getActiveLegNote(activeLeg);
 
                                     if (null != existingNote) {
                                         Log.i(Constants.LOG_TAG_DB, "Existing note found");
                                         // update existing
                                         existingNote.setText(noteText.getText().toString());
-                                        mWorkspace.getDBHelper().getNoteDao().update(existingNote);
+                                        getWorkspace().getDBHelper().getNoteDao().update(existingNote);
                                     } else {
                                         // create new
                                         existingNote = new Note(noteText.getText().toString());
                                         existingNote.setPoint(activeLeg.getFromPoint());
-                                        mWorkspace.getDBHelper().getNoteDao().create(existingNote);
+                                        getWorkspace().getDBHelper().getNoteDao().create(existingNote);
                                     }
 
                                     UIUtilities.showNotification(NoteActivity.this, R.string.note_saved);

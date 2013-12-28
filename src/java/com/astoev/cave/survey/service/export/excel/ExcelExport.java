@@ -132,7 +132,7 @@ public class ExcelExport {
                 }
                 Cell note = legRow.createCell(9);
 
-                Note n = DaoUtil.getActiveLegNote(l, mWorkspace);
+                Note n = DaoUtil.getActiveLegNote(l);
                 if (n != null) {
                     note.setCellValue(n.getText());
                 }

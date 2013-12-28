@@ -179,7 +179,7 @@ public class PointActivity extends MainMenuActivity {
             addOnClickListener(slope, Constants.Measures.slope);
 
             // fill note_text with its value
-            Note note = DaoUtil.getActiveLegNote(legEdited, mWorkspace);
+            Note note = DaoUtil.getActiveLegNote(legEdited);
             TextView textView = (TextView) findViewById(R.id.point_note_text);
             if (note != null && note.getText() != null) {
                 textView.setText(note.getText());
@@ -280,7 +280,7 @@ public class PointActivity extends MainMenuActivity {
 
             Log.i(Constants.LOG_TAG_UI, "Saving leg");
 
-            TransactionManager.callInTransaction(mWorkspace.getDBHelper().getConnectionSource(),
+            TransactionManager.callInTransaction(getWorkspace().getDBHelper().getConnectionSource(),
                     new Callable() {
                         public Integer call() throws Exception {
 
@@ -296,8 +296,8 @@ public class PointActivity extends MainMenuActivity {
 //
 //                                Leg nextLeg = new Leg(newFrom, newTo, mWorkspace.getActiveProject(), activeLeg.getGalleryId());
 
-                            	mWorkspace.getDBHelper().getPointDao().create(legEdited.getToPoint());
-                                mWorkspace.getDBHelper().getLegDao().create(legEdited);
+                            	getWorkspace().getDBHelper().getPointDao().create(legEdited.getToPoint());
+                                getWorkspace().getDBHelper().getLegDao().create(legEdited);
 //                                mCurrLeg = legEdited.getId();
                             }
 
@@ -313,16 +313,16 @@ public class PointActivity extends MainMenuActivity {
                             legEdited.setRight(StringUtils.getFromEditTextNotNull(right));
 
                             // save leg
-                            mWorkspace.getDBHelper().getLegDao().update(legEdited);
+                            getWorkspace().getDBHelper().getLegDao().update(legEdited);
 
                             if (mNewNote != null) {
                                 // create new note
                                 Note note = new Note(mNewNote);
                                 note.setPoint(legEdited.getFromPoint());
-                                mWorkspace.getDBHelper().getNoteDao().create(note);
+                                getWorkspace().getDBHelper().getNoteDao().create(note);
                             }
 
-                            mWorkspace.setActiveLegId(legEdited.getId());
+                            getWorkspace().setActiveLegId(legEdited.getId());
 
                             Log.i(Constants.LOG_TAG_UI, "Saved");
                             UIUtilities.showNotification(PointActivity.this, R.string.action_saved);
@@ -425,22 +425,22 @@ public class PointActivity extends MainMenuActivity {
 
     public void deleteButton() {
         try {
-            TransactionManager.callInTransaction(mWorkspace.getDBHelper().getConnectionSource(),
+            TransactionManager.callInTransaction(getWorkspace().getDBHelper().getConnectionSource(),
                     new Callable() {
                         public Object call() throws Exception {
-                            Log.i(Constants.LOG_TAG_UI, "Delete " + mWorkspace.getActiveLegId());
+                            Log.i(Constants.LOG_TAG_UI, "Delete " + getWorkspace().getActiveLegId());
 
                             Leg legEdited = getCurrentLeg();
 
-                            Note note = DaoUtil.getActiveLegNote(legEdited, mWorkspace);
+                            Note note = DaoUtil.getActiveLegNote(legEdited);
                             if (note != null) {
-                                mWorkspace.getDBHelper().getNoteDao().delete(note);
+                                getWorkspace().getDBHelper().getNoteDao().delete(note);
                             }
 
-                            mWorkspace.getDBHelper().getLegDao().delete(legEdited);
-                            mWorkspace.getDBHelper().getPointDao().delete(legEdited.getToPoint());
+                            getWorkspace().getDBHelper().getLegDao().delete(legEdited);
+                            getWorkspace().getDBHelper().getPointDao().delete(legEdited.getToPoint());
 
-                            mWorkspace.setActiveLegId(mWorkspace.getLastLeg().getId());
+                            getWorkspace().setActiveLegId(getWorkspace().getLastLeg().getId());
 
                             UIUtilities.showNotification(PointActivity.this, R.string.action_deleted);
                             onBackPressed();
@@ -536,10 +536,10 @@ public class PointActivity extends MainMenuActivity {
                         photo.setPictureBytes(IOUtils.toByteArray(in));
 
                         Leg legEdited = getCurrentLeg();
-                        Point currPoint = (Point) mWorkspace.getDBHelper().getPointDao().queryForId(legEdited.getFromPoint().getId());
+                        Point currPoint = DaoUtil.getPoint(legEdited.getFromPoint().getId());
                         photo.setPoint(currPoint);
 
-                        mWorkspace.getDBHelper().getPhotoDao().create(photo);
+                        getWorkspace().getDBHelper().getPhotoDao().create(photo);
 
                         Log.i(Constants.LOG_TAG_SERVICE, "Image stored");
                     } catch (Exception e) {
@@ -626,7 +626,7 @@ public class PointActivity extends MainMenuActivity {
         Leg legEdited = getCurrentLeg();
         if (!legEdited.isNew()) {
             try {
-                Leg lastLeg = mWorkspace.getLastLeg();
+                Leg lastLeg = getWorkspace().getLastLeg();
                 if (lastLeg.getId().equals(legEdited.getId())) {
                     // and only last leg for now
                     MenuItem deleteMenuOption = menu.findItem(R.id.point_action_delete);
@@ -657,17 +657,17 @@ public class PointActivity extends MainMenuActivity {
             try {
 				if (extras != null) {
 				    int currentLegSelectedId = extras.getInt(Constants.LEG_SELECTED);
-				    currentLeg = (Leg) mWorkspace.getDBHelper().getLegDao().queryForId(currentLegSelectedId);
+				    currentLeg = DaoUtil.getLeg(currentLegSelectedId);
 				    Log.i(Constants.LOG_TAG_UI, "PointView for leg with id: " + currentLegSelectedId);
 				} else {
 					Log.i(Constants.LOG_TAG_UI, "Create new leg");
-				    Leg activeLeg = (Leg) mWorkspace.getDBHelper().getLegDao().queryForId(mWorkspace.getActiveLegId());
+				    Leg activeLeg = DaoUtil.getLeg(getWorkspace().getActiveLegId());
 
 				    // another leg, starting from the latest in the gallery
-				    Point newFrom = mWorkspace.getLastGalleryPoint(activeLeg.getGalleryId());
+				    Point newFrom = getWorkspace().getLastGalleryPoint(activeLeg.getGalleryId());
 				    Point newTo = PointUtil.generateNextPoint(activeLeg.getGalleryId());
 
-				    currentLeg = new Leg(newFrom, newTo, mWorkspace.getActiveProject(), activeLeg.getGalleryId());
+				    currentLeg = new Leg(newFrom, newTo, getWorkspace().getActiveProject(), activeLeg.getGalleryId());
 				    Log.i(Constants.LOG_TAG_UI, "PointView for new point");
 				}
 			} catch (SQLException sqle) {

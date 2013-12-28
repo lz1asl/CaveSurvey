@@ -73,10 +73,10 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
             drawingSurface.setOldBitmap(null);
 
             // search
-            Leg activeLeg = mWorkspace.getActiveOrFirstLeg();
-            QueryBuilder<Sketch, Integer> queryBuilder = mWorkspace.getDBHelper().getSketchDao().queryBuilder();
+            Leg activeLeg = getWorkspace().getActiveOrFirstLeg();
+            QueryBuilder<Sketch, Integer> queryBuilder = getWorkspace().getDBHelper().getSketchDao().queryBuilder();
             queryBuilder.where().eq(Sketch.COLUMN_POINT_ID, activeLeg.getFromPoint().getId());
-            Sketch existingDrawing = (Sketch) mWorkspace.getDBHelper().getSketchDao().queryForFirst(queryBuilder.prepare());
+            Sketch existingDrawing = (Sketch) getWorkspace().getDBHelper().getSketchDao().queryForFirst(queryBuilder.prepare());
 
             // preload with image
             if (null != existingDrawing) {
@@ -171,21 +171,21 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
 
     	drawingSurface.stopToSave();
         try {
-            Leg activeLeg = mWorkspace.getActiveOrFirstLeg();
+            Leg activeLeg = getWorkspace().getActiveOrFirstLeg();
             Point activePoint = activeLeg.getFromPoint();
-            mWorkspace.getDBHelper().getPointDao().refresh(activePoint);
+            getWorkspace().getDBHelper().getPointDao().refresh(activePoint);
 
             // store to SD
             ByteArrayOutputStream buff = new ByteArrayOutputStream();
             drawingSurface.getBitmap().compress(Bitmap.CompressFormat.PNG, 50, buff);
             
-			String path = FileStorageUtil.addProjectMedia(this, mWorkspace.getActiveProject(), activePoint, buff.toByteArray());
+			String path = FileStorageUtil.addProjectMedia(this, getWorkspace().getActiveProject(), activePoint, buff.toByteArray());
 
             // create DB record
             Sketch drawing = new Sketch();
             drawing.setPoint(activePoint);
             drawing.setBitmap(path.getBytes());
-            mWorkspace.getDBHelper().getSketchDao().create(drawing);
+            getWorkspace().getDBHelper().getSketchDao().create(drawing);
 
             UIUtilities.showNotification(this, R.string.sketch_saved);
 

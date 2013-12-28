@@ -30,16 +30,14 @@ public class InfoActivity extends MainMenuActivity {
         setContentView(R.layout.info);
 
         try {
-            Leg activeLeg = mWorkspace.getActiveOrFirstLeg();
-
             // prepare labels
             TextView projectName = (TextView) findViewById(R.id.infoProjectName);
-            projectName.setText(mWorkspace.getActiveProject().getName());
+            projectName.setText(getWorkspace().getActiveProject().getName());
 
             TextView projectCreated = (TextView) findViewById(R.id.infoProjectCreated);
-            projectCreated.setText(mWorkspace.getActiveProject().getCreationDateFormatted());
+            projectCreated.setText(getWorkspace().getActiveProject().getCreationDateFormatted());
 
-            List<Leg> legs = mWorkspace.getCurrProjectLegs();
+            List<Leg> legs = getWorkspace().getCurrProjectLegs();
 
             TextView projectNumLegs = (TextView) findViewById(R.id.infoNumLegs);
             projectNumLegs.setText("" + legs.size());
@@ -53,25 +51,25 @@ public class InfoActivity extends MainMenuActivity {
                 }
 
                 // notes
-                List<Note> notes = mWorkspace.getDBHelper().getNoteDao().queryBuilder().where().eq(Note.COLUMN_POINT_ID, l.getFromPoint().getId()).query();
+                List<Note> notes = getWorkspace().getDBHelper().getNoteDao().queryBuilder().where().eq(Note.COLUMN_POINT_ID, l.getFromPoint().getId()).query();
                 if (notes != null && notes.size() >0) {
                     numNotes += notes.size();
                 }
 
                 // drawings
-                List<Drawing> drawings = mWorkspace.getDBHelper().getSketchDao().queryBuilder().where().eq(Sketch.COLUMN_POINT_ID, l.getFromPoint().getId()).query();
+                List<Drawing> drawings = getWorkspace().getDBHelper().getSketchDao().queryBuilder().where().eq(Sketch.COLUMN_POINT_ID, l.getFromPoint().getId()).query();
                 if (drawings != null && drawings.size() > 0){
                     numDrawings += drawings.size();
                 }
 
                 // gps
-                List<Location> locations = mWorkspace.getDBHelper().getLocationDao().queryBuilder().where().eq(Location.COLUMN_POINT_ID, l.getFromPoint().getId()).query();
+                List<Location> locations = getWorkspace().getDBHelper().getLocationDao().queryBuilder().where().eq(Location.COLUMN_POINT_ID, l.getFromPoint().getId()).query();
                 if (locations != null && locations.size() >0) {
                     numCoordinates += locations.size();
                 }
 
                 // photo
-                List<Photo>  photos = mWorkspace.getDBHelper().getPhotoDao().queryBuilder().where().eq(Photo.COLUMN_POINT_ID, l.getFromPoint().getId()).query();
+                List<Photo>  photos = getWorkspace().getDBHelper().getPhotoDao().queryBuilder().where().eq(Photo.COLUMN_POINT_ID, l.getFromPoint().getId()).query();
                 if (photos != null && photos.size() >0) {
                     numPhotos += photos.size();
                 }
@@ -108,8 +106,8 @@ public class InfoActivity extends MainMenuActivity {
 
             // export legs
 
-            ExcelExport export = new ExcelExport(mWorkspace, this);
-            String exportPath = export.runExport(mWorkspace.getActiveProject());
+            ExcelExport export = new ExcelExport(getWorkspace(), this);
+            String exportPath = export.runExport(getWorkspace().getActiveProject());
 
             UIUtilities.showNotification(this, R.string.export_done, exportPath);
         } catch (Exception e) {

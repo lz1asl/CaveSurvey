@@ -59,8 +59,7 @@ public class MainActivity extends MainMenuActivity {
 
     private void drawTable() {
         try {
-            Leg activeLeg = mWorkspace.getLastLeg();
-            mWorkspace.setActiveLegId(activeLeg.getId());
+            Leg activeLeg = getWorkspace().getLastLeg();
 
             // prepare labels
             TextView activeLegName = (TextView) findViewById(R.id.mainActiveLeg);
@@ -72,7 +71,7 @@ public class MainActivity extends MainMenuActivity {
             // prepare grid
             table.removeAllViews();
 
-            List<Leg> legs = mWorkspace.getCurrProjectLegs();
+            List<Leg> legs = getWorkspace().getCurrProjectLegs();
 
             boolean currentLeg;
             for (final Leg l : legs) {
@@ -84,21 +83,21 @@ public class MainActivity extends MainMenuActivity {
                     public void onClick(View aView) {
                         Intent intent = new Intent(MainActivity.this, PointActivity.class);
                         intent.putExtra(Constants.LEG_SELECTED, l.getId());
-                        mWorkspace.setActiveLegId(l.getId());
+                        getWorkspace().setActiveLegId(l.getId());
                         startActivity(intent);
                     }
                 });
 
-                currentLeg = mWorkspace.getActiveLegId().equals(l.getId());
+                currentLeg = getWorkspace().getActiveLegId().equals(l.getId());
                 if (currentLeg) {
                     row.setBackgroundColor(Color.GRAY);
                 }
 
                 Point fromPoint = l.getFromPoint();
-                mWorkspace.getDBHelper().getPointDao().refresh(fromPoint);
+                getWorkspace().getDBHelper().getPointDao().refresh(fromPoint);
                 row.addView(createTextView(fromPoint.getName(), currentLeg, false));
                 Point toPoint = l.getToPoint();
-                mWorkspace.getDBHelper().getPointDao().refresh(toPoint);
+                getWorkspace().getDBHelper().getPointDao().refresh(toPoint);
                 row.addView(createTextView(toPoint.getName(), currentLeg, false));
                 row.addView(createTextView(l.getDistance(), currentLeg, true));
                 row.addView(createTextView(l.getAzimuth(), currentLeg, true));
@@ -106,11 +105,11 @@ public class MainActivity extends MainMenuActivity {
                 
                 //TODO build SNP string
                 StringBuilder moreText = new StringBuilder();
-                Sketch sketch = DaoUtil.getScetchByLeg(l, mWorkspace);
+                Sketch sketch = DaoUtil.getScetchByLeg(l);
                 if (sketch != null){
                 	moreText.append(getString(R.string.table_sketch_prefix));
                 }
-                Note note = DaoUtil.getActiveLegNote(l, mWorkspace);
+                Note note = DaoUtil.getActiveLegNote(l);
                 if (note != null){
                 	moreText.append(getString(R.string.table_note_prefix));
                 }
@@ -186,7 +185,7 @@ public class MainActivity extends MainMenuActivity {
         alertDialogBuilder.setView(promptsView);
 
         final EditText userInput = (EditText) promptsView.findViewById(R.id.popup_distance);
-        final Leg currLeg = mWorkspace.getActiveOrFirstLeg();
+        final Leg currLeg = getWorkspace().getActiveOrFirstLeg();
 
         // set dialog message
         alertDialogBuilder
@@ -231,28 +230,28 @@ public class MainActivity extends MainMenuActivity {
     private void addMiddle(final float atDistance) throws SQLException {
 
         Log.i(Constants.LOG_TAG_UI, "Creating middle point");
-        Integer newLegId = TransactionManager.callInTransaction(mWorkspace.getDBHelper().getConnectionSource(),
+        Integer newLegId = TransactionManager.callInTransaction(getWorkspace().getDBHelper().getConnectionSource(),
                 new Callable<Integer>() {
                     public Integer call() throws Exception {
                         try {
-                            Leg activeLeg = (Leg) mWorkspace.getDBHelper().getLegDao().queryForId(mWorkspace.getActiveLegId());
+                            Leg activeLeg = getWorkspace().getActiveLeg();
                             float activeLegOrigDistance = activeLeg.getDistance();
 
                             // another leg, starting from the current leg and in new gallery
                             Point newFrom = activeLeg.getFromPoint();
                             Point oldToPoint = activeLeg.getToPoint();
-                            mWorkspace.getDBHelper().getPointDao().refresh(newFrom);
-                            mWorkspace.getDBHelper().getPointDao().refresh(oldToPoint);
+                            getWorkspace().getDBHelper().getPointDao().refresh(newFrom);
+                            getWorkspace().getDBHelper().getPointDao().refresh(oldToPoint);
 
 
                             // create new point
                             Point newMiddlePoint = PointUtil.generateMiddlePoint(newFrom);
-                            mWorkspace.getDBHelper().getPointDao().create(newMiddlePoint);
+                            getWorkspace().getDBHelper().getPointDao().create(newMiddlePoint);
 
                             // split the old leg - update the existing and add new one
                             activeLeg.setToPoint(newMiddlePoint);
                             activeLeg.setDistance(atDistance);
-                            mWorkspace.getDBHelper().getLegDao().update(activeLeg);
+                            getWorkspace().getDBHelper().getLegDao().update(activeLeg);
 
                             Leg newLeg = new Leg(newMiddlePoint, oldToPoint, activeLeg.getProject(), activeLeg.getGalleryId());
 
@@ -263,7 +262,7 @@ public class MainActivity extends MainMenuActivity {
                             newLeg.setRight(activeLeg.getRight());
                             newLeg.setTop(activeLeg.getTop());
                             newLeg.setDown(activeLeg.getDown());
-                            mWorkspace.getDBHelper().getLegDao().create(newLeg);
+                            getWorkspace().getDBHelper().getLegDao().create(newLeg);
 
                             return newLeg.getId();
                         } catch (Exception e) {
@@ -277,7 +276,7 @@ public class MainActivity extends MainMenuActivity {
         if (newLegId != null)
 
         {
-            mWorkspace.setActiveLegId(newLegId);
+            getWorkspace().setActiveLegId(newLegId);
             Intent intent = new Intent(MainActivity.this, PointActivity.class);
             intent.putExtra(Constants.LEG_SELECTED, newLegId);
             startActivity(intent);
@@ -292,38 +291,38 @@ public class MainActivity extends MainMenuActivity {
 
     private void addLeg(final boolean isDeviation) throws SQLException {
         Log.i(Constants.LOG_TAG_UI, "Creating leg");
-      /*  Integer newLegId = TransactionManager.callInTransaction(mWorkspace.getDBHelper().getConnectionSource(),
+      /*  Integer newLegId = TransactionManager.callInTransaction(getWorkspace().getDBHelper().getConnectionSource(),
                 new Callable<Integer>() {
                     public Integer call() throws Exception {
                         try {
-                            Leg activeLeg = (Leg) mWorkspace.getDBHelper().getLegDao().queryForId(mWorkspace.getActiveLegId());
+                            Leg activeLeg = (Leg) getWorkspace().getDBHelper().getLegDao().queryForId(getWorkspace().getActiveLegId());
 
                             if (isDeviation) {
 
                                 // another leg, starting from the current leg and in new gallery
                                 Point newFrom = activeLeg.getFromPoint();
-                                mWorkspace.getDBHelper().getPointDao().refresh(newFrom);
+                                getWorkspace().getDBHelper().getPointDao().refresh(newFrom);
                                 Point newTo = PointUtil.generateDeviationPoint(newFrom);
-                                mWorkspace.getDBHelper().getPointDao().create(newTo);
+                                getWorkspace().getDBHelper().getPointDao().create(newTo);
 
 
                                 Gallery newGallery = new Gallery();
                                 // TODO read name ?
                                 newGallery.setName(newFrom.getName());
-                                mWorkspace.getDBHelper().getGalleryDao().create(newGallery);
+                                getWorkspace().getDBHelper().getGalleryDao().create(newGallery);
 
-                                Leg nextLeg = new Leg(newFrom, newTo, mWorkspace.getActiveProject(), newGallery.getId());
-                                mWorkspace.getDBHelper().getLegDao().create(nextLeg);
+                                Leg nextLeg = new Leg(newFrom, newTo, getWorkspace().getActiveProject(), newGallery.getId());
+                                getWorkspace().getDBHelper().getLegDao().create(nextLeg);
                                 return nextLeg.getId();
                             } else {
                                 // another leg, starting from the latest in the gallery
-                                Point newFrom = (Point) mWorkspace.getLastGalleryPoint(activeLeg.getGalleryId());
+                                Point newFrom = (Point) getWorkspace().getLastGalleryPoint(activeLeg.getGalleryId());
                                 Point newTo = PointUtil.generateNextPoint(activeLeg.getGalleryId());
-                                mWorkspace.getDBHelper().getPointDao().create(newTo);
+                                getWorkspace().getDBHelper().getPointDao().create(newTo);
 
-                                Leg nextLeg = new Leg(newFrom, newTo, mWorkspace.getActiveProject(), activeLeg.getGalleryId());
+                                Leg nextLeg = new Leg(newFrom, newTo, getWorkspace().getActiveProject(), activeLeg.getGalleryId());
 
-                                mWorkspace.getDBHelper().getLegDao().create(nextLeg);
+                                getWorkspace().getDBHelper().getLegDao().create(nextLeg);
                                 return nextLeg.getId();
                             }
 
@@ -334,7 +333,7 @@ public class MainActivity extends MainMenuActivity {
                     }
                 });*/
 //        if (newLegId != null) {
-//            mWorkspace.setActiveLegId(newLegId);
+//            getWorkspace().setActiveLegId(newLegId);
             Intent intent = new Intent(MainActivity.this, PointActivity.class);
 //            intent.putExtra(Constants.LEG_SELECTED, newLegId);
             startActivity(intent);
@@ -369,13 +368,13 @@ public class MainActivity extends MainMenuActivity {
         Log.i(Constants.LOG_TAG_UI, "Change active leg");
         try {
 
-            final List<Leg> legs = mWorkspace.getCurrProjectLegs();
+            final List<Leg> legs = getWorkspace().getCurrProjectLegs();
             List<String> itemsList = new ArrayList<String>();
             int selectedItem = -1;
             int counter = 0;
             for (Leg l : legs) {
                 itemsList.add(l.buildLegDescription());
-                if (l.getId() == mWorkspace.getActiveLegId()) {
+                if (l.getId() == getWorkspace().getActiveLegId()) {
                     selectedItem = counter;
                 } else {
                     counter++;
@@ -391,7 +390,7 @@ public class MainActivity extends MainMenuActivity {
                 public void onClick(DialogInterface dialog, int item) {
 
                     Log.i(Constants.LOG_TAG_UI, "Selected leg " + legs.get(item));
-                    mWorkspace.setActiveLegId(legs.get(item).getId());
+                    getWorkspace().setActiveLegId(legs.get(item).getId());
 
                     Intent intent = new Intent(MainActivity.this, MainActivity.class);
                     startActivity(intent);
