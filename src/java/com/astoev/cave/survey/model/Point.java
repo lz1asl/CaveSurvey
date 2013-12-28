@@ -16,7 +16,9 @@ import java.io.Serializable;
 @DatabaseTable(tableName = "points")
 public class Point implements Serializable {
 
-    public static final String COLUMN_POINT_NAME = "name";
+	private static final long serialVersionUID = 201312130309L;
+
+	public static final String COLUMN_POINT_NAME = "name";
 
     @DatabaseField(generatedId = true, columnName = "id")
     private Integer mId;
@@ -35,4 +37,17 @@ public class Point implements Serializable {
         mName = aName;
     }
 
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Point [id=");
+		builder.append(mId);
+		builder.append(", name=");
+		builder.append(mName);
+		builder.append("]");
+		return builder.toString();
+	}
 }

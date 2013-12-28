@@ -19,6 +19,8 @@ import java.sql.SQLException;
 @DatabaseTable(tableName = "legs")
 public class Leg implements Serializable {
 
+	private static final long serialVersionUID = 201312130309L;
+	
     public static final String COLUMN_PROJECT_ID = "project_id";
     public static final String COLUMN_FROM_POINT = "from_point_id";
     public static final String COLUMN_TO_POINT = "to_point_id";
@@ -70,6 +72,10 @@ public class Leg implements Serializable {
 
         return leg;
     }
+    
+    public boolean isNew(){
+    	return (getId() ==  null);
+    }
 
     /**
      * Helper method to build string representation of the leg. Shows from and to points.
@@ -90,8 +96,15 @@ public class Leg implements Serializable {
      */
     public String buildLegDescription(boolean shortArg) throws SQLException{
         Workspace workspace = Workspace.getCurrentInstance();
-        Point startPoint = (Point) workspace.getDBHelper().getPointDao().queryForId(getFromPoint().getId());
-        Point endPoint = (Point) workspace.getDBHelper().getPointDao().queryForId(getToPoint().getId());
+        Point startPoint = null;
+        Point endPoint = null;
+        if (isNew()){
+            startPoint = getFromPoint();
+            endPoint = getToPoint();
+        } else {
+            startPoint = (Point) workspace.getDBHelper().getPointDao().queryForId(getFromPoint().getId());
+            endPoint = (Point) workspace.getDBHelper().getPointDao().queryForId(getToPoint().getId());
+        }
         
         StringBuilder builder = new StringBuilder(StringUtils.SPACE);
         builder.append(startPoint.getName());
@@ -205,5 +218,41 @@ public class Leg implements Serializable {
     public Integer getGalleryId() {
         return mGalleryId;
     }
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Leg [id=");
+		builder.append(mId);
+		builder.append(", fromPoint=");
+		builder.append(mFromPoint);
+		builder.append(", mToPoint=");
+		builder.append(mToPoint);
+		builder.append(", project=");
+		builder.append(mProject);
+//		builder.append(", mDistance=");
+//		builder.append(mDistance);
+//		builder.append(", mDistanceFromStart=");
+//		builder.append(mDistanceFromStart);
+//		builder.append(", mAzimuth=");
+//		builder.append(mAzimuth);
+//		builder.append(", mSlope=");
+//		builder.append(mSlope);
+//		builder.append(", mLeft=");
+//		builder.append(mLeft);
+//		builder.append(", mRight=");
+//		builder.append(mRight);
+//		builder.append(", mTop=");
+//		builder.append(mTop);
+//		builder.append(", mDown=");
+//		builder.append(mDown);
+		builder.append(", galleryId=");
+		builder.append(mGalleryId);
+		builder.append("]");
+		return builder.toString();
+	}
 
 }

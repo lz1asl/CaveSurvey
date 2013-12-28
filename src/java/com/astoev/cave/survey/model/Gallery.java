@@ -19,6 +19,8 @@ import java.sql.SQLException;
 @DatabaseTable(tableName = "galleries")
 public class Gallery implements Serializable {
 
+	private static final long serialVersionUID = 201312130309L;
+	
     public static final String COLUMN_PROJECT_ID = "project_id";
     public static final String COLUMN_ID = "id";
 
