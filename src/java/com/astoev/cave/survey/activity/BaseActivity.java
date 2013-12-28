@@ -1,5 +1,6 @@
 package com.astoev.cave.survey.activity;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -16,8 +17,6 @@ import com.astoev.cave.survey.service.Workspace;
  */
 public abstract class BaseActivity extends ActionBarActivity {
 
-    protected Workspace mWorkspace = Workspace.getCurrentInstance();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.i(Constants.LOG_TAG_UI, "Creating activity " + this.getClass().getName());
@@ -33,9 +32,14 @@ public abstract class BaseActivity extends ActionBarActivity {
 		super.onResume();
 		
         // set the name of the chosen project as title in the action bar
-        Project activeProject = mWorkspace.getActiveProject();
+        Project activeProject = getWorkspace().getActiveProject();
         if (activeProject != null){
-        	setTitle(activeProject.getName()); 
+        	setTitle(activeProject.getName());
         }
 	}
+
+    protected Workspace getWorkspace() {
+        return Workspace.getCurrentInstance();
+    }
+
 }
