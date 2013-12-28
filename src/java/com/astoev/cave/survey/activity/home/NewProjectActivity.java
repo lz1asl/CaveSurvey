@@ -98,7 +98,7 @@ public class NewProjectActivity extends MainMenuActivity {
                             Gallery firstGallery = new Gallery();
                             firstGallery.setName(Gallery.getFirstGalleryName());
                             firstGallery.setProject(newProject);
-                            Integer firstGalleryId = mWorkspace.getDBHelper().getGalleryDao().create(firstGallery);
+                            mWorkspace.getDBHelper().getGalleryDao().create(firstGallery);
 
                             // points
                             Point startPoint = PointUtil.createFirstPoint();
@@ -107,7 +107,7 @@ public class NewProjectActivity extends MainMenuActivity {
                             mWorkspace.getDBHelper().getPointDao().create(secondPoint);
 
                             // first leg
-                            Leg firstLeg = new Leg(startPoint, secondPoint, newProject, firstGalleryId);
+                            Leg firstLeg = new Leg(startPoint, secondPoint, newProject, firstGallery.getId());
                             mWorkspace.getDBHelper().getLegDao().create(firstLeg);
                             mWorkspace.setActiveLegId(firstLeg.getId());
 
