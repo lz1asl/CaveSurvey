@@ -96,7 +96,7 @@ public class InfoActivity extends MainMenuActivity {
 
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to render info activity", e);
-            UIUtilities.showNotification(this, R.string.error);
+            UIUtilities.showNotification(R.string.error);
         }
     }
 
@@ -112,7 +112,7 @@ public class InfoActivity extends MainMenuActivity {
             UIUtilities.showNotification(this, R.string.export_done, exportPath);
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to export project", e);
-            UIUtilities.showNotification(this, R.string.error);
+            UIUtilities.showNotification(R.string.error);
         }
     }
 

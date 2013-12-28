@@ -88,7 +88,7 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
 
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to load drawing", e);
-            UIUtilities.showNotification(this, R.string.error);
+            UIUtilities.showNotification(R.string.error);
         }
     }
 
@@ -187,11 +187,11 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
             drawing.setBitmap(path.getBytes());
             getWorkspace().getDBHelper().getSketchDao().create(drawing);
 
-            UIUtilities.showNotification(this, R.string.sketch_saved);
+            UIUtilities.showNotification(R.string.sketch_saved);
 
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed drawing save", e);
-            UIUtilities.showNotification(this, R.string.error);
+            UIUtilities.showNotification(R.string.error);
         }
         
         // back home

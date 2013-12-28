@@ -53,7 +53,7 @@ public class Map3DActivity extends BaseActivity implements View.OnTouchListener 
             });
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_DB, "Failed to render 3d", e);
-            UIUtilities.showNotification(this, R.string.error);
+            UIUtilities.showNotification(R.string.error);
         }
     }
 

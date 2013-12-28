@@ -5,6 +5,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.widget.Toast;
 import com.astoev.cave.survey.R;
+import com.astoev.cave.survey.service.Workspace;
+import com.astoev.cave.survey.util.ConfigUtil;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -18,12 +20,12 @@ import java.io.StringWriter;
  */
 public class UIUtilities {
 
-    public static void showNotification(Context aContext, int aResourceId) {
-        showNotification(aContext, aResourceId, null);
+    public static void showNotification(int aResourceId) {
+        showNotification(ConfigUtil.getContext(), aResourceId, null);
     }
 
-    public static void showNotification(Context aContext, String aMessage) {
-        showNotification(aContext, aMessage, null);
+    public static void showNotification(String aMessage) {
+        showNotification(ConfigUtil.getContext(), aMessage, null);
     }
 
     public static void showNotification(Context aContext, int aResourceId, Object aParams) {

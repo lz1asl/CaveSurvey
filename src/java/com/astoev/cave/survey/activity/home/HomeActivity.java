@@ -133,7 +133,7 @@ public class HomeActivity extends MainMenuActivity {
 
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed offer project", e);
-            UIUtilities.showNotification(this, R.string.error);
+            UIUtilities.showNotification(R.string.error);
         }
     }
 

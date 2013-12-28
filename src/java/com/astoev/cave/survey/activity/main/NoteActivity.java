@@ -93,7 +93,7 @@ public class NoteActivity extends MainMenuActivity {
                                         getWorkspace().getDBHelper().getNoteDao().create(existingNote);
                                     }
 
-                                    UIUtilities.showNotification(NoteActivity.this, R.string.note_saved);
+                                    UIUtilities.showNotification(R.string.note_saved);
                                     Intent intent = new Intent(NoteActivity.this, MainActivity.class);
                                     startActivity(intent);
 
@@ -101,7 +101,7 @@ public class NoteActivity extends MainMenuActivity {
                                     return null;
                                 } catch (Exception e) {
                                     Log.e(Constants.LOG_TAG_DB, "Failed to save note", e);
-                                    UIUtilities.showNotification(NoteActivity.this, R.string.error);
+                                    UIUtilities.showNotification(R.string.error);
                                     throw e;
                                 }
                             }
@@ -116,7 +116,7 @@ public class NoteActivity extends MainMenuActivity {
             }
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to save note", e);
-            UIUtilities.showNotification(NoteActivity.this, R.string.error);
+            UIUtilities.showNotification(R.string.error);
         }
     }
 

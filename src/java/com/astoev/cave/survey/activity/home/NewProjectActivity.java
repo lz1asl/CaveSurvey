@@ -188,11 +188,11 @@ public class NewProjectActivity extends MainMenuActivity {
                 startActivity(intent);
             } else {
                 Log.e(Constants.LOG_TAG_DB, "No project created");
-                UIUtilities.showNotification(NewProjectActivity.this, R.string.error);
+                UIUtilities.showNotification(R.string.error);
             }
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed at new project creation", e);
-            UIUtilities.showNotification(NewProjectActivity.this, R.string.error);
+            UIUtilities.showNotification(R.string.error);
         }
     }
 

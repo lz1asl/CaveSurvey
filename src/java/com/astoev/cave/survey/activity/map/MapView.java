@@ -212,7 +212,7 @@ public class MapView extends View {
 
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to draw map activity", e);
-            UIUtilities.showNotification(getContext(), R.string.error);
+            UIUtilities.showNotification(R.string.error);
         }
     }
 

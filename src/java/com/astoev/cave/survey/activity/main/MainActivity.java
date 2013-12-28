@@ -121,7 +121,7 @@ public class MainActivity extends MainMenuActivity {
             table.invalidate();
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to render main activity", e);
-            UIUtilities.showNotification(this, R.string.error);
+            UIUtilities.showNotification(R.string.error);
         }
     }
 
@@ -168,7 +168,7 @@ public class MainActivity extends MainMenuActivity {
                     }
                 } catch (Exception e) {
                     Log.e(Constants.LOG_TAG_UI, "Error adding", e);
-                    UIUtilities.showNotification(MainActivity.this, R.string.error);
+                    UIUtilities.showNotification(R.string.error);
                 }
             }
         });
@@ -196,13 +196,13 @@ public class MainActivity extends MainMenuActivity {
 
                                 Float distance = StringUtils.getFromEditTextNotNull(userInput);
                                 if (null == distance) {
-                                    UIUtilities.showNotification(MainActivity.this, R.string.popup_bad_input);
+                                    UIUtilities.showNotification(R.string.popup_bad_input);
                                     dialog.cancel();
                                     return;
                                 }
 
                                 if (currLeg.getDistance() != null && currLeg.getDistance().floatValue() <= distance.floatValue()) {
-                                    UIUtilities.showNotification(MainActivity.this, R.string.popup_bad_input);
+                                    UIUtilities.showNotification(R.string.popup_bad_input);
                                     dialog.cancel();
                                     return;
                                 }
@@ -211,7 +211,7 @@ public class MainActivity extends MainMenuActivity {
                                     addMiddle(distance.floatValue());
                                 } catch (SQLException e) {
                                     Log.e(Constants.LOG_TAG_UI, "Error adding", e);
-                                    UIUtilities.showNotification(MainActivity.this, R.string.error);
+                                    UIUtilities.showNotification(R.string.error);
                                 }
                                 dialog.cancel();
                             }
@@ -283,7 +283,7 @@ public class MainActivity extends MainMenuActivity {
         } else
 
         {
-            UIUtilities.showNotification(this, R.string.error);
+            UIUtilities.showNotification(R.string.error);
         }
 
     }
@@ -400,7 +400,7 @@ public class MainActivity extends MainMenuActivity {
             alert.show();
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_DB, "Failed to select leg", e);
-            UIUtilities.showNotification(this, R.string.error);
+            UIUtilities.showNotification(R.string.error);
         }
 
     }

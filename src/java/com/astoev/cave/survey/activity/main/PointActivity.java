@@ -191,7 +191,7 @@ public class PointActivity extends MainMenuActivity {
 
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to render point", e);
-            UIUtilities.showNotification(this, R.string.error);
+            UIUtilities.showNotification(R.string.error);
         }
     }
 
@@ -325,13 +325,13 @@ public class PointActivity extends MainMenuActivity {
                             getWorkspace().setActiveLegId(legEdited.getId());
 
                             Log.i(Constants.LOG_TAG_UI, "Saved");
-                            UIUtilities.showNotification(PointActivity.this, R.string.action_saved);
+                            UIUtilities.showNotification(R.string.action_saved);
                             return 0;
                         }
                     });
             return true;
         } catch (Exception e) {
-            UIUtilities.showNotification(this, R.string.error);
+            UIUtilities.showNotification(R.string.error);
             Log.e(Constants.LOG_TAG_UI, "Leg not saved", e);
         }
         return false;
@@ -420,7 +420,7 @@ public class PointActivity extends MainMenuActivity {
 
     public void coordinateButton() {
         // TODO location http://www.tutorialforandroid.com/2009/05/permissions-journey-accesscoarselocatio.html
-        UIUtilities.showNotification(this, R.string.todo);
+        UIUtilities.showNotification(R.string.todo);
     }
 
     public void deleteButton() {
@@ -442,14 +442,14 @@ public class PointActivity extends MainMenuActivity {
 
                             getWorkspace().setActiveLegId(getWorkspace().getLastLeg().getId());
 
-                            UIUtilities.showNotification(PointActivity.this, R.string.action_deleted);
+                            UIUtilities.showNotification(R.string.action_deleted);
                             onBackPressed();
                             return null;
                         }
                     });
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to delete point", e);
-            UIUtilities.showNotification(this, R.string.error);
+            UIUtilities.showNotification(R.string.error);
         }
     }
 
@@ -500,7 +500,7 @@ public class PointActivity extends MainMenuActivity {
 
     public void readSlope(View view) {
         // TODO
-        UIUtilities.showNotification(this, R.string.todo);
+        UIUtilities.showNotification(R.string.todo);
     }
 
     public void photoButton() {
@@ -544,7 +544,7 @@ public class PointActivity extends MainMenuActivity {
                         Log.i(Constants.LOG_TAG_SERVICE, "Image stored");
                     } catch (Exception e) {
                         Log.e(Constants.LOG_TAG_UI, "Picture not saved", e);
-                        UIUtilities.showNotification(this, R.string.error);
+                        UIUtilities.showNotification(R.string.error);
                     } finally {
                         IOUtils.closeQuietly(in);
                     }
@@ -635,7 +635,7 @@ public class PointActivity extends MainMenuActivity {
                 }
             } catch (Exception e) {
                 Log.e(Constants.LOG_TAG_UI, "Failed to update menu", e);
-                UIUtilities.showNotification(this, R.string.error);
+                UIUtilities.showNotification(R.string.error);
             }
         }
 
