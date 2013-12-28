@@ -8,16 +8,20 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Pair;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.BaseActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.activity.home.HomeActivity;
 import com.astoev.cave.survey.service.bluetooth.BluetoothService;
+import com.astoev.cave.survey.util.ConfigUtil;
+import com.astoev.cave.survey.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +36,7 @@ import java.util.List;
 public class BTActivity extends BaseActivity {
 
 
-    final List<BluetoothDevice> devices = new ArrayList<BluetoothDevice>();
-    BluetoothDevice device = null;
+    final List<Pair<String, String>> devices = new ArrayList<Pair<String, String>>();
 
     final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
@@ -43,15 +46,15 @@ public class BTActivity extends BaseActivity {
                 // When discovery finds a device
                 if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                     BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                    Log.i("BlueTooth Testing", device.getName() + "\n" + device.getAddress());
+                    Log.i("Bluetooth new device ", device.getName() + "\n" + device.getAddress());
                     if (!devices.contains(device)) {
-                        devices.add(device);
+                        devices.add(new Pair(device.getName(), device.getAddress()));
                     }
                     refreshDevicesList();
                 }
             } catch (Exception e) {
                 Log.e(Constants.LOG_TAG_UI, "Failed during receive", e);
-                UIUtilities.showNotification(BTActivity.this, R.string.error);
+                UIUtilities.showNotification(R.string.error);
             }
         }
     };
@@ -65,48 +68,57 @@ public class BTActivity extends BaseActivity {
 
             // BT disabled?
             if (!BluetoothService.askBluetoothOn(this)) {
-//            if (true) {
                 Log.i(Constants.LOG_TAG_UI, "BT disabled");
-                UIUtilities.showNotification(this, R.string.bt_not_on);
+                UIUtilities.showNotification(R.string.bt_not_on);
                 finish();
                 return;
             }
 
-            BluetoothService.prepare(this);
+            String selectedBtDeviceAddress = ConfigUtil.getStringProperty(ConfigUtil.PROP_CURR_BT_DEVICE_ADDRESS);
+            if (StringUtils.isNotEmpty(selectedBtDeviceAddress)) {
+                String selectedBtDeviceName = ConfigUtil.getStringProperty(ConfigUtil.PROP_CURR_BT_DEVICE_NAME);
+                devices.add(new Pair(selectedBtDeviceName, selectedBtDeviceAddress));
+                if (BluetoothService.isPaired()) {
+                    Button searchButton = (Button) findViewById(R.id.bt_search);
+                    searchButton.setEnabled(false);
+                }
+            }
 
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed during create", e);
-            UIUtilities.showNotification(BTActivity.this, R.string.error);
+            UIUtilities.showNotification(R.string.error);
         }
     }
 
     public void togglePair(View aView) {
-        if (device == null) {
-            Log.i(Constants.LOG_TAG_UI, "Pair");
-            Spinner devicesChooser = (Spinner) findViewById(R.id.bt_devices);
-            device = devices.get(devicesChooser.getSelectedItemPosition());
-            Log.i(Constants.LOG_TAG_UI, "Try to use " + device.getName() + ":" + device.getAddress());
-            BluetoothService.selectDevice(device);
+        Button toggle = (Button) aView.findViewById(R.id.bt_toggle_pair);
+        toggle.setEnabled(false);
 
-            // no need to stay here
-            Intent intent = new Intent(this, HomeActivity.class);
-            startActivity(intent);
+        unregisterReceiver(mReceiver);
 
-        } else {
-            Log.i(Constants.LOG_TAG_UI, "Disconnect ");
-            BluetoothService.disconnect();
-        }
+        Log.i(Constants.LOG_TAG_UI, "Pair");
+        Spinner devicesChooser = (Spinner) findViewById(R.id.bt_devices);
+        Pair<String, String> device = devices.get(devicesChooser.getSelectedItemPosition());
+        Log.i(Constants.LOG_TAG_UI, "Try to use " + device.first + ":" + device.second);
+        BluetoothService.selectDevice(device.second);
+
+        // no need to stay here
+        Intent intent = new Intent(this, HomeActivity.class);
+        startActivity(intent);
     }
 
     public void searchDevices(View aView) {
 
         try {
             Log.i(Constants.LOG_TAG_UI, "Searching devices");
-registerReceiver(mReceiver, filter);
-            BluetoothAdapter.getDefaultAdapter().startDiscovery();
+            if (!BluetoothAdapter.getDefaultAdapter().isDiscovering()) {
+                registerReceiver(mReceiver, filter);
+                BluetoothService.prepare(this);
+                BluetoothAdapter.getDefaultAdapter().startDiscovery();
+            }
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed during search", e);
-            UIUtilities.showNotification(BTActivity.this, R.string.error);
+            UIUtilities.showNotification(R.string.error);
         }
     }
 
@@ -114,8 +126,8 @@ registerReceiver(mReceiver, filter);
         Spinner devicesChooser = (Spinner) findViewById(R.id.bt_devices);
 
         List<String> devicesList = new ArrayList<String>();
-        for (final BluetoothDevice device : devices) {
-            devicesList.add(device.getName() + " : " + device.getAddress());
+        for (final Pair<String, String> device : devices) {
+            devicesList.add(buildDeviceName(device));
         }
 
         ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, devicesList);
@@ -123,7 +135,7 @@ registerReceiver(mReceiver, filter);
         devicesChooser.setAdapter(spinnerArrayAdapter);
 
         Button toggle = (Button) findViewById(R.id.bt_toggle_pair);
-        if (device != null || devices.size() > 0) {
+        if (!BluetoothService.isPaired() && devices.size() > 0) {
             toggle.setEnabled(true);
         } else {
             toggle.setEnabled(false);
@@ -135,4 +147,9 @@ registerReceiver(mReceiver, filter);
         unregisterReceiver(mReceiver);
         super.onBackPressed();
     }
+
+    private String buildDeviceName(Pair<String, String> aDevice) {
+        return aDevice.first + " : " + aDevice.second;
+    }
+
 }

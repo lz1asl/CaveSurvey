@@ -41,4 +41,8 @@ public class StringUtils {
     public static boolean isEmpty(EditText aEditText){
         return aEditText.getText().toString().trim().equals("");
     }
+
+    public static boolean isNotEmpty(String aString){
+        return ((aString != null) && (!"".equals(aString)));
+    }
 }

@@ -14,6 +14,9 @@ import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.UIUtilities;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created with IntelliJ IDEA.
  * User: astoev
@@ -25,6 +28,9 @@ public class BluetoothService {
 
     private static ConnectThread mBusyThread = null;
     private static BluetoothDevice mCurrDevice = null;
+    private static boolean mPaired = false;
+    private static Activity mCurrContext = null;
+    private static List<BroadcastReceiver> mRegisteredReceivers = new ArrayList<BroadcastReceiver>();
 
     public static boolean isBluetoothSupported() {
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -51,39 +57,46 @@ public class BluetoothService {
 
     public static void prepare(final Activity aContext) {
 
-        aContext.registerReceiver(new BroadcastReceiver() {
+        mCurrContext = aContext;
+
+        BroadcastReceiver connectedReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 try {
-                    UIUtilities.showNotification(aContext, R.string.bt_paired);
+                    UIUtilities.showNotification(R.string.bt_paired);
                     Button toggle = (Button) aContext.findViewById(R.id.bt_toggle_pair);
-                    toggle.setText(R.string.bt_disconnect);
+//                    toggle.setText(R.string.bt_disconnect);
                     Log.i(Constants.LOG_TAG_UI, "Paired with " + mCurrDevice);
+                    mPaired = true;
                 } catch (Exception e) {
                     Log.e(Constants.LOG_TAG_UI, "Failed during pair", e);
-                    UIUtilities.showNotification(aContext, R.string.error);
+                    UIUtilities.showNotification(R.string.error);
                 }
             }
-        },
-                new IntentFilter(BluetoothDevice.ACTION_ACL_CONNECTED));
-        aContext.registerReceiver(new BroadcastReceiver() {
+        };
+        BroadcastReceiver disconnectedReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 try {
-                    UIUtilities.showNotification(aContext, R.string.bt_disconnect);
+                    UIUtilities.showNotification(R.string.bt_disconnect);
                     Log.i(Constants.LOG_TAG_UI, "Disconnected");
                     Button toggle = (Button) aContext.findViewById(R.id.bt_toggle_pair);
-                    toggle.setText(R.string.bt_pair);
-                    mCurrDevice = null;
-                    if (mBusyThread != null) {
-                        mBusyThread.cancel();
-                    }
+//                    toggle.setText(R.string.bt_pair);
+                    mPaired = false;
+                    stop();
                 } catch (Exception e) {
                     Log.e(Constants.LOG_TAG_UI, "Failed during disconnect", e);
-                    UIUtilities.showNotification(aContext, R.string.error);
+                    UIUtilities.showNotification(R.string.error);
                 }
             }
-        },
+        };
+
+        mRegisteredReceivers.add(connectedReceiver);
+        mRegisteredReceivers.add(disconnectedReceiver);
+
+        aContext.registerReceiver(connectedReceiver,
+                new IntentFilter(BluetoothDevice.ACTION_ACL_CONNECTED));
+        aContext.registerReceiver(disconnectedReceiver,
                 new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED));
 
     }
@@ -103,6 +116,7 @@ public class BluetoothService {
                     mBusyThread.start();
                 } catch (Exception e) {
                     Log.e(Constants.LOG_TAG_UI, "Failed", e);
+                    UIUtilities.showNotification(R.string.error);
                     if (mBusyThread != null) {
                         mBusyThread.cancel();
                     }
@@ -111,21 +125,32 @@ public class BluetoothService {
         }.start();
     }
 
-    public static void disconnect() {
+    public static void stop() {
         if (mBusyThread != null) {
             mBusyThread.cancel();
         }
         mCurrDevice = null;
 
+        for (BroadcastReceiver r: mRegisteredReceivers) {
+            mCurrContext.unregisterReceiver(r);
+        }
+        mRegisteredReceivers.clear();
+        mCurrContext = null;
     }
 
-    public static void selectDevice(BluetoothDevice aDevice) {
-        mCurrDevice = aDevice;
+    public static void selectDevice(String aDeviceAddress) {
+        mCurrDevice = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(aDeviceAddress);
+    }
+
+    public static boolean isPaired() {
+        return mPaired;
     }
 
     // read single measure command
     private static byte[] getReadDistanceMessage() {
         return ByteUtils.hexStringToByte("D5F0E00D");
     }
+
+
 
 }

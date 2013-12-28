@@ -12,7 +12,8 @@
                       android:layout_height="wrap_content"
                       android:gravity="center_horizontal"
                       android:text="@string/bt_devices"/>
-            <Button android:layout_height="wrap_content"
+            <Button android:id="@+id/bt_search"
+                    android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:text="@string/bt_search"
                     android:onClick="searchDevices"
