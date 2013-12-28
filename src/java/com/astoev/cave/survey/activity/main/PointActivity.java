@@ -3,12 +3,11 @@ package com.astoev.cave.survey.activity.main;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.ResultReceiver;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,6 +28,7 @@ import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.service.bluetooth.BluetoothService;
 import com.astoev.cave.survey.util.DaoUtil;
+import com.astoev.cave.survey.util.PhotoUtil;
 import com.astoev.cave.survey.util.PointUtil;
 import com.astoev.cave.survey.util.StringUtils;
 import com.j256.ormlite.misc.TransactionManager;
@@ -49,8 +49,11 @@ import java.util.concurrent.Callable;
  */
 public class PointActivity extends MainMenuActivity {
 
-    private Integer mCurrLeg = null;
     private String mNewNote = null;
+    
+    /** Current leg to work with */
+    private Leg currentLeg = null;
+    
     private ResultReceiver receiver = new ResultReceiver(new Handler()) {
 
         @Override
@@ -115,83 +118,75 @@ public class PointActivity extends MainMenuActivity {
     protected void onResume() {
         super.onResume();
         
+        loadPointData();
+        
         try {
-			Leg activeLeg = mWorkspace.getActiveLeg();
-			if (activeLeg != null){
-				StringBuilder builder = new StringBuilder(getString(R.string.leg));
-				builder.append(activeLeg.buildLegDescription(true));
-				
-				setTitle(builder.toString()); 
-			}
+        	Leg workingLeg = getCurrentLeg();
+			StringBuilder builder = new StringBuilder(getString(R.string.leg));
+			builder.append(workingLeg.buildLegDescription(true));
+			
+			setTitle(builder.toString()); 
 		} catch (SQLException e) {
 			Log.e(Constants.LOG_TAG_UI, "Failed to create activity's name", e);
 		}
-        
-        loadPointData();
     }
-
+    
     private void loadPointData() {
         Log.i(Constants.LOG_TAG_UI, "Initialize point view");
 
         try {
-            Bundle extras = getIntent().getExtras();
-            if (extras != null) {
-                mCurrLeg = extras.getInt(Constants.LEG_SELECTED);
-                Leg legEdited = (Leg) mWorkspace.getDBHelper().getLegDao().queryForId(mCurrLeg);
 
-                // label
-                TextView leg = (TextView) findViewById(R.id.point_curr_leg);
-                leg.setText(legEdited.buildLegDescription());
+            Leg legEdited = getCurrentLeg();
 
-                // up
-                EditText up = (EditText) findViewById(R.id.point_up);
-                setNotNull(up, legEdited.getTop());
-                addOnClickListener(up, Constants.Measures.up);
+            // label
+            TextView leg = (TextView) findViewById(R.id.point_curr_leg);
+            leg.setText(legEdited.buildLegDescription());
 
-                // down
-                EditText down = (EditText) findViewById(R.id.point_down);
-                setNotNull(down, legEdited.getDown());
-                addOnClickListener(down, Constants.Measures.down);
+            // up
+            EditText up = (EditText) findViewById(R.id.point_up);
+            setNotNull(up, legEdited.getTop());
+            addOnClickListener(up, Constants.Measures.up);
 
-                // left
-                EditText left = (EditText) findViewById(R.id.point_left);
-                setNotNull(left, legEdited.getLeft());
-                addOnClickListener(left, Constants.Measures.left);
+            // down
+            EditText down = (EditText) findViewById(R.id.point_down);
+            setNotNull(down, legEdited.getDown());
+            addOnClickListener(down, Constants.Measures.down);
 
-                // right
-                EditText right = (EditText) findViewById(R.id.point_right);
-                setNotNull(right, legEdited.getRight());
-                addOnClickListener(right, Constants.Measures.right);
+            // left
+            EditText left = (EditText) findViewById(R.id.point_left);
+            setNotNull(left, legEdited.getLeft());
+            addOnClickListener(left, Constants.Measures.left);
 
-                // distance
-                EditText distance = (EditText) findViewById(R.id.point_distance);
-                setNotNull(distance, legEdited.getDistance());
-                addOnClickListener(distance, Constants.Measures.distance);
+            // right
+            EditText right = (EditText) findViewById(R.id.point_right);
+            setNotNull(right, legEdited.getRight());
+            addOnClickListener(right, Constants.Measures.right);
 
-                // azimuth
-                EditText azimuth = (EditText) findViewById(R.id.point_azimuth);
-                setNotNull(azimuth, legEdited.getAzimuth());
-                addOnClickListener(azimuth, Constants.Measures.angle);
+            // distance
+            EditText distance = (EditText) findViewById(R.id.point_distance);
+            setNotNull(distance, legEdited.getDistance());
+            addOnClickListener(distance, Constants.Measures.distance);
 
-                // slope
-                EditText slope = (EditText) findViewById(R.id.point_slope);
-                slope.setText("0");
-                setNotNull(slope, legEdited.getSlope());
-                addOnClickListener(slope, Constants.Measures.slope);
+            // azimuth
+            EditText azimuth = (EditText) findViewById(R.id.point_azimuth);
+            setNotNull(azimuth, legEdited.getAzimuth());
+            addOnClickListener(azimuth, Constants.Measures.angle);
 
-                // fill note_text with its value
-                Note note = DaoUtil.getActiveLegNote(legEdited, mWorkspace);
-                TextView textView = (TextView) findViewById(R.id.point_note_text);
-                if (note != null && note.getText() != null) {
-                    textView.setText(note.getText());
-                    textView.setClickable(true);
-                } else if (mNewNote != null) {
-                    textView.setText(mNewNote);
-                    textView.setClickable(true);
-                }
+            // slope
+            EditText slope = (EditText) findViewById(R.id.point_slope);
+            slope.setText("0");
+            setNotNull(slope, legEdited.getSlope());
+            addOnClickListener(slope, Constants.Measures.slope);
 
-            } else {
-                Log.i(Constants.LOG_TAG_UI, "PointView for new point");
+            // fill note_text with its value
+            Note note = DaoUtil.getActiveLegNote(legEdited, mWorkspace);
+            TextView textView = (TextView) findViewById(R.id.point_note_text);
+            if (note != null && note.getText() != null) {
+                textView.setText(note.getText());
+                textView.setClickable(true);
+            } else if (mNewNote != null) {
+                textView.setText(mNewNote);
+                textView.setClickable(true);
             }
 
         } catch (Exception e) {
@@ -289,22 +284,24 @@ public class PointActivity extends MainMenuActivity {
                     new Callable() {
                         public Integer call() throws Exception {
 
-                            if (mCurrLeg == null) {
-                                Log.i(Constants.LOG_TAG_UI, "Create new leg");
-                                Leg activeLeg = (Leg) mWorkspace.getDBHelper().getLegDao().queryForId(mWorkspace.getActiveLegId());
+                        	Leg legEdited = getCurrentLeg();
+                            if (legEdited.isNew()) {
+//                                Log.i(Constants.LOG_TAG_UI, "Create new leg");
+//                                Leg activeLeg = (Leg) mWorkspace.getDBHelper().getLegDao().queryForId(mWorkspace.getActiveLegId());
+//
+//                                // another leg, starting from the latest in the gallery
+//                                Point newFrom = mWorkspace.getLastGalleryPoint(activeLeg.getGalleryId());
+//                                Point newTo = PointUtil.generateNextPoint(activeLeg.getGalleryId());
+//                                mWorkspace.getDBHelper().getPointDao().create(newTo);
+//
+//                                Leg nextLeg = new Leg(newFrom, newTo, mWorkspace.getActiveProject(), activeLeg.getGalleryId());
 
-                                // another leg, starting from the latest in the gallery
-                                Point newFrom = mWorkspace.getLastGalleryPoint(activeLeg.getGalleryId());
-                                Point newTo = PointUtil.generateNextPoint(activeLeg.getGalleryId());
-                                mWorkspace.getDBHelper().getPointDao().create(newTo);
-
-                                Leg nextLeg = new Leg(newFrom, newTo, mWorkspace.getActiveProject(), activeLeg.getGalleryId());
-
-                                mWorkspace.getDBHelper().getLegDao().create(nextLeg);
-                                mCurrLeg = nextLeg.getId();
+                            	mWorkspace.getDBHelper().getPointDao().create(legEdited.getToPoint());
+                                mWorkspace.getDBHelper().getLegDao().create(legEdited);
+//                                mCurrLeg = legEdited.getId();
                             }
 
-                            Leg legEdited = (Leg) mWorkspace.getDBHelper().getLegDao().queryForId(mCurrLeg);
+//                            Leg legEdited = (Leg) mWorkspace.getDBHelper().getLegDao().queryForId(mCurrLeg);
 
                             // update model
                             legEdited.setDistance(StringUtils.getFromEditTextNotNull(distance));
@@ -404,7 +401,7 @@ public class PointActivity extends MainMenuActivity {
 
     public void noteButton(View aView) {
         Intent intent = new Intent(this, NoteActivity.class);
-        intent.putExtra(Constants.LEG_SELECTED, mCurrLeg);
+        intent.putExtra(Constants.LEG_SELECTED, getCurrentLeg().getId());
         intent.putExtra(Constants.LEG_NOTE, mNewNote);
         startActivityForResult(intent, 2);
     }
@@ -433,7 +430,7 @@ public class PointActivity extends MainMenuActivity {
                         public Object call() throws Exception {
                             Log.i(Constants.LOG_TAG_UI, "Delete " + mWorkspace.getActiveLegId());
 
-                            Leg legEdited = (Leg) mWorkspace.getDBHelper().getLegDao().queryForId(mCurrLeg);
+                            Leg legEdited = getCurrentLeg();
 
                             Note note = DaoUtil.getActiveLegNote(legEdited, mWorkspace);
                             if (note != null) {
@@ -509,14 +506,18 @@ public class PointActivity extends MainMenuActivity {
     public void photoButton() {
         // picture http://www.tutorialforandroid.com/2010/10/take-picture-in-android-with.html
 
-        final File path = new File(Environment.getExternalStorageDirectory(), "CaveSurvey");
-        if (!path.exists()) {
-            path.mkdir();
-        }
-
-        final Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(path, "photo.tmp")));
-        startActivityForResult(intent, 1);
+//        final File path = new File(Environment.getExternalStorageDirectory(), "CaveSurvey");
+//        if (!path.exists()) {
+//            path.mkdir();
+//        }
+        
+//    	mCurrLeg.
+//		File photoFile = FileStorageUtil.createPictureFile(this, projectNameArg, pointNameArg, FileStorageUtil.JPG_FILE_EXTENSION);
+//
+//        final Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+//        startActivityForResult(intent, PhotoUtil.REQUEST_IMAGE_CAPTURE);
+//    	PhotoUtil.sendPhotoIntent(this);
 
     }
 
@@ -525,7 +526,7 @@ public class PointActivity extends MainMenuActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent aData) {
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
-                case 1:
+                case PhotoUtil.REQUEST_IMAGE_CAPTURE:
                     Log.i(Constants.LOG_TAG_SERVICE, "Got image");
                     final File file = new File(new File(Environment.getExternalStorageDirectory(), "CaveSurvey"), "photo.tmp");
                     FileInputStream in = null;
@@ -534,7 +535,7 @@ public class PointActivity extends MainMenuActivity {
                         Photo photo = new Photo();
                         photo.setPictureBytes(IOUtils.toByteArray(in));
 
-                        Leg legEdited = (Leg) mWorkspace.getDBHelper().getLegDao().queryForId(mCurrLeg);
+                        Leg legEdited = getCurrentLeg();
                         Point currPoint = (Point) mWorkspace.getDBHelper().getPointDao().queryForId(legEdited.getFromPoint().getId());
                         photo.setPoint(currPoint);
 
@@ -612,11 +613,19 @@ public class PointActivity extends MainMenuActivity {
     public boolean onPrepareOptionsMenu(Menu menu) {
         // need to call super to prepare menu
         boolean flag =  super.onPrepareOptionsMenu(menu);
+        
+        // check if the device has a camera
+        PackageManager packageManager = getPackageManager();
+        if (!packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA)){
+        	// if there is no camera remove the photo button
+        	MenuItem photoMenuItem = menu.findItem(R.id.point_action_photo);
+        	photoMenuItem.setVisible(false);
+        }
 
         // enable deletion if already saved
-        if (mCurrLeg != null) {
+        Leg legEdited = getCurrentLeg();
+        if (!legEdited.isNew()) {
             try {
-                Leg legEdited = (Leg) mWorkspace.getDBHelper().getLegDao().queryForId(mCurrLeg);
                 Leg lastLeg = mWorkspace.getLastLeg();
                 if (lastLeg.getId().equals(legEdited.getId())) {
                     // and only last leg for now
@@ -634,5 +643,37 @@ public class PointActivity extends MainMenuActivity {
         MenuItem deleteMenuOption = menu.findItem(R.id.point_action_delete);
         deleteMenuOption.setEnabled(false);
         return flag;
+    }
+    
+    /**
+     * Helper method to build the current leg. If the leg is new will create from and to points. The id of the
+     * new leg will always be null. If the leg is currently edited it is obtained from the workspace.
+     * 
+     * @return Leg instance
+     */
+    private Leg getCurrentLeg(){
+        if (currentLeg == null){
+        	Bundle extras = getIntent().getExtras();
+            try {
+				if (extras != null) {
+				    int currentLegSelectedId = extras.getInt(Constants.LEG_SELECTED);
+				    currentLeg = (Leg) mWorkspace.getDBHelper().getLegDao().queryForId(currentLegSelectedId);
+				    Log.i(Constants.LOG_TAG_UI, "PointView for leg with id: " + currentLegSelectedId);
+				} else {
+					Log.i(Constants.LOG_TAG_UI, "Create new leg");
+				    Leg activeLeg = (Leg) mWorkspace.getDBHelper().getLegDao().queryForId(mWorkspace.getActiveLegId());
+
+				    // another leg, starting from the latest in the gallery
+				    Point newFrom = mWorkspace.getLastGalleryPoint(activeLeg.getGalleryId());
+				    Point newTo = PointUtil.generateNextPoint(activeLeg.getGalleryId());
+
+				    currentLeg = new Leg(newFrom, newTo, mWorkspace.getActiveProject(), activeLeg.getGalleryId());
+				    Log.i(Constants.LOG_TAG_UI, "PointView for new point");
+				}
+			} catch (SQLException sqle) {
+				throw new RuntimeException(sqle);
+			}
+        }
+        return currentLeg;
     }
 }
