@@ -32,8 +32,6 @@ public class PointUtil {
 
     public static Point generateNextPoint(Integer aGalleryId) throws SQLException {
 
-        Dao pointDao = Workspace.getCurrentInstance().getDBHelper().getPointDao();
-
         Point lastGalleryPoint = Workspace.getCurrentInstance().getLastGalleryPoint(aGalleryId);
 
         Point newPoint = new Point();
