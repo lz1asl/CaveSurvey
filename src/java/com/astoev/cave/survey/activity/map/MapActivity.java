@@ -17,7 +17,7 @@ import com.astoev.cave.survey.activity.MainMenuActivity;
  */
 public class MapActivity extends MainMenuActivity implements View.OnTouchListener {
 
-    MapView map;
+    private MapView map;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,5 +65,9 @@ public class MapActivity extends MainMenuActivity implements View.OnTouchListene
 
         map = (MapView) findViewById(R.id.mapSurface);
         map.setOnTouchListener(this);
+    }
+
+    public void allowDrawing(View aView) {
+
     }
 }
