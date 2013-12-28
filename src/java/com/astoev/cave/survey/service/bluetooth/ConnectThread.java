@@ -111,7 +111,7 @@ public class ConnectThread extends Thread {
                         Log.i(Constants.LOG_TAG_UI, "Got angle " + measure / 10);
                         Bundle b = new Bundle();
                         b.putFloat("result", measure / 10);
-                        b.putString("type", Constants.Measures.angle.toString());
+                        b.putString("type", Constants.Measures.slope.toString());
                         mReceiver.send(Activity.RESULT_OK, b);
                     }
 
