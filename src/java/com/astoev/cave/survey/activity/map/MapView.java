@@ -122,9 +122,9 @@ public class MapView extends View {
                             deltaX = 0;
                             deltaY = 0;
                         } else {
-                            // todo slope in the distance
-                            deltaY = -(float) (l.getDistance() * Math.cos(Math.toRadians(getAzimuthInDegrees(l.getAzimuth())))) * scale;
-                            deltaX = (float) (l.getDistance() * Math.sin(Math.toRadians(getAzimuthInDegrees(l.getAzimuth())))) * scale;
+                            float legDistance = applySlopeToDistance(l.getDistance(), getSlopeInDegrees(l.getSlope()));
+                            deltaY = -(float) (legDistance * Math.cos(Math.toRadians(getAzimuthInDegrees(l.getAzimuth())))) * scale;
+                            deltaX = (float) (legDistance * Math.sin(Math.toRadians(getAzimuthInDegrees(l.getAzimuth())))) * scale;
                         }
 
                         Point2D second = new Point2D(first.getX() + deltaX, first.getY() + deltaY);
@@ -267,5 +267,25 @@ public class MapView extends View {
             // convert from grads to degrees
             return anAzimuth * Option.MAX_VALUE_AZIMUTH_DEGREES / Option.MAX_VALUE_AZIMUTH_GRADS;
         }
+    }
+
+    private Float getSlopeInDegrees(Float aSlope) {
+        if (null == aSlope) {
+            return null;
+        }
+
+        if (Option.UNIT_DEGREES.equals(Options.getOptionValue(Option.CODE_SLOPE_UNITS))) {
+            return aSlope;
+        } else {
+            // convert from grads to degrees
+            return aSlope * Option.MAX_VALUE_SLOPE_DEGREES / Option.MAX_VALUE_SLOPE_GRADS;
+        }
+    }
+
+    private Float applySlopeToDistance(Float aDistance, Float aSlope) {
+        if (aSlope == null) {
+            return aDistance;
+        }
+        return new Float(aDistance * Math.cos(Math.toRadians(aSlope)));
     }
 }
