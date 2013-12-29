@@ -41,6 +41,43 @@ public class BluetoothService {
     private static Activity mCurrContext = null;
     private static List<BroadcastReceiver> mRegisteredReceivers = new ArrayList<BroadcastReceiver>();
 
+    private static BroadcastReceiver mConnectedReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            try {
+                UIUtilities.showNotification(R.string.bt_paired);
+                Button toggle = (Button) mCurrContext.findViewById(R.id.bt_toggle_pair);
+                Log.i(Constants.LOG_TAG_UI, "Paired with " + mCurrDevice);
+                mPaired = true;
+
+                CheckBox deviceStatus = (CheckBox) mCurrContext.findViewById(R.id.bt_device_status);
+                deviceStatus.setChecked(true);
+            } catch (Exception e) {
+                Log.e(Constants.LOG_TAG_UI, "Failed during pair", e);
+                UIUtilities.showNotification(R.string.error);
+            }
+        }
+    };
+    private static BroadcastReceiver mDisconnectedReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            try {
+                UIUtilities.showNotification(R.string.bt_disconnect);
+                Log.i(Constants.LOG_TAG_UI, "Disconnected");
+                Button toggle = (Button) mCurrContext.findViewById(R.id.bt_toggle_pair);
+                mPaired = false;
+
+                CheckBox deviceStatus = (CheckBox) mCurrContext.findViewById(R.id.bt_device_status);
+                deviceStatus.setChecked(false);
+
+                stop();
+            } catch (Exception e) {
+                Log.e(Constants.LOG_TAG_UI, "Failed during disconnect", e);
+                UIUtilities.showNotification(R.string.error);
+            }
+        }
+    };
+
     public static boolean isBluetoothSupported() {
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bluetoothAdapter == null) {
@@ -68,53 +105,17 @@ public class BluetoothService {
 
         mCurrContext = aContext;
 
-        BroadcastReceiver connectedReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                try {
-                    UIUtilities.showNotification(R.string.bt_paired);
-                    Button toggle = (Button) aContext.findViewById(R.id.bt_toggle_pair);
-//                    toggle.setText(R.string.bt_disconnect);
-                    Log.i(Constants.LOG_TAG_UI, "Paired with " + mCurrDevice);
-                    mPaired = true;
+        if (!mRegisteredReceivers.contains(mConnectedReceiver)) {
+            mRegisteredReceivers.add(mConnectedReceiver);
+            aContext.registerReceiver(mConnectedReceiver,
+                    new IntentFilter(BluetoothDevice.ACTION_ACL_CONNECTED));
+        }
 
-                    CheckBox deviceStatus = (CheckBox) mCurrContext.findViewById(R.id.bt_device_status);
-                    deviceStatus.setChecked(true);
-                } catch (Exception e) {
-                    Log.e(Constants.LOG_TAG_UI, "Failed during pair", e);
-                    UIUtilities.showNotification(R.string.error);
-                }
-            }
-        };
-        BroadcastReceiver disconnectedReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                try {
-                    UIUtilities.showNotification(R.string.bt_disconnect);
-                    Log.i(Constants.LOG_TAG_UI, "Disconnected");
-                    Button toggle = (Button) aContext.findViewById(R.id.bt_toggle_pair);
-//                    toggle.setText(R.string.bt_pair);
-                    mPaired = false;
-
-                    CheckBox deviceStatus = (CheckBox) mCurrContext.findViewById(R.id.bt_device_status);
-                    deviceStatus.setChecked(false);
-
-                    stop();
-                } catch (Exception e) {
-                    Log.e(Constants.LOG_TAG_UI, "Failed during disconnect", e);
-                    UIUtilities.showNotification(R.string.error);
-                }
-            }
-        };
-
-        mRegisteredReceivers.add(connectedReceiver);
-        mRegisteredReceivers.add(disconnectedReceiver);
-
-        aContext.registerReceiver(connectedReceiver,
-                new IntentFilter(BluetoothDevice.ACTION_ACL_CONNECTED));
-        aContext.registerReceiver(disconnectedReceiver,
-                new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED));
-
+        if (!mRegisteredReceivers.contains(mDisconnectedReceiver)) {
+            mRegisteredReceivers.add(mDisconnectedReceiver);
+            aContext.registerReceiver(mDisconnectedReceiver,
+                    new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED));
+        }
     }
 
     public static void sendReadDistanceCommand(final ResultReceiver receiver, final Constants.Measures aMeasure) {

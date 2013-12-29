@@ -47,8 +47,9 @@ public class BTActivity extends BaseActivity {
                 if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                     BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                     Log.i("Bluetooth new device ", device.getName() + "\n" + device.getAddress());
-                    if (!devices.contains(device)) {
-                        devices.add(new Pair(device.getName(), device.getAddress()));
+                    Pair<String, String> newDevice = new Pair(device.getName(), device.getAddress());
+                    if (!devices.contains(newDevice)) {
+                        devices.add(newDevice);
                     }
                     refreshDevicesList();
                 }
@@ -66,6 +67,7 @@ public class BTActivity extends BaseActivity {
         setContentView(R.layout.bluetooth);
 
         prepareUI();
+        BluetoothService.registerListeners(this);
     }
 
     private void prepareUI() {
@@ -81,10 +83,14 @@ public class BTActivity extends BaseActivity {
             String selectedBtDeviceAddress = ConfigUtil.getStringProperty(ConfigUtil.PROP_CURR_BT_DEVICE_ADDRESS);
             if (StringUtils.isNotEmpty(selectedBtDeviceAddress)) {
                 String selectedBtDeviceName = ConfigUtil.getStringProperty(ConfigUtil.PROP_CURR_BT_DEVICE_NAME);
-                devices.add(new Pair(selectedBtDeviceName, selectedBtDeviceAddress));
-                if (BluetoothService.isPaired()) {
-                    Button searchButton = (Button) findViewById(R.id.bt_search);
-                    searchButton.setEnabled(false);
+                Pair<String, String> newDevice = new Pair(selectedBtDeviceName, selectedBtDeviceAddress);
+                if (!devices.contains(newDevice)) {
+                    devices.add(newDevice);
+                    refreshDevicesList();
+                    if (BluetoothService.isPaired()) {
+                        Button searchButton = (Button) findViewById(R.id.bt_search);
+                        searchButton.setEnabled(false);
+                    }
                 }
             }
 
@@ -99,6 +105,7 @@ public class BTActivity extends BaseActivity {
         super.onResume();
 
         prepareUI();
+        BluetoothService.registerListeners(this);
     }
 
     @Override
@@ -106,6 +113,7 @@ public class BTActivity extends BaseActivity {
         super.onRestart();
 
         prepareUI();
+        BluetoothService.registerListeners(this);
     }
 
     public void togglePair(View aView) {
@@ -114,7 +122,7 @@ public class BTActivity extends BaseActivity {
 
         // stop BT discovery and events
         BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
-        unregisterReceiver(mReceiver);
+        safeUnregisterReceiver();
 
         // get selected
         Log.i(Constants.LOG_TAG_UI, "Pair");
@@ -138,7 +146,6 @@ public class BTActivity extends BaseActivity {
             Log.i(Constants.LOG_TAG_UI, "Searching devices");
             if (!BluetoothAdapter.getDefaultAdapter().isDiscovering()) {
                 registerReceiver(mReceiver, filter);
-                BluetoothService.registerListeners(this);
                 BluetoothAdapter.getDefaultAdapter().startDiscovery();
             }
         } catch (Exception e) {
@@ -169,12 +176,16 @@ public class BTActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
+        safeUnregisterReceiver();
+        super.onBackPressed();
+    }
+
+    private void safeUnregisterReceiver() {
         try {
             unregisterReceiver(mReceiver);
         } catch (Exception e) {
             // ignore, might already been unregistered
         }
-        super.onBackPressed();
     }
 
     private String buildDeviceName(Pair<String, String> aDevice) {
