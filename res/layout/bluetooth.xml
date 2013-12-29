@@ -21,6 +21,7 @@
         </TableRow>
         <TableRow>
             <Spinner android:id="@+id/bt_devices"/>
+            <CheckBox android:id="@+id/bt_device_status" android:enabled="false"/>
         </TableRow>
         <TableRow>
             <Button android:id="@+id/bt_toggle_pair"

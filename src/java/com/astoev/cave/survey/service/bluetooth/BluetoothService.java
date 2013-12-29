@@ -3,19 +3,26 @@ package com.astoev.cave.survey.service.bluetooth;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.ResultReceiver;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.CheckBox;
+
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.UIUtilities;
 
+import java.io.IOException;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created with IntelliJ IDEA.
@@ -25,6 +32,8 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class BluetoothService {
+
+    public static final String SPP_UUID = "00001101-0000-1000-8000-00805F9B34FB";
 
     private static ConnectThread mBusyThread = null;
     private static BluetoothDevice mCurrDevice = null;
@@ -55,7 +64,7 @@ public class BluetoothService {
         }
     }
 
-    public static void prepare(final Activity aContext) {
+    public static void registerListeners(final Activity aContext) {
 
         mCurrContext = aContext;
 
@@ -68,6 +77,9 @@ public class BluetoothService {
 //                    toggle.setText(R.string.bt_disconnect);
                     Log.i(Constants.LOG_TAG_UI, "Paired with " + mCurrDevice);
                     mPaired = true;
+
+                    CheckBox deviceStatus = (CheckBox) mCurrContext.findViewById(R.id.bt_device_status);
+                    deviceStatus.setChecked(true);
                 } catch (Exception e) {
                     Log.e(Constants.LOG_TAG_UI, "Failed during pair", e);
                     UIUtilities.showNotification(R.string.error);
@@ -83,6 +95,10 @@ public class BluetoothService {
                     Button toggle = (Button) aContext.findViewById(R.id.bt_toggle_pair);
 //                    toggle.setText(R.string.bt_pair);
                     mPaired = false;
+
+                    CheckBox deviceStatus = (CheckBox) mCurrContext.findViewById(R.id.bt_device_status);
+                    deviceStatus.setChecked(false);
+
                     stop();
                 } catch (Exception e) {
                     Log.e(Constants.LOG_TAG_UI, "Failed during disconnect", e);
@@ -131,7 +147,7 @@ public class BluetoothService {
         }
         mCurrDevice = null;
 
-        for (BroadcastReceiver r: mRegisteredReceivers) {
+        for (BroadcastReceiver r : mRegisteredReceivers) {
             mCurrContext.unregisterReceiver(r);
         }
         mRegisteredReceivers.clear();
@@ -140,6 +156,34 @@ public class BluetoothService {
 
     public static void selectDevice(String aDeviceAddress) {
         mCurrDevice = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(aDeviceAddress);
+        Log.i(Constants.LOG_TAG_SERVICE, "Selected " + aDeviceAddress + " : " + mCurrDevice);
+
+       /* // ping the device in background
+        new Thread() {
+            public void run() {
+                Log.i(Constants.LOG_TAG_UI, "Test device");
+                BluetoothSocket tester = null;
+                try {
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD_MR1) {
+                        tester = mCurrDevice.createRfcommSocketToServiceRecord(UUID.fromString(SPP_UUID));
+                    } else {
+                        tester = mCurrDevice.createInsecureRfcommSocketToServiceRecord(UUID.fromString(SPP_UUID));
+                    }
+                    tester.connect();
+                    Log.i(Constants.LOG_TAG_UI, "Device found!");
+                } catch (Exception e) {
+                    Log.e(Constants.LOG_TAG_SERVICE, "Failed to test device ", e);
+                } finally {
+                    if (tester != null) {
+                        try {
+                            tester.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        }.start();*/
     }
 
     public static boolean isPaired() {
@@ -150,7 +194,6 @@ public class BluetoothService {
     private static byte[] getReadDistanceMessage() {
         return ByteUtils.hexStringToByte("D5F0E00D");
     }
-
 
 
 }

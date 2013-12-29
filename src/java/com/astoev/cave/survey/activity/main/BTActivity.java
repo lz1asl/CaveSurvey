@@ -62,10 +62,14 @@ public class BTActivity extends BaseActivity {
     IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
 
     public void onCreate(Bundle savedInstanceState) {
-        try {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.bluetooth);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.bluetooth);
 
+        prepareUI();
+    }
+
+    private void prepareUI() {
+        try {
             // BT disabled?
             if (!BluetoothService.askBluetoothOn(this)) {
                 Log.i(Constants.LOG_TAG_UI, "BT disabled");
@@ -90,21 +94,42 @@ public class BTActivity extends BaseActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        prepareUI();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+
+        prepareUI();
+    }
+
     public void togglePair(View aView) {
         Button toggle = (Button) aView.findViewById(R.id.bt_toggle_pair);
         toggle.setEnabled(false);
 
+        // stop BT discovery and events
+        BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
         unregisterReceiver(mReceiver);
 
+        // get selected
         Log.i(Constants.LOG_TAG_UI, "Pair");
         Spinner devicesChooser = (Spinner) findViewById(R.id.bt_devices);
         Pair<String, String> device = devices.get(devicesChooser.getSelectedItemPosition());
         Log.i(Constants.LOG_TAG_UI, "Try to use " + device.first + ":" + device.second);
-        BluetoothService.selectDevice(device.second);
 
-        // no need to stay here
-        Intent intent = new Intent(this, HomeActivity.class);
-        startActivity(intent);
+        // store & propagate
+        BluetoothService.selectDevice(device.second);
+        ConfigUtil.setStringProperty(ConfigUtil.PROP_CURR_BT_DEVICE_NAME, device.first);
+        ConfigUtil.setStringProperty(ConfigUtil.PROP_CURR_BT_DEVICE_ADDRESS, device.second);
+
+        // no need to stay here more
+//        Intent intent = new Intent(this, HomeActivity.class);
+//        startActivity(intent);
     }
 
     public void searchDevices(View aView) {
@@ -113,7 +138,7 @@ public class BTActivity extends BaseActivity {
             Log.i(Constants.LOG_TAG_UI, "Searching devices");
             if (!BluetoothAdapter.getDefaultAdapter().isDiscovering()) {
                 registerReceiver(mReceiver, filter);
-                BluetoothService.prepare(this);
+                BluetoothService.registerListeners(this);
                 BluetoothAdapter.getDefaultAdapter().startDiscovery();
             }
         } catch (Exception e) {
@@ -144,7 +169,11 @@ public class BTActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        unregisterReceiver(mReceiver);
+        try {
+            unregisterReceiver(mReceiver);
+        } catch (Exception e) {
+            // ignore, might already been unregistered
+        }
         super.onBackPressed();
     }
 

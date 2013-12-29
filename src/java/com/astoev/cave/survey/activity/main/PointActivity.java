@@ -38,6 +38,8 @@ import org.apache.commons.io.IOUtils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.sql.SQLException;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.Callable;
 
 /**
@@ -54,53 +56,7 @@ public class PointActivity extends MainMenuActivity {
     /** Current leg to work with */
     private Leg currentLeg = null;
     
-    private ResultReceiver receiver = new ResultReceiver(new Handler()) {
-
-        @Override
-        protected void onReceiveResult(int resultCode, Bundle resultData) {
-            float aMeasure = resultData.getFloat("result");
-            Constants.Measures type = Constants.Measures.valueOf(resultData.getString("type"));
-            switch (type) {
-                case distance:
-                    Log.i(Constants.LOG_TAG_UI, "Got distance " + aMeasure);
-                    populateMeasure(aMeasure, R.id.point_distance);
-                    break;
-
-                case angle:
-                    Log.i(Constants.LOG_TAG_UI, "Got angle " + aMeasure);
-                    populateMeasure(aMeasure, R.id.point_azimuth);
-                    break;
-
-                case slope:
-                    Log.i(Constants.LOG_TAG_UI, "Got slope " + aMeasure);
-                    populateMeasure(aMeasure, R.id.point_slope);
-                    break;
-
-                case up:
-                    Log.i(Constants.LOG_TAG_UI, "Got up " + aMeasure);
-                    populateMeasure(aMeasure, R.id.point_up);
-                    break;
-
-                case down:
-                    Log.i(Constants.LOG_TAG_UI, "Got down " + aMeasure);
-                    populateMeasure(aMeasure, R.id.point_down);
-                    break;
-
-                case left:
-                    Log.i(Constants.LOG_TAG_UI, "Got left " + aMeasure);
-                    populateMeasure(aMeasure, R.id.point_left);
-                    break;
-
-                case right:
-                    Log.i(Constants.LOG_TAG_UI, "Got right " + aMeasure);
-                    populateMeasure(aMeasure, R.id.point_right);
-                    break;
-
-                default:
-                    Log.i(Constants.LOG_TAG_UI, "Ignore type " + type);
-            }
-        }
-    };
+    private BTMeasureResultReceiver receiver = new BTMeasureResultReceiver(new Handler());
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -132,7 +88,7 @@ public class PointActivity extends MainMenuActivity {
     }
     
     private void loadPointData() {
-        Log.i(Constants.LOG_TAG_UI, "Initialize point view");
+        Log.i(Constants.LOG_TAG_UI, "Loading point data");
 
         try {
 
@@ -145,38 +101,38 @@ public class PointActivity extends MainMenuActivity {
             // up
             EditText up = (EditText) findViewById(R.id.point_up);
             setNotNull(up, legEdited.getTop());
-            addOnClickListener(up, Constants.Measures.up);
+            bindBTMeasures(up, Constants.Measures.up);
 
             // down
             EditText down = (EditText) findViewById(R.id.point_down);
             setNotNull(down, legEdited.getDown());
-            addOnClickListener(down, Constants.Measures.down);
+            bindBTMeasures(down, Constants.Measures.down);
 
             // left
             EditText left = (EditText) findViewById(R.id.point_left);
             setNotNull(left, legEdited.getLeft());
-            addOnClickListener(left, Constants.Measures.left);
+            bindBTMeasures(left, Constants.Measures.left);
 
             // right
             EditText right = (EditText) findViewById(R.id.point_right);
             setNotNull(right, legEdited.getRight());
-            addOnClickListener(right, Constants.Measures.right);
+            bindBTMeasures(right, Constants.Measures.right);
 
             // distance
             EditText distance = (EditText) findViewById(R.id.point_distance);
             setNotNull(distance, legEdited.getDistance());
-            addOnClickListener(distance, Constants.Measures.distance);
+            bindBTMeasures(distance, Constants.Measures.distance);
 
             // azimuth
             EditText azimuth = (EditText) findViewById(R.id.point_azimuth);
             setNotNull(azimuth, legEdited.getAzimuth());
-            addOnClickListener(azimuth, Constants.Measures.angle);
+            bindBTMeasures(azimuth, Constants.Measures.angle);
 
             // slope
             EditText slope = (EditText) findViewById(R.id.point_slope);
             slope.setText("0");
             setNotNull(slope, legEdited.getSlope());
-            addOnClickListener(slope, Constants.Measures.slope);
+            bindBTMeasures(slope, Constants.Measures.slope);
 
             // fill note_text with its value
             Note note = DaoUtil.getActiveLegNote(legEdited);
@@ -195,11 +151,12 @@ public class PointActivity extends MainMenuActivity {
         }
     }
 
-    private void addOnClickListener(EditText text, final Constants.Measures aMeasure) {
+    private void bindBTMeasures(EditText text, final Constants.Measures aMeasure) {
 
         if (BluetoothService.isBluetoothSupported()) {
 
             if (!ensureDeviceSelected(false)) {
+                Log.i(Constants.LOG_TAG_UI, "No device");
                 return;
             }
 
@@ -231,11 +188,17 @@ public class PointActivity extends MainMenuActivity {
 
         Log.i(Constants.LOG_TAG_UI, "Add BT listener");
         // supported for the measure, add the listener
-        text.setOnClickListener(new View.OnClickListener() {
+        text.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onClick(View v) {
-                Log.i(Constants.LOG_TAG_UI, "Send command");
-                triggerBluetoothMeasure(aMeasure);
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    Log.i(Constants.LOG_TAG_UI, "Send read command");
+                    receiver.expectsMeasure(aMeasure);
+                    triggerBluetoothMeasure(aMeasure);
+                } else {
+                    receiver.ignore(aMeasure);
+                }
+
             }
         });
     }
@@ -676,4 +639,69 @@ public class PointActivity extends MainMenuActivity {
         }
         return currentLeg;
     }
+
+    private class BTMeasureResultReceiver extends ResultReceiver {
+            private Set<Constants.Measures> expectedMeasures = new HashSet<Constants.Measures>();
+
+        public BTMeasureResultReceiver(Handler handler) {
+            super(handler);
+        }
+
+        @Override
+            protected void onReceiveResult(int resultCode, Bundle resultData) {
+                float aMeasure = resultData.getFloat("result");
+                Constants.Measures type = Constants.Measures.valueOf(resultData.getString("type"));
+                switch (type) {
+                    case distance:
+                        Log.i(Constants.LOG_TAG_UI, "Got distance " + aMeasure);
+                        populateMeasure(aMeasure, R.id.point_distance);
+                        break;
+
+                    case angle:
+                        Log.i(Constants.LOG_TAG_UI, "Got angle " + aMeasure);
+                        populateMeasure(aMeasure, R.id.point_azimuth);
+                        break;
+
+                    case slope:
+                        Log.i(Constants.LOG_TAG_UI, "Got slope " + aMeasure);
+                        populateMeasure(aMeasure, R.id.point_slope);
+                        break;
+
+                    case up:
+                        Log.i(Constants.LOG_TAG_UI, "Got up " + aMeasure);
+                        populateMeasure(aMeasure, R.id.point_up);
+                        break;
+
+                    case down:
+                        Log.i(Constants.LOG_TAG_UI, "Got down " + aMeasure);
+                        populateMeasure(aMeasure, R.id.point_down);
+                        break;
+
+                    case left:
+                        Log.i(Constants.LOG_TAG_UI, "Got left " + aMeasure);
+                        populateMeasure(aMeasure, R.id.point_left);
+                        break;
+
+                    case right:
+                        Log.i(Constants.LOG_TAG_UI, "Got right " + aMeasure);
+                        populateMeasure(aMeasure, R.id.point_right);
+                        break;
+
+                    default:
+                        Log.i(Constants.LOG_TAG_UI, "Ignore type " + type);
+                }
+            }
+
+        public boolean expectsMeasure(Constants.Measures aMeasure) {
+            return expectedMeasures.contains(aMeasure);
+        }
+
+        public void await(Constants.Measures aMeasure) {
+            expectedMeasures.add(aMeasure);
+        }
+
+        public void ignore(Constants.Measures aMeasure) {
+            expectedMeasures.remove(aMeasure);
+        }
+    };
 }

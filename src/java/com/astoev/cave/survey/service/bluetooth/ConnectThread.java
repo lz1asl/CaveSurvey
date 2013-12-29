@@ -26,7 +26,6 @@ import java.util.UUID;
  */
 public class ConnectThread extends Thread {
 
-    private static final String SPP_UUID = "00001101-0000-1000-8000-00805F9B34FB";
     private static final int REC_MODE_PLUS = 9;
     private static final int REC_MODE_MINUS = 10;
     private BluetoothSocket mSocket;
@@ -48,7 +47,7 @@ public class ConnectThread extends Thread {
 
         Log.i(Constants.LOG_TAG_UI, "Prepare client");
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD_MR1) {
-            mSocket = mDevice.createRfcommSocketToServiceRecord(UUID.fromString(SPP_UUID));
+            mSocket = mDevice.createRfcommSocketToServiceRecord(UUID.fromString(BluetoothService.SPP_UUID));
         } else {
 //            mSocket = mDevice.createInsecureRfcommSocketToServiceRecord(UUID.fromString(SPP_UUID));
         	mSocket = createSocketApi10Plus();
@@ -60,7 +59,7 @@ public class ConnectThread extends Thread {
     
     @TargetApi(Build.VERSION_CODES.GINGERBREAD_MR1)
     private BluetoothSocket createSocketApi10Plus() throws IOException{
-    	return mDevice.createInsecureRfcommSocketToServiceRecord(UUID.fromString(SPP_UUID));
+    	return mDevice.createInsecureRfcommSocketToServiceRecord(UUID.fromString(BluetoothService.SPP_UUID));
     }
 
     public void sendMessage(byte[] aMessage) throws IOException {

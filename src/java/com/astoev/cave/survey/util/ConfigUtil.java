@@ -1,5 +1,6 @@
 package com.astoev.cave.survey.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -14,13 +15,13 @@ public class ConfigUtil {
     public static final String PROP_CURR_BT_DEVICE_ADDRESS = "curr_bt_device_addr";
     public static final String PROP_CURR_BT_DEVICE_NAME = "curr_bt_device_name";
 
-    private static Context mAppContext;
+    private static Activity mAppContext;
 
-    public static void setContext(Context aContext) {
+    public static void setContext(Activity aContext) {
         mAppContext = aContext;
     }
 
-    public static Context getContext() {
+    public static Activity getContext() {
         return mAppContext;
     }
 

@@ -1,5 +1,6 @@
 package com.astoev.cave.survey.activity;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -28,16 +29,22 @@ public class UIUtilities {
         showNotification(ConfigUtil.getContext(), aMessage, null);
     }
 
-    public static void showNotification(Context aContext, int aResourceId, Object aParams) {
-        int duration = Toast.LENGTH_SHORT;
-        Toast toast = Toast.makeText(aContext, aContext.getString(aResourceId, aParams), duration);
-        toast.show();
+    public static void showNotification(final Activity aContext, final int aResourceId, final Object aParams) {
+        aContext.runOnUiThread(new Runnable() {
+            public void run() {
+                Toast toast = Toast.makeText(aContext, aContext.getString(aResourceId, aParams), Toast.LENGTH_SHORT);
+                toast.show();
+            }
+        });
     }
 
-    public static void showNotification(Context aContext, String aMessage, Object aParams) {
-        int duration = Toast.LENGTH_SHORT;
-        Toast toast = Toast.makeText(aContext, aMessage, duration);
-        toast.show();
+    public static void showNotification(final Activity aContext, final String aMessage, final Object aParams) {
+        aContext.runOnUiThread(new Runnable() {
+            public void run() {
+                Toast toast = Toast.makeText(aContext, aMessage, Toast.LENGTH_SHORT);
+                toast.show();
+            }
+        });
     }
 
     public static void showRawMessage(Context aContext, String rawMessage) {
