@@ -51,6 +51,8 @@ import java.util.concurrent.Callable;
  */
 public class PointActivity extends MainMenuActivity {
 
+	private static final int REQUEST_IMAGE_CAPTURE = 1;
+	
     private String mNewNote = null;
     
     /** Current leg to work with */
@@ -489,7 +491,7 @@ public class PointActivity extends MainMenuActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent aData) {
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
-                case PhotoUtil.REQUEST_IMAGE_CAPTURE:
+                case REQUEST_IMAGE_CAPTURE:
                     Log.i(Constants.LOG_TAG_SERVICE, "Got image");
                     final File file = new File(new File(Environment.getExternalStorageDirectory(), "CaveSurvey"), "photo.tmp");
                     FileInputStream in = null;
