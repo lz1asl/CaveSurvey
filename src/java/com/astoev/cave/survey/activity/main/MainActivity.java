@@ -51,6 +51,8 @@ public class MainActivity extends MainMenuActivity {
 //            R.string.main_add_middlepoint
 //            ,R.string.main_add_custom
     };
+    
+    private static boolean isDebug = false;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,16 +97,30 @@ public class MainActivity extends MainMenuActivity {
 
                 Point fromPoint = l.getFromPoint();
                 getWorkspace().getDBHelper().getPointDao().refresh(fromPoint);
-                row.addView(createTextView(fromPoint.getName(), currentLeg, false));
+                String fromPointString = fromPoint.getName();
+                
                 Point toPoint = l.getToPoint();
                 getWorkspace().getDBHelper().getPointDao().refresh(toPoint);
-                row.addView(createTextView(toPoint.getName(), currentLeg, false));
+                String toPointString = toPoint.getName();
+                
+                if (isDebug){
+                	fromPointString = fromPointString +"(" + fromPoint.getId() + ")";
+                	toPointString = toPointString + "("+toPoint.getId()+")";
+                }
+                row.addView(createTextView(fromPointString, currentLeg, false));
+                row.addView(createTextView(toPointString, currentLeg, false));
                 row.addView(createTextView(l.getDistance(), currentLeg, true));
                 row.addView(createTextView(l.getAzimuth(), currentLeg, true));
                 row.addView(createTextView(l.getSlope(), currentLeg, true));
                 
                 //TODO build SNP string
                 StringBuilder moreText = new StringBuilder();
+                
+                //TODO Debug
+                if (isDebug){
+                	moreText.append(l.getGalleryId()).append(" ");
+                }
+                
                 Sketch sketch = DaoUtil.getScetchByLeg(l);
                 if (sketch != null){
                 	moreText.append(getString(R.string.table_sketch_prefix));
