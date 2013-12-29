@@ -1,10 +1,12 @@
 package com.astoev.cave.survey.activity.map;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -17,6 +19,7 @@ import com.astoev.cave.survey.model.Option;
 import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.service.Workspace;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -245,6 +248,26 @@ public class MapView extends View {
         mapCenterMoveY += (y - initialMoveY);
         initialMoveY = y;
         invalidate();
+    }
+
+    public byte[] getPngDump() {
+
+        // render
+        Bitmap returnedBitmap = Bitmap.createBitmap(this.getWidth(), this.getHeight(),Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(returnedBitmap);
+        Drawable bgDrawable = this.getBackground();
+        if (bgDrawable!=null) {
+            bgDrawable.draw(canvas);
+        }
+        draw(canvas);
+
+        // crop borders etc
+        returnedBitmap = returnedBitmap.createBitmap(returnedBitmap, 30, 30, this.getWidth() - 60, this.getHeight() - 60);
+
+        // return
+        ByteArrayOutputStream buff = new ByteArrayOutputStream();
+        returnedBitmap.compress(Bitmap.CompressFormat.PNG, 50, buff);
+        return buff.toByteArray();
     }
 
     private Integer getNextColor(Integer aGalleryId) {

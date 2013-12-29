@@ -70,21 +70,16 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
         undoBtn.setEnabled(false);
 
         try {
+
             drawingSurface.setOldBitmap(null);
 
-            // search
-//            Leg activeLeg = getWorkspace().getActiveOrFirstLeg();
-//            QueryBuilder<Sketch, Integer> queryBuilder = getWorkspace().getDBHelper().getSketchDao().queryBuilder();
-//            queryBuilder.where().eq(Sketch.COLUMN_POINT_ID, activeLeg.getFromPoint().getId());
-//            Sketch existingDrawing = (Sketch) getWorkspace().getDBHelper().getSketchDao().queryForFirst(queryBuilder.prepare());
-
             // preload with image
-//            if (null != existingDrawing) {
-//                byte[] drawingBytes = existingDrawing.getBitmap();
-//                BitmapFactory.Options options = new BitmapFactory.Options();
-//                drawingSurface.setOldBitmap(BitmapFactory.decodeByteArray(drawingBytes, 0, drawingBytes.length, null));
-//                drawingSurface.invalidate();
-//            }
+            byte [] backgroundBytes = getIntent().getByteArrayExtra("sketch_base");
+            if (null != backgroundBytes) {
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                drawingSurface.setOldBitmap(BitmapFactory.decodeByteArray(backgroundBytes, 0, backgroundBytes.length, null));
+                drawingSurface.invalidate();
+            }
 
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to load drawing", e);

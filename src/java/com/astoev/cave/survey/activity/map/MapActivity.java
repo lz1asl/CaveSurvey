@@ -1,12 +1,17 @@
 package com.astoev.cave.survey.activity.map;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ZoomControls;
+
+import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.MainMenuActivity;
+import com.astoev.cave.survey.activity.draw.DrawingActivity;
+import com.astoev.cave.survey.activity.main.PointActivity;
 
 /**
  * Created by IntelliJ IDEA.
@@ -21,7 +26,7 @@ public class MapActivity extends MainMenuActivity implements View.OnTouchListene
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
         setContentView(R.layout.map);
         map = (MapView) findViewById(R.id.mapSurface);
         map.setOnTouchListener(this);
@@ -67,7 +72,9 @@ public class MapActivity extends MainMenuActivity implements View.OnTouchListene
         map.setOnTouchListener(this);
     }
 
-    public void allowDrawing(View aView) {
-
+    public void annotateMap(View aView) {
+        Intent intent = new Intent(this, DrawingActivity.class);
+        intent.putExtra("sketch_base", map.getPngDump());
+        startActivity(intent);
     }
 }
