@@ -20,8 +20,8 @@ public class Sketch {
     private Integer mId;
     @DatabaseField(canBeNull = false, foreign = true, columnName = COLUMN_POINT_ID)
     private Point mPoint;
-    @DatabaseField(dataType = DataType.BYTE_ARRAY)
-    private byte[] mBitmap;
+    @DatabaseField(columnName = "path")
+    private String mFSPath;
 
 
     public Integer getId() {
@@ -40,11 +40,11 @@ public class Sketch {
         mPoint = aPoint;
     }
 
-    public byte[] getBitmap() {
-        return mBitmap;
+    public String getFSPath() {
+        return mFSPath;
     }
 
-    public void setBitmap(byte[] aBitmap) {
-        mBitmap = aBitmap;
+    public void setFSPath(String aFSPath) {
+        mFSPath = aFSPath;
     }
 }

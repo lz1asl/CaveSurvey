@@ -20,8 +20,8 @@ public class Photo {
     private Integer mId;
     @DatabaseField(foreign = true, columnName = COLUMN_POINT_ID)
     private Point mPoint;
-    @DatabaseField(dataType = DataType.BYTE_ARRAY)
-    private byte[] pictureBytes;
+    @DatabaseField(columnName = "path")
+    private String mFSPath;
 
     public Integer getId() {
         return mId;
@@ -39,11 +39,11 @@ public class Photo {
         mPoint = aPoint;
     }
 
-    public byte[] getPictureBytes() {
-        return pictureBytes;
+    public String getFSPath() {
+        return mFSPath;
     }
 
-    public void setPictureBytes(byte[] aPictureBytes) {
-        pictureBytes = aPictureBytes;
+    public void setFSPath(String aFSPath) {
+        mFSPath = aFSPath;
     }
 }

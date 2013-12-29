@@ -73,18 +73,18 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
             drawingSurface.setOldBitmap(null);
 
             // search
-            Leg activeLeg = getWorkspace().getActiveOrFirstLeg();
-            QueryBuilder<Sketch, Integer> queryBuilder = getWorkspace().getDBHelper().getSketchDao().queryBuilder();
-            queryBuilder.where().eq(Sketch.COLUMN_POINT_ID, activeLeg.getFromPoint().getId());
-            Sketch existingDrawing = (Sketch) getWorkspace().getDBHelper().getSketchDao().queryForFirst(queryBuilder.prepare());
+//            Leg activeLeg = getWorkspace().getActiveOrFirstLeg();
+//            QueryBuilder<Sketch, Integer> queryBuilder = getWorkspace().getDBHelper().getSketchDao().queryBuilder();
+//            queryBuilder.where().eq(Sketch.COLUMN_POINT_ID, activeLeg.getFromPoint().getId());
+//            Sketch existingDrawing = (Sketch) getWorkspace().getDBHelper().getSketchDao().queryForFirst(queryBuilder.prepare());
 
             // preload with image
-            if (null != existingDrawing) {
-                byte[] drawingBytes = existingDrawing.getBitmap();
-                BitmapFactory.Options options = new BitmapFactory.Options();
-                drawingSurface.setOldBitmap(BitmapFactory.decodeByteArray(drawingBytes, 0, drawingBytes.length, null));
-                drawingSurface.invalidate();
-            }
+//            if (null != existingDrawing) {
+//                byte[] drawingBytes = existingDrawing.getBitmap();
+//                BitmapFactory.Options options = new BitmapFactory.Options();
+//                drawingSurface.setOldBitmap(BitmapFactory.decodeByteArray(drawingBytes, 0, drawingBytes.length, null));
+//                drawingSurface.invalidate();
+//            }
 
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to load drawing", e);
@@ -184,7 +184,7 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
             // create DB record
             Sketch drawing = new Sketch();
             drawing.setPoint(activePoint);
-            drawing.setBitmap(path.getBytes());
+            drawing.setFSPath(path);
             getWorkspace().getDBHelper().getSketchDao().create(drawing);
 
             UIUtilities.showNotification(R.string.sketch_saved);

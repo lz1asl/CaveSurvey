@@ -496,7 +496,7 @@ public class PointActivity extends MainMenuActivity {
                     try {
                         in = new FileInputStream(file);
                         Photo photo = new Photo();
-                        photo.setPictureBytes(IOUtils.toByteArray(in));
+//                        photo.setFSPath(...);
 
                         Leg legEdited = getCurrentLeg();
                         Point currPoint = DaoUtil.getPoint(legEdited.getFromPoint().getId());
