@@ -14,10 +14,12 @@ import android.view.View;
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.UIUtilities;
+import com.astoev.cave.survey.model.Gallery;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Option;
 import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.service.Workspace;
+import com.astoev.cave.survey.util.DaoUtil;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -76,6 +78,7 @@ public class MapView extends View {
 
             int spacing = 5;
 
+            String pointLabel;
 
             // load the points
             List<Leg> legs = mWorkspace.getCurrProjectLegs();
@@ -83,6 +86,7 @@ public class MapView extends View {
             List<Integer> processedLegs = new ArrayList<Integer>();
             Map<Integer, Point2D> mapPoints = new HashMap<Integer, Point2D>();
             Map<Integer, Integer> galleryColors = new HashMap<Integer, Integer>();
+            Map<Integer, String> galleryNames = new HashMap<Integer, String>();
 
             while (processedLegs.size() < legs.size()) {
                 for (Leg l : legs) {
@@ -111,11 +115,14 @@ public class MapView extends View {
                             //color
                             if (!galleryColors.containsKey(l.getGalleryId())) {
                                 galleryColors.put(l.getGalleryId(), getNextColor(l.getGalleryId()));
+                                Gallery gallery = DaoUtil.getGallery(l.getGalleryId());
+                                galleryNames.put(l.getGalleryId(), gallery.getName());
                             }
                             polygonPaint.setColor(galleryColors.get(l.getGalleryId()));
 
                             mWorkspace.getDBHelper().getPointDao().refresh(l.getFromPoint());
-                            canvas.drawText(l.getFromPoint().getName(), mapCenterMoveX + first.getX() + LABEL_DEVIATION_X, mapCenterMoveY + first.getY() + LABEL_DEVIATION_Y, polygonPaint);
+                            pointLabel = galleryNames.get(l.getGalleryId()) + l.getFromPoint().getName();
+                            canvas.drawText(pointLabel, mapCenterMoveX + first.getX() + LABEL_DEVIATION_X, mapCenterMoveY + first.getY() + LABEL_DEVIATION_Y, polygonPaint);
                             canvas.drawCircle(mapCenterMoveX + first.getX(), mapCenterMoveY + first.getY(), POINT_RADIUS, polygonPaint);
                         }
 
@@ -159,7 +166,8 @@ public class MapView extends View {
                             }
 
                             mWorkspace.getDBHelper().getPointDao().refresh(l.getToPoint());
-                            canvas.drawText(l.getToPoint().getName(), mapCenterMoveX + second.getX() + LABEL_DEVIATION_X, mapCenterMoveY + second.getY() + LABEL_DEVIATION_Y, polygonPaint);
+                            pointLabel = galleryNames.get(l.getGalleryId()) + l.getToPoint().getName();
+                            canvas.drawText(pointLabel, mapCenterMoveX + second.getX() + LABEL_DEVIATION_X, mapCenterMoveY + second.getY() + LABEL_DEVIATION_Y, polygonPaint);
                             canvas.drawCircle(mapCenterMoveX + second.getX(), mapCenterMoveY + second.getY(), POINT_RADIUS, polygonPaint);
                         }
 
