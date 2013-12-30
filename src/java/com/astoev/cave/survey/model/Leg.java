@@ -96,7 +96,6 @@ public class Leg implements Serializable {
      * @throws SQLException
      */
     public String buildLegDescription(boolean shortArg) throws SQLException{
-        Workspace workspace = Workspace.getCurrentInstance();
         Point startPoint = null;
         Point endPoint = null;
         if (isNew()){
@@ -108,6 +107,8 @@ public class Leg implements Serializable {
         }
         
         StringBuilder builder = new StringBuilder(StringUtils.SPACE);
+        Gallery g = DaoUtil.getGallery(mGalleryId);
+        builder.append(g.getName());
         builder.append(startPoint.getName());
         if (!shortArg){
         	builder.append(StringUtils.SPACE);
@@ -116,6 +117,7 @@ public class Leg implements Serializable {
         if (!shortArg){
         	builder.append(StringUtils.SPACE);
         }
+        builder.append(g.getName());
         builder.append(endPoint.getName());
         return builder.toString();
     }
