@@ -3,7 +3,6 @@ package com.astoev.cave.survey.activity.draw;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.*;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,14 +15,11 @@ import com.astoev.cave.survey.activity.BaseActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.activity.draw.brush.Brush;
 import com.astoev.cave.survey.activity.draw.brush.PenBrush;
-import com.astoev.cave.survey.activity.main.MainActivity;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.model.Sketch;
 import com.astoev.cave.survey.util.FileStorageUtil;
-import com.j256.ormlite.stmt.QueryBuilder;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
 
@@ -189,9 +185,8 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
             UIUtilities.showNotification(R.string.error);
         }
         
-        // back home
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
+        // go back to parent
+        finish();
     }
 
     public void pickColor(View aView) {
