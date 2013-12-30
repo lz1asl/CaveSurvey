@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.astoev.cave.survey.Constants;
+import com.astoev.cave.survey.model.Gallery;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.model.Project;
@@ -75,6 +76,38 @@ public class Workspace {
 
     public void clearActiveLeg() {
         ConfigUtil.removeProperty(ConfigUtil.PROP_CURR_LEG);
+    }
+
+    public void setActiveGallery(Gallery aGallery) {
+        ConfigUtil.setIntProperty(ConfigUtil.PROP_CURR_GALLERY, aGallery.getId());
+    }
+
+    public Gallery getActiveGallery() {
+        Integer id = getActiveGalleryId();
+
+        if (id == null) {
+            return null;
+        }
+
+        try {
+            return DaoUtil.getGallery(id);
+        } catch (SQLException e) {
+            return null;
+        }
+    }
+
+    public Integer getActiveGalleryId() {
+        Integer id = ConfigUtil.getIntProperty(ConfigUtil.PROP_CURR_GALLERY);
+
+        if (id <= 0) {
+            return null;
+        }
+
+        return id;
+    }
+
+    public void clearActiveGallery() {
+        ConfigUtil.removeProperty(ConfigUtil.PROP_CURR_GALLERY);
     }
 
     public Integer getActiveLegId() {

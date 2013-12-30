@@ -7,6 +7,7 @@ import java.sql.SQLException;
 
 import android.graphics.Picture;
 
+import com.astoev.cave.survey.model.Gallery;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Note;
 import com.astoev.cave.survey.model.Photo;
@@ -58,5 +59,9 @@ public class DaoUtil {
 
     public static Point getPoint(Integer aId) throws SQLException {
         return (Point) Workspace.getCurrentInstance().getDBHelper().getPointDao().queryForId(aId);
+    }
+
+    public static Gallery getGallery(Integer aId) throws SQLException {
+        return (Gallery) Workspace.getCurrentInstance().getDBHelper().getGalleryDao().queryForId(aId);
     }
 }

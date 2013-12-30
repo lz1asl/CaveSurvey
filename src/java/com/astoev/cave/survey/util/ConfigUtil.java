@@ -12,6 +12,7 @@ public class ConfigUtil {
     private static final String SHARED_PREFS_KEY = "CaveSurvey";
     public static final String PROP_CURR_PROJECT = "curr_project_id";
     public static final String PROP_CURR_LEG = "curr_leg_id";
+    public static final String PROP_CURR_GALLERY = "curr_gallery_id";
     public static final String PROP_CURR_BT_DEVICE_ADDRESS = "curr_bt_device_addr";
     public static final String PROP_CURR_BT_DEVICE_NAME = "curr_bt_device_name";
 
