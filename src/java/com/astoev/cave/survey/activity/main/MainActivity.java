@@ -24,6 +24,7 @@ import com.astoev.cave.survey.activity.map.MapActivity;
 import com.astoev.cave.survey.activity.map.opengl.Map3DActivity;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Note;
+import com.astoev.cave.survey.model.Photo;
 import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.model.Sketch;
 import com.astoev.cave.survey.util.DaoUtil;
@@ -128,6 +129,10 @@ public class MainActivity extends MainMenuActivity {
                 Note note = DaoUtil.getActiveLegNote(l);
                 if (note != null){
                 	moreText.append(getString(R.string.table_note_prefix));
+                }
+                Photo photo = DaoUtil.getPhotoByLeg(l);
+                if (photo != null) {
+                	moreText.append(getString(R.string.table_photo_prefix));
                 }
 
                 //TODO add sketch and photo here
