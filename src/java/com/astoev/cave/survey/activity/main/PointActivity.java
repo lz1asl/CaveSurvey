@@ -4,10 +4,11 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.ResultReceiver;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,15 +29,13 @@ import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.service.bluetooth.BluetoothService;
 import com.astoev.cave.survey.util.DaoUtil;
-import com.astoev.cave.survey.util.PhotoUtil;
+import com.astoev.cave.survey.util.FileStorageUtil;
 import com.astoev.cave.survey.util.PointUtil;
 import com.astoev.cave.survey.util.StringUtils;
 import com.j256.ormlite.misc.TransactionManager;
 
-import org.apache.commons.io.IOUtils;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
@@ -52,8 +51,11 @@ import java.util.concurrent.Callable;
 public class PointActivity extends MainMenuActivity {
 
 	private static final int REQUEST_IMAGE_CAPTURE = 1;
+	private static final int REQIEST_EDIT_NOTE = 2;
 	
     private String mNewNote = null;
+    
+    private String currentPhotoPath;
     
     /** Current leg to work with */
     private Leg currentLeg = null;
@@ -368,7 +370,7 @@ public class PointActivity extends MainMenuActivity {
         Intent intent = new Intent(this, NoteActivity.class);
         intent.putExtra(Constants.LEG_SELECTED, getCurrentLeg().getId());
         intent.putExtra(Constants.LEG_NOTE, mNewNote);
-        startActivityForResult(intent, 2);
+        startActivityForResult(intent, REQIEST_EDIT_NOTE);
     }
 
     public void saveButton() {
@@ -470,51 +472,82 @@ public class PointActivity extends MainMenuActivity {
 
     public void photoButton() {
         // picture http://www.tutorialforandroid.com/2010/10/take-picture-in-android-with.html
+    	// https://developer.android.com/training/camera/photobasics.html
 
-//        final File path = new File(Environment.getExternalStorageDirectory(), "CaveSurvey");
-//        if (!path.exists()) {
-//            path.mkdir();
-//        }
-        
-//    	mCurrLeg.
-//		File photoFile = FileStorageUtil.createPictureFile(this, projectNameArg, pointNameArg, FileStorageUtil.JPG_FILE_EXTENSION);
-//
-//        final Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
-//        startActivityForResult(intent, PhotoUtil.REQUEST_IMAGE_CAPTURE);
-//    	PhotoUtil.sendPhotoIntent(this);
-
+    	File photoFile = null;
+		try {
+			//TODO fix this. Leg.getPoint should load the whole point!
+			String projectName = getWorkspace().getActiveProject().getName();
+			Leg workingLeg = getCurrentLeg();
+			int fromPointId = workingLeg.getFromPoint().getId();
+			Point pointFrom = DaoUtil.getPoint(fromPointId);
+			
+			// create file where to capture the image
+			String filePrefix = FileStorageUtil.getFilePrefixForPicture(pointFrom);
+			photoFile = FileStorageUtil.createPictureFile(this, projectName, filePrefix, FileStorageUtil.JPG_FILE_EXTENSION);
+			
+		} catch (SQLException e) {
+			UIUtilities.showNotification(R.string.error);
+			return;
+		} catch (Exception e) {
+			UIUtilities.showNotification(R.string.export_io_error);
+			return;
+		}
+		
+		// call capture image
+		if (photoFile != null){
+			
+			currentPhotoPath = photoFile.getAbsolutePath();
+			
+			Log.i(Constants.LOG_TAG_SERVICE, "Going to capture image in: " + photoFile.getAbsolutePath());
+	        final Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+	        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+	        startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+		} 
     }
 
     // photo is captured
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent aData) {
+    	
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case REQUEST_IMAGE_CAPTURE:
-                    Log.i(Constants.LOG_TAG_SERVICE, "Got image");
-                    final File file = new File(new File(Environment.getExternalStorageDirectory(), "CaveSurvey"), "photo.tmp");
-                    FileInputStream in = null;
-                    try {
-                        in = new FileInputStream(file);
-                        Photo photo = new Photo();
-//                        photo.setFSPath(...);
+                {
+                	Log.i(Constants.LOG_TAG_SERVICE, "Got image");
+    				try {
+    					
+    					// check if the file really exists
+    				    if (!FileStorageUtil.isFileExists(currentPhotoPath)){
+    				    	UIUtilities.showNotification(R.string.export_io_error);
+    				    	break;
+    				    }
+    				    
+    					File pictureFile = new File(currentPhotoPath);
+    					
+    					// broadcast that the file is added if working with the public follder
+    			        if (FileStorageUtil.isPublicFolder()){
+    			        	FileStorageUtil.notifyPictureAddedToGalery(this, pictureFile);
+    			        }
+    					
+    					Log.i(Constants.LOG_TAG_SERVICE, "Image captured in: " + currentPhotoPath);
+    					Photo photo = new Photo();
+    					photo.setFSPath(currentPhotoPath);
 
-                        Leg legEdited = getCurrentLeg();
-                        Point currPoint = DaoUtil.getPoint(legEdited.getFromPoint().getId());
-                        photo.setPoint(currPoint);
+    					Leg legEdited = getCurrentLeg();
+    					Point currPoint = DaoUtil.getPoint(legEdited.getFromPoint().getId());
+    					photo.setPoint(currPoint);
 
-                        getWorkspace().getDBHelper().getPhotoDao().create(photo);
-
-                        Log.i(Constants.LOG_TAG_SERVICE, "Image stored");
-                    } catch (Exception e) {
-                        Log.e(Constants.LOG_TAG_UI, "Picture not saved", e);
-                        UIUtilities.showNotification(R.string.error);
-                    } finally {
-                        IOUtils.closeQuietly(in);
-                    }
+    					getWorkspace().getDBHelper().getPhotoDao().create(photo);
+    					Log.i(Constants.LOG_TAG_SERVICE, "Image stored");
+    					
+    				} catch (SQLException e) {
+    					Log.e(Constants.LOG_TAG_UI, "Picture object not saved", e);
+    					UIUtilities.showNotification(R.string.error);
+    				}
+                }
                     break;
-                case 2:
+                case REQIEST_EDIT_NOTE:
                     mNewNote = aData.getStringExtra("note");
                     TextView textView = (TextView) findViewById(R.id.point_note_text);
                     textView.setText(mNewNote);
@@ -557,10 +590,10 @@ public class PointActivity extends MainMenuActivity {
                 drawingButton();
                 return true;
             }
-            case R.id.point_action_gps: {
-                coordinateButton();
-                return true;
-            }
+//            case R.id.point_action_gps: {
+//                coordinateButton();
+//                return true;
+//            }
             case R.id.point_action_photo: {
                 photoButton();
                 return true;

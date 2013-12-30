@@ -26,13 +26,18 @@ import java.util.Date;
 
 /**
  * Created by astoev on 12/25/13.
+ * 
+ * @author - astoev
+ * @author - jmitrev
  */
 public class FileStorageUtil {
 
     private static final String EXCEL_FILE_EXTENSION = ".xls";
     private static final String PNG_FILE_EXTENSION = ".png";
     private static final String NAME_DELIMITER = "_";
-    private static final String POING_PREFIX = "Point";
+    
+    public static final String JPG_FILE_EXTENSION = ".jpg";
+    public static final String POINT_PREFIX = "Point";
 
     private static final String CAVE_SURVEY_FOLDER = "CaveSurvey";
     private static final String TIME_PATTERN = "yyyyMMdd";
@@ -118,51 +123,10 @@ public class FileStorageUtil {
      * @return String for the file name created
      * @throws Exception
      */
-    @SuppressLint("SimpleDateFormat")
 	public static String addProjectMedia(Context contextArg, Project aProject, Point activePointArg, byte[] byteArrayArg) throws Exception {
 
-    	if (!isExternalStorageWritable())
-    	{
-    		Log.e(Constants.LOG_TAG_SERVICE, "Storage not available for writing");
-    		throw new Exception();
-    	}
-    	
-    	boolean isPublicFolder = true;
-    	
-    	// Store in file system
-    	// use the project name as an albumName
-    	String projectName = aProject.getName();
-    	
-    	File destinationDir = null;	
-    	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO){
-    		// api 8+
-            // Get the directory for the app's public pictures directory. 
-            destinationDir = getDirectoryPicture(projectName);
-    	} else {
-    		// api level 7
-    		destinationDir = new File(Environment.getExternalStorageDirectory(), projectName);
-    		isPublicFolder = false;
-    	}
-    	
-    	if (!destinationDir.isDirectory()){
-	        if (!destinationDir.mkdirs()) {
-	            Log.e(Constants.LOG_TAG_SERVICE, "Directory not created");
-	        }
-    	}
-        
-        Log.i(Constants.LOG_TAG_SERVICE, "Will write at: " + destinationDir.getAbsolutePath());
-        
-        // build filename
-        Date date = new Date();
-        SimpleDateFormat df = new SimpleDateFormat(Constants.DATE_FORMAT);
-        
-        StringBuilder fileName = new StringBuilder(POING_PREFIX);
-        fileName.append(activePointArg.getName());
-        fileName.append(NAME_DELIMITER);
-        fileName.append(df.format(date));
-        fileName.append(PNG_FILE_EXTENSION);
-        
-        File pictureFile = new File(destinationDir, fileName.toString());
+		String filePrefix = getFilePrefixForPicture(activePointArg);
+    	File pictureFile = createPictureFile(contextArg, aProject.getName(), filePrefix, PNG_FILE_EXTENSION);
         
         OutputStream os = null;
         try {
@@ -178,11 +142,83 @@ public class FileStorageUtil {
         Log.i(Constants.LOG_TAG_SERVICE, "Just wrote: " + pictureFile.getAbsolutePath());
         
         // broadcast that picture was added to the projects if the folder is public (api level 8+)
-        if (isPublicFolder){
+        if (isPublicFolder()){
         	notifyPictureAddedToGalery(contextArg, pictureFile);
         }
         return pictureFile.getAbsolutePath();
     }
+    
+	/**
+	 * Helper method that checks if we use a public folder to store files. 
+	 * 
+	 * @return if api version 8+ return true, otherwise false
+	 */
+    public static boolean isPublicFolder(){
+    	return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO);
+    }
+    
+    /**
+     * Helper method that creates a prefix name for picture files based on Point objects
+     * 
+     * @param pointArg - parent point
+     * @return
+     */
+    public static String getFilePrefixForPicture(Point pointArg){
+    	return POINT_PREFIX + NAME_DELIMITER + pointArg.getName();
+    }
+    
+    /**
+     * Helper method to create a picture file. The file will be named <prefix>-<date_format><extension>. The 
+     * file is stored in public folder based on the album name if running on api 8+. If the api is 7 it is 
+     * saved as private file.
+     * 
+     * @param contextArg - context to use
+     * @param albumName - album name
+     * @param filePrefix - file prefix
+     * @param fileExtensionArg - extension for the file.
+     * @return
+     * @throws Exception
+     */
+    @SuppressLint("SimpleDateFormat")
+    public static File createPictureFile(Context contextArg, String albumName, String filePrefix, String fileExtensionArg)
+    	throws Exception {
+    	if (!isExternalStorageWritable())
+    	{
+    		Log.e(Constants.LOG_TAG_SERVICE, "Storage not available for writing");
+    		throw new Exception();
+    	}
+    	
+    	// Store in file system
+    	File destinationDir = null;	
+    	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO){
+    		// api 8+
+            // Get the directory for the app's public pictures directory. 
+            destinationDir = getDirectoryPicture(albumName);
+    	} else {
+    		// api level 7
+    		destinationDir = new File(Environment.getExternalStorageDirectory(), albumName);
+    	}
+    	
+    	if (!destinationDir.isDirectory()){
+	        if (!destinationDir.mkdirs()) {
+	            Log.e(Constants.LOG_TAG_SERVICE, "Directory not created");
+	        }
+    	}
+        
+        Log.i(Constants.LOG_TAG_SERVICE, "Will write at: " + destinationDir.getAbsolutePath());
+        
+        // build filename
+        Date date = new Date();
+        SimpleDateFormat df = new SimpleDateFormat(Constants.DATE_FORMAT);
+        
+        StringBuilder fileName = new StringBuilder(filePrefix);
+        fileName.append(NAME_DELIMITER);
+        fileName.append(df.format(date));
+        fileName.append(fileExtensionArg);
+        
+        File pictureFile = new File(destinationDir, fileName.toString());
+        return pictureFile;
+    }// end of createPictureFile
 
     private static File getStorageHome() {
         if (!Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
@@ -244,9 +280,37 @@ public class FileStorageUtil {
     	if (addedFileArg == null){
     		return;
     	}
+    	Uri contentUri = Uri.fromFile(addedFileArg);
+    	notifyPictureAddedToGalery(contextArg, contentUri);
+    }
+    
+    /**
+     * Helper method to broadcast a message that a picture is added
+     * 
+     * @param contextArg	  - context to use
+     * @param addedFileUriArg - uri to picture
+     */
+    public static void notifyPictureAddedToGalery(Context contextArg, Uri addedFileUriArg){
+    	if (addedFileUriArg == null){
+    		return;
+    	}
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        Uri contentUri = Uri.fromFile(addedFileArg);
-        mediaScanIntent.setData(contentUri);
+        mediaScanIntent.setData(addedFileUriArg);
         contextArg.sendBroadcast(mediaScanIntent);
+    }
+    
+    /**
+     * Helper method to check if file exists
+     * 
+     * @param fileNameArg - file name
+     * @return true if the file exists, otherwise false
+     */ 
+    public static final boolean isFileExists(String fileNameArg){
+    	if (fileNameArg == null){
+    		return false;
+    	}
+    	
+    	File file = new File(fileNameArg);
+    	return file.exists();
     }
 }

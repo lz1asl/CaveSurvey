@@ -5,8 +5,11 @@ package com.astoev.cave.survey.util;
 
 import java.sql.SQLException;
 
+import android.graphics.Picture;
+
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Note;
+import com.astoev.cave.survey.model.Photo;
 import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.model.Sketch;
@@ -14,7 +17,7 @@ import com.astoev.cave.survey.service.Workspace;
 import com.j256.ormlite.stmt.QueryBuilder;
 
 /**
- * @author jivko
+ * @author jmitrev
  */
 public class DaoUtil {
 
@@ -27,11 +30,21 @@ public class DaoUtil {
     public static Sketch getScetchByLeg(Leg legArg) throws SQLException {
         return getScetchByPoint(legArg.getFromPoint());
     }
+    
+    public static Photo getPhotoByLeg(Leg legALeg) throws SQLException{
+    	return getPhotoByPoint(legALeg.getFromPoint());
+    }
 
     public static Sketch getScetchByPoint(Point pointArg) throws SQLException {
         QueryBuilder<Note, Integer> query = Workspace.getCurrentInstance().getDBHelper().getSketchDao().queryBuilder();
-        query.where().eq(Note.COLUMN_POINT_ID, pointArg.getId());
+        query.where().eq(Sketch.COLUMN_POINT_ID, pointArg.getId());
         return (Sketch) Workspace.getCurrentInstance().getDBHelper().getSketchDao().queryForFirst(query.prepare());
+    }
+    
+    public static Photo getPhotoByPoint(Point pointArg) throws SQLException {
+    	QueryBuilder<Photo, Integer> query = Workspace.getCurrentInstance().getDBHelper().getPhotoDao().queryBuilder();
+    	query.where().eq(Photo.COLUMN_POINT_ID, pointArg.getId());
+    	return (Photo)Workspace.getCurrentInstance().getDBHelper().getPhotoDao().queryForFirst(query.prepare());
     }
 
     public static Project getProject(int aId) throws SQLException {
