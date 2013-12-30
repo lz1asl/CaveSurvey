@@ -45,6 +45,12 @@ public class ConfigUtil {
         return editor.commit();
     }
 
+    public static boolean removeProperty(String aName) {
+        SharedPreferences.Editor editor = getPrefs(Context.MODE_WORLD_WRITEABLE).edit();
+        editor.remove(aName);
+        return editor.commit();
+    }
+
 
     private static SharedPreferences getPrefs(int aMode) {
         return mAppContext.getSharedPreferences(SHARED_PREFS_KEY, aMode);

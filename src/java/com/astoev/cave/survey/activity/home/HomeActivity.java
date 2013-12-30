@@ -101,6 +101,7 @@ public class HomeActivity extends MainMenuActivity {
 						
                         Log.i(Constants.LOG_TAG_UI, "Selected project " + project.getId());
                         getWorkspace().setActiveProject(project);
+                        getWorkspace().clearActiveLeg();
 
                         Intent intent = new Intent(HomeActivity.this, MainActivity.class);
                         startActivity(intent);

@@ -183,6 +183,7 @@ public class NewProjectActivity extends MainMenuActivity {
 
             if (project != null) {
                 Intent intent = new Intent(NewProjectActivity.this, PointActivity.class);
+                getWorkspace().setActiveProject(project);
                 getWorkspace().setActiveLegId(getWorkspace().getActiveOrFirstLeg().getId());
                 intent.putExtra(Constants.LEG_SELECTED, getWorkspace().getActiveLegId());
                 startActivity(intent);

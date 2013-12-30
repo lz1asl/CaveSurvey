@@ -63,6 +63,7 @@ public class MainActivity extends MainMenuActivity {
     private void drawTable() {
         try {
             Leg activeLeg = getWorkspace().getLastLeg();
+            getWorkspace().setActiveLeg(activeLeg);
 
             // prepare labels
             TextView activeLegName = (TextView) findViewById(R.id.mainActiveLeg);

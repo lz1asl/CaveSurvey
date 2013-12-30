@@ -73,6 +73,10 @@ public class Workspace {
         ConfigUtil.setIntProperty(ConfigUtil.PROP_CURR_LEG, aId);
     }
 
+    public void clearActiveLeg() {
+        ConfigUtil.removeProperty(ConfigUtil.PROP_CURR_LEG);
+    }
+
     public Integer getActiveLegId() {
         return ConfigUtil.getIntProperty(ConfigUtil.PROP_CURR_LEG);
     }
