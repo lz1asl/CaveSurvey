@@ -41,7 +41,6 @@ public class MapView extends View {
     public static final int CURR_POINT_RADIUS = 8;
     private final static int LABEL_DEVIATION_X = 5;
     private final static int LABEL_DEVIATION_Y = 5;
-    private static final int[] COLORS = new int[]{ Color.BLUE, Color.YELLOW, Color.RED, Color.GRAY, Color.GREEN};
     Paint polygonPaint = new Paint();
     Paint polygonWidthPaint = new Paint();
     Paint overlayPaint = new Paint();
@@ -114,7 +113,7 @@ public class MapView extends View {
 
                             //color
                             if (!galleryColors.containsKey(l.getGalleryId())) {
-                                galleryColors.put(l.getGalleryId(), getNextColor(l.getGalleryId()));
+                                galleryColors.put(l.getGalleryId(), MapUtilities.getNextGalleryColor(l.getGalleryId()));
                                 Gallery gallery = DaoUtil.getGallery(l.getGalleryId());
                                 galleryNames.put(l.getGalleryId(), gallery.getName());
                             }
@@ -153,7 +152,7 @@ public class MapView extends View {
 
                             // color
                             if (!galleryColors.containsKey(l.getGalleryId())) {
-                                galleryColors.put(l.getGalleryId(), getNextColor(l.getGalleryId()));
+                                galleryColors.put(l.getGalleryId(), MapUtilities.getNextGalleryColor(l.getGalleryId()));
                             }
                             polygonPaint.setColor(galleryColors.get(l.getGalleryId()));
                             polygonWidthPaint.setColor(galleryColors.get(l.getGalleryId()));
@@ -276,15 +275,6 @@ public class MapView extends View {
         ByteArrayOutputStream buff = new ByteArrayOutputStream();
         returnedBitmap.compress(Bitmap.CompressFormat.PNG, 50, buff);
         return buff.toByteArray();
-    }
-
-    private Integer getNextColor(Integer aGalleryId) {
-        // assure predictable colors for the galleries, start repeating colors if too many galleries
-        int colorIndex = aGalleryId;
-        while (colorIndex >= COLORS.length) {
-            colorIndex -= COLORS.length;
-        }
-        return COLORS[colorIndex];
     }
 
     private Float getAzimuthInDegrees(Float anAzimuth) {

@@ -21,7 +21,9 @@ import com.astoev.cave.survey.activity.MainMenuActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.activity.home.HomeActivity;
 import com.astoev.cave.survey.activity.map.MapActivity;
+import com.astoev.cave.survey.activity.map.MapUtilities;
 import com.astoev.cave.survey.activity.map.opengl.Map3DActivity;
+import com.astoev.cave.survey.model.Gallery;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Note;
 import com.astoev.cave.survey.model.Photo;
@@ -34,7 +36,9 @@ import com.j256.ormlite.misc.TransactionManager;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 
 /**
@@ -46,12 +50,14 @@ import java.util.concurrent.Callable;
  */
 public class MainActivity extends MainMenuActivity {
 
-    private static final int[] ADD_ITEM_LABELS = {R.string.main_add_leg
-//            ,
-//            R.string.main_add_branch,
+    private static final int[] ADD_ITEM_LABELS = {R.string.main_add_leg,
+            R.string.main_add_branch,
 //            R.string.main_add_middlepoint
 //            ,R.string.main_add_custom
     };
+
+    private Map<Integer, Integer> mGalleryColors;
+    private Map<Integer, String> mGalleryNames;
     
     private static boolean isDebug = false;
 
@@ -64,6 +70,9 @@ public class MainActivity extends MainMenuActivity {
         try {
             Leg activeLeg = getWorkspace().getLastLeg();
             getWorkspace().setActiveLeg(activeLeg);
+
+            mGalleryColors = new HashMap<Integer, Integer>();
+            mGalleryNames = new HashMap<Integer, String>();
 
             // prepare labels
             TextView activeLegName = (TextView) findViewById(R.id.mainActiveLeg);
@@ -109,8 +118,16 @@ public class MainActivity extends MainMenuActivity {
                 	fromPointString = fromPointString +"(" + fromPoint.getId() + ")";
                 	toPointString = toPointString + "("+toPoint.getId()+")";
                 }
-                row.addView(createTextView(fromPointString, currentLeg, false));
-                row.addView(createTextView(toPointString, currentLeg, false));
+
+                if (!mGalleryColors.containsKey(l.getGalleryId())) {
+                    Gallery gallery = DaoUtil.getGallery(l.getGalleryId());
+                    mGalleryColors.put(l.getGalleryId(), MapUtilities.getNextGalleryColor(l.getGalleryId()));
+                    mGalleryNames.put(l.getGalleryId(), gallery.getName());
+                }
+
+                row.addView(createTextView(mGalleryNames.get(l.getGalleryId()), currentLeg, false, mGalleryColors.get(l.getGalleryId())));
+                row.addView(createTextView(fromPointString, currentLeg, false, null));
+                row.addView(createTextView(toPointString, currentLeg, false, null));
                 row.addView(createTextView(l.getDistance(), currentLeg, true));
                 row.addView(createTextView(l.getAzimuth(), currentLeg, true));
                 row.addView(createTextView(l.getSlope(), currentLeg, true));
@@ -137,7 +154,7 @@ public class MainActivity extends MainMenuActivity {
                 }
 
                 //TODO add sketch and photo here
-                row.addView(createTextView(moreText.toString(), currentLeg, true));
+                row.addView(createTextView(moreText.toString(), currentLeg, true, null));
                 table.addView(row, params);
             }
             table.invalidate();
@@ -148,14 +165,19 @@ public class MainActivity extends MainMenuActivity {
     }
 
     private View createTextView(Float aMeasure, boolean isCurrentLeg, boolean allowEditing) {
-        return createTextView(StringUtils.floatToLabel(aMeasure), isCurrentLeg, allowEditing);
+        return createTextView(StringUtils.floatToLabel(aMeasure), isCurrentLeg, allowEditing, null);
     }
 
-    private View createTextView(String name, boolean isCurrentLeg, boolean allowEditing) {
+    private View createTextView(String aText, boolean isCurrentLeg, boolean allowEditing, Integer aColor) {
         TextView edit = new TextView(this);
         edit.setLines(1);
-        edit.setText(name);
+        if (aText != null) {
+            edit.setText(aText);
+        }
         edit.setGravity(Gravity.CENTER);
+        if (aColor != null) {
+            edit.setBackgroundColor(aColor);
+        }
 
         if (!isCurrentLeg || !allowEditing) {
             edit.setEnabled(false);
@@ -181,8 +203,8 @@ public class MainActivity extends MainMenuActivity {
                 try {
                     if (0 == item) {
                         addLeg(false);
-//                    } else if (1 == item) {
-//                        addLeg(true);
+                    } else if (1 == item) {
+                        addLeg(true);
 //                    } else if (2 == item) {
 //                        requestLengthAndAddMiddle();
 //                    } else if (3 == item) {
