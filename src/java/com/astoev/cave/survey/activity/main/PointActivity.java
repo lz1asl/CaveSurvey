@@ -525,10 +525,8 @@ public class PointActivity extends MainMenuActivity {
     				    
     					File pictureFile = new File(currentPhotoPath);
     					
-    					// broadcast that the file is added if working with the public follder
-    			        if (FileStorageUtil.isPublicFolder()){
-    			        	FileStorageUtil.notifyPictureAddedToGalery(this, pictureFile);
-    			        }
+    					// broadcast that the file is added 
+			        	FileStorageUtil.notifyPictureAddedToGalery(this, pictureFile);
     					
     					Log.i(Constants.LOG_TAG_SERVICE, "Image captured in: " + currentPhotoPath);
     					Photo photo = new Photo();
