@@ -33,8 +33,8 @@ import java.io.ByteArrayOutputStream;
  */
 public class DrawingActivity extends BaseActivity implements View.OnTouchListener {
 
-	public final static String MAP_FLAG = "com.astoev.cave.survey.activity.draw.MAP_FLAG";
-	public final static String SKETCH_BASE = "com.astoev.cave.survey.activity.draw.SKETCH_BASE";
+	public final static String MAP_FLAG = "com.astoev.cave.survey.MAP_FLAG";
+	public final static String SKETCH_BASE = "com.astoev.cave.survey.SKETCH_BASE";
 	
     private DrawingSurface drawingSurface;
     private DrawingPath currentDrawingPath;
