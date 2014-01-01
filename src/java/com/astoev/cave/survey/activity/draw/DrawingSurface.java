@@ -86,12 +86,8 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
                     } finally {
                         mSurfaceHolder.unlockCanvasAndPost(canvas);
                     }
-
-
                 }
-
             }
-
         }
     }
 

@@ -258,4 +258,15 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
         alert.show();
 
     }
+
+	/**
+	 * @see android.support.v7.app.ActionBarActivity#onBackPressed()
+	 */
+	@Override
+	public void onBackPressed() {
+		// stop drawing thread before going back
+    	drawingSurface.stopToSave();
+		super.onBackPressed();
+	}
+    
 }
