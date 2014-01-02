@@ -94,6 +94,8 @@
     <string name="sketch_pick_style_fill">Fill</string>
     <string name="sketch_pick_style_dash">Dash</string>
     <string name="sketch_saved">saved</string>
+    
+    <string name="map_edit">Edit</string>
 
     <!-- info screen -->
     <string name="info_title">Project</string>
