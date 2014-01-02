@@ -49,6 +49,11 @@ android {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
     }
+
+    lintOptions {
+        // if true, stop the gradle build if errors are found
+        abortOnError false
+    }
 }
 
 dependencies {
