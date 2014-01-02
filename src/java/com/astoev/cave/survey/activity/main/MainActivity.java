@@ -176,7 +176,7 @@ public class MainActivity extends MainMenuActivity {
         }
         edit.setGravity(Gravity.CENTER);
         if (aColor != null) {
-            edit.setBackgroundColor(aColor);
+            edit.setTextColor(aColor);
         }
 
         if (!isCurrentLeg || !allowEditing) {
