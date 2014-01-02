@@ -15,7 +15,9 @@ import java.io.Serializable;
 @DatabaseTable(tableName = "options")
 public class Option implements Serializable {
 
-    public static final String CODE_DISTANCE_UNITS = "distance";
+	private static final long serialVersionUID = 201401022246L;
+	
+	public static final String CODE_DISTANCE_UNITS = "distance";
     public static final String CODE_AZIMUTH_UNITS = "azimuth";
     public static final String CODE_SLOPE_UNITS = "slope";
 

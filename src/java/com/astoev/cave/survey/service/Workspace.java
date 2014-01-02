@@ -1,6 +1,5 @@
 package com.astoev.cave.survey.service;
 
-import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.astoev.cave.survey.Constants;

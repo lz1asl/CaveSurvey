@@ -2,7 +2,6 @@ package com.astoev.cave.survey.util;
 
 import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.service.Workspace;
-import com.j256.ormlite.dao.Dao;
 
 import java.sql.SQLException;
 

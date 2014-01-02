@@ -15,6 +15,8 @@ import java.io.Serializable;
 @DatabaseTable(tableName = "vectors")
 public class Vector implements Serializable {
 
+	private static final long serialVersionUID = 201401022247L;
+	
     private static final String COLUMN_POINT = "point_id";
 
     @DatabaseField(generatedId = true, columnName = "id")

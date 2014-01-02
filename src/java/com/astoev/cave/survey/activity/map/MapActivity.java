@@ -7,11 +7,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ZoomControls;
 
-import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.MainMenuActivity;
 import com.astoev.cave.survey.activity.draw.DrawingActivity;
-import com.astoev.cave.survey.activity.main.PointActivity;
 
 /**
  * Created by IntelliJ IDEA.

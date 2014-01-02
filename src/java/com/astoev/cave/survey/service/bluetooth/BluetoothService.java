@@ -3,26 +3,20 @@ package com.astoev.cave.survey.service.bluetooth;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Build;
 import android.os.ResultReceiver;
 import android.util.Log;
-import android.widget.Button;
 import android.widget.CheckBox;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.UIUtilities;
 
-import java.io.IOException;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created with IntelliJ IDEA.
@@ -46,7 +40,7 @@ public class BluetoothService {
         public void onReceive(Context context, Intent intent) {
             try {
                 UIUtilities.showNotification(R.string.bt_paired);
-                Button toggle = (Button) mCurrContext.findViewById(R.id.bt_toggle_pair);
+//                Button toggle = (Button) mCurrContext.findViewById(R.id.bt_toggle_pair);
                 Log.i(Constants.LOG_TAG_UI, "Paired with " + mCurrDevice);
                 mPaired = true;
 
@@ -64,7 +58,7 @@ public class BluetoothService {
             try {
                 UIUtilities.showNotification(R.string.bt_disconnect);
                 Log.i(Constants.LOG_TAG_UI, "Disconnected");
-                Button toggle = (Button) mCurrContext.findViewById(R.id.bt_toggle_pair);
+//                Button toggle = (Button) mCurrContext.findViewById(R.id.bt_toggle_pair);
                 mPaired = false;
 
                 CheckBox deviceStatus = (CheckBox) mCurrContext.findViewById(R.id.bt_device_status);

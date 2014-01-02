@@ -9,7 +9,9 @@ package com.astoev.cave.survey.exception;
  */
 public class DataException extends Exception {
 
-    public DataException() {
+	private static final long serialVersionUID = 1L;
+
+	public DataException() {
         super();
     }
 
