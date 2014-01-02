@@ -38,33 +38,17 @@ public class FileStorageUtil {
     
     public static final String JPG_FILE_EXTENSION = ".jpg";
     public static final String POINT_PREFIX = "Point";
+    public static final String MAP_PREFIX = "Map";
 
     private static final String CAVE_SURVEY_FOLDER = "CaveSurvey";
     private static final String TIME_PATTERN = "yyyyMMdd";
     private static final int MIN_REQUIRED_STORAGE = 50 * 1024;
 
 
-    public static File getProjectHome(Project aProject) {
-        File storageHome = getStorageHome();
-        if (storageHome == null) {
-            return null;
-        }
-        File projectHome = new File(storageHome, aProject.getName());
-        if (!projectHome.exists()) {
-            boolean projectHomeCreated = projectHome.mkdirs();
-            if (!projectHomeCreated) {
-                Log.e(Constants.LOG_TAG_UI, "Failed to create folder " + projectHome.getAbsolutePath());
-                return null;
-            }
-            Log.i(Constants.LOG_TAG_SERVICE, "Project home created");
-        }
-        return projectHome;
-    }
-
     @SuppressLint("SimpleDateFormat")
 	public static String addProjectExport(Project aProject, InputStream aStream) {
 
-        File projectHome = getProjectHome(aProject);
+        File projectHome = getProjectHome(aProject.getName());
         if (projectHome == null) {
             return null;
         }
@@ -116,17 +100,16 @@ public class FileStorageUtil {
     /**
      * Helper method that adds project's media content to public external storage
      * 
-     * @param contextArg     - context
-     * @param aProject       - project owner
-     * @param activePointArg - parent point
-     * @param byteArrayArg   - media content as a byte array
+     * @param contextArg    - context
+     * @param aProject      - project owner
+     * @param filePrefixArg - file prefix
+     * @param byteArrayArg  - media content as a byte array
      * @return String for the file name created
      * @throws Exception
      */
-	public static String addProjectMedia(Context contextArg, Project aProject, Point activePointArg, byte[] byteArrayArg) throws Exception {
+	public static String addProjectMedia(Context contextArg, Project aProject, String filePrefixArg, byte[] byteArrayArg) throws Exception {
 
-		String filePrefix = getFilePrefixForPicture(activePointArg);
-    	File pictureFile = createPictureFile(contextArg, aProject.getName(), filePrefix, PNG_FILE_EXTENSION);
+    	File pictureFile = createPictureFile(contextArg, aProject.getName(), filePrefixArg, PNG_FILE_EXTENSION);
         
         OutputStream os = null;
         try {
@@ -141,10 +124,8 @@ public class FileStorageUtil {
 
         Log.i(Constants.LOG_TAG_SERVICE, "Just wrote: " + pictureFile.getAbsolutePath());
         
-        // broadcast that picture was added to the projects if the folder is public (api level 8+)
-        if (isPublicFolder()){
-        	notifyPictureAddedToGalery(contextArg, pictureFile);
-        }
+        // broadcast that picture was added to the project
+        notifyPictureAddedToGalery(contextArg, pictureFile);
         return pictureFile.getAbsolutePath();
     }
     
@@ -153,9 +134,9 @@ public class FileStorageUtil {
 	 * 
 	 * @return if api version 8+ return true, otherwise false
 	 */
-    public static boolean isPublicFolder(){
-    	return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO);
-    }
+//    public static boolean isPublicFolder(){
+//    	return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO);
+//    }
     
     /**
      * Helper method that creates a prefix name for picture files based on Point objects
@@ -169,42 +150,26 @@ public class FileStorageUtil {
     
     /**
      * Helper method to create a picture file. The file will be named <prefix>-<date_format><extension>. The 
-     * file is stored in public folder based on the album name if running on api 8+. If the api is 7 it is 
-     * saved as private file.
+     * file is stored in public folder based on the project's name. ../CaveSurvay/<project_name>/<file>
      * 
      * @param contextArg - context to use
-     * @param albumName - album name
+     * @param projectName - project's name
      * @param filePrefix - file prefix
      * @param fileExtensionArg - extension for the file.
      * @return
      * @throws Exception
      */
     @SuppressLint("SimpleDateFormat")
-    public static File createPictureFile(Context contextArg, String albumName, String filePrefix, String fileExtensionArg)
+    public static File createPictureFile(Context contextArg, String projectName, String filePrefix, String fileExtensionArg)
     	throws Exception {
-    	if (!isExternalStorageWritable())
-    	{
-    		Log.e(Constants.LOG_TAG_SERVICE, "Storage not available for writing");
+    	
+    	// Store in file system
+    	File destinationDir = getProjectHome(projectName);
+    	if (destinationDir == null){
+    		Log.e(Constants.LOG_TAG_SERVICE, "Directory not created");
     		throw new Exception();
     	}
     	
-    	// Store in file system
-    	File destinationDir = null;	
-    	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO){
-    		// api 8+
-            // Get the directory for the app's public pictures directory. 
-            destinationDir = getDirectoryPicture(albumName);
-    	} else {
-    		// api level 7
-    		destinationDir = new File(Environment.getExternalStorageDirectory(), albumName);
-    	}
-    	
-    	if (!destinationDir.isDirectory()){
-	        if (!destinationDir.mkdirs()) {
-	            Log.e(Constants.LOG_TAG_SERVICE, "Directory not created");
-	        }
-    	}
-        
         Log.i(Constants.LOG_TAG_SERVICE, "Will write at: " + destinationDir.getAbsolutePath());
         
         // build filename
@@ -220,14 +185,35 @@ public class FileStorageUtil {
         return pictureFile;
     }// end of createPictureFile
 
+    public static File getProjectHome(String projectName) {
+        File storageHome = getStorageHome();
+        if (storageHome == null) {
+            return null;
+        }
+        
+        //TODO if there is a problem with spaces in project's name substitute spaces with "_"
+        
+        File projectHome = new File(storageHome, projectName);
+        if (!projectHome.exists()) {
+            if (!projectHome.mkdirs()) {
+                Log.e(Constants.LOG_TAG_UI, "Failed to create folder " + projectHome.getAbsolutePath());
+                return null;
+            }
+            Log.i(Constants.LOG_TAG_SERVICE, "Project home created");
+        }
+        return projectHome;
+    }
+    
+    @SuppressWarnings("deprecation")
     private static File getStorageHome() {
-        if (!Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
+        if (!isExternalStorageWritable()) {
             Log.e(Constants.LOG_TAG_UI, "Storage unavailable");
             return null;
         }
         File extdir = Environment.getExternalStorageDirectory();
         StatFs stats = new StatFs(extdir.getAbsolutePath());
-        int availableBytes = stats.getAvailableBlocks() * stats.getBlockSize();
+        
+		int availableBytes = stats.getAvailableBlocks() * stats.getBlockSize();
         if (availableBytes < MIN_REQUIRED_STORAGE) {
             Log.e(Constants.LOG_TAG_UI, "No space left");
             return null;
@@ -235,8 +221,7 @@ public class FileStorageUtil {
 
         File storageHome = new File(Environment.getExternalStorageDirectory() + File.separator + CAVE_SURVEY_FOLDER);
         if (!storageHome.exists()) {
-            boolean exportFolderCreated = storageHome.mkdirs();
-            if (!exportFolderCreated) {
+            if (!storageHome.mkdirs()) {
                 Log.e(Constants.LOG_TAG_UI, "Failed to create folder " + storageHome.getAbsolutePath());
                 return null;
             }

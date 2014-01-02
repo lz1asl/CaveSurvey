@@ -3,6 +3,7 @@ package com.astoev.cave.survey.activity.draw;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.*;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,6 +33,9 @@ import java.io.ByteArrayOutputStream;
  */
 public class DrawingActivity extends BaseActivity implements View.OnTouchListener {
 
+	public final static String MAP_FLAG = "com.astoev.cave.survey.MAP_FLAG";
+	public final static String SKETCH_BASE = "com.astoev.cave.survey.SKETCH_BASE";
+	
     private DrawingSurface drawingSurface;
     private DrawingPath currentDrawingPath;
     private Paint currentPaint;
@@ -44,6 +48,9 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
     private int currentStyle = 0;
 
     private Brush currentBrush;
+    
+    /** Helper flag that shows if this drawing is related with map.*/
+    private boolean isMap;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,12 +77,16 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
             drawingSurface.setOldBitmap(null);
 
             // preload with image
-            byte [] backgroundBytes = getIntent().getByteArrayExtra("sketch_base");
+            byte [] backgroundBytes = getIntent().getByteArrayExtra(SKETCH_BASE);
             if (null != backgroundBytes) {
                 BitmapFactory.Options options = new BitmapFactory.Options();
                 drawingSurface.setOldBitmap(BitmapFactory.decodeByteArray(backgroundBytes, 0, backgroundBytes.length, null));
                 drawingSurface.invalidate();
             }
+            
+            // read the flag if this drawing is related with a map or a point(default)
+    		Intent intent = getIntent();
+    		isMap = intent.getBooleanExtra(MAP_FLAG, false);
 
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to load drawing", e);
@@ -170,7 +181,13 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
             ByteArrayOutputStream buff = new ByteArrayOutputStream();
             drawingSurface.getBitmap().compress(Bitmap.CompressFormat.PNG, 50, buff);
             
-			String path = FileStorageUtil.addProjectMedia(this, getWorkspace().getActiveProject(), activePoint, buff.toByteArray());
+            String filePrefix = null;
+            if (isMap){
+            	filePrefix = FileStorageUtil.MAP_PREFIX;
+            } else {
+            	filePrefix = FileStorageUtil.getFilePrefixForPicture(activePoint);
+            }
+			String path = FileStorageUtil.addProjectMedia(this, getWorkspace().getActiveProject(), filePrefix, buff.toByteArray());
 
             // create DB record
             Sketch drawing = new Sketch();
@@ -241,4 +258,15 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
         alert.show();
 
     }
+
+	/**
+	 * @see android.support.v7.app.ActionBarActivity#onBackPressed()
+	 */
+	@Override
+	public void onBackPressed() {
+		// stop drawing thread before going back
+    	drawingSurface.stopToSave();
+		super.onBackPressed();
+	}
+    
 }
