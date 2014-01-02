@@ -6,7 +6,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.widget.Toast;
 import com.astoev.cave.survey.R;
-import com.astoev.cave.survey.service.Workspace;
 import com.astoev.cave.survey.util.ConfigUtil;
 
 import java.io.PrintWriter;

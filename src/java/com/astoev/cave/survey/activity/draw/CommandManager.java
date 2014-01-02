@@ -49,17 +49,16 @@ public class CommandManager {
     public void executeAll(Canvas canvas, Handler doneHandler) {
         if (currentStack != null) {
             synchronized (currentStack) {
-                final Iterator i = currentStack.iterator();
+                final Iterator<DrawingPath> i = currentStack.iterator();
 
                 while (i.hasNext()) {
-                    final DrawingPath drawingPath = (DrawingPath) i.next();
+                    final DrawingPath drawingPath = i.next();
                     drawingPath.draw(canvas);
                     //doneHandler.sendEmptyMessage(1);
                 }
             }
         }
     }
-
 
     public boolean hasMoreRedo() {
         return redoStack.toArray().length > 0;

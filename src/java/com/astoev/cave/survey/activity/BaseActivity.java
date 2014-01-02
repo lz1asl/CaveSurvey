@@ -1,6 +1,5 @@
 package com.astoev.cave.survey.activity;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
