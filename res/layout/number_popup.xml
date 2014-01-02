@@ -18,7 +18,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:maxLength="5"
-            android:ems="4">
+            android:ems="4"
+            android:inputType="number">
 
         <requestFocus/>
     </EditText>

@@ -9,10 +9,8 @@
     <string name="invalid">Invalid</string>
 
     <!-- welcome screen -->
-    <string name="home_select_project">Projects:</string>
     <string name="home_no_projects">No projects yet!</string>
     <string name="home_new_project">New project</string>
-    <string name="home_button_open_project">&gt;</string>
     <string name="home_button_new_exists">Project %1$s exists!</string>
 
     <!-- new project screen -->
@@ -21,26 +19,19 @@
     <string name="new_project_name">Name</string>
     <string name="new_project_name_required">Enter name</string>
 
-    <!-- load project popup -->
-    <string name="load_title">Load Project</string>
-    <string name="load_no_projects">No project yet</string>
-
     <!-- main screen -->
-<!--     
-    <string name="main_welcome">Project</string>
- -->    
     <string name="main_leg">Current</string>
     <string name="main_button_change">Select</string>
     <string name="main_button_change_title">Change leg</string>
     <string name="main_button_add">Add</string>
-    <string name="main_button_plot">Plot 2D</string>
-    <string name="main_button_plot3d">Plot 3D</string>
     <string name="main_button_info">Info</string>
     <string name="main_button_map">Map</string>
 
     <string name="main_table_header_from">From</string>
     <string name="main_table_header_to">To</string>
+<!--     
     <string name="main_table_header_distance_from_start">From start</string>
+ -->    
     <string name="main_table_header_more">More</string>
     <string name="main_table_header_note">Note</string>
     <string name="main_table_header_drawing">Drawing</string>
@@ -62,8 +53,10 @@
     <string name="main_add_title">Add new</string>
     <string name="main_add_leg">Next leg</string>
     <string name="main_add_branch">Branch</string>
+<!--     
     <string name="main_add_custom">Custom ...</string>
     <string name="main_add_middlepoint">Middle point</string>
+ -->    
     <string name="main_add_note">Note</string>
     <string name="main_add_sketch">Draw</string>
     <string name="main_add_photo">Photo</string>
@@ -75,7 +68,6 @@
 
 
     <!-- main menu -->
-    <string name="menu_open">Open</string>
     <string name="menu_help">Help</string>
     <string name="menu_exit">End</string>
 
@@ -84,8 +76,10 @@
     <!-- point -->
     <string name="point_save">Save</string>
     <string name="point_delete">Delete</string>
+<!--     
     <string name="point_read">Read</string>
-
+ -->
+ 
     <!-- note screen -->
     <string name="note_title">Note for</string>
     <string name="note_save">Save</string>
@@ -116,9 +110,6 @@
 
     <string name="export_title">Export</string>
     <string name="export_view_files">Files</string>
-    <string name="export_excel">Excel</string>
-    <string name="export_calculate">Calculating...</string>
-    <string name="export_exporting">Exporting ...</string>
     <string name="export_done">Exported to %1$s</string>
     <string name="export_io_error">Failed to write to SD card</string>
     <string name="io_error">Unable to access SD card</string>
@@ -134,7 +125,6 @@
     <!-- options -->
     <string name="measures_title">Measures</string>
 
-    <string name="units_mode">Measure mode</string>
     <string-array name="options_modes">
         <item>Manual enter</item>
         <item>Build-in sensors</item>
@@ -182,8 +172,6 @@
         -> A2.1 -> A2.2 : middle points
     </string>
 
-
-    <string name="leg_to">to</string>
 
     <!-- info -->
     <string name="info_distance_in">Distance in</string>
