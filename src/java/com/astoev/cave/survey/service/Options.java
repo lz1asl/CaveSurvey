@@ -31,7 +31,7 @@ public class Options {
     public static Option getOption(String aCode) {
 
         try {
-            QueryBuilder<Option, Object> query = Workspace.getCurrentInstance().getDBHelper().getOptionsDao().queryBuilder();
+            QueryBuilder<Option, Integer> query = Workspace.getCurrentInstance().getDBHelper().getOptionsDao().queryBuilder();
             query.where().eq(Option.COLUMN_CODE, aCode).and().eq(Option.COLUMN_PROJECT_ID, Workspace.getCurrentInstance().getActiveProject().getId());
 
             return (Option) Workspace.getCurrentInstance().getDBHelper().getOptionsDao().queryForFirst(query.prepare());

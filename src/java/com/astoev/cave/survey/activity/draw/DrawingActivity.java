@@ -79,7 +79,7 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
             // preload with image
             byte [] backgroundBytes = getIntent().getByteArrayExtra(SKETCH_BASE);
             if (null != backgroundBytes) {
-                BitmapFactory.Options options = new BitmapFactory.Options();
+//                BitmapFactory.Options options = new BitmapFactory.Options();
                 drawingSurface.setOldBitmap(BitmapFactory.decodeByteArray(backgroundBytes, 0, backgroundBytes.length, null));
                 drawingSurface.invalidate();
             }
