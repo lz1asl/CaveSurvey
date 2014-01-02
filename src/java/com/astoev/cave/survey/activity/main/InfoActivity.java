@@ -17,8 +17,6 @@ import com.astoev.cave.survey.service.export.excel.ExcelExport;
 import com.astoev.cave.survey.util.FileStorageUtil;
 import com.astoev.cave.survey.util.StringUtils;
 
-import org.apache.poi.ss.usermodel.Drawing;
-
 import java.io.File;
 import java.util.List;
 
@@ -66,7 +64,7 @@ public class InfoActivity extends MainMenuActivity {
                 }
 
                 // drawings
-                List<Drawing> drawings = getWorkspace().getDBHelper().getSketchDao().queryBuilder().where().eq(Sketch.COLUMN_POINT_ID, l.getFromPoint().getId()).query();
+                List<Sketch> drawings = getWorkspace().getDBHelper().getSketchDao().queryBuilder().where().eq(Sketch.COLUMN_POINT_ID, l.getFromPoint().getId()).query();
                 if (drawings != null && drawings.size() > 0){
                     numDrawings += drawings.size();
                 }

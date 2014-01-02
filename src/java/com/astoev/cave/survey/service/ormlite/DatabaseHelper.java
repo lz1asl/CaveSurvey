@@ -25,18 +25,16 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "CaveSurvey";
 
-    private static DatabaseHelper instance = null;
-
-    private Dao mLegDao;
-    private Dao mLocationDao;
-    private Dao mNoteDao;
-    private Dao mPhotoDao;
-    private Dao mPointDao;
-    private Dao mProjectDao;
-    private Dao mSketchDao;
-    private Dao mGalleryDao;
-    private Dao mOptionsDao;
-    private Dao mVectorsDao;
+    private Dao<Leg, Integer> mLegDao;
+    private Dao<Location, Integer> mLocationDao;
+    private Dao<Note, Integer> mNoteDao;
+    private Dao<Photo, Integer> mPhotoDao;
+    private Dao<Point, Integer> mPointDao;
+    private Dao<Project, Integer> mProjectDao;
+    private Dao<Sketch, Integer> mSketchDao;
+    private Dao<Gallery, Integer> mGalleryDao;
+    private Dao<Option, Integer> mOptionsDao;
+    private Dao<Vector, Integer> mVectorsDao;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION, R.raw.ormlite_config);
@@ -86,43 +84,43 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         throw new RuntimeException("Update not supported yet");
     }
 
-    public Dao getLegDao() {
+    public Dao<Leg, Integer> getLegDao() {
         return mLegDao;
     }
 
-    public Dao getLocationDao() {
+    public Dao<Location, Integer> getLocationDao() {
         return mLocationDao;
     }
 
-    public Dao getNoteDao() {
+    public Dao<Note, Integer> getNoteDao() {
         return mNoteDao;
     }
 
-    public Dao getPhotoDao() {
+    public Dao<Photo, Integer> getPhotoDao() {
         return mPhotoDao;
     }
 
-    public Dao getPointDao() {
+    public Dao<Point, Integer> getPointDao() {
         return mPointDao;
     }
 
-    public Dao getProjectDao() {
+    public Dao<Project, Integer> getProjectDao() {
         return mProjectDao;
     }
 
-    public Dao getSketchDao() {
+    public Dao<Sketch, Integer> getSketchDao() {
         return mSketchDao;
     }
 
-    public Dao getGalleryDao() {
+    public Dao<Gallery, Integer> getGalleryDao() {
         return mGalleryDao;
     }
 
-    public Dao getOptionsDao() {
+    public Dao<Option, Integer> getOptionsDao() {
         return mOptionsDao;
     }
 
-    public Dao getVectorsDao() {
+    public Dao<Vector, Integer> getVectorsDao() {
         return mVectorsDao;
     }
 }

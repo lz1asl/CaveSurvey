@@ -77,16 +77,14 @@ public class Gallery implements Serializable {
 
     // A -> B ... -> Z -> AA -> AB etc for next galleries
     public static String generateNextGalleryName(Integer aProjectId) throws SQLException {
-        Dao galleryDao = Workspace.getCurrentInstance().getDBHelper().getGalleryDao();
+        Dao<Gallery, Integer> galleryDao = Workspace.getCurrentInstance().getDBHelper().getGalleryDao();
 
-        QueryBuilder query = galleryDao.queryBuilder();
+        QueryBuilder<Gallery, Integer> query = galleryDao.queryBuilder();
                 query.where().eq(COLUMN_PROJECT_ID, aProjectId);
                         query.orderBy(COLUMN_ID, false);
         Gallery lastGallery = (Gallery) query.queryForFirst();
-
-
-            return nextName( lastGallery.getName());
-
+        
+        return nextName( lastGallery.getName());
     }
 
     public static String nextName(String s) {
