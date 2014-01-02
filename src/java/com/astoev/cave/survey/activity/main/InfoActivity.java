@@ -1,5 +1,8 @@
 package com.astoev.cave.survey.activity.main;
 
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -11,9 +14,12 @@ import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.model.*;
 import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.service.export.excel.ExcelExport;
+import com.astoev.cave.survey.util.FileStorageUtil;
 import com.astoev.cave.survey.util.StringUtils;
+
 import org.apache.poi.ss.usermodel.Drawing;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -24,6 +30,9 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class InfoActivity extends MainMenuActivity {
+	
+	public static final String MIME_RESOURCE_FOLDER = "resource/folder";
+	public static final String MIME_TYPE_ANY = "*/*";
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -115,6 +124,61 @@ public class InfoActivity extends MainMenuActivity {
             UIUtilities.showNotification(R.string.error);
         }
     }
+    
+    /**
+     * Handles click on Files button. Tries to find an activity to show project's folder by sending 
+     * ACTION_VIEW intent. Sequentially tries to find a compatible activity. First looks for activity to just 
+     * handle a file path. Second tries to for mime-type "resource/folder" and finally executes a search for
+     * mime-type "*.*" and leaves the user to select a matching application. 
+     */
+	private void onViewFiles(){
+    	String projectName = getWorkspace().getActiveProject().getName();
+    	
+    	Log.i(Constants.LOG_TAG_SERVICE, "View files selected for project:" + projectName);
+    	
+    	File projectHome = FileStorageUtil.getProjectHome(projectName);
+    	
+    	if (projectHome != null){
+	    	Uri contentUri = Uri.fromFile(projectHome);
+	    	
+	    	Log.i(Constants.LOG_TAG_SERVICE, "Uri:" + contentUri);
+	    	
+	        String chooserTitle = getResources().getString(R.string.info_chooser_open_folder);
+	        
+	        Intent intent = new Intent(Intent.ACTION_VIEW);
+	        intent.setData(contentUri); // works wit OI File manager
+	        
+	        PackageManager pacakgeManager = getPackageManager();
+	        
+	        // works with OI File manager
+	        if (intent.resolveActivity(pacakgeManager) != null){
+	        	
+	        	Log.i(Constants.LOG_TAG_SERVICE, "ACTION_VIEW resolved");
+	        	
+	        	startActivity(Intent.createChooser(intent, chooserTitle));
+	        	return;
+	        }
+	        
+	        // Works with ES file manager
+	        intent.setDataAndType(contentUri, MIME_RESOURCE_FOLDER);
+	        if (intent.resolveActivity(pacakgeManager) != null){
+	        	Log.i(Constants.LOG_TAG_SERVICE, "ACTION_VIEW with resource/folder resolved");
+	        	
+	        	startActivity(Intent.createChooser(intent, chooserTitle));
+	        	return;
+	        }
+	        
+	        // brute force to choose a file manager
+	        Log.i(Constants.LOG_TAG_SERVICE, "ACTION_VIEW with */* resolved");
+	        intent.setDataAndType(contentUri, MIME_TYPE_ANY);
+	        startActivity(Intent.createChooser(intent, chooserTitle));
+	        return;
+	        
+    	} else {
+    		Log.e(Constants.LOG_TAG_SERVICE, "No project folder for project:" + projectName);
+    		UIUtilities.showNotification(R.string.io_error);
+    	}
+    }//end of onViewFiles
 
 	/**
 	 * @see com.astoev.cave.survey.activity.MainMenuActivity#getChildsOptionsMenu()
@@ -134,6 +198,10 @@ public class InfoActivity extends MainMenuActivity {
 		switch (item.getItemId()) {
 			case R.id.info_action_export:{
 				exportProject();
+				return true;
+			}
+			case R.id.info_action_view_files:{
+				onViewFiles();
 				return true;
 			}
 			default:
