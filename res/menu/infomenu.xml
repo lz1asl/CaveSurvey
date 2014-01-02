@@ -7,5 +7,9 @@
 	      android:title="@string/export_title"
 	      android:visible="true"
 	      myapp:showAsAction="ifRoom|withText"/>
-      
+    <item android:id="@+id/info_action_view_files"
+          android:icon="@drawable/ic_action_collection"
+          android:title="@string/export_view_files"
+          android:visible="true"
+          myapp:showAsAction="ifRoom|withText"/> 
 </menu>    
