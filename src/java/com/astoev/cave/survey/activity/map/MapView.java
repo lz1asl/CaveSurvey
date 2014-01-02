@@ -52,6 +52,11 @@ public class MapView extends View {
     private float initialMoveX = 0;
     private float initialMoveY = 0;
 
+    List<Integer> processedLegs = new ArrayList<Integer>();
+    Map<Integer, Point2D> mapPoints = new HashMap<Integer, Point2D>();
+    Map<Integer, Integer> galleryColors = new HashMap<Integer, Integer>();
+    Map<Integer, String> galleryNames = new HashMap<Integer, String>();
+
     public MapView(Context context, AttributeSet attrs) {
         super(context, attrs);
         polygonPaint.setColor(Color.RED);
@@ -68,6 +73,12 @@ public class MapView extends View {
     public void onDraw(Canvas canvas) {
 
         try {
+
+            processedLegs.clear();
+            mapPoints.clear();
+            galleryColors.clear();
+            galleryNames.clear();
+
             // prepare map surface
             int maxX = canvas.getWidth();
             int maxY = canvas.getHeight();
@@ -81,11 +92,6 @@ public class MapView extends View {
 
             // load the points
             List<Leg> legs = mWorkspace.getCurrProjectLegs();
-
-            List<Integer> processedLegs = new ArrayList<Integer>();
-            Map<Integer, Point2D> mapPoints = new HashMap<Integer, Point2D>();
-            Map<Integer, Integer> galleryColors = new HashMap<Integer, Integer>();
-            Map<Integer, String> galleryNames = new HashMap<Integer, String>();
 
             while (processedLegs.size() < legs.size()) {
                 for (Leg l : legs) {
