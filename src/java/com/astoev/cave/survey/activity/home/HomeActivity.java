@@ -17,7 +17,6 @@ import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.activity.main.BTActivity;
 import com.astoev.cave.survey.activity.main.MainActivity;
 import com.astoev.cave.survey.model.Project;
-import com.astoev.cave.survey.service.ormlite.DatabaseHelper;
 import com.astoev.cave.survey.util.ConfigUtil;
 
 import java.util.List;
@@ -29,8 +28,6 @@ import java.util.List;
  */
 public class HomeActivity extends MainMenuActivity {
 
-    private static boolean isFirstEntry;
-    
     /**
      * Called when the activity is first created.
      */
