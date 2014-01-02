@@ -12,27 +12,28 @@
     <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_weight="1">
-        <ImageButton
-                android:src="@drawable/colorpicker"
-                android:onClick="pickColor"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:scaleType="fitCenter"/>
+            android:orientation="vertical">
         <ImageButton
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/paints"
                 android:scaleType="fitCenter"
+                android:src="@drawable/colorpicker"
+                android:contentDescription="@string/drawing_colorpicker"
+                android:onClick="pickColor"/>
+        <ImageButton
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/paints"
+                android:contentDescription="@string/drawing_style"
                 android:onClick="pickStyle"/>
         <ImageButton
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:onClick="pickSize"
+                android:scaleType="fitCenter"
                 android:src="@drawable/sizes"
-                android:scaleType="fitCenter"/>
-
+                android:contentDescription="@string/drawing_size"
+                android:onClick="pickSize"/>
 
     </LinearLayout>
 
@@ -40,30 +41,27 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:orientation="vertical"
-            android:layout_weight="1"
             android:gravity="bottom">
 
         <Button
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="Undo"
-                android:onClick="onClick"
                 android:id="@+id/undoBtn"
-                />
-        <Button
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:text="Redo"
-                android:onClick="onClick"
+                android:text="@string/drawing_undo"
+                android:onClick="onClick"/>
+        <Button
                 android:id="@+id/redoBtn"
-                />
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="@string/drawing_redo"
+                android:onClick="onClick"/>
 
         <Button
+                android:id="@+id/saveBtn"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:text="Save"
-                android:onClick="saveDrawing"
-                android:id="@+id/saveBtn"/>
+                android:text="@string/drawing_save"
+                android:onClick="saveDrawing"/>
     </LinearLayout>
 
 
