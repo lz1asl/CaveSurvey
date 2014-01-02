@@ -104,6 +104,7 @@
     <string name="info_created">Created</string>
     <string name="info_legs"># legs</string>
     <string name="info_total_distance">Raw length</string>
+    <string name="info_chooser_open_folder">Open folder</string>
 
     <string name="info_num_notes"># notes</string>
     <string name="info_num_drawings"># drawings</string>
@@ -112,11 +113,13 @@
 
 
     <string name="export_title">Export</string>
+    <string name="export_view_files">Files</string>
     <string name="export_excel">Excel</string>
     <string name="export_calculate">Calculating...</string>
     <string name="export_exporting">Exporting ...</string>
     <string name="export_done">Exported to %1$s</string>
     <string name="export_io_error">Failed to write to SD card</string>
+    <string name="io_error">Unable to access SD card</string>
 
     <!-- options -->
     <string name="measures_title">Measures</string>
