@@ -1,5 +1,7 @@
 package com.astoev.cave.survey;
 
+import java.util.Locale;
+
 /**
  * Created by IntelliJ IDEA.
  * User: astoev
@@ -17,6 +19,8 @@ public class Constants {
 
     public static final String LEG_SELECTED = "leg";
     public static final String LEG_NOTE = "legNote";
+    
+    public static Locale DEFAULT_LOCALE = Locale.US;
 
     public static enum Measures {distance, slope, angle, up, down, left, right}
 }

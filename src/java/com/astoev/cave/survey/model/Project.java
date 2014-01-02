@@ -70,7 +70,7 @@ public class Project {
     }
 
     public String getCreationDateFormatted() {
-        SimpleDateFormat df = new SimpleDateFormat(Constants.DATE_FORMAT);
+        SimpleDateFormat df = new SimpleDateFormat(Constants.DATE_FORMAT, Constants.DEFAULT_LOCALE);
         return df.format(mCreationDate);
     }
 

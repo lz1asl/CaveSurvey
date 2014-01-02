@@ -1,5 +1,6 @@
 package com.astoev.cave.survey.util;
 
+import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.service.Workspace;
 
@@ -59,7 +60,7 @@ public class PointUtil {
                 // increase letter index 2A -> 2B
                 char letter = pointName.charAt(pointName.length() - 1);
                 String newName = pointName.substring(pointName.length() - 1) + (char) (letter + 1);
-                newPoint.setName(newName.toUpperCase());
+                newPoint.setName(newName.toUpperCase(Constants.DEFAULT_LOCALE));
             } else {
                 // increase the index 2 -> 3
                 newPoint.setName(String.valueOf(Long.parseLong(lastGalleryPoint.getName()) + 1));
@@ -85,7 +86,7 @@ public class PointUtil {
             // increase letter index 2A -> 2B
             char letter = pointName.charAt(pointName.length() - 1);
             String newName = pointName.substring(0, pointName.length() - 1) + (char) (letter + 1);
-            point.setName(newName.toUpperCase());
+            point.setName(newName.toUpperCase(Constants.DEFAULT_LOCALE));
             // TODO verify name does not exist
         } else {
             // append letter 2 -> 2A
