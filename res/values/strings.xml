@@ -86,7 +86,7 @@
     <string name="note_save">Save</string>
     <string name="note_saved">Saved</string>
 
-    <string name="sketch_save">Save</string>
+    
 
     <string name="sketch_pick_color">Pick a Color</string>
     <string name="sketch_pick_size">Pick a Size</string>
@@ -95,6 +95,14 @@
     <string name="sketch_pick_style_fill">Fill</string>
     <string name="sketch_pick_style_dash">Dash</string>
     <string name="sketch_saved">saved</string>
+    
+    <string name="sketch_undo">Undo</string>
+    <string name="sketch_redo">Redo</string>
+    <string name="sketch_save">Save</string>
+    <string name="sketch_colorpicker">color picker</string>
+    <string name="sketch_style">Style</string>
+    <string name="sketch_size">Size</string>
+    
     
     <string name="map_edit">Edit</string>
 
@@ -117,14 +125,6 @@
     <string name="export_io_error">Failed to write to SD card</string>
     <string name="io_error">Unable to access SD card</string>
     
-    <string name="drawing_undo">Undo</string>
-    <string name="drawing_redo">Redo</string>
-    <string name="drawing_save">Save</string>
-    <string name="drawing_colorpicker">color picker</string>
-    <string name="drawing_style">Style</string>
-    <string name="drawing_size">Size</string>
-    
-
     <!-- options -->
     <string name="measures_title">Measures</string>
 <!-- 
