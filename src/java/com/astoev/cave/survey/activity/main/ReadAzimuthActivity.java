@@ -8,6 +8,8 @@ package com.astoev.cave.survey.activity.main;
  * To change this template use File | Settings | File Templates.
  */
 
+import java.lang.ref.WeakReference;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -32,6 +34,8 @@ public class ReadAzimuthActivity extends Activity implements SensorEventListener
     private Sensor mCompassSensor;
 
     private float mLastValue;
+    
+    private ProgressHandler handler;
 
     /**
      * Called when the activity is first created.
@@ -44,7 +48,8 @@ public class ReadAzimuthActivity extends Activity implements SensorEventListener
             mCompassSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         }
         mSensorManager.registerListener(this, mCompassSensor, SensorManager.SENSOR_DELAY_FASTEST);
-
+        handler = new ProgressHandler(this);
+        
         showDialog(PROGRESS_DIALOG);
     }
 
@@ -72,28 +77,6 @@ public class ReadAzimuthActivity extends Activity implements SensorEventListener
                 progressThread.start();
         }
     }
-
-    // Define the Handler that receives messages from the thread and update the progress
-    final Handler handler = new Handler() {
-        public void handleMessage(Message msg) {
-            int total = msg.arg1;
-            progressDialog.setProgress(total);
-            progressDialog.setSecondaryProgress(total);
-            if (total >= 3) {
-                progressThread.setState(ProgressThread.STATE_DONE);
-                dismissDialog(PROGRESS_DIALOG);
-
-
-                mSensorManager.unregisterListener(ReadAzimuthActivity.this, mCompassSensor);
-
-                Intent intent = ReadAzimuthActivity.this.getIntent();
-                intent.putExtra("Azimuth", mLastValue);
-                ReadAzimuthActivity.this.setResult(RESULT_OK, intent);
-
-                finish();
-            }
-        }
-    };
 
     /**
      * Nested class that performs progress calculations (counting)
@@ -132,7 +115,6 @@ public class ReadAzimuthActivity extends Activity implements SensorEventListener
         }
     }
 
-
     @Override
     protected void onPause() {
         mSensorManager.unregisterListener(this, mCompassSensor);
@@ -149,5 +131,47 @@ public class ReadAzimuthActivity extends Activity implements SensorEventListener
         mLastValue = event.values[0];
         // TODO add unit
         progressDialog.setMessage("aa " + String.valueOf(mLastValue));
+    }
+    
+    /**
+     * Define the Handler that receives messages from the thread and update the progress
+     * 
+     * @author astoev
+     * @author jmitrev
+     *
+     */
+    public static class ProgressHandler extends Handler{
+    	
+    	private WeakReference<ReadAzimuthActivity> reference;
+    	
+    	public ProgressHandler(ReadAzimuthActivity surfaceArg)
+    	{
+    		reference = new WeakReference<ReadAzimuthActivity>(surfaceArg);
+    	}
+    	
+        public void handleMessage(Message msg) {
+        	
+        	ReadAzimuthActivity activity = reference.get();
+        	if (activity == null){
+        		return;
+        	}
+        	
+            int total = msg.arg1;
+            activity.progressDialog.setProgress(total);
+            activity.progressDialog.setSecondaryProgress(total);
+            if (total >= 3) {
+            	activity.progressThread.setState(ProgressThread.STATE_DONE);
+            	activity.dismissDialog(PROGRESS_DIALOG);
+
+
+                activity.mSensorManager.unregisterListener(activity, activity.mCompassSensor);
+
+                Intent intent = activity.getIntent();
+                intent.putExtra("Azimuth", activity.mLastValue);
+                activity.setResult(RESULT_OK, intent);
+
+                activity.finish();
+            }
+        }
     }
 }
