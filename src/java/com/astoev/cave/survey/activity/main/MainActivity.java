@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.SparseIntArray;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -56,7 +57,8 @@ public class MainActivity extends MainMenuActivity {
 //            ,R.string.main_add_custom
     };
 
-    private Map<Integer, Integer> mGalleryColors;
+//    private Map<Integer, Integer> mGalleryColors;
+    private SparseIntArray mGalleryColors; 
     private Map<Integer, String> mGalleryNames;
     
     private static boolean isDebug = false;
@@ -71,7 +73,7 @@ public class MainActivity extends MainMenuActivity {
             Leg activeLeg = getWorkspace().getLastLeg();
             getWorkspace().setActiveLeg(activeLeg);
 
-            mGalleryColors = new HashMap<Integer, Integer>();
+            mGalleryColors = new SparseIntArray();
             mGalleryNames = new HashMap<Integer, String>();
 
             // prepare labels
@@ -119,15 +121,15 @@ public class MainActivity extends MainMenuActivity {
                 	toPointString = toPointString + "("+toPoint.getId()+")";
                 }
 
-                if (!mGalleryColors.containsKey(l.getGalleryId())) {
+                if (mGalleryColors.get(l.getGalleryId(), Constants.NOT_FOUND) == Constants.NOT_FOUND) {
                     Gallery gallery = DaoUtil.getGallery(l.getGalleryId());
-                    mGalleryColors.put(l.getGalleryId(), MapUtilities.getNextGalleryColor(l.getGalleryId()));
+                    mGalleryColors.put(l.getGalleryId(), MapUtilities.getNextGalleryColor(mGalleryColors.size()));
                     mGalleryNames.put(l.getGalleryId(), gallery.getName());
                 }
 
                 row.addView(createTextView(mGalleryNames.get(l.getGalleryId()), currentLeg, false, mGalleryColors.get(l.getGalleryId())));
-                row.addView(createTextView(fromPointString, currentLeg, false, null));
-                row.addView(createTextView(toPointString, currentLeg, false, null));
+                row.addView(createTextView(fromPointString, currentLeg, false));
+                row.addView(createTextView(toPointString, currentLeg, false));
                 row.addView(createTextView(l.getDistance(), currentLeg, true));
                 row.addView(createTextView(l.getAzimuth(), currentLeg, true));
                 row.addView(createTextView(l.getSlope(), currentLeg, true));
@@ -154,7 +156,7 @@ public class MainActivity extends MainMenuActivity {
                 }
 
                 //TODO add sketch and photo here
-                row.addView(createTextView(moreText.toString(), currentLeg, true, null));
+                row.addView(createTextView(moreText.toString(), currentLeg, true));
                 table.addView(row, params);
             }
             table.invalidate();
@@ -164,26 +166,29 @@ public class MainActivity extends MainMenuActivity {
         }
     }
 
-    private View createTextView(Float aMeasure, boolean isCurrentLeg, boolean allowEditing) {
-        return createTextView(StringUtils.floatToLabel(aMeasure), isCurrentLeg, allowEditing, null);
+    private TextView createTextView(Float aMeasure, boolean isCurrentLeg, boolean allowEditing) {
+        return createTextView(StringUtils.floatToLabel(aMeasure), isCurrentLeg, allowEditing);
     }
-
-    private View createTextView(String aText, boolean isCurrentLeg, boolean allowEditing, Integer aColor) {
+    
+    private TextView createTextView(String aText, boolean isCurrentLeg, boolean allowEditing) {
         TextView edit = new TextView(this);
         edit.setLines(1);
         if (aText != null) {
             edit.setText(aText);
         }
         edit.setGravity(Gravity.CENTER);
-        if (aColor != null) {
-            edit.setTextColor(aColor);
-        }
 
         if (!isCurrentLeg || !allowEditing) {
             edit.setEnabled(false);
         }
 
         return edit;
+    }
+
+    private TextView createTextView(String aText, boolean isCurrentLeg, boolean allowEditing, int aColor) {
+    	TextView edit = createTextView(aText, isCurrentLeg, allowEditing);
+    	edit.setTextColor(aColor);
+    	return edit;
     }
 
     public void addButtonClick() {

@@ -9,6 +9,7 @@ import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.SparseIntArray;
 import android.view.View;
 
 import com.astoev.cave.survey.Constants;
@@ -51,11 +52,12 @@ public class MapView extends View {
     private int mapCenterMoveY = 0;
     private float initialMoveX = 0;
     private float initialMoveY = 0;
-
+    
     List<Integer> processedLegs = new ArrayList<Integer>();
     Map<Integer, Point2D> mapPoints = new HashMap<Integer, Point2D>();
-    Map<Integer, Integer> galleryColors = new HashMap<Integer, Integer>();
     Map<Integer, String> galleryNames = new HashMap<Integer, String>();
+    
+    private SparseIntArray galleryColors = new SparseIntArray();
 
     public MapView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -118,8 +120,8 @@ public class MapView extends View {
                             mapPoints.put(l.getFromPoint().getId(), first);
 
                             //color
-                            if (!galleryColors.containsKey(l.getGalleryId())) {
-                                galleryColors.put(l.getGalleryId(), MapUtilities.getNextGalleryColor(l.getGalleryId()));
+                            if (galleryColors.get(l.getGalleryId(), Constants.NOT_FOUND) == Constants.NOT_FOUND) {
+                                galleryColors.put(l.getGalleryId(), MapUtilities.getNextGalleryColor(galleryColors.size()));
                                 Gallery gallery = DaoUtil.getGallery(l.getGalleryId());
                                 galleryNames.put(l.getGalleryId(), gallery.getName());
                             }
@@ -157,8 +159,8 @@ public class MapView extends View {
                             mapPoints.put(l.getToPoint().getId(), second);
 
                             // color
-                            if (!galleryColors.containsKey(l.getGalleryId())) {
-                                galleryColors.put(l.getGalleryId(), MapUtilities.getNextGalleryColor(l.getGalleryId()));
+                            if (galleryColors.get(l.getGalleryId(), Constants.NOT_FOUND) == Constants.NOT_FOUND) {
+                                galleryColors.put(l.getGalleryId(), MapUtilities.getNextGalleryColor(galleryColors.size()));
                             }
                             polygonPaint.setColor(galleryColors.get(l.getGalleryId()));
                             polygonWidthPaint.setColor(galleryColors.get(l.getGalleryId()));
