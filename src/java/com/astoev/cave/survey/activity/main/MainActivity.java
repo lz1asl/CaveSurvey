@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.SparseArray;
 import android.util.SparseIntArray;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -37,9 +38,7 @@ import com.j256.ormlite.misc.TransactionManager;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Callable;
 
 /**
@@ -59,7 +58,7 @@ public class MainActivity extends MainMenuActivity {
 
 //    private Map<Integer, Integer> mGalleryColors;
     private SparseIntArray mGalleryColors; 
-    private Map<Integer, String> mGalleryNames;
+    private SparseArray<String> mGalleryNames;
     
     private static boolean isDebug = false;
 
@@ -74,7 +73,7 @@ public class MainActivity extends MainMenuActivity {
             getWorkspace().setActiveLeg(activeLeg);
 
             mGalleryColors = new SparseIntArray();
-            mGalleryNames = new HashMap<Integer, String>();
+            mGalleryNames = new SparseArray<String>();
 
             // prepare labels
             TextView activeLegName = (TextView) findViewById(R.id.mainActiveLeg);
