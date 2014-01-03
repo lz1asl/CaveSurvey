@@ -47,8 +47,6 @@
     <string name="azimuth">Compass</string>
     <string name="slope">Clinometer</string>
     
-    <string name="save">Save</string>
-
     <!-- add popup -->
     <string name="main_add_title">Add new</string>
     <string name="main_add_leg">Next leg</string>
@@ -60,15 +58,18 @@
     <string name="main_add_note">Note</string>
     <string name="main_add_sketch">Draw</string>
     <string name="main_add_photo">Photo</string>
+<!--     
     <string name="main_add_coordinate">GPS</string>
-    
+ -->    
     <string name="table_sketch_prefix">S</string>
     <string name="table_note_prefix">N</string>
     <string name="table_photo_prefix">P</string>
 
 
     <!-- main menu -->
+<!--     
     <string name="menu_help">Help</string>
+ -->    
     <string name="menu_exit">End</string>
 
     <string name="menu_exit_confirmation_question">End survey?</string>
@@ -126,13 +127,14 @@
 
     <!-- options -->
     <string name="measures_title">Measures</string>
-
+<!-- 
     <string-array name="options_modes">
         <item>Manual enter</item>
         <item>Build-in sensors</item>
         <item>Bluetooth sensors</item>
     </string-array>
-
+ -->
+ 
     <string name="options_units_distance">Read Distance</string>
     <string-array name="distance_units">
         <item>Meters</item>
@@ -199,7 +201,9 @@
     <string name="bt_pair">Pair</string>
     <string name="bt_paired">Paired</string>
     <string name="bt_disconnect">Disconnect</string>
+<!--     
     <string name="bt_not_supported">Bluetooth not supported</string>
+ -->    
     <string name="bt_not_selected">Pair device?</string>
     <string name="bt_not_on">Bluetooth not turned on</string>
 

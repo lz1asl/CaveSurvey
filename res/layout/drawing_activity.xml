@@ -60,7 +60,7 @@
                 android:id="@+id/saveBtn"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:text="@string/drawing_save"
+                android:text="@string/sketch_save"
                 android:onClick="saveDrawing"/>
     </LinearLayout>
 
