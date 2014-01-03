@@ -1,5 +1,7 @@
 package com.astoev.cave.survey.activity.draw;
 
+import java.lang.ref.WeakReference;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -27,6 +29,7 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
     public DrawingPath previewPath;
 
     private CommandManager commandManager;
+    private Handler previewDoneHandler;
 
     public DrawingSurface(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -36,14 +39,8 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 
         commandManager = new CommandManager();
         thread = new DrawThread(getHolder());
+        previewDoneHandler = new PreviewDoneHandler(this);
     }
-
-    private Handler previewDoneHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            isDrawing = false;
-        }
-    };
 
     class DrawThread extends Thread {
         private SurfaceHolder mSurfaceHolder;
@@ -154,5 +151,28 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 
     public void setOldBitmap(Bitmap aOldBitmap) {
         mOldBitmap = aOldBitmap;
+    }
+    
+    /**
+     * Handler implementation
+     * 
+     * @author jmitrev
+     */
+    public static class PreviewDoneHandler extends Handler{
+    	
+    	private WeakReference<DrawingSurface> reference;
+    	
+    	public PreviewDoneHandler(DrawingSurface surfaceArg)
+    	{
+    		reference = new WeakReference<DrawingSurface>(surfaceArg);
+    	}
+    	
+        @Override
+        public void handleMessage(Message msg) {
+        	DrawingSurface drawingSurface = reference.get();
+        	if (drawingSurface != null){
+        		drawingSurface.isDrawing = false;	
+        	}
+        }
     }
 }
