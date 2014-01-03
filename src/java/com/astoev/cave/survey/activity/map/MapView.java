@@ -9,6 +9,7 @@ import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.SparseArray;
 import android.util.SparseIntArray;
 import android.view.View;
 
@@ -24,9 +25,7 @@ import com.astoev.cave.survey.util.DaoUtil;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -54,10 +53,10 @@ public class MapView extends View {
     private float initialMoveY = 0;
     
     List<Integer> processedLegs = new ArrayList<Integer>();
-    Map<Integer, Point2D> mapPoints = new HashMap<Integer, Point2D>();
-    Map<Integer, String> galleryNames = new HashMap<Integer, String>();
     
+    private SparseArray<Point2D> mapPoints = new SparseArray<Point2D>();
     private SparseIntArray galleryColors = new SparseIntArray();
+    private SparseArray<String> galleryNames = new SparseArray<String>();
 
     public MapView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -116,7 +115,8 @@ public class MapView extends View {
                             first = mapPoints.get(l.getFromPoint().getId());
                         }
 
-                        if (!mapPoints.containsKey(l.getFromPoint().getId())) {
+                        
+                        if (mapPoints.get(l.getFromPoint().getId()) == null) {
                             mapPoints.put(l.getFromPoint().getId(), first);
 
                             //color
@@ -155,7 +155,7 @@ public class MapView extends View {
                             second.setAzimuth(l.getAzimuth());
                         }
 
-                        if (!mapPoints.containsKey(l.getToPoint().getId())) {
+                        if (mapPoints.get(l.getToPoint().getId()) == null) {
                             mapPoints.put(l.getToPoint().getId(), second);
 
                             // color
