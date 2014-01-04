@@ -58,7 +58,11 @@
         </activity>
         <activity android:name=".activity.main.ReadAzimuthActivity"/>
         <activity android:name=".activity.map.opengl.Map3DActivity"/>
-        <activity android:name="com.astoev.cave.survey.activity.main.BTActivity"/>
+        <activity android:name="com.astoev.cave.survey.activity.main.BTActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.astoev.cave.survey.activity.home.HomeActivity" />
+        </activity>
     </application>
 
 </manifest>
