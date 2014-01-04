@@ -120,7 +120,7 @@ public class BTActivity extends BaseActivity {
 	 */
 	@Override
 	protected String getScreenTitle() {
-		return getString(R.string.bt_title);
+		return getString(R.string.bt_devices);
 	}
 
 	public void togglePair(View aView) {

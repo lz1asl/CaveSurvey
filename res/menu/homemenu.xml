@@ -10,7 +10,7 @@
 	
 	<item android:id="@+id/action_setup_bt"
 	      android:icon="@drawable/ic_action_bluetooth_searching"
-	      android:title="@string/bt_title"
+	      android:title="@string/bt_devices"
 	      android:visible="true"
 	      myapp:showAsAction="ifRoom|withText"/>
     
