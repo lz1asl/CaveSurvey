@@ -44,7 +44,11 @@
         </activity>
         <activity android:name=".activity.main.NoteActivity"/>
         <activity android:name=".activity.map.MapActivity" android:theme="@style/NoActionBar"/>
-        <activity android:name=".activity.home.NewProjectActivity"/>
+        <activity android:name=".activity.home.NewProjectActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.astoev.cave.survey.activity.home.HomeActivity" />
+        </activity>    
         <activity android:name=".activity.draw.DrawingActivity"/>
         <activity android:name=".activity.main.PointActivity">
 			<meta-data

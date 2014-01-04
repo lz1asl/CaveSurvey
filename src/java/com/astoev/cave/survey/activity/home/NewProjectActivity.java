@@ -50,8 +50,16 @@ public class NewProjectActivity extends MainMenuActivity {
         prepareSpinner(R.id.options_slope_type, R.array.slope_read_type);
 
     }
+    
+    /**
+	 * @see com.astoev.cave.survey.activity.BaseActivity#getScreenTitle()
+	 */
+	@Override
+	protected String getScreenTitle() {
+		return getString(R.string.new_title);
+	}
 
-    private void prepareSpinner(int aSpinnerId, int aTextArrayId) {
+	private void prepareSpinner(int aSpinnerId, int aTextArrayId) {
         Spinner spinner = (Spinner) findViewById(aSpinnerId);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, aTextArrayId, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
