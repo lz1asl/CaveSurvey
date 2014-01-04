@@ -30,15 +30,30 @@ public abstract class BaseActivity extends ActionBarActivity {
 	protected void onResume() {
 		super.onResume();
 		
-        // set the name of the chosen project as title in the action bar
-        Project activeProject = getWorkspace().getActiveProject();
-        if (activeProject != null){
-        	setTitle(activeProject.getName());
+		// set desired screen title as requested by the child implementation
+        String screenTitle = getScreenTitle();
+        if (getScreenTitle() != null){
+        	setTitle(screenTitle);
         }
 	}
 
     protected Workspace getWorkspace() {
         return Workspace.getCurrentInstance();
+    }
+    
+    /**
+     * Defines a default screen title to be shown as Activity's title
+     * 
+     * @return String title
+     */
+    protected String getScreenTitle(){
+    	
+    	// set the name of the chosen project as title in the action bar
+        Project activeProject = getWorkspace().getActiveProject();
+        if (activeProject != null){
+        	return activeProject.getName();
+        }
+        return null;
     }
 
 }

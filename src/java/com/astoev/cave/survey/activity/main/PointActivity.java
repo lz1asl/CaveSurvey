@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -66,6 +67,21 @@ public class PointActivity extends MainMenuActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.point);
         mNewNote = null;
+        
+//        if (Option.CODE_SENSOR_INTERNAL.equals(Options.getOptionValue(Option.CODE_AZIMUTH_SENSOR))){
+//        	Log.i(Constants.LOG_TAG_UI, "Will register onClickListener for Azimuth");
+//        	EditText azimuth = (EditText) findViewById(R.id.point_azimuth);
+//        	azimuth.setOnClickListener(new OnClickListener(){
+//
+//				/**
+//				 * @see android.view.View.OnClickListener#onClick(android.view.View)
+//				 */
+//				@Override
+//				public void onClick(View v) {
+//					readAzimuth(v);
+//				}
+//        	});
+//        }
     }
 
     @Override
@@ -79,19 +95,28 @@ public class PointActivity extends MainMenuActivity {
         super.onResume();
         
         loadPointData();
-        
+    }
+    
+    /**
+     * Shows the current leg as activity title
+     * 
+	 * @see com.astoev.cave.survey.activity.BaseActivity#getScreenTitle()
+	 */
+	@Override
+	protected String getScreenTitle() {
         try {
         	Leg workingLeg = getCurrentLeg();
 			StringBuilder builder = new StringBuilder(getString(R.string.leg));
 			builder.append(workingLeg.buildLegDescription(true));
 			
-			setTitle(builder.toString()); 
+			return builder.toString();
 		} catch (SQLException e) {
 			Log.e(Constants.LOG_TAG_UI, "Failed to create activity's name", e);
 		}
-    }
-    
-    private void loadPointData() {
+        return null;
+	}
+
+	private void loadPointData() {
         Log.i(Constants.LOG_TAG_UI, "Loading point data");
 
         try {

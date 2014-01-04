@@ -114,8 +114,16 @@ public class BTActivity extends BaseActivity {
         prepareUI();
         BluetoothService.registerListeners(this);
     }
+    
+    /**
+	 * @see com.astoev.cave.survey.activity.BaseActivity#getScreenTitle()
+	 */
+	@Override
+	protected String getScreenTitle() {
+		return getString(R.string.bt_title);
+	}
 
-    public void togglePair(View aView) {
+	public void togglePair(View aView) {
         Button toggle = (Button) aView.findViewById(R.id.bt_toggle_pair);
         toggle.setEnabled(false);
 
