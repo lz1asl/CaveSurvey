@@ -126,15 +126,12 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
             currentBrush.mouseDown(currentDrawingPath.path, motionEvent.getX(), motionEvent.getY());
             currentBrush.mouseDown(drawingSurface.previewPath.path, motionEvent.getX(), motionEvent.getY());
 
-
         } else if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
             drawingSurface.isDrawing = true;
             currentBrush.mouseMove(currentDrawingPath.path, motionEvent.getX(), motionEvent.getY());
             currentBrush.mouseMove(drawingSurface.previewPath.path, motionEvent.getX(), motionEvent.getY());
 
-
         } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
-
 
             currentBrush.mouseUp(drawingSurface.previewPath.path, motionEvent.getX(), motionEvent.getY());
             drawingSurface.previewPath.path = new Path();
@@ -144,7 +141,6 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
 
             undoBtn.setEnabled(true);
             redoBtn.setEnabled(false);
-
         }
 
         return true;
@@ -154,7 +150,7 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
         switch (view.getId()) {
             case R.id.undoBtn:
                 drawingSurface.undo();
-                if (drawingSurface.hasMoreUndo() == false) {
+                if (!drawingSurface.hasMoreUndo()) {
                     undoBtn.setEnabled(false);
                 }
                 redoBtn.setEnabled(true);
@@ -162,7 +158,7 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
 
             case R.id.redoBtn:
                 drawingSurface.redo();
-                if (drawingSurface.hasMoreRedo() == false) {
+                if (!drawingSurface.hasMoreRedo()) {
                     redoBtn.setEnabled(false);
                 }
 
@@ -185,7 +181,7 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
             Bitmap image = MapUtilities.combineBitmaps(drawingSurface.getOldBitmap(), drawingSurface.getBitmap());
             image.compress(Bitmap.CompressFormat.PNG, 50, buff);
 
-            String filePrefix = null;
+            String filePrefix;
             if (isMap){
             	filePrefix = FileStorageUtil.MAP_PREFIX;
             } else {

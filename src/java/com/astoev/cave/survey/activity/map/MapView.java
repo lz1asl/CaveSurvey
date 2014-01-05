@@ -87,6 +87,16 @@ public class MapView extends View {
 
             int spacing = 5;
 
+            // grid
+//            int gridStep = 20;
+//            for (int x=0; x<maxX; x++) {
+//                canvas.drawLine(x * gridStep, 0, x*gridStep, maxY, polygonPaint);
+//            }
+//
+//            for (int y=0; y<maxY; y++) {
+//                canvas.drawLine(0, y * gridStep, maxX, y*gridStep, polygonPaint);
+//            }
+
             String pointLabel;
 
             // load the points
@@ -275,7 +285,7 @@ public class MapView extends View {
         draw(canvas);
 
         // crop borders etc
-        returnedBitmap = returnedBitmap.createBitmap(returnedBitmap, 30, 30, this.getWidth() - 60, this.getHeight() - 60);
+        returnedBitmap = Bitmap.createBitmap(returnedBitmap, 30, 30, this.getWidth() - 60, this.getHeight() - 60);
 
         // return
         ByteArrayOutputStream buff = new ByteArrayOutputStream();
