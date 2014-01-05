@@ -28,6 +28,7 @@ import com.astoev.cave.survey.model.Option;
 import com.astoev.cave.survey.model.Photo;
 import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.service.Options;
+import com.astoev.cave.survey.service.azimuth.AzimuthChangedListener;
 import com.astoev.cave.survey.service.bluetooth.BluetoothService;
 import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.util.FileStorageUtil;
@@ -49,10 +50,12 @@ import java.util.concurrent.Callable;
  * Time: 1:15 AM
  * To change this template use File | Settings | File Templates.
  */
-public class PointActivity extends MainMenuActivity {
+public class PointActivity extends MainMenuActivity implements AzimuthChangedListener{
 
 	private static final int REQUEST_IMAGE_CAPTURE = 1;
 	private static final int REQIEST_EDIT_NOTE = 2;
+	
+	private static final String AZIMUTH_DIALOG = "azimuth_dialog";
 	
     private String mNewNote = null;
     
@@ -68,20 +71,20 @@ public class PointActivity extends MainMenuActivity {
         setContentView(R.layout.point);
         mNewNote = null;
         
-//        if (Option.CODE_SENSOR_INTERNAL.equals(Options.getOptionValue(Option.CODE_AZIMUTH_SENSOR))){
-//        	Log.i(Constants.LOG_TAG_UI, "Will register onClickListener for Azimuth");
-//        	EditText azimuth = (EditText) findViewById(R.id.point_azimuth);
-//        	azimuth.setOnClickListener(new OnClickListener(){
-//
-//				/**
-//				 * @see android.view.View.OnClickListener#onClick(android.view.View)
-//				 */
-//				@Override
-//				public void onClick(View v) {
-//					readAzimuth(v);
-//				}
-//        	});
-//        }
+        if (Option.CODE_SENSOR_INTERNAL.equals(Options.getOptionValue(Option.CODE_AZIMUTH_SENSOR))){
+        	Log.i(Constants.LOG_TAG_UI, "Will register onClickListener for Azimuth");
+        	EditText azimuth = (EditText) findViewById(R.id.point_azimuth);
+        	azimuth.setOnClickListener(new OnClickListener(){
+
+				/**
+				 * @see android.view.View.OnClickListener#onClick(android.view.View)
+				 */
+				@Override
+				public void onClick(View v) {
+					readAzimuth(v);
+				}
+        	});
+        }
     }
 
     @Override
@@ -483,11 +486,8 @@ public class PointActivity extends MainMenuActivity {
     }
 
     public void readAzimuth(View view) {
-        Intent intent = new Intent(this, ReadAzimuthActivity.class);
-        startActivityForResult(intent, 1);
-        EditText azimuth = (EditText) findViewById(R.id.point_azimuth);
-        azimuth.setText(intent.getStringExtra("Azimuth"));
-
+		AzimuthDialog dialog = new AzimuthDialog();
+		dialog.show(getSupportFragmentManager(), AZIMUTH_DIALOG);
     }
 
     public void readSlope(View view) {
@@ -761,5 +761,17 @@ public class PointActivity extends MainMenuActivity {
         public void ignore(Constants.Measures aMeasure) {
             expectedMeasures.remove(aMeasure);
         }
-    };
+    }
+
+	/**
+	 * @see com.astoev.cave.survey.service.azimuth.AzimuthChangedListener#onAzimuthChanged(float)
+	 */
+	@Override
+	public void onAzimuthChanged(float newValueArg) {
+		
+        final EditText azimuth = (EditText) findViewById(R.id.point_azimuth);
+		azimuth.setText(String.valueOf(newValueArg));
+	};
+    
+    
 }

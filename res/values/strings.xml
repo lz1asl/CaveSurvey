@@ -206,6 +206,9 @@
 
     <string name="action_saved">Saved</string>
     <string name="action_deleted">Deleted</string>
+    
+    <string name="azimuth_no_value">No value</string>
+    <string name="azimuth">Azimuth</string>
 
 
 </resources>
