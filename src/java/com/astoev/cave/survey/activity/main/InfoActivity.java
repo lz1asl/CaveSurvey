@@ -59,15 +59,13 @@ public class InfoActivity extends MainMenuActivity {
                 }
 
                 // notes
-                Note note = DaoUtil.getActiveLegNote(l);
-                if (note != null) {
+                if (DaoUtil.getActiveLegNote(l) != null) {
                     numNotes ++;
                 }
 
                 // drawings
-                List<Sketch> drawings = getWorkspace().getDBHelper().getSketchDao().queryBuilder().where().eq(Sketch.COLUMN_POINT_ID, l.getFromPoint().getId()).query();
-                if (drawings != null && drawings.size() > 0){
-                    numDrawings += drawings.size();
+                if (DaoUtil.getScetchByLeg(l) != null){
+                    numDrawings ++;
                 }
 
                 // gps
