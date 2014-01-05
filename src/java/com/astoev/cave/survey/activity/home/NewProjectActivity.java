@@ -14,6 +14,7 @@ import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.activity.main.PointActivity;
 import com.astoev.cave.survey.model.*;
 import com.astoev.cave.survey.service.Options;
+import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.util.PointUtil;
 import com.j256.ormlite.misc.TransactionManager;
 
@@ -103,10 +104,7 @@ public class NewProjectActivity extends MainMenuActivity {
                             getWorkspace().setActiveProject(newProject);
 
                             // gallery
-                            Gallery firstGallery = new Gallery();
-                            firstGallery.setName(Gallery.getFirstGalleryName());
-                            firstGallery.setProject(newProject);
-                            getWorkspace().getDBHelper().getGalleryDao().create(firstGallery);
+                            Gallery firstGallery = DaoUtil.createGallery(true);
 
                             // points
                             Point startPoint = PointUtil.createFirstPoint();

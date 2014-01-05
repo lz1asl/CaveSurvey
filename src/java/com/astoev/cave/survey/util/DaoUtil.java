@@ -78,10 +78,15 @@ public class DaoUtil {
         Workspace.getCurrentInstance().getDBHelper().getPointDao().refresh(aPoint);
     }
 
-    public static Gallery createGallery() throws SQLException {
+    public static Gallery createGallery(boolean isFirst) throws SQLException {
         Gallery gallery = new Gallery();
-        gallery.setName(Gallery.nextName(Workspace.getCurrentInstance().getActiveGallery().getName()));
-        gallery.setProject(Workspace.getCurrentInstance().getActiveProject());
+        Project currProject = Workspace.getCurrentInstance().getActiveProject();
+        if (isFirst) {
+            gallery.setName(Gallery.getFirstGalleryName());
+        } else {
+            gallery.setName(Gallery.generateNextGalleryName(currProject.getId()));
+        }
+        gallery.setProject(currProject);
         Workspace.getCurrentInstance().getDBHelper().getGalleryDao().create(gallery);
         return gallery;
     }

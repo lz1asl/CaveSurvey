@@ -287,7 +287,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                         	Leg legEdited = getCurrentLeg();
 
                             if (mNewGallery) {
-                                Gallery newGallery = DaoUtil.createGallery();
+                                Gallery newGallery = DaoUtil.createGallery(false);
                                 legEdited.setGalleryId(newGallery.getId());
                             }
 
