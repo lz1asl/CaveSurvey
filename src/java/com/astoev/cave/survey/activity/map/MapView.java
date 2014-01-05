@@ -315,6 +315,6 @@ public class MapView extends View {
         if (aSlope == null) {
             return aDistance;
         }
-        return new Float(aDistance * Math.cos(Math.toRadians(aSlope)));
+        return Double.valueOf(aDistance * Math.cos(Math.toRadians(aSlope))).floatValue();
     }
 }
