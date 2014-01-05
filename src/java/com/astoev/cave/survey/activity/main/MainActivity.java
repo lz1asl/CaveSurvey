@@ -106,11 +106,11 @@ public class MainActivity extends MainMenuActivity {
                 }
 
                 Point fromPoint = l.getFromPoint();
-                getWorkspace().getDBHelper().getPointDao().refresh(fromPoint);
+                DaoUtil.refreshPoint(fromPoint);
                 String fromPointString = fromPoint.getName();
                 
                 Point toPoint = l.getToPoint();
-                getWorkspace().getDBHelper().getPointDao().refresh(toPoint);
+                DaoUtil.refreshPoint(toPoint);
                 String toPointString = toPoint.getName();
                 
                 if (isDebug){
@@ -286,8 +286,8 @@ public class MainActivity extends MainMenuActivity {
                             // another leg, starting from the current leg and in new gallery
                             Point newFrom = activeLeg.getFromPoint();
                             Point oldToPoint = activeLeg.getToPoint();
-                            getWorkspace().getDBHelper().getPointDao().refresh(newFrom);
-                            getWorkspace().getDBHelper().getPointDao().refresh(oldToPoint);
+                            DaoUtil.refreshPoint(newFrom);
+                            DaoUtil.refreshPoint(oldToPoint);
 
 
                             // create new point

@@ -19,6 +19,7 @@ import com.astoev.cave.survey.activity.draw.brush.PenBrush;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.model.Sketch;
+import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.util.FileStorageUtil;
 
 import java.io.ByteArrayOutputStream;
@@ -175,7 +176,7 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
         try {
             Leg activeLeg = getWorkspace().getActiveOrFirstLeg();
             Point activePoint = activeLeg.getFromPoint();
-            getWorkspace().getDBHelper().getPointDao().refresh(activePoint);
+            DaoUtil.refreshPoint(activePoint);
 
             // store to SD
             ByteArrayOutputStream buff = new ByteArrayOutputStream();

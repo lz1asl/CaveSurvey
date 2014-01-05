@@ -73,4 +73,8 @@ public class DaoUtil {
 
         return Workspace.getCurrentInstance().getDBHelper().getLegDao().query(statementBuilder.prepare());
     }
+
+    public static void refreshPoint(Point aPoint) throws SQLException {
+        Workspace.getCurrentInstance().getDBHelper().getPointDao().refresh(aPoint);
+    }
 }

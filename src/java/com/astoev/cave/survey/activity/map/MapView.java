@@ -45,7 +45,6 @@ public class MapView extends View {
     Paint polygonWidthPaint = new Paint();
     Paint overlayPaint = new Paint();
     Paint youAreHerePaint = new Paint();
-    Workspace mWorkspace;
     private float scale = 10;
     private int mapCenterMoveX = 0;
     private int mapCenterMoveY = 0;
@@ -67,7 +66,6 @@ public class MapView extends View {
         overlayPaint.setColor(Color.WHITE);
         youAreHerePaint.setColor(Color.WHITE);
         youAreHerePaint.setAlpha(50);
-        mWorkspace = Workspace.getCurrentInstance();
     }
 
     @Override
@@ -127,7 +125,7 @@ public class MapView extends View {
                             }
                             polygonPaint.setColor(galleryColors.get(l.getGalleryId()));
 
-                            mWorkspace.getDBHelper().getPointDao().refresh(l.getFromPoint());
+                            DaoUtil.refreshPoint(l.getFromPoint());
                             pointLabel = galleryNames.get(l.getGalleryId()) + l.getFromPoint().getName();
                             canvas.drawText(pointLabel, mapCenterMoveX + first.getX() + LABEL_DEVIATION_X, mapCenterMoveY + first.getY() + LABEL_DEVIATION_Y, polygonPaint);
                             canvas.drawCircle(mapCenterMoveX + first.getX(), mapCenterMoveY + first.getY(), POINT_RADIUS, polygonPaint);
@@ -167,12 +165,12 @@ public class MapView extends View {
 
 //                            Log.i(Constants.LOG_TAG_UI, "Drawing leg " + l.getFromPoint().getName() + ":" + l.getToPoint().getName() + "-" + l.getGalleryId());
 
-                            if (mWorkspace.getActiveLegId().equals(l.getId())) {
+                            if (Workspace.getCurrentInstance().getActiveLegId().equals(l.getId())) {
                                 // you are here
                                 canvas.drawCircle(mapCenterMoveX + first.getX(), mapCenterMoveY + first.getY(), CURR_POINT_RADIUS, youAreHerePaint);
                             }
 
-                            mWorkspace.getDBHelper().getPointDao().refresh(l.getToPoint());
+                            DaoUtil.refreshPoint(l.getToPoint());
                             pointLabel = galleryNames.get(l.getGalleryId()) + l.getToPoint().getName();
                             canvas.drawText(pointLabel, mapCenterMoveX + second.getX() + LABEL_DEVIATION_X, mapCenterMoveY + second.getY() + LABEL_DEVIATION_Y, polygonPaint);
                             canvas.drawCircle(mapCenterMoveX + second.getX(), mapCenterMoveY + second.getY(), POINT_RADIUS, polygonPaint);

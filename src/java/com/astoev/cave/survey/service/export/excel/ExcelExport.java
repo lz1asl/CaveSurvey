@@ -96,11 +96,11 @@ public class ExcelExport {
 
                 Cell from = legRow.createCell(0);
                 Point fromPoint = l.getFromPoint();
-                mWorkspace.getDBHelper().getPointDao().refresh(fromPoint);
+                DaoUtil.refreshPoint(fromPoint);
                 from.setCellValue(fromPoint.getName());
                 Cell to = legRow.createCell(1);
                 Point toPoint = l.getToPoint();
-                mWorkspace.getDBHelper().getPointDao().refresh(toPoint);
+                DaoUtil.refreshPoint(toPoint);
                 to.setCellValue(toPoint.getName());
                 Cell length = legRow.createCell(2);
                 if (l.getDistance() != null) {
