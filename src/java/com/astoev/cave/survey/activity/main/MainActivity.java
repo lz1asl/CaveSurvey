@@ -420,7 +420,7 @@ public class MainActivity extends MainMenuActivity {
             int counter = 0;
             for (Leg l : legs) {
                 itemsList.add(l.buildLegDescription());
-                if (l.getId() == getWorkspace().getActiveLegId()) {
+                if (l.getId().equals(getWorkspace().getActiveLegId())) {
                     selectedItem = counter;
                 } else {
                     counter++;

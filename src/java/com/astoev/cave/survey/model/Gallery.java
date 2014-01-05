@@ -82,7 +82,7 @@ public class Gallery implements Serializable {
         QueryBuilder<Gallery, Integer> query = galleryDao.queryBuilder();
                 query.where().eq(COLUMN_PROJECT_ID, aProjectId);
                         query.orderBy(COLUMN_ID, false);
-        Gallery lastGallery = (Gallery) query.queryForFirst();
+        Gallery lastGallery = query.queryForFirst();
         
         return nextName( lastGallery.getName());
     }

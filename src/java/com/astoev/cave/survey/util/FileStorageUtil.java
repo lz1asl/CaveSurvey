@@ -181,8 +181,7 @@ public class FileStorageUtil {
         fileName.append(df.format(date));
         fileName.append(fileExtensionArg);
         
-        File pictureFile = new File(destinationDir, fileName.toString());
-        return pictureFile;
+        return new File(destinationDir, fileName.toString());
     }// end of createPictureFile
 
     public static File getProjectHome(String projectName) {

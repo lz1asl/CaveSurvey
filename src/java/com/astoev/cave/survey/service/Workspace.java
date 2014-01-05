@@ -123,7 +123,7 @@ public class Workspace {
             QueryBuilder<Leg, Integer> firstLegQuery = mDBHelper.getLegDao().queryBuilder();
             firstLegQuery.where().eq(Leg.COLUMN_PROJECT_ID, currProject);
             firstLegQuery.orderBy(Leg.COLUMN_FROM_POINT, true);
-            return (Leg) mDBHelper.getLegDao().queryForFirst(firstLegQuery.prepare());
+            return mDBHelper.getLegDao().queryForFirst(firstLegQuery.prepare());
         }
     }
 
@@ -147,7 +147,7 @@ public class Workspace {
         QueryBuilder<Leg, Integer> firstLegQuery = mDBHelper.getLegDao().queryBuilder();
         firstLegQuery.where().eq(Leg.COLUMN_PROJECT_ID, currProjectId);
         firstLegQuery.orderBy(Leg.COLUMN_FROM_POINT, false);
-        return (Leg) mDBHelper.getLegDao().queryForFirst(firstLegQuery.prepare());
+        return mDBHelper.getLegDao().queryForFirst(firstLegQuery.prepare());
     }
 
     // TODO list need to be sorted, here last id is get, higher number is what we need

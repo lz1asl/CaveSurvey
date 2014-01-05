@@ -73,12 +73,7 @@ public class BluetoothService {
     };
 
     public static boolean isBluetoothSupported() {
-        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (bluetoothAdapter == null) {
-            // Device does not support Bluetooth
-            return false;
-        }
-        return true;
+        return BluetoothAdapter.getDefaultAdapter() != null;
     }
 
     public static boolean isDeviceSelected() {
@@ -86,13 +81,7 @@ public class BluetoothService {
     }
 
     public static boolean askBluetoothOn(Activity aParentActivity) {
-        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-
-        if (!bluetoothAdapter.isEnabled()) {
-            return false;
-        } else {
-            return true;
-        }
+        return BluetoothAdapter.getDefaultAdapter().isEnabled();
     }
 
     public static void registerListeners(final Activity aContext) {

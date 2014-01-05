@@ -41,8 +41,7 @@ public class CommandManager {
     }
 
     public int currentStackLength() {
-        final int length = currentStack.toArray().length;
-        return length;
+        return currentStack.toArray().length;
     }
 
 

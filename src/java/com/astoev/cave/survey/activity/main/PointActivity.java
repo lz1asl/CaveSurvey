@@ -771,7 +771,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 		
         final EditText azimuth = (EditText) findViewById(R.id.point_azimuth);
 		azimuth.setText(String.valueOf(newValueArg));
-	};
+	}
     
     
 }

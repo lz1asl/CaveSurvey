@@ -184,7 +184,7 @@
 
 
     <string name="error">Error occurred</string>
-    <string name="busy">Please wait...</string>
+    <string name="busy">Please wait&#8230;</string>
 
     <string name="todo">TODO</string>
 

@@ -34,7 +34,7 @@ public class Options {
             QueryBuilder<Option, Integer> query = Workspace.getCurrentInstance().getDBHelper().getOptionsDao().queryBuilder();
             query.where().eq(Option.COLUMN_CODE, aCode).and().eq(Option.COLUMN_PROJECT_ID, Workspace.getCurrentInstance().getActiveProject().getId());
 
-            return (Option) Workspace.getCurrentInstance().getDBHelper().getOptionsDao().queryForFirst(query.prepare());
+            return Workspace.getCurrentInstance().getDBHelper().getOptionsDao().queryForFirst(query.prepare());
         } catch (SQLException e) {
             Log.e(Constants.LOG_TAG_DB, "Failed to get option " + aCode, e);
             return null;
