@@ -77,4 +77,12 @@ public class DaoUtil {
     public static void refreshPoint(Point aPoint) throws SQLException {
         Workspace.getCurrentInstance().getDBHelper().getPointDao().refresh(aPoint);
     }
+
+    public static Gallery createGallery() throws SQLException {
+        Gallery gallery = new Gallery();
+        gallery.setName(Gallery.nextName(Workspace.getCurrentInstance().getActiveGallery().getName()));
+        gallery.setProject(Workspace.getCurrentInstance().getActiveProject());
+        Workspace.getCurrentInstance().getDBHelper().getGalleryDao().create(gallery);
+        return gallery;
+    }
 }

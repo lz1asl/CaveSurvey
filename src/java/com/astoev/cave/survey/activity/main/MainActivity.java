@@ -51,7 +51,7 @@ import java.util.concurrent.Callable;
 public class MainActivity extends MainMenuActivity {
 
     private static final int[] ADD_ITEM_LABELS = {R.string.main_add_leg,
-//            R.string.main_add_branch,
+            R.string.main_add_branch,
 //            R.string.main_add_middlepoint
     };
 
@@ -67,8 +67,12 @@ public class MainActivity extends MainMenuActivity {
 
     private void drawTable() {
         try {
-            Leg activeLeg = getWorkspace().getLastLeg();
-            getWorkspace().setActiveLeg(activeLeg);
+            Leg activeLeg = getWorkspace().getActiveLeg();
+
+            if (activeLeg == null) {
+                activeLeg = getWorkspace().getLastLeg();
+                getWorkspace().setActiveLeg(activeLeg);
+            }
 
             mGalleryColors = new SparseIntArray();
             mGalleryNames = new SparseArray<String>();
@@ -206,8 +210,7 @@ public class MainActivity extends MainMenuActivity {
                     if (0 == item) {
                         addLeg(false);
                     } else if (1 == item) {
-                        UIUtilities.showNotification(R.string.todo);
-//                        addLeg(true);
+                        addLeg(true);
                     } else if (2 == item) {
 //                        requestLengthAndAddMiddle();
                         UIUtilities.showNotification(R.string.todo);
@@ -381,7 +384,7 @@ public class MainActivity extends MainMenuActivity {
 //        if (newLegId != null) {
 //            getWorkspace().setActiveLegId(newLegId);
             Intent intent = new Intent(MainActivity.this, PointActivity.class);
-//            intent.putExtra(Constants.LEG_SELECTED, newLegId);
+            intent.putExtra(Constants.GALLERY_NEW, true);
             startActivity(intent);
 //        } else {
 //            UIUtilities.showNotification(this, R.string.error);

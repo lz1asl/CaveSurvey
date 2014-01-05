@@ -22,12 +22,14 @@ import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.MainMenuActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.activity.draw.DrawingActivity;
+import com.astoev.cave.survey.model.Gallery;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Note;
 import com.astoev.cave.survey.model.Option;
 import com.astoev.cave.survey.model.Photo;
 import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.service.Options;
+import com.astoev.cave.survey.service.Workspace;
 import com.astoev.cave.survey.service.azimuth.AzimuthChangedListener;
 import com.astoev.cave.survey.service.bluetooth.BluetoothService;
 import com.astoev.cave.survey.util.DaoUtil;
@@ -58,7 +60,8 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 	private static final String AZIMUTH_DIALOG = "azimuth_dialog";
 	
     private String mNewNote = null;
-    
+    private boolean mNewGallery = false;
+
     private String currentPhotoPath;
     
     /** Current leg to work with */
@@ -66,11 +69,13 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
     
     private BTMeasureResultReceiver receiver = new BTMeasureResultReceiver(new Handler());
 
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.point);
         mNewNote = null;
-        
+        mNewGallery = getIntent().getBooleanExtra(Constants.GALLERY_NEW, false);
+
         if (Option.CODE_SENSOR_INTERNAL.equals(Options.getOptionValue(Option.CODE_AZIMUTH_SENSOR))){
         	Log.i(Constants.LOG_TAG_UI, "Will register onClickListener for Azimuth");
         	EditText azimuth = (EditText) findViewById(R.id.point_azimuth);
@@ -280,23 +285,16 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                         public Integer call() throws Exception {
 
                         	Leg legEdited = getCurrentLeg();
-                            if (legEdited.isNew()) {
-//                                Log.i(Constants.LOG_TAG_UI, "Create new leg");
-//                                Leg activeLeg = (Leg) mWorkspace.getDBHelper().getLegDao().queryForId(mWorkspace.getActiveLegId());
-//
-//                                // another leg, starting from the latest in the gallery
-//                                Point newFrom = mWorkspace.getLastGalleryPoint(activeLeg.getGalleryId());
-//                                Point newTo = PointUtil.generateNextPoint(activeLeg.getGalleryId());
-//                                mWorkspace.getDBHelper().getPointDao().create(newTo);
-//
-//                                Leg nextLeg = new Leg(newFrom, newTo, mWorkspace.getActiveProject(), activeLeg.getGalleryId());
 
-                            	getWorkspace().getDBHelper().getPointDao().create(legEdited.getToPoint());
-                                getWorkspace().getDBHelper().getLegDao().create(legEdited);
-//                                mCurrLeg = legEdited.getId();
+                            if (mNewGallery) {
+                                Gallery newGallery = DaoUtil.createGallery();
+                                legEdited.setGalleryId(newGallery.getId());
                             }
 
-//                            Leg legEdited = (Leg) mWorkspace.getDBHelper().getLegDao().queryForId(mCurrLeg);
+                            if (legEdited.isNew()) {
+                            	getWorkspace().getDBHelper().getPointDao().create(legEdited.getToPoint());
+                                getWorkspace().getDBHelper().getLegDao().create(legEdited);
+                            }
 
                             // update model
                             legEdited.setDistance(StringUtils.getFromEditTextNotNull(distance));

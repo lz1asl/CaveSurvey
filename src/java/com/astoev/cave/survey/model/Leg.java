@@ -221,6 +221,10 @@ public class Leg implements Serializable {
         return mGalleryId;
     }
 
+    public void setGalleryId(Integer aGalleryId) {
+        mGalleryId = aGalleryId;
+    }
+
 	/**
 	 * @see java.lang.Object#toString()
 	 */

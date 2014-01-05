@@ -49,8 +49,8 @@
     
     <!-- add popup -->
     <string name="main_add_title">Add new</string>
-    <string name="main_add_leg">Next leg</string>
-    <string name="main_add_branch">Branch</string>
+    <string name="main_add_leg">Next Leg</string>
+    <string name="main_add_branch">Next Gallery</string>
     <string name="main_add_middlepoint">Middle point</string>
     <string name="main_add_note">Note</string>
     <string name="main_add_sketch">Draw</string>
