@@ -31,12 +31,10 @@ import java.util.List;
  */
 public class ExcelExport {
 
-    private Workspace mWorkspace;
     private Context mContext;
 
 
-    public ExcelExport(Workspace aWorkspace, Context aContext) {
-        mWorkspace = aWorkspace;
+    public ExcelExport(Context aContext) {
         mContext = aContext;
     }
 
