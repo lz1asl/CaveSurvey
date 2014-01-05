@@ -16,6 +16,7 @@ import com.astoev.cave.survey.activity.BaseActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.activity.draw.brush.Brush;
 import com.astoev.cave.survey.activity.draw.brush.PenBrush;
+import com.astoev.cave.survey.activity.map.MapUtilities;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.model.Sketch;
@@ -180,8 +181,10 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
 
             // store to SD
             ByteArrayOutputStream buff = new ByteArrayOutputStream();
-            drawingSurface.getBitmap().compress(Bitmap.CompressFormat.PNG, 50, buff);
-            
+
+            Bitmap image = MapUtilities.combineBitmaps(drawingSurface.getOldBitmap(), drawingSurface.getBitmap());
+            image.compress(Bitmap.CompressFormat.PNG, 50, buff);
+
             String filePrefix = null;
             if (isMap){
             	filePrefix = FileStorageUtil.MAP_PREFIX;

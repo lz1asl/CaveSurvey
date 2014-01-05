@@ -36,7 +36,6 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 
         getHolder().addCallback(this);
 
-
         commandManager = new CommandManager();
         thread = new DrawThread(getHolder());
         previewDoneHandler = new PreviewDoneHandler(this);
@@ -125,6 +124,9 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
         return mBitmap;
     }
 
+    public Bitmap getOldBitmap() {
+        return mOldBitmap;
+    }
 
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
         mBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
