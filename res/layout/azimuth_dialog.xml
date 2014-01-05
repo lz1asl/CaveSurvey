@@ -1,0 +1,21 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    
+    <TextView android:id="@+id/azimuth_value"
+              android:layout_height="wrap_content"
+              android:layout_width="fill_parent"
+              android:gravity="center"
+              android:text="@string/azimuth_no_value"
+              android:textAppearance="?android:attr/textAppearanceLarge"/>
+    <ProgressBar android:id="@+id/azimuth_progress"
+                 android:progress="0"
+                 android:max="3"
+                 android:layout_height="2dp"
+                 android:layout_width="fill_parent"
+                 android:maxHeight="2dp"
+                 style="@android:style/Widget.ProgressBar.Horizontal"
+                 android:layout_margin="5dp"/> 
+    
+</LinearLayout>
