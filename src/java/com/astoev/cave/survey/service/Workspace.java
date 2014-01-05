@@ -150,16 +150,6 @@ public class Workspace {
         return (Leg) mDBHelper.getLegDao().queryForFirst(firstLegQuery.prepare());
     }
 
-    public List<Leg> getCurrProjectLegs() throws SQLException {
-        QueryBuilder<Leg, Integer> statementBuilder = mDBHelper.getLegDao().queryBuilder();
-        statementBuilder.where().eq(Leg.COLUMN_PROJECT_ID, getActiveProjectId());
-        statementBuilder.orderBy(Leg.COLUMN_FROM_POINT, true);
-        statementBuilder.orderBy(Leg.COLUMN_TO_POINT, true);
-        statementBuilder.orderBy(Leg.COLUMN_DISTANCE_FROM_START, true);
-
-        return mDBHelper.getLegDao().query(statementBuilder.prepare());
-    }
-
     // TODO list need to be sorted, here last id is get, higher number is what we need
     public Point getLastGalleryPoint(Integer aGalleryId) throws SQLException {
         String lastPointInCurrentGalleryQuery = "select max(id) from points where id in(" +

@@ -51,13 +51,11 @@ import java.util.concurrent.Callable;
 public class MainActivity extends MainMenuActivity {
 
     private static final int[] ADD_ITEM_LABELS = {R.string.main_add_leg,
-            R.string.main_add_branch,
+//            R.string.main_add_branch,
 //            R.string.main_add_middlepoint
-//            ,R.string.main_add_custom
     };
 
-//    private Map<Integer, Integer> mGalleryColors;
-    private SparseIntArray mGalleryColors; 
+    private SparseIntArray mGalleryColors;
     private SparseArray<String> mGalleryNames;
     
     private static boolean isDebug = false;
@@ -85,7 +83,7 @@ public class MainActivity extends MainMenuActivity {
             // prepare grid
             table.removeAllViews();
 
-            List<Leg> legs = getWorkspace().getCurrProjectLegs();
+            List<Leg> legs = DaoUtil.getCurrProjectLegs();
 
             boolean currentLeg;
             for (final Leg l : legs) {
@@ -208,11 +206,11 @@ public class MainActivity extends MainMenuActivity {
                     if (0 == item) {
                         addLeg(false);
                     } else if (1 == item) {
-                        addLeg(true);
-//                    } else if (2 == item) {
+                        UIUtilities.showNotification(R.string.todo);
+//                        addLeg(true);
+                    } else if (2 == item) {
 //                        requestLengthAndAddMiddle();
-//                    } else if (3 == item) {
-//                        UIUtilities.showNotification(MainActivity.this, R.string.todo);
+                        UIUtilities.showNotification(R.string.todo);
                     }
                 } catch (Exception e) {
                     Log.e(Constants.LOG_TAG_UI, "Error adding", e);
@@ -416,7 +414,7 @@ public class MainActivity extends MainMenuActivity {
         Log.i(Constants.LOG_TAG_UI, "Change active leg");
         try {
 
-            final List<Leg> legs = getWorkspace().getCurrProjectLegs();
+            final List<Leg> legs = DaoUtil.getCurrProjectLegs();
             List<String> itemsList = new ArrayList<String>();
             int selectedItem = -1;
             int counter = 0;

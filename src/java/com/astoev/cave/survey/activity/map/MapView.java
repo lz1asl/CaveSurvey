@@ -92,7 +92,7 @@ public class MapView extends View {
             String pointLabel;
 
             // load the points
-            List<Leg> legs = mWorkspace.getCurrProjectLegs();
+            List<Leg> legs = DaoUtil.getCurrProjectLegs();
 
             while (processedLegs.size() < legs.size()) {
                 for (Leg l : legs) {

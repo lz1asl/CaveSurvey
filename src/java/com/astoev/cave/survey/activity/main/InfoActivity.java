@@ -14,6 +14,7 @@ import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.model.*;
 import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.service.export.excel.ExcelExport;
+import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.util.FileStorageUtil;
 import com.astoev.cave.survey.util.StringUtils;
 
@@ -44,7 +45,7 @@ public class InfoActivity extends MainMenuActivity {
             TextView projectCreated = (TextView) findViewById(R.id.infoProjectCreated);
             projectCreated.setText(getWorkspace().getActiveProject().getCreationDateFormatted());
 
-            List<Leg> legs = getWorkspace().getCurrProjectLegs();
+            List<Leg> legs = DaoUtil.getCurrProjectLegs();
 
             TextView projectNumLegs = (TextView) findViewById(R.id.infoNumLegs);
             projectNumLegs.setText("" + legs.size());

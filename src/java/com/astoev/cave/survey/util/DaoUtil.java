@@ -4,6 +4,7 @@
 package com.astoev.cave.survey.util;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import com.astoev.cave.survey.model.Gallery;
 import com.astoev.cave.survey.model.Leg;
@@ -61,5 +62,15 @@ public class DaoUtil {
 
     public static Gallery getGallery(Integer aId) throws SQLException {
         return Workspace.getCurrentInstance().getDBHelper().getGalleryDao().queryForId(aId);
+    }
+
+    public static List<Leg> getCurrProjectLegs() throws SQLException {
+        QueryBuilder<Leg, Integer> statementBuilder = Workspace.getCurrentInstance().getDBHelper().getLegDao().queryBuilder();
+        statementBuilder.where().eq(Leg.COLUMN_PROJECT_ID, Workspace.getCurrentInstance().getActiveProjectId());
+        statementBuilder.orderBy(Leg.COLUMN_FROM_POINT, true);
+        statementBuilder.orderBy(Leg.COLUMN_TO_POINT, true);
+        statementBuilder.orderBy(Leg.COLUMN_DISTANCE_FROM_START, true);
+
+        return Workspace.getCurrentInstance().getDBHelper().getLegDao().query(statementBuilder.prepare());
     }
 }

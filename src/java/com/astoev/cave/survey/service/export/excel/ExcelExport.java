@@ -86,7 +86,7 @@ public class ExcelExport {
 //            CreationHelper helper = wb.getCreationHelper();
 
             // legs
-            List<Leg> legs = mWorkspace.getCurrProjectLegs();
+            List<Leg> legs = DaoUtil.getCurrProjectLegs();
 
             int rowCounter = 0;
             for (Leg l : legs) {
