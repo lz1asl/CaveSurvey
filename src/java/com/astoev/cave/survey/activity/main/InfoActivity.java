@@ -59,9 +59,9 @@ public class InfoActivity extends MainMenuActivity {
                 }
 
                 // notes
-                List<Note> notes = getWorkspace().getDBHelper().getNoteDao().queryBuilder().where().eq(Note.COLUMN_POINT_ID, l.getFromPoint().getId()).query();
-                if (notes != null && notes.size() >0) {
-                    numNotes += notes.size();
+                Note note = DaoUtil.getActiveLegNote(l);
+                if (note != null) {
+                    numNotes ++;
                 }
 
                 // drawings
