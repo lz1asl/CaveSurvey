@@ -67,9 +67,10 @@ public class DaoUtil {
     public static List<Leg> getCurrProjectLegs() throws SQLException {
         QueryBuilder<Leg, Integer> statementBuilder = Workspace.getCurrentInstance().getDBHelper().getLegDao().queryBuilder();
         statementBuilder.where().eq(Leg.COLUMN_PROJECT_ID, Workspace.getCurrentInstance().getActiveProjectId());
+        statementBuilder.orderBy(Leg.COLUMN_GALLERY_ID, true);
         statementBuilder.orderBy(Leg.COLUMN_FROM_POINT, true);
         statementBuilder.orderBy(Leg.COLUMN_TO_POINT, true);
-        statementBuilder.orderBy(Leg.COLUMN_DISTANCE_FROM_START, true);
+//        statementBuilder.orderBy(Leg.COLUMN_DISTANCE_FROM_START, true);
 
         return Workspace.getCurrentInstance().getDBHelper().getLegDao().query(statementBuilder.prepare());
     }
