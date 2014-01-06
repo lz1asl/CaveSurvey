@@ -95,6 +95,7 @@ public class Workspace {
         try {
             return DaoUtil.getGallery(id);
         } catch (SQLException e) {
+            Log.e(Constants.LOG_TAG_SERVICE, "Failet to get active gallery", e);
             return null;
         }
     }
@@ -145,13 +146,18 @@ public class Workspace {
         return null;
     }
 
-    public Leg getLastLeg() throws SQLException {
-        int currProjectId = getActiveProjectId();
-        Log.i(Constants.LOG_TAG_SERVICE, "Search last leg for project " + currProjectId);
-        QueryBuilder<Leg, Integer> firstLegQuery = mDBHelper.getLegDao().queryBuilder();
-        firstLegQuery.where().eq(Leg.COLUMN_PROJECT_ID, currProjectId);
-        firstLegQuery.orderBy(Leg.COLUMN_FROM_POINT, false);
-        return mDBHelper.getLegDao().queryForFirst(firstLegQuery.prepare());
+    public Leg getLastLeg() {
+        try {
+            int currProjectId = getActiveProjectId();
+            Log.i(Constants.LOG_TAG_SERVICE, "Search last leg for project " + currProjectId);
+            QueryBuilder<Leg, Integer> firstLegQuery = mDBHelper.getLegDao().queryBuilder();
+            firstLegQuery.where().eq(Leg.COLUMN_PROJECT_ID, currProjectId);
+            firstLegQuery.orderBy(Leg.COLUMN_FROM_POINT, false);
+            return mDBHelper.getLegDao().queryForFirst(firstLegQuery.prepare());
+        } catch (Exception e) {
+            Log.e(Constants.LOG_TAG_SERVICE, "Failet to get last leg", e);
+            return null;
+        }
     }
 
     // TODO list need to be sorted, here last id is get, higher number is what we need

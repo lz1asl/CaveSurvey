@@ -61,7 +61,6 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 	private static final String AZIMUTH_DIALOG = "azimuth_dialog";
 	
     private String mNewNote = null;
-    private boolean mNewGallery = false;
 
     private String currentPhotoPath;
     
@@ -75,7 +74,6 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.point);
         mNewNote = null;
-        mNewGallery = getIntent().getBooleanExtra(Constants.GALLERY_NEW, false);
 
         if (Option.CODE_SENSOR_INTERNAL.equals(Options.getOptionValue(Option.CODE_AZIMUTH_SENSOR))){
         	Log.i(Constants.LOG_TAG_UI, "Will register onClickListener for Azimuth");
@@ -286,7 +284,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 
                         	Leg legEdited = getCurrentLeg();
 
-                            if (mNewGallery) {
+                            if (getIntent().getBooleanExtra(Constants.GALLERY_NEW, false)) {
                                 Gallery newGallery = DaoUtil.createGallery(false);
                                 legEdited.setGalleryId(newGallery.getId());
                             }
@@ -688,8 +686,17 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                 Integer currGalleryId = getWorkspace().getActiveGalleryId();
 
                 // another leg, starting from the latest in the gallery
-                Point newFrom = getWorkspace().getLastGalleryPoint(currGalleryId);
-                Point newTo = PointUtil.generateNextPoint(currGalleryId);
+                boolean newGalleryFlag = extras.getBoolean(Constants.GALLERY_NEW, false);
+                Point newFrom, newTo;
+                if (newGalleryFlag) {
+                    newFrom = getWorkspace().getActiveLeg().getFromPoint();
+                    newTo = PointUtil.createSecondPoint();
+                } else {
+                    newFrom = getWorkspace().getLastGalleryPoint(currGalleryId);
+                    newTo = PointUtil.generateNextPoint(currGalleryId);
+                }
+
+
 
                 Log.i(Constants.LOG_TAG_UI, "PointView for new point");
                 currentLeg = new Leg(newFrom, newTo, getWorkspace().getActiveProject(), currGalleryId);

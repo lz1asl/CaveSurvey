@@ -1,6 +1,7 @@
 package com.astoev.cave.survey.model;
 
 import com.astoev.cave.survey.service.Workspace;
+import com.astoev.cave.survey.util.DaoUtil;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.stmt.QueryBuilder;
@@ -77,20 +78,15 @@ public class Gallery implements Serializable {
 
     // A -> B ... -> Z -> AA -> AB etc for next galleries
     public static String generateNextGalleryName(Integer aProjectId) throws SQLException {
-        Dao<Gallery, Integer> galleryDao = Workspace.getCurrentInstance().getDBHelper().getGalleryDao();
-
-        QueryBuilder<Gallery, Integer> query = galleryDao.queryBuilder();
-                query.where().eq(COLUMN_PROJECT_ID, aProjectId);
-                        query.orderBy(COLUMN_ID, false);
-        Gallery lastGallery = query.queryForFirst();
+        Gallery lastGallery = DaoUtil.getLastGallery(aProjectId);
         
         return nextName( lastGallery.getName());
     }
 
     public static String nextName(String s) {
         if (getFirstGalleryName().equals(s)) {
-            // start with A
-            return String.valueOf(GALLERY_LETTERS[0]);
+            // start with A->B
+            return String.valueOf(GALLERY_LETTERS[1]);
         } else {
             // try to push A up to Z for each position
             for (int i = s.length()-1; i>=0; i--) {

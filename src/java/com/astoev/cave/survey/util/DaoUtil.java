@@ -14,6 +14,7 @@ import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.model.Sketch;
 import com.astoev.cave.survey.service.Workspace;
+import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
 
 /**
@@ -90,5 +91,12 @@ public class DaoUtil {
         gallery.setProject(currProject);
         Workspace.getCurrentInstance().getDBHelper().getGalleryDao().create(gallery);
         return gallery;
+    }
+
+    public static Gallery getLastGallery(Integer aProjectId) throws SQLException {
+        QueryBuilder<Gallery, Integer> query = Workspace.getCurrentInstance().getDBHelper().getGalleryDao().queryBuilder();
+        query.where().eq(Gallery.COLUMN_PROJECT_ID, aProjectId);
+        query.orderBy(Gallery.COLUMN_ID, false);
+        return query.queryForFirst();
     }
 }
