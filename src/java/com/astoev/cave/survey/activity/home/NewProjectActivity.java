@@ -105,6 +105,7 @@ public class NewProjectActivity extends MainMenuActivity {
 
                             // gallery
                             Gallery firstGallery = DaoUtil.createGallery(true);
+                            getWorkspace().setActiveGallery(firstGallery);
 
                             // points
                             Point startPoint = PointUtil.createFirstPoint();
