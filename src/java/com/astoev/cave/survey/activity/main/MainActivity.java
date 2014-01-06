@@ -74,6 +74,11 @@ public class MainActivity extends MainMenuActivity {
                 getWorkspace().setActiveLeg(activeLeg);
             }
 
+            Integer currGalleryId = getWorkspace().getActiveGalleryId();
+            if (currGalleryId == null) {
+                getWorkspace().setActiveGalleryId(activeLeg.getGalleryId());
+            }
+
             mGalleryColors = new SparseIntArray();
             mGalleryNames = new SparseArray<String>();
 
@@ -384,7 +389,8 @@ public class MainActivity extends MainMenuActivity {
 //        if (newLegId != null) {
 //            getWorkspace().setActiveLegId(newLegId);
             Intent intent = new Intent(MainActivity.this, PointActivity.class);
-            intent.putExtra(Constants.GALLERY_NEW, true);
+            intent.putExtra(Constants.GALLERY_NEW, isDeviation);
+
             startActivity(intent);
 //        } else {
 //            UIUtilities.showNotification(this, R.string.error);

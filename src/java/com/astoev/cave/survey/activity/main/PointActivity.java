@@ -32,6 +32,7 @@ import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.service.Workspace;
 import com.astoev.cave.survey.service.azimuth.AzimuthChangedListener;
 import com.astoev.cave.survey.service.bluetooth.BluetoothService;
+import com.astoev.cave.survey.util.ConfigUtil;
 import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.util.FileStorageUtil;
 import com.astoev.cave.survey.util.PointUtil;
@@ -113,9 +114,8 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 	@Override
 	protected String getScreenTitle() {
         try {
-        	Leg workingLeg = getCurrentLeg();
 			StringBuilder builder = new StringBuilder(getString(R.string.leg));
-			builder.append(workingLeg.buildLegDescription(true));
+			builder.append(getCurrentLeg().buildLegDescription(true));
 			
 			return builder.toString();
 		} catch (SQLException e) {
@@ -221,23 +221,23 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                     }
                     break;
             }
-        }
 
-        Log.i(Constants.LOG_TAG_UI, "Add BT listener");
-        // supported for the measure, add the listener
-        text.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    Log.i(Constants.LOG_TAG_UI, "Send read command");
-                    receiver.expectsMeasure(aMeasure);
-                    triggerBluetoothMeasure(aMeasure);
-                } else {
-                    receiver.ignore(aMeasure);
+            Log.i(Constants.LOG_TAG_UI, "Add BT listener");
+            // supported for the measure, add the listener
+            text.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if (hasFocus) {
+                        Log.i(Constants.LOG_TAG_UI, "Send read command");
+                        receiver.expectsMeasure(aMeasure);
+                        triggerBluetoothMeasure(aMeasure);
+                    } else {
+                        receiver.ignore(aMeasure);
+                    }
+
                 }
-
-            }
-        });
+            });
+        }
     }
 
     private void setNotNull(EditText aEditText, Float aValue) {
@@ -676,19 +676,23 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
             try {
 				if (extras != null) {
 				    int currentLegSelectedId = extras.getInt(Constants.LEG_SELECTED);
-				    currentLeg = DaoUtil.getLeg(currentLegSelectedId);
-				    Log.i(Constants.LOG_TAG_UI, "PointView for leg with id: " + currentLegSelectedId);
-				} else {
-					Log.i(Constants.LOG_TAG_UI, "Create new leg");
-				    Leg activeLeg = DaoUtil.getLeg(getWorkspace().getActiveLegId());
 
-				    // another leg, starting from the latest in the gallery
-				    Point newFrom = getWorkspace().getLastGalleryPoint(activeLeg.getGalleryId());
-				    Point newTo = PointUtil.generateNextPoint(activeLeg.getGalleryId());
-
-				    currentLeg = new Leg(newFrom, newTo, getWorkspace().getActiveProject(), activeLeg.getGalleryId());
-				    Log.i(Constants.LOG_TAG_UI, "PointView for new point");
+                    if (currentLegSelectedId > 0) {
+				        currentLeg = DaoUtil.getLeg(currentLegSelectedId);
+				        Log.i(Constants.LOG_TAG_UI, "PointView for leg with id: " + currentLegSelectedId);
+                        return currentLeg;
+                    }
 				}
+
+                Log.i(Constants.LOG_TAG_UI, "Create new leg");
+                Integer currGalleryId = getWorkspace().getActiveGalleryId();
+
+                // another leg, starting from the latest in the gallery
+                Point newFrom = getWorkspace().getLastGalleryPoint(currGalleryId);
+                Point newTo = PointUtil.generateNextPoint(currGalleryId);
+
+                Log.i(Constants.LOG_TAG_UI, "PointView for new point");
+                currentLeg = new Leg(newFrom, newTo, getWorkspace().getActiveProject(), currGalleryId);
 			} catch (SQLException sqle) {
 				throw new RuntimeException(sqle);
 			}

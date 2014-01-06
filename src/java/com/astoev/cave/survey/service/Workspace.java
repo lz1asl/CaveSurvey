@@ -81,6 +81,10 @@ public class Workspace {
         ConfigUtil.setIntProperty(ConfigUtil.PROP_CURR_GALLERY, aGallery.getId());
     }
 
+    public void setActiveGalleryId(Integer aGalleryId) {
+        ConfigUtil.setIntProperty(ConfigUtil.PROP_CURR_GALLERY, aGalleryId);
+    }
+
     public Gallery getActiveGallery() {
         Integer id = getActiveGalleryId();
 
