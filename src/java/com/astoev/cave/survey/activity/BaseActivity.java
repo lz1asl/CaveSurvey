@@ -6,6 +6,7 @@ import android.util.Log;
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.service.Workspace;
+import com.astoev.cave.survey.util.ConfigUtil;
 
 /**
  * Created by IntelliJ IDEA.
@@ -19,7 +20,6 @@ public abstract class BaseActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.i(Constants.LOG_TAG_UI, "Creating activity " + this.getClass().getName());
-
         super.onCreate(savedInstanceState);
     }
 
@@ -29,6 +29,7 @@ public abstract class BaseActivity extends ActionBarActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+        ConfigUtil.setContext(this);
 		
 		// set desired screen title as requested by the child implementation
         String screenTitle = getScreenTitle();

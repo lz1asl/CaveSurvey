@@ -35,7 +35,6 @@ public class HomeActivity extends MainMenuActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home);
-        ConfigUtil.setContext(this);
     }
     
     @Override
