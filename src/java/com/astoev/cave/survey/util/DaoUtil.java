@@ -99,4 +99,11 @@ public class DaoUtil {
         query.orderBy(Gallery.COLUMN_ID, false);
         return query.queryForFirst();
     }
+
+    public static Leg getLegByToPoint(Point aToPoint) throws SQLException {
+        // TODO this will work as soon as we keep a tree of legs. Once we start closing circles will break
+        QueryBuilder<Leg, Integer> query = Workspace.getCurrentInstance().getDBHelper().getLegDao().queryBuilder();
+        query.where().eq(Leg.COLUMN_TO_POINT, aToPoint.getId());
+        return query.queryForFirst();
+    }
 }

@@ -22,7 +22,6 @@
 	<LinearLayout android:layout_width="fill_parent" 
 	    		  android:layout_height="wrap_content"
 	    		  android:layout_marginLeft="5dp">
-        <TextView                                                                           android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:gravity="center_horizontal" android:ellipsize="end" android:singleLine="true"/>
 		<TextView android:text="@string/main_table_header_from" android:layout_margin="5dp" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:gravity="center_horizontal" android:ellipsize="end" android:singleLine="true"/>
 		<TextView android:text="@string/main_table_header_to"   android:layout_margin="5dp" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:gravity="center_horizontal" android:ellipsize="end" android:singleLine="true"/>
 		<TextView android:text="@string/distance"               android:layout_margin="5dp" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:gravity="center_horizontal" android:ellipsize="end" android:singleLine="true"/>

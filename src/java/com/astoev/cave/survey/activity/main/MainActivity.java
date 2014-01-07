@@ -95,6 +95,8 @@ public class MainActivity extends MainMenuActivity {
             List<Leg> legs = DaoUtil.getCurrProjectLegs();
 
             boolean currentLeg;
+            Integer lastGalleryId = null, prevGalleryId;
+
             for (final Leg l : legs) {
                 TableRow row = new TableRow(this);
                 LayoutParams params = new TableLayout.LayoutParams(0, LayoutParams.WRAP_CONTENT, 1);
@@ -114,28 +116,41 @@ public class MainActivity extends MainMenuActivity {
                     row.setBackgroundColor(Color.GRAY);
                 }
 
-                Point fromPoint = l.getFromPoint();
-                DaoUtil.refreshPoint(fromPoint);
-                String fromPointString = fromPoint.getName();
-                
-                Point toPoint = l.getToPoint();
-                DaoUtil.refreshPoint(toPoint);
-                String toPointString = toPoint.getName();
-                
-                if (isDebug){
-                	fromPointString = fromPointString +"(" + fromPoint.getId() + ")";
-                	toPointString = toPointString + "("+toPoint.getId()+")";
-                }
-
                 if (mGalleryColors.get(l.getGalleryId(), Constants.NOT_FOUND) == Constants.NOT_FOUND) {
                     Gallery gallery = DaoUtil.getGallery(l.getGalleryId());
                     mGalleryColors.put(l.getGalleryId(), MapUtilities.getNextGalleryColor(mGalleryColors.size()));
                     mGalleryNames.put(l.getGalleryId(), gallery.getName());
                 }
 
-                row.addView(createTextView(mGalleryNames.get(l.getGalleryId()), currentLeg, false, mGalleryColors.get(l.getGalleryId())));
-                row.addView(createTextView(fromPointString, currentLeg, false));
-                row.addView(createTextView(toPointString, currentLeg, false));
+                Point fromPoint = l.getFromPoint();
+                DaoUtil.refreshPoint(fromPoint);
+                String fromPointString = fromPoint.getName();
+                if (lastGalleryId == null) {
+                    lastGalleryId = l.getGalleryId();
+                }
+
+                if (l.getGalleryId().equals(lastGalleryId)) {
+                    fromPointString =  mGalleryNames.get(l.getGalleryId()) + fromPointString;
+                    prevGalleryId = l.getGalleryId();
+                } else {
+                    prevGalleryId = DaoUtil.getLegByToPoint(l.getFromPoint()).getGalleryId();
+                    fromPointString =  mGalleryNames.get(prevGalleryId) + fromPointString;
+                }
+
+                
+                Point toPoint = l.getToPoint();
+                DaoUtil.refreshPoint(toPoint);
+                String toPointString = mGalleryNames.get(l.getGalleryId()) + toPoint.getName();
+
+                lastGalleryId = l.getGalleryId();
+                
+                if (isDebug){
+                	fromPointString = fromPointString +"(" + fromPoint.getId() + ")";
+                	toPointString = toPointString + "("+toPoint.getId()+")";
+                }
+
+                row.addView(createTextView(fromPointString, currentLeg, false, mGalleryColors.get(prevGalleryId)));
+                row.addView(createTextView(toPointString, currentLeg, false, mGalleryColors.get(l.getGalleryId())));
                 row.addView(createTextView(l.getDistance(), currentLeg, true));
                 row.addView(createTextView(l.getAzimuth(), currentLeg, true));
                 row.addView(createTextView(l.getSlope(), currentLeg, true));
