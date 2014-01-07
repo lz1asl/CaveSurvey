@@ -1,0 +1,73 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_height="fill_parent" 
+              android:layout_width="fill_parent" 
+              android:orientation="vertical">
+
+    <!-- Orientation sensor -->
+    <LinearLayout android:layout_height="wrap_content" 
+              android:layout_width="fill_parent" 
+              android:orientation="horizontal"
+              android:layout_margin="10dp">
+        <TextView android:layout_height="wrap_content" 
+                  android:layout_width="0dp"
+                  android:layout_weight="1"
+                  android:text="@string/azimuth_orination"/>
+        <TextView android:id="@+id/azimuth_orientation"
+                  android:layout_height="wrap_content" 
+                  android:layout_width="0dp"
+                  android:layout_weight="1"
+                  android:text="@string/azimuth_no_value"/>
+    </LinearLayout>
+    
+    <!-- Magnetic sensor -->
+    <LinearLayout android:layout_height="wrap_content" 
+              android:layout_width="fill_parent" 
+              android:orientation="horizontal"
+              android:layout_margin="10dp">
+        <TextView android:layout_height="wrap_content" 
+                  android:layout_width="0dp"
+                  android:layout_weight="1"
+                  android:text="@string/azimuth_magnetic"/>
+        <TextView android:id="@+id/azimuth_magnetic"
+                  android:layout_height="wrap_content" 
+                  android:layout_width="0dp"
+                  android:layout_weight="1"
+                  android:text="@string/azimuth_no_value"/>
+    </LinearLayout>
+    
+    <!-- Rotation sensor -->
+    <LinearLayout android:layout_height="wrap_content" 
+              android:layout_width="fill_parent" 
+              android:orientation="horizontal"
+              android:layout_margin="10dp">
+        <TextView android:layout_height="wrap_content" 
+                  android:layout_width="0dp"
+                  android:layout_weight="1"
+                  android:text="@string/azimuth_rotation"/>
+        <TextView android:id="@+id/azimuth_rotation"
+                  android:layout_height="wrap_content" 
+                  android:layout_width="0dp"
+                  android:layout_weight="1"
+                  android:text="@string/azimuth_no_value"/>
+    </LinearLayout>
+    <LinearLayout android:layout_height="wrap_content" 
+              android:layout_width="fill_parent" 
+              android:orientation="horizontal"
+              android:layout_margin="10dp">
+        <Button android:id="@+id/azimuth_btn_start"
+                android:layout_height="wrap_content" 
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:text="@string/azimuth_start"
+                android:onClick="onStart"
+                android:enabled="false"/>
+        <Button android:id="@+id/azimuth_btn_stop" 
+                android:layout_height="wrap_content" 
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:text="@string/azimuth_stop"
+                android:onClick="onStop"
+                android:enabled="false"/>
+    </LinearLayout>
+    
+</LinearLayout>              
