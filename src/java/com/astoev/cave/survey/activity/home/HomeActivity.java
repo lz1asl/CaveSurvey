@@ -16,6 +16,7 @@ import com.astoev.cave.survey.activity.MainMenuActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.activity.main.BTActivity;
 import com.astoev.cave.survey.activity.main.MainActivity;
+import com.astoev.cave.survey.activity.poc.AzimuthTestActivity;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.util.ConfigUtil;

@@ -205,5 +205,11 @@
     <string name="action_deleted">Deleted</string>
     
     <string name="azimuth_no_value">No value</string>
+    <string name="azimuth_orination">Orientation:</string>
+    <string name="azimuth_magnetic">Magnetic:</string>
+    <string name="azimuth_rotation">Rotation:</string>
+    <string name="azimuth_start">Start</string>
+    <string name="azimuth_stop">Stop</string>
+    <string name="azimuth_test_title">Azimuth Test</string>
 
 </resources>

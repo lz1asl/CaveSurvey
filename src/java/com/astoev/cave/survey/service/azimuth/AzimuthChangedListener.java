@@ -4,7 +4,7 @@
 package com.astoev.cave.survey.service.azimuth;
 
 /**
- * Notifies a top level listener to notify when an azimuth is changed
+ * Notifies a top level listener when an azimuth is changed
  * 
  * @author jmitrev
  *

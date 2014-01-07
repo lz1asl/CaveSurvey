@@ -8,7 +8,7 @@ import java.lang.ref.WeakReference;
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.service.azimuth.AzimuthChangedListener;
-import com.astoev.cave.survey.service.azimuth.AzimuthProcessor;
+import com.astoev.cave.survey.service.azimuth.MagneticAzimuthProcessor;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -47,7 +47,7 @@ public class AzimuthDialog extends DialogFragment implements AzimuthChangedListe
 	 private ProgressHandler progressHandler;
 	 
 	 /** AzimuthProcessor that handles the work with the sensors*/
-	 private AzimuthProcessor azimuthProcessor;
+	 private MagneticAzimuthProcessor azimuthProcessor;
 	 
 	/**
 	 * @see android.support.v4.app.DialogFragment#onCreateDialog(android.os.Bundle)
@@ -84,7 +84,7 @@ public class AzimuthDialog extends DialogFragment implements AzimuthChangedListe
 		AlertDialog alertDialg = builder.create();
 		
 		// create azimuth processor to handle the azimuth sensors and value changes
-		azimuthProcessor = new AzimuthProcessor(getActivity(), this);
+		azimuthProcessor = new MagneticAzimuthProcessor(getActivity(), this);
 		azimuthProcessor.startListening();
 		
 		// create a handler and a thread that will drive the progress bar

@@ -13,5 +13,10 @@
 	      android:title="@string/bt_devices"
 	      android:visible="true"
 	      myapp:showAsAction="ifRoom|withText"/>
+	
+    <item android:id="@+id/action_azimuth_test"
+          android:title="@string/azimuth_test_title"
+          android:visible="true"
+          myapp:showAsAction="never"/>
     
 </menu>

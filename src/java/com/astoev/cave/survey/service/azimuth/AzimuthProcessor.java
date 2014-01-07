@@ -3,36 +3,35 @@
  */
 package com.astoev.cave.survey.service.azimuth;
 
-import com.astoev.cave.survey.Constants;
-
 import android.content.Context;
 import android.hardware.Sensor;
-import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.Log;
 
+import com.astoev.cave.survey.Constants;
+
 /**
- * Azimuth processor wraps the work with azimuth sensors
+ * Abstract Azimuth processor defines the base interface for working with all azimuth processors and sensors.
  * 
  * @author jmitrev
+ *
  */
-public class AzimuthProcessor implements SensorEventListener {
-
-	/** Listener to notify on value change*/
-	private AzimuthChangedListener listener;
+public abstract class AzimuthProcessor implements SensorEventListener {
+	
+    protected final static float RAD2GRAD = (float)(180.0f/Math.PI);
+    
+    /** Default sensor delay */
+    protected final static int SENSOR_DELAY = SensorManager.SENSOR_DELAY_UI;
 	
 	/** Sensor manager*/
-    private SensorManager sensorManager;
+    protected SensorManager sensorManager;
     
-    /** Compass sensor to use */
-    private Sensor compassSensor;
+    protected Context context;
 
-    private Context context;
-    
-    /** Last read value from the sensor*/
-    private float lastValue;
-    
+	/** Listener to notify on value change*/
+	protected AzimuthChangedListener listener;
+	
     /**
      * Constructor for AzimuthProcessor
      * 
@@ -45,53 +44,40 @@ public class AzimuthProcessor implements SensorEventListener {
     	if (listenerArg == null){
     		Log.w(Constants.LOG_TAG_SERVICE, "AzimuthChangedListener is not specified");
     	}
+    	
+    	sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
     }
+    
+    /**
+     * Returns the current sensor
+     * 
+     * @return Sensor
+     */
+    public abstract Sensor getSensor();
 
-	/**
-	 * @see android.hardware.SensorEventListener#onAccuracyChanged(android.hardware.Sensor, int)
-	 */
-	@Override
-	public void onAccuracyChanged(Sensor sensor, int accuracy) {
-	}
-
-	/**
-	 * @see android.hardware.SensorEventListener#onSensorChanged(android.hardware.SensorEvent)
-	 */
-	@Override
-	public void onSensorChanged(SensorEvent event) {
-		lastValue = event.values[0];
-		if (listener != null){
-			listener.onAzimuthChanged(lastValue);
-		}
-	}
+    /**
+     * Starts the sensor listeners
+     */
+	public abstract void startListening();
 	
 	/**
-	 * Obtains a sensor and starts the listener
+	 * Stops the sensor listeners
 	 */
-	public void startListening(){
-        if (sensorManager == null) {
-            sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
-            compassSensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-        }
-        sensorManager.registerListener(this, compassSensor, SensorManager.SENSOR_DELAY_FASTEST);
-	}
+	public abstract void stopListening();
 	
 	/**
-	 * Stops the sensor listener
-	 */
-	public void stopListening(){
-		if (sensorManager != null){
-			sensorManager.unregisterListener(this, compassSensor);
-		}
-	}
-
-	/**
-	 * Getter for the last successfully read vale from the sensor
+	 * Returns the last available value
 	 * 
-	 * @return the lastValue
+	 * @return last read value
 	 */
-	public float getLastValue() {
-		return lastValue;
+	public abstract float getLastValue();
+	
+	/**
+	 * Helper method that shows if the this processor can be read. 
+	 * 
+	 * @return true if the underlying sensor is available, otherwise false 
+	 */
+	public boolean canReadAzimuth(){
+		return (getSensor() != null);
 	}
-
 }
