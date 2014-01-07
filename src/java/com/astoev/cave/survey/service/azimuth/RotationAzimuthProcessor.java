@@ -54,7 +54,10 @@ public class RotationAzimuthProcessor extends AzimuthProcessor {
 		
 		if (isApiAvailable()){
 			processSafeData();
-			lastValue = oData[0] * RAD2GRAD;
+			
+//			lastValue = oData[0] * RAD2GRAD;
+			lastValue = oData[0] < 0 ? oData[0] * RAD2GRAD + 360 : oData[0] * RAD2GRAD;
+			
 			if (listener != null){
 				listener.onAzimuthChanged(lastValue);
 			}

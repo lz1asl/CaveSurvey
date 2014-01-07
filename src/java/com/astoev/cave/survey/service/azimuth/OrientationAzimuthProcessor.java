@@ -45,8 +45,10 @@ public class OrientationAzimuthProcessor extends AzimuthProcessor {
 	@Override
 	public void onSensorChanged(SensorEvent event) {
 		float[] data = event.values;
-		lastValue = data[0];
-		listener.onAzimuthChanged(lastValue) ;
+		
+		lastValue = data[0] < 0 ? data[0] + 360 : data[0];
+		
+		listener.onAzimuthChanged(lastValue);
 	}
 
 	/**

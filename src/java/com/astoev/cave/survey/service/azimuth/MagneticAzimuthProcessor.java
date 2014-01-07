@@ -72,7 +72,10 @@ public class MagneticAzimuthProcessor extends AzimuthProcessor {
 		boolean success = SensorManager.getRotationMatrix(R, I, aData, mData);
 		if (success){
 			SensorManager.getOrientation(R, oData);
-			lastValue = oData[0] * RAD2GRAD;
+//			lastValue = oData[0] * RAD2GRAD;
+			
+			lastValue = oData[0] < 0 ? oData[0] * RAD2GRAD + 360 : oData[0] * RAD2GRAD;
+			
 			listener.onAzimuthChanged(lastValue);
 		}
 	}
