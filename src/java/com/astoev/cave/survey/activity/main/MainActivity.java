@@ -446,6 +446,7 @@ public class MainActivity extends MainMenuActivity {
 
                     Log.i(Constants.LOG_TAG_UI, "Selected leg " + legs.get(item));
                     getWorkspace().setActiveLegId(legs.get(item).getId());
+                    getWorkspace().setActiveGalleryId(legs.get(item).getGalleryId());
 
                     Intent intent = new Intent(MainActivity.this, MainActivity.class);
                     startActivity(intent);
