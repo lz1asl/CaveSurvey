@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import com.astoev.cave.survey.Constants;
-import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.service.Workspace;
 
 /**
@@ -47,12 +46,6 @@ public abstract class BaseActivity extends ActionBarActivity {
      * @return String title
      */
     protected String getScreenTitle(){
-    	
-    	// set the name of the chosen project as title in the action bar
-        Project activeProject = getWorkspace().getActiveProject();
-        if (activeProject != null){
-        	return activeProject.getName();
-        }
         return null;
     }
 
