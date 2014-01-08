@@ -3,11 +3,16 @@
  */
 package com.astoev.cave.survey.service.azimuth;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Build;
 import android.util.Log;
+import android.view.Display;
+import android.view.Surface;
+import android.view.WindowManager;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
@@ -35,6 +40,9 @@ public abstract class AzimuthProcessor implements SensorEventListener {
 	
 	/** Sensor's accuracy */
 	protected int accuracy;
+	
+	/** Rotation of the screen */
+	private int rotation = Surface.ROTATION_0;
 	
     /**
      * Constructor for AzimuthProcessor
@@ -117,4 +125,67 @@ public abstract class AzimuthProcessor implements SensorEventListener {
 	public boolean canReadAzimuth(){
 		return (getSensor() != null);
 	}
+	
+	/**
+	 * Helper method to get the rotation
+	 * 
+	 * @return rotation
+	 */
+	protected int getRotation(){
+    	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO){
+    		rotation = getSafeRotation();
+    	}
+    	return rotation;
+	}
+	
+	/**
+	 * Safely get rotation for api 8+
+	 * 
+	 * @return rotation
+	 */
+    @TargetApi(Build.VERSION_CODES.FROYO)
+    private int getSafeRotation(){
+		WindowManager windowManager = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
+		
+		if (windowManager != null){
+			Display display = windowManager.getDefaultDisplay();
+			int rotation = display.getRotation();
+		
+			return rotation;
+		}
+		
+		return Surface.ROTATION_0;
+    }
+    
+    /**
+     * Re maps the coordinate system according the screen orientation
+     * 
+     * @param inRArg      - in rotation matrix
+     * @param rotationArg - rotation
+     * @return result rotation matrix if the remaping is correct, otherwise null
+     */
+    protected float[] remapCoordinateSystem(float[] inRArg, int rotationArg){
+    	float[] outR = new float[9];
+    	boolean success = false;
+    	switch (rotationArg) {
+    	case Surface.ROTATION_0:
+    		success = true;
+    		outR = inRArg;
+		case Surface.ROTATION_90:
+			success =  SensorManager.remapCoordinateSystem(inRArg, SensorManager.AXIS_Y, SensorManager.AXIS_MINUS_X, outR);
+			break;
+		case Surface.ROTATION_180:
+			success = SensorManager.remapCoordinateSystem(inRArg, SensorManager.AXIS_MINUS_X, SensorManager.AXIS_MINUS_Y, outR); 
+			break;
+		case Surface.ROTATION_270:
+			success = SensorManager.remapCoordinateSystem(inRArg, SensorManager.AXIS_MINUS_Y, SensorManager.AXIS_X, outR);
+			break;
+		}
+    	
+    	if (success){
+    		return outR;
+    	} else {
+    		return null;
+    	}
+    }
 }

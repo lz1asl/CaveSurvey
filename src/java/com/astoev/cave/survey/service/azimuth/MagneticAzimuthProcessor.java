@@ -7,6 +7,7 @@ import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
+import android.view.Surface;
 
 /**
  * Azimuth processor that works with magnetic and accelerometer sensors
@@ -27,8 +28,10 @@ public class MagneticAzimuthProcessor extends AzimuthProcessor {
     private int magneticAccuracy;
     private int accelerometerAccuracy;
     
-    private float[] R = new float[16];
+    private float[] R = new float[9];
     private float[] I = new float[16];
+//    private float[] R = new float[16];
+//    private float[] I = new float[16];
     private float aData[] = new float[3];
     private float mData[] = new float[3];
     private float oData[] = new float[3];
@@ -85,14 +88,20 @@ public class MagneticAzimuthProcessor extends AzimuthProcessor {
 		default:
 			break;
 		}
+		
+		int rotation = getRotation();
+		
 		boolean success = SensorManager.getRotationMatrix(R, I, aData, mData);
 		if (success){
-			SensorManager.getOrientation(R, oData);
-//			lastValue = oData[0] * RAD2GRAD;
-			
-			lastValue = oData[0] < 0 ? oData[0] * RAD2GRAD + 360 : oData[0] * RAD2GRAD;
-			
-			listener.onAzimuthChanged(lastValue/*, getAccuracy()*/);
+			R = (rotation != Surface.ROTATION_0) ? remapCoordinateSystem(R, rotation): R;
+			if (R != null){
+				SensorManager.getOrientation(R, oData);
+				
+				lastValue = oData[0] < 0 ? oData[0] * RAD2GRAD + 360 : oData[0] * RAD2GRAD;
+				if (listener != null){
+					listener.onAzimuthChanged(lastValue);
+				}
+			}
 		}
 	}
 	
