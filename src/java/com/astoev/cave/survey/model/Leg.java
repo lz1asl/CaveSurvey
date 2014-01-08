@@ -106,8 +106,17 @@ public class Leg implements Serializable {
         }
         
         StringBuilder builder = new StringBuilder(StringUtils.SPACE);
-        Gallery g = DaoUtil.getGallery(mGalleryId);
-        builder.append(g.getName());
+        Gallery legGallery = DaoUtil.getGallery(mGalleryId);
+        Leg prevLeg = DaoUtil.getLegByToPoint(mFromPoint);
+        Integer prevLegGalleryId = legGallery.getId();
+        if (prevLeg != null) {
+            prevLegGalleryId = prevLeg.getGalleryId();
+        }
+        if (mGalleryId.equals(prevLegGalleryId)) {
+            builder.append(legGallery.getName());
+        } else {
+            builder.append(DaoUtil.getGallery(prevLegGalleryId).getName());
+        }
         builder.append(startPoint.getName());
         if (!shortArg){
         	builder.append(StringUtils.SPACE);
@@ -116,7 +125,7 @@ public class Leg implements Serializable {
         if (!shortArg){
         	builder.append(StringUtils.SPACE);
         }
-        builder.append(g.getName());
+        builder.append(legGallery.getName());
         builder.append(endPoint.getName());
         return builder.toString();
     }
