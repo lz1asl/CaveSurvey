@@ -39,13 +39,6 @@ public class RotationAzimuthProcessor extends AzimuthProcessor {
     }
     
 	/**
-	 * @see android.hardware.SensorEventListener#onAccuracyChanged(android.hardware.Sensor, int)
-	 */
-	@Override
-	public void onAccuracyChanged(Sensor sensor, int accuracy) {
-	}
-
-	/**
 	 * @see android.hardware.SensorEventListener#onSensorChanged(android.hardware.SensorEvent)
 	 */
 	@Override
@@ -59,7 +52,7 @@ public class RotationAzimuthProcessor extends AzimuthProcessor {
 			lastValue = oData[0] < 0 ? oData[0] * RAD2GRAD + 360 : oData[0] * RAD2GRAD;
 			
 			if (listener != null){
-				listener.onAzimuthChanged(lastValue);
+				listener.onAzimuthChanged(lastValue, accuracy);
 			}
 		}
 	}

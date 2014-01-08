@@ -32,14 +32,6 @@ public class OrientationAzimuthProcessor extends AzimuthProcessor {
     }
     
 	/**
-	 * @see android.hardware.SensorEventListener#onAccuracyChanged(android.hardware.Sensor, int)
-	 */
-	@Override
-	public void onAccuracyChanged(Sensor sensor, int accuracy) {
-		// TODO Auto-generated method stub
-	}
-
-	/**
 	 * @see android.hardware.SensorEventListener#onSensorChanged(android.hardware.SensorEvent)
 	 */
 	@Override
@@ -48,7 +40,7 @@ public class OrientationAzimuthProcessor extends AzimuthProcessor {
 		
 		lastValue = data[0] < 0 ? data[0] + 360 : data[0];
 		
-		listener.onAzimuthChanged(lastValue);
+		listener.onAzimuthChanged(lastValue, accuracy);
 	}
 
 	/**

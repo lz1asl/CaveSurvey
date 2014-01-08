@@ -3,6 +3,8 @@
  */
 package com.astoev.cave.survey.activity.poc;
 
+import java.text.DecimalFormat;
+
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -26,12 +28,18 @@ public class AzimuthTestActivity extends MainMenuActivity {
 	private TextView magneticView;
 	private TextView rotationView;
 	
+	private TextView orientationAccuracyView;
+	private TextView magneticAccuracyView;
+	private TextView rotationAccuracyView;
+	
 	private Button startButton;
 	private Button stopButton;
 	
 	private OrientationAzimuthProcessor orientationAzimuthProcessor;
 	private MagneticAzimuthProcessor magneticAzimuthProcessor;
 	private RotationAzimuthProcessor rotationAzimuthProcessor;
+	
+	private DecimalFormat azimuthFormater;
 	
 	/** Flag to show if the listeners are started*/
 	public boolean started = false;
@@ -48,28 +56,37 @@ public class AzimuthTestActivity extends MainMenuActivity {
         magneticView = (TextView)findViewById(R.id.azimuth_magnetic);
         rotationView = (TextView)findViewById(R.id.azimuth_rotation);
         
+        orientationAccuracyView = (TextView)findViewById(R.id.azimuth_orientation_accuracy);
+        magneticAccuracyView = (TextView)findViewById(R.id.azimuth_magnetic_accuracy);
+        rotationAccuracyView = (TextView)findViewById(R.id.azimuth_rotation_accuracy);
+        
         startButton = (Button)findViewById(R.id.azimuth_btn_start);
         stopButton = (Button)findViewById(R.id.azimuth_btn_stop);
+        
+        azimuthFormater = new DecimalFormat("#.#");
         
         orientationAzimuthProcessor = new OrientationAzimuthProcessor(this, new AzimuthChangedListener() {
 			
 			@Override
-			public void onAzimuthChanged(float newValueArg) {
-				orientationView.setText(String.valueOf(newValueArg));
+			public void onAzimuthChanged(float newValueArg, int accuracyArg) {
+				orientationView.setText(azimuthFormater.format(newValueArg));
+				orientationAccuracyView.setText(String.valueOf(accuracyArg));
 			}
 		});
         magneticAzimuthProcessor = new MagneticAzimuthProcessor(this, new AzimuthChangedListener() {
 			
 			@Override
-			public void onAzimuthChanged(float newValueArg) {
-				magneticView.setText(String.valueOf(newValueArg));
+			public void onAzimuthChanged(float newValueArg, int accuracyArg) {
+				magneticView.setText(azimuthFormater.format(newValueArg));
+				magneticAccuracyView.setText(String.valueOf(accuracyArg));
 			}
 		});
         rotationAzimuthProcessor = new RotationAzimuthProcessor(this, new AzimuthChangedListener() {
 			
 			@Override
-			public void onAzimuthChanged(float newValueArg) {
-				rotationView.setText(String.valueOf(newValueArg));
+			public void onAzimuthChanged(float newValueArg, int accuracyArg) {
+				rotationView.setText(azimuthFormater.format(newValueArg));
+				rotationAccuracyView.setText(String.valueOf(accuracyArg));
 			}
 		});
 	}

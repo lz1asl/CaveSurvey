@@ -16,13 +16,16 @@ import android.hardware.SensorManager;
 public class MagneticAzimuthProcessor extends AzimuthProcessor {
 
     /** Compass sensor to use */
-    private Sensor compassSensor;
+    private Sensor magneticSensor;
     
     /** Accelerometer sensor */
     private Sensor accelerometerSensor;
 
     /** Last read value from the sensor*/
     private float lastValue;
+    
+    private int magneticAccuracy;
+    private int accelerometerAccuracy;
     
     private float[] R = new float[16];
     private float[] I = new float[16];
@@ -44,7 +47,17 @@ public class MagneticAzimuthProcessor extends AzimuthProcessor {
 	 * @see android.hardware.SensorEventListener#onAccuracyChanged(android.hardware.Sensor, int)
 	 */
 	@Override
-	public void onAccuracyChanged(Sensor sensor, int accuracy) {
+	public void onAccuracyChanged(Sensor sensorArg, int accuracyArg) {
+		switch (sensorArg.getType()) {
+		case Sensor.TYPE_MAGNETIC_FIELD:
+			magneticAccuracy = accuracyArg;
+			break;
+		case Sensor.TYPE_ACCELEROMETER:
+			accelerometerAccuracy = accuracyArg;
+			break;
+		default:
+			break;
+		}
 	}
 
 	/**
@@ -76,7 +89,7 @@ public class MagneticAzimuthProcessor extends AzimuthProcessor {
 			
 			lastValue = oData[0] < 0 ? oData[0] * RAD2GRAD + 360 : oData[0] * RAD2GRAD;
 			
-			listener.onAzimuthChanged(lastValue);
+			listener.onAzimuthChanged(lastValue, getAccuracy());
 		}
 	}
 	
@@ -87,10 +100,10 @@ public class MagneticAzimuthProcessor extends AzimuthProcessor {
 	public void startListening(){
 
 		if (canReadAzimuth()){
-            compassSensor = getSensorMagnetic();
+            magneticSensor = getSensorMagnetic();
             accelerometerSensor = getSensorAccelerometer();
             
-            sensorManager.registerListener(this, compassSensor, SENSOR_DELAY);
+            sensorManager.registerListener(this, magneticSensor, SENSOR_DELAY);
             sensorManager.registerListener(this, accelerometerSensor, SENSOR_DELAY);
 		}
 	}
@@ -101,8 +114,8 @@ public class MagneticAzimuthProcessor extends AzimuthProcessor {
 	@Override
 	public void stopListening(){
 		if (sensorManager != null){
-			if (compassSensor != null){
-				sensorManager.unregisterListener(this, compassSensor);
+			if (magneticSensor != null){
+				sensorManager.unregisterListener(this, magneticSensor);
 			}
 			if (accelerometerSensor != null){
 				sensorManager.unregisterListener(this, accelerometerSensor);
@@ -145,10 +158,10 @@ public class MagneticAzimuthProcessor extends AzimuthProcessor {
 	 * @return magnetic sensor
 	 */
 	private Sensor getSensorMagnetic(){
-		if (compassSensor == null){
-			compassSensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);	
+		if (magneticSensor == null){
+			magneticSensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);	
 		}
-        return compassSensor;
+        return magneticSensor;
 	}
 	
 	/**
@@ -160,6 +173,23 @@ public class MagneticAzimuthProcessor extends AzimuthProcessor {
 			accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 		}
 		return accelerometerSensor;	
+	}
+
+	/**
+	 * @see com.astoev.cave.survey.service.azimuth.AzimuthProcessor#getAccuracy()
+	 */
+	@Override
+	public int getAccuracy() {
+		return magneticAccuracy * 10 + accelerometerAccuracy;
+	}
+
+	/**
+	 * @see com.astoev.cave.survey.service.azimuth.AzimuthProcessor#getAccuracyAsString(int)
+	 */
+	@Override
+	public String getAccuracyAsString(int accuracyArg) {
+		int accuracy = Math.min(magneticAccuracy, accelerometerAccuracy);
+		return super.getAccuracyAsString(accuracy);
 	}
 
 }

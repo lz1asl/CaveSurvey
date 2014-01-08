@@ -204,7 +204,10 @@
     <string name="action_saved">Saved</string>
     <string name="action_deleted">Deleted</string>
     
+    <string name="azimuth_azimuth">Azimuth:</string>
+    <string name="azimuth_accuracy">Accuracy:</string>
     <string name="azimuth_no_value">No value</string>
+    <string name="azimuth_accuracy_no_value">-1</string>
     <string name="azimuth_orination">Orientation:</string>
     <string name="azimuth_magnetic">Magnetic:</string>
     <string name="azimuth_rotation">Rotation:</string>
@@ -212,4 +215,10 @@
     <string name="azimuth_stop">Stop</string>
     <string name="azimuth_test_title">Azimuth Test</string>
 
+    <string name="SENSOR_STATUS_UNRELIABLE">UNRELIABLE</string>
+    <string name="SENSOR_STATUS_ACCURACY_LOW">LOW</string>
+    <string name="SENSOR_STATUS_ACCURACY_MEDIUM">MEDIUM</string>
+    <string name="SENSOR_STATUS_ACCURACY_HIGH">HIGH</string>
+    <string name="SENSOR_STATUS_ACCURACY_UNKNOWN">UNKNOWN</string>
+    
 </resources>

@@ -65,6 +65,8 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
     private Leg currentLeg = null;
     
     private BTMeasureResultReceiver receiver = new BTMeasureResultReceiver(new Handler());
+    
+    private AzimuthDialog azimuthDialog;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,6 +103,18 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
     }
     
     /**
+	 * @see android.support.v4.app.FragmentActivity#onPause()
+	 */
+	@Override
+	protected void onPause() {
+		if (azimuthDialog != null){
+			azimuthDialog.cancelDialog();
+			azimuthDialog.dismiss();
+		}
+		super.onPause();
+	}
+
+	/**
      * Shows the current leg as activity title
      * 
 	 * @see com.astoev.cave.survey.activity.BaseActivity#getScreenTitle()
@@ -486,8 +500,8 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
     }
 
     public void readAzimuth(View view) {
-		AzimuthDialog dialog = new AzimuthDialog();
-		dialog.show(getSupportFragmentManager(), AZIMUTH_DIALOG);
+		azimuthDialog = new AzimuthDialog();
+		azimuthDialog.show(getSupportFragmentManager(), AZIMUTH_DIALOG);
     }
 
     public void readSlope(View view) {
@@ -767,11 +781,10 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 	 * @see com.astoev.cave.survey.service.azimuth.AzimuthChangedListener#onAzimuthChanged(float)
 	 */
 	@Override
-	public void onAzimuthChanged(float newValueArg) {
+	public void onAzimuthChanged(float newValueArg, int accuracyArg) {
 		
         final EditText azimuth = (EditText) findViewById(R.id.point_azimuth);
 		azimuth.setText(String.valueOf(newValueArg));
 	}
-    
     
 }
