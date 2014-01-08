@@ -169,6 +169,8 @@ public class MapView extends View {
                             // color
                             if (galleryColors.get(l.getGalleryId(), Constants.NOT_FOUND) == Constants.NOT_FOUND) {
                                 galleryColors.put(l.getGalleryId(), MapUtilities.getNextGalleryColor(galleryColors.size()));
+                                Gallery gallery = DaoUtil.getGallery(l.getGalleryId());
+                                galleryNames.put(l.getGalleryId(), gallery.getName());
                             }
                             polygonPaint.setColor(galleryColors.get(l.getGalleryId()));
                             polygonWidthPaint.setColor(galleryColors.get(l.getGalleryId()));
@@ -227,12 +229,6 @@ public class MapView extends View {
             canvas.drawLine(northCenter.x, northCenter.y - 20, northCenter.x - 10, northCenter.y + 10, overlayPaint);
             canvas.drawLine(northCenter.x - 10, northCenter.y + 10, northCenter.x, northCenter.y, overlayPaint);
             canvas.drawText("N", northCenter.x + 5, northCenter.y - 10, overlayPaint);
-
-            // scale
-//            canvas.drawLine(20, maxY - 55, 55, maxY - 55, overlayPaint);
-//            canvas.drawLine(20, maxY - 53, 20, maxY - 52, overlayPaint);
-//            canvas.drawLine(55, maxY - 53, 55, maxY - 52, overlayPaint);
-//            canvas.drawLine(55, maxY - 53, 55, maxY - 52, overlayPaint);
 
             canvas.drawText("x" + (int)scale, 20, 25, overlayPaint);
 
