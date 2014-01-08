@@ -52,7 +52,7 @@ public class RotationAzimuthProcessor extends AzimuthProcessor {
 			lastValue = oData[0] < 0 ? oData[0] * RAD2GRAD + 360 : oData[0] * RAD2GRAD;
 			
 			if (listener != null){
-				listener.onAzimuthChanged(lastValue, accuracy);
+				listener.onAzimuthChanged(lastValue);
 			}
 		}
 	}

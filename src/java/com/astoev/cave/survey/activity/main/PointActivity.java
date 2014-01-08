@@ -781,10 +781,16 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 	 * @see com.astoev.cave.survey.service.azimuth.AzimuthChangedListener#onAzimuthChanged(float)
 	 */
 	@Override
-	public void onAzimuthChanged(float newValueArg, int accuracyArg) {
-		
+	public void onAzimuthChanged(float newValueArg) {
         final EditText azimuth = (EditText) findViewById(R.id.point_azimuth);
 		azimuth.setText(String.valueOf(newValueArg));
+	}
+
+	/**
+	 * @see com.astoev.cave.survey.service.azimuth.AzimuthChangedListener#onAccuracyChanged(int)
+	 */
+	@Override
+	public void onAccuracyChanged(int accuracyArg) {
 	}
     
 }

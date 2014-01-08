@@ -35,6 +35,16 @@ public class AzimuthProcessorFactory {
 		
 		OrientationAzimuthProcessor orientationazimuthProcessor = new OrientationAzimuthProcessor(contextArg, listenerArg);
 	    return orientationazimuthProcessor;
-		
 	}
+	
+	/**
+	 * Helper method to check if there is a processor who can effectively read the azimuth
+	 * 
+	 * @param contextArg 
+	 * @return true if there is at least single processor who can read the azimuth, otherwise false
+	 */
+	public static boolean canReadAzimuth(Context contextArg){
+		return getAzimuthProcessor(contextArg, null).canReadAzimuth();
+	}
+	
 }

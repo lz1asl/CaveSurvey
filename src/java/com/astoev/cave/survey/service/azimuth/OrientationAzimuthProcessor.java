@@ -40,7 +40,7 @@ public class OrientationAzimuthProcessor extends AzimuthProcessor {
 		
 		lastValue = data[0] < 0 ? data[0] + 360 : data[0];
 		
-		listener.onAzimuthChanged(lastValue, accuracy);
+		listener.onAzimuthChanged(lastValue);
 	}
 
 	/**

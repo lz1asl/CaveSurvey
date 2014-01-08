@@ -14,7 +14,6 @@ import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.activity.main.PointActivity;
 import com.astoev.cave.survey.model.*;
 import com.astoev.cave.survey.service.Options;
-import com.astoev.cave.survey.service.azimuth.AzimuthProcessor;
 import com.astoev.cave.survey.service.azimuth.AzimuthProcessorFactory;
 import com.astoev.cave.survey.util.PointUtil;
 import com.j256.ormlite.misc.TransactionManager;
@@ -47,8 +46,7 @@ public class NewProjectActivity extends MainMenuActivity {
         prepareSpinner(R.id.options_units_azimuth, R.array.azimuth_units);
         
         // check if build in azimuth sensor is available
-        AzimuthProcessor azimuthProcessor = AzimuthProcessorFactory.getAzimuthProcessor(this, null);
-        boolean hasBuildInAzimuthProcessor = azimuthProcessor.canReadAzimuth();
+        boolean hasBuildInAzimuthProcessor = AzimuthProcessorFactory.canReadAzimuth(this);
         int azimuthOptions = R.array.azimuth_read_type_all;
         
         if (!hasBuildInAzimuthProcessor){

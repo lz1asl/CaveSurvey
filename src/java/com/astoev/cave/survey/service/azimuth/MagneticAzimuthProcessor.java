@@ -58,6 +58,9 @@ public class MagneticAzimuthProcessor extends AzimuthProcessor {
 		default:
 			break;
 		}
+		if (listener != null){
+			listener.onAccuracyChanged(getAccuracy());
+		}
 	}
 
 	/**
@@ -89,7 +92,7 @@ public class MagneticAzimuthProcessor extends AzimuthProcessor {
 			
 			lastValue = oData[0] < 0 ? oData[0] * RAD2GRAD + 360 : oData[0] * RAD2GRAD;
 			
-			listener.onAzimuthChanged(lastValue, getAccuracy());
+			listener.onAzimuthChanged(lastValue/*, getAccuracy()*/);
 		}
 	}
 	

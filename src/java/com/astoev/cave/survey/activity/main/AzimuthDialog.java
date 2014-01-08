@@ -123,11 +123,10 @@ public class AzimuthDialog extends DialogFragment implements AzimuthChangedListe
 	protected void notifyEndProgress(){
 		azimuthProcessor.stopListening();
 		float lastValue = azimuthProcessor.getLastValue();
-		int accuracy = azimuthProcessor.getAccuracy();
 		Activity activity = getActivity();
 		
 		if (activity != null && activity instanceof AzimuthChangedListener){
-			((AzimuthChangedListener)activity).onAzimuthChanged(lastValue, accuracy);
+			((AzimuthChangedListener)activity).onAzimuthChanged(lastValue);
 		} 
 		dismiss();
 	}
@@ -138,13 +137,21 @@ public class AzimuthDialog extends DialogFragment implements AzimuthChangedListe
 	 * @see com.astoev.cave.survey.service.azimuth.AzimuthChangedListener#onAzimuthChanged(float)
 	 */
 	@Override
-	public void onAzimuthChanged(float newValueArg, int accuracyArg) {
+	public void onAzimuthChanged(float newValueArg) {
 		azimuthView.setText(azimuthFrmater.format(newValueArg));
-		
-		accuracyView.setText(azimuthProcessor.getAccuracyAsString(accuracyArg));
 	}
 	
     /**
+	 * @see com.astoev.cave.survey.service.azimuth.AzimuthChangedListener#onAccuracyChanged(int)
+	 */
+	@Override
+	public void onAccuracyChanged(int accuracyArg) {
+		accuracyView.setText(azimuthProcessor.getAccuracyAsString(accuracyArg));
+	}
+
+
+
+	/**
      * Nested class that performs progress calculations (counting)
      */
     private class ProgressThread extends Thread {

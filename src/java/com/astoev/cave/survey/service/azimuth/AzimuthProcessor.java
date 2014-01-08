@@ -58,6 +58,9 @@ public abstract class AzimuthProcessor implements SensorEventListener {
 	@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracyArg) {
 		accuracy = accuracyArg;
+		if (listener != null){
+			listener.onAccuracyChanged(accuracyArg);
+		}
 	}
 
 	/**

@@ -68,26 +68,39 @@ public class AzimuthTestActivity extends MainMenuActivity {
         orientationAzimuthProcessor = new OrientationAzimuthProcessor(this, new AzimuthChangedListener() {
 			
 			@Override
-			public void onAzimuthChanged(float newValueArg, int accuracyArg) {
+			public void onAzimuthChanged(float newValueArg) {
 				orientationView.setText(azimuthFormater.format(newValueArg));
+			}
+
+			@Override
+			public void onAccuracyChanged(int accuracyArg) {
 				orientationAccuracyView.setText(String.valueOf(accuracyArg));
 			}
 		});
         magneticAzimuthProcessor = new MagneticAzimuthProcessor(this, new AzimuthChangedListener() {
 			
 			@Override
-			public void onAzimuthChanged(float newValueArg, int accuracyArg) {
+			public void onAzimuthChanged(float newValueArg) {
 				magneticView.setText(azimuthFormater.format(newValueArg));
+			}
+			
+			@Override
+			public void onAccuracyChanged(int accuracyArg) {
 				magneticAccuracyView.setText(String.valueOf(accuracyArg));
 			}
 		});
         rotationAzimuthProcessor = new RotationAzimuthProcessor(this, new AzimuthChangedListener() {
 			
 			@Override
-			public void onAzimuthChanged(float newValueArg, int accuracyArg) {
+			public void onAzimuthChanged(float newValueArg) {
 				rotationView.setText(azimuthFormater.format(newValueArg));
+			}
+			
+			@Override
+			public void onAccuracyChanged(int accuracyArg) {
 				rotationAccuracyView.setText(String.valueOf(accuracyArg));
 			}
+			
 		});
 	}
 
