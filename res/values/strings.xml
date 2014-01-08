@@ -146,7 +146,12 @@
         <item>Degrees</item>
         <item>Grad</item>
     </string-array>
-    <string-array name="azimuth_read_type">
+
+    <string-array name="azimuth_read_type_manually">
+        <item>Manually</item>
+    </string-array>
+    
+    <string-array name="azimuth_read_type_all">
         <item>Manually</item>
         <item>Built-in sensor</item>
     </string-array>
