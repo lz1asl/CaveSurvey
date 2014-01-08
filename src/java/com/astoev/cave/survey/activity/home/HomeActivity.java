@@ -75,14 +75,6 @@ public class HomeActivity extends MainMenuActivity {
 		}
 	}
 	
-	/**
-	 * @see com.astoev.cave.survey.activity.BaseActivity#getScreenTitle()
-	 */
-	@Override
-	protected String getScreenTitle() {
-		return getString(R.string.app_name);
-	}
-
 	private void loadProjects() {
         try {
 

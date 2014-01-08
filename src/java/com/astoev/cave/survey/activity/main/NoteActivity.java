@@ -15,6 +15,7 @@ import com.astoev.cave.survey.model.Note;
 import com.astoev.cave.survey.util.DaoUtil;
 import com.j256.ormlite.misc.TransactionManager;
 
+import java.sql.SQLException;
 import java.util.concurrent.Callable;
 
 /**
@@ -32,8 +33,6 @@ public class NoteActivity extends MainMenuActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.note);
 
-        TextView title = (TextView) findViewById(R.id.note_title);
-
         try {
 
             Bundle extras = getIntent().getExtras();
@@ -41,7 +40,6 @@ public class NoteActivity extends MainMenuActivity {
             Leg activeLeg = DaoUtil.getLeg(mCurrLeg);
 
             if (activeLeg != null) {
-                title.setText(activeLeg.buildLegDescription());
 
                 Note note = DaoUtil.getActiveLegNote(activeLeg);
                 if (note != null) {
@@ -154,4 +152,22 @@ public class NoteActivity extends MainMenuActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+	/**
+	 * @see com.astoev.cave.survey.activity.BaseActivity#getScreenTitle()
+	 */
+	@Override
+	protected String getScreenTitle() {
+		StringBuilder builder = new StringBuilder();
+		builder.append(getString(R.string.note_title));
+		if (mCurrLeg != null){
+			try {
+				builder.append(DaoUtil.getLeg(mCurrLeg).buildLegDescription());
+			} catch (SQLException e) {
+				Log.i(Constants.LOG_TAG_UI, "Unable to laod leg:" + mCurrLeg);
+			}
+		}
+		return builder.toString();
+	}
+    
 }

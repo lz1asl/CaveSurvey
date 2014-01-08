@@ -10,6 +10,7 @@ import android.hardware.SensorManager;
 import android.util.Log;
 
 import com.astoev.cave.survey.Constants;
+import com.astoev.cave.survey.R;
 
 /**
  * Abstract Azimuth processor defines the base interface for working with all azimuth processors and sensors.
@@ -32,6 +33,9 @@ public abstract class AzimuthProcessor implements SensorEventListener {
 	/** Listener to notify on value change*/
 	protected AzimuthChangedListener listener;
 	
+	/** Sensor's accuracy */
+	protected int accuracy;
+	
     /**
      * Constructor for AzimuthProcessor
      * 
@@ -49,6 +53,17 @@ public abstract class AzimuthProcessor implements SensorEventListener {
     }
     
     /**
+	 * @see android.hardware.SensorEventListener#onAccuracyChanged(android.hardware.Sensor, int)
+	 */
+	@Override
+	public void onAccuracyChanged(Sensor sensor, int accuracyArg) {
+		accuracy = accuracyArg;
+		if (listener != null){
+			listener.onAccuracyChanged(accuracyArg);
+		}
+	}
+
+	/**
      * Returns the current sensor
      * 
      * @return Sensor
@@ -72,6 +87,28 @@ public abstract class AzimuthProcessor implements SensorEventListener {
 	 */
 	public abstract float getLastValue();
 	
+	/**
+	 * @return the accuracy
+	 */
+	public int getAccuracy() {
+		return accuracy;
+	}
+	
+	public String getAccuracyAsString(int accuracyArg){
+		switch (accuracyArg) {
+		case SensorManager.SENSOR_STATUS_UNRELIABLE:
+			return context.getString(R.string.SENSOR_STATUS_UNRELIABLE);
+		case SensorManager.SENSOR_STATUS_ACCURACY_LOW:
+			return context.getString(R.string.SENSOR_STATUS_ACCURACY_LOW);
+		case SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM:
+			return context.getString(R.string.SENSOR_STATUS_ACCURACY_MEDIUM);
+		case SensorManager.SENSOR_STATUS_ACCURACY_HIGH:
+			return context.getString(R.string.SENSOR_STATUS_ACCURACY_HIGH);
+		default:
+			return context.getString(R.string.SENSOR_STATUS_ACCURACY_UNKNOWN);
+		}
+	}
+
 	/**
 	 * Helper method that shows if the this processor can be read. 
 	 * 

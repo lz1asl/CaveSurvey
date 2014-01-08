@@ -15,6 +15,7 @@ import com.astoev.cave.survey.activity.main.PointActivity;
 import com.astoev.cave.survey.model.*;
 import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.util.DaoUtil;
+import com.astoev.cave.survey.service.azimuth.AzimuthProcessorFactory;
 import com.astoev.cave.survey.util.PointUtil;
 import com.j256.ormlite.misc.TransactionManager;
 

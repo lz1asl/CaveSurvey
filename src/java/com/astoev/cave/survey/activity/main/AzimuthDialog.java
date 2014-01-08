@@ -4,11 +4,13 @@
 package com.astoev.cave.survey.activity.main;
 
 import java.lang.ref.WeakReference;
+import java.text.DecimalFormat;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.service.azimuth.AzimuthChangedListener;
-import com.astoev.cave.survey.service.azimuth.MagneticAzimuthProcessor;
+import com.astoev.cave.survey.service.azimuth.AzimuthProcessor;
+import com.astoev.cave.survey.service.azimuth.AzimuthProcessorFactory;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -38,6 +40,7 @@ public class AzimuthDialog extends DialogFragment implements AzimuthChangedListe
      private static int MAX_VALUE = 3;
      
      private TextView azimuthView;
+     private TextView accuracyView;
      private ProgressBar progressBar;
      
      /** Progress thread*/
@@ -47,13 +50,18 @@ public class AzimuthDialog extends DialogFragment implements AzimuthChangedListe
 	 private ProgressHandler progressHandler;
 	 
 	 /** AzimuthProcessor that handles the work with the sensors*/
-	 private MagneticAzimuthProcessor azimuthProcessor;
+	 private AzimuthProcessor azimuthProcessor;
+	 
+	 /** Formatter */
+	 private DecimalFormat azimuthFrmater;
 	 
 	/**
 	 * @see android.support.v4.app.DialogFragment#onCreateDialog(android.os.Bundle)
 	 */
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
+		
+		azimuthFrmater = new DecimalFormat("#.#");
 		
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		builder.setTitle(getString(R.string.azimuth));
@@ -79,12 +87,13 @@ public class AzimuthDialog extends DialogFragment implements AzimuthChangedListe
 		progressBar = (ProgressBar)view.findViewById(R.id.azimuth_progress);
 		
 		azimuthView = (TextView)view.findViewById(R.id.azimuth_value);
+		accuracyView = (TextView)view.findViewById(R.id.azimuth_accuracy);
 		
 		// create the Dialog
 		AlertDialog alertDialg = builder.create();
 		
 		// create azimuth processor to handle the azimuth sensors and value changes
-		azimuthProcessor = new MagneticAzimuthProcessor(getActivity(), this);
+		azimuthProcessor = AzimuthProcessorFactory.getAzimuthProcessor(getActivity(), this);
 		azimuthProcessor.startListening();
 		
 		// create a handler and a thread that will drive the progress bar
@@ -129,11 +138,20 @@ public class AzimuthDialog extends DialogFragment implements AzimuthChangedListe
 	 */
 	@Override
 	public void onAzimuthChanged(float newValueArg) {
-		//TODO make pretty here
-		azimuthView.setText(String.valueOf(newValueArg));
+		azimuthView.setText(azimuthFrmater.format(newValueArg));
 	}
 	
     /**
+	 * @see com.astoev.cave.survey.service.azimuth.AzimuthChangedListener#onAccuracyChanged(int)
+	 */
+	@Override
+	public void onAccuracyChanged(int accuracyArg) {
+		accuracyView.setText(azimuthProcessor.getAccuracyAsString(accuracyArg));
+	}
+
+
+
+	/**
      * Nested class that performs progress calculations (counting)
      */
     private class ProgressThread extends Thread {

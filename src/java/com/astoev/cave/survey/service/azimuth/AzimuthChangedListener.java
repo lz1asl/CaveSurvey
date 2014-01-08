@@ -12,4 +12,7 @@ package com.astoev.cave.survey.service.azimuth;
 public interface AzimuthChangedListener {
 
 	void onAzimuthChanged(float newValueArg);
+	
+	void onAccuracyChanged(int accuracyArg);
+	
 }

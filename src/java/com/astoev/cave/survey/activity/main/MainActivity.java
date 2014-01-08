@@ -30,6 +30,7 @@ import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Note;
 import com.astoev.cave.survey.model.Photo;
 import com.astoev.cave.survey.model.Point;
+import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.model.Sketch;
 import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.util.PointUtil;
@@ -518,6 +519,21 @@ public class MainActivity extends MainMenuActivity {
 			default:
 				return super.onOptionsItemSelected(item);
 		}
+	}
+
+	/**
+	 * Add project's name as a title
+	 * 
+	 * @see com.astoev.cave.survey.activity.BaseActivity#getScreenTitle()
+	 */
+	@Override
+	protected String getScreenTitle() {
+    	// set the name of the chosen project as title in the action bar
+        Project activeProject = getWorkspace().getActiveProject();
+        if (activeProject != null){
+        	return activeProject.getName();
+        }
+        return null;
 	}
     
 }
