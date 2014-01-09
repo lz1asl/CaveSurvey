@@ -6,6 +6,7 @@ package com.astoev.cave.survey.service.azimuth;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
+import android.view.Surface;
 
 /**
  * Azimuth processor that works with orientation sensor. Note that Orientation sensor is deprecated since api9
@@ -38,7 +39,36 @@ public class OrientationAzimuthProcessor extends AzimuthProcessor {
 	public void onSensorChanged(SensorEvent event) {
 		float[] data = event.values;
 		
-		lastValue = data[0] < 0 ? data[0] + 360 : data[0];
+		float currentValue = data[0] < 0 ? data[0] + 360 : data[0];
+		
+		// handle device rotation
+		int rotation = getRotation();
+		switch (rotation) {
+		case Surface.ROTATION_0:
+			break;
+		case Surface.ROTATION_90:
+			currentValue = currentValue + 90;
+			if (currentValue > 360){
+				currentValue %= 360;
+			}
+			break;
+		case Surface.ROTATION_180:
+			currentValue = currentValue - 180;
+			if (currentValue < 0){
+				currentValue += 360;
+			}
+			break;
+		case Surface.ROTATION_270:
+			currentValue = currentValue - 90;
+			if (currentValue < 0){
+				currentValue += 360;
+			}
+			break;
+		default:
+			break;
+		}
+		
+		lastValue = currentValue;
 		
 		listener.onAzimuthChanged(lastValue);
 	}
