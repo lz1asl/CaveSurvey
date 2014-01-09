@@ -108,6 +108,7 @@ public class MainActivity extends MainMenuActivity {
                         Intent intent = new Intent(MainActivity.this, PointActivity.class);
                         intent.putExtra(Constants.LEG_SELECTED, l.getId());
                         getWorkspace().setActiveLegId(l.getId());
+                        getWorkspace().setActiveGalleryId(l.getGalleryId());
                         startActivity(intent);
                     }
                 });
