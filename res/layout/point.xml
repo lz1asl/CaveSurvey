@@ -1,132 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent" 
-                android:scrollbars="vertical">
-                
-	<EditText android:id="@+id/point_up"
-	    	  android:hint="@string/up"
-	    	  android:inputType="numberDecimal"
-	          android:layout_width="wrap_content"
-	          android:layout_height="wrap_content"
-	          android:layout_centerHorizontal="true"
-	          android:layout_alignParentTop="true"
-	          android:maxLength="5"
-	          android:ems="4" 
-	          android:gravity="center"/>
-	
-	<LinearLayout android:id="@+id/layout_left_right"
-	    		  android:layout_width="wrap_content"
-	    		  android:layout_height="wrap_content"
-	    		  android:layout_centerHorizontal="true"
-	    		  android:layout_below="@id/point_up">
-		<EditText android:id="@+id/point_left"
-		    	  android:hint="@string/left"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+     android:layout_width="fill_parent"
+     android:layout_height="fill_parent">
+	<RelativeLayout android:layout_width="fill_parent"
+	                android:layout_height="wrap_content" 
+	                android:scrollbars="vertical">
+	                
+		<EditText android:id="@+id/point_up"
+		    	  android:hint="@string/up"
 		    	  android:inputType="numberDecimal"
-		    	  android:layout_width="wrap_content"
+		          android:layout_width="wrap_content"
 		          android:layout_height="wrap_content"
-		          android:layout_marginRight="70dp"
-		          android:gravity="center"
+		          android:layout_centerHorizontal="true"
+		          android:layout_alignParentTop="true"
 		          android:maxLength="5"
-		          android:ems="4"/>
-		<EditText android:id="@+id/point_right"
-		    	  android:hint="@string/right"
-		    	  android:inputType="numberDecimal"
-		    	  android:layout_width="wrap_content"
-		          android:layout_height="wrap_content"
-		          android:gravity="center"
-		          android:maxLength="5"
-		          android:ems="4"/>		
-	</LinearLayout>
-	
-	<EditText android:id="@+id/point_down"
-	   	  android:hint="@string/down"
-	   	  android:inputType="numberDecimal"
-	   	  android:layout_width="wrap_content"
-	      android:layout_height="wrap_content"
-	      android:layout_centerHorizontal="true"
-	      android:gravity="center"
-	      android:layout_below="@id/layout_left_right"
-	      android:maxLength="5"
-	      android:ems="4"/>
-    
-    <LinearLayout android:id="@+id/point_leg_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/point_down"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true">
-		<TextView android:layout_width="wrap_content"
-		          android:layout_height="wrap_content"
-		          android:text="@string/main_leg"
-		          android:textAppearance="?android:attr/textAppearanceLarge"/>
-		<TextView android:id="@+id/point_curr_leg" 
-		    	  android:layout_width="wrap_content"
-		          android:layout_height="wrap_content"
-		          android:gravity="center"
-		          android:textAppearance="?android:attr/textAppearanceLarge"/>        
-    </LinearLayout>
-    <LinearLayout android:id="@+id/point_dimensions_text"
-        		  android:layout_width="fill_parent"
-        		  android:layout_height="wrap_content"
-        		  android:layout_below="@id/point_leg_text">
-		<TextView android:layout_width="0dp"
-		          android:layout_height="wrap_content"
-		          android:layout_weight="1"
-		          android:gravity="center_horizontal"
-		          android:text="@string/distance"/>
-        <TextView android:layout_width="0dp"
-                  android:layout_height="wrap_content"
-                  android:layout_weight="1"
-                  android:gravity="center_horizontal"
-                  android:text="@string/azimuth"/>
-        <TextView android:layout_width="0dp"
-                  android:layout_height="wrap_content"
-                  android:layout_weight="1"
-                  android:gravity="center_horizontal"
-                  android:text="@string/slope"/>
-    </LinearLayout>
-    <LinearLayout android:id="@+id/point_dimensions_fields"
-        		  android:layout_width="fill_parent"
-        		  android:layout_height="wrap_content"
-        		  android:layout_below="@id/point_dimensions_text">
-		<EditText android:id="@+id/point_distance"
-		          android:inputType="numberDecimal"
-		          android:layout_width="0dp"
-		          android:layout_height="wrap_content"
-		          android:layout_weight="1"
-		          android:gravity="center"
-		          android:maxLength="5"
-		          android:ems="5">
-		    <requestFocus/>
-		</EditText>
-		<EditText android:id="@+id/point_azimuth" 
-		    	  android:inputType="numberDecimal"
-		    	  android:layout_width="0dp"
-		          android:layout_height="wrap_content"
-		          android:layout_weight="1"
-		          android:gravity="center"
-		          android:maxLength="3"
-		          android:ems="5"/>
-		<EditText android:id="@+id/point_slope"
-		    	  android:inputType="numberDecimal|numberSigned"
-		    	  android:layout_width="0dp"
-		          android:layout_height="wrap_content"
-		          android:layout_weight="1"
-		          android:gravity="center"
-		          android:maxLength="4"
-		          android:ems="5"/>
-    </LinearLayout>
-    <TextView android:id="@+id/point_note_text"
-        	  android:layout_width="fill_parent"
-        	  android:layout_height="wrap_content"
-        	  android:layout_margin="20dp"
-        	  android:layout_below="@id/point_dimensions_fields"
-        	  android:clickable="false"
-        	  android:onClick="noteButton"
-        	  android:ellipsize="end"
-        	  android:scrollbars="vertical"
-        	  android:fadeScrollbars="false"/>
-    
-</RelativeLayout>
+		          android:ems="4" 
+		          android:gravity="center"/>
+		
+		<LinearLayout android:id="@+id/layout_left_right"
+		    		  android:layout_width="wrap_content"
+		    		  android:layout_height="wrap_content"
+		    		  android:layout_centerHorizontal="true"
+		    		  android:layout_below="@id/point_up">
+			<EditText android:id="@+id/point_left"
+			    	  android:hint="@string/left"
+			    	  android:inputType="numberDecimal"
+			    	  android:layout_width="wrap_content"
+			          android:layout_height="wrap_content"
+			          android:layout_marginRight="70dp"
+			          android:gravity="center"
+			          android:maxLength="5"
+			          android:ems="4"/>
+			<EditText android:id="@+id/point_right"
+			    	  android:hint="@string/right"
+			    	  android:inputType="numberDecimal"
+			    	  android:layout_width="wrap_content"
+			          android:layout_height="wrap_content"
+			          android:gravity="center"
+			          android:maxLength="5"
+			          android:ems="4"/>		
+		</LinearLayout>
+		
+		<EditText android:id="@+id/point_down"
+		   	  android:hint="@string/down"
+		   	  android:inputType="numberDecimal"
+		   	  android:layout_width="wrap_content"
+		      android:layout_height="wrap_content"
+		      android:layout_centerHorizontal="true"
+		      android:gravity="center"
+		      android:layout_below="@id/layout_left_right"
+		      android:maxLength="5"
+		      android:ems="4"/>
+	    
+	    <LinearLayout android:id="@+id/point_leg_text"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_below="@id/point_down"
+	            android:layout_centerHorizontal="true"
+	            android:layout_centerVertical="true">
+			<TextView android:layout_width="wrap_content"
+			          android:layout_height="wrap_content"
+			          android:text="@string/main_leg"
+			          android:textAppearance="?android:attr/textAppearanceLarge"/>
+			<TextView android:id="@+id/point_curr_leg" 
+			    	  android:layout_width="wrap_content"
+			          android:layout_height="wrap_content"
+			          android:gravity="center"
+			          android:textAppearance="?android:attr/textAppearanceLarge"/>        
+	    </LinearLayout>
+	    <LinearLayout android:id="@+id/point_dimensions_text"
+	        		  android:layout_width="fill_parent"
+	        		  android:layout_height="wrap_content"
+	        		  android:layout_below="@id/point_leg_text">
+			<TextView android:layout_width="0dp"
+			          android:layout_height="wrap_content"
+			          android:layout_weight="1"
+			          android:gravity="center_horizontal"
+			          android:text="@string/distance"/>
+	        <TextView android:layout_width="0dp"
+	                  android:layout_height="wrap_content"
+	                  android:layout_weight="1"
+	                  android:gravity="center_horizontal"
+	                  android:text="@string/azimuth"/>
+	        <TextView android:layout_width="0dp"
+	                  android:layout_height="wrap_content"
+	                  android:layout_weight="1"
+	                  android:gravity="center_horizontal"
+	                  android:text="@string/slope"/>
+	    </LinearLayout>
+	    <LinearLayout android:id="@+id/point_dimensions_fields"
+	        		  android:layout_width="fill_parent"
+	        		  android:layout_height="wrap_content"
+	        		  android:layout_below="@id/point_dimensions_text">
+			<EditText android:id="@+id/point_distance"
+			          android:inputType="numberDecimal"
+			          android:layout_width="0dp"
+			          android:layout_height="wrap_content"
+			          android:layout_weight="1"
+			          android:gravity="center"
+			          android:maxLength="5"
+			          android:ems="5">
+			    <requestFocus/>
+			</EditText>
+			<EditText android:id="@+id/point_azimuth" 
+			    	  android:inputType="numberDecimal"
+			    	  android:layout_width="0dp"
+			          android:layout_height="wrap_content"
+			          android:layout_weight="1"
+			          android:gravity="center"
+			          android:maxLength="3"
+			          android:ems="5"/>
+			<EditText android:id="@+id/point_slope"
+			    	  android:inputType="numberDecimal|numberSigned"
+			    	  android:layout_width="0dp"
+			          android:layout_height="wrap_content"
+			          android:layout_weight="1"
+			          android:gravity="center"
+			          android:maxLength="4"
+			          android:ems="5"/>
+	    </LinearLayout>
+	    <TextView android:id="@+id/point_note_text"
+	        	  android:layout_width="fill_parent"
+	        	  android:layout_height="wrap_content"
+	        	  android:layout_margin="20dp"
+	        	  android:layout_below="@id/point_dimensions_fields"
+	        	  android:clickable="false"
+	        	  android:onClick="noteButton"
+	        	  android:ellipsize="end"
+	        	  android:scrollbars="vertical"
+	        	  android:fadeScrollbars="false"/>
+	    
+	</RelativeLayout>
+</ScrollView>

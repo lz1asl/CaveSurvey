@@ -60,7 +60,7 @@
                    	   android:value="splitActionBarWhenNarrow" />
  -->                   	   
         </activity>
-        <activity android:name=".activity.main.ReadAzimuthActivity"/>
+
         <activity android:name=".activity.map.opengl.Map3DActivity"/>
         <activity android:name="com.astoev.cave.survey.activity.main.BTActivity">
             <meta-data

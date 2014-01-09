@@ -9,6 +9,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
 import android.os.Build;
+import android.view.Surface;
 
 /**
  * Azimuth processor that works with rotation sensor. Note that rotation sensor is available after api 9
@@ -17,8 +18,10 @@ import android.os.Build;
  */
 public class RotationAzimuthProcessor extends AzimuthProcessor {
 	
-    protected float[] R = new float[16];
-    protected float[] I = new float[16];
+//    protected float[] R = new float[16];
+//    protected float[] I = new float[16];
+    protected float[] R = new float[9];
+    protected float[] I = new float[9];
     protected float[] rData = new float[3];
     protected float[] oData = new float[3];
 
@@ -48,11 +51,17 @@ public class RotationAzimuthProcessor extends AzimuthProcessor {
 		if (isApiAvailable()){
 			processSafeData();
 			
-//			lastValue = oData[0] * RAD2GRAD;
-			lastValue = oData[0] < 0 ? oData[0] * RAD2GRAD + 360 : oData[0] * RAD2GRAD;
-			
-			if (listener != null){
-				listener.onAzimuthChanged(lastValue);
+			int rotation = getRotation();
+			R = (rotation != Surface.ROTATION_0) ? remapCoordinateSystem(R, rotation): R;
+
+			if (R != null){
+				SensorManager.getOrientation(R, oData);
+	
+				lastValue = oData[0] < 0 ? oData[0] * RAD2GRAD + 360 : oData[0] * RAD2GRAD;
+				
+				if (listener != null){
+					listener.onAzimuthChanged(lastValue);
+				}
 			}
 		}
 	}
@@ -63,7 +72,6 @@ public class RotationAzimuthProcessor extends AzimuthProcessor {
 	@TargetApi(Build.VERSION_CODES.GINGERBREAD)
 	private void processSafeData(){
 		SensorManager.getRotationMatrixFromVector(R, rData);
-		SensorManager.getOrientation(R, oData);
 	}
 
 	/**
