@@ -45,6 +45,10 @@ public class InfoActivity extends MainMenuActivity {
             TextView projectCreated = (TextView) findViewById(R.id.infoProjectCreated);
             projectCreated.setText(getWorkspace().getActiveProject().getCreationDateFormatted());
 
+            long numGalleries = DaoUtil.getGalleriesCount(getWorkspace().getActiveProjectId());
+            TextView projectNumGalleries = (TextView) findViewById(R.id.infoNumGalleries);
+            projectNumGalleries.setText("" + numGalleries);
+
             List<Leg> legs = DaoUtil.getCurrProjectLegs();
 
             TextView projectNumLegs = (TextView) findViewById(R.id.infoNumLegs);

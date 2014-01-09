@@ -106,6 +106,7 @@
     <!-- info screen -->
     <string name="info_title">Project</string>
     <string name="info_created">Created</string>
+    <string name="info_galleries"># galleries</string>
     <string name="info_legs"># legs</string>
     <string name="info_total_distance">Raw length</string>
     <string name="info_chooser_open_folder">Open folder</string>
@@ -151,7 +152,7 @@
         <item>Manually</item>
     </string-array>
     
-    <string-array name="azimuth_read_type_all">
+    <string-array name="azimuth_read_type">
         <item>Manually</item>
         <item>Built-in sensor</item>
     </string-array>

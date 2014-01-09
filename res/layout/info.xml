@@ -40,17 +40,32 @@
 
         <TableRow>
             <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/info_legs"
-                    android:layout_weight="1"
-                    android:gravity="left"/>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/info_galleries"
+                android:layout_weight="1"
+                android:gravity="left"/>
             <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:layout_weight="1"
-                    android:id="@+id/infoNumLegs"/>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:layout_weight="1"
+                android:id="@+id/infoNumGalleries"/>
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/info_legs"
+                android:layout_weight="1"
+                android:gravity="left"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:layout_weight="1"
+                android:id="@+id/infoNumLegs"/>
         </TableRow>
 
         <TableRow>
