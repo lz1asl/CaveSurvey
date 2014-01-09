@@ -19,8 +19,6 @@ import com.astoev.cave.survey.activity.main.MainActivity;
 import com.astoev.cave.survey.activity.poc.AzimuthTestActivity;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Project;
-import com.astoev.cave.survey.util.ConfigUtil;
-import com.astoev.cave.survey.util.DaoUtil;
 
 import java.util.List;
 
@@ -68,6 +66,10 @@ public class HomeActivity extends MainMenuActivity {
 		}
 		case R.id.action_setup_bt : {
 			pairBtDevice();
+			return true;
+		}
+		case R.id.action_azimuth_test : {
+			onAzimuthTest();
 			return true;
 		}
 		default:
@@ -155,6 +157,12 @@ public class HomeActivity extends MainMenuActivity {
         Log.i(Constants.LOG_TAG_UI, "New project");
         Intent intent = new Intent(this, NewProjectActivity.class);
         startActivity(intent);
+    }
+    
+    private void onAzimuthTest(){
+    	Log.i(Constants.LOG_TAG_UI, "Azimuth Test");
+    	Intent intent = new Intent(this, AzimuthTestActivity.class);
+    	startActivity(intent);
     }
 
     @Override

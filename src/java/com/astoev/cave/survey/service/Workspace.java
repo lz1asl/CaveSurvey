@@ -14,7 +14,6 @@ import com.j256.ormlite.dao.GenericRawResults;
 import com.j256.ormlite.stmt.QueryBuilder;
 
 import java.sql.SQLException;
-import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
