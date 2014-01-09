@@ -25,6 +25,7 @@ public class Constants {
     public static Locale DEFAULT_LOCALE = Locale.US;
     
     public static final int NOT_FOUND = -1;
+    public static final String STRING_NOT_FOUND = null;
 
     public static enum Measures {distance, slope, angle, up, down, left, right}
 }

@@ -173,7 +173,6 @@ public class MapView extends View {
                                 galleryNames.put(l.getGalleryId(), gallery.getName());
                             }
                             polygonPaint.setColor(galleryColors.get(l.getGalleryId()));
-                            polygonWidthPaint.setColor(galleryColors.get(l.getGalleryId()));
 
 //                            Log.i(Constants.LOG_TAG_UI, "Drawing leg " + l.getFromPoint().getName() + ":" + l.getToPoint().getName() + "-" + l.getGalleryId());
 
