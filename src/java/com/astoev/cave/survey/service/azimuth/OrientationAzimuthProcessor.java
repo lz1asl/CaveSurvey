@@ -53,15 +53,15 @@ public class OrientationAzimuthProcessor extends AzimuthProcessor {
 			}
 			break;
 		case Surface.ROTATION_180:
-			currentValue = currentValue - 180;
-			if (currentValue < 0){
-				currentValue += 360;
+			currentValue += 180;
+			if (currentValue > 360){
+				currentValue %= 360;
 			}
 			break;
 		case Surface.ROTATION_270:
-			currentValue = currentValue - 90;
-			if (currentValue < 0){
-				currentValue += 360;
+			currentValue += 270;
+			if (currentValue > 360){
+				currentValue %= 360;
 			}
 			break;
 		default:
