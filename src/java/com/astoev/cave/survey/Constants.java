@@ -2,6 +2,8 @@ package com.astoev.cave.survey;
 
 import java.util.Locale;
 
+import com.astoev.cave.survey.model.Option;
+
 /**
  * Created by IntelliJ IDEA.
  * User: astoev
@@ -28,4 +30,7 @@ public class Constants {
     public static final String STRING_NOT_FOUND = null;
 
     public static enum Measures {distance, slope, angle, up, down, left, right}
+    
+    public static final float GRAD_TO_DEC = (Option.MAX_VALUE_AZIMUTH_DEGREES / (float)Option.MAX_VALUE_AZIMUTH_GRADS);
+    public static final float DEC_TO_GRAD = (Option.MAX_VALUE_AZIMUTH_GRADS / (float)Option.MAX_VALUE_AZIMUTH_DEGREES);
 }

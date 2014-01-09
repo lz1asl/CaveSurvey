@@ -152,7 +152,7 @@
         <item>Manually</item>
     </string-array>
     
-    <string-array name="azimuth_read_type">
+    <string-array name="azimuth_read_type_all">
         <item>Manually</item>
         <item>Built-in sensor</item>
     </string-array>
@@ -226,5 +226,8 @@
     <string name="SENSOR_STATUS_ACCURACY_MEDIUM">MEDIUM</string>
     <string name="SENSOR_STATUS_ACCURACY_HIGH">HIGH</string>
     <string name="SENSOR_STATUS_ACCURACY_UNKNOWN">UNKNOWN</string>
+    
+    <string name="degrees"> \u00B0</string>
+    <string name="grads"> grads</string>
     
 </resources>

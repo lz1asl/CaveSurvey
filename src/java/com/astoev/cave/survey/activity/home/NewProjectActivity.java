@@ -45,7 +45,15 @@ public class NewProjectActivity extends MainMenuActivity {
 
         // azimuth
         prepareSpinner(R.id.options_units_azimuth, R.array.azimuth_units);
-        prepareSpinner(R.id.options_azimuth_type, R.array.azimuth_read_type);
+        
+        // check if build in azimuth sensor is available
+        boolean hasBuildInAzimuthProcessor = AzimuthProcessorFactory.canReadAzimuth(this);
+        int azimuthOptions = R.array.azimuth_read_type_all;
+        
+        if (!hasBuildInAzimuthProcessor){
+        	azimuthOptions = R.array.azimuth_read_type_manually;
+        }
+        prepareSpinner(R.id.options_azimuth_type, azimuthOptions);
 
         // slope
         prepareSpinner(R.id.options_units_slope, R.array.slope_units);

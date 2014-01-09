@@ -8,6 +8,8 @@ import java.text.DecimalFormat;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
+import com.astoev.cave.survey.model.Option;
+import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.service.azimuth.AzimuthChangedListener;
 import com.astoev.cave.survey.service.azimuth.AzimuthProcessor;
 import com.astoev.cave.survey.service.azimuth.AzimuthProcessorFactory;
@@ -55,6 +57,12 @@ public class AzimuthDialog extends DialogFragment implements AzimuthChangedListe
 	 /** Formatter */
 	 private DecimalFormat azimuthFrmater;
 	 
+	 /** Flag if the azimuth is expected in degrees */
+	 private boolean isInDegrees = true;
+	 
+	 /** String for azimuth's units */
+	 private String azimuthUnitsString;
+	 
 	/**
 	 * @see android.support.v4.app.DialogFragment#onCreateDialog(android.os.Bundle)
 	 */
@@ -62,6 +70,14 @@ public class AzimuthDialog extends DialogFragment implements AzimuthChangedListe
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		
 		azimuthFrmater = new DecimalFormat("#.#");
+		
+		if (Option.UNIT_DEGREES.equals(Options.getOptionValue(Option.CODE_AZIMUTH_UNITS))){
+			isInDegrees = true;
+			azimuthUnitsString = " " + getString(R.string.degrees);
+		} else {
+			isInDegrees = false;
+			azimuthUnitsString = " " + getString(R.string.grads);
+		}
 		
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		builder.setTitle(getString(R.string.azimuth));
@@ -123,6 +139,12 @@ public class AzimuthDialog extends DialogFragment implements AzimuthChangedListe
 	protected void notifyEndProgress(){
 		azimuthProcessor.stopListening();
 		float lastValue = azimuthProcessor.getLastValue();
+		
+		// convert to Grads if necessary 
+		if (!isInDegrees){
+			lastValue = lastValue * Constants.DEC_TO_GRAD;
+		}
+		
 		Activity activity = getActivity();
 		
 		if (activity != null && activity instanceof AzimuthChangedListener){
@@ -138,7 +160,12 @@ public class AzimuthDialog extends DialogFragment implements AzimuthChangedListe
 	 */
 	@Override
 	public void onAzimuthChanged(float newValueArg) {
-		azimuthView.setText(azimuthFrmater.format(newValueArg));
+		//convert to Grads if necessary
+		if (!isInDegrees){
+			newValueArg = newValueArg * Constants.DEC_TO_GRAD;
+		}
+		
+		azimuthView.setText(azimuthFrmater.format(newValueArg) + azimuthUnitsString);
 	}
 	
     /**

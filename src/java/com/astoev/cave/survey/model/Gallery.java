@@ -1,10 +1,7 @@
 package com.astoev.cave.survey.model;
 
-import com.astoev.cave.survey.service.Workspace;
 import com.astoev.cave.survey.util.DaoUtil;
-import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.table.DatabaseTable;
 
 import java.io.Serializable;
