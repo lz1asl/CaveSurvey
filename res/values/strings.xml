@@ -227,4 +227,7 @@
     <string name="SENSOR_STATUS_ACCURACY_HIGH">HIGH</string>
     <string name="SENSOR_STATUS_ACCURACY_UNKNOWN">UNKNOWN</string>
     
+    <string name="degrees"> \u00B0</string>
+    <string name="grads"> grads</string>
+    
 </resources>

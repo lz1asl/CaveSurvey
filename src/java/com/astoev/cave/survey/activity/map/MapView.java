@@ -297,7 +297,7 @@ public class MapView extends View {
             return anAzimuth;
         } else {
             // convert from grads to degrees
-            return anAzimuth * Option.MAX_VALUE_AZIMUTH_DEGREES / Option.MAX_VALUE_AZIMUTH_GRADS;
+            return anAzimuth * Constants.GRAD_TO_DEC;
         }
     }
 
@@ -310,7 +310,7 @@ public class MapView extends View {
             return aSlope;
         } else {
             // convert from grads to degrees
-            return aSlope * Option.MAX_VALUE_SLOPE_DEGREES / Option.MAX_VALUE_SLOPE_GRADS;
+            return aSlope * Constants.GRAD_TO_DEC;
         }
     }
 
