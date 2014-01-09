@@ -72,7 +72,9 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
                         canvas.drawColor(0, PorterDuff.Mode.CLEAR);
 
                         if (mOldBitmap != null) {
-                            canvas.drawBitmap(mOldBitmap, 0, 0, null);
+                            int left = (canvas.getWidth() - mOldBitmap.getWidth())/2;
+                            int top = (canvas.getHeight() - mOldBitmap.getHeight())/2;
+                            canvas.drawBitmap(mOldBitmap, left, top, null);
                         }
 
                         commandManager.executeAll(c, previewDoneHandler);
