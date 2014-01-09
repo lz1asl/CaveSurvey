@@ -2,8 +2,11 @@ package com.astoev.cave.survey.service.export.excel;
 
 import android.content.Context;
 import android.util.Log;
+import android.util.SparseArray;
+
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
+import com.astoev.cave.survey.activity.map.MapUtilities;
 import com.astoev.cave.survey.model.*;
 import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.service.Workspace;
@@ -87,19 +90,38 @@ public class ExcelExport {
             List<Leg> legs = DaoUtil.getCurrProjectLegs();
 
             int rowCounter = 0;
+            Integer lastGalleryId = null, prevGalleryId;
+            SparseArray<String> galleryNames = new SparseArray<String>();
+
             for (Leg l : legs) {
                 rowCounter++;
+
+                if (galleryNames.get(l.getGalleryId(), Constants.STRING_NOT_FOUND) == Constants.STRING_NOT_FOUND) {
+                    Gallery gallery = DaoUtil.getGallery(l.getGalleryId());
+                    galleryNames.put(l.getGalleryId(), gallery.getName());
+                }
+                if (lastGalleryId == null) {
+                    lastGalleryId = l.getGalleryId();
+                }
 
                 Row legRow = sheet.createRow(rowCounter);
 
                 Cell from = legRow.createCell(0);
                 Point fromPoint = l.getFromPoint();
                 DaoUtil.refreshPoint(fromPoint);
-                from.setCellValue(fromPoint.getName());
+
+                if (l.getGalleryId().equals(lastGalleryId)) {
+                    from.setCellValue(galleryNames.get(l.getGalleryId()) + fromPoint.getName());
+                    prevGalleryId = l.getGalleryId();
+                } else {
+                    prevGalleryId = DaoUtil.getLegByToPoint(l.getFromPoint()).getGalleryId();
+                    from.setCellValue(galleryNames.get(prevGalleryId) + fromPoint.getName());
+                }
+
                 Cell to = legRow.createCell(1);
                 Point toPoint = l.getToPoint();
                 DaoUtil.refreshPoint(toPoint);
-                to.setCellValue(toPoint.getName());
+                to.setCellValue(galleryNames.get(l.getGalleryId()) + toPoint.getName());
                 Cell length = legRow.createCell(2);
                 if (l.getDistance() != null) {
                     length.setCellValue(StringUtils.floatToLabel(l.getDistance()));
@@ -134,6 +156,8 @@ public class ExcelExport {
                 if (n != null) {
                     note.setCellValue(n.getText());
                 }
+
+                lastGalleryId = l.getGalleryId();
 
                 /*QueryBuilder<Sketch, Integer> queryBuilderSketch = mWorkspace.getDBHelper().getSketchDao().queryBuilder();
                 queryBuilderSketch.where().eq(Sketch.COLUMN_POINT_ID, fromPoint.getId());

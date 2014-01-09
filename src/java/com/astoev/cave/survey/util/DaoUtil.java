@@ -106,4 +106,10 @@ public class DaoUtil {
         query.where().eq(Leg.COLUMN_TO_POINT, aToPoint.getId());
         return query.queryForFirst();
     }
+
+    public static long getGalleriesCount(Integer aActiveProjectId) throws SQLException {
+        QueryBuilder<Gallery, Integer> query = Workspace.getCurrentInstance().getDBHelper().getGalleryDao().queryBuilder();
+        query.where().eq(Gallery.COLUMN_PROJECT_ID, aActiveProjectId);
+        return query.countOf();
+    }
 }
