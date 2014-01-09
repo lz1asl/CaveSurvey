@@ -45,6 +45,7 @@ public class MapView extends View {
     Paint polygonWidthPaint = new Paint();
     Paint overlayPaint = new Paint();
     Paint youAreHerePaint = new Paint();
+    Paint gridPaint = new Paint();
     private float scale = 10;
     private int mapCenterMoveX = 0;
     private int mapCenterMoveY = 0;
@@ -66,6 +67,10 @@ public class MapView extends View {
         overlayPaint.setColor(Color.WHITE);
         youAreHerePaint.setColor(Color.WHITE);
         youAreHerePaint.setAlpha(50);
+        // semi transparent white
+        gridPaint.setColor(Color.parseColor("#11FFFFFF"));
+        gridPaint.setStrokeWidth(1);
+
     }
 
     @Override
@@ -88,14 +93,14 @@ public class MapView extends View {
             int spacing = 5;
 
             // grid
-//            int gridStep = 20;
-//            for (int x=0; x<maxX; x++) {
-//                canvas.drawLine(x * gridStep, 0, x*gridStep, maxY, polygonPaint);
-//            }
-//
-//            for (int y=0; y<maxY; y++) {
-//                canvas.drawLine(0, y * gridStep, maxX, y*gridStep, polygonPaint);
-//            }
+            int gridStep = 20;
+            for (int x=0; x<maxX; x++) {
+                canvas.drawLine(x*gridStep + spacing, spacing, x*gridStep + spacing, maxY - spacing, gridPaint);
+            }
+
+            for (int y=0; y<maxY; y++) {
+                canvas.drawLine(spacing, y*gridStep + spacing, maxX - spacing, y*gridStep + spacing, gridPaint);
+            }
 
             String pointLabel;
 
