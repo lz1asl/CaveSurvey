@@ -139,6 +139,7 @@ public class MapView extends View {
                                 galleryNames.put(l.getGalleryId(), gallery.getName());
                             }
                             polygonPaint.setColor(galleryColors.get(l.getGalleryId()));
+                            polygonWidthPaint.setColor(galleryColors.get(l.getGalleryId()));
 
                             DaoUtil.refreshPoint(l.getFromPoint());
                             pointLabel = galleryNames.get(l.getGalleryId()) + l.getFromPoint().getName();
@@ -148,6 +149,7 @@ public class MapView extends View {
 
                         float deltaX;
                         float deltaY;
+                        double galleryWidthAngle;
                         if (l.getDistance() == null || l.getAzimuth() == null) {
                             deltaX = 0;
                             deltaY = 0;
@@ -178,6 +180,7 @@ public class MapView extends View {
                                 galleryNames.put(l.getGalleryId(), gallery.getName());
                             }
                             polygonPaint.setColor(galleryColors.get(l.getGalleryId()));
+                            polygonWidthPaint.setColor(galleryColors.get(l.getGalleryId()));
 
 //                            Log.i(Constants.LOG_TAG_UI, "Drawing leg " + l.getFromPoint().getName() + ":" + l.getToPoint().getName() + "-" + l.getGalleryId());
 
@@ -195,17 +198,37 @@ public class MapView extends View {
                         // leg
                         canvas.drawLine(mapCenterMoveX + first.getX(), mapCenterMoveY + first.getY(), mapCenterMoveX + second.getX(), mapCenterMoveY + second.getY(), polygonPaint);
 
+                        Leg prevLeg = DaoUtil.getLegByToPoint(l.getFromPoint());
+
                         // left
                         if (first.getLeft() != null && first.getLeft()> 0) {
-                            deltaY = -(float) (first.getLeft() * Math.cos(Math.toRadians(getAzimuthInDegrees(first.getAzimuth() )- 90))) * scale;
-                            deltaX = (float) (first.getLeft() * Math.sin(Math.toRadians(getAzimuthInDegrees(first.getAzimuth() )- 90))) * scale;
+                            if (prevLeg == null) {
+                                // first point by 90 degree left
+                                galleryWidthAngle = Math.toRadians(getAzimuthInDegrees(first.getAzimuth()) - 90);
+                                deltaY = -(float) (first.getLeft() * Math.cos(galleryWidthAngle) * scale);
+                                deltaX = (float) (first.getLeft() * Math.sin(galleryWidthAngle) * scale);
+                            } else {
+                                // each other by the bisector
+                                galleryWidthAngle = Math.toRadians(getAzimuthInDegrees(Math.abs(prevLeg.getAzimuth()+second.getAzimuth())/2 - 90));
+                                deltaY = - (float) (first.getLeft() * Math.cos(galleryWidthAngle) * scale);
+                                deltaX = (float) (first.getLeft() * Math.sin(galleryWidthAngle) * scale);
+                            }
                             canvas.drawCircle(mapCenterMoveX + first.getX() + deltaX, mapCenterMoveY + first.getY() + deltaY, MEASURE_POINT_RADIUS, polygonWidthPaint);
                         }
 
                         // right
                         if (first.getRight() != null && first.getRight()> 0) {
-                            deltaY = -(float) (first.getRight() * Math.cos(Math.toRadians(getAzimuthInDegrees(first.getAzimuth()) + 90))) * scale;
-                            deltaX = (float) (first.getRight() * Math.sin(Math.toRadians(getAzimuthInDegrees(first.getAzimuth() )+ 90))) * scale;
+                            if (prevLeg == null) {
+                                // first point by 90 degree left
+                                galleryWidthAngle = Math.toRadians(getAzimuthInDegrees(first.getAzimuth()) + 90);
+                                deltaY = -(float) (first.getRight() * Math.cos(galleryWidthAngle) * scale);
+                                deltaX = (float) (first.getRight() * Math.sin(galleryWidthAngle) * scale);
+                            } else {
+                                // each other by the bisector
+                                galleryWidthAngle = Math.toRadians(getAzimuthInDegrees(Math.abs(prevLeg.getAzimuth()+second.getAzimuth())/2 + 90));
+                                deltaY = - (float) (first.getLeft() * Math.cos(galleryWidthAngle) * scale);
+                                deltaX = (float) (first.getLeft() * Math.sin(galleryWidthAngle) * scale);
+                            }
                             canvas.drawCircle(mapCenterMoveX + first.getX() + deltaX, mapCenterMoveY + first.getY() + deltaY, MEASURE_POINT_RADIUS, polygonWidthPaint);
                         }
 
