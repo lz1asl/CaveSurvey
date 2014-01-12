@@ -209,7 +209,11 @@ public class MapView extends View {
                                 deltaX = (float) (first.getLeft() * Math.sin(galleryWidthAngle) * scale);
                             } else {
                                 // each other by the bisector
-                                galleryWidthAngle = Math.toRadians(getAzimuthInDegrees(Math.abs(prevLeg.getAzimuth()+second.getAzimuth())/2 - 90));
+                                if (l.getGalleryId().equals(prevLeg.getGalleryId())) {
+                                    galleryWidthAngle = Math.toRadians(getAzimuthInDegrees(Math.abs(prevLeg.getAzimuth()+second.getAzimuth())/2 - 90));
+                                } else {
+                                    galleryWidthAngle = Math.toRadians(getAzimuthInDegrees(second.getAzimuth()) - 90);
+                                }
                                 deltaY = - (float) (first.getLeft() * Math.cos(galleryWidthAngle) * scale);
                                 deltaX = (float) (first.getLeft() * Math.sin(galleryWidthAngle) * scale);
                             }
@@ -225,7 +229,12 @@ public class MapView extends View {
                                 deltaX = (float) (first.getRight() * Math.sin(galleryWidthAngle) * scale);
                             } else {
                                 // each other by the bisector
-                                galleryWidthAngle = Math.toRadians(getAzimuthInDegrees(Math.abs(prevLeg.getAzimuth()+second.getAzimuth())/2 + 90));
+                                if (l.getGalleryId().equals(prevLeg.getGalleryId())) {
+                                    galleryWidthAngle = Math.toRadians(getAzimuthInDegrees(Math.abs(prevLeg.getAzimuth()+second.getAzimuth())/2 + 90));
+                                } else {
+                                    galleryWidthAngle = Math.toRadians(getAzimuthInDegrees(second.getAzimuth()) + 90);
+                                }
+
                                 deltaY = - (float) (first.getLeft() * Math.cos(galleryWidthAngle) * scale);
                                 deltaX = (float) (first.getLeft() * Math.sin(galleryWidthAngle) * scale);
                             }
