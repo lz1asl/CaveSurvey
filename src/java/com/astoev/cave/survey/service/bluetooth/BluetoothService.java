@@ -16,7 +16,9 @@ import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.UIUtilities;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -28,6 +30,10 @@ import java.util.List;
 public class BluetoothService {
 
     public static final String SPP_UUID = "00001101-0000-1000-8000-00805F9B34FB";
+    private static final Set<String> SUPPORTED_DEVICES = new HashSet<String>();
+    static {
+        SUPPORTED_DEVICES.add("iLDM-150");
+    }
 
     private static ConnectThread mBusyThread = null;
     private static BluetoothDevice mCurrDevice = null;
@@ -172,6 +178,10 @@ public class BluetoothService {
 
     public static boolean isPaired() {
         return mPaired;
+    }
+
+    public static boolean isSupported(String aDeviceName) {
+        return SUPPORTED_DEVICES.contains(aDeviceName);
     }
 
     // read single measure command

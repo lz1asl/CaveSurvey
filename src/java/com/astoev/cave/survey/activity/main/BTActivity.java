@@ -23,7 +23,9 @@ import com.astoev.cave.survey.util.ConfigUtil;
 import com.astoev.cave.survey.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -34,8 +36,8 @@ import java.util.List;
  */
 public class BTActivity extends BaseActivity {
 
-
     final List<Pair<String, String>> devices = new ArrayList<Pair<String, String>>();
+
 
     final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
@@ -45,12 +47,16 @@ public class BTActivity extends BaseActivity {
                 // When discovery finds a device
                 if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                     BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                    Log.i("Bluetooth new device ", device.getName() + "\n" + device.getAddress());
-                    Pair<String, String> newDevice = new Pair(device.getName(), device.getAddress());
-                    if (!devices.contains(newDevice)) {
-                        devices.add(newDevice);
+                    if (BluetoothService.isSupported(device.getName())) {
+                        Log.i("Bluetooth new device ", device.getName() + "\n" + device.getAddress());
+                        Pair<String, String> newDevice = new Pair(device.getName(), device.getAddress());
+                        if (!devices.contains(newDevice)) {
+                            devices.add(newDevice);
+                        }
+                        refreshDevicesList();
+                    } else {
+                        Log.i(Constants.LOG_TAG_SERVICE, device.getName() + " not supported");
                     }
-                    refreshDevicesList();
                 }
             } catch (Exception e) {
                 Log.e(Constants.LOG_TAG_UI, "Failed during receive", e);
