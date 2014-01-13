@@ -5,16 +5,24 @@ package com.astoev.cave.survey.util;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.concurrent.Callable;
 
+import android.util.Log;
+
+import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.model.Gallery;
 import com.astoev.cave.survey.model.Leg;
+import com.astoev.cave.survey.model.Location;
 import com.astoev.cave.survey.model.Note;
 import com.astoev.cave.survey.model.Photo;
 import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.model.Sketch;
 import com.astoev.cave.survey.service.Workspace;
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.misc.TransactionManager;
 import com.j256.ormlite.stmt.QueryBuilder;
+import com.j256.ormlite.support.ConnectionSource;
 
 /**
  * @author jmitrev
@@ -45,6 +53,13 @@ public class DaoUtil {
     	QueryBuilder<Photo, Integer> query = Workspace.getCurrentInstance().getDBHelper().getPhotoDao().queryBuilder();
     	query.where().eq(Photo.COLUMN_POINT_ID, pointArg.getId());
     	return Workspace.getCurrentInstance().getDBHelper().getPhotoDao().queryForFirst(query.prepare());
+    }
+    
+    public static Location getLocationByPoint(Point pointArg) throws SQLException {
+        Dao<Location, Integer> locationDao = Workspace.getCurrentInstance().getDBHelper().getLocationDao();
+        QueryBuilder<Location, Integer> query = locationDao.queryBuilder();
+        query.where().eq(Location.COLUMN_POINT_ID, pointArg.getId());
+        return locationDao.queryForFirst(query.prepare());
     }
 
     public static Project getProject(int aId) throws SQLException {
@@ -110,5 +125,47 @@ public class DaoUtil {
         QueryBuilder<Gallery, Integer> query = Workspace.getCurrentInstance().getDBHelper().getGalleryDao().queryBuilder();
         query.where().eq(Gallery.COLUMN_PROJECT_ID, aActiveProjectId);
         return query.countOf();
+    }
+    
+    /**
+     * DAO method that saves or update the location of Point based on GPS location 
+     * 
+     * @param parentPointArg - parent Point
+     * @param gpsLocationArg - GPS Location
+     * @throws SQLException if there is a problem working with the DB
+     */
+    public static void saveLocationToPoint(final Point parentPointArg, final android.location.Location gpsLocationArg)
+        throws SQLException {
+        
+        ConnectionSource connetionSource = Workspace.getCurrentInstance().getDBHelper().getConnectionSource();
+        TransactionManager.callInTransaction(connetionSource, new Callable<Integer>() {
+
+            @Override
+            public Integer call() throws Exception {
+                Location oldLocation = getLocationByPoint(parentPointArg);
+                if (oldLocation != null){
+                    oldLocation.setLatitude((float)gpsLocationArg.getLatitude());
+                    oldLocation.setLongitude((float)gpsLocationArg.getLongitude());
+                    oldLocation.setAltitude((int)gpsLocationArg.getAltitude());
+                    oldLocation.setAccuracy((int)gpsLocationArg.getAccuracy());
+                    Workspace.getCurrentInstance().getDBHelper().getLocationDao().update(oldLocation);
+                    
+                    Log.i(Constants.LOG_TAG_DB, "Update location with id:" + oldLocation.getId() + " for point:" + parentPointArg.getId());
+                    return oldLocation.getId();
+                } else {
+                    Location newLocation = new Location();
+                    newLocation.setPoint(parentPointArg);
+                    newLocation.setLatitude((float)gpsLocationArg.getLatitude());
+                    newLocation.setLongitude((float)gpsLocationArg.getLongitude());
+                    newLocation.setAltitude((int)gpsLocationArg.getAltitude());
+                    newLocation.setAccuracy((int)gpsLocationArg.getAccuracy());
+                    Workspace.getCurrentInstance().getDBHelper().getLocationDao().create(newLocation);
+                    
+                    Log.i(Constants.LOG_TAG_DB, "Creted location with id:" + newLocation.getId() + " for point:" + parentPointArg.getId());
+                    return newLocation.getId();
+                }
+            }
+        });
+        
     }
 }

@@ -27,6 +27,7 @@ import com.astoev.cave.survey.activity.map.MapUtilities;
 import com.astoev.cave.survey.activity.map.opengl.Map3DActivity;
 import com.astoev.cave.survey.model.Gallery;
 import com.astoev.cave.survey.model.Leg;
+import com.astoev.cave.survey.model.Location;
 import com.astoev.cave.survey.model.Note;
 import com.astoev.cave.survey.model.Photo;
 import com.astoev.cave.survey.model.Point;
@@ -60,10 +61,20 @@ public class MainActivity extends MainMenuActivity {
     private SparseArray<String> mGalleryNames;
     
     private static boolean isDebug = false;
+    
+    private String sketchPrefix;
+    private String notePrefix;
+    private String photoPrefix;
+    private String locationPrefix;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        
+        sketchPrefix   = getString(R.string.table_sketch_prefix);
+        notePrefix     = getString(R.string.table_note_prefix);
+        photoPrefix    = getString(R.string.table_photo_prefix);
+        locationPrefix = getString(R.string.table_location_prefix);
     }
 
     private void drawTable() {
@@ -167,15 +178,19 @@ public class MainActivity extends MainMenuActivity {
                 
                 Sketch sketch = DaoUtil.getScetchByLeg(l);
                 if (sketch != null){
-                	moreText.append(getString(R.string.table_sketch_prefix));
+                	moreText.append(sketchPrefix);
                 }
                 Note note = DaoUtil.getActiveLegNote(l);
                 if (note != null){
-                	moreText.append(getString(R.string.table_note_prefix));
+                	moreText.append(notePrefix);
                 }
                 Photo photo = DaoUtil.getPhotoByLeg(l);
                 if (photo != null) {
-                	moreText.append(getString(R.string.table_photo_prefix));
+                	moreText.append(photoPrefix);
+                }
+                Location location = DaoUtil.getLocationByPoint(fromPoint);
+                if (location != null){
+                    moreText.append(locationPrefix);
                 }
 
                 //TODO add sketch and photo here

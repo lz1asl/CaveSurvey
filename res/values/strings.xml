@@ -55,12 +55,11 @@
     <string name="main_add_note">Note</string>
     <string name="main_add_sketch">Draw</string>
     <string name="main_add_photo">Photo</string>
-<!--     
-    <string name="main_add_coordinate">GPS</string>
- -->    
+    <string name="main_add_gps">GPS</string>
     <string name="table_sketch_prefix">S</string>
     <string name="table_note_prefix">N</string>
     <string name="table_photo_prefix">P</string>
+    <string name="table_location_prefix">L</string>
 
 
     <!-- main menu -->
@@ -227,7 +226,29 @@
     <string name="SENSOR_STATUS_ACCURACY_HIGH">HIGH</string>
     <string name="SENSOR_STATUS_ACCURACY_UNKNOWN">UNKNOWN</string>
     
-    <string name="degrees"> \u00B0</string>
-    <string name="grads"> grads</string>
+    <string name="degrees">\u00B0</string>
+    <string name="grads">grads</string>
+<!--     
+    <string name="meters">m</string>
+ -->
+<!--  
+    <string name="lat_lon_template">%f\u00B0%s</string>
+ -->     
+    <string name="gps_title">GPS Position</string>
+    <string name="gps_altitude">Altitude (m):</string>
+    <string name="gps_latitude">Latitude:</string>
+    <string name="gps_longitude">Longitude:</string>
+    <string name="gps_accuracy">Accuracy (m):</string>
+    <string name="gps_no_value">No value</string>
+    <string name="gps_save">Save</string>
+    <string name="gps_disabled">GPS Disabled</string>
+    
+    <string name="gps_error_no_location">No GPS location!</string>
+    <string name="gps_db_error">Unable to save location!</string>
+    
+    <string name="gps_enable_question">GPS is diabled! Would you like to enable it from Settings page?</string>
+    
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancel</string>
     
 </resources>

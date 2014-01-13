@@ -421,9 +421,11 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         startActivity(intent);
     }
 
-    public void coordinateButton() {
-        // TODO location http://www.tutorialforandroid.com/2009/05/permissions-journey-accesscoarselocatio.html
-        UIUtilities.showNotification(R.string.todo);
+    public void gpsButton() {
+        Point parentPoint = getCurrentLeg().getFromPoint();
+    	Intent intent = new Intent(this, GPSActivity.class);
+    	intent.putExtra(GPSActivity.POINT, parentPoint);
+    	startActivity(intent);
     }
 
     public void deleteButton() {
@@ -621,10 +623,10 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                 drawingButton();
                 return true;
             }
-//            case R.id.point_action_gps: {
-//                coordinateButton();
-//                return true;
-//            }
+            case R.id.point_action_gps: {
+                gpsButton();
+                return true;
+            }
             case R.id.point_action_photo: {
                 photoButton();
                 return true;

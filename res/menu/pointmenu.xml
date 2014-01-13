@@ -7,6 +7,13 @@
 	      android:title="@string/point_save"
 	      android:visible="true"
 	      myapp:showAsAction="ifRoom|withText"/>
+	
+    <item android:id="@+id/point_action_gps"
+          android:icon="@drawable/ic_action_place"
+          android:title="@string/main_add_gps"
+          android:visible="true"
+          android:enabled="true"
+          myapp:showAsAction="ifRoom|withText"/>    
 
 	<item android:id="@+id/point_action_note"
 	      android:icon="@drawable/ic_action_labels"
@@ -27,15 +34,8 @@
           android:enabled="true"
           myapp:showAsAction="ifRoom|withText"/>	
 	      
-	<!-- gps photo delete are disabled-->
-<!-- 	
-	<item android:id="@+id/point_action_gps"
-	      android:icon="@drawable/ic_action_place"
-	      android:title="@string/main_add_coordinate"
-	      android:visible="true"
-	      android:enabled="false"
-	      myapp:showAsAction="ifRoom|withText"/>	
- -->
+<!-- TODO place gps here -->
+ 
 	<item android:id="@+id/point_action_delete"
 	      android:icon="@drawable/ic_action_discard"
 	      android:title="@string/point_delete"
