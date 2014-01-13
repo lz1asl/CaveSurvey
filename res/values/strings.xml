@@ -249,6 +249,6 @@
     <string name="gps_error_no_location">No GPS location!</string>
     <string name="gps_db_error">Unable to save location!</string>
     
-    <string name="gps_enable_question">GPS is diabled! Would you like to enable it from Settings page?</string>
+    <string name="gps_enable_question">GPS is disabled! Would you like to enable it from Settings page?</string>
     
 </resources>

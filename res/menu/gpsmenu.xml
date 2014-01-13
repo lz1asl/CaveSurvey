@@ -4,7 +4,7 @@
       
 	<item android:id="@+id/note_action_save"
 	      android:icon="@drawable/ic_action_save"
-	      android:title="@string/note_save"
+	      android:title="@string/gps_save"
 	      android:visible="true"
 	      myapp:showAsAction="ifRoom|withText"/>
       
