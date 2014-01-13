@@ -6,7 +6,8 @@
     <TableRow android:layout_width="fill_parent"
               android:layout_height="wrap_content" 
               android:layout_marginTop="10dp">    
-	    <TextView android:text="@string/gps_current_location"
+	    <TextView android:id="@+id/location_fragment_title"
+	              android:text="@string/gps_saved_location"
 	              android:layout_height="wrap_content"
 	              android:layout_width="0dp"
 	              android:layout_weight="1"

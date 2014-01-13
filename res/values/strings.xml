@@ -235,21 +235,20 @@
     <string name="lat_lon_template">%f\u00B0%s</string>
  -->     
     <string name="gps_title">GPS Position</string>
-    <string name="gps_altitude">Altitude (m):</string>
-    <string name="gps_latitude">Latitude:</string>
-    <string name="gps_longitude">Longitude:</string>
-    <string name="gps_accuracy">Accuracy (m):</string>
+    <string name="gps_altitude">Altitude (m)</string>
+    <string name="gps_latitude">Latitude</string>
+    <string name="gps_longitude">Longitude</string>
+    <string name="gps_accuracy">Accuracy (m)</string>
     <string name="gps_no_value">No value</string>
     <string name="gps_save">Save</string>
     <string name="gps_disabled">GPS Disabled</string>
-    <string name="gps_current_location">Curretn location</string>
+    <string name="gps_no_signal">Looking for GPS Location ....</string>
+    <string name="gps_saved_location">Saved location</string>
+    <string name="gps_current_location">Current location</string>
     
     <string name="gps_error_no_location">No GPS location!</string>
     <string name="gps_db_error">Unable to save location!</string>
     
     <string name="gps_enable_question">GPS is diabled! Would you like to enable it from Settings page?</string>
-    
-    <string name="ok">Ok</string>
-    <string name="cancel">Cancel</string>
     
 </resources>

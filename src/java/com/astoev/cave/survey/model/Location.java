@@ -1,5 +1,7 @@
 package com.astoev.cave.survey.model;
 
+import java.io.Serializable;
+
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -11,7 +13,9 @@ import com.j256.ormlite.table.DatabaseTable;
  * To change this template use File | Settings | File Templates.
  */
 @DatabaseTable(tableName = "locations")
-public class Location {
+public class Location implements Serializable{
+
+    private static final long serialVersionUID = 201401131334L;
 
     public static final String COLUMN_POINT_ID =               "point_id";
 

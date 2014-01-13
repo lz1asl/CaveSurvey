@@ -2,94 +2,29 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:orientation="vertical" >
-<!-- --> 
+
 	<include android:id="@+id/no_gps_include"
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_margin="10dp"
 	    layout="@layout/nogps"/>
-
-<!-- 
-    <TextView android:id="@+id/no_gps_include"
-              android:text="@string/gps_disabled"
-              android:gravity="center"
-              android:layout_width="fill_parent"
-              android:layout_height="wrap_content"
-              android:textAppearance="?android:attr/textAppearanceLarge"/>
- -->
-         
-	<LinearLayout
-	    android:id="@+id/gps_located"
+	
+	<include android:id="@+id/no_gps_signal_include"
 	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	    android:orientation="vertical" >
-	    
-		<LinearLayout android:layout_width="fill_parent"
-		              android:layout_height="wrap_content"
-		              android:orientation="horizontal"
-		              android:layout_margin="10dp">
-	        <TextView android:layout_height="wrap_content"
-	                  android:layout_width="0dp"
-	                  android:layout_weight="1"
-	                  android:text="@string/gps_latitude"
-	                  android:textAppearance="?android:attr/textAppearanceLarge"/>
-	        <TextView android:id="@+id/gps_latitude"
-	                  android:text="@string/gps_no_value"
-	                  android:layout_height="wrap_content"
-	                  android:layout_width="0dp"
-	                  android:layout_weight="1"
-	                  android:textAppearance="?android:attr/textAppearanceLarge"/>
-		</LinearLayout>
-	    <LinearLayout android:layout_width="fill_parent"
-	                  android:layout_height="wrap_content"
-	                  android:orientation="horizontal"
-	                  android:layout_margin="10dp">
-	        <TextView android:layout_height="wrap_content"
-	                  android:layout_width="0dp"
-	                  android:layout_weight="1"
-	                  android:text="@string/gps_longitude"
-	                  android:textAppearance="?android:attr/textAppearanceLarge"/>
-	        <TextView android:id="@+id/gps_longitude"
-	                  android:text="@string/gps_no_value"
-	                  android:layout_height="wrap_content"
-	                  android:layout_width="0dp"
-	                  android:layout_weight="1"
-	                  android:textAppearance="?android:attr/textAppearanceLarge"/>
-	    </LinearLayout>
-	    <LinearLayout android:layout_width="fill_parent"
-	                  android:layout_height="wrap_content"
-	                  android:orientation="horizontal"
-	                  android:layout_margin="10dp">
-	        <TextView android:layout_height="wrap_content"
-	                  android:layout_width="0dp"
-	                  android:layout_weight="1"
-	                  android:text="@string/gps_altitude"
-	                  android:textAppearance="?android:attr/textAppearanceLarge"/>
-	        <TextView android:id="@+id/gps_altitude"
-	                  android:text="@string/gps_no_value"
-	                  android:layout_height="wrap_content"
-	                  android:layout_width="0dp"
-	                  android:layout_weight="1"
-	                  android:textAppearance="?android:attr/textAppearanceLarge"/>
-	    </LinearLayout>
-	    <LinearLayout android:layout_width="fill_parent"
-	                  android:layout_height="wrap_content"
-	                  android:orientation="horizontal"
-	                  android:layout_margin="10dp">
-	        <TextView android:layout_height="wrap_content"
-	                  android:layout_width="0dp"
-	                  android:layout_weight="1"
-	                  android:text="@string/gps_accuracy"
-	                  android:textAppearance="?android:attr/textAppearanceLarge"/>
-	        <TextView android:id="@+id/gps_accuracy"
-	                  android:text="@string/gps_no_value"
-	                  android:layout_height="wrap_content"
-	                  android:layout_width="0dp"
-	                  android:layout_weight="1"
-	                  android:textAppearance="?android:attr/textAppearanceLarge"/>
-	    </LinearLayout>
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        layout="@layout/no_gps_signal"/>
+
+	<fragment
+	    android:id="@+id/current_location_container"
+	    android:name="com.astoev.cave.survey.fragment.UpdatebleLocationFragment"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content" />
 	
-	</LinearLayout>
-	
+	<FrameLayout 
+	    android:id="@+id/saved_location_container"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content" >
+	</FrameLayout>	
 	
 </LinearLayout>

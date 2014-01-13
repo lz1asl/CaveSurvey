@@ -60,7 +60,9 @@ public class GPSProcessor implements LocationListener {
      */
     @Override
     public void onStatusChanged(String providerArg, int statusArg, Bundle extrasArg) {
-        // TODO Auto-generated method stub
+        if (listener != null){
+            listener.onStatusChanged(providerArg, statusArg, extrasArg);
+        }
     }
 
     /**
@@ -68,7 +70,7 @@ public class GPSProcessor implements LocationListener {
      */
     @Override
     public void onProviderEnabled(String providerArg) {
-        // TODO Auto-generated method stub
+        // Don't care right now
     }
 
     /**
@@ -76,6 +78,6 @@ public class GPSProcessor implements LocationListener {
      */
     @Override
     public void onProviderDisabled(String providerArg) {
-        // TODO Auto-generated method stub
+        // Don't care right now
     }
 }
