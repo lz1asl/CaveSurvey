@@ -60,35 +60,35 @@ public class GPSActivity extends MainMenuActivity {
         
 		gpsProcessor = getGPSProcessor();
 		
-		com.astoev.cave.survey.model.Location currentLocation = null;
-		if (parentPoint != null){
-		    try {
-                currentLocation = DaoUtil.getLocationByPoint(parentPoint);
-            } catch (SQLException sqle) {
-                Log.e(Constants.LOG_TAG_UI, "Unable to load location", sqle);
-            }
-		}
-        if (/*findViewById(R.id.current_location_container) != null &&*/ currentLocation != null) {
-
-            // However, if we're being restored from a previous state,
-            // then we don't need to do anything and should return or else
-            // we could end up with overlapping fragments.
-            if (savedInstanceState != null) {
-                return;
-            }
-            
-            LocationFragment locationFragment = new LocationFragment();
-            
-            Bundle bundle = new Bundle();
-            bundle.putSerializable(LocationFragment.LOCATION_KEY, currentLocation);
-            locationFragment.setArguments(bundle);
-            
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.saved_location_container, locationFragment);
-            
-            transaction.commit();
-            
-        }
+		initSavedLocationContainer(parentPoint, this, savedInstanceState);
+//		if (parentPoint != null){
+//		    try {
+//                currentLocation = DaoUtil.getLocationByPoint(parentPoint);
+//            } catch (SQLException sqle) {
+//                Log.e(Constants.LOG_TAG_UI, "Unable to load location", sqle);
+//            }
+//		}
+//        if (/*findViewById(R.id.current_location_container) != null &&*/ currentLocation != null) {
+//
+//            // However, if we're being restored from a previous state,
+//            // then we don't need to do anything and should return or else
+//            // we could end up with overlapping fragments.
+//            if (savedInstanceState != null) {
+//                return;
+//            }
+//            
+//            LocationFragment locationFragment = new LocationFragment();
+//            
+//            Bundle bundle = new Bundle();
+//            bundle.putSerializable(LocationFragment.LOCATION_KEY, currentLocation);
+//            locationFragment.setArguments(bundle);
+//            
+//            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+//            transaction.replace(R.id.saved_location_container, locationFragment);
+//            
+//            transaction.commit();
+//            
+//        }
 	}
 
 	/**
@@ -229,5 +229,45 @@ public class GPSActivity extends MainMenuActivity {
         findViewById(R.id.no_gps_include).setVisibility(View.GONE);
         findViewById(R.id.no_gps_signal_include).setVisibility(View.GONE);
         findViewById(R.id.current_location_container).setVisibility(View.VISIBLE);
+    }
+    
+    /**
+     * Helper method that defines how to initialize saved_location_container fragment with Location
+     * 
+     * @param parentPoint - parent point
+     * @param activity - parent activity
+     * @param savedInstanceState - Bundle
+     * @return Location if available for the parent point
+     */
+    public static com.astoev.cave.survey.model.Location initSavedLocationContainer(Point parentPoint, MainMenuActivity activity, Bundle savedInstanceState){
+        com.astoev.cave.survey.model.Location currentLocation = null;
+        if (parentPoint != null){
+            try {
+                currentLocation = DaoUtil.getLocationByPoint(parentPoint);
+            } catch (SQLException sqle) {
+                Log.e(Constants.LOG_TAG_UI, "Unable to load location", sqle);
+            }
+        }
+        if (/*findViewById(R.id.current_location_container) != null &&*/ currentLocation != null) {
+
+            // However, if we're being restored from a previous state,
+            // then we don't need to do anything and should return or else
+            // we could end up with overlapping fragments.
+            if (savedInstanceState != null) {
+                return null;
+            }
+            
+            LocationFragment locationFragment = new LocationFragment();
+            
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(LocationFragment.LOCATION_KEY, currentLocation);
+            locationFragment.setArguments(bundle);
+            
+            FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.saved_location_container, locationFragment);
+            
+            transaction.commit();
+        }
+        return currentLocation;
     }
 }
