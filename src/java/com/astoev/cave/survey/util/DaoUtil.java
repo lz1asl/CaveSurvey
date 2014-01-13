@@ -144,8 +144,8 @@ public class DaoUtil {
             public Integer call() throws Exception {
                 Location oldLocation = getLocationByPoint(parentPointArg);
                 if (oldLocation != null){
-                    oldLocation.setLatitude((float)gpsLocationArg.getLatitude());
-                    oldLocation.setLongitude((float)gpsLocationArg.getLongitude());
+                    oldLocation.setLatitude(gpsLocationArg.getLatitude());
+                    oldLocation.setLongitude(gpsLocationArg.getLongitude());
                     oldLocation.setAltitude((int)gpsLocationArg.getAltitude());
                     oldLocation.setAccuracy((int)gpsLocationArg.getAccuracy());
                     Workspace.getCurrentInstance().getDBHelper().getLocationDao().update(oldLocation);
@@ -155,8 +155,8 @@ public class DaoUtil {
                 } else {
                     Location newLocation = new Location();
                     newLocation.setPoint(parentPointArg);
-                    newLocation.setLatitude((float)gpsLocationArg.getLatitude());
-                    newLocation.setLongitude((float)gpsLocationArg.getLongitude());
+                    newLocation.setLatitude(gpsLocationArg.getLatitude());
+                    newLocation.setLongitude(gpsLocationArg.getLongitude());
                     newLocation.setAltitude((int)gpsLocationArg.getAltitude());
                     newLocation.setAccuracy((int)gpsLocationArg.getAccuracy());
                     Workspace.getCurrentInstance().getDBHelper().getLocationDao().create(newLocation);

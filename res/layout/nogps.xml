@@ -1,0 +1,12 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+	<TextView android:id="@+id/no_gps"
+	          android:text="@string/gps_disabled"
+	          android:gravity="center"
+	          android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:textAppearance="?android:attr/textAppearanceLarge"/>
+    
+</FrameLayout>
