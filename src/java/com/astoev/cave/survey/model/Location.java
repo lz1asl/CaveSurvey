@@ -20,9 +20,9 @@ public class Location {
     @DatabaseField(foreign = true, columnName =COLUMN_POINT_ID)
     private Point mPoint;
     @DatabaseField(columnName = "latitude")
-    private float mLatitude;
+    private double mLatitude;
     @DatabaseField(columnName = "longitude")
-    private float mLongitude;
+    private double mLongitude;
     @DatabaseField(columnName = "altitude")
     private int mAltitude;
     @DatabaseField(columnName = "accuracy")
@@ -44,19 +44,19 @@ public class Location {
         mPoint = aPoint;
     }
 
-    public float getLatitude() {
+    public double getLatitude() {
         return mLatitude;
     }
 
-    public void setLatitude(float aLatitude) {
+    public void setLatitude(double aLatitude) {
         mLatitude = aLatitude;
     }
 
-    public float getLongitude() {
+    public double getLongitude() {
         return mLongitude;
     }
 
-    public void setLongitude(float aLongitude) {
+    public void setLongitude(double aLongitude) {
         mLongitude = aLongitude;
     }
 
