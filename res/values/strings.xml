@@ -205,6 +205,7 @@
     <string name="bt_state_bonding">Bonding state</string>
     <string name="bt_state_none">Unknown state</string>
     <string name="bt_not_on">Bluetooth not turned on</string>
+    <string name="bt_not_selected">Device not selected</string>
 
     <string name="action_saved">Saved</string>
     <string name="action_deleted">Deleted</string>
