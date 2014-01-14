@@ -100,7 +100,8 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
     @Override
     protected void onResume() {
         super.onResume();
-        
+
+        receiver.resetMeasureExpectations();
         loadPointData();
     }
     
@@ -232,21 +233,34 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                     break;
             }
 
-            Log.i(Constants.LOG_TAG_UI, "Add BT listener");
             // supported for the measure, add the listener
-            text.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                @Override
-                public void onFocusChange(View v, boolean hasFocus) {
-                    if (hasFocus) {
-                        Log.i(Constants.LOG_TAG_UI, "Send read command");
-                        receiver.expectsMeasure(aMeasure);
-                        triggerBluetoothMeasure(aMeasure);
-                    } else {
-                        receiver.ignore(aMeasure);
+            if (StringUtils.isEmpty(text)) {
+                // no current falue, just moving focus to the cell requests measure from BT
+                Log.i(Constants.LOG_TAG_UI, "Add BT focus listener");
+                text.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                    @Override
+                    public void onFocusChange(View v, boolean hasFocus) {
+                        if (hasFocus) {
+                            Log.i(Constants.LOG_TAG_UI, "Send read command");
+                            receiver.awaitMeasure(aMeasure);
+                            triggerBluetoothMeasure(aMeasure);
+                        } else {
+                            receiver.ignoreMeasure(aMeasure);
+                        }
                     }
-
-                }
-            });
+                });
+            } else {
+                // trigger BT read only if you tap twice
+                Log.i(Constants.LOG_TAG_UI, "Add BT click listener");
+                text.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Log.i(Constants.LOG_TAG_UI, "Send read command");
+                        receiver.awaitMeasure(aMeasure);
+                        triggerBluetoothMeasure(aMeasure);
+                    }
+                });
+            }
         }
     }
 
@@ -732,6 +746,11 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
             protected void onReceiveResult(int resultCode, Bundle resultData) {
                 float aMeasure = resultData.getFloat("result");
                 Constants.Measures type = Constants.Measures.valueOf(resultData.getString("type"));
+                if (!expectsMeasure(type)) {
+                    Log.i(Constants.LOG_TAG_SERVICE, "Unexpected measure " + type + " : " + aMeasure);
+                    return;
+                }
+
                 switch (type) {
                     case distance:
                         Log.i(Constants.LOG_TAG_UI, "Got distance " + aMeasure);
@@ -777,12 +796,16 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
             return expectedMeasures.contains(aMeasure);
         }
 
-        public void await(Constants.Measures aMeasure) {
+        public void awaitMeasure(Constants.Measures aMeasure) {
             expectedMeasures.add(aMeasure);
         }
 
-        public void ignore(Constants.Measures aMeasure) {
+        public void ignoreMeasure(Constants.Measures aMeasure) {
             expectedMeasures.remove(aMeasure);
+        }
+
+        public void resetMeasureExpectations() {
+            expectedMeasures.clear();
         }
     }
 
