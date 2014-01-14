@@ -13,9 +13,9 @@ import com.astoev.cave.survey.model.Option;
  */
 public class Constants {
 
-    public static final String LOG_TAG_DB = "DB";
-    public static final String LOG_TAG_UI = "CaveUI";
-    public static final String LOG_TAG_SERVICE = "SRVC";
+    public static final String LOG_TAG_DB = "CaveSurveyDB";
+    public static final String LOG_TAG_UI = "CaveSurveyUI";
+    public static final String LOG_TAG_SERVICE = "CaveSurveySVC";
 
     public static final String DATE_FORMAT = "yyyyMMdd_HHmmss";
 
