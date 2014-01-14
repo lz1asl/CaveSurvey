@@ -193,7 +193,6 @@ public class MainActivity extends MainMenuActivity {
                     moreText.append(locationPrefix);
                 }
 
-                //TODO add sketch and photo here
                 row.addView(createTextView(moreText.toString(), currentLeg, true));
                 table.addView(row, params);
             }

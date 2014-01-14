@@ -3,22 +3,29 @@ package com.astoev.cave.survey.service.bluetooth;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.ResultReceiver;
 import android.util.Log;
+import android.util.Pair;
 import android.widget.CheckBox;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.UIUtilities;
+import com.astoev.cave.survey.service.Workspace;
+import com.astoev.cave.survey.util.ConfigUtil;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * Created with IntelliJ IDEA.
@@ -45,13 +52,18 @@ public class BluetoothService {
         @Override
         public void onReceive(Context context, Intent intent) {
             try {
-                UIUtilities.showNotification(R.string.bt_paired);
-//                Button toggle = (Button) mCurrContext.findViewById(R.id.bt_toggle_pair);
-                Log.i(Constants.LOG_TAG_UI, "Paired with " + mCurrDevice);
-                mPaired = true;
+                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                if (!isSupported(device.getName())) {
+                    // ignore other devices
+                    Log.i(Constants.LOG_TAG_SERVICE, "Bonded unsupported device");
+                    return;
+                }
 
-                CheckBox deviceStatus = (CheckBox) mCurrContext.findViewById(R.id.bt_device_status);
-                deviceStatus.setChecked(true);
+                UIUtilities.showNotification(R.string.bt_paired);
+                Log.i(Constants.LOG_TAG_UI, "Paired with " + device.getName());
+                mPaired = true;
+                mCurrDevice = device;
+
             } catch (Exception e) {
                 Log.e(Constants.LOG_TAG_UI, "Failed during pair", e);
                 UIUtilities.showNotification(R.string.error);
@@ -62,15 +74,31 @@ public class BluetoothService {
         @Override
         public void onReceive(Context context, Intent intent) {
             try {
-                UIUtilities.showNotification(R.string.bt_disconnect);
-                Log.i(Constants.LOG_TAG_UI, "Disconnected");
-//                Button toggle = (Button) mCurrContext.findViewById(R.id.bt_toggle_pair);
-                mPaired = false;
+                if (mCurrDevice == null) {
+                    // ignore event if don't expect to be paired with device
+                    Log.i(Constants.LOG_TAG_SERVICE, "Ignore disconnect, no curr device");
+                    return;
+                }
 
-                CheckBox deviceStatus = (CheckBox) mCurrContext.findViewById(R.id.bt_device_status);
-                deviceStatus.setChecked(false);
+                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                if (!isSupported(device.getName())) {
+                    // ignore other devices
+                    Log.i(Constants.LOG_TAG_SERVICE, "Ignore disconnect, device not supported");
+                    return;
+                }
 
-                stop();
+                if (mCurrDevice.getName().equals(device.getName()) && mCurrDevice.getAddress().equals(device.getAddress())) {
+                    mCurrDevice = null;
+                    mPaired = false;
+                    UIUtilities.showNotification(R.string.bt_not_paired);
+                    Log.i(Constants.LOG_TAG_UI, "Disconnected");
+
+                    stop();
+                } else {
+                    // ignore events for other non paired devices
+                    Log.i(Constants.LOG_TAG_SERVICE, "Ignore disconnect, not curr device");
+                }
+
             } catch (Exception e) {
                 Log.e(Constants.LOG_TAG_UI, "Failed during disconnect", e);
                 UIUtilities.showNotification(R.string.error);
@@ -87,7 +115,10 @@ public class BluetoothService {
     }
 
     public static boolean askBluetoothOn(Activity aParentActivity) {
-        return BluetoothAdapter.getDefaultAdapter().isEnabled();
+        if (isBluetoothSupported()) {
+            return BluetoothAdapter.getDefaultAdapter().isEnabled();
+        }
+        return false;
     }
 
     public static void registerListeners(final Activity aContext) {
@@ -96,13 +127,13 @@ public class BluetoothService {
 
         if (!mRegisteredReceivers.contains(mConnectedReceiver)) {
             mRegisteredReceivers.add(mConnectedReceiver);
-            aContext.registerReceiver(mConnectedReceiver,
+            mCurrContext.registerReceiver(mConnectedReceiver,
                     new IntentFilter(BluetoothDevice.ACTION_ACL_CONNECTED));
         }
 
         if (!mRegisteredReceivers.contains(mDisconnectedReceiver)) {
             mRegisteredReceivers.add(mDisconnectedReceiver);
-            aContext.registerReceiver(mDisconnectedReceiver,
+            mCurrContext.registerReceiver(mDisconnectedReceiver,
                     new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED));
         }
     }
@@ -148,7 +179,7 @@ public class BluetoothService {
         mCurrDevice = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(aDeviceAddress);
         Log.i(Constants.LOG_TAG_SERVICE, "Selected " + aDeviceAddress + " : " + mCurrDevice);
 
-       /* // ping the device in background
+       // ping the device in background
         new Thread() {
             public void run() {
                 Log.i(Constants.LOG_TAG_UI, "Test device");
@@ -161,19 +192,23 @@ public class BluetoothService {
                     }
                     tester.connect();
                     Log.i(Constants.LOG_TAG_UI, "Device found!");
+                    UIUtilities.showNotification(R.string.bt_paired);
+                    mPaired = true;
                 } catch (Exception e) {
-                    Log.e(Constants.LOG_TAG_SERVICE, "Failed to test device ", e);
+                    mCurrDevice = null;
+                    UIUtilities.showNotification(R.string.bt_pair_failed);
+                    Log.e(Constants.LOG_TAG_SERVICE, "Failed test to new device");
                 } finally {
                     if (tester != null) {
                         try {
                             tester.close();
                         } catch (IOException e) {
-                            e.printStackTrace();
+                            Log.e(Constants.LOG_TAG_SERVICE, "Failed to cleanup tester");
                         }
                     }
                 }
             }
-        }.start();*/
+        }.start();
     }
 
     public static boolean isPaired() {
@@ -190,4 +225,36 @@ public class BluetoothService {
     }
 
 
+    public static List<Pair<String, String>> getPairedCompatibleDevices() {
+        List<Pair<String, String>> result = new ArrayList<Pair<String, String>>();
+        Set<BluetoothDevice> devices = BluetoothAdapter.getDefaultAdapter().getBondedDevices();
+        for(BluetoothDevice d: devices) {
+            if (isSupported(d.getName())) {
+                result.add(new Pair(d.getName(), d.getAddress()));
+            }
+        }
+        return result;
+    }
+
+    public static String getCurrDeviceStatus() {
+        if (mCurrDevice == null) {
+            return ConfigUtil.getContext().getString(R.string.bt_state_unknown);
+        }
+
+        switch (mCurrDevice.getBondState()) {
+            case BluetoothDevice.BOND_BONDED:
+                return mCurrContext.getString(R.string.bt_state_bonded);
+
+            case BluetoothDevice.BOND_BONDING:
+                return mCurrContext.getString(R.string.bt_state_bonding);
+
+            case BluetoothDevice.BOND_NONE:
+                return mCurrContext.getString(R.string.bt_state_none);
+
+            default:
+                return mCurrContext.getString(R.string.bt_state_unknown);
+        }
+
+
+    }
 }

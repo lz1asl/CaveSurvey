@@ -9,14 +9,18 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.BaseActivity;
+import com.astoev.cave.survey.activity.MainMenuActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.service.bluetooth.BluetoothService;
 import com.astoev.cave.survey.util.ConfigUtil;
@@ -34,38 +38,9 @@ import java.util.Set;
  * Time: 10:31 AM
  * To change this template use File | Settings | File Templates.
  */
-public class BTActivity extends BaseActivity {
+public class BTActivity extends MainMenuActivity {
 
-    final List<Pair<String, String>> devices = new ArrayList<Pair<String, String>>();
-
-
-    final BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        public void onReceive(Context context, Intent intent) {
-            try {
-
-                String action = intent.getAction();
-                // When discovery finds a device
-                if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-                    BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                    if (BluetoothService.isSupported(device.getName())) {
-                        Log.i("Bluetooth new device ", device.getName() + "\n" + device.getAddress());
-                        Pair<String, String> newDevice = new Pair(device.getName(), device.getAddress());
-                        if (!devices.contains(newDevice)) {
-                            devices.add(newDevice);
-                        }
-                        refreshDevicesList();
-                    } else {
-                        Log.i(Constants.LOG_TAG_SERVICE, device.getName() + " not supported");
-                    }
-                }
-            } catch (Exception e) {
-                Log.e(Constants.LOG_TAG_UI, "Failed during receive", e);
-                UIUtilities.showNotification(R.string.error);
-            }
-        }
-    };
-
-    IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+    List<Pair<String, String>> devices = new ArrayList<Pair<String, String>>();
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,19 +60,20 @@ public class BTActivity extends BaseActivity {
                 return;
             }
 
-            String selectedBtDeviceAddress = ConfigUtil.getStringProperty(ConfigUtil.PROP_CURR_BT_DEVICE_ADDRESS);
-            if (StringUtils.isNotEmpty(selectedBtDeviceAddress)) {
-                String selectedBtDeviceName = ConfigUtil.getStringProperty(ConfigUtil.PROP_CURR_BT_DEVICE_NAME);
-                Pair<String, String> newDevice = new Pair(selectedBtDeviceName, selectedBtDeviceAddress);
-                if (!devices.contains(newDevice)) {
-                    devices.add(newDevice);
-                    refreshDevicesList();
-                    if (BluetoothService.isPaired()) {
-                        Button searchButton = (Button) findViewById(R.id.bt_search);
-                        searchButton.setEnabled(false);
-                    }
+            Spinner devicesChooser = (Spinner) findViewById(R.id.bt_devices);
+            devicesChooser.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    selectDevice();
                 }
-            }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+
+            refreshDevicesList();
 
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed during create", e);
@@ -129,16 +105,64 @@ public class BTActivity extends BaseActivity {
 		return getString(R.string.bt_devices);
 	}
 
-	public void togglePair(View aView) {
-        Button toggle = (Button) aView.findViewById(R.id.bt_toggle_pair);
-        toggle.setEnabled(false);
+    private void refreshDevicesList() {
 
-        // stop BT discovery and events
-        BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
-        safeUnregisterReceiver();
+        devices = BluetoothService.getPairedCompatibleDevices();
 
+        String selectedDeviceName = null;
+        String selectedBtDeviceAddress = ConfigUtil.getStringProperty(ConfigUtil.PROP_CURR_BT_DEVICE_ADDRESS);
+        if (StringUtils.isNotEmpty(selectedBtDeviceAddress)) {
+            String selectedBtDeviceName = ConfigUtil.getStringProperty(ConfigUtil.PROP_CURR_BT_DEVICE_NAME);
+            selectedDeviceName = buildDeviceName(new Pair(selectedBtDeviceName, selectedBtDeviceAddress));
+        }
+
+        List<String> devicesList = new ArrayList<String>();
+        int index = 0;
+        int selectedDeviceIndex = -1;
+        String tempName;
+        for (final Pair<String, String> device : devices) {
+            tempName = buildDeviceName(device);
+            devicesList.add(tempName);
+            if (tempName.equals(selectedDeviceName)) {
+                selectedDeviceIndex = index;
+            }
+            index ++;
+        }
+
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, devicesList);
+        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        Spinner devicesChooser = (Spinner) findViewById(R.id.bt_devices);
+        devicesChooser.setAdapter(spinnerArrayAdapter);
+        if (selectedDeviceIndex >= 0) {
+            devicesChooser.setSelection(selectedDeviceIndex);
+        }
+
+        updateDeviceStatus();
+
+    }
+
+    private void updateDeviceStatus() {
+        // display status
+        TextView status = (TextView) findViewById(R.id.bt_status);
+        StringBuilder statusText = new StringBuilder();
+        statusText.append(BluetoothService.getCurrDeviceStatus());
+        statusText.append(" : ");
+        statusText.append(BluetoothService.isPaired() ? getString(R.string.bt_paired) : getString(R.string.bt_not_paired));
+        status.setText(statusText.toString());
+    }
+
+    public void pairNewDevice() {
+        Intent intentOpenBluetoothSettings = new Intent();
+        intentOpenBluetoothSettings.setAction(android.provider.Settings.ACTION_BLUETOOTH_SETTINGS);
+        startActivity(intentOpenBluetoothSettings);
+    }
+
+    private String buildDeviceName(Pair<String, String> aDevice) {
+        return aDevice.first + " : " + aDevice.second;
+    }
+
+    public void selectDevice() {
         // get selected
-        Log.i(Constants.LOG_TAG_UI, "Pair");
         Spinner devicesChooser = (Spinner) findViewById(R.id.bt_devices);
         Pair<String, String> device = devices.get(devicesChooser.getSelectedItemPosition());
         Log.i(Constants.LOG_TAG_UI, "Try to use " + device.first + ":" + device.second);
@@ -148,61 +172,31 @@ public class BTActivity extends BaseActivity {
         ConfigUtil.setStringProperty(ConfigUtil.PROP_CURR_BT_DEVICE_NAME, device.first);
         ConfigUtil.setStringProperty(ConfigUtil.PROP_CURR_BT_DEVICE_ADDRESS, device.second);
 
-        // no need to stay here more
-//        Intent intent = new Intent(this, HomeActivity.class);
-//        startActivity(intent);
     }
 
-    public void searchDevices(View aView) {
-
-        try {
-            Log.i(Constants.LOG_TAG_UI, "Searching devices");
-            if (!BluetoothAdapter.getDefaultAdapter().isDiscovering()) {
-                registerReceiver(mReceiver, filter);
-                BluetoothAdapter.getDefaultAdapter().startDiscovery();
-            }
-        } catch (Exception e) {
-            Log.e(Constants.LOG_TAG_UI, "Failed during search", e);
-            UIUtilities.showNotification(R.string.error);
-        }
-    }
-
-    private void refreshDevicesList() {
-        Spinner devicesChooser = (Spinner) findViewById(R.id.bt_devices);
-
-        List<String> devicesList = new ArrayList<String>();
-        for (final Pair<String, String> device : devices) {
-            devicesList.add(buildDeviceName(device));
-        }
-
-        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, devicesList);
-        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        devicesChooser.setAdapter(spinnerArrayAdapter);
-
-        Button toggle = (Button) findViewById(R.id.bt_toggle_pair);
-        if (!BluetoothService.isPaired() && devices.size() > 0) {
-            toggle.setEnabled(true);
-        } else {
-            toggle.setEnabled(false);
-        }
-    }
-
+    /**
+     * @see com.astoev.cave.survey.activity.MainMenuActivity#getChildsOptionsMenu()
+     */
     @Override
-    public void onBackPressed() {
-        safeUnregisterReceiver();
-        super.onBackPressed();
+    protected int getChildsOptionsMenu() {
+        return R.menu.btmenu;
     }
 
-    private void safeUnregisterReceiver() {
-        try {
-            unregisterReceiver(mReceiver);
-        } catch (Exception e) {
-            // ignore, might already been unregistered
+    /**
+     * @see com.astoev.cave.survey.activity.MainMenuActivity#onOptionsItemSelected(android.view.MenuItem)
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.bt_new:{
+                pairNewDevice();
+                return true;
+            }
+
+            default:
+                return super.onOptionsItemSelected(item);
         }
-    }
-
-    private String buildDeviceName(Pair<String, String> aDevice) {
-        return aDevice.first + " : " + aDevice.second;
     }
 
 }

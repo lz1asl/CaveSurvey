@@ -3,15 +3,6 @@
               android:orientation="vertical"
               android:layout_width="fill_parent"
               android:layout_height="fill_parent">
-<!--               
-    <TextView android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:gravity="center_horizontal"
-              android:text="@string/bt_title"
-              android:textAppearance="?android:attr/textAppearanceLarge"
-              android:layout_gravity="center"
-              android:layout_margin="10dp"/>
- -->              
     <LinearLayout android:layout_width="fill_parent"
                   android:layout_height="wrap_content"
                   android:orientation="horizontal"
@@ -20,28 +11,14 @@
                  android:layout_height="wrap_content"
                  android:layout_width="0dp"
                  android:layout_weight="9"/>
-	    <CheckBox android:id="@+id/bt_device_status" 
-                 android:layout_height="wrap_content"
-                 android:layout_width="0dp"
-                 android:layout_weight="1"
-	              android:enabled="false"/>
     </LinearLayout>    
     <LinearLayout android:layout_width="fill_parent"
                   android:layout_height="wrap_content"
                   android:orientation="horizontal"
                   android:layout_margin="10dp">
-        <Button android:id="@+id/bt_toggle_pair"
+        <TextView android:id="@+id/bt_status"
                 android:layout_height="wrap_content"
                 android:layout_width="0dp"
-                android:layout_weight="1"
-                android:enabled="false"
-                android:onClick="togglePair"
-                android:text="@string/bt_pair"/>
-        <Button android:id="@+id/bt_search"
-                android:layout_height="wrap_content"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:text="@string/bt_search"
-                android:onClick="searchDevices"/>        
+                android:layout_weight="1"/>
     </LinearLayout>
 </LinearLayout>
