@@ -47,6 +47,8 @@ public class GPSActivity extends MainMenuActivity {
     /** Point owner of the location*/
     private Point parentPoint;
     
+    private boolean hasLocation;
+    
 	/**
 	 * @see com.astoev.cave.survey.activity.BaseActivity#onCreate(android.os.Bundle)
 	 */
@@ -195,14 +197,31 @@ public class GPSActivity extends MainMenuActivity {
                 public void onStatusChanged(String providerArg, int statusArg, Bundle extrasArg) {
                     switch (statusArg) {
                     case LocationProvider.AVAILABLE:
+                        Log.d(Constants.LOG_TAG_UI, "onStatusChanged: AVAILABLE :" + statusArg);
                         signalFound();
                         break;
                     case LocationProvider.TEMPORARILY_UNAVAILABLE:
+                        Log.d(Constants.LOG_TAG_UI, "onStatusChanged: TEMPORARILY_UNAVAILABLE :" + statusArg);
                         waitingForSignal();
                         break;
                     case LocationProvider.OUT_OF_SERVICE:
+                        Log.d(Constants.LOG_TAG_UI, "onStatusChanged: OUT_OF_SERVICE :" + statusArg);
                         waitingForSignal();
                         break;
+                    default:
+                        Log.d(Constants.LOG_TAG_UI, "onStatusChanged: UNKNOWN :" + statusArg);
+                    }
+                }
+
+                /**
+                 * @see com.astoev.cave.survey.service.gps.LocationListenerAdapter#onLocationChanged(android.location.Location)
+                 */
+                @Override
+                public void onLocationChanged(Location locationArg) {
+                    if (!hasLocation){
+                        // hack for Hero I do not receive the status updates
+                        hasLocation = true;
+                        signalFound();
                     }
                 }
             };
@@ -216,19 +235,21 @@ public class GPSActivity extends MainMenuActivity {
         findViewById(R.id.no_gps_include).setVisibility(View.VISIBLE);
         findViewById(R.id.no_gps_signal_include).setVisibility(View.GONE);
         findViewById(R.id.current_location_container).setVisibility(View.GONE);
+        hasLocation = false;
     }
     
     private void waitingForSignal(){
         findViewById(R.id.no_gps_include).setVisibility(View.GONE);
         findViewById(R.id.no_gps_signal_include).setVisibility(View.VISIBLE);
         findViewById(R.id.current_location_container).setVisibility(View.GONE);
-        
+        hasLocation = false;
     }
     
     private void signalFound(){
         findViewById(R.id.no_gps_include).setVisibility(View.GONE);
         findViewById(R.id.no_gps_signal_include).setVisibility(View.GONE);
         findViewById(R.id.current_location_container).setVisibility(View.VISIBLE);
+        hasLocation = true;
     }
     
     /**
