@@ -13,6 +13,7 @@ import android.os.ResultReceiver;
 import android.util.Log;
 import android.util.Pair;
 import android.widget.CheckBox;
+import android.widget.TextView;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
@@ -64,6 +65,9 @@ public class BluetoothService {
                 mPaired = true;
                 mCurrDevice = device;
 
+                TextView status = (TextView) mCurrContext.findViewById(R.id.bt_status);
+                status.setText(BluetoothService.getCurrDeviceStatusLabel(mCurrContext));
+
             } catch (Exception e) {
                 Log.e(Constants.LOG_TAG_UI, "Failed during pair", e);
                 UIUtilities.showNotification(R.string.error);
@@ -94,6 +98,9 @@ public class BluetoothService {
                     Log.i(Constants.LOG_TAG_UI, "Disconnected");
 
                     stop();
+
+                    TextView status = (TextView) mCurrContext.findViewById(R.id.bt_status);
+                    status.setText(BluetoothService.getCurrDeviceStatusLabel(mCurrContext));
                 } else {
                     // ignore events for other non paired devices
                     Log.i(Constants.LOG_TAG_SERVICE, "Ignore disconnect, not curr device");
@@ -167,6 +174,7 @@ public class BluetoothService {
             mBusyThread.cancel();
         }
         mCurrDevice = null;
+        mPaired = false;
 
         for (BroadcastReceiver r : mRegisteredReceivers) {
             mCurrContext.unregisterReceiver(r);
@@ -256,5 +264,13 @@ public class BluetoothService {
         }
 
 
+    }
+
+    public static String getCurrDeviceStatusLabel(Context aContext) {
+        StringBuilder statusText = new StringBuilder();
+        statusText.append(getCurrDeviceStatus());
+        statusText.append(" : ");
+        statusText.append(BluetoothService.isPaired() ? aContext.getString(R.string.bt_paired) : aContext.getString(R.string.bt_not_paired));
+        return statusText.toString();
     }
 }

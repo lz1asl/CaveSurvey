@@ -144,11 +144,7 @@ public class BTActivity extends MainMenuActivity {
     private void updateDeviceStatus() {
         // display status
         TextView status = (TextView) findViewById(R.id.bt_status);
-        StringBuilder statusText = new StringBuilder();
-        statusText.append(BluetoothService.getCurrDeviceStatus());
-        statusText.append(" : ");
-        statusText.append(BluetoothService.isPaired() ? getString(R.string.bt_paired) : getString(R.string.bt_not_paired));
-        status.setText(statusText.toString());
+        status.setText(BluetoothService.getCurrDeviceStatusLabel(this));
     }
 
     public void pairNewDevice() {
