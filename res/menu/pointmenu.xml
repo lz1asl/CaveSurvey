@@ -8,13 +8,6 @@
 	      android:visible="true"
 	      myapp:showAsAction="ifRoom|withText"/>
 	
-    <item android:id="@+id/point_action_gps"
-          android:icon="@drawable/ic_action_place"
-          android:title="@string/main_add_gps"
-          android:visible="true"
-          android:enabled="true"
-          myapp:showAsAction="ifRoom|withText"/>    
-
 	<item android:id="@+id/point_action_note"
 	      android:icon="@drawable/ic_action_labels"
 	      android:title="@string/main_add_note"
@@ -34,7 +27,12 @@
           android:enabled="true"
           myapp:showAsAction="ifRoom|withText"/>	
 	      
-<!-- TODO place gps here -->
+    <item android:id="@+id/point_action_gps"
+          android:icon="@drawable/ic_action_place"
+          android:title="@string/main_add_gps"
+          android:visible="true"
+          android:enabled="true"
+          myapp:showAsAction="ifRoom|withText"/>  
  
 	<item android:id="@+id/point_action_delete"
 	      android:icon="@drawable/ic_action_discard"

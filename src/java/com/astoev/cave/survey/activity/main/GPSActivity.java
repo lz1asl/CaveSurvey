@@ -6,22 +6,24 @@ package com.astoev.cave.survey.activity.main;
 import java.sql.SQLException;
 
 import android.location.Location;
+import android.location.LocationProvider;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.MainMenuActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.activity.dialog.TurnOnGPSDialogFragment;
+import com.astoev.cave.survey.fragment.LocationFragment;
+import com.astoev.cave.survey.fragment.UpdatebleLocationFragment;
 import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.service.gps.GPSProcessor;
 import com.astoev.cave.survey.service.gps.LocationListenerAdapter;
 import com.astoev.cave.survey.util.DaoUtil;
-import com.astoev.cave.survey.util.LocationUtil;
 
 /**
  * Activity that handles capturing GPS location
@@ -30,11 +32,6 @@ import com.astoev.cave.survey.util.LocationUtil;
  */
 public class GPSActivity extends MainMenuActivity {
 
-//    private static final String N = "N";
-//    private static final String S = "S";
-//    private static final String E = "E";
-//    private static final String W = "W";
-    
     /** Dialog name for enable GPS dialog */
     private static final String GPS_DIALOG = "GPS_DIALOG";
     
@@ -44,22 +41,13 @@ public class GPSActivity extends MainMenuActivity {
     /** GPS processor to handle the work with GPS */
     private GPSProcessor gpsProcessor;
     
-    private TextView latitudeView;
-    private TextView longitudeView;
-    private TextView altitudeView;
-    private TextView accuracyView;
-    
-//    /** Template for formatting latitude and longitude */
-//    private String latLonTemplate = "%f\u00B0%s";
-
     /** Flag if GPS enable is already requested */
     private boolean gpsRequested = false;
     
-    /** Current location from the location listener*/
-    private Location lastLocation;
-    
     /** Point owner of the location*/
     private Point parentPoint;
+    
+    private boolean hasLocation;
     
 	/**
 	 * @see com.astoev.cave.survey.activity.BaseActivity#onCreate(android.os.Bundle)
@@ -71,49 +59,38 @@ public class GPSActivity extends MainMenuActivity {
 		
         Bundle extras = getIntent().getExtras();
         parentPoint = (Point)extras.get(POINT);
-
-		latitudeView  = (TextView)findViewById(R.id.gps_latitude);
-		longitudeView = (TextView)findViewById(R.id.gps_longitude);
-		altitudeView  = (TextView)findViewById(R.id.gps_altitude);
-		accuracyView  = (TextView)findViewById(R.id.gps_accuracy);
+        
+		gpsProcessor = getGPSProcessor();
 		
-		LocationListenerAdapter listener = new LocationListenerAdapter(){
-
-            @Override
-            public void onLocationChanged(Location locationArg) {
-                
-                // latitude
-                final double latitude = locationArg.getLatitude();
-                String lat = LocationUtil.formatLatitude(latitude);
-//                if (latitude > 0){
-//                    lat = String.format(latLonTemplate, latitude, N);
-//                    
-//                } else {
-//                    lat = String.format(latLonTemplate, -latitude, S);
-//                }
-                latitudeView.setText(lat);
-                
-                // longitude
-                double longitude = locationArg.getLongitude();
-                String lon = LocationUtil.formatLongitude(longitude);
-//                if (longitude > 0){
-//                    lon = String.format(latLonTemplate, longitude, E);
-//                } else {
-//                    lon = String.format(latLonTemplate, -longitude, W);
-//                }
-                longitudeView.setText(lon);
-                
-                // altitude
-                altitudeView.setText(String.valueOf((int)locationArg.getAltitude()));
-                
-                // accuracy
-                accuracyView.setText(String.valueOf((int)locationArg.getAccuracy()));
-                
-                lastLocation = locationArg;
-            }
-		};
-		
-		gpsProcessor = new GPSProcessor(this, listener);
+		initSavedLocationContainer(parentPoint, this, savedInstanceState);
+//		if (parentPoint != null){
+//		    try {
+//                currentLocation = DaoUtil.getLocationByPoint(parentPoint);
+//            } catch (SQLException sqle) {
+//                Log.e(Constants.LOG_TAG_UI, "Unable to load location", sqle);
+//            }
+//		}
+//        if (/*findViewById(R.id.current_location_container) != null &&*/ currentLocation != null) {
+//
+//            // However, if we're being restored from a previous state,
+//            // then we don't need to do anything and should return or else
+//            // we could end up with overlapping fragments.
+//            if (savedInstanceState != null) {
+//                return;
+//            }
+//            
+//            LocationFragment locationFragment = new LocationFragment();
+//            
+//            Bundle bundle = new Bundle();
+//            bundle.putSerializable(LocationFragment.LOCATION_KEY, currentLocation);
+//            locationFragment.setArguments(bundle);
+//            
+//            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+//            transaction.replace(R.id.saved_location_container, locationFragment);
+//            
+//            transaction.commit();
+//            
+//        }
 	}
 
 	/**
@@ -123,8 +100,9 @@ public class GPSActivity extends MainMenuActivity {
 	protected void onResume() {
 		super.onResume();
 		
-		//TODO implement with dialog!
-		if (!gpsProcessor.canRead()){
+		GPSProcessor gpsProcessor = getGPSProcessor();
+
+		if (!getGPSProcessor().canRead()){
 		    
 		    if (!gpsRequested){
 		        // one request to turn on gps if disabled on settings page
@@ -134,18 +112,10 @@ public class GPSActivity extends MainMenuActivity {
 		    } 
 		    
 		    // show GPS disabled layout
-	        findViewById(R.id.no_gps_include).setVisibility(View.VISIBLE);
-	        findViewById(R.id.gps_located).setVisibility(View.GONE);
-		    
-//		} 
-//		else if (lastLocation != null){
-//		    // TODO enable waiting layout
-//	          findViewById(R.id.no_gps_include).setVisibility(View.INVISIBLE);
-//	          findViewById(R.id.gps_located).setVisibility(View.VISIBLE);
+		    gpsDisabled();
 		}else {
-		    //TODO enable main Layout
-            findViewById(R.id.no_gps_include).setVisibility(View.GONE);
-            findViewById(R.id.gps_located).setVisibility(View.VISIBLE);
+		    
+		    waitingForSignal();
 		}
 		
 		gpsProcessor.startListening();
@@ -198,6 +168,9 @@ public class GPSActivity extends MainMenuActivity {
      */
     private void saveLocation(){
         
+        UpdatebleLocationFragment fragment = (UpdatebleLocationFragment)getSupportFragmentManager().findFragmentById(R.id.current_location_container);
+        Location lastLocation = fragment.getLastLocation();
+        
         if (lastLocation != null){
             try {
                 DaoUtil.saveLocationToPoint(parentPoint, lastLocation);
@@ -209,5 +182,113 @@ public class GPSActivity extends MainMenuActivity {
         } else {
             UIUtilities.showNotification(R.string.gps_error_no_location);
         }
+    }
+    
+    /**
+     * Helper method that obtains a GPS processor
+     * 
+     * @return GPSProcessor with attached listener
+     */
+    private GPSProcessor getGPSProcessor(){
+        if (gpsProcessor == null){
+            LocationListenerAdapter listener = new LocationListenerAdapter(){
+
+                @Override
+                public void onStatusChanged(String providerArg, int statusArg, Bundle extrasArg) {
+                    switch (statusArg) {
+                    case LocationProvider.AVAILABLE:
+                        Log.d(Constants.LOG_TAG_UI, "onStatusChanged: AVAILABLE :" + statusArg);
+                        signalFound();
+                        break;
+                    case LocationProvider.TEMPORARILY_UNAVAILABLE:
+                        Log.d(Constants.LOG_TAG_UI, "onStatusChanged: TEMPORARILY_UNAVAILABLE :" + statusArg);
+                        waitingForSignal();
+                        break;
+                    case LocationProvider.OUT_OF_SERVICE:
+                        Log.d(Constants.LOG_TAG_UI, "onStatusChanged: OUT_OF_SERVICE :" + statusArg);
+                        waitingForSignal();
+                        break;
+                    default:
+                        Log.d(Constants.LOG_TAG_UI, "onStatusChanged: UNKNOWN :" + statusArg);
+                    }
+                }
+
+                /**
+                 * @see com.astoev.cave.survey.service.gps.LocationListenerAdapter#onLocationChanged(android.location.Location)
+                 */
+                @Override
+                public void onLocationChanged(Location locationArg) {
+                    if (!hasLocation){
+                        // hack for Hero I do not receive the status updates
+                        hasLocation = true;
+                        signalFound();
+                    }
+                }
+            };
+            
+            gpsProcessor = new GPSProcessor(this, listener);
+        }
+        return gpsProcessor;
+    }
+    
+    private void gpsDisabled(){
+        findViewById(R.id.no_gps_include).setVisibility(View.VISIBLE);
+        findViewById(R.id.no_gps_signal_include).setVisibility(View.GONE);
+        findViewById(R.id.current_location_container).setVisibility(View.GONE);
+        hasLocation = false;
+    }
+    
+    private void waitingForSignal(){
+        findViewById(R.id.no_gps_include).setVisibility(View.GONE);
+        findViewById(R.id.no_gps_signal_include).setVisibility(View.VISIBLE);
+        findViewById(R.id.current_location_container).setVisibility(View.GONE);
+        hasLocation = false;
+    }
+    
+    private void signalFound(){
+        findViewById(R.id.no_gps_include).setVisibility(View.GONE);
+        findViewById(R.id.no_gps_signal_include).setVisibility(View.GONE);
+        findViewById(R.id.current_location_container).setVisibility(View.VISIBLE);
+        hasLocation = true;
+    }
+    
+    /**
+     * Helper method that defines how to initialize saved_location_container fragment with Location
+     * 
+     * @param parentPoint - parent point
+     * @param activity - parent activity
+     * @param savedInstanceState - Bundle
+     * @return Location if available for the parent point
+     */
+    public static com.astoev.cave.survey.model.Location initSavedLocationContainer(Point parentPoint, MainMenuActivity activity, Bundle savedInstanceState){
+        com.astoev.cave.survey.model.Location currentLocation = null;
+        if (parentPoint != null){
+            try {
+                currentLocation = DaoUtil.getLocationByPoint(parentPoint);
+            } catch (SQLException sqle) {
+                Log.e(Constants.LOG_TAG_UI, "Unable to load location", sqle);
+            }
+        }
+        if (/*findViewById(R.id.current_location_container) != null &&*/ currentLocation != null) {
+
+            // However, if we're being restored from a previous state,
+            // then we don't need to do anything and should return or else
+            // we could end up with overlapping fragments.
+            if (savedInstanceState != null) {
+                return null;
+            }
+            
+            LocationFragment locationFragment = new LocationFragment();
+            
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(LocationFragment.LOCATION_KEY, currentLocation);
+            locationFragment.setArguments(bundle);
+            
+            FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.saved_location_container, locationFragment);
+            
+            transaction.commit();
+        }
+        return currentLocation;
     }
 }

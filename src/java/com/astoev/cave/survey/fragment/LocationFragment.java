@@ -1,11 +1,11 @@
 /**
  * 
  */
-package com.astoev.cave.survey.activity.main;
-
-import java.util.zip.Inflater;
+package com.astoev.cave.survey.fragment;
 
 import com.astoev.cave.survey.R;
+import com.astoev.cave.survey.model.Location;
+import com.astoev.cave.survey.util.LocationUtil;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,19 +15,21 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 /**
+ * Fragment that shows information for particular Location. It expects the the Location to be set as argument
+ * with key LOCATION.
  * 
  * @author jmitrev
  */
 public class LocationFragment extends Fragment {
 
+    /** Key where the Location is expected */
     public static final String LOCATION_KEY = "LOCATION";
     
-    private TextView latitudeView;
-    private TextView longitudeView;
-    private TextView altitudeView;
-    private TextView accuracyView;
+    protected TextView latitudeView;
+    protected TextView longitudeView;
+    protected TextView altitudeView;
+    protected TextView accuracyView;
 
-    
     /**
      * @see android.support.v4.app.Fragment#onCreateView(android.view.LayoutInflater, android.view.ViewGroup, android.os.Bundle)
      */
@@ -44,13 +46,22 @@ public class LocationFragment extends Fragment {
         
         Bundle arguments = getArguments();
         if (arguments != null && arguments.get(LOCATION_KEY) != null){
-//            latitudeView
+            Location location = (Location)arguments.get(LOCATION_KEY);
+            
+            String latitude = LocationUtil.formatLatitude(location.getLatitude());
+            latitudeView.setText(latitude);
+            
+            String longitude = LocationUtil.formatLongitude(location.getLongitude());
+            longitudeView.setText(longitude);
+            
+            // altitude
+            altitudeView.setText(String.valueOf(location.getAltitude()));
+            
+            // accuracy
+            accuracyView.setText(String.valueOf(location.getAccuracy()));
         }
         
         return view;
-
     }
-
-    
     
 }

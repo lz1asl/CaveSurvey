@@ -89,6 +89,11 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 				}
         	});
         }
+        
+        Leg legEdited = getCurrentLeg();
+        if (legEdited != null){
+            GPSActivity.initSavedLocationContainer(legEdited.getFromPoint(), this, savedInstanceState);
+        }
     }
 
     @Override
@@ -305,7 +310,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
             Log.i(Constants.LOG_TAG_UI, "Saving leg");
 
             TransactionManager.callInTransaction(getWorkspace().getDBHelper().getConnectionSource(),
-                    new Callable() {
+                    new Callable<Integer>() {
                         public Integer call() throws Exception {
 
                         	Leg legEdited = getCurrentLeg();
@@ -445,7 +450,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
     public void deleteButton() {
         try {
             TransactionManager.callInTransaction(getWorkspace().getDBHelper().getConnectionSource(),
-                    new Callable() {
+                    new Callable<Object>() {
                         public Object call() throws Exception {
                             Log.i(Constants.LOG_TAG_UI, "Delete " + getWorkspace().getActiveLegId());
 
@@ -458,6 +463,8 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 
                             getWorkspace().getDBHelper().getLegDao().delete(legEdited);
                             getWorkspace().getDBHelper().getPointDao().delete(legEdited.getToPoint());
+                            
+                            //TODO delete locations, sketches, photos
 
                             getWorkspace().setActiveLegId(getWorkspace().getLastLeg().getId());
 

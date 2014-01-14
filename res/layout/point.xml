@@ -122,13 +122,22 @@
 	    <TextView android:id="@+id/point_note_text"
 	        	  android:layout_width="fill_parent"
 	        	  android:layout_height="wrap_content"
-	        	  android:layout_margin="20dp"
+	        	  android:layout_marginLeft="20dp"
+	        	  android:layout_marginTop="10dp"
+	        	  android:layout_marginRight="20dp"
 	        	  android:layout_below="@id/point_dimensions_fields"
 	        	  android:clickable="false"
 	        	  android:onClick="noteButton"
 	        	  android:ellipsize="end"
 	        	  android:scrollbars="vertical"
 	        	  android:fadeScrollbars="false"/>
-	    
+
+        <FrameLayout 
+            android:id="@+id/saved_location_container"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" 
+            android:layout_below="@id/point_note_text">
+        </FrameLayout>  
+	    	    
 	</RelativeLayout>
 </ScrollView>
