@@ -171,6 +171,7 @@ public abstract class AzimuthProcessor implements SensorEventListener {
     	case Surface.ROTATION_0:
     		success = true;
     		outR = inRArg;
+    		break;
 		case Surface.ROTATION_90:
 			success =  SensorManager.remapCoordinateSystem(inRArg, SensorManager.AXIS_Y, SensorManager.AXIS_MINUS_X, outR);
 			break;
