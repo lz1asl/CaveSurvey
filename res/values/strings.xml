@@ -35,7 +35,9 @@
     <string name="main_table_header_more">More</string>
     <string name="main_table_header_note">Note</string>
     <string name="main_table_header_drawing">Drawing</string>
+<!--     
     <string name="main_table_header_gps">GPS</string>
+ -->    
     <string name="main_table_header_photo">Photo</string>
     
     <string name="leg">Leg</string>
