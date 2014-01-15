@@ -151,7 +151,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/infoDistanceIn"/>
     </TableRow>
-    <TableRow>
+    <TableRow >
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -161,17 +161,18 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/infoAzimuthIn"/>
     </TableRow>
-    <TableRow>
-        <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/info_azimuth_build_in_sensor"/>
-        <TextView
-                android:id="@+id/info_azimuth_sensor" 
-                android:layout_width="wrap_content"
+    <LinearLayout android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:orientation="horizontal">
+        <TextView android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="@string/info_azimuth_build_in_sensor"
+                  android:layout_marginRight="5dp"/>
+        <TextView android:id="@+id/info_azimuth_sensor" 
+                android:layout_width="wrap_content" 
                 android:layout_height="wrap_content"
                 android:text="@string/sensor_none"/>
-    </TableRow>        
+    </LinearLayout>
     <TableRow>
         <TextView
                 android:layout_width="wrap_content"

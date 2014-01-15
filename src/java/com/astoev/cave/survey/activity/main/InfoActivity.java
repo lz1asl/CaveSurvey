@@ -21,17 +21,19 @@ import com.astoev.cave.survey.service.azimuth.RotationAzimuthProcessor;
 import com.astoev.cave.survey.service.export.excel.ExcelExport;
 import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.util.FileStorageUtil;
+import com.astoev.cave.survey.util.ProjectInfo;
 import com.astoev.cave.survey.util.StringUtils;
 
 import java.io.File;
-import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
  * User: astoev
  * Date: 2/12/12
  * Time: 11:37 AM
- * To change this template use File | Settings | File Templates.
+ * 
+ * @author astoev
+ * @author jmitrev
  */
 public class InfoActivity extends MainMenuActivity {
 	
@@ -43,65 +45,37 @@ public class InfoActivity extends MainMenuActivity {
         setContentView(R.layout.info);
 
         try {
+            
+            ProjectInfo projectInfo = DaoUtil.getProjectInfo();
             // prepare labels
             TextView projectName = (TextView) findViewById(R.id.infoProjectName);
-            projectName.setText(getWorkspace().getActiveProject().getName());
+            projectName.setText(projectInfo.getName());
 
             TextView projectCreated = (TextView) findViewById(R.id.infoProjectCreated);
-            projectCreated.setText(getWorkspace().getActiveProject().getCreationDateFormatted());
+            projectCreated.setText(projectInfo.getCreationDate());
 
-            long numGalleries = DaoUtil.getGalleriesCount(getWorkspace().getActiveProjectId());
-            TextView projectNumGalleries = (TextView) findViewById(R.id.infoNumGalleries);
-            projectNumGalleries.setText("" + numGalleries);
+            TextView projectNumGalleries = (TextView)findViewById(R.id.infoNumGalleries);
+            projectNumGalleries.setText(String.valueOf(projectInfo.getGalleries()));
 
-            List<Leg> legs = DaoUtil.getCurrProjectLegs();
+            TextView projectNumLegs = (TextView)findViewById(R.id.infoNumLegs);
+            projectNumLegs.setText(String.valueOf(projectInfo.getLegs()));
 
-            TextView projectNumLegs = (TextView) findViewById(R.id.infoNumLegs);
-            projectNumLegs.setText("" + legs.size());
+            TextView projectTotalLength = (TextView)findViewById(R.id.infoRawDistance);
 
-            TextView projectTotalLength = (TextView) findViewById(R.id.infoRawDistance);
-            float totalLength = 0;
-            int numNotes = 0, numDrawings = 0, numCoordinates = 0, numPhotos = 0;
-            for (Leg l : legs) {
-                if (l.getDistance() != null) {
-                    totalLength += l.getDistance();
-                }
-
-                // notes
-                if (DaoUtil.getActiveLegNote(l) != null) {
-                    numNotes ++;
-                }
-
-                // drawings
-                if (DaoUtil.getScetchByLeg(l) != null){
-                    numDrawings ++;
-                }
-
-                // gps
-                List<Location> locations = getWorkspace().getDBHelper().getLocationDao().queryBuilder().where().eq(Location.COLUMN_POINT_ID, l.getFromPoint().getId()).query();
-                if (locations != null && locations.size() >0) {
-                    numCoordinates += locations.size();
-                }
-
-                // photo
-                List<Photo>  photos = getWorkspace().getDBHelper().getPhotoDao().queryBuilder().where().eq(Photo.COLUMN_POINT_ID, l.getFromPoint().getId()).query();
-                if (photos != null && photos.size() >0) {
-                    numPhotos += photos.size();
-                }
-            }
-            String lengthLabel = StringUtils.floatToLabel(totalLength) + " " + Options.getOptionValue(Option.CODE_DISTANCE_UNITS);
+            String lengthLabel = StringUtils.floatToLabel(projectInfo.getLength()) + " " + Options.getOptionValue(Option.CODE_DISTANCE_UNITS);
             projectTotalLength.setText(lengthLabel);
 
-
-            TextView projectNumNotes = (TextView) findViewById(R.id.infoNumNotes);
-
-            projectNumNotes.setText(StringUtils.intToLabel(numNotes));
-            TextView projectNumDrawings = (TextView) findViewById(R.id.infoNumDrawings);
-            projectNumDrawings.setText(StringUtils.intToLabel(numDrawings));
-            TextView projectNumCoordinates = (TextView) findViewById(R.id.infoNumCoordinates);
-            projectNumCoordinates.setText(StringUtils.intToLabel(numCoordinates));
-            TextView projectNumPhotos = (TextView) findViewById(R.id.infoNumPhotos);
-            projectNumPhotos.setText(StringUtils.intToLabel(numPhotos));
+            TextView projectNumNotes = (TextView)findViewById(R.id.infoNumNotes);
+            projectNumNotes.setText(StringUtils.intToLabel(projectInfo.getNotes()));
+            
+            TextView projectNumDrawings = (TextView)findViewById(R.id.infoNumDrawings);
+            projectNumDrawings.setText(StringUtils.intToLabel(projectInfo.getSketches()));
+            
+            TextView projectNumCoordinates = (TextView)findViewById(R.id.infoNumCoordinates);
+            projectNumCoordinates.setText(StringUtils.intToLabel(projectInfo.getLocations()));
+            
+            TextView projectNumPhotos = (TextView)findViewById(R.id.infoNumPhotos);
+            projectNumPhotos.setText(StringUtils.intToLabel(projectInfo.getPhotos()));
 
 
             ((TextView)findViewById(R.id.infoDistanceIn)).setText(Options.getOptionValue(Option.CODE_DISTANCE_UNITS));

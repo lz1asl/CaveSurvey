@@ -188,8 +188,15 @@ public class DaoUtil {
         });
     }
     
-    public static boolean deleteLeg(final Leg legEdited) throws SQLException{
-        if (legEdited.isNew()){
+    /**
+     * Deletes a leg its toPoint and all the data that is related to toPoint
+     * 
+     * @param legArg - leg to delete
+     * @return true if the leg is successfully deleted
+     * @throws SQLException if there is a problem with DB
+     */
+    public static boolean deleteLeg(final Leg legArg) throws SQLException{
+        if (legArg.isNew()){
             return false;
         }
         
@@ -200,7 +207,7 @@ public class DaoUtil {
             public Object call() throws Exception {
                 Log.d(Constants.LOG_TAG_DB, "Deleting " + workspace.getActiveLegId());
 
-                Point toPoint = legEdited.getToPoint();
+                Point toPoint = legArg.getToPoint();
                 
                 // delete note
                 Note note = DaoUtil.getNoteByPoint(toPoint);
@@ -231,7 +238,7 @@ public class DaoUtil {
                 }
                 
                 // delete leg
-                int deletedLeg = dbHelper.getLegDao().delete(legEdited);
+                int deletedLeg = dbHelper.getLegDao().delete(legArg);
                 Log.d(Constants.LOG_TAG_DB, "Deleted leg:" + deletedLeg);
                 
                 // delete to point
@@ -244,5 +251,65 @@ public class DaoUtil {
             }
         });        
         return true;
+    }
+    
+    /**
+     * Creates an ProjectInfo that sums up the project
+     * 
+     * @return ProjectInfo
+     * @throws SQLException if there is an DB problem
+     */
+    public static ProjectInfo getProjectInfo() throws SQLException{
+        
+        List<Leg> legs = DaoUtil.getCurrProjectLegs();
+        Project project = Workspace.getCurrentInstance().getActiveProject();
+        String name = project.getName();
+        String creationDate = project.getCreationDateFormatted();
+        
+        float totalLength = 0, totalDepth = 0;
+        int numNotes = 0, numDrawings = 0, numCoordinates = 0, numPhotos = 0;
+        for (Leg l : legs) {
+            
+            // TODO calculate the correct distance and depth
+            if (l.getDistance() != null) {
+                totalLength += l.getDistance();
+            }
+
+            // notes
+            if (DaoUtil.getActiveLegNote(l) != null) {
+                numNotes ++;
+            }
+
+            Point fromPoint = l.getFromPoint();
+            
+            // drawings
+            List<Sketch> sketchesList = DaoUtil.getAllScetchesByPoint(fromPoint);
+            if (sketchesList != null && !sketchesList.isEmpty()){
+                numDrawings += sketchesList.size();
+            }
+
+            // gps
+            Location locaiton = DaoUtil.getLocationByPoint(fromPoint);
+            if (locaiton != null ) {
+                numCoordinates ++;
+            }
+
+            // photos
+            List<Photo>  photos = DaoUtil.getAllPhotosByPoint(fromPoint);
+            if (photos != null && !photos.isEmpty()) {
+                numPhotos += photos.size();
+            }
+        }
+        
+        int numGalleries = (int)DaoUtil.getGalleriesCount(project.getId());
+        
+        ProjectInfo projectInfo = new ProjectInfo(name, creationDate, numGalleries, legs.size(), totalLength, totalDepth);
+        
+        projectInfo.setNotes(numNotes);
+        projectInfo.setSketches(numDrawings);
+        projectInfo.setLocations(numCoordinates);
+        projectInfo.setPhotos(numPhotos);
+        
+        return projectInfo;
     }
 }

@@ -181,7 +181,7 @@
     <string name="info_distance_in">Distance in</string>
     <string name="info_azimuth_in">Azimuth in</string>
     <string name="info_slope_in">Slope in</string>
-    <string name="info_azimuth_build_in_sensor">Azimuth build-in sensor:</string>
+    <string name="info_azimuth_build_in_sensor">Azimuth build-in sensor -</string>
     
     <string name="sensor_none">None</string>
     <string name="rotation_sensor">Rotation</string>
