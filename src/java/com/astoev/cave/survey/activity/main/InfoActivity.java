@@ -13,6 +13,11 @@ import com.astoev.cave.survey.activity.MainMenuActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.model.*;
 import com.astoev.cave.survey.service.Options;
+import com.astoev.cave.survey.service.azimuth.AzimuthProcessor;
+import com.astoev.cave.survey.service.azimuth.AzimuthProcessorFactory;
+import com.astoev.cave.survey.service.azimuth.MagneticAzimuthProcessor;
+import com.astoev.cave.survey.service.azimuth.OrientationAzimuthProcessor;
+import com.astoev.cave.survey.service.azimuth.RotationAzimuthProcessor;
 import com.astoev.cave.survey.service.export.excel.ExcelExport;
 import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.util.FileStorageUtil;
@@ -102,7 +107,21 @@ public class InfoActivity extends MainMenuActivity {
             ((TextView)findViewById(R.id.infoDistanceIn)).setText(Options.getOptionValue(Option.CODE_DISTANCE_UNITS));
             ((TextView)findViewById(R.id.infoAzimuthIn)).setText(Options.getOptionValue(Option.CODE_AZIMUTH_UNITS));
             ((TextView)findViewById(R.id.infoSlopeIn)).setText(Options.getOptionValue(Option.CODE_SLOPE_UNITS));
-
+            
+            // set the value for azimuth build in processor
+            if (Option.CODE_SENSOR_INTERNAL.equals(Options.getOption(Option.CODE_AZIMUTH_SENSOR).getValue())){
+                TextView azimuthSensor = (TextView)findViewById(R.id.info_azimuth_sensor);
+                AzimuthProcessor azimuthProcessor = AzimuthProcessorFactory.getAzimuthProcessor(this, null);
+                if (azimuthProcessor.canReadAzimuth()){
+                    if (azimuthProcessor instanceof RotationAzimuthProcessor){
+                        azimuthSensor.setText(getString(R.string.rotation_sensor));
+                    } else if (azimuthProcessor instanceof MagneticAzimuthProcessor){
+                        azimuthSensor.setText(getString(R.string.magnetic_sensor));
+                    } else if (azimuthProcessor instanceof OrientationAzimuthProcessor){
+                        azimuthSensor.setText(getString(R.string.orientation_sensor));
+                    }
+                } 
+            } 
 
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to render info activity", e);
