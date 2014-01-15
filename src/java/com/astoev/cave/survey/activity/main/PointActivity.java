@@ -448,31 +448,14 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
     }
 
     public void deleteButton() {
+        
         try {
-            TransactionManager.callInTransaction(getWorkspace().getDBHelper().getConnectionSource(),
-                    new Callable<Object>() {
-                        public Object call() throws Exception {
-                            Log.i(Constants.LOG_TAG_UI, "Delete " + getWorkspace().getActiveLegId());
-
-                            Leg legEdited = getCurrentLeg();
-
-                            Note note = DaoUtil.getActiveLegNote(legEdited);
-                            if (note != null) {
-                                getWorkspace().getDBHelper().getNoteDao().delete(note);
-                            }
-
-                            getWorkspace().getDBHelper().getLegDao().delete(legEdited);
-                            getWorkspace().getDBHelper().getPointDao().delete(legEdited.getToPoint());
-                            
-                            //TODO delete locations, sketches, photos
-
-                            getWorkspace().setActiveLegId(getWorkspace().getLastLeg().getId());
-
-                            UIUtilities.showNotification(R.string.action_deleted);
-                            onBackPressed();
-                            return null;
-                        }
-                    });
+            Leg legEdited = getCurrentLeg();
+            boolean deleted = DaoUtil.deleteLeg(legEdited);
+            if (deleted){
+                UIUtilities.showNotification(R.string.action_deleted);
+                onBackPressed();
+            } 
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to delete point", e);
             UIUtilities.showNotification(R.string.error);
@@ -612,8 +595,9 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
+        finish();
+//        Intent intent = new Intent(this, MainActivity.class);
+//        startActivity(intent);
     }
 
     /**

@@ -19,6 +19,7 @@ import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.model.Sketch;
 import com.astoev.cave.survey.service.Workspace;
+import com.astoev.cave.survey.service.ormlite.DatabaseHelper;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.misc.TransactionManager;
 import com.j256.ormlite.stmt.QueryBuilder;
@@ -32,6 +33,12 @@ public class DaoUtil {
     public static Note getActiveLegNote(Leg aActiveLeg) throws SQLException {
         QueryBuilder<Note, Integer> query = Workspace.getCurrentInstance().getDBHelper().getNoteDao().queryBuilder();
         query.where().eq(Note.COLUMN_POINT_ID, aActiveLeg.getFromPoint().getId());
+        return Workspace.getCurrentInstance().getDBHelper().getNoteDao().queryForFirst(query.prepare());
+    }
+    
+    public static Note getNoteByPoint(Point pointArg) throws SQLException{
+        QueryBuilder<Note, Integer> query = Workspace.getCurrentInstance().getDBHelper().getNoteDao().queryBuilder();
+        query.where().eq(Note.COLUMN_POINT_ID, pointArg.getId());
         return Workspace.getCurrentInstance().getDBHelper().getNoteDao().queryForFirst(query.prepare());
     }
 
@@ -49,10 +56,23 @@ public class DaoUtil {
         return Workspace.getCurrentInstance().getDBHelper().getSketchDao().queryForFirst(query.prepare());
     }
     
+    public static List<Sketch> getAllScetchesByPoint(Point pointArg) throws SQLException {
+        QueryBuilder<Sketch, Integer> query = Workspace.getCurrentInstance().getDBHelper().getSketchDao().queryBuilder();
+        query.where().eq(Sketch.COLUMN_POINT_ID, pointArg.getId());
+        return Workspace.getCurrentInstance().getDBHelper().getSketchDao().query(query.prepare());
+    }
+
+    
     public static Photo getPhotoByPoint(Point pointArg) throws SQLException {
     	QueryBuilder<Photo, Integer> query = Workspace.getCurrentInstance().getDBHelper().getPhotoDao().queryBuilder();
     	query.where().eq(Photo.COLUMN_POINT_ID, pointArg.getId());
     	return Workspace.getCurrentInstance().getDBHelper().getPhotoDao().queryForFirst(query.prepare());
+    }
+    
+    public static List<Photo> getAllPhotosByPoint(Point pointArg) throws SQLException {
+        QueryBuilder<Photo, Integer> query = Workspace.getCurrentInstance().getDBHelper().getPhotoDao().queryBuilder();
+        query.where().eq(Photo.COLUMN_POINT_ID, pointArg.getId());
+        return Workspace.getCurrentInstance().getDBHelper().getPhotoDao().query(query.prepare());
     }
     
     public static Location getLocationByPoint(Point pointArg) throws SQLException {
@@ -166,6 +186,63 @@ public class DaoUtil {
                 }
             }
         });
+    }
+    
+    public static boolean deleteLeg(final Leg legEdited) throws SQLException{
+        if (legEdited.isNew()){
+            return false;
+        }
         
+        final Workspace workspace = Workspace.getCurrentInstance();
+        final DatabaseHelper dbHelper = Workspace.getCurrentInstance().getDBHelper();
+        
+        TransactionManager.callInTransaction(dbHelper.getConnectionSource(), new Callable<Object>() {
+            public Object call() throws Exception {
+                Log.d(Constants.LOG_TAG_DB, "Deleting " + workspace.getActiveLegId());
+
+                Point toPoint = legEdited.getToPoint();
+                
+                // delete note
+                Note note = DaoUtil.getNoteByPoint(toPoint);
+                if (note != null) {
+                    int deleted = dbHelper.getNoteDao().delete(note);
+                    Log.d(Constants.LOG_TAG_DB, "Deleted note:" + deleted);
+                }
+                
+                // delete location
+                Location location  = DaoUtil.getLocationByPoint(toPoint);
+                if (location != null){
+                    int deleted = dbHelper.getLocationDao().delete(location);
+                    Log.d(Constants.LOG_TAG_DB, "Deleted location:" + deleted);
+                }
+                
+                // delete photos
+                List<Photo> photosList = DaoUtil.getAllPhotosByPoint(toPoint);
+                if (photosList != null && !photosList.isEmpty()){
+                    int deleted = dbHelper.getPhotoDao().delete(photosList);
+                    Log.d(Constants.LOG_TAG_DB, "Deleted photos:" + deleted);
+                }
+                
+                // delete sketches
+                List<Sketch> sketchList = DaoUtil.getAllScetchesByPoint(toPoint);
+                if (sketchList != null && !sketchList.isEmpty()){
+                    int deleted = dbHelper.getSketchDao().delete(sketchList);
+                    Log.d(Constants.LOG_TAG_DB, "Deleted sketches:" + deleted);
+                }
+                
+                // delete leg
+                int deletedLeg = dbHelper.getLegDao().delete(legEdited);
+                Log.d(Constants.LOG_TAG_DB, "Deleted leg:" + deletedLeg);
+                
+                // delete to point
+                int deletedPoint = dbHelper.getPointDao().delete(toPoint);
+                Log.d(Constants.LOG_TAG_DB, "Deleted point:" + deletedPoint);
+
+                workspace.setActiveLegId(workspace.getLastLeg().getId());
+
+                return null;
+            }
+        });        
+        return true;
     }
 }
