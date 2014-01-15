@@ -1,11 +1,6 @@
 package com.astoev.cave.survey.activity.main;
 
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
@@ -13,13 +8,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
-import com.astoev.cave.survey.activity.BaseActivity;
 import com.astoev.cave.survey.activity.MainMenuActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.service.bluetooth.BluetoothService;
@@ -27,9 +20,7 @@ import com.astoev.cave.survey.util.ConfigUtil;
 import com.astoev.cave.survey.util.StringUtils;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -113,7 +104,7 @@ public class BTActivity extends MainMenuActivity {
         String selectedBtDeviceAddress = ConfigUtil.getStringProperty(ConfigUtil.PROP_CURR_BT_DEVICE_ADDRESS);
         if (StringUtils.isNotEmpty(selectedBtDeviceAddress)) {
             String selectedBtDeviceName = ConfigUtil.getStringProperty(ConfigUtil.PROP_CURR_BT_DEVICE_NAME);
-            selectedDeviceName = buildDeviceName(new Pair(selectedBtDeviceName, selectedBtDeviceAddress));
+            selectedDeviceName = buildDeviceName(new Pair<String, String>(selectedBtDeviceName, selectedBtDeviceAddress));
         }
 
         List<String> devicesList = new ArrayList<String>();
