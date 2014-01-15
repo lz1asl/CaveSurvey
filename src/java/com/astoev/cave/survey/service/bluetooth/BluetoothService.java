@@ -1,5 +1,6 @@
 package com.astoev.cave.survey.service.bluetooth;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -12,13 +13,11 @@ import android.os.Build;
 import android.os.ResultReceiver;
 import android.util.Log;
 import android.util.Pair;
-import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.UIUtilities;
-import com.astoev.cave.survey.service.Workspace;
 import com.astoev.cave.survey.util.ConfigUtil;
 
 import java.io.IOException;
@@ -196,7 +195,7 @@ public class BluetoothService {
                     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD_MR1) {
                         tester = mCurrDevice.createRfcommSocketToServiceRecord(UUID.fromString(SPP_UUID));
                     } else {
-                        tester = mCurrDevice.createInsecureRfcommSocketToServiceRecord(UUID.fromString(SPP_UUID));
+                        tester = callSafeCreateInsecureRfcommSocketToServiceRecord(mCurrDevice);
                     }
                     tester.connect();
                     Log.i(Constants.LOG_TAG_UI, "Device found!");
@@ -218,6 +217,11 @@ public class BluetoothService {
             }
         }.start();
     }
+    
+    @TargetApi(Build.VERSION_CODES.GINGERBREAD_MR1)
+    public static BluetoothSocket callSafeCreateInsecureRfcommSocketToServiceRecord(BluetoothDevice deviceaArg) throws IOException{
+        return deviceaArg.createInsecureRfcommSocketToServiceRecord(UUID.fromString(SPP_UUID));
+    }
 
     public static boolean isPaired() {
         return mPaired;
@@ -238,7 +242,7 @@ public class BluetoothService {
         Set<BluetoothDevice> devices = BluetoothAdapter.getDefaultAdapter().getBondedDevices();
         for(BluetoothDevice d: devices) {
             if (isSupported(d.getName())) {
-                result.add(new Pair(d.getName(), d.getAddress()));
+                result.add(new Pair<String, String>(d.getName(), d.getAddress()));
             }
         }
         return result;
