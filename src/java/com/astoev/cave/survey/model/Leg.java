@@ -68,9 +68,7 @@ public class Leg implements Serializable {
 
     public Leg createNextLeg() throws SQLException {
         Point nextPoint = PointUtil.generateNextPoint(mGalleryId);
-        Leg leg = new Leg(mToPoint, nextPoint, mProject, mGalleryId);
-
-        return leg;
+        return new Leg(mToPoint, nextPoint, mProject, mGalleryId);
     }
 
     public boolean isNew(){
@@ -95,8 +93,7 @@ public class Leg implements Serializable {
      * @throws SQLException
      */
     public String buildLegDescription(boolean shortArg) throws SQLException{
-        Point startPoint = null;
-        Point endPoint = null;
+        Point startPoint, endPoint;
         if (isNew()){
             startPoint = getFromPoint();
             endPoint = getToPoint();

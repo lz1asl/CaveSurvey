@@ -33,8 +33,7 @@ public class AzimuthProcessorFactory {
 			return magneticAzimuthProcessor;
 		}
 		
-		OrientationAzimuthProcessor orientationazimuthProcessor = new OrientationAzimuthProcessor(contextArg, listenerArg);
-	    return orientationazimuthProcessor;
+		return new OrientationAzimuthProcessor(contextArg, listenerArg);
 	}
 	
 	/**

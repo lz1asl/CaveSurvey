@@ -119,7 +119,7 @@ public class ExcelExport {
             for (Leg l : legs) {
                 rowCounter++;
 
-                if (galleryNames.get(l.getGalleryId(), Constants.STRING_NOT_FOUND) == Constants.STRING_NOT_FOUND) {
+                if (Constants.STRING_NOT_FOUND.equals(galleryNames.get(l.getGalleryId(), Constants.STRING_NOT_FOUND))) {
                     Gallery gallery = DaoUtil.getGallery(l.getGalleryId());
                     galleryNames.put(l.getGalleryId(), gallery.getName());
                 }

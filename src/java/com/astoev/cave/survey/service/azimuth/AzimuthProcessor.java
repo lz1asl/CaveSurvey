@@ -149,9 +149,7 @@ public abstract class AzimuthProcessor implements SensorEventListener {
 		
 		if (windowManager != null){
 			Display display = windowManager.getDefaultDisplay();
-			int rotation = display.getRotation();
-		
-			return rotation;
+			return display.getRotation();
 		}
 		
 		return Surface.ROTATION_0;

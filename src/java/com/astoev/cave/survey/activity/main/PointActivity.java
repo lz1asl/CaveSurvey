@@ -380,7 +380,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
     private boolean checkAzimuth(EditText aEditText) {
         Float azimuth = StringUtils.getFromEditTextNotNull(aEditText);
         if (null != azimuth) {
-            if (azimuth.floatValue() < 0) {
+            if (azimuth < 0) {
                 aEditText.setError(aEditText.getContext().getString(R.string.invalid));
                 return false;
             }
@@ -392,7 +392,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
             } else { // Option.UNIT_GRADS
                 maxValue = Option.MAX_VALUE_AZIMUTH_GRADS;
             }
-            if (azimuth.floatValue() > maxValue) {
+            if (azimuth > maxValue) {
                 aEditText.setError(aEditText.getContext().getString(R.string.invalid));
                 return false;
             }
@@ -413,7 +413,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                 maxValue = Option.MAX_VALUE_SLOPE_GRADS;
                 minValue = Option.MIN_VALUE_SLOPE_GRADS;
             }
-            if (slope.floatValue() > maxValue || slope.floatValue() < minValue) {
+            if (slope > maxValue || slope < minValue) {
                 aEditText.setError(aEditText.getContext().getString(R.string.invalid));
                 return false;
             }

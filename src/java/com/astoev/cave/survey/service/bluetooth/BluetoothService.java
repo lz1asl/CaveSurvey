@@ -53,7 +53,7 @@ public class BluetoothService {
         public void onReceive(Context context, Intent intent) {
             try {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                if (!isSupported(device.getName())) {
+                if (!isSupported(device)) {
                     // ignore other devices
                     Log.i(Constants.LOG_TAG_SERVICE, "Bonded unsupported device");
                     return;
@@ -84,7 +84,7 @@ public class BluetoothService {
                 }
 
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                if (!isSupported(device.getName())) {
+                if (!isSupported(device)) {
                     // ignore other devices
                     Log.i(Constants.LOG_TAG_SERVICE, "Ignore disconnect, device not supported");
                     return;
@@ -229,6 +229,10 @@ public class BluetoothService {
 
     public static boolean isSupported(String aDeviceName) {
         return SUPPORTED_DEVICES.contains(aDeviceName);
+    }
+
+    public static boolean isSupported(BluetoothDevice aDevice) {
+        return aDevice != null && isSupported(aDevice.getName());
     }
 
     // read single measure command

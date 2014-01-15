@@ -51,7 +51,8 @@ public class MapView extends View {
     private int mapCenterMoveY = 0;
     private float initialMoveX = 0;
     private float initialMoveY = 0;
-    
+    Point northCenter = new Point();
+
     List<Integer> processedLegs = new ArrayList<Integer>();
     
     private SparseArray<Point2D> mapPoints = new SparseArray<Point2D>();
@@ -77,7 +78,6 @@ public class MapView extends View {
     public void onDraw(Canvas canvas) {
 
         try {
-
             processedLegs.clear();
             mapPoints.clear();
             galleryColors.clear();
@@ -114,11 +114,7 @@ public class MapView extends View {
                         break;
                     }
 
-                    if (processedLegs.contains(l.getId())) {
-                        // skip processed
-                        continue;
-                    } else {
-
+                    if (!processedLegs.contains(l.getId())) {
                         // first leg ever
                         Point2D first;
 
@@ -128,7 +124,6 @@ public class MapView extends View {
                             first = mapPoints.get(l.getFromPoint().getId());
                         }
 
-                        
                         if (mapPoints.get(l.getFromPoint().getId()) == null) {
                             mapPoints.put(l.getFromPoint().getId(), first);
 
@@ -205,8 +200,6 @@ public class MapView extends View {
                             if (prevLeg == null) {
                                 // first point by 90 degree left
                                 galleryWidthAngle = Math.toRadians(getAzimuthInDegrees(first.getAzimuth()) - 90);
-                                deltaY = -(float) (first.getLeft() * Math.cos(galleryWidthAngle) * scale);
-                                deltaX = (float) (first.getLeft() * Math.sin(galleryWidthAngle) * scale);
                             } else {
                                 // each other by the bisector
                                 if (l.getGalleryId().equals(prevLeg.getGalleryId())) {
@@ -214,9 +207,9 @@ public class MapView extends View {
                                 } else {
                                     galleryWidthAngle = Math.toRadians(getAzimuthInDegrees(second.getAzimuth()) - 90);
                                 }
-                                deltaY = - (float) (first.getLeft() * Math.cos(galleryWidthAngle) * scale);
-                                deltaX = (float) (first.getLeft() * Math.sin(galleryWidthAngle) * scale);
                             }
+                            deltaY = - (float) (first.getLeft() * Math.cos(galleryWidthAngle) * scale);
+                            deltaX = (float) (first.getLeft() * Math.sin(galleryWidthAngle) * scale);
                             canvas.drawCircle(mapCenterMoveX + first.getX() + deltaX, mapCenterMoveY + first.getY() + deltaY, MEASURE_POINT_RADIUS, polygonWidthPaint);
                         }
 
@@ -225,8 +218,6 @@ public class MapView extends View {
                             if (prevLeg == null) {
                                 // first point by 90 degree left
                                 galleryWidthAngle = Math.toRadians(getAzimuthInDegrees(first.getAzimuth()) + 90);
-                                deltaY = -(float) (first.getRight() * Math.cos(galleryWidthAngle) * scale);
-                                deltaX = (float) (first.getRight() * Math.sin(galleryWidthAngle) * scale);
                             } else {
                                 // each other by the bisector
                                 if (l.getGalleryId().equals(prevLeg.getGalleryId())) {
@@ -234,10 +225,9 @@ public class MapView extends View {
                                 } else {
                                     galleryWidthAngle = Math.toRadians(getAzimuthInDegrees(second.getAzimuth()) + 90);
                                 }
-
-                                deltaY = - (float) (first.getLeft() * Math.cos(galleryWidthAngle) * scale);
-                                deltaX = (float) (first.getLeft() * Math.sin(galleryWidthAngle) * scale);
                             }
+                            deltaY = -(float) (first.getRight() * Math.cos(galleryWidthAngle) * scale);
+                            deltaX = (float) (first.getRight() * Math.sin(galleryWidthAngle) * scale);
                             canvas.drawCircle(mapCenterMoveX + first.getX() + deltaX, mapCenterMoveY + first.getY() + deltaY, MEASURE_POINT_RADIUS, polygonWidthPaint);
                         }
 
@@ -259,7 +249,7 @@ public class MapView extends View {
             canvas.drawLine(spacing, maxY - spacing, spacing, spacing, overlayPaint);
 
             // north
-            Point northCenter = new Point(maxX - 20, 30);
+            northCenter.set(maxX - 20, 30);
             canvas.drawLine(northCenter.x, northCenter.y, northCenter.x + 10, northCenter.y + 10, overlayPaint);
             canvas.drawLine(northCenter.x + 10, northCenter.y + 10, northCenter.x, northCenter.y - 20, overlayPaint);
             canvas.drawLine(northCenter.x, northCenter.y - 20, northCenter.x - 10, northCenter.y + 10, overlayPaint);

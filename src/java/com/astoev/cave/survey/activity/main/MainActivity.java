@@ -9,10 +9,8 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -24,7 +22,6 @@ import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.activity.home.HomeActivity;
 import com.astoev.cave.survey.activity.map.MapActivity;
 import com.astoev.cave.survey.activity.map.MapUtilities;
-import com.astoev.cave.survey.activity.map.opengl.Map3DActivity;
 import com.astoev.cave.survey.model.Gallery;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Location;
@@ -34,14 +31,11 @@ import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.model.Sketch;
 import com.astoev.cave.survey.util.DaoUtil;
-import com.astoev.cave.survey.util.PointUtil;
 import com.astoev.cave.survey.util.StringUtils;
-import com.j256.ormlite.misc.TransactionManager;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 
 /**
  * Created by IntelliJ IDEA.
@@ -57,8 +51,8 @@ public class MainActivity extends MainMenuActivity {
 //            R.string.main_add_middlepoint
     };
 
-    private SparseIntArray mGalleryColors;
-    private SparseArray<String> mGalleryNames;
+    private SparseIntArray mGalleryColors = new SparseIntArray();
+    private SparseArray<String> mGalleryNames = new SparseArray<String>();
     
     private static boolean isDebug = false;
     
@@ -91,8 +85,8 @@ public class MainActivity extends MainMenuActivity {
                 getWorkspace().setActiveGalleryId(activeLeg.getGalleryId());
             }
 
-            mGalleryColors = new SparseIntArray();
-            mGalleryNames = new SparseArray<String>();
+            mGalleryColors.clear();
+            mGalleryNames.clear();
 
             // prepare labels
             TextView activeLegName = (TextView) findViewById(R.id.mainActiveLeg);
@@ -261,7 +255,7 @@ public class MainActivity extends MainMenuActivity {
         alert.show();
     }
 
-    private void requestLengthAndAddMiddle() throws SQLException {
+  /*  private void requestLengthAndAddMiddle() throws SQLException {
 
         LayoutInflater li = LayoutInflater.from(this);
         View promptsView = li.inflate(R.layout.number_popup, null);
@@ -371,7 +365,7 @@ public class MainActivity extends MainMenuActivity {
             UIUtilities.showNotification(R.string.error);
         }
 
-    }
+    }*/
 
 
     private void addLeg(final boolean isDeviation) throws SQLException {
@@ -440,10 +434,10 @@ public class MainActivity extends MainMenuActivity {
         startActivity(intent);
     }
 
-    public void plot3dButton() {
+   /* public void plot3dButton() {
         Intent intent = new Intent(this, Map3DActivity.class);
         startActivity(intent);
-    }
+    }*/
 
     public void infoButton() {
         Intent intent = new Intent(this, InfoActivity.class);
