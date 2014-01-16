@@ -35,7 +35,9 @@
     <string name="main_table_header_more">More</string>
     <string name="main_table_header_note">Note</string>
     <string name="main_table_header_drawing">Drawing</string>
+<!--     
     <string name="main_table_header_gps">GPS</string>
+ -->    
     <string name="main_table_header_photo">Photo</string>
     
     <string name="leg">Leg</string>
@@ -181,6 +183,12 @@
     <string name="info_distance_in">Distance in</string>
     <string name="info_azimuth_in">Azimuth in</string>
     <string name="info_slope_in">Slope in</string>
+    <string name="info_azimuth_build_in_sensor">Azimuth build-in sensor -</string>
+    
+    <string name="sensor_none">None</string>
+    <string name="rotation_sensor">Rotation</string>
+    <string name="magnetic_sensor">Magnetic/Accelerometer</string>
+    <string name="orientation_sensor">Orientation</string>
 
 
     <!-- popup -->

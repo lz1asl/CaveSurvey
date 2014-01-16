@@ -1,180 +1,187 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="fill_parent"
-              android:layout_height="wrap_content" android:orientation="vertical">
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android" 
+             android:layout_width="fill_parent"
+             android:layout_height="wrap_content">
 
-    <TableLayout android:layout_width="fill_parent"
-                 android:layout_height="wrap_content">
-
-        <TableRow>
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/info_title"
-                    android:layout_weight="1"
-                    android:gravity="left"
-                    android:textAppearance="?android:attr/textAppearanceLarge"/>
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:id="@+id/infoProjectName"
-                    android:layout_weight="1"
-                    android:textAppearance="?android:attr/textAppearanceLarge"/>
-        </TableRow>
-
-        <TableRow>
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/info_created"
-                    android:layout_weight="1"
-                    android:gravity="left"/>
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:layout_weight="1"
-                    android:id="@+id/infoProjectCreated"/>
-        </TableRow>
-
-        <TableRow>
-            <TextView
+    <TableRow>
+        <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/info_galleries"
+                android:text="@string/info_title"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:textAppearance="?android:attr/textAppearanceLarge"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:id="@+id/infoProjectName"
+                android:layout_weight="1"
+                android:textAppearance="?android:attr/textAppearanceLarge"/>
+    </TableRow>
+
+    <TableRow>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/info_created"
                 android:layout_weight="1"
                 android:gravity="left"/>
-            <TextView
+        <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:layout_weight="1"
-                android:id="@+id/infoNumGalleries"/>
-        </TableRow>
+                android:id="@+id/infoProjectCreated"/>
+    </TableRow>
 
-        <TableRow>
-            <TextView
+    <TableRow>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/info_galleries"
+            android:layout_weight="1"
+            android:gravity="left"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_weight="1"
+            android:id="@+id/infoNumGalleries"/>
+    </TableRow>
+
+    <TableRow>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/info_legs"
+            android:layout_weight="1"
+            android:gravity="left"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_weight="1"
+            android:id="@+id/infoNumLegs"/>
+    </TableRow>
+
+    <TableRow>
+        <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/info_legs"
+                android:text="@string/info_num_notes"
                 android:layout_weight="1"
                 android:gravity="left"/>
-            <TextView
+        <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:layout_weight="1"
-                android:id="@+id/infoNumLegs"/>
-        </TableRow>
+                android:id="@+id/infoNumNotes"/>
+    </TableRow>
 
-        <TableRow>
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/info_num_notes"
-                    android:layout_weight="1"
-                    android:gravity="left"/>
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:layout_weight="1"
-                    android:id="@+id/infoNumNotes"/>
-        </TableRow>
+    <TableRow>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/info_num_drawings"
+                android:layout_weight="1"
+                android:gravity="left"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:layout_weight="1"
+                android:id="@+id/infoNumDrawings"/>
+    </TableRow>
 
-        <TableRow>
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/info_num_drawings"
-                    android:layout_weight="1"
-                    android:gravity="left"/>
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:layout_weight="1"
-                    android:id="@+id/infoNumDrawings"/>
-        </TableRow>
+    <TableRow>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/info_num_coordinates"
+                android:layout_weight="1"
+                android:gravity="left"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:layout_weight="1"
+                android:id="@+id/infoNumCoordinates"/>
+    </TableRow>
 
-        <TableRow>
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/info_num_coordinates"
-                    android:layout_weight="1"
-                    android:gravity="left"/>
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:layout_weight="1"
-                    android:id="@+id/infoNumCoordinates"/>
-        </TableRow>
+    <TableRow>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/info_num_photos"
+                android:layout_weight="1"
+                android:gravity="left"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:layout_weight="1"
+                android:id="@+id/infoNumPhotos"/>
+    </TableRow>
 
-        <TableRow>
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/info_num_photos"
-                    android:layout_weight="1"
-                    android:gravity="left"/>
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:layout_weight="1"
-                    android:id="@+id/infoNumPhotos"/>
-        </TableRow>
+    <TableRow>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/info_total_distance"
+                android:layout_weight="1"
+                android:gravity="left"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:layout_weight="1"
+                android:id="@+id/infoRawDistance"/>
+    </TableRow>
 
-        <TableRow>
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/info_total_distance"
-                    android:layout_weight="1"
-                    android:gravity="left"/>
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:layout_weight="1"
-                    android:id="@+id/infoRawDistance"/>
-        </TableRow>
+    <!-- measures -->
+    <TableRow>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/info_distance_in"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/infoDistanceIn"/>
+    </TableRow>
+    <TableRow >
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/info_azimuth_in"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/infoAzimuthIn"/>
+    </TableRow>
+    <LinearLayout android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:orientation="horizontal">
+        <TextView android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="@string/info_azimuth_build_in_sensor"
+                  android:layout_marginRight="5dp"/>
+        <TextView android:id="@+id/info_azimuth_sensor" 
+                android:layout_width="wrap_content" 
+                android:layout_height="wrap_content"
+                android:text="@string/sensor_none"/>
+    </LinearLayout>
+    <TableRow>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/info_slope_in"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/infoSlopeIn"/>
+    </TableRow>
 
-        <!-- measures -->
-        <TableRow>
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/info_distance_in"/>
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/infoDistanceIn"/>
-        </TableRow>
-        <TableRow>
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/info_azimuth_in"/>
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/infoAzimuthIn"/>
-        </TableRow>
-        <TableRow>
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/info_slope_in"/>
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/infoSlopeIn"/>
-        </TableRow>
-
-    </TableLayout>
-
-</LinearLayout>
+</TableLayout>
