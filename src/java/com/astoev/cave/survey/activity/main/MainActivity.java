@@ -120,7 +120,7 @@ public class MainActivity extends MainMenuActivity {
 
                 currentLeg = getWorkspace().getActiveLegId().equals(l.getId());
                 if (currentLeg) {
-                    row.setBackgroundColor(Color.GRAY);
+                    row.setBackgroundColor(Color.parseColor("#101010"));
                 }
 
                 if (mGalleryColors.get(l.getGalleryId(), Constants.NOT_FOUND) == Constants.NOT_FOUND) {
@@ -370,56 +370,11 @@ public class MainActivity extends MainMenuActivity {
 
     private void addLeg(final boolean isDeviation) throws SQLException {
         Log.i(Constants.LOG_TAG_UI, "Creating leg");
-      /*  Integer newLegId = TransactionManager.callInTransaction(getWorkspace().getDBHelper().getConnectionSource(),
-                new Callable<Integer>() {
-                    public Integer call() throws Exception {
-                        try {
-                            Leg activeLeg = (Leg) getWorkspace().getDBHelper().getLegDao().queryForId(getWorkspace().getActiveLegId());
 
-                            if (isDeviation) {
+        Intent intent = new Intent(MainActivity.this, PointActivity.class);
+        intent.putExtra(Constants.GALLERY_NEW, isDeviation);
 
-                                // another leg, starting from the current leg and in new gallery
-                                Point newFrom = activeLeg.getFromPoint();
-                                getWorkspace().getDBHelper().getPointDao().refresh(newFrom);
-                                Point newTo = PointUtil.generateDeviationPoint(newFrom);
-                                getWorkspace().getDBHelper().getPointDao().create(newTo);
-
-
-                                Gallery newGallery = new Gallery();
-                                // TODO read name ?
-                                newGallery.setName(newFrom.getName());
-                                getWorkspace().getDBHelper().getGalleryDao().create(newGallery);
-
-                                Leg nextLeg = new Leg(newFrom, newTo, getWorkspace().getActiveProject(), newGallery.getId());
-                                getWorkspace().getDBHelper().getLegDao().create(nextLeg);
-                                return nextLeg.getId();
-                            } else {
-                                // another leg, starting from the latest in the gallery
-                                Point newFrom = (Point) getWorkspace().getLastGalleryPoint(activeLeg.getGalleryId());
-                                Point newTo = PointUtil.generateNextPoint(activeLeg.getGalleryId());
-                                getWorkspace().getDBHelper().getPointDao().create(newTo);
-
-                                Leg nextLeg = new Leg(newFrom, newTo, getWorkspace().getActiveProject(), activeLeg.getGalleryId());
-
-                                getWorkspace().getDBHelper().getLegDao().create(nextLeg);
-                                return nextLeg.getId();
-                            }
-
-                        } catch (Exception e) {
-                            Log.e(Constants.LOG_TAG_DB, "Failed to add leg", e);
-                            throw e;
-                        }
-                    }
-                });*/
-//        if (newLegId != null) {
-//            getWorkspace().setActiveLegId(newLegId);
-            Intent intent = new Intent(MainActivity.this, PointActivity.class);
-            intent.putExtra(Constants.GALLERY_NEW, isDeviation);
-
-            startActivity(intent);
-//        } else {
-//            UIUtilities.showNotification(this, R.string.error);
-//        }
+        startActivity(intent);
     }
 
     @Override
