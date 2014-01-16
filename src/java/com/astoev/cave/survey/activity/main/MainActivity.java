@@ -249,6 +249,7 @@ public class MainActivity extends MainMenuActivity {
                     Log.e(Constants.LOG_TAG_UI, "Error adding", e);
                     UIUtilities.showNotification(R.string.error);
                 }
+                dialog.dismiss();
             }
         });
         AlertDialog alert = builder.create();
