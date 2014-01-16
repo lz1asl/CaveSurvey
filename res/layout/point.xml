@@ -14,8 +14,9 @@
 		          android:layout_centerHorizontal="true"
 		          android:layout_alignParentTop="true"
 		          android:maxLength="5"
-		          android:ems="4" 
-		          android:gravity="center"/>
+		          android:ems="4"
+		          android:gravity="center"
+		          android:ellipsize="end"/>
 		
 		<LinearLayout android:id="@+id/layout_left_right"
 		    		  android:layout_width="wrap_content"
@@ -29,6 +30,7 @@
 			          android:layout_height="wrap_content"
 			          android:layout_marginRight="70dp"
 			          android:gravity="center"
+			          android:ellipsize="end"
 			          android:maxLength="5"
 			          android:ems="4"/>
 			<EditText android:id="@+id/point_right"
@@ -37,6 +39,7 @@
 			    	  android:layout_width="wrap_content"
 			          android:layout_height="wrap_content"
 			          android:gravity="center"
+			          android:ellipsize="end"
 			          android:maxLength="5"
 			          android:ems="4"/>		
 		</LinearLayout>
@@ -48,6 +51,7 @@
 		      android:layout_height="wrap_content"
 		      android:layout_centerHorizontal="true"
 		      android:gravity="center"
+		      android:ellipsize="end"
 		      android:layout_below="@id/layout_left_right"
 		      android:maxLength="5"
 		      android:ems="4"/>
