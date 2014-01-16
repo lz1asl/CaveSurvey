@@ -119,7 +119,7 @@ public class MapView extends View {
                         Point2D first;
 
                         if (processedLegs.size() == 0) {
-                            first = new Point2D(Float.valueOf(centerX), Float.valueOf(centerY), l.getLeft(), l.getRight(), l.getAzimuth());
+                            first = new Point2D(Float.valueOf(centerX), Float.valueOf(centerY), l.getLeft(), l.getRight(), getAzimuthInDegrees(l.getAzimuth()));
                         } else {
                             // update previously created point with the correct values for left/right/up/down
                             first = mapPoints.get(l.getFromPoint().getId());
@@ -134,7 +134,7 @@ public class MapView extends View {
                                 first.setRight(0f);
                             }
                             if (l.getAzimuth() != null) {
-                                first.setAzimuth(l.getAzimuth());
+                                first.setAzimuth(getAzimuthInDegrees(l.getAzimuth()));
                             } else {
                                 first.setAzimuth(0f);
                             }
@@ -215,13 +215,13 @@ public class MapView extends View {
                         if (first.getLeft() != null && first.getLeft()> 0) {
                             if (prevLeg == null) {
                                 // first point by 90 degree left
-                                galleryWidthAngle = Math.toRadians(getAzimuthInDegrees(first.getAzimuth()) - 90);
+                                galleryWidthAngle = Math.toRadians(first.getAzimuth() - 90);
                             } else {
                                 // each other by the bisector
                                 if (l.getGalleryId().equals(prevLeg.getGalleryId())) {
-                                    galleryWidthAngle = Math.toRadians(getAzimuthInDegrees(Math.abs(prevLeg.getAzimuth()+first.getAzimuth())/2 - 90));
+                                    galleryWidthAngle = Math.toRadians(Math.abs(getAzimuthInDegrees(prevLeg.getAzimuth())+first.getAzimuth())/2 - 90);
                                 } else {
-                                    galleryWidthAngle = Math.toRadians(getAzimuthInDegrees(first.getAzimuth()) - 90);
+                                    galleryWidthAngle = Math.toRadians(first.getAzimuth() - 90);
                                 }
                             }
                             deltaY = - (float) (first.getLeft() * Math.cos(galleryWidthAngle) * scale);
@@ -233,13 +233,13 @@ public class MapView extends View {
                         if (first.getRight() != null && first.getRight()> 0) {
                             if (prevLeg == null) {
                                 // first point by 90 degree left
-                                galleryWidthAngle = Math.toRadians(getAzimuthInDegrees(first.getAzimuth()) + 90);
+                                galleryWidthAngle = Math.toRadians(first.getAzimuth() + 90);
                             } else {
                                 // each other by the bisector
                                 if (l.getGalleryId().equals(prevLeg.getGalleryId())) {
-                                    galleryWidthAngle = Math.toRadians(getAzimuthInDegrees(Math.abs(prevLeg.getAzimuth()+first.getAzimuth())/2 + 90));
+                                    galleryWidthAngle = Math.toRadians(Math.abs(getAzimuthInDegrees(prevLeg.getAzimuth())+first.getAzimuth())/2 + 90);
                                 } else {
-                                    galleryWidthAngle = Math.toRadians(getAzimuthInDegrees(first.getAzimuth()) + 90);
+                                    galleryWidthAngle = Math.toRadians(first.getAzimuth() + 90);
                                 }
                             }
                             deltaY = -(float) (first.getRight() * Math.cos(galleryWidthAngle) * scale);
