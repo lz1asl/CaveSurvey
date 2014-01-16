@@ -245,7 +245,7 @@ public class DaoUtil {
                 int deletedPoint = dbHelper.getPointDao().delete(toPoint);
                 Log.d(Constants.LOG_TAG_DB, "Deleted point:" + deletedPoint);
 
-                workspace.setActiveLegId(workspace.getLastLeg().getId());
+                workspace.setActiveLeg(workspace.getLastLeg());
 
                 return null;
             }

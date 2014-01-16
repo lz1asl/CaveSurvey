@@ -80,11 +80,6 @@ public class MainActivity extends MainMenuActivity {
                 getWorkspace().setActiveLeg(activeLeg);
             }
 
-            Integer currGalleryId = getWorkspace().getActiveGalleryId();
-            if (currGalleryId == null) {
-                getWorkspace().setActiveGalleryId(activeLeg.getGalleryId());
-            }
-
             mGalleryColors.clear();
             mGalleryNames.clear();
 
@@ -112,8 +107,7 @@ public class MainActivity extends MainMenuActivity {
                     public void onClick(View aView) {
                         Intent intent = new Intent(MainActivity.this, PointActivity.class);
                         intent.putExtra(Constants.LEG_SELECTED, l.getId());
-                        getWorkspace().setActiveLegId(l.getId());
-                        getWorkspace().setActiveGalleryId(l.getGalleryId());
+                        getWorkspace().setActiveLeg(l);
                         startActivity(intent);
                     }
                 });
@@ -426,8 +420,7 @@ public class MainActivity extends MainMenuActivity {
                 public void onClick(DialogInterface dialog, int item) {
 
                     Log.i(Constants.LOG_TAG_UI, "Selected leg " + legs.get(item));
-                    getWorkspace().setActiveLegId(legs.get(item).getId());
-                    getWorkspace().setActiveGalleryId(legs.get(item).getGalleryId());
+                    getWorkspace().setActiveLeg(legs.get(item));
 
                     Intent intent = new Intent(MainActivity.this, MainActivity.class);
                     startActivity(intent);

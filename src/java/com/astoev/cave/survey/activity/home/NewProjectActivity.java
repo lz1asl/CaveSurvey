@@ -114,7 +114,6 @@ public class NewProjectActivity extends MainMenuActivity {
 
                             // gallery
                             Gallery firstGallery = DaoUtil.createGallery(true);
-                            getWorkspace().setActiveGallery(firstGallery);
 
                             // points
                             Point startPoint = PointUtil.createFirstPoint();
@@ -125,8 +124,7 @@ public class NewProjectActivity extends MainMenuActivity {
                             // first leg
                             Leg firstLeg = new Leg(startPoint, secondPoint, newProject, firstGallery.getId());
                             getWorkspace().getDBHelper().getLegDao().create(firstLeg);
-                            getWorkspace().setActiveLegId(firstLeg.getId());
-
+                            getWorkspace().setActiveLeg(firstLeg);
 
                             // project units
 
@@ -200,7 +198,7 @@ public class NewProjectActivity extends MainMenuActivity {
             if (project != null) {
                 Intent intent = new Intent(NewProjectActivity.this, PointActivity.class);
                 getWorkspace().setActiveProject(project);
-                getWorkspace().setActiveLegId(getWorkspace().getActiveOrFirstLeg().getId());
+                getWorkspace().setActiveLeg(getWorkspace().getActiveOrFirstLeg());
                 intent.putExtra(Constants.LEG_SELECTED, getWorkspace().getActiveLegId());
                 startActivity(intent);
             } else {

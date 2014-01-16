@@ -104,8 +104,6 @@ public class HomeActivity extends MainMenuActivity {
                         getWorkspace().setActiveProject(project);
                         Leg lastProjectLeg = getWorkspace().getLastLeg();
                         getWorkspace().setActiveLeg(lastProjectLeg);
-                        getWorkspace().setActiveGalleryId(lastProjectLeg.getGalleryId());
-                        getWorkspace().clearActiveLeg();
 
                         Intent intent = new Intent(HomeActivity.this, MainActivity.class);
                         startActivity(intent);

@@ -66,9 +66,10 @@ public class Workspace {
 
     public void setActiveLeg(Leg aLeg) {
         setActiveLegId(aLeg.getId());
+        setActiveGalleryId(aLeg.getGalleryId());
     }
 
-    public void setActiveLegId(Integer aId) {
+    private void setActiveLegId(Integer aId) {
         ConfigUtil.setIntProperty(ConfigUtil.PROP_CURR_LEG, aId);
     }
 
@@ -76,11 +77,11 @@ public class Workspace {
         ConfigUtil.removeProperty(ConfigUtil.PROP_CURR_LEG);
     }
 
-    public void setActiveGallery(Gallery aGallery) {
+    private void setActiveGallery(Gallery aGallery) {
         ConfigUtil.setIntProperty(ConfigUtil.PROP_CURR_GALLERY, aGallery.getId());
     }
 
-    public void setActiveGalleryId(Integer aGalleryId) {
+    private void setActiveGalleryId(Integer aGalleryId) {
         ConfigUtil.setIntProperty(ConfigUtil.PROP_CURR_GALLERY, aGalleryId);
     }
 
