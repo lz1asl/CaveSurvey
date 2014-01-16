@@ -147,10 +147,6 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 
             Leg legEdited = getCurrentLeg();
 
-            // label
-            TextView leg = (TextView) findViewById(R.id.point_curr_leg);
-            leg.setText(legEdited.buildLegDescription());
-
             // up
             EditText up = (EditText) findViewById(R.id.point_up);
             setNotNull(up, legEdited.getTop());
@@ -596,8 +592,6 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
     @Override
     public void onBackPressed() {
         finish();
-//        Intent intent = new Intent(this, MainActivity.class);
-//        startActivity(intent);
     }
 
     /**
@@ -815,5 +809,5 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 	@Override
 	public void onAccuracyChanged(int accuracyArg) {
 	}
-    
+
 }

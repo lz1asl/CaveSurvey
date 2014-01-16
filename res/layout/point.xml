@@ -52,26 +52,11 @@
 		      android:maxLength="5"
 		      android:ems="4"/>
 	    
-	    <LinearLayout android:id="@+id/point_leg_text"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_below="@id/point_down"
-	            android:layout_centerHorizontal="true"
-	            android:layout_centerVertical="true">
-			<TextView android:layout_width="wrap_content"
-			          android:layout_height="wrap_content"
-			          android:text="@string/main_leg"
-			          android:textAppearance="?android:attr/textAppearanceLarge"/>
-			<TextView android:id="@+id/point_curr_leg" 
-			    	  android:layout_width="wrap_content"
-			          android:layout_height="wrap_content"
-			          android:gravity="center"
-			          android:textAppearance="?android:attr/textAppearanceLarge"/>        
-	    </LinearLayout>
 	    <LinearLayout android:id="@+id/point_dimensions_text"
 	        		  android:layout_width="fill_parent"
 	        		  android:layout_height="wrap_content"
-	        		  android:layout_below="@id/point_leg_text">
+	        		  android:layout_below="@id/point_down"
+                      android:layout_marginTop="20dp">
 			<TextView android:layout_width="0dp"
 			          android:layout_height="wrap_content"
 			          android:layout_weight="1"
