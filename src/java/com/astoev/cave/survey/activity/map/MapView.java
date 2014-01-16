@@ -121,7 +121,23 @@ public class MapView extends View {
                         if (processedLegs.size() == 0) {
                             first = new Point2D(Float.valueOf(centerX), Float.valueOf(centerY), l.getLeft(), l.getRight(), l.getAzimuth());
                         } else {
+                            // update previously created point with the correct values for left/right/up/down
                             first = mapPoints.get(l.getFromPoint().getId());
+                            if (l.getLeft() != null ) {
+                                first.setLeft(l.getLeft());
+                            } else {
+                                first.setLeft(0f);
+                            }
+                            if (l.getRight() != null) {
+                                first.setRight(l.getRight());
+                            } else {
+                                first.setRight(0f);
+                            }
+                            if (l.getAzimuth() != null) {
+                                first.setAzimuth(l.getAzimuth());
+                            } else {
+                                first.setAzimuth(0f);
+                            }
                         }
 
                         if (mapPoints.get(l.getFromPoint().getId()) == null) {
@@ -155,15 +171,15 @@ public class MapView extends View {
                         }
 
                         Point2D second = new Point2D(first.getX() + deltaX, first.getY() + deltaY);
-                        if (l.getLeft() != null) {
-                            second.setLeft(l.getLeft());
-                        }
-                        if (l.getRight() != null) {
-                            second.setRight(l.getRight());
-                        }
-                        if (l.getAzimuth() != null) {
-                            second.setAzimuth(l.getAzimuth());
-                        }
+//                        if (l.getLeft() != null) {
+//                            second.setLeft(l.getLeft());//TODO this is wrong
+//                        }
+//                        if (l.getRight() != null) {
+//                            second.setRight(l.getRight());//TODO this is wrong
+//                        }
+//                        if (l.getAzimuth() != null) {
+//                            second.setAzimuth(l.getAzimuth());//TODO this is wrong
+//                        }
 
                         if (mapPoints.get(l.getToPoint().getId()) == null) {
                             mapPoints.put(l.getToPoint().getId(), second);
@@ -203,9 +219,9 @@ public class MapView extends View {
                             } else {
                                 // each other by the bisector
                                 if (l.getGalleryId().equals(prevLeg.getGalleryId())) {
-                                    galleryWidthAngle = Math.toRadians(getAzimuthInDegrees(Math.abs(prevLeg.getAzimuth()+second.getAzimuth())/2 - 90));
+                                    galleryWidthAngle = Math.toRadians(getAzimuthInDegrees(Math.abs(prevLeg.getAzimuth()+first.getAzimuth())/2 - 90));
                                 } else {
-                                    galleryWidthAngle = Math.toRadians(getAzimuthInDegrees(second.getAzimuth()) - 90);
+                                    galleryWidthAngle = Math.toRadians(getAzimuthInDegrees(first.getAzimuth()) - 90);
                                 }
                             }
                             deltaY = - (float) (first.getLeft() * Math.cos(galleryWidthAngle) * scale);
@@ -221,9 +237,9 @@ public class MapView extends View {
                             } else {
                                 // each other by the bisector
                                 if (l.getGalleryId().equals(prevLeg.getGalleryId())) {
-                                    galleryWidthAngle = Math.toRadians(getAzimuthInDegrees(Math.abs(prevLeg.getAzimuth()+second.getAzimuth())/2 + 90));
+                                    galleryWidthAngle = Math.toRadians(getAzimuthInDegrees(Math.abs(prevLeg.getAzimuth()+first.getAzimuth())/2 + 90));
                                 } else {
-                                    galleryWidthAngle = Math.toRadians(getAzimuthInDegrees(second.getAzimuth()) + 90);
+                                    galleryWidthAngle = Math.toRadians(getAzimuthInDegrees(first.getAzimuth()) + 90);
                                 }
                             }
                             deltaY = -(float) (first.getRight() * Math.cos(galleryWidthAngle) * scale);
