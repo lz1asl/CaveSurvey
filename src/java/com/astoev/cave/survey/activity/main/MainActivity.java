@@ -30,6 +30,7 @@ import com.astoev.cave.survey.model.Photo;
 import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.model.Sketch;
+import com.astoev.cave.survey.service.Workspace;
 import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.util.StringUtils;
 
@@ -232,9 +233,17 @@ public class MainActivity extends MainMenuActivity {
             public void onClick(DialogInterface dialog, int item) {
                 try {
                     if (0 == item) {
+                        // next leg
                         addLeg(false);
                     } else if (1 == item) {
-                        addLeg(true);
+                        Leg prevLeg = DaoUtil.getLegByToPoint(Workspace.getCurrentInstance().getActiveLeg().getFromPoint());
+                        if (prevLeg == null) {
+                            // not supported
+                            UIUtilities.showNotification(R.string.gallery_after_first_point);
+                        } else {
+                            // next gallery
+                            addLeg(true);
+                        }
                     } else if (2 == item) {
 //                        requestLengthAndAddMiddle();
                         UIUtilities.showNotification(R.string.todo);

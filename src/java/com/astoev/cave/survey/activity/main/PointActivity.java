@@ -704,12 +704,11 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                 if (newGalleryFlag) {
                     newFrom = getWorkspace().getActiveLeg().getFromPoint();
                     newTo = PointUtil.createSecondPoint();
+                    currGalleryId = null;
                 } else {
                     newFrom = getWorkspace().getLastGalleryPoint(currGalleryId);
                     newTo = PointUtil.generateNextPoint(currGalleryId);
                 }
-
-
 
                 Log.i(Constants.LOG_TAG_UI, "PointView for new point");
                 currentLeg = new Leg(newFrom, newTo, getWorkspace().getActiveProject(), currGalleryId);

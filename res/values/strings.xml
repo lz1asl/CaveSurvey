@@ -63,6 +63,7 @@
     <string name="table_photo_prefix">P</string>
     <string name="table_location_prefix">L</string>
 
+    <string name="gallery_after_first_point">Not available for first leg</string>
 
     <!-- main menu -->
 <!--     

@@ -1,5 +1,7 @@
 package com.astoev.cave.survey.model;
 
+import com.astoev.cave.survey.service.Workspace;
+import com.astoev.cave.survey.util.ConfigUtil;
 import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.util.PointUtil;
 import com.astoev.cave.survey.util.StringUtils;
@@ -103,17 +105,15 @@ public class Leg implements Serializable {
         }
         
         StringBuilder builder = new StringBuilder(StringUtils.SPACE);
-        Gallery legGallery = DaoUtil.getGallery(mGalleryId);
-        Leg prevLeg = DaoUtil.getLegByToPoint(mFromPoint);
-        Integer prevLegGalleryId = legGallery.getId();
-        if (prevLeg != null) {
-            prevLegGalleryId = prevLeg.getGalleryId();
-        }
-        if (mGalleryId.equals(prevLegGalleryId)) {
-            builder.append(legGallery.getName());
+
+        if (mGalleryId != null) {
+            builder.append(DaoUtil.getGallery(mGalleryId).getName());
         } else {
-            builder.append(DaoUtil.getGallery(prevLegGalleryId).getName());
+            // fresh leg for new gallery
+            Leg prevLeg = DaoUtil.getLegByToPoint(mFromPoint);
+            builder.append(DaoUtil.getGallery(prevLeg.mGalleryId).getName());
         }
+        DaoUtil.refreshPoint(startPoint);
         builder.append(startPoint.getName());
         if (!shortArg){
         	builder.append(StringUtils.SPACE);
@@ -122,7 +122,12 @@ public class Leg implements Serializable {
         if (!shortArg){
         	builder.append(StringUtils.SPACE);
         }
-        builder.append(legGallery.getName());
+        if (mGalleryId != null) {
+            builder.append(DaoUtil.getGallery(mGalleryId).getName());
+        } else {
+            // fresh leg for new gallery
+            builder.append(Gallery.generateNextGalleryName(Workspace.getCurrentInstance().getActiveProjectId()));
+        }
         builder.append(endPoint.getName());
         return builder.toString();
     }
