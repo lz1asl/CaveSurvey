@@ -7,8 +7,7 @@
     <com.astoev.cave.survey.activity.draw.DrawingSurface
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:id="@+id/drawingSurface"
-            />
+            android:id="@+id/drawingSurface"/>
     <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -56,11 +55,12 @@
                 android:text="@string/sketch_redo"
                 android:onClick="onClick"/>
 
-        <Button
-                android:id="@+id/saveBtn"
+        <ImageButton
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:text="@string/sketch_save"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_action_save"
+                android:contentDescription="@string/sketch_save"
                 android:onClick="saveDrawing"/>
     </LinearLayout>
 
