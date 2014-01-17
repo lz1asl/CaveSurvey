@@ -9,7 +9,7 @@ About
 
 Preparing a cave map is a tough activity. For example if you want to map a gallery you usually pick reference points for the main polyline going trough that gallery. Between every two poins distance, angle and inclination is measured and on each one (and on any other more specific place) distance to the top, bottom and both sides is measured. Usually this is written to a paper sheet, later transformed in to Excel spreadsheet and processed with a variety of existing tools.
 Well, in real life this process is much harder and very error prone. CaveSurvey targets the process of collecting measures and tries to improve it.
-While we have not published yet to Google Play you can use the [latest build]( https://razhodki.ci.cloudbees.com/job/CaveSurvey/).
+While we have not published yet to Google Play you can use the [latest build]( https://razhodki.ci.cloudbees.com/job/CaveSurvey/lastSuccessfulBuild/artifact/build/apk/CaveSurvey-defaultFlavor-debug-unaligned.apk).
 Contact us at cave.survey.project@gmail.com.
 
 
