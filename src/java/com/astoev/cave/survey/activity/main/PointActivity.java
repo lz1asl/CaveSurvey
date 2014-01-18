@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
 import android.provider.MediaStore;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,6 +23,7 @@ import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.MainMenuActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.activity.draw.DrawingActivity;
+import com.astoev.cave.survey.fragment.LocationFragment;
 import com.astoev.cave.survey.model.Gallery;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Note;
@@ -108,6 +110,13 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 
         receiver.resetMeasureExpectations();
         loadPointData();
+        
+        //check if location is added and returned back to this activity
+        Fragment fragment = this.getSupportFragmentManager().findFragmentById(R.id.saved_location_container);
+        if (!(fragment instanceof LocationFragment)){
+            Leg legEdited = getCurrentLeg();
+            GPSActivity.initSavedLocationContainer(legEdited.getFromPoint(), this, null);
+        }
     }
     
     /**
