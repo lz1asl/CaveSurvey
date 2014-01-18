@@ -118,7 +118,6 @@
 	        	  android:clickable="false"
 	        	  android:onClick="noteButton"
 	        	  android:ellipsize="end"
-	        	  android:scrollbars="vertical"
 	        	  android:fadeScrollbars="false"/>
 
         <FrameLayout 
