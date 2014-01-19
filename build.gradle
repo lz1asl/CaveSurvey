@@ -22,10 +22,25 @@ android {
         targetSdkVersion 15
     }
 
+    signingConfigs {
+        release {
+            // We can leave these in environment variables
+            storeFile file("CaveSurvey.keystore")
+            keyAlias "CaveSurvey"
+
+            // These two lines make gradle believe that the signingConfigs
+            // section is complete. Without them, tasks like installRelease
+            // will not be available!
+            storePassword System.getenv("CaveSurveyKeystorePassword")
+            keyPassword System.getenv("CaveSurveyKeyPassword")
+        }
+    }
+
     buildTypes {
         release {
             runProguard false
             proguardFile getDefaultProguardFile('proguard-android.txt')
+            signingConfig signingConfigs.release
         }
     }
     productFlavors {
