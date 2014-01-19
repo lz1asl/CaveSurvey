@@ -157,7 +157,6 @@ public class MainActivity extends MainMenuActivity {
                 row.addView(createTextView(l.getAzimuth(), currentLeg, true));
                 row.addView(createTextView(l.getSlope(), currentLeg, true));
                 
-                //TODO build SNP string
                 StringBuilder moreText = new StringBuilder();
                 
                 //TODO Debug

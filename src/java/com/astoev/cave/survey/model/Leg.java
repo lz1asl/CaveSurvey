@@ -104,6 +104,7 @@ public class Leg implements Serializable {
             endPoint = DaoUtil.getPoint(getToPoint().getId());
         }
         
+
         StringBuilder builder = new StringBuilder(StringUtils.SPACE);
 
         Leg prevLeg = DaoUtil.getLegByToPoint(mFromPoint);

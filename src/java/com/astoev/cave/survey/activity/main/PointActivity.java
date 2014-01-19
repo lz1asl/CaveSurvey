@@ -509,23 +509,17 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 		azimuthDialog.show(getSupportFragmentManager(), AZIMUTH_DIALOG);
     }
 
-    public void readSlope(View view) {
-        // TODO
-        UIUtilities.showNotification(R.string.todo);
-    }
-
     public void photoButton() {
         // picture http://www.tutorialforandroid.com/2010/10/take-picture-in-android-with.html
     	// https://developer.android.com/training/camera/photobasics.html
 
     	File photoFile = null;
 		try {
-			//TODO fix this. Leg.getPoint should load the whole point!
 			String projectName = getWorkspace().getActiveProject().getName();
 			Leg workingLeg = getCurrentLeg();
-			int fromPointId = workingLeg.getFromPoint().getId();
-			Point pointFrom = DaoUtil.getPoint(fromPointId);
-			
+            Point pointFrom = workingLeg.getFromPoint();
+            DaoUtil.refreshPoint(pointFrom);
+
 			// create file where to capture the image
 			String filePrefix = FileStorageUtil.getFilePrefixForPicture(pointFrom);
 			photoFile = FileStorageUtil.createPictureFile(this, projectName, filePrefix, FileStorageUtil.JPG_FILE_EXTENSION);
