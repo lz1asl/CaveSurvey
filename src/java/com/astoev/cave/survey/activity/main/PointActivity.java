@@ -659,11 +659,11 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         Leg legEdited = getCurrentLeg();
         if (!legEdited.isNew()) {
             try {
-                Leg lastLeg = getWorkspace().getLastLeg();
-                if (lastLeg.getId().equals(legEdited.getId())) {
-                    // and only last leg for now
+                Leg lastLeg = getWorkspace().getLastLeg(legEdited.getGalleryId());
+                // and only last leg for now and no other galleries start from here
+                if (lastLeg.getId().equals(legEdited.getId()) && !DaoUtil.hasLegsByFromPoint(legEdited.getToPoint())) {
                     MenuItem deleteMenuOption = menu.findItem(R.id.point_action_delete);
-                    deleteMenuOption.setEnabled(true);
+                    deleteMenuOption.setVisible(true);
                     return flag;
                 }
             } catch (Exception e) {

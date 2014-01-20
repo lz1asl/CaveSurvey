@@ -141,6 +141,12 @@ public class DaoUtil {
         return query.queryForFirst();
     }
 
+    public static boolean hasLegsByFromPoint(Point aFromPoint) throws SQLException {
+        QueryBuilder<Leg, Integer> query = Workspace.getCurrentInstance().getDBHelper().getLegDao().queryBuilder();
+        query.where().eq(Leg.COLUMN_FROM_POINT, aFromPoint.getId());
+        return query.countOf() > 0;
+    }
+
     public static long getGalleriesCount(Integer aActiveProjectId) throws SQLException {
         QueryBuilder<Gallery, Integer> query = Workspace.getCurrentInstance().getDBHelper().getGalleryDao().queryBuilder();
         query.where().eq(Gallery.COLUMN_PROJECT_ID, aActiveProjectId);

@@ -23,13 +23,14 @@ public class Leg implements Serializable {
 
 	private static final long serialVersionUID = 201312130309L;
 
+    public static final String COLUMN_ID = "id";
     public static final String COLUMN_PROJECT_ID = "project_id";
     public static final String COLUMN_FROM_POINT = "from_point_id";
     public static final String COLUMN_TO_POINT = "to_point_id";
     public static final String COLUMN_DISTANCE_FROM_START = "distance_from_start";
     public static final String COLUMN_GALLERY_ID = "gallery_id";
 
-    @DatabaseField(generatedId = true, columnName = "id")
+    @DatabaseField(generatedId = true, columnName = COLUMN_ID)
     private Integer mId;
     @DatabaseField(canBeNull = false, foreign = true, columnName = COLUMN_FROM_POINT)
     private Point mFromPoint;

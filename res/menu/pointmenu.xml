@@ -37,8 +37,8 @@
 	<item android:id="@+id/point_action_delete"
 	      android:icon="@drawable/ic_action_discard"
 	      android:title="@string/point_delete"
-	      android:visible="true"
-	      android:enabled="false"
+	      android:visible="false"
+	      android:enabled="true"
 	      myapp:showAsAction="ifRoom|withText"/>	
 
 </menu>
