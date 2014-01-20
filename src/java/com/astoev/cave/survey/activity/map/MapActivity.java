@@ -46,8 +46,6 @@ public class MapActivity extends MainMenuActivity implements View.OnTouchListene
                 zoom.setIsZoomInEnabled(map.canZoomIn());
             }
         });
-
-
     }
 
     @Override
