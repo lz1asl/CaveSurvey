@@ -212,7 +212,7 @@ public class FileStorageUtil {
         File extdir = Environment.getExternalStorageDirectory();
         StatFs stats = new StatFs(extdir.getAbsolutePath());
         
-		int availableBytes = stats.getAvailableBlocks() * stats.getBlockSize();
+		long availableBytes = stats.getAvailableBlocks() * (long)stats.getBlockSize();
         if (availableBytes < MIN_REQUIRED_STORAGE) {
             Log.e(Constants.LOG_TAG_UI, "No space left");
             return null;
