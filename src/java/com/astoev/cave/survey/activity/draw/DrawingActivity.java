@@ -57,6 +57,11 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.drawing_activity);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
 
         setCurrentPaint();
         currentBrush = new PenBrush();
@@ -66,7 +71,6 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
         drawingSurface.previewPath = new DrawingPath();
         drawingSurface.previewPath.path = new Path();
         drawingSurface.previewPath.paint = currentPaint;
-
 
         redoBtn = (Button) findViewById(R.id.redoBtn);
         undoBtn = (Button) findViewById(R.id.undoBtn);
@@ -81,14 +85,13 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
             // preload with image
             byte [] backgroundBytes = getIntent().getByteArrayExtra(SKETCH_BASE);
             if (null != backgroundBytes) {
-//                BitmapFactory.Options options = new BitmapFactory.Options();
                 drawingSurface.setOldBitmap(BitmapFactory.decodeByteArray(backgroundBytes, 0, backgroundBytes.length, null));
                 drawingSurface.invalidate();
             }
-            
+
             // read the flag if this drawing is related with a map or a point(default)
-    		Intent intent = getIntent();
-    		isMap = intent.getBooleanExtra(MAP_FLAG, false);
+            Intent intent = getIntent();
+            isMap = intent.getBooleanExtra(MAP_FLAG, false);
 
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to load drawing", e);
@@ -110,7 +113,6 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
             currentPaint.setStrokeJoin(Paint.Join.BEVEL);
             currentPaint.setStrokeCap(Paint.Cap.SQUARE);
         } else {
-//            currentPaint.setARGB(255, 0, 0, 0);
             currentPaint.setStyle(Paint.Style.STROKE);
             currentPaint.setPathEffect(new DashPathEffect(new float[]{2 * currentSize, 4 * currentSize}, 0));
         }
@@ -218,18 +220,25 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
                 setCurrentPaint();
             }
         };
-        Dialog dialog = new ColorPickerDialog(this, listener, Color.GREEN);
+        Dialog dialog = new ColorPickerDialog(this, listener, currentColor);
         dialog.show();
     }
 
     public void pickSize(View aView) {
 
         final CharSequence[] items = new CharSequence[]{"1", "2", "3", "4", "5", "6", "7"};
+        int selectedIndex = -1;
+        for (int i=0; i< items.length; i++) {
+            if (currentSize == Integer.parseInt(items[i].toString())) {
+                selectedIndex = i+1;
+                break;
+            }
+        }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.sketch_pick_size);
 
-        builder.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
+        builder.setSingleChoiceItems(items, selectedIndex, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
 
                 Log.i(Constants.LOG_TAG_UI, "Selected size " + item);
@@ -238,18 +247,27 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
                 dialog.dismiss();
             }
         });
+
         AlertDialog alert = builder.create();
         alert.show();
     }
 
     public void pickStyle(View aView) {
 
-        final CharSequence[] items = new CharSequence[]{getString(R.string.sketch_pick_style_thick), getString(R.string.sketch_pick_style_fill), getString(R.string.sketch_pick_style_dash)};
+        final int[] items = new int[]{R.string.sketch_pick_style_thick, R.string.sketch_pick_style_fill, R.string.sketch_pick_style_dash};
+        final CharSequence[] itemsLabels = new CharSequence[items.length];
+        int selectedIndex = -1;
+        for (int i=0; i< items.length; i++) {
+            if (currentStyle == i) {
+                selectedIndex = i;
+            }
+            itemsLabels[i] = getString(items[i]);
+        }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.sketch_pick_style);
 
-        builder.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
+        builder.setSingleChoiceItems(itemsLabels, selectedIndex, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
 
                 Log.i(Constants.LOG_TAG_UI, "Selected style " + item);
