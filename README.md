@@ -28,7 +28,7 @@ CaveSurvey is tool for mapping caves having Android device and laser distance me
 Features
 ========
 
- Currently CaveSurvey can :
+ Currently CaveSurvey can:
   - Supports multiple projects
   - Supports multiple cave galleries
   - Can add points to the sheet and manually enter measures
@@ -36,8 +36,8 @@ Features
   - Take GPS coordinates of a point
   - Read compass from the build-in compass
   - Read measures from Bluetooth laser distance meter (currently only CEM iLDM-150 - distance + inclination)
-  - Display 2D map of the current measures (horizontal projection)
-  - Can export to Excel using Apache POI 
+  - Display 2D map of the current measures(horizontal projection)
+  - Can export to Excel
 
   In progress:
   - Read inclination from the build-in compass
