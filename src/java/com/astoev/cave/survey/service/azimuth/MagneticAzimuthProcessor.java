@@ -29,7 +29,7 @@ public class MagneticAzimuthProcessor extends AzimuthProcessor {
     private int accelerometerAccuracy;
     
     private float[] R = new float[9];
-    private float[] I = new float[16];
+//    private float[] I = new float[16];
 //    private float[] R = new float[16];
 //    private float[] I = new float[16];
     private float aData[] = new float[3];
@@ -91,7 +91,7 @@ public class MagneticAzimuthProcessor extends AzimuthProcessor {
 		
 		int rotation = getRotation();
 		
-		boolean success = SensorManager.getRotationMatrix(R, I, aData, mData);
+		boolean success = SensorManager.getRotationMatrix(R, null, aData, mData);
 		if (success){
 			R = (rotation != Surface.ROTATION_0) ? remapCoordinateSystem(R, rotation): R;
 			if (R != null){

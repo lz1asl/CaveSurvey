@@ -18,10 +18,8 @@ import android.view.Surface;
  */
 public class RotationAzimuthProcessor extends AzimuthProcessor {
 	
-//    protected float[] R = new float[16];
-//    protected float[] I = new float[16];
     protected float[] R = new float[9];
-    protected float[] I = new float[9];
+//    protected float[] I = new float[9];
     protected float[] rData = new float[3];
     protected float[] oData = new float[3];
 
