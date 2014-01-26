@@ -76,6 +76,11 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.point);
         mNewNote = null;
+        
+        // initialize the view with leg data only if the activity is new
+        if (savedInstanceState == null){
+            loadPointData();
+        }
 
         if (Option.CODE_SENSOR_INTERNAL.equals(Options.getOptionValue(Option.CODE_AZIMUTH_SENSOR))){
         	Log.i(Constants.LOG_TAG_UI, "Will register onClickListener for Azimuth");
@@ -101,7 +106,6 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
     @Override
     protected void onRestart() {
         super.onRestart();
-        loadPointData();
     }
 
     @Override
@@ -109,7 +113,6 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         super.onResume();
 
         receiver.resetMeasureExpectations();
-        loadPointData();
         
         //check if location is added and returned back to this activity
         Fragment fragment = this.getSupportFragmentManager().findFragmentById(R.id.saved_location_container);
