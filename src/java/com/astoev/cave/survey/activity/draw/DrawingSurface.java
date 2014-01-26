@@ -54,7 +54,6 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
             _run = run;
         }
 
-
         @Override
         public void run() {
             Canvas canvas = null;
@@ -101,8 +100,6 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
     public void redo() {
         isDrawing = true;
         commandManager.redo();
-
-
     }
     
     /**
@@ -136,6 +133,9 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 
 
     public void surfaceCreated(SurfaceHolder holder) {
+        if (thread == null){
+            thread = new DrawThread(getHolder());
+        }
         thread.setRunning(true);
         thread.start();
     }
@@ -151,12 +151,21 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
                 // we will try it again and again...
             }
         }
+        thread = null;
     }
 
     public void setOldBitmap(Bitmap aOldBitmap) {
         mOldBitmap = aOldBitmap;
     }
     
+    public CommandManager getCommandManager() {
+        return commandManager;
+    }
+
+    public void setCommandManager(CommandManager commandManagerArg) {
+        commandManager = commandManagerArg;
+    }
+
     /**
      * Handler implementation
      * 
