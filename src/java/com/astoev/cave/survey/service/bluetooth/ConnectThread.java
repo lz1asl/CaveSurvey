@@ -98,6 +98,9 @@ public class ConnectThread extends Thread {
                 Log.d(Constants.LOG_TAG_UI, "units " + new String[]{" ", "m", "in", "in+", "ft", "ft&in"}[buffer[7]]);
                 if (1 != buffer[7]) {
                     Log.i(Constants.LOG_TAG_UI, "Please measure in meters!");
+                    Bundle b = new Bundle();
+                    b.putString("error", "Use meters for distance");
+                    mReceiver.send(Activity.RESULT_CANCELED, b);
                     break;
                 }
 
@@ -106,7 +109,9 @@ public class ConnectThread extends Thread {
                             | 0xFF0000 & buffer[(9 + j * 4)] << 16
                             | 0xFF00 & buffer[(10 + j * 4)] << 8
                             | 0xFF & buffer[(11 + j * 4)]);
-                    if (j == 0 && measure > -26843545) {
+
+                    // accept angle only when measuring angle also
+                    if (j == 0 && measure > -26843545 && buffer[5] == 8) {
                         Log.i(Constants.LOG_TAG_UI, "Got angle " + measure / 10);
                         Bundle b = new Bundle();
                         b.putFloat("result", measure / 10);

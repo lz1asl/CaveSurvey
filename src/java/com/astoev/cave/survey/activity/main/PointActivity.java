@@ -1,5 +1,6 @@
 package com.astoev.cave.survey.activity.main;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -730,53 +731,63 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         }
 
         @Override
-            protected void onReceiveResult(int resultCode, Bundle resultData) {
-                float aMeasure = resultData.getFloat("result");
-                Constants.Measures type = Constants.Measures.valueOf(resultData.getString("type"));
-                if (!expectsMeasure(type)) {
-                    Log.i(Constants.LOG_TAG_SERVICE, "Unexpected measure " + type + " : " + aMeasure);
-                    return;
-                }
+            protected void onReceiveResult(int aResultCode, Bundle aResultData) {
 
-                switch (type) {
-                    case distance:
-                        Log.i(Constants.LOG_TAG_UI, "Got distance " + aMeasure);
-                        populateMeasure(aMeasure, R.id.point_distance);
-                        break;
+                switch (aResultCode) {
+                    case Activity.RESULT_OK:
 
-                    case angle:
-                        Log.i(Constants.LOG_TAG_UI, "Got angle " + aMeasure);
-                        populateMeasure(aMeasure, R.id.point_azimuth);
-                        break;
+                        float aMeasure = aResultData.getFloat("result");
+                        Constants.Measures type = Constants.Measures.valueOf(aResultData.getString("type"));
+                        if (!expectsMeasure(type)) {
+                            Log.i(Constants.LOG_TAG_SERVICE, "Unexpected measure " + type + " : " + aMeasure);
+                            return;
+                        }
 
-                    case slope:
-                        Log.i(Constants.LOG_TAG_UI, "Got slope " + aMeasure);
-                        populateMeasure(aMeasure, R.id.point_slope);
-                        break;
+                        switch (type) {
+                            case distance:
+                                Log.i(Constants.LOG_TAG_UI, "Got distance " + aMeasure);
+                                populateMeasure(aMeasure, R.id.point_distance);
+                                break;
 
-                    case up:
-                        Log.i(Constants.LOG_TAG_UI, "Got up " + aMeasure);
-                        populateMeasure(aMeasure, R.id.point_up);
-                        break;
+                            case angle:
+                                Log.i(Constants.LOG_TAG_UI, "Got angle " + aMeasure);
+                                populateMeasure(aMeasure, R.id.point_azimuth);
+                                break;
 
-                    case down:
-                        Log.i(Constants.LOG_TAG_UI, "Got down " + aMeasure);
-                        populateMeasure(aMeasure, R.id.point_down);
-                        break;
+                            case slope:
+                                Log.i(Constants.LOG_TAG_UI, "Got slope " + aMeasure);
+                                populateMeasure(aMeasure, R.id.point_slope);
+                                break;
 
-                    case left:
-                        Log.i(Constants.LOG_TAG_UI, "Got left " + aMeasure);
-                        populateMeasure(aMeasure, R.id.point_left);
-                        break;
+                            case up:
+                                Log.i(Constants.LOG_TAG_UI, "Got up " + aMeasure);
+                                populateMeasure(aMeasure, R.id.point_up);
+                                break;
 
-                    case right:
-                        Log.i(Constants.LOG_TAG_UI, "Got right " + aMeasure);
-                        populateMeasure(aMeasure, R.id.point_right);
-                        break;
+                            case down:
+                                Log.i(Constants.LOG_TAG_UI, "Got down " + aMeasure);
+                                populateMeasure(aMeasure, R.id.point_down);
+                                break;
+
+                            case left:
+                                Log.i(Constants.LOG_TAG_UI, "Got left " + aMeasure);
+                                populateMeasure(aMeasure, R.id.point_left);
+                                break;
+
+                            case right:
+                                Log.i(Constants.LOG_TAG_UI, "Got right " + aMeasure);
+                                populateMeasure(aMeasure, R.id.point_right);
+                                break;
+
+                            default:
+                                Log.i(Constants.LOG_TAG_UI, "Ignore type " + type);
+                        }
+                    break;
 
                     default:
-                        Log.i(Constants.LOG_TAG_UI, "Ignore type " + type);
+                        UIUtilities.showNotification(aResultData.getString("error"));
                 }
+
             }
 
         public boolean expectsMeasure(Constants.Measures aMeasure) {
