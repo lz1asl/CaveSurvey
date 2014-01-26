@@ -112,7 +112,7 @@ public class ConnectThread extends Thread {
 
                     // accept angle only when measuring angle also
                     if (j == 0 && measure > -26843545 && buffer[5] == 8) {
-                        Log.i(Constants.LOG_TAG_UI, "Got angle " + measure / 10);
+                        Log.i(Constants.LOG_TAG_UI, "Read angle " + measure / 10);
                         Bundle b = new Bundle();
                         b.putFloat("result", measure / 10);
                         b.putString("type", Constants.Measures.slope.toString());
@@ -120,11 +120,13 @@ public class ConnectThread extends Thread {
                     }
 
                     if (j == 2 && measure > -26843545) {
-                        Log.i(Constants.LOG_TAG_UI, "Got distance " + measure / 1000);
-                        Bundle b = new Bundle();
-                        b.putFloat("result", measure / 1000);
-                        b.putString("type", mMeasure.toString());
-                        mReceiver.send(Activity.RESULT_OK, b);
+                        Log.i(Constants.LOG_TAG_UI, "Read distance " + measure / 1000);
+                        if (mMeasure != Constants.Measures.slope) {
+                            Bundle b = new Bundle();
+                            b.putFloat("result", measure / 1000);
+                            b.putString("type", mMeasure.toString());
+                            mReceiver.send(Activity.RESULT_OK, b);
+                        }
                     }
                 }
 
