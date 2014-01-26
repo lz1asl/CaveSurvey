@@ -179,7 +179,7 @@ public class BluetoothService {
             mCurrContext.unregisterReceiver(r);
         }
         mRegisteredReceivers.clear();
-        mCurrContext = null;
+//        mCurrContext = null;
     }
 
     public static void selectDevice(String aDeviceAddress) {
@@ -204,7 +204,7 @@ public class BluetoothService {
                 } catch (Exception e) {
                     mCurrDevice = null;
                     UIUtilities.showNotification(R.string.bt_pair_failed);
-                    Log.e(Constants.LOG_TAG_SERVICE, "Failed test to new device");
+                    Log.e(Constants.LOG_TAG_SERVICE, "Failed test to new device", e);
                 } finally {
                     if (tester != null) {
                         try {
