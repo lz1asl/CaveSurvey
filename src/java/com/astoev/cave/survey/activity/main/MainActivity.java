@@ -115,7 +115,7 @@ public class MainActivity extends MainMenuActivity {
 
                 currentLeg = getWorkspace().getActiveLegId().equals(l.getId());
                 if (currentLeg) {
-                    row.setBackgroundColor(Color.parseColor("#101010"));
+                    row.setBackgroundColor(Color.parseColor("#202020"));
                 }
 
                 if (mGalleryColors.get(l.getGalleryId(), Constants.NOT_FOUND) == Constants.NOT_FOUND) {
