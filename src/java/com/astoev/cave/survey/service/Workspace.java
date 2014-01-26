@@ -77,9 +77,9 @@ public class Workspace {
         ConfigUtil.removeProperty(ConfigUtil.PROP_CURR_LEG);
     }
 
-    private void setActiveGallery(Gallery aGallery) {
-        ConfigUtil.setIntProperty(ConfigUtil.PROP_CURR_GALLERY, aGallery.getId());
-    }
+//    private void setActiveGallery(Gallery aGallery) {
+//        ConfigUtil.setIntProperty(ConfigUtil.PROP_CURR_GALLERY, aGallery.getId());
+//    }
 
     private void setActiveGalleryId(Integer aGalleryId) {
         ConfigUtil.setIntProperty(ConfigUtil.PROP_CURR_GALLERY, aGalleryId);

@@ -27,27 +27,27 @@ public class ConfigUtil {
     }
 
     public static Integer getIntProperty(String aName) {
-        return getPrefs(Context.MODE_WORLD_READABLE).getInt(aName, 0);
+        return getPrefs(Context.MODE_PRIVATE).getInt(aName, 0);
     }
 
     public static boolean setIntProperty(String aName, Integer aValue) {
-        SharedPreferences.Editor editor = getPrefs(Context.MODE_WORLD_WRITEABLE).edit();
+        SharedPreferences.Editor editor = getPrefs(Context.MODE_PRIVATE).edit();
         editor.putInt(aName, aValue);
         return editor.commit();
     }
 
     public static String getStringProperty(String aName) {
-        return getPrefs(Context.MODE_WORLD_READABLE).getString(aName, null);
+        return getPrefs(Context.MODE_PRIVATE).getString(aName, null);
     }
 
     public static boolean setStringProperty(String aName, String aValue) {
-        SharedPreferences.Editor editor = getPrefs(Context.MODE_WORLD_WRITEABLE).edit();
+        SharedPreferences.Editor editor = getPrefs(Context.MODE_PRIVATE).edit();
         editor.putString(aName, aValue);
         return editor.commit();
     }
 
     public static boolean removeProperty(String aName) {
-        SharedPreferences.Editor editor = getPrefs(Context.MODE_WORLD_WRITEABLE).edit();
+        SharedPreferences.Editor editor = getPrefs(Context.MODE_PRIVATE).edit();
         editor.remove(aName);
         return editor.commit();
     }
