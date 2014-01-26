@@ -77,9 +77,10 @@ Another Android app is [Abris](https://play.google.com/store/apps/details?id=com
 About
 =====
 
+
 While we have not published yet to Google Play you can use the [latest build]( https://razhodki.ci.cloudbees.com/job/CaveSurvey/lastSuccessfulBuild/artifact/build/apk/CaveSurvey-defaultFlavor-debug-unaligned.apk).
 
 ![CloudBees](http://www.cloudbees.com/sites/default/files/Button-Built-on-CB-1.png)
 
 
-Contact us at cave.survey.project@gmail.com.
+This software is free to use and modify. Well, we provide no guarantee in any kind but are open for ideas and collaborations. Contact us at cave.survey.project@gmail.com.
