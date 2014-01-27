@@ -169,8 +169,10 @@
 
     <string-array name="slope_read_type">
         <item>Manually</item>
-        <item>Built-in sensor</item>
         <item>From Bluetooth</item>
+<!--         
+        <item>Built-in sensor</item>
+ -->
     </string-array>
 
 

@@ -183,12 +183,13 @@ public class NewProjectActivity extends MainMenuActivity {
                                     Options.createOption(Option.CODE_SLOPE_SENSOR, Option.CODE_SENSOR_NONE);
                                     break;
                                 case 1:
+                                    Log.i(Constants.LOG_TAG_UI, "Read slope from BT");
+                                    Options.createOption(Option.CODE_SLOPE_SENSOR, Option.CODE_SENSOR_BLUETOOTH);
+                                    break;
+                                case 2:
                                     Log.i(Constants.LOG_TAG_UI, "Read slope from build-in sensor");
                                     Options.createOption(Option.CODE_SLOPE_SENSOR, Option.CODE_SENSOR_INTERNAL);
                                     break;
-                                case 2:
-                                    Log.i(Constants.LOG_TAG_UI, "Read slope from BT");
-                                    Options.createOption(Option.CODE_SLOPE_SENSOR, Option.CODE_SENSOR_BLUETOOTH);
                             }
 
                             return newProject;
