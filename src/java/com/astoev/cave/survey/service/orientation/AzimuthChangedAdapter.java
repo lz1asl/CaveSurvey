@@ -4,8 +4,9 @@
 package com.astoev.cave.survey.service.orientation;
 
 /**
- * @author jivko
- *
+ * Adapter for listening for azimuth changes.
+ * 
+ * @author jmitrev
  */
 public class AzimuthChangedAdapter implements AzimuthChangedListener,
         OrientationChangedListener {

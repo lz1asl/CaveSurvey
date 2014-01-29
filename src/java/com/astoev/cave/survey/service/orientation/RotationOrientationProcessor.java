@@ -55,7 +55,6 @@ public class RotationOrientationProcessor extends OrientationProcessor {
 			if (R != null){
 				SensorManager.getOrientation(R, oData);
 	
-				//TODO change
 				lastValue = oData[0] < 0 ? oData[0] * RAD2GRAD + 360 : oData[0] * RAD2GRAD;
 				
 				if (listener != null){
@@ -64,7 +63,6 @@ public class RotationOrientationProcessor extends OrientationProcessor {
                     converted[1] = oData[1] * RAD2GRAD;
                     converted[2] = oData[2] * RAD2GRAD;
                     listener.onOrinationChanged(converted);
-//                  listener.onAzimuthChanged(lastValue);
 				}
 			}
 		}
@@ -123,14 +121,6 @@ public class RotationOrientationProcessor extends OrientationProcessor {
 			sensorManager.unregisterListener(this, rotationSensor);
 		}
 	}
-
-	/**
-	 * @see com.astoev.cave.survey.service.azimuth.AzimuthProcessor#getLastValue()
-	 */
-//	@Override
-//	public float getLastValue() {
-//		return lastValue;
-//	}
 
 	/**
 	 * Helper method that checks if the sensor is available for the current api version

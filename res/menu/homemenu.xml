@@ -15,7 +15,7 @@
 	      myapp:showAsAction="ifRoom|withText"/>
 	
     <item android:id="@+id/action_azimuth_test"
-          android:title="@string/azimuth_test_title"
+          android:title="@string/sensor_test_title"
           android:visible="true"
           myapp:showAsAction="never"/>
     

@@ -97,7 +97,6 @@ public class MagneticOrientationProcessor extends OrientationProcessor {
 			if (R != null){
 				SensorManager.getOrientation(R, oData);
 				
-				//TODO redesign
 				lastValue = oData[0] < 0 ? oData[0] * RAD2GRAD + 360 : oData[0] * RAD2GRAD;
 				
 				if (listener != null){
@@ -106,7 +105,6 @@ public class MagneticOrientationProcessor extends OrientationProcessor {
 	                converted[1] = oData[1] * RAD2GRAD;
 	                converted[2] = oData[2] * RAD2GRAD;
 	                listener.onOrinationChanged(converted);
-//					listener.onAzimuthChanged(lastValue);
 				}
 			}
 		}
@@ -141,16 +139,6 @@ public class MagneticOrientationProcessor extends OrientationProcessor {
 			}
 		}
 	}
-
-	/**
-	 * Getter for the last successfully read vale from the sensor
-	 * 
-	 * @return the lastValue
-	 */
-//	@Override
-//	public float getLastValue() {
-//		return lastValue;
-//	}
 	
 	/**
 	 * Will be able to read only if both sensors are available

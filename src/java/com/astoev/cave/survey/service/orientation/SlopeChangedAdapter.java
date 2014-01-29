@@ -5,8 +5,9 @@ package com.astoev.cave.survey.service.orientation;
 
 
 /**
+ * Adaptor that handles orientation changes and extracts the deviation of the slope
+ * 
  * @author jmitrev
- *
  */
 public class SlopeChangedAdapter implements OrientationChangedListener, SlopeChangedListener{
 

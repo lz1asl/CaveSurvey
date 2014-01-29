@@ -9,7 +9,8 @@ import android.hardware.SensorEvent;
 import android.view.Surface;
 
 /**
- * Azimuth processor that works with orientation sensor. Note that Orientation sensor is deprecated since api9
+ * Processor that works with deprecated synthetic orientation sensor. Note that Orientation sensor is 
+ * deprecated since api9
  * 
  * @author jmitrev
  */
@@ -83,7 +84,6 @@ public class OrientationDeprecatedProcessor extends OrientationProcessor {
         converted[1] = pitch;
         converted[2] = roll;
         listener.onOrinationChanged(converted);
-//        listener.onAzimuthChanged(lastValue);
 
 	}
 
@@ -109,14 +109,6 @@ public class OrientationDeprecatedProcessor extends OrientationProcessor {
 		}
 	}
 
-	/**
-	 * @see com.astoev.cave.survey.service.azimuth.AzimuthProcessor#getLastValue()
-	 */
-//	@Override
-//	public float getLastValue() {
-//		return lastValue;
-//	}
-	
 	/**
 	 * @see com.astoev.cave.survey.service.orientation.OrientationProcessor#getSensor()
 	 */

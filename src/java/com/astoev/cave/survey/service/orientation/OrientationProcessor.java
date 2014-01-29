@@ -89,13 +89,6 @@ public abstract class OrientationProcessor implements SensorEventListener {
 	public abstract void stopListening();
 	
 	/**
-	 * Returns the last available value
-	 * 
-	 * @return last read value
-	 */
-//	public abstract float getLastValue();
-	
-	/**
 	 * @return the accuracy
 	 */
 	public int getAccuracy() {

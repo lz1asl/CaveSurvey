@@ -16,7 +16,7 @@ import com.astoev.cave.survey.activity.MainMenuActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.activity.main.BTActivity;
 import com.astoev.cave.survey.activity.main.MainActivity;
-import com.astoev.cave.survey.activity.poc.AzimuthTestActivity;
+import com.astoev.cave.survey.activity.poc.SensorTestActivity;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Project;
 
@@ -159,7 +159,7 @@ public class HomeActivity extends MainMenuActivity {
     
     private void onAzimuthTest(){
     	Log.i(Constants.LOG_TAG_UI, "Azimuth Test");
-    	Intent intent = new Intent(this, AzimuthTestActivity.class);
+    	Intent intent = new Intent(this, SensorTestActivity.class);
     	startActivity(intent);
     }
 

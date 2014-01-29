@@ -232,7 +232,7 @@
     <string name="azimuth_rotation">Rotation:</string>
     <string name="azimuth_start">Start</string>
     <string name="azimuth_stop">Stop</string>
-    <string name="azimuth_test_title">Azimuth Test</string>
+    <string name="sensor_test_title">Sensor Test</string>
 
     <string name="SENSOR_STATUS_UNRELIABLE">UNRELIABLE</string>
     <string name="SENSOR_STATUS_ACCURACY_LOW">LOW</string>

@@ -37,7 +37,7 @@ import android.widget.TextView;
  * 
  * @author jmitrev
  */
-public class AzimuthDialog extends DialogFragment{// implements AzimuthChangedListener{
+public class AzimuthDialog extends DialogFragment{
 
 	 /** Max value for the progress bar*/
      private static int MAX_VALUE = 3;

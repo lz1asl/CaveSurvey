@@ -23,7 +23,7 @@ import com.astoev.cave.survey.service.orientation.SlopeChangedAdapter;
  * 
  * @author jmitrev
  */
-public class AzimuthTestActivity extends MainMenuActivity {
+public class SensorTestActivity extends MainMenuActivity {
 
 	private TextView orientationView;
 	private TextView magneticView;
@@ -59,7 +59,7 @@ public class AzimuthTestActivity extends MainMenuActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.azimuthtest);
+        setContentView(R.layout.sensortest);
         
         orientationView = (TextView)findViewById(R.id.azimuth_orientation);
         magneticView = (TextView)findViewById(R.id.azimuth_magnetic);
@@ -168,7 +168,7 @@ public class AzimuthTestActivity extends MainMenuActivity {
 	 */
 	@Override
 	protected String getScreenTitle() {
-		return getString(R.string.azimuth_test_title);
+		return getString(R.string.sensor_test_title);
 	}
 
 	/**
