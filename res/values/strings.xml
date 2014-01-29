@@ -49,6 +49,9 @@
     <string name="azimuth">Compass</string>
     <string name="slope">Clinometer</string>
     
+    <string name="sensor">Sensor</string>
+    <string name="accuracy">Accuracy</string>
+    
     <!-- add popup -->
     <string name="main_add_title">Add new</string>
     <string name="main_add_leg">Next Leg</string>
