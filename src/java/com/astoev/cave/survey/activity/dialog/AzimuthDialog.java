@@ -166,13 +166,6 @@ public class AzimuthDialog extends DialogFragment{
 	 */
 	protected void notifyEndProgress(){
 		orientationProcessor.stopListening();
-//		float lastValue = orientationProcessor.getLastValue();
-		
-		// convert to Grads if necessary 
-//		if (!isInDegrees){
-//			lastValue = lastValue * Constants.DEC_TO_GRAD;
-//		}
-		
 		Activity activity = getActivity();
 		
 		if (activity != null && activity instanceof AzimuthChangedListener){ 
@@ -181,31 +174,6 @@ public class AzimuthDialog extends DialogFragment{
 		dismiss();
 	}
 	
-//	/**
-//	 * Azimuth callback method. Edits the azimuth text view with the new value
-//	 * 
-//	 * @see com.astoev.cave.survey.service.azimuth.AzimuthChangedListener#onAzimuthChanged(float)
-//	 */
-//	@Override
-//	public void onAzimuthChanged(float newValueArg) {
-//		//convert to Grads if necessary
-//		if (!isInDegrees){
-//			newValueArg = newValueArg * Constants.DEC_TO_GRAD;
-//		}
-//		
-//		azimuthView.setText(azimuthFrmater.format(newValueArg) + azimuthUnitsString);
-//	}
-//	
-//    /**
-//	 * @see com.astoev.cave.survey.service.azimuth.AzimuthChangedListener#onAccuracyChanged(int)
-//	 */
-//	@Override
-//	public void onAccuracyChanged(int accuracyArg) {
-//		accuracyView.setText(orientationProcessor.getAccuracyAsString(accuracyArg));
-//	}
-
-
-
 	/**
      * Nested class that performs progress calculations (counting)
      */
