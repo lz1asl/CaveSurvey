@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.astoev.cave.survey.service.azimuth;
+package com.astoev.cave.survey.service.orientation;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -23,7 +23,7 @@ import com.astoev.cave.survey.R;
  * @author jmitrev
  *
  */
-public abstract class AzimuthProcessor implements SensorEventListener {
+public abstract class OrientationProcessor implements SensorEventListener {
 	
     protected final static float RAD2GRAD = (float)(180.0f/Math.PI);
     
@@ -36,7 +36,7 @@ public abstract class AzimuthProcessor implements SensorEventListener {
     protected Context context;
 
 	/** Listener to notify on value change*/
-	protected AzimuthChangedListener listener;
+	protected OrientationChangedListener listener;
 	
 	/** Sensor's accuracy */
 	protected int accuracy;
@@ -45,12 +45,12 @@ public abstract class AzimuthProcessor implements SensorEventListener {
 	private int rotation = Surface.ROTATION_0;
 	
     /**
-     * Constructor for AzimuthProcessor
+     * Constructor for OrientationProcessor
      * 
      * @param contextArg  - context to use
      * @param listenerArg - listener to notify on value change
      */
-    public AzimuthProcessor(Context contextArg, AzimuthChangedListener listenerArg){
+    public OrientationProcessor(Context contextArg, OrientationChangedListener listenerArg){
     	context = contextArg;
     	listener = listenerArg;
     	if (listenerArg == null){
@@ -93,7 +93,7 @@ public abstract class AzimuthProcessor implements SensorEventListener {
 	 * 
 	 * @return last read value
 	 */
-	public abstract float getLastValue();
+//	public abstract float getLastValue();
 	
 	/**
 	 * @return the accuracy

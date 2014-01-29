@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.astoev.cave.survey.service.azimuth;
+package com.astoev.cave.survey.service.orientation;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -16,7 +16,7 @@ import android.view.Surface;
  * 
  * @author jmitrev
  */
-public class RotationAzimuthProcessor extends AzimuthProcessor {
+public class RotationOrientationProcessor extends OrientationProcessor {
 	
     protected float[] R = new float[9];
 //    protected float[] I = new float[9];
@@ -30,12 +30,12 @@ public class RotationAzimuthProcessor extends AzimuthProcessor {
     private Sensor rotationSensor;
 	
     /**
-     * Constructor for RotationAzimuthProcessor
+     * Constructor for RotationOrientationProcessor
      * 
      * @param contextArg  - context to use
      * @param listenerArg - listener to notify on value change
      */
-    public RotationAzimuthProcessor(Context contextArg, AzimuthChangedListener listenerArg){
+    public RotationOrientationProcessor(Context contextArg, OrientationChangedListener listenerArg){
     	super(contextArg, listenerArg);
     }
     
@@ -55,10 +55,16 @@ public class RotationAzimuthProcessor extends AzimuthProcessor {
 			if (R != null){
 				SensorManager.getOrientation(R, oData);
 	
+				//TODO change
 				lastValue = oData[0] < 0 ? oData[0] * RAD2GRAD + 360 : oData[0] * RAD2GRAD;
 				
 				if (listener != null){
-					listener.onAzimuthChanged(lastValue);
+                    float[] converted = new float[3];
+                    converted[0] = lastValue;
+                    converted[1] = oData[1] * RAD2GRAD;
+                    converted[2] = oData[2] * RAD2GRAD;
+                    listener.onOrinationChanged(converted);
+//                  listener.onAzimuthChanged(lastValue);
 				}
 			}
 		}
@@ -73,7 +79,7 @@ public class RotationAzimuthProcessor extends AzimuthProcessor {
 	}
 
 	/**
-	 * @see com.astoev.cave.survey.service.azimuth.AzimuthProcessor#startListening()
+	 * @see com.astoev.cave.survey.service.orientation.OrientationProcessor#startListening()
 	 */
 	@Override
 	public void startListening() {
@@ -86,7 +92,7 @@ public class RotationAzimuthProcessor extends AzimuthProcessor {
 	}
 	
 	/**
-	 * @see com.astoev.cave.survey.service.azimuth.AzimuthProcessor#getSensor()
+	 * @see com.astoev.cave.survey.service.orientation.OrientationProcessor#getSensor()
 	 */
 	@Override
 	public Sensor getSensor() {
@@ -109,7 +115,7 @@ public class RotationAzimuthProcessor extends AzimuthProcessor {
 	}
 
 	/**
-	 * @see com.astoev.cave.survey.service.azimuth.AzimuthProcessor#stopListening()
+	 * @see com.astoev.cave.survey.service.orientation.OrientationProcessor#stopListening()
 	 */
 	@Override
 	public void stopListening() {
@@ -121,10 +127,10 @@ public class RotationAzimuthProcessor extends AzimuthProcessor {
 	/**
 	 * @see com.astoev.cave.survey.service.azimuth.AzimuthProcessor#getLastValue()
 	 */
-	@Override
-	public float getLastValue() {
-		return lastValue;
-	}
+//	@Override
+//	public float getLastValue() {
+//		return lastValue;
+//	}
 
 	/**
 	 * Helper method that checks if the sensor is available for the current api version

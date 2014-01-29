@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.astoev.cave.survey.service.azimuth;
+package com.astoev.cave.survey.service.orientation;
 
 import android.content.Context;
 import android.hardware.Sensor;
@@ -14,7 +14,7 @@ import android.view.Surface;
  * 
  * @author jmitrev
  */
-public class MagneticAzimuthProcessor extends AzimuthProcessor {
+public class MagneticOrientationProcessor extends OrientationProcessor {
 
     /** Compass sensor to use */
     private Sensor magneticSensor;
@@ -37,12 +37,12 @@ public class MagneticAzimuthProcessor extends AzimuthProcessor {
     private float oData[] = new float[3];
     
     /**
-     * Constructor for MagneticAzimuthProcessor
+     * Constructor for MagneticOrientationProcessor
      * 
      * @param contextArg  - context to use
      * @param listenerArg - listener to notify on value change
      */
-    public MagneticAzimuthProcessor(Context contextArg, AzimuthChangedListener listenerArg){
+    public MagneticOrientationProcessor(Context contextArg, OrientationChangedListener listenerArg){
     	super(contextArg, listenerArg);
     }
 
@@ -97,9 +97,16 @@ public class MagneticAzimuthProcessor extends AzimuthProcessor {
 			if (R != null){
 				SensorManager.getOrientation(R, oData);
 				
+				//TODO redesign
 				lastValue = oData[0] < 0 ? oData[0] * RAD2GRAD + 360 : oData[0] * RAD2GRAD;
+				
 				if (listener != null){
-					listener.onAzimuthChanged(lastValue);
+	                float[] converted = new float[3];
+	                converted[0] = lastValue;
+	                converted[1] = oData[1] * RAD2GRAD;
+	                converted[2] = oData[2] * RAD2GRAD;
+	                listener.onOrinationChanged(converted);
+//					listener.onAzimuthChanged(lastValue);
 				}
 			}
 		}
@@ -140,15 +147,15 @@ public class MagneticAzimuthProcessor extends AzimuthProcessor {
 	 * 
 	 * @return the lastValue
 	 */
-	@Override
-	public float getLastValue() {
-		return lastValue;
-	}
+//	@Override
+//	public float getLastValue() {
+//		return lastValue;
+//	}
 	
 	/**
 	 * Will be able to read only if both sensors are available
 	 * 
-	 * @see com.astoev.cave.survey.service.azimuth.AzimuthProcessor#canReadAzimuth()
+	 * @see com.astoev.cave.survey.service.orientation.OrientationProcessor#canReadAzimuth()
 	 */
 	@Override
 	public boolean canReadAzimuth(){
@@ -156,7 +163,7 @@ public class MagneticAzimuthProcessor extends AzimuthProcessor {
 	}
 	
 	/**
-	 * @see com.astoev.cave.survey.service.azimuth.AzimuthProcessor#getSensor()
+	 * @see com.astoev.cave.survey.service.orientation.OrientationProcessor#getSensor()
 	 */
 	@Override
 	public Sensor getSensor() {
@@ -188,7 +195,7 @@ public class MagneticAzimuthProcessor extends AzimuthProcessor {
 	}
 
 	/**
-	 * @see com.astoev.cave.survey.service.azimuth.AzimuthProcessor#getAccuracy()
+	 * @see com.astoev.cave.survey.service.orientation.OrientationProcessor#getAccuracy()
 	 */
 	@Override
 	public int getAccuracy() {
@@ -196,7 +203,7 @@ public class MagneticAzimuthProcessor extends AzimuthProcessor {
 	}
 
 	/**
-	 * @see com.astoev.cave.survey.service.azimuth.AzimuthProcessor#getAccuracyAsString(int)
+	 * @see com.astoev.cave.survey.service.orientation.OrientationProcessor#getAccuracyAsString(int)
 	 */
 	@Override
 	public String getAccuracyAsString(int accuracyArg) {

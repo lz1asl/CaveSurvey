@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.astoev.cave.survey.activity.main;
+package com.astoev.cave.survey.activity.dialog;
 
 import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
@@ -10,9 +10,10 @@ import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.model.Option;
 import com.astoev.cave.survey.service.Options;
-import com.astoev.cave.survey.service.azimuth.AzimuthChangedListener;
-import com.astoev.cave.survey.service.azimuth.AzimuthProcessor;
-import com.astoev.cave.survey.service.azimuth.AzimuthProcessorFactory;
+import com.astoev.cave.survey.service.orientation.AzimuthChangedAdapter;
+import com.astoev.cave.survey.service.orientation.AzimuthChangedListener;
+import com.astoev.cave.survey.service.orientation.OrientationProcessor;
+import com.astoev.cave.survey.service.orientation.OrientationProcessorFactory;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -36,7 +37,7 @@ import android.widget.TextView;
  * 
  * @author jmitrev
  */
-public class AzimuthDialog extends DialogFragment implements AzimuthChangedListener{
+public class AzimuthDialog extends DialogFragment{// implements AzimuthChangedListener{
 
 	 /** Max value for the progress bar*/
      private static int MAX_VALUE = 3;
@@ -51,8 +52,8 @@ public class AzimuthDialog extends DialogFragment implements AzimuthChangedListe
 	 /** Progress handler*/
 	 private ProgressHandler progressHandler;
 	 
-	 /** AzimuthProcessor that handles the work with the sensors*/
-	 private AzimuthProcessor azimuthProcessor;
+	 /** OrientationProcessor that handles the work with the sensors*/
+	 private OrientationProcessor orientationProcessor;
 	 
 	 /** Formatter */
 	 private DecimalFormat azimuthFrmater;
@@ -62,6 +63,8 @@ public class AzimuthDialog extends DialogFragment implements AzimuthChangedListe
 	 
 	 /** String for azimuth's units */
 	 private String azimuthUnitsString;
+	 
+	 private float lastValue;
 	 
 	/**
 	 * @see android.support.v4.app.DialogFragment#onCreateDialog(android.os.Bundle)
@@ -109,8 +112,33 @@ public class AzimuthDialog extends DialogFragment implements AzimuthChangedListe
 		AlertDialog alertDialg = builder.create();
 		
 		// create azimuth processor to handle the azimuth sensors and value changes
-		azimuthProcessor = AzimuthProcessorFactory.getAzimuthProcessor(getActivity(), this);
-		azimuthProcessor.startListening();
+		orientationProcessor = OrientationProcessorFactory.getAzimuthProcessor(getActivity(), new AzimuthChangedAdapter() {
+		    
+		    /**
+		     * Azimuth callback method. Edits the azimuth text view with the new value
+		     * 
+		     * @see com.astoev.cave.survey.service.orientation.AzimuthChangedListener#onAzimuthChanged(float)
+		     */
+		    @Override
+		    public void onAzimuthChanged(float newValueArg) {
+		        //convert to Grads if necessary
+		        lastValue = newValueArg;
+		        if (!isInDegrees){
+		            lastValue = newValueArg * Constants.DEC_TO_GRAD;
+		        } 
+		        
+		        azimuthView.setText(azimuthFrmater.format(lastValue) + azimuthUnitsString);
+		    }
+		    
+		    /**
+		     * @see com.astoev.cave.survey.service.orientation.AzimuthChangedListener#onAccuracyChanged(int)
+		     */
+		    @Override
+		    public void onAccuracyChanged(int accuracyArg) {
+		        accuracyView.setText(orientationProcessor.getAccuracyAsString(accuracyArg));
+		    }
+		});
+		orientationProcessor.startListening();
 		
 		// create a handler and a thread that will drive the progress bar
 		progressHandler = new ProgressHandler(this);
@@ -124,12 +152,12 @@ public class AzimuthDialog extends DialogFragment implements AzimuthChangedListe
 	 * Helper method that handles when the dialog is handled. It will stop the thread and stop the azimuth 
 	 * processor
 	 */
-	protected void cancelDialog(){
+	public void cancelDialog(){
 		// stop the progress thread
 		progressThread.setState(ProgressThread.STATE_DONE);
 		
 		// stop azimuth listener
-		azimuthProcessor.stopListening();
+		orientationProcessor.stopListening();
 	}
 	
 	/**
@@ -137,44 +165,44 @@ public class AzimuthDialog extends DialogFragment implements AzimuthChangedListe
 	 * Stops the azimuth processor notifies the parent activity and will dismiss the dialog
 	 */
 	protected void notifyEndProgress(){
-		azimuthProcessor.stopListening();
-		float lastValue = azimuthProcessor.getLastValue();
+		orientationProcessor.stopListening();
+//		float lastValue = orientationProcessor.getLastValue();
 		
 		// convert to Grads if necessary 
-		if (!isInDegrees){
-			lastValue = lastValue * Constants.DEC_TO_GRAD;
-		}
+//		if (!isInDegrees){
+//			lastValue = lastValue * Constants.DEC_TO_GRAD;
+//		}
 		
 		Activity activity = getActivity();
 		
-		if (activity != null && activity instanceof AzimuthChangedListener){
+		if (activity != null && activity instanceof AzimuthChangedListener){ 
 			((AzimuthChangedListener)activity).onAzimuthChanged(lastValue);
 		} 
 		dismiss();
 	}
 	
-	/**
-	 * Azimuth callback method. Edits the azimuth text view with the new value
-	 * 
-	 * @see com.astoev.cave.survey.service.azimuth.AzimuthChangedListener#onAzimuthChanged(float)
-	 */
-	@Override
-	public void onAzimuthChanged(float newValueArg) {
-		//convert to Grads if necessary
-		if (!isInDegrees){
-			newValueArg = newValueArg * Constants.DEC_TO_GRAD;
-		}
-		
-		azimuthView.setText(azimuthFrmater.format(newValueArg) + azimuthUnitsString);
-	}
-	
-    /**
-	 * @see com.astoev.cave.survey.service.azimuth.AzimuthChangedListener#onAccuracyChanged(int)
-	 */
-	@Override
-	public void onAccuracyChanged(int accuracyArg) {
-		accuracyView.setText(azimuthProcessor.getAccuracyAsString(accuracyArg));
-	}
+//	/**
+//	 * Azimuth callback method. Edits the azimuth text view with the new value
+//	 * 
+//	 * @see com.astoev.cave.survey.service.azimuth.AzimuthChangedListener#onAzimuthChanged(float)
+//	 */
+//	@Override
+//	public void onAzimuthChanged(float newValueArg) {
+//		//convert to Grads if necessary
+//		if (!isInDegrees){
+//			newValueArg = newValueArg * Constants.DEC_TO_GRAD;
+//		}
+//		
+//		azimuthView.setText(azimuthFrmater.format(newValueArg) + azimuthUnitsString);
+//	}
+//	
+//    /**
+//	 * @see com.astoev.cave.survey.service.azimuth.AzimuthChangedListener#onAccuracyChanged(int)
+//	 */
+//	@Override
+//	public void onAccuracyChanged(int accuracyArg) {
+//		accuracyView.setText(orientationProcessor.getAccuracyAsString(accuracyArg));
+//	}
 
 
 

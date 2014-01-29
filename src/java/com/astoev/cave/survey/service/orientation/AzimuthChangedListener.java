@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.astoev.cave.survey.service.azimuth;
+package com.astoev.cave.survey.service.orientation;
 
 /**
  * Notifies a top level listener when an azimuth is changed
@@ -13,6 +13,6 @@ public interface AzimuthChangedListener {
 
 	void onAzimuthChanged(float newValueArg);
 	
-	void onAccuracyChanged(int accuracyArg);
+//	void onAccuracyChanged(int accuracyArg);
 	
 }

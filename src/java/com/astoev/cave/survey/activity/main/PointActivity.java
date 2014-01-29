@@ -23,6 +23,7 @@ import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.MainMenuActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
+import com.astoev.cave.survey.activity.dialog.AzimuthDialog;
 import com.astoev.cave.survey.activity.draw.DrawingActivity;
 import com.astoev.cave.survey.fragment.LocationFragment;
 import com.astoev.cave.survey.model.Gallery;
@@ -32,8 +33,8 @@ import com.astoev.cave.survey.model.Option;
 import com.astoev.cave.survey.model.Photo;
 import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.service.Options;
-import com.astoev.cave.survey.service.azimuth.AzimuthChangedListener;
 import com.astoev.cave.survey.service.bluetooth.BluetoothService;
+import com.astoev.cave.survey.service.orientation.AzimuthChangedListener;
 import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.util.FileStorageUtil;
 import com.astoev.cave.survey.util.PointUtil;
@@ -811,19 +812,12 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
     }
 
 	/**
-	 * @see com.astoev.cave.survey.service.azimuth.AzimuthChangedListener#onAzimuthChanged(float)
+	 * @see com.astoev.cave.survey.service.orientation.AzimuthChangedListener#onAzimuthChanged(float)
 	 */
 	@Override
 	public void onAzimuthChanged(float newValueArg) {
         final EditText azimuth = (EditText) findViewById(R.id.point_azimuth);
 		azimuth.setText(String.valueOf(newValueArg));
-	}
-
-	/**
-	 * @see com.astoev.cave.survey.service.azimuth.AzimuthChangedListener#onAccuracyChanged(int)
-	 */
-	@Override
-	public void onAccuracyChanged(int accuracyArg) {
 	}
 
 }
