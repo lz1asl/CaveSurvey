@@ -38,7 +38,7 @@ public class MapUtilities {
     }
 
     public static Float getMiddleAngle(Float aFirstAzimuth, Float aSecondAzimuth) {
-        if (aFirstAzimuth == aSecondAzimuth) {
+        if (aFirstAzimuth.equals(aSecondAzimuth)) {
             return aFirstAzimuth;
         } else if (Math.abs(aFirstAzimuth - aSecondAzimuth) > Option.MAX_VALUE_AZIMUTH_DEGREES/2) {
             // average, then flip the direction if sum goes above 360
@@ -105,5 +105,44 @@ public class MapUtilities {
         } else {
             return Option.MAX_VALUE_AZIMUTH_DEGREES + anAzimuth - 90;
         }
+    }
+
+    public static boolean isSlopeValid(Float aSlope) {
+        if (null != aSlope) {
+            String currSlopeMeasure = Options.getOptionValue(Option.CODE_SLOPE_UNITS);
+            int maxValue, minValue;
+            if (Option.UNIT_DEGREES.equals(currSlopeMeasure)) {
+                maxValue = Option.MAX_VALUE_SLOPE_DEGREES;
+                minValue = Option.MIN_VALUE_SLOPE_DEGREES;
+            } else { // Option.UNIT_GRADS
+                maxValue = Option.MAX_VALUE_SLOPE_GRADS;
+                minValue = Option.MIN_VALUE_SLOPE_GRADS;
+            }
+            if (aSlope > maxValue || aSlope < minValue) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean isAzimuthValid(Float anAzimuth) {
+        if (null != anAzimuth) {
+            if (anAzimuth < 0) {
+                return false;
+            }
+
+            String currAzimuthMeasure = Options.getOptionValue(Option.CODE_AZIMUTH_UNITS);
+            int maxValue;
+            if (Option.UNIT_DEGREES.equals(currAzimuthMeasure)) {
+                maxValue = Option.MAX_VALUE_AZIMUTH_DEGREES;
+            } else { // Option.UNIT_GRADS
+                maxValue = Option.MAX_VALUE_AZIMUTH_GRADS;
+            }
+            if (anAzimuth > maxValue) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

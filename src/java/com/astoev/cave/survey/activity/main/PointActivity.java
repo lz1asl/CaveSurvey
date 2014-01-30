@@ -24,6 +24,7 @@ import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.MainMenuActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.activity.draw.DrawingActivity;
+import com.astoev.cave.survey.activity.map.MapUtilities;
 import com.astoev.cave.survey.fragment.LocationFragment;
 import com.astoev.cave.survey.model.Gallery;
 import com.astoev.cave.survey.model.Leg;
@@ -387,47 +388,23 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
     }
 
     private boolean checkAzimuth(EditText aEditText) {
-        Float azimuth = StringUtils.getFromEditTextNotNull(aEditText);
-        if (null != azimuth) {
-            if (azimuth < 0) {
-                aEditText.setError(aEditText.getContext().getString(R.string.invalid));
-                return false;
-            }
+        boolean valid = MapUtilities.isAzimuthValid(StringUtils.getFromEditTextNotNull(aEditText));
 
-            String currAzimuthMeasure = Options.getOptionValue(Option.CODE_AZIMUTH_UNITS);
-            int maxValue;
-            if (Option.UNIT_DEGREES.equals(currAzimuthMeasure)) {
-                maxValue = Option.MAX_VALUE_AZIMUTH_DEGREES;
-            } else { // Option.UNIT_GRADS
-                maxValue = Option.MAX_VALUE_AZIMUTH_GRADS;
-            }
-            if (azimuth > maxValue) {
-                aEditText.setError(aEditText.getContext().getString(R.string.invalid));
-                return false;
-            }
+        if (!valid) {
+            aEditText.setError(aEditText.getContext().getString(R.string.invalid));
         }
 
-        return true;
+        return valid;
     }
 
     private boolean checkSlope(EditText aEditText) {
-        Float slope = StringUtils.getFromEditTextNotNull(aEditText);
-        if (null != slope) {
-            String currSlopeMeasure = Options.getOptionValue(Option.CODE_SLOPE_UNITS);
-            int maxValue, minValue;
-            if (Option.UNIT_DEGREES.equals(currSlopeMeasure)) {
-                maxValue = Option.MAX_VALUE_SLOPE_DEGREES;
-                minValue = Option.MIN_VALUE_SLOPE_DEGREES;
-            } else { // Option.UNIT_GRADS
-                maxValue = Option.MAX_VALUE_SLOPE_GRADS;
-                minValue = Option.MIN_VALUE_SLOPE_GRADS;
-            }
-            if (slope > maxValue || slope < minValue) {
-                aEditText.setError(aEditText.getContext().getString(R.string.invalid));
-                return false;
-            }
+        boolean valid = MapUtilities.isSlopeValid(StringUtils.getFromEditTextNotNull(aEditText));
+
+        if (!valid) {
+            aEditText.setError(aEditText.getContext().getString(R.string.invalid));
         }
-        return true;
+
+        return valid;
     }
 
     public void noteButton(View aView) {
