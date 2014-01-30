@@ -31,5 +31,5 @@
 	      android:title="@string/main_button_info"
 	      android:visible="true"
 	      myapp:showAsAction="ifRoom|withText"/>
-	
+
 </menu>

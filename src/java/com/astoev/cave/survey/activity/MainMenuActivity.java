@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 
@@ -68,20 +69,6 @@ public class MainMenuActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.i(Constants.LOG_TAG_UI, "Main menu selected - " + item.toString());
         switch (item.getItemId()) {
-//            case R.id.menuAbout:
-//                try {
-//                    Dialog dialog = new Dialog(this);
-//                    dialog.setContentView(R.layout.about);
-//                    ImageView image = (ImageView) dialog.findViewById(R.id.aboutImage);
-//                    image.setImageResource(R.drawable.paldin);
-//                    TextView url = (TextView) dialog.findViewById(R.id.aboutUrl);
-//                    Linkify.addLinks(url, Linkify.WEB_URLS);
-//                    dialog.show();
-//                } catch (Exception e) {
-//                    Log.e(Constants.LOG_TAG_UI, "Failed toshow about", e);
-//                    UIUtilities.showNotification(this, R.string.error);
-//                }
-//                return true;
             case R.id.menuExit:
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
                 dialogBuilder.setMessage(R.string.menu_exit_confirmation_question)

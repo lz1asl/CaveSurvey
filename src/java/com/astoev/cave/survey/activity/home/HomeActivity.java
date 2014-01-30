@@ -1,9 +1,11 @@
 package com.astoev.cave.survey.activity.home;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -72,12 +74,30 @@ public class HomeActivity extends MainMenuActivity {
 			onAzimuthTest();
 			return true;
 		}
+        case R.id.main_action_about:
+            showAboutDialog();
+            return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
 	}
-	
-	private void loadProjects() {
+
+    private void showAboutDialog() {
+        try {
+            Dialog dialog = new Dialog(this);
+            dialog.setContentView(R.layout.about);
+            TextView url = (TextView) dialog.findViewById(R.id.aboutUrl);
+            Linkify.addLinks(url, Linkify.WEB_URLS);
+            TextView url2 = (TextView) dialog.findViewById(R.id.aboutUrl2);
+            Linkify.addLinks(url2, Linkify.WEB_URLS);
+            dialog.show();
+        } catch (Exception e) {
+            Log.e(Constants.LOG_TAG_UI, "Failed toshow about", e);
+            UIUtilities.showNotification(R.string.error);
+        }
+    }
+
+    private void loadProjects() {
         try {
 
             ListView projectsContainer = (ListView) findViewById(R.id.homeProjects);
