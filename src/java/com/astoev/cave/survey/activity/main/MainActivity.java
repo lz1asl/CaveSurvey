@@ -9,8 +9,10 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -48,8 +50,8 @@ import java.util.List;
 public class MainActivity extends MainMenuActivity {
 
     private static final int[] ADD_ITEM_LABELS = {R.string.main_add_leg,
-            R.string.main_add_branch,
-//            R.string.main_add_middlepoint
+            R.string.main_add_branch
+//            ,            R.string.main_add_middlepoint
     };
 
     private SparseIntArray mGalleryColors = new SparseIntArray();
@@ -244,8 +246,7 @@ public class MainActivity extends MainMenuActivity {
                             addLeg(true);
                         }
                     } else if (2 == item) {
-//                        requestLengthAndAddMiddle();
-                        UIUtilities.showNotification(R.string.todo);
+                        requestLengthAndAddMiddle();
                     }
                 } catch (Exception e) {
                     Log.e(Constants.LOG_TAG_UI, "Error adding", e);
@@ -258,7 +259,7 @@ public class MainActivity extends MainMenuActivity {
         alert.show();
     }
 
-  /*  private void requestLengthAndAddMiddle() throws SQLException {
+    private void requestLengthAndAddMiddle() throws SQLException {
 
         LayoutInflater li = LayoutInflater.from(this);
         View promptsView = li.inflate(R.layout.number_popup, null);
@@ -267,12 +268,12 @@ public class MainActivity extends MainMenuActivity {
         alertDialogBuilder.setView(promptsView);
 
         final EditText userInput = (EditText) promptsView.findViewById(R.id.popup_distance);
-        final Leg currLeg = getWorkspace().getActiveOrFirstLeg();
+        final Leg currLeg = getWorkspace().getActiveLeg();
 
         // set dialog message
         alertDialogBuilder
                 .setCancelable(true)
-                .setPositiveButton("OK",
+                .setPositiveButton(getString(R.string.popup_ok),
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
 
@@ -298,7 +299,7 @@ public class MainActivity extends MainMenuActivity {
                                 dialog.cancel();
                             }
                         })
-                .setNegativeButton("Back",
+                .setNegativeButton(getString(R.string.popup_cancel),
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
@@ -312,7 +313,7 @@ public class MainActivity extends MainMenuActivity {
     private void addMiddle(final float atDistance) throws SQLException {
 
         Log.i(Constants.LOG_TAG_UI, "Creating middle point");
-        Integer newLegId = TransactionManager.callInTransaction(getWorkspace().getDBHelper().getConnectionSource(),
+       /* Integer newLegId = TransactionManager.callInTransaction(getWorkspace().getDBHelper().getConnectionSource(),
                 new Callable<Integer>() {
                     public Integer call() throws Exception {
                         try {
@@ -366,9 +367,9 @@ public class MainActivity extends MainMenuActivity {
 
         {
             UIUtilities.showNotification(R.string.error);
-        }
+        }*/
 
-    }*/
+    }
 
 
     private void addLeg(final boolean isDeviation) throws SQLException {
