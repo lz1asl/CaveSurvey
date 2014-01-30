@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.astoev.cave.survey.activity.main;
+package com.astoev.cave.survey.activity.dialog;
 
 import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
@@ -10,9 +10,10 @@ import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.model.Option;
 import com.astoev.cave.survey.service.Options;
-import com.astoev.cave.survey.service.azimuth.AzimuthChangedListener;
-import com.astoev.cave.survey.service.azimuth.AzimuthProcessor;
-import com.astoev.cave.survey.service.azimuth.AzimuthProcessorFactory;
+import com.astoev.cave.survey.service.orientation.AzimuthChangedAdapter;
+import com.astoev.cave.survey.service.orientation.AzimuthChangedListener;
+import com.astoev.cave.survey.service.orientation.OrientationProcessor;
+import com.astoev.cave.survey.service.orientation.OrientationProcessorFactory;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -36,47 +37,50 @@ import android.widget.TextView;
  * 
  * @author jmitrev
  */
-public class AzimuthDialog extends DialogFragment implements AzimuthChangedListener{
+public class AzimuthDialog extends DialogFragment{
 
 	 /** Max value for the progress bar*/
      private static int MAX_VALUE = 3;
      
      private TextView azimuthView;
      private TextView accuracyView;
-     private ProgressBar progressBar;
+     protected ProgressBar progressBar;
      
      /** Progress thread*/
-	 private ProgressThread progressThread;
+	 protected ProgressThread progressThread;
 	 
 	 /** Progress handler*/
-	 private ProgressHandler progressHandler;
+	 protected ProgressHandler progressHandler;
 	 
-	 /** AzimuthProcessor that handles the work with the sensors*/
-	 private AzimuthProcessor azimuthProcessor;
+	 /** OrientationProcessor that handles the work with the sensors*/
+	 protected OrientationProcessor orientationProcessor;
 	 
 	 /** Formatter */
-	 private DecimalFormat azimuthFrmater;
+	 protected DecimalFormat formater;
 	 
 	 /** Flag if the azimuth is expected in degrees */
-	 private boolean isInDegrees = true;
+	 protected boolean isInDegrees = true;
 	 
 	 /** String for azimuth's units */
-	 private String azimuthUnitsString;
+	 protected String unitsString;
+	 
+	 private float lastValue;
 	 
 	/**
 	 * @see android.support.v4.app.DialogFragment#onCreateDialog(android.os.Bundle)
 	 */
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
+	    super.onCreateDialog(savedInstanceState);
 		
-		azimuthFrmater = new DecimalFormat("#.#");
+		formater = new DecimalFormat("#.#");
 		
 		if (Option.UNIT_DEGREES.equals(Options.getOptionValue(Option.CODE_AZIMUTH_UNITS))){
 			isInDegrees = true;
-			azimuthUnitsString = " " + getString(R.string.degrees);
+			unitsString = " " + getString(R.string.degrees);
 		} else {
 			isInDegrees = false;
-			azimuthUnitsString = " " + getString(R.string.grads);
+			unitsString = " " + getString(R.string.grads);
 		}
 		
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -87,17 +91,7 @@ public class AzimuthDialog extends DialogFragment implements AzimuthChangedListe
 		builder.setView(view);
 
 		// add key listener to handle the back button
-		builder.setOnKeyListener(new OnKeyListener(){
-
-			@Override
-			public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-				if (keyCode == KeyEvent.KEYCODE_BACK) {
-					Log.i(Constants.LOG_TAG_UI, "Back button pressed! Cancel AzimuthDialog.");
-					cancelDialog();
-				}
-				return false;
-			}
-		});
+		builder.setOnKeyListener(new BackKeyListener(this));
 		
 		// progress bar view 
 		progressBar = (ProgressBar)view.findViewById(R.id.azimuth_progress);
@@ -109,8 +103,33 @@ public class AzimuthDialog extends DialogFragment implements AzimuthChangedListe
 		AlertDialog alertDialg = builder.create();
 		
 		// create azimuth processor to handle the azimuth sensors and value changes
-		azimuthProcessor = AzimuthProcessorFactory.getAzimuthProcessor(getActivity(), this);
-		azimuthProcessor.startListening();
+		orientationProcessor = OrientationProcessorFactory.getAzimuthProcessor(getActivity(), new AzimuthChangedAdapter() {
+		    
+		    /**
+		     * Azimuth callback method. Edits the azimuth text view with the new value
+		     * 
+		     * @see com.astoev.cave.survey.service.orientation.AzimuthChangedListener#onAzimuthChanged(float)
+		     */
+		    @Override
+		    public void onAzimuthChanged(float newValueArg) {
+		        //convert to Grads if necessary
+		        lastValue = newValueArg;
+		        if (!isInDegrees){
+		            lastValue = newValueArg * Constants.DEC_TO_GRAD;
+		        } 
+		        
+		        azimuthView.setText(formater.format(lastValue) + unitsString);
+		    }
+		    
+		    /**
+		     * @see com.astoev.cave.survey.service.orientation.AzimuthChangedListener#onAccuracyChanged(int)
+		     */
+		    @Override
+		    public void onAccuracyChanged(int accuracyArg) {
+		        accuracyView.setText(orientationProcessor.getAccuracyAsString(accuracyArg));
+		    }
+		});
+		orientationProcessor.startListening();
 		
 		// create a handler and a thread that will drive the progress bar
 		progressHandler = new ProgressHandler(this);
@@ -124,12 +143,12 @@ public class AzimuthDialog extends DialogFragment implements AzimuthChangedListe
 	 * Helper method that handles when the dialog is handled. It will stop the thread and stop the azimuth 
 	 * processor
 	 */
-	protected void cancelDialog(){
+	public void cancelDialog(){
 		// stop the progress thread
 		progressThread.setState(ProgressThread.STATE_DONE);
 		
 		// stop azimuth listener
-		azimuthProcessor.stopListening();
+		orientationProcessor.stopListening();
 	}
 	
 	/**
@@ -137,51 +156,19 @@ public class AzimuthDialog extends DialogFragment implements AzimuthChangedListe
 	 * Stops the azimuth processor notifies the parent activity and will dismiss the dialog
 	 */
 	protected void notifyEndProgress(){
-		azimuthProcessor.stopListening();
-		float lastValue = azimuthProcessor.getLastValue();
-		
-		// convert to Grads if necessary 
-		if (!isInDegrees){
-			lastValue = lastValue * Constants.DEC_TO_GRAD;
-		}
-		
+		orientationProcessor.stopListening();
 		Activity activity = getActivity();
 		
-		if (activity != null && activity instanceof AzimuthChangedListener){
+		if (activity != null && activity instanceof AzimuthChangedListener){ 
 			((AzimuthChangedListener)activity).onAzimuthChanged(lastValue);
 		} 
 		dismiss();
 	}
 	
 	/**
-	 * Azimuth callback method. Edits the azimuth text view with the new value
-	 * 
-	 * @see com.astoev.cave.survey.service.azimuth.AzimuthChangedListener#onAzimuthChanged(float)
-	 */
-	@Override
-	public void onAzimuthChanged(float newValueArg) {
-		//convert to Grads if necessary
-		if (!isInDegrees){
-			newValueArg = newValueArg * Constants.DEC_TO_GRAD;
-		}
-		
-		azimuthView.setText(azimuthFrmater.format(newValueArg) + azimuthUnitsString);
-	}
-	
-    /**
-	 * @see com.astoev.cave.survey.service.azimuth.AzimuthChangedListener#onAccuracyChanged(int)
-	 */
-	@Override
-	public void onAccuracyChanged(int accuracyArg) {
-		accuracyView.setText(azimuthProcessor.getAccuracyAsString(accuracyArg));
-	}
-
-
-
-	/**
      * Nested class that performs progress calculations (counting)
      */
-    private class ProgressThread extends Thread {
+    protected class ProgressThread extends Thread {
         Handler mHandler;
         final static int STATE_DONE = 0;
         final static int STATE_RUNNING = 1;
@@ -246,6 +233,30 @@ public class AzimuthDialog extends DialogFragment implements AzimuthChangedListe
             	dialog.progressThread.setState(ProgressThread.STATE_DONE);
             	dialog.notifyEndProgress();
             }
+        }
+    }
+    
+    public static class BackKeyListener implements OnKeyListener{
+        
+        private WeakReference<AzimuthDialog> reference;
+        
+        public BackKeyListener(AzimuthDialog dialogFragmentArg)
+        {
+            reference = new WeakReference<AzimuthDialog>(dialogFragmentArg);
+        }
+        
+        @Override
+        public boolean onKey(DialogInterface dialogArg, int keyCode, KeyEvent event) {
+            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                
+                Log.i(Constants.LOG_TAG_UI, "Back button pressed! Cancel AzimuthDialog.");
+                
+                AzimuthDialog dialog= reference.get();
+                if (dialog != null){
+                    dialog.cancelDialog();
+                }
+            }
+            return false;
         }
     }
 }

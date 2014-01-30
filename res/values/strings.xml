@@ -50,6 +50,11 @@
     <string name="azimuth">Compass</string>
     <string name="slope">Clinometer</string>
     
+    <string name="slope_slope">Clinometer:</string>
+    
+    <string name="sensor">Sensor</string>
+    <string name="accuracy">Accuracy</string>
+    
     <!-- add popup -->
     <string name="main_add_title">Add new</string>
     <string name="main_add_leg">Next Leg</string>
@@ -169,9 +174,7 @@
     <string-array name="slope_read_type">
         <item>Manually</item>
         <item>From Bluetooth</item>
-<!--         
         <item>Built-in sensor</item>
- -->
     </string-array>
 
 
@@ -234,7 +237,7 @@
     <string name="azimuth_rotation">Rotation:</string>
     <string name="azimuth_start">Start</string>
     <string name="azimuth_stop">Stop</string>
-    <string name="azimuth_test_title">Azimuth Test</string>
+    <string name="sensor_test_title">Sensor Test</string>
 
     <string name="SENSOR_STATUS_UNRELIABLE">UNRELIABLE</string>
     <string name="SENSOR_STATUS_ACCURACY_LOW">LOW</string>

@@ -12,21 +12,26 @@ import android.widget.TextView;
 
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.MainMenuActivity;
-import com.astoev.cave.survey.service.azimuth.AzimuthChangedListener;
-import com.astoev.cave.survey.service.azimuth.MagneticAzimuthProcessor;
-import com.astoev.cave.survey.service.azimuth.OrientationAzimuthProcessor;
-import com.astoev.cave.survey.service.azimuth.RotationAzimuthProcessor;
+import com.astoev.cave.survey.service.orientation.AzimuthChangedAdapter;
+import com.astoev.cave.survey.service.orientation.MagneticOrientationProcessor;
+import com.astoev.cave.survey.service.orientation.OrientationDeprecatedProcessor;
+import com.astoev.cave.survey.service.orientation.RotationOrientationProcessor;
+import com.astoev.cave.survey.service.orientation.SlopeChangedAdapter;
 
 /**
  * Activity that tests all available azimuth sensors and processor implementations
  * 
  * @author jmitrev
  */
-public class AzimuthTestActivity extends MainMenuActivity {
+public class SensorTestActivity extends MainMenuActivity {
 
 	private TextView orientationView;
 	private TextView magneticView;
 	private TextView rotationView;
+	
+	private TextView orientationSlopeView;
+	private TextView magneticSlopeView;
+	private TextView rotationSlopeView;
 	
 	private TextView orientationAccuracyView;
 	private TextView magneticAccuracyView;
@@ -35,9 +40,13 @@ public class AzimuthTestActivity extends MainMenuActivity {
 	private Button startButton;
 	private Button stopButton;
 	
-	private OrientationAzimuthProcessor orientationAzimuthProcessor;
-	private MagneticAzimuthProcessor magneticAzimuthProcessor;
-	private RotationAzimuthProcessor rotationAzimuthProcessor;
+	private OrientationDeprecatedProcessor orientationDeprecatedProcessor;
+	private MagneticOrientationProcessor magneticOrientationProcessor;
+	private RotationOrientationProcessor rotationOrientationProcessor;
+	
+	private OrientationDeprecatedProcessor orientationSlopeProcessor;
+	private MagneticOrientationProcessor magneticSlopeProcessor;
+	private RotationOrientationProcessor rotationSlopeProcessor;
 	
 	private DecimalFormat azimuthFormater;
 	
@@ -50,11 +59,15 @@ public class AzimuthTestActivity extends MainMenuActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.azimuthtest);
+        setContentView(R.layout.sensortest);
         
         orientationView = (TextView)findViewById(R.id.azimuth_orientation);
         magneticView = (TextView)findViewById(R.id.azimuth_magnetic);
         rotationView = (TextView)findViewById(R.id.azimuth_rotation);
+        
+        orientationSlopeView = (TextView)findViewById(R.id.slope_orientation);
+        magneticSlopeView = (TextView)findViewById(R.id.slope_magnetic);
+        rotationSlopeView = (TextView)findViewById(R.id.slope_rotation);
         
         orientationAccuracyView = (TextView)findViewById(R.id.azimuth_orientation_accuracy);
         magneticAccuracyView = (TextView)findViewById(R.id.azimuth_magnetic_accuracy);
@@ -65,7 +78,7 @@ public class AzimuthTestActivity extends MainMenuActivity {
         
         azimuthFormater = new DecimalFormat("#.#");
         
-        orientationAzimuthProcessor = new OrientationAzimuthProcessor(this, new AzimuthChangedListener() {
+        orientationDeprecatedProcessor = new OrientationDeprecatedProcessor(this, new AzimuthChangedAdapter() {
 			
 			@Override
 			public void onAzimuthChanged(float newValueArg) {
@@ -77,7 +90,7 @@ public class AzimuthTestActivity extends MainMenuActivity {
 				orientationAccuracyView.setText(String.valueOf(accuracyArg));
 			}
 		});
-        magneticAzimuthProcessor = new MagneticAzimuthProcessor(this, new AzimuthChangedListener() {
+        magneticOrientationProcessor = new MagneticOrientationProcessor(this, new AzimuthChangedAdapter() {
 			
 			@Override
 			public void onAzimuthChanged(float newValueArg) {
@@ -89,7 +102,7 @@ public class AzimuthTestActivity extends MainMenuActivity {
 				magneticAccuracyView.setText(String.valueOf(accuracyArg));
 			}
 		});
-        rotationAzimuthProcessor = new RotationAzimuthProcessor(this, new AzimuthChangedListener() {
+        rotationOrientationProcessor = new RotationOrientationProcessor(this, new AzimuthChangedAdapter() {
 			
 			@Override
 			public void onAzimuthChanged(float newValueArg) {
@@ -102,6 +115,27 @@ public class AzimuthTestActivity extends MainMenuActivity {
 			}
 			
 		});
+        
+        orientationSlopeProcessor = new OrientationDeprecatedProcessor(this, new SlopeChangedAdapter(){
+            @Override
+            public void onSlopeChanged(float newValueArg) {
+                orientationSlopeView.setText(azimuthFormater.format(newValueArg));
+            }
+        });
+        
+        magneticSlopeProcessor = new MagneticOrientationProcessor(this, new SlopeChangedAdapter(){
+            @Override
+            public void onSlopeChanged(float newValueArg) {
+                magneticSlopeView.setText(azimuthFormater.format(newValueArg));
+            }
+        });
+        
+        rotationSlopeProcessor = new RotationOrientationProcessor(this, new SlopeChangedAdapter(){
+            @Override
+            public void onSlopeChanged(float newValueArg) {
+                rotationSlopeView.setText(azimuthFormater.format(newValueArg));
+            }
+        });
 	}
 
 	/**
@@ -134,7 +168,7 @@ public class AzimuthTestActivity extends MainMenuActivity {
 	 */
 	@Override
 	protected String getScreenTitle() {
-		return getString(R.string.azimuth_test_title);
+		return getString(R.string.sensor_test_title);
 	}
 
 	/**
@@ -144,9 +178,13 @@ public class AzimuthTestActivity extends MainMenuActivity {
 	 */
 	public void onStart(View view){
 		if (!started){
-			orientationAzimuthProcessor.startListening();
-			magneticAzimuthProcessor.startListening();
-			rotationAzimuthProcessor.startListening();
+			orientationDeprecatedProcessor.startListening();
+			magneticOrientationProcessor.startListening();
+			rotationOrientationProcessor.startListening();
+			
+			orientationSlopeProcessor.startListening();
+			magneticSlopeProcessor.startListening();
+			rotationSlopeProcessor.startListening();
 			
 			started = true;
 			
@@ -163,9 +201,13 @@ public class AzimuthTestActivity extends MainMenuActivity {
 	 */
 	public void onStop(View view){
 		if (started){
-			orientationAzimuthProcessor.stopListening();
-			magneticAzimuthProcessor.stopListening();
-			rotationAzimuthProcessor.stopListening();
+			orientationDeprecatedProcessor.stopListening();
+			magneticOrientationProcessor.stopListening();
+			rotationOrientationProcessor.stopListening();
+			
+            orientationSlopeProcessor.stopListening();
+            magneticSlopeProcessor.stopListening();
+            rotationSlopeProcessor.stopListening();			
 			
 			started = false;
 			

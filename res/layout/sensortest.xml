@@ -3,6 +3,33 @@
               android:layout_width="fill_parent" 
               android:orientation="vertical">
 
+    <!-- Header -->
+    <LinearLayout android:layout_height="wrap_content" 
+              android:layout_width="fill_parent" 
+              android:orientation="horizontal"
+              android:layout_margin="10dp">
+        <TextView android:layout_height="wrap_content" 
+                  android:layout_width="0dp"
+                  android:layout_weight="2"
+                  android:text="@string/sensor"
+                  android:ellipsize="end" android:singleLine="true"/>
+        <TextView android:layout_height="wrap_content" 
+                  android:layout_width="0dp"
+                  android:layout_weight="2"
+                  android:text="@string/azimuth"
+                  android:ellipsize="end" android:singleLine="true"/>
+        <TextView android:layout_height="wrap_content" 
+                  android:layout_width="0dp"
+                  android:layout_weight="2"
+                  android:text="@string/slope"
+                  android:ellipsize="end" android:singleLine="true"/>
+        <TextView android:layout_height="wrap_content" 
+                  android:layout_width="0dp"
+                  android:layout_weight="1"
+                  android:text="@string/accuracy"
+                  android:ellipsize="end" android:singleLine="true"/>
+    </LinearLayout>
+    
     <!-- Orientation sensor -->
     <LinearLayout android:layout_height="wrap_content" 
               android:layout_width="fill_parent" 
@@ -13,6 +40,11 @@
                   android:layout_weight="2"
                   android:text="@string/azimuth_orination"/>
         <TextView android:id="@+id/azimuth_orientation"
+                  android:layout_height="wrap_content" 
+                  android:layout_width="0dp"
+                  android:layout_weight="2"
+                  android:text="@string/azimuth_no_value"/>
+        <TextView android:id="@+id/slope_orientation"
                   android:layout_height="wrap_content" 
                   android:layout_width="0dp"
                   android:layout_weight="2"
@@ -38,6 +70,11 @@
                   android:layout_width="0dp"
                   android:layout_weight="2"
                   android:text="@string/azimuth_no_value"/>
+        <TextView android:id="@+id/slope_magnetic"
+                  android:layout_height="wrap_content" 
+                  android:layout_width="0dp"
+                  android:layout_weight="2"
+                  android:text="@string/azimuth_no_value"/>
         <TextView android:id="@+id/azimuth_magnetic_accuracy"
                   android:layout_height="wrap_content" 
                   android:layout_width="0dp"
@@ -55,6 +92,11 @@
                   android:layout_weight="2"
                   android:text="@string/azimuth_rotation"/>
         <TextView android:id="@+id/azimuth_rotation"
+                  android:layout_height="wrap_content" 
+                  android:layout_width="0dp"
+                  android:layout_weight="2"
+                  android:text="@string/azimuth_no_value"/>
+        <TextView android:id="@+id/slope_rotation"
                   android:layout_height="wrap_content" 
                   android:layout_width="0dp"
                   android:layout_weight="2"

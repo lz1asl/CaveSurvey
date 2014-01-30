@@ -23,6 +23,8 @@ import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.MainMenuActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
+import com.astoev.cave.survey.activity.dialog.AzimuthDialog;
+import com.astoev.cave.survey.activity.dialog.SlopeDialog;
 import com.astoev.cave.survey.activity.draw.DrawingActivity;
 import com.astoev.cave.survey.activity.map.MapUtilities;
 import com.astoev.cave.survey.fragment.LocationFragment;
@@ -33,8 +35,9 @@ import com.astoev.cave.survey.model.Option;
 import com.astoev.cave.survey.model.Photo;
 import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.service.Options;
-import com.astoev.cave.survey.service.azimuth.AzimuthChangedListener;
 import com.astoev.cave.survey.service.bluetooth.BluetoothService;
+import com.astoev.cave.survey.service.orientation.AzimuthChangedListener;
+import com.astoev.cave.survey.service.orientation.SlopeChangedListener;
 import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.util.FileStorageUtil;
 import com.astoev.cave.survey.util.PointUtil;
@@ -55,12 +58,13 @@ import java.util.concurrent.Callable;
  * Time: 1:15 AM
  * To change this template use File | Settings | File Templates.
  */
-public class PointActivity extends MainMenuActivity implements AzimuthChangedListener{
+public class PointActivity extends MainMenuActivity implements AzimuthChangedListener, SlopeChangedListener{
 
 	private static final int REQUEST_IMAGE_CAPTURE = 1;
 	private static final int REQIEST_EDIT_NOTE = 2;
 	
 	private static final String AZIMUTH_DIALOG = "azimuth_dialog";
+	private static final String SLOPE_DIALOG = "slope_dialog";
 	
     private String mNewNote = null;
 
@@ -72,6 +76,8 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
     private BTMeasureResultReceiver receiver = new BTMeasureResultReceiver(new Handler());
     
     private AzimuthDialog azimuthDialog;
+    
+    private SlopeDialog slopeDialog;
 
 
     public void onCreate(Bundle savedInstanceState) {
@@ -84,6 +90,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
             loadPointData();
         }
 
+        // if the azimuth is read from build in sensors add onClickListener to show azimuth dialog
         if (Option.CODE_SENSOR_INTERNAL.equals(Options.getOptionValue(Option.CODE_AZIMUTH_SENSOR))){
         	Log.i(Constants.LOG_TAG_UI, "Will register onClickListener for Azimuth");
         	EditText azimuth = (EditText) findViewById(R.id.point_azimuth);
@@ -97,6 +104,19 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 					readAzimuth(v);
 				}
         	});
+        }
+        
+        // if the slope is read from build in sensors add onClickListener to show slope dialog
+        if (Option.CODE_SENSOR_INTERNAL.equals(Options.getOptionValue(Option.CODE_SLOPE_SENSOR))){
+            Log.i(Constants.LOG_TAG_UI, "Will register onClickListener for Slope");
+            EditText slope = (EditText) findViewById(R.id.point_slope);
+            slope.setOnClickListener(new OnClickListener() {
+                
+                @Override
+                public void onClick(View viewArg) {
+                    readSlope(viewArg);
+                }
+            });
         }
         
         Leg legEdited = getCurrentLeg();
@@ -132,6 +152,10 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 		if (azimuthDialog != null){
 			azimuthDialog.cancelDialog();
 			azimuthDialog.dismiss();
+		}
+		if (slopeDialog != null){
+		    slopeDialog.cancelDialog();
+		    slopeDialog.dismiss();
 		}
 		super.onPause();
 	}
@@ -489,6 +513,11 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 		azimuthDialog = new AzimuthDialog();
 		azimuthDialog.show(getSupportFragmentManager(), AZIMUTH_DIALOG);
     }
+    
+    public void readSlope(View view){
+        slopeDialog = new SlopeDialog();
+        slopeDialog.show(getSupportFragmentManager(), SLOPE_DIALOG);
+    }
 
     public void photoButton() {
         // picture http://www.tutorialforandroid.com/2010/10/take-picture-in-android-with.html
@@ -788,7 +817,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
     }
 
 	/**
-	 * @see com.astoev.cave.survey.service.azimuth.AzimuthChangedListener#onAzimuthChanged(float)
+	 * @see com.astoev.cave.survey.service.orientation.AzimuthChangedListener#onAzimuthChanged(float)
 	 */
 	@Override
 	public void onAzimuthChanged(float newValueArg) {
@@ -796,11 +825,13 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 		azimuth.setText(String.valueOf(newValueArg));
 	}
 
-	/**
-	 * @see com.astoev.cave.survey.service.azimuth.AzimuthChangedListener#onAccuracyChanged(int)
-	 */
-	@Override
-	public void onAccuracyChanged(int accuracyArg) {
-	}
-
+    /**
+     * @see com.astoev.cave.survey.service.orientation.SlopeChangedListener#onSlopeChanged(float)
+     */
+    @Override
+    public void onSlopeChanged(float newValueArg) {
+        final EditText slope = (EditText)findViewById(R.id.point_slope);
+        slope.setText(String.valueOf(newValueArg));
+    }
+	
 }

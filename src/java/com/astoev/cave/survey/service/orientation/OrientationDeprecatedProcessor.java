@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.astoev.cave.survey.service.azimuth;
+package com.astoev.cave.survey.service.orientation;
 
 import android.content.Context;
 import android.hardware.Sensor;
@@ -9,11 +9,12 @@ import android.hardware.SensorEvent;
 import android.view.Surface;
 
 /**
- * Azimuth processor that works with orientation sensor. Note that Orientation sensor is deprecated since api9
+ * Processor that works with deprecated synthetic orientation sensor. Note that Orientation sensor is 
+ * deprecated since api9
  * 
  * @author jmitrev
  */
-public class OrientationAzimuthProcessor extends AzimuthProcessor {
+public class OrientationDeprecatedProcessor extends OrientationProcessor {
 
 	/** Orientation sensor */
     private Sensor orientationSensor;
@@ -23,12 +24,12 @@ public class OrientationAzimuthProcessor extends AzimuthProcessor {
     
 	
     /**
-     * Constructor for OrientationAzimuthProcessor
+     * Constructor for OrientationDeprecatedProcessor
      * 
      * @param contextArg  - context to use
      * @param listenerArg - listener to notify on value change
      */
-    public OrientationAzimuthProcessor(Context contextArg, AzimuthChangedListener listenerArg){
+    public OrientationDeprecatedProcessor(Context contextArg, OrientationChangedListener listenerArg){
     	super(contextArg, listenerArg);
     }
     
@@ -37,9 +38,11 @@ public class OrientationAzimuthProcessor extends AzimuthProcessor {
 	 */
 	@Override
 	public void onSensorChanged(SensorEvent event) {
-		float[] data = event.values;
+		float[] data = event.values.clone();
 		
 		float currentValue = data[0] < 0 ? data[0] + 360 : data[0];
+		float pitch = data[1];
+		float roll = data[2];
 		
 		// handle device rotation
 		int rotation = getRotation();
@@ -51,30 +54,41 @@ public class OrientationAzimuthProcessor extends AzimuthProcessor {
 			if (currentValue > 360){
 				currentValue %= 360;
 			}
+			pitch = -data[2];
+			roll = data[1];
 			break;
 		case Surface.ROTATION_180:
 			currentValue += 180;
 			if (currentValue > 360){
 				currentValue %= 360;
 			}
+			pitch = -data[1];
+			roll = -data[2];
 			break;
 		case Surface.ROTATION_270:
 			currentValue += 270;
 			if (currentValue > 360){
 				currentValue %= 360;
 			}
+			pitch = data[2];
+			roll = data[1];
 			break;
 		default:
 			break;
 		}
-		
+
 		lastValue = currentValue;
 		
-		listener.onAzimuthChanged(lastValue);
+        float[] converted = new float[3];
+        converted[0] = lastValue;
+        converted[1] = pitch;
+        converted[2] = roll;
+        listener.onOrinationChanged(converted);
+
 	}
 
 	/**
-	 * @see com.astoev.cave.survey.service.azimuth.AzimuthProcessor#startListening()
+	 * @see com.astoev.cave.survey.service.orientation.OrientationProcessor#startListening()
 	 */
 	@Override
 	public void startListening() {
@@ -86,7 +100,7 @@ public class OrientationAzimuthProcessor extends AzimuthProcessor {
 	}
 
 	/**
-	 * @see com.astoev.cave.survey.service.azimuth.AzimuthProcessor#stopListening()
+	 * @see com.astoev.cave.survey.service.orientation.OrientationProcessor#stopListening()
 	 */
 	@Override
 	public void stopListening() {
@@ -96,15 +110,7 @@ public class OrientationAzimuthProcessor extends AzimuthProcessor {
 	}
 
 	/**
-	 * @see com.astoev.cave.survey.service.azimuth.AzimuthProcessor#getLastValue()
-	 */
-	@Override
-	public float getLastValue() {
-		return lastValue;
-	}
-	
-	/**
-	 * @see com.astoev.cave.survey.service.azimuth.AzimuthProcessor#getSensor()
+	 * @see com.astoev.cave.survey.service.orientation.OrientationProcessor#getSensor()
 	 */
 	@SuppressWarnings("deprecation")
 	@Override

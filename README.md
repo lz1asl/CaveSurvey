@@ -8,7 +8,7 @@ The Story
 =========
 
 Preparing a cave map is a tough activity. For example if you want to map a gallery you usually pick reference points for the main polyline going trough that gallery. Between every two poins distance, angle and inclination is measured and on each one (and on any other specific place) distance to the top, bottom and both sides is measured. Usually this is written to a paper sheet, later transformed in to Excel spreadsheet and processed with a variety of existing tools.
-Well, in real life this process is much harder and very error prone. CaveSurvey targets the process of collecting measures and tries to improve it.
+Well, in real life this process is much harder and very error prone. CaveSurvey targets the process of collecting measures and tries to improve it. See examples in the [User Guide](https://github.com/lz1asl/CaveSurvey/wiki/User-Guide).
 
 
 Goal
@@ -34,12 +34,12 @@ Features
   - For each point you can add note, take picture, draw simple sketch
   - Take GPS coordinates of a point (assuming visible sky)
   - Read compass from the build-in compass
+  - Read inclination from the build-in sensors
   - Read measures from Bluetooth laser distance meter (currently supported only CEM iLDM-150 - distance + inclination)
   - Display 2D map of the current measures(horizontal projection)
   - Can export to Excel
 
   In progress:
-  - Read inclination from the build-in sensors
   - Map in vertical projection
   - See the issues for complete list or roadmap
   
@@ -77,8 +77,11 @@ Another Android app is [Abris](https://play.google.com/store/apps/details?id=com
 About
 =====
 
+Developed by members of caving club [Paldin](http://sk-paldin.eu/) Plovdiv, Bulgaria.
 
-While we have not published yet to Google Play you can use the [latest build]( https://razhodki.ci.cloudbees.com/job/CaveSurvey/lastSuccessfulBuild/artifact/build/apk/CaveSurvey-defaultFlavor-debug-unaligned.apk).
+![Picture](res/drawable-mdpi/paldin.jpg)
+
+While we have not published yet to Google Play you can use the [latest build](https://razhodki.ci.cloudbees.com/job/CaveSurvey/lastSuccessfulBuild/artifact/build/apk/CaveSurvey-defaultFlavor-release.apk).
 
 ![CloudBees](http://www.cloudbees.com/sites/default/files/Button-Built-on-CB-1.png)
 

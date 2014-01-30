@@ -13,12 +13,12 @@ import com.astoev.cave.survey.activity.MainMenuActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.model.*;
 import com.astoev.cave.survey.service.Options;
-import com.astoev.cave.survey.service.azimuth.AzimuthProcessor;
-import com.astoev.cave.survey.service.azimuth.AzimuthProcessorFactory;
-import com.astoev.cave.survey.service.azimuth.MagneticAzimuthProcessor;
-import com.astoev.cave.survey.service.azimuth.OrientationAzimuthProcessor;
-import com.astoev.cave.survey.service.azimuth.RotationAzimuthProcessor;
 import com.astoev.cave.survey.service.export.excel.ExcelExport;
+import com.astoev.cave.survey.service.orientation.OrientationProcessor;
+import com.astoev.cave.survey.service.orientation.OrientationProcessorFactory;
+import com.astoev.cave.survey.service.orientation.MagneticOrientationProcessor;
+import com.astoev.cave.survey.service.orientation.OrientationDeprecatedProcessor;
+import com.astoev.cave.survey.service.orientation.RotationOrientationProcessor;
 import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.util.FileStorageUtil;
 import com.astoev.cave.survey.util.ProjectInfo;
@@ -85,13 +85,13 @@ public class InfoActivity extends MainMenuActivity {
             // set the value for azimuth build in processor
             if (Option.CODE_SENSOR_INTERNAL.equals(Options.getOption(Option.CODE_AZIMUTH_SENSOR).getValue())){
                 TextView azimuthSensor = (TextView)findViewById(R.id.info_azimuth_sensor);
-                AzimuthProcessor azimuthProcessor = AzimuthProcessorFactory.getAzimuthProcessor(this, null);
-                if (azimuthProcessor.canReadAzimuth()){
-                    if (azimuthProcessor instanceof RotationAzimuthProcessor){
+                OrientationProcessor orientationProcessor = OrientationProcessorFactory.getAzimuthProcessor(this, null);
+                if (orientationProcessor.canReadAzimuth()){
+                    if (orientationProcessor instanceof RotationOrientationProcessor){
                         azimuthSensor.setText(getString(R.string.rotation_sensor));
-                    } else if (azimuthProcessor instanceof MagneticAzimuthProcessor){
+                    } else if (orientationProcessor instanceof MagneticOrientationProcessor){
                         azimuthSensor.setText(getString(R.string.magnetic_sensor));
-                    } else if (azimuthProcessor instanceof OrientationAzimuthProcessor){
+                    } else if (orientationProcessor instanceof OrientationDeprecatedProcessor){
                         azimuthSensor.setText(getString(R.string.orientation_sensor));
                     }
                 } 
