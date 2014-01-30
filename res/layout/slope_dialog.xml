@@ -1,0 +1,32 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <LinearLayout android:layout_height="wrap_content"
+                  android:layout_width="fill_parent"
+                  android:layout_margin="10dp">
+                  
+        <TextView android:layout_height="wrap_content"
+                  android:layout_width="0dp"
+                  android:layout_weight="1" 
+                  android:text="@string/slope_slope"/>
+        
+        <TextView android:id="@+id/slope_value"
+                  android:layout_height="wrap_content"
+                  android:layout_width="0dp"
+                  android:layout_weight="1"
+                  android:text="@string/azimuth_no_value"
+                  android:textAppearance="?android:attr/textAppearanceLarge"/>
+    </LinearLayout>
+    
+    <ProgressBar android:id="@+id/slope_progress"
+                 android:progress="0"
+                 android:max="3"
+                 android:layout_height="5dp"
+                 android:layout_width="fill_parent"
+                 android:maxHeight="2dp"
+                 style="@android:style/Widget.ProgressBar.Horizontal"
+                 android:layout_margin="10dp"/> 
+    
+</LinearLayout>
