@@ -78,7 +78,7 @@ About
 =====
 
 
-While we have not published yet to Google Play you can use the [latest build]( https://razhodki.ci.cloudbees.com/job/CaveSurvey/lastSuccessfulBuild/artifact/build/apk/CaveSurvey-defaultFlavor-debug-unaligned.apk).
+While we have not published yet to Google Play you can use the [latest build](https://razhodki.ci.cloudbees.com/job/CaveSurvey/lastSuccessfulBuild/artifact/build/apk/CaveSurvey-defaultFlavor-release.apk).
 
 ![CloudBees](http://www.cloudbees.com/sites/default/files/Button-Built-on-CB-1.png)
 
