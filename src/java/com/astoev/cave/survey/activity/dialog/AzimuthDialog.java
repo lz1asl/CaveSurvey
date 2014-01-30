@@ -44,25 +44,25 @@ public class AzimuthDialog extends DialogFragment{
      
      private TextView azimuthView;
      private TextView accuracyView;
-     private ProgressBar progressBar;
+     protected ProgressBar progressBar;
      
      /** Progress thread*/
-	 private ProgressThread progressThread;
+	 protected ProgressThread progressThread;
 	 
 	 /** Progress handler*/
-	 private ProgressHandler progressHandler;
+	 protected ProgressHandler progressHandler;
 	 
 	 /** OrientationProcessor that handles the work with the sensors*/
-	 private OrientationProcessor orientationProcessor;
+	 protected OrientationProcessor orientationProcessor;
 	 
 	 /** Formatter */
-	 private DecimalFormat azimuthFrmater;
+	 protected DecimalFormat formater;
 	 
 	 /** Flag if the azimuth is expected in degrees */
-	 private boolean isInDegrees = true;
+	 protected boolean isInDegrees = true;
 	 
 	 /** String for azimuth's units */
-	 private String azimuthUnitsString;
+	 protected String unitsString;
 	 
 	 private float lastValue;
 	 
@@ -71,15 +71,16 @@ public class AzimuthDialog extends DialogFragment{
 	 */
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
+	    super.onCreateDialog(savedInstanceState);
 		
-		azimuthFrmater = new DecimalFormat("#.#");
+		formater = new DecimalFormat("#.#");
 		
 		if (Option.UNIT_DEGREES.equals(Options.getOptionValue(Option.CODE_AZIMUTH_UNITS))){
 			isInDegrees = true;
-			azimuthUnitsString = " " + getString(R.string.degrees);
+			unitsString = " " + getString(R.string.degrees);
 		} else {
 			isInDegrees = false;
-			azimuthUnitsString = " " + getString(R.string.grads);
+			unitsString = " " + getString(R.string.grads);
 		}
 		
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -90,17 +91,7 @@ public class AzimuthDialog extends DialogFragment{
 		builder.setView(view);
 
 		// add key listener to handle the back button
-		builder.setOnKeyListener(new OnKeyListener(){
-
-			@Override
-			public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-				if (keyCode == KeyEvent.KEYCODE_BACK) {
-					Log.i(Constants.LOG_TAG_UI, "Back button pressed! Cancel AzimuthDialog.");
-					cancelDialog();
-				}
-				return false;
-			}
-		});
+		builder.setOnKeyListener(new BackKeyListener(this));
 		
 		// progress bar view 
 		progressBar = (ProgressBar)view.findViewById(R.id.azimuth_progress);
@@ -127,7 +118,7 @@ public class AzimuthDialog extends DialogFragment{
 		            lastValue = newValueArg * Constants.DEC_TO_GRAD;
 		        } 
 		        
-		        azimuthView.setText(azimuthFrmater.format(lastValue) + azimuthUnitsString);
+		        azimuthView.setText(formater.format(lastValue) + unitsString);
 		    }
 		    
 		    /**
@@ -177,7 +168,7 @@ public class AzimuthDialog extends DialogFragment{
 	/**
      * Nested class that performs progress calculations (counting)
      */
-    private class ProgressThread extends Thread {
+    protected class ProgressThread extends Thread {
         Handler mHandler;
         final static int STATE_DONE = 0;
         final static int STATE_RUNNING = 1;
@@ -242,6 +233,30 @@ public class AzimuthDialog extends DialogFragment{
             	dialog.progressThread.setState(ProgressThread.STATE_DONE);
             	dialog.notifyEndProgress();
             }
+        }
+    }
+    
+    public static class BackKeyListener implements OnKeyListener{
+        
+        private WeakReference<AzimuthDialog> reference;
+        
+        public BackKeyListener(AzimuthDialog dialogFragmentArg)
+        {
+            reference = new WeakReference<AzimuthDialog>(dialogFragmentArg);
+        }
+        
+        @Override
+        public boolean onKey(DialogInterface dialogArg, int keyCode, KeyEvent event) {
+            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                
+                Log.i(Constants.LOG_TAG_UI, "Back button pressed! Cancel AzimuthDialog.");
+                
+                AzimuthDialog dialog= reference.get();
+                if (dialog != null){
+                    dialog.cancelDialog();
+                }
+            }
+            return false;
         }
     }
 }
