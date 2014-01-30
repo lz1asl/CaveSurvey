@@ -34,12 +34,12 @@ Features
   - For each point you can add note, take picture, draw simple sketch
   - Take GPS coordinates of a point (assuming visible sky)
   - Read compass from the build-in compass
+  - Read inclination from the build-in sensors
   - Read measures from Bluetooth laser distance meter (currently supported only CEM iLDM-150 - distance + inclination)
   - Display 2D map of the current measures(horizontal projection)
   - Can export to Excel
 
   In progress:
-  - Read inclination from the build-in sensors
   - Map in vertical projection
   - See the issues for complete list or roadmap
   
