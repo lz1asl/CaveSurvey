@@ -85,6 +85,7 @@ public class HomeActivity extends MainMenuActivity {
     private void showAboutDialog() {
         try {
             Dialog dialog = new Dialog(this);
+            dialog.setTitle(R.string.about_title);
             dialog.setContentView(R.layout.about);
             TextView url = (TextView) dialog.findViewById(R.id.aboutUrl);
             Linkify.addLinks(url, Linkify.WEB_URLS);

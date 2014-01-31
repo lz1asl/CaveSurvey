@@ -5,12 +5,6 @@
               android:layout_height="fill_parent"
               android:padding="10dp">
 
-    <TextView android:layout_width="fill_parent"
-              android:layout_height="wrap_content"
-              android:gravity="center_horizontal"
-              android:text="@string/about_memo"
-              android:textAppearance="?android:attr/textAppearanceLarge"/>
-
     <TextView android:id="@+id/aboutUrl" android:layout_width="fill_parent"
               android:layout_height="wrap_content"
               android:text="@string/about_paldin" android:gravity="center_horizontal"
@@ -21,10 +15,12 @@
               android:text="@string/about_paldin2" android:gravity="center_horizontal"
               android:layout_weight="0.00"/>
 
-    <ImageView android:src="@drawable/paldin" android:layout_width="wrap_content"
+    <ImageView android:src="@drawable/paldin" 
+               android:layout_width="wrap_content"
                android:layout_height="wrap_content"
                android:layout_gravity="center_horizontal"
-               android:layout_margin="20dp"/>
+               android:layout_margin="20dp"
+               android:contentDescription="@string/sk_paldin"/>
 
     <!--<TextView android:layout_width="fill_parent"
               android:layout_height="wrap_content"
