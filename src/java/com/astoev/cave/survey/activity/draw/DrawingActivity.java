@@ -22,6 +22,7 @@ import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.model.Sketch;
 import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.util.FileStorageUtil;
+import com.astoev.cave.survey.util.PointUtil;
 
 import java.io.ByteArrayOutputStream;
 
@@ -232,7 +233,8 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
             if (isMap){
             	filePrefix = FileStorageUtil.MAP_PREFIX;
             } else {
-            	filePrefix = FileStorageUtil.getFilePrefixForPicture(activePoint);
+                String galleryName = PointUtil.getGalleryNameForFromPoint(activePoint, activeLeg.getGalleryId());
+            	filePrefix = FileStorageUtil.getFilePrefixForPicture(activePoint, galleryName);
             }
 			String path = FileStorageUtil.addProjectMedia(this, getWorkspace().getActiveProject(), filePrefix, buff.toByteArray());
 

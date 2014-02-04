@@ -1,6 +1,8 @@
 package com.astoev.cave.survey.util;
 
 import com.astoev.cave.survey.Constants;
+import com.astoev.cave.survey.model.Gallery;
+import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.service.Workspace;
 
@@ -101,5 +103,44 @@ public class PointUtil {
         Point p = new Point();
         p.setName("" + (START_INDEX + 1));
         return p;
+    }
+    
+    /**
+     * Helper method to give the gallery name as string for particular from point
+     * 
+     * @param pointArg - from point
+     * @param galleryId - gallery id
+     * @return gallery's name
+     * @throws SQLException
+     */
+    public static String getGalleryNameForFromPoint(Point pointArg, Integer galleryId) throws SQLException{
+        Leg prevLeg = DaoUtil.getLegByToPoint(pointArg);
+        
+        if (galleryId != null) {
+            if (prevLeg != null &&  !prevLeg.getGalleryId().equals(galleryId)) {
+                return DaoUtil.getGallery(prevLeg.getGalleryId()).getName();
+            } else {
+                return DaoUtil.getGallery(galleryId).getName();
+            }
+        } else {
+            // fresh leg for new gallery
+            return DaoUtil.getGallery(prevLeg.getGalleryId()).getName();
+        }
+    }
+    
+    /**
+     * Helper method to give the gallery name as string for particular to point
+     * 
+     * @param galleryId - to point
+     * @return gallery's name
+     * @throws SQLException
+     */
+    public static String getGalleryNameForToPoint(Integer galleryId) throws SQLException {
+        if (galleryId != null) {
+            return DaoUtil.getGallery(galleryId).getName();
+        } else {
+            // fresh leg for new gallery
+            return Gallery.generateNextGalleryName(Workspace.getCurrentInstance().getActiveProjectId());
+        }
     }
 }

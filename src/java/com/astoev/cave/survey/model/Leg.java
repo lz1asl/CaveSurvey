@@ -1,6 +1,5 @@
 package com.astoev.cave.survey.model;
 
-import com.astoev.cave.survey.service.Workspace;
 import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.util.PointUtil;
 import com.astoev.cave.survey.util.StringUtils;
@@ -107,17 +106,18 @@ public class Leg implements Serializable {
 
         StringBuilder builder = new StringBuilder(StringUtils.SPACE);
 
-        Leg prevLeg = DaoUtil.getLegByToPoint(mFromPoint);
-        if (mGalleryId != null) {
-            if (prevLeg != null &&  !prevLeg.getGalleryId().equals(mGalleryId)) {
-                builder.append(DaoUtil.getGallery(prevLeg.getGalleryId()).getName());
-            } else {
-                builder.append(DaoUtil.getGallery(mGalleryId).getName());
-            }
-        } else {
-            // fresh leg for new gallery
-            builder.append(DaoUtil.getGallery(prevLeg.mGalleryId).getName());
-        }
+//        Leg prevLeg = DaoUtil.getLegByToPoint(mFromPoint);
+//        if (mGalleryId != null) {
+//            if (prevLeg != null &&  !prevLeg.getGalleryId().equals(mGalleryId)) {
+//                builder.append(DaoUtil.getGallery(prevLeg.getGalleryId()).getName());
+//            } else {
+//                builder.append(DaoUtil.getGallery(mGalleryId).getName());
+//            }
+//        } else {
+//            // fresh leg for new gallery
+//            builder.append(DaoUtil.getGallery(prevLeg.mGalleryId).getName());
+//        }
+        builder.append(PointUtil.getGalleryNameForFromPoint(mFromPoint, mGalleryId));
         DaoUtil.refreshPoint(startPoint);
         builder.append(startPoint.getName());
         if (!shortArg){
@@ -127,12 +127,14 @@ public class Leg implements Serializable {
         if (!shortArg){
         	builder.append(StringUtils.SPACE);
         }
-        if (mGalleryId != null) {
-            builder.append(DaoUtil.getGallery(mGalleryId).getName());
-        } else {
-            // fresh leg for new gallery
-            builder.append(Gallery.generateNextGalleryName(Workspace.getCurrentInstance().getActiveProjectId()));
-        }
+        
+//        if (mGalleryId != null) {
+//            builder.append(DaoUtil.getGallery(mGalleryId).getName());
+//        } else {
+//            // fresh leg for new gallery
+//            builder.append(Gallery.generateNextGalleryName(Workspace.getCurrentInstance().getActiveProjectId()));
+//        }
+        builder.append(PointUtil.getGalleryNameForToPoint(mGalleryId));
         builder.append(endPoint.getName());
         return builder.toString();
     }

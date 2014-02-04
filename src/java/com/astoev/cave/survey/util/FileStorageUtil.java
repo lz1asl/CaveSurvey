@@ -142,10 +142,11 @@ public class FileStorageUtil {
      * Helper method that creates a prefix name for picture files based on Point objects
      * 
      * @param pointArg - parent point
+     * @param galleryNameArg - name of the gallery
      * @return
      */
-    public static String getFilePrefixForPicture(Point pointArg){
-    	return POINT_PREFIX + NAME_DELIMITER + pointArg.getName();
+    public static String getFilePrefixForPicture(Point pointArg, String galleryNameArg){
+    	return POINT_PREFIX + NAME_DELIMITER + galleryNameArg + pointArg.getName();
     }
     
     /**
