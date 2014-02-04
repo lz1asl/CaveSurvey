@@ -183,7 +183,10 @@ public class MainActivity extends MainMenuActivity {
                     moreText.append(locationPrefix);
                 }
 
-                row.addView(createTextView(moreText.toString(), currentLeg, true));
+                // reset the text appearance to small
+                TextView view = createTextView(moreText.toString(), currentLeg, true);
+                view.setTextAppearance(this, android.R.style.TextAppearance_Small);
+                row.addView(view);
                 table.addView(row, params);
             }
             table.invalidate();
@@ -209,9 +212,11 @@ public class MainActivity extends MainMenuActivity {
             edit.setEnabled(false);
         }
 
+        //set text appearance as medium
+        edit.setTextAppearance(this, android.R.style.TextAppearance_Medium);
         return edit;
     }
-
+    
     private TextView createTextView(String aText, boolean isCurrentLeg, boolean allowEditing, int aColor) {
     	TextView edit = createTextView(aText, isCurrentLeg, allowEditing);
     	edit.setTextColor(aColor);
