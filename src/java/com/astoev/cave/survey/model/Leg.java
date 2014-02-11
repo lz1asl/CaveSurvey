@@ -1,5 +1,6 @@
 package com.astoev.cave.survey.model;
 
+import com.astoev.cave.survey.service.Workspace;
 import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.util.PointUtil;
 import com.astoev.cave.survey.util.StringUtils;
@@ -137,6 +138,18 @@ public class Leg implements Serializable {
         builder.append(PointUtil.getGalleryNameForToPoint(mGalleryId));
         builder.append(endPoint.getName());
         return builder.toString();
+    }
+
+    public static boolean canDelete(Leg aLeg) throws SQLException {
+        // may enable deletion if already saved
+        if (!aLeg.isNew()) {
+            Leg lastLeg = Workspace.getCurrentInstance().getLastLeg(aLeg.getGalleryId());
+            // only last leg for now and no other galleries start from here
+            if (lastLeg.getId().equals(aLeg.getId()) && !DaoUtil.hasLegsByFromPoint(aLeg.getToPoint())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public Integer getId() {

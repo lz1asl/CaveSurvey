@@ -666,21 +666,15 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         	photoMenuItem.setVisible(false);
         }
 
-        // enable deletion if already saved
-        Leg legEdited = getCurrentLeg();
-        if (!legEdited.isNew()) {
-            try {
-                Leg lastLeg = getWorkspace().getLastLeg(legEdited.getGalleryId());
-                // and only last leg for now and no other galleries start from here
-                if (lastLeg.getId().equals(legEdited.getId()) && !DaoUtil.hasLegsByFromPoint(legEdited.getToPoint())) {
-                    MenuItem deleteMenuOption = menu.findItem(R.id.point_action_delete);
-                    deleteMenuOption.setVisible(true);
-                    return flag;
-                }
-            } catch (Exception e) {
-                Log.e(Constants.LOG_TAG_UI, "Failed to update menu", e);
-                UIUtilities.showNotification(R.string.error);
+        try {
+            if (Leg.canDelete(getCurrentLeg())) {
+                MenuItem deleteMenuOption = menu.findItem(R.id.point_action_delete);
+                deleteMenuOption.setVisible(true);
+                return flag;
             }
+        } catch (Exception e) {
+            Log.e(Constants.LOG_TAG_UI, "Failed to update menu", e);
+            UIUtilities.showNotification(R.string.error);
         }
 
         // delete disabled by default
