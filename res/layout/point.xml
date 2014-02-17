@@ -89,7 +89,6 @@
 			          android:gravity="center"
 			          android:maxLength="5"
 			          android:ems="5">
-			    <requestFocus/>
 			</EditText>
 			<EditText android:id="@+id/point_azimuth" 
 			    	  android:inputType="numberDecimal"
