@@ -1,4 +1,4 @@
-package com.astoev.cave.survey.service.bluetooth;
+package com.astoev.cave.survey.util;
 
 /**
  * Created with IntelliJ IDEA.
