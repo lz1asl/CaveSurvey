@@ -9,15 +9,51 @@ buildscript {
 
 apply plugin: 'android'
 
+sourceSets {
+    unitTest {
+        java.srcDir file('src/test/java')
+        resources.srcDir file('src/test/res')
+    }
+}
+
 repositories {
     mavenCentral()
 }
 
+configurations {
+    unitTestCompile.extendsFrom runtime
+    unitTestRuntime.extendsFrom unitTestCompile
+}
+
+dependencies {
+    compile 'com.android.support:appcompat-v7:19.0.0'
+    compile 'com.j256.ormlite:ormlite-core:4.47'
+    compile 'com.j256.ormlite:ormlite-android:4.47'
+    compile 'org.apache.poi:poi:3.9'
+    compile 'commons-io:commons-io:2.4'
+    compile 'commons-codec:commons-codec:1.7'
+
+    unitTestCompile files("D:\\MyWorkspace\\android\\CaveSurvey\\build\\classes\\defaultFlavor\\release")
+    unitTestCompile 'junit:junit:4.10'
+    unitTestCompile 'com.google.android:android:4.0.1.2'
+}
+
+task unitTest(type:Test, dependsOn: assemble) {
+    testClassesDir = project.sourceSets.unitTest.output.classesDir
+    classpath = project.sourceSets.unitTest.runtimeClasspath
+
+    println classpath
+    classpath.each {File file ->
+        println relativePath(file)
+    }
+}
+check.dependsOn unitTest
+
 android {
     compileSdkVersion 15
     buildToolsVersion "18.0.1"
-	
-	defaultConfig {
+
+    defaultConfig {
         minSdkVersion 7
         targetSdkVersion 15
     }
@@ -55,12 +91,10 @@ android {
             java.srcDirs = ['src/java']
             res.srcDirs = ['res']
         }
-
-        instrumentTest.setRoot('src/test')
-//        instrumentTestCompile "junit:junit:4.5+"
     }
 
     packagingOptions {
+        exclude 'LICENSE.txt'
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
     }
@@ -69,18 +103,4 @@ android {
         // if true, stop the gradle build if errors are found
         abortOnError false
     }
-}
-
-dependencies {
-    compile 'com.android.support:appcompat-v7:19.0.0'
-
-
-//	compile project('CaveSurvey')
-	compile 'com.j256.ormlite:ormlite-core:4.47'
-	compile 'com.j256.ormlite:ormlite-android:4.47'
-	compile 'org.apache.poi:poi:3.9'
-//	compile 'org.apache.commons:commons-lang:3.1'
-	compile 'commons-io:commons-io:2.4'
-	compile 'commons-codec:commons-codec:1.7'
-//	compile 'junit:junit:4.11'
 }
