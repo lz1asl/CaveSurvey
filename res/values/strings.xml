@@ -11,12 +11,12 @@
     <string name="sk_paldin">Paldin</string>
 
     <!-- welcome screen -->
-    <string name="home_no_projects">No projects yet!</string>
-    <string name="home_new_project">New project</string>
-    <string name="home_button_new_exists">Project %1$s exists!</string>
+    <string name="home_no_projects">No surveys yet!</string>
+    <string name="home_new_project">New survey</string>
+    <string name="home_button_new_exists">Survey %1$s exists!</string>
 
     <!-- new project screen -->
-    <string name="new_title">New project</string>
+    <string name="new_title">New Survey</string>
     <string name="new_button_create">Create</string>
     <string name="new_project_name">Name</string>
     <string name="new_project_name_required">Enter name</string>
@@ -184,9 +184,9 @@
     <string name="about_title">About CaveSurvey</string>
     <string name="about_paldin">http://sk-paldin.eu</string>
     <string name="about_paldin2">http://github.com/lz1asl/CaveSurvey</string>
-    <string name="about_info">Station names convention :\nA1 -> A2 -> A3 : legs in gallery A\nA2 -> B1 : new gallery\nA2
+    <!--<string name="about_info">Station names convention :\nA1 -> A2 -> A3 : legs in gallery A\nA2 -> B1 : new gallery\nA2
         -> A2.1 -> A2.2 : middle points
-    </string>
+    </string>-->
 
 
     <!-- info -->
