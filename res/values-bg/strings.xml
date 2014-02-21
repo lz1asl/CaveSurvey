@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- common -->
+    <string name="app_name">CaveSurvey</string>
+    <string name="button_yes">Да</string>
+    <string name="button_no">Не</string>
+    <string name="required">Задължително</string>
+    <string name="invalid">Невалидно</string>
+    
+    <string name="sk_paldin">Пълдин</string>
+
+    <!-- welcome screen -->
+    <string name="home_no_projects">Няма проучвания!</string>
+    <string name="home_new_project">Ново проучване</string>
+    <string name="home_button_new_exists">Survey %1$s exists!</string>
+
+    <!-- new project screen -->
+    <string name="new_title">Ново проучване</string>
+    <string name="new_button_create">Създай</string>
+    <string name="new_project_name">Име</string>
+    <string name="new_project_name_required">Въведи име</string>
+
+    <!-- main screen -->
+    <string name="main_leg">Текущ</string>
+    <string name="main_button_change">Избери</string>
+    <string name="main_button_change_title">Избери отсечка</string>
+    <string name="main_button_add">Добави</string>
+    <string name="main_button_info">Информация</string>
+    <string name="main_button_about">Относно</string>
+    <string name="main_button_map">Карта</string>
+
+    <string name="main_table_header_from">От</string>
+    <string name="main_table_header_to">До</string>
+<!--     
+    <string name="main_table_header_distance_from_start">From start</string>
+ -->    
+    <string name="main_table_header_more">Още</string>
+    <string name="main_table_header_note">Бележка</string>
+    <string name="main_table_header_drawing">Скица</string>
+<!--     
+    <string name="main_table_header_gps">GPS</string>
+ -->    
+    <string name="main_table_header_photo">Снимка</string>
+    
+    <string name="leg">Отсечка</string>
+    <string name="left">Ляво</string>
+    <string name="right">Дясно</string>
+    <string name="up">Горе</string>
+    <string name="down">Долу</string>
+    <string name="distance">Дължина</string>
+    <string name="azimuth">Азимут</string>
+    <string name="slope">Наклон</string>
+    
+    <string name="slope_slope">Наклон:</string>
+    
+    <string name="sensor">Сензор</string>
+    <string name="accuracy">Точност</string>
+    
+    <!-- add popup -->
+    <string name="main_add_title">Добави отсечка</string>
+    <string name="main_add_leg">Следваща отсечка</string>
+    <string name="main_add_branch">Следваща галерия</string>
+    <string name="main_add_middlepoint">Междинна точка</string>
+    <string name="main_add_note">Бележка</string>
+    <string name="main_add_sketch">Скица</string>
+    <string name="main_add_photo">Снимка</string>
+    <string name="main_add_gps">Координат</string>
+    <string name="table_sketch_prefix">S</string>
+    <string name="table_note_prefix">N</string>
+    <string name="table_photo_prefix">P</string>
+    <string name="table_location_prefix">L</string>
+
+    <string name="gallery_after_first_point">Недостъпно за първата отсечка</string>
+
+    <!-- main menu -->
+<!--     
+    <string name="menu_help">Help</string>
+ -->    
+    <string name="menu_exit">Край</string>
+
+    <string name="menu_exit_confirmation_question">Край на проучването?</string>
+
+    <!-- point -->
+    <string name="point_save">Запази</string>
+    <string name="point_delete">Изтрий</string>
+<!--     
+    <string name="point_read">Read</string>
+ -->
+ 
+    <!-- note screen -->
+    <string name="note_title">Бележка за</string>
+    <string name="note_save">Запази</string>
+    <string name="note_saved">Запазено</string>
+
+    
+
+    <string name="sketch_pick_color">Избери цвят</string>
+    <string name="sketch_pick_size">Избери размер</string>
+    <string name="sketch_pick_style">Избери стил</string>
+    <string name="sketch_pick_style_thick">Плътно</string>
+    <string name="sketch_pick_style_fill">Запълнено</string>
+    <string name="sketch_pick_style_dash">Пунктир</string>
+    <string name="sketch_saved">Запазено</string>
+    
+    <string name="sketch_undo">Назад</string>
+    <string name="sketch_redo">Върни</string>
+    <string name="sketch_save">Запази</string>
+    <string name="sketch_colorpicker">Избери цвят</string>
+    <string name="sketch_style">Стил</string>
+    <string name="sketch_size">Размер</string>
+    
+    
+    <string name="map_edit">Редактирай</string>
+
+    <!-- info screen -->
+    <string name="info_title">Проучване</string>
+    <string name="info_created">Създадено</string>
+    <string name="info_galleries"># галерии</string>
+    <string name="info_legs"># отсечки</string>
+    <string name="info_total_distance">Обща дължина</string>
+    <string name="info_chooser_open_folder">Отвори папка</string>
+
+    <string name="info_num_notes"># бележки</string>
+    <string name="info_num_drawings"># скици</string>
+    <string name="info_num_coordinates"># координати</string>
+    <string name="info_num_photos"># снимки</string>
+
+
+    <string name="export_title">Експорт</string>
+    <string name="export_view_files">Файлове</string>
+    <string name="export_done">Експортирано в %1$s</string>
+    <string name="export_io_error">Неуспешно писане на SD картата</string>
+    <string name="io_error">Неуспешен достъп до SD картата</string>
+    
+    <!-- options -->
+    <string name="measures_title">Измерване</string>
+<!-- 
+    <string-array name="options_modes">
+        <item>Manual enter</item>
+        <item>Build-in sensors</item>
+        <item>Bluetooth sensors</item>
+    </string-array>
+ -->
+ 
+    <string name="options_units_distance">Измерване на разстояние</string>
+    <string-array name="distance_units">
+        <item>Метри</item>
+    </string-array>
+    <string-array name="distance_read_type">
+        <item>Ръчно</item>
+        <item>През Bluetooth</item>
+    </string-array>
+
+    <string name="options_units_azimuth">Измерване на азимут</string>
+    <string-array name="azimuth_units">
+        <item>Градуси</item>
+        <item>Гради</item>
+    </string-array>
+
+    <string-array name="azimuth_read_type_manually">
+        <item>Ръчно</item>
+    </string-array>
+    
+    <string-array name="azimuth_read_type_all">
+        <item>Ръчво</item>
+        <item>Вграден сензор</item>
+    </string-array>
+
+    <string name="options_units_slope">Наклон</string>
+    <string-array name="slope_units">
+        <item>Гадуси</item>
+        <item>Гради</item>
+    </string-array>
+
+    <string-array name="slope_read_type">
+        <item>Ръчно</item>
+        <item>През Bluetooth</item>
+        <item>Вграден сензор</item>
+    </string-array>
+
+
+    <!-- about screen -->
+    <string name="about_title">Относно CaveSurvey</string>
+    <string name="about_paldin">http://sk-paldin.eu</string>
+    <string name="about_paldin2">http://github.com/lz1asl/CaveSurvey</string>
+    <!--<string name="about_info">Station names convention :\nA1 -> A2 -> A3 : legs in gallery A\nA2 -> B1 : new gallery\nA2
+        -> A2.1 -> A2.2 : middle points
+    </string>-->
+
+
+    <!-- info -->
+    <string name="info_distance_in">Разстояние в</string>
+    <string name="info_azimuth_in">Азимут в</string>
+    <string name="info_slope_in">Наклон в</string>
+    <string name="info_azimuth_build_in_sensor">Азимут от вграден сензор -</string>
+    
+    <string name="sensor_none">Липсва</string>
+    <string name="rotation_sensor">Завъртане</string>
+    <string name="magnetic_sensor">Магнитен/Ускорение</string>
+    <string name="orientation_sensor">Ориентация</string>
+
+
+    <!-- popup -->
+    <string name="middle_leg_add">Добави междинно измерване</string>
+    <string name="middle_leg_info">Отсечка  %1$s, %2$s%3$s</string>
+    <string name="middle_split_at">Раздели на</string>
+    <string name="middle_create">Създай</string>
+    <string name="middle_bad_value">Непозволена стойност</string>
+    <string name="middle_leg_shorter">Твърде кратка</string>
+    <string name="middle_leg_bigger">Твърде голяма</string>
+    <string name="middle_no_value">Изисква се разстояние</string>
+
+    <string name="error">Възникна грешка</string>
+    <string name="busy">Моля изчакайте&#8230;</string>
+
+    <string name="todo">Предстои</string>
+
+
+    <!-- bluetooth -->
+    <string name="bt_devices">Сдвоено устройство</string>
+    <string name="bt_new_device">Добави устройство</string>
+    <string name="bt_paired">Сдвоен</string>
+    <string name="bt_not_paired">Не е сдвоен</string>
+    <string name="bt_pair_failed">Устройството е несъвместимо или неналично</string>
+    <string name="bt_state_unknown">Неразпознато състояние</string>
+    <string name="bt_state_bonded">Сдвоен</string>
+    <string name="bt_state_bonding">Сдвояване</string>
+    <string name="bt_state_none">Неразпознато състояние</string>
+    <string name="bt_not_on">Bluetooth не е включен</string>
+    <string name="bt_not_selected">Не е избрано устройство</string>
+
+    <string name="action_saved">Запазено</string>
+    <string name="action_deleted">Изтрито</string>
+    
+    <string name="azimuth_azimuth">Азимут:</string>
+    <string name="azimuth_accuracy">Точност:</string>
+    <string name="azimuth_no_value">Липсва стойност</string>
+    <string name="azimuth_accuracy_no_value">-1</string>
+    <string name="azimuth_orination">Ориентация:</string>
+    <string name="azimuth_magnetic">Магнитен:</string>
+    <string name="azimuth_rotation">Заъвртане:</string>
+    <string name="azimuth_start">Старт</string>
+    <string name="azimuth_stop">Стоп</string>
+    <string name="sensor_test_title">Тест на сензорите</string>
+
+    <string name="SENSOR_STATUS_UNRELIABLE">Ненадежден</string>
+    <string name="SENSOR_STATUS_ACCURACY_LOW">Ниска точност</string>
+    <string name="SENSOR_STATUS_ACCURACY_MEDIUM">Средна точност</string>
+    <string name="SENSOR_STATUS_ACCURACY_HIGH">Висока точност</string>
+    <string name="SENSOR_STATUS_ACCURACY_UNKNOWN">Не може да се определи</string>
+    
+    <string name="degrees">\u00B0</string>
+    <string name="grads">гради</string>
+<!--     
+    <string name="meters">m</string>
+ -->
+<!--  
+    <string name="lat_lon_template">%f\u00B0%s</string>
+ -->     
+    <string name="gps_title">GPS позициониране</string>
+    <string name="gps_altitude">Надморска височина (м)</string>
+    <string name="gps_latitude">Latitude</string>
+    <string name="gps_longitude">Longitude</string>
+    <string name="gps_accuracy">Точност (м)</string>
+    <string name="gps_no_value">Няма стойност</string>
+    <string name="gps_save">Захади</string>
+    <string name="gps_disabled">GPS забранен</string>
+    <string name="gps_no_signal">Търсене на GPS позиция ....</string>
+    <string name="gps_saved_location">Запазена позиция</string>
+    <string name="gps_current_location">Текуща позиция</string>
+    
+    <string name="gps_error_no_location">Няма GPS позиция!</string>
+    <string name="gps_db_error">Неуспешно запазване!</string>
+    
+    <string name="gps_enable_question">GPS е забранен! Искате ли да го разрешите?</string>
+    
+</resources>
