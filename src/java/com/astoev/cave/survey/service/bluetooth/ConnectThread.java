@@ -10,12 +10,15 @@ import android.os.Bundle;
 import android.os.ResultReceiver;
 import android.util.Log;
 import com.astoev.cave.survey.Constants;
+import com.astoev.cave.survey.exception.DataException;
+import com.astoev.cave.survey.service.bluetooth.device.AbstractBluetoothDevice;
+
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.UUID;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -30,26 +33,27 @@ public class ConnectThread extends Thread {
     private static final int REC_MODE_MINUS = 10;
     private BluetoothSocket mSocket;
     private BluetoothDevice mDevice;
+    private AbstractBluetoothDevice mDeviceSpec;
     private InputStream mIn;
     private OutputStream mOut;
     private boolean running = true;
     private ResultReceiver mReceiver = null;
-    private Constants.Measures mMeasure = null;
+    private List<Constants.MeasureTypes> mMeasureTypes = null;
 
 
-    public ConnectThread(BluetoothDevice device) throws IOException {
-        mDevice = device;
+    public ConnectThread(BluetoothDevice aDevice, AbstractBluetoothDevice aDeviceSpec) throws IOException {
+        mDevice = aDevice;
+        mDeviceSpec = aDeviceSpec;
 
         BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
         if (adapter.isDiscovering()) {
             adapter.cancelDiscovery();
         }
 
-        Log.i(Constants.LOG_TAG_UI, "Prepare client");
+        Log.i(Constants.LOG_TAG_BT, "Prepare client");
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD_MR1) {
-            mSocket = mDevice.createRfcommSocketToServiceRecord(UUID.fromString(BluetoothService.SPP_UUID));
+            mSocket = mDevice.createRfcommSocketToServiceRecord(mDeviceSpec.getSPPUUID());
         } else {
-//            mSocket = mDevice.createInsecureRfcommSocketToServiceRecord(UUID.fromString(SPP_UUID));
         	mSocket = createSocketApi10Plus();
         }
         mSocket.connect();
@@ -59,106 +63,76 @@ public class ConnectThread extends Thread {
     
     @TargetApi(Build.VERSION_CODES.GINGERBREAD_MR1)
     private BluetoothSocket createSocketApi10Plus() throws IOException{
-    	return mDevice.createInsecureRfcommSocketToServiceRecord(UUID.fromString(BluetoothService.SPP_UUID));
-    }
-
-    public void sendMessage(byte[] aMessage) throws IOException {
-        mOut.write(aMessage);
+    	return mDevice.createInsecureRfcommSocketToServiceRecord(mDeviceSpec.getSPPUUID());
     }
 
     @Override
     public void run() {
-        Log.i(Constants.LOG_TAG_UI, "Start client");
+        Log.i(Constants.LOG_TAG_BT, "Start client for " + mDeviceSpec.getDescription());
 
         byte[] buffer = new byte[1024];
-        Log.i(Constants.LOG_TAG_UI, "Start reading ");
+
+        Log.i(Constants.LOG_TAG_BT, "Trigger measures");
+        try {
+            mDeviceSpec.triggerMeasures(mOut, mMeasureTypes);
+        } catch (IOException e) {
+            Log.e(Constants.LOG_TAG_BT, "Error triggering measure", e);
+            Bundle b = new Bundle();
+            b.putString("error", "Failed to talk to device");
+            mReceiver.send(Activity.RESULT_CANCELED, b);
+            return;
+        }
+
+        Log.i(Constants.LOG_TAG_BT, "Start reading ");
         while (running) {
             try {
                 int i = mIn.read(buffer);
 
 
-                if (i < 25) {
-                    Log.i(Constants.LOG_TAG_UI, "Got bytes " + i);
-                    break;
-                }
+               List<Measure> measures = mDeviceSpec.decodeMeasure(buffer, mMeasureTypes);
 
-                if (buffer[24] != 13) {
-                    Log.i(Constants.LOG_TAG_UI, "Data validation failed ");
-                    break;
-                }
-
-                if (buffer[4] != 0) {
-                    Log.i(Constants.LOG_TAG_UI, "error code" + buffer[4]);
-                    break;
-                }
-                Log.i(Constants.LOG_TAG_UI, "rec mode" + buffer[5]);
-                // 2 from bottom of the devise, 1 from top of the devise
-//                Log.i(Constants.LOG_TAG_UI, "measure location" + buffer[6]);
-
-                Log.d(Constants.LOG_TAG_UI, "units " + new String[]{" ", "m", "in", "in+", "ft", "ft&in"}[buffer[7]]);
-                if (1 != buffer[7]) {
-                    Log.i(Constants.LOG_TAG_UI, "Please measure in meters!");
-                    Bundle b = new Bundle();
-                    b.putString("error", "Use meters for distance");
-                    mReceiver.send(Activity.RESULT_CANCELED, b);
-                    break;
-                }
-
-                for (int j = 0; j < 4; j++) {
-                    float measure = (0xFF000000 & buffer[(8 + j * 4)] << 24
-                            | 0xFF0000 & buffer[(9 + j * 4)] << 16
-                            | 0xFF00 & buffer[(10 + j * 4)] << 8
-                            | 0xFF & buffer[(11 + j * 4)]);
-
-                    // accept angle only when measuring angle also
-                    if (j == 0 && measure > -26843545 && buffer[5] == 8) {
-                        Log.i(Constants.LOG_TAG_UI, "Read angle " + measure / 10);
+                if (measures != null) {
+                    for (Measure m: measures) {
                         Bundle b = new Bundle();
-                        b.putFloat("result", measure / 10);
-                        b.putString("type", Constants.Measures.slope.toString());
+                        b.putFloat(Constants.MEASURE_VALUE_KEY, m.getValue());
+                        b.putString(Constants.MEASURE_TYPE_KEY, m.getMeasureType().toString());
+                        b.putString(Constants.MEASURE_UNIT_KEY, m.getMeasureUnit().toString());
+                        b.putString(Constants.MEASURE_TARGET_KEY, m.getMeasure().toString());
                         mReceiver.send(Activity.RESULT_OK, b);
-                    }
-
-                    if (j == 2 && measure > -26843545) {
-                        Log.i(Constants.LOG_TAG_UI, "Read distance " + measure / 1000);
-                        if (mMeasure != Constants.Measures.slope) {
-                            Bundle b = new Bundle();
-                            b.putFloat("result", measure / 1000);
-                            b.putString("type", mMeasure.toString());
-                            mReceiver.send(Activity.RESULT_OK, b);
-                        }
                     }
                 }
 
                 sleep(20);
-
+            } catch (DataException de) {
+                Bundle b = new Bundle();
+                b.putString("error", de.getMessage());
+                mReceiver.send(Activity.RESULT_CANCELED, b);
+                break;
             } catch (Exception connectException) {
-                Log.e(Constants.LOG_TAG_UI, "Error client connect", connectException);
+                Log.e(Constants.LOG_TAG_BT, "Error client connect", connectException);
                 break;
             }
             try {
                 sleep(100);
             } catch (InterruptedException e) {
-                Log.e(Constants.LOG_TAG_UI, "Error client sleep", e);
+                Log.e(Constants.LOG_TAG_BT, "Error client sleep", e);
             }
         }
 
-        Log.i(Constants.LOG_TAG_UI, "End client");
+        Log.i(Constants.LOG_TAG_BT, "End client");
     }
 
     public void cancel() {
         try {
-            Log.i(Constants.LOG_TAG_UI, "Cancel client");
+            Log.i(Constants.LOG_TAG_BT, "Cancel client");
             running = false;
             if (mSocket != null) {
-//                if (mSocket.isConnected()) {
                 mSocket.close();
-//                }
             }
             IOUtils.closeQuietly(mIn);
             IOUtils.closeQuietly(mOut);
         } catch (IOException e) {
-            Log.i(Constants.LOG_TAG_UI, "Error cancel client");
+            Log.i(Constants.LOG_TAG_BT, "Error cancel client");
         }
     }
 
@@ -166,7 +140,8 @@ public class ConnectThread extends Thread {
         this.mReceiver = aReceiver;
     }
 
-    public void setMeasure(Constants.Measures measure) {
-        this.mMeasure = measure;
+    public void setMeasureTypes(List<Constants.MeasureTypes> aMeasureTypes) {
+        this.mMeasureTypes = aMeasureTypes;
     }
+
 }

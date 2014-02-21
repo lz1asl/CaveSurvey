@@ -474,7 +474,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 
     private void triggerBluetoothMeasure(Constants.Measures aMeasure) {
         // register listeners & send command
-        BluetoothService.sendReadDistanceCommand(receiver, aMeasure);
+        BluetoothService.sendReadMeasureCommand(receiver, aMeasure);
         Log.i(Constants.LOG_TAG_UI, "Command sent for " + aMeasure);
     }
 

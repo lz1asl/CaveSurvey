@@ -16,6 +16,7 @@ public class Constants {
     public static final String LOG_TAG_DB = "CaveSurveyDB";
     public static final String LOG_TAG_UI = "CaveSurveyUI";
     public static final String LOG_TAG_SERVICE = "CaveSurveySVC";
+    public static final String LOG_TAG_BT = "CaveSurveyBT";
 
     public static final String DATE_FORMAT = "yyyyMMdd_HHmmss";
 
@@ -30,6 +31,13 @@ public class Constants {
     public static final String STRING_NOT_FOUND = "NOT_FOUND";
 
     public static enum Measures {distance, slope, angle, up, down, left, right}
+    public static enum MeasureTypes {distance, slope, angle}
+    public static enum MeasureUnits {meters, degrees, grads}
+
+    public static final String MEASURE_TARGET_KEY = "target";
+    public static final String MEASURE_VALUE_KEY = "value";
+    public static final String MEASURE_TYPE_KEY = "type";
+    public static final String MEASURE_UNIT_KEY = "unit";
     
     public static final float GRAD_TO_DEC = (Option.MAX_VALUE_AZIMUTH_DEGREES / (float)Option.MAX_VALUE_AZIMUTH_GRADS);
     public static final float DEC_TO_GRAD = (Option.MAX_VALUE_AZIMUTH_GRADS / (float)Option.MAX_VALUE_AZIMUTH_DEGREES);
