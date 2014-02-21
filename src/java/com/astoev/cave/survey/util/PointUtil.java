@@ -79,26 +79,6 @@ public class PointUtil {
         return point;
     }
 
-    public static Point generateMiddlePoint(Point aPoint) {
-
-        String pointName = aPoint.getName();
-        Point point = new Point();
-
-        if (Character.isLetter(pointName.charAt(pointName.length() - 1))) {
-            // increase letter index 2A -> 2B
-            char letter = pointName.charAt(pointName.length() - 1);
-            String newName = pointName.substring(0, pointName.length() - 1) + (char) (letter + 1);
-            point.setName(newName.toUpperCase(Constants.DEFAULT_LOCALE));
-            // TODO verify name does not exist
-        } else {
-            // append letter 2 -> 2A
-//            point.setName(aPoint.getName() + MIDDLE_POINT_START_CHAR);
-            // TODO verify name does not exist
-        }
-        return point;
-    }
-
-
     public static Point createSecondPoint() {
         Point p = new Point();
         p.setName("" + (START_INDEX + 1));

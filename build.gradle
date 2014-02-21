@@ -34,7 +34,7 @@ dependencies {
     compile 'commons-codec:commons-codec:1.7'
 
     unitTestCompile files("build/classes/defaultFlavor/release")
-    unitTestCompile 'junit:junit:4.10'
+    unitTestCompile 'junit:junit:4+'
     unitTestCompile 'com.google.android:android:4.0.1.2'
 }
 
