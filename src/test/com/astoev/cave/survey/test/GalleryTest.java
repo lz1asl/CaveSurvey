@@ -13,29 +13,11 @@ import org.junit.Test;
  */
 public class GalleryTest extends TestCase {
 
-    @Test
-    public void test1() {
-        String name = Gallery.nextName("A");
-        assertEquals("B", name);
-    }
-
-    public void test2() {
-     String   name = Gallery.nextName("AA");
-        assertEquals("AB", name);
-    }
-
-    public void test3() {
-        String  name = Gallery.nextName("Z");
-        assertEquals("AZ", name);
-    }
-
-    public void test4() {
-        String    name = Gallery.nextName("ABCZZ");
-        assertEquals("ABDZZ", name);
-    }
-
-    public void test5() {
-        String  name = Gallery.nextName("ZZZZ");
-        assertEquals("AZZZZ", name);
+    public void testNextName() {
+        assertEquals("B", Gallery.nextName("A"));
+        assertEquals("C", Gallery.nextName("B"));
+        assertEquals("AZ", Gallery.nextName("Z"));
+        assertEquals("AB", Gallery.nextName("AA"));
+        assertEquals("AZZZZ", Gallery.nextName("ZZZZ"));
     }
 }
