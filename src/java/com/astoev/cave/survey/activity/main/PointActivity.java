@@ -740,8 +740,8 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                 switch (aResultCode) {
                     case Activity.RESULT_OK:
 
-                        float aMeasure = aResultData.getFloat("result");
-                        Constants.Measures type = Constants.Measures.valueOf(aResultData.getString("type"));
+                        float aMeasure = aResultData.getFloat(Constants.MEASURE_VALUE_KEY);
+                        Constants.Measures type = Constants.Measures.valueOf(aResultData.getString(Constants.MEASURE_TARGET_KEY));
                         if (!expectsMeasure(type)) {
                             Log.i(Constants.LOG_TAG_SERVICE, "Unexpected measure " + type + " : " + aMeasure);
                             return;

@@ -179,6 +179,7 @@ public class BluetoothService {
                             break;
                     }
                     mBusyThread.setMeasureTypes(measureTypes);
+                    mBusyThread.setTarget(aMeasure);
                     mBusyThread.start();
                 } catch (Exception e) {
                     Log.e(Constants.LOG_TAG_BT, "Failed", e);
