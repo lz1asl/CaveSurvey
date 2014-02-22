@@ -108,41 +108,37 @@ public class MapUtilities {
     }
 
     public static boolean isSlopeValid(Float aSlope) {
-        if (null != aSlope) {
-            String currSlopeMeasure = Options.getOptionValue(Option.CODE_SLOPE_UNITS);
-            int maxValue, minValue;
-            if (Option.UNIT_DEGREES.equals(currSlopeMeasure)) {
-                maxValue = Option.MAX_VALUE_SLOPE_DEGREES;
-                minValue = Option.MIN_VALUE_SLOPE_DEGREES;
-            } else { // Option.UNIT_GRADS
-                maxValue = Option.MAX_VALUE_SLOPE_GRADS;
-                minValue = Option.MIN_VALUE_SLOPE_GRADS;
-            }
-            if (aSlope > maxValue || aSlope < minValue) {
-                return false;
-            }
+        String currSlopeMeasure = Options.getOptionValue(Option.CODE_SLOPE_UNITS);
+        if (Option.UNIT_DEGREES.equals(currSlopeMeasure)) {
+            return isSlopeInDegreesValid(aSlope);
+        } else { // Option.UNIT_GRADS
+            return isSlopeInGradsValid(aSlope);
         }
-        return true;
     }
 
     public static boolean isAzimuthValid(Float anAzimuth) {
-        if (null != anAzimuth) {
-            if (anAzimuth < 0) {
-                return false;
-            }
-
-            String currAzimuthMeasure = Options.getOptionValue(Option.CODE_AZIMUTH_UNITS);
-            int maxValue;
-            if (Option.UNIT_DEGREES.equals(currAzimuthMeasure)) {
-                maxValue = Option.MAX_VALUE_AZIMUTH_DEGREES;
-            } else { // Option.UNIT_GRADS
-                maxValue = Option.MAX_VALUE_AZIMUTH_GRADS;
-            }
-            if (anAzimuth > maxValue) {
-                return false;
-            }
+        String currAzimuthMeasure = Options.getOptionValue(Option.CODE_AZIMUTH_UNITS);
+        if (Option.UNIT_DEGREES.equals(currAzimuthMeasure)) {
+            return isAzimuthInDegreesValid
+                    (anAzimuth);
+        } else { // Option.UNIT_GRADS
+            return isAzimuthInGradsValid(anAzimuth);
         }
+    }
 
-        return true;
+    public static boolean isAzimuthInDegreesValid(Float anAzimuth) {
+        return anAzimuth != null && anAzimuth >= 0 && anAzimuth < Option.MAX_VALUE_AZIMUTH_DEGREES;
+    }
+
+    public static boolean isAzimuthInGradsValid(Float anAzimuth) {
+        return anAzimuth != null && anAzimuth >= 0 && anAzimuth < Option.MAX_VALUE_AZIMUTH_GRADS;
+    }
+
+    public static boolean isSlopeInDegreesValid(Float aSlope) {
+        return aSlope != null && aSlope >= Option.MIN_VALUE_SLOPE_DEGREES && aSlope <= Option.MAX_VALUE_SLOPE_DEGREES;
+    }
+
+    public static boolean isSlopeInGradsValid(Float aSlope) {
+        return aSlope != null && aSlope >= Option.MIN_VALUE_SLOPE_GRADS && aSlope <= Option.MAX_VALUE_SLOPE_GRADS;
     }
 }
