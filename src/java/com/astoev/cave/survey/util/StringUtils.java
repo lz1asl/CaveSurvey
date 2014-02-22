@@ -43,6 +43,10 @@ public class StringUtils {
     }
 
     public static boolean isNotEmpty(String aString){
-        return ((aString != null) && (!"".equals(aString)));
+        return !isEmpty(aString);
+    }
+
+    public static boolean isEmpty(String aString){
+        return aString == null || "".equals(aString);
     }
 }

@@ -15,6 +15,12 @@ public class Measure {
     public Measure(){
     }
 
+    public Measure(Constants.MeasureTypes aMeasureType, Constants.MeasureUnits aMeasureUnit, Float aValue) {
+        mMeasureType = aMeasureType;
+        mMeasureUnit = aMeasureUnit;
+        mValue = aValue;
+    }
+
     public Constants.Measures getMeasure() {
         return mMeasure;
     }
