@@ -17,7 +17,7 @@ public class LaserAceBluetoothDevice extends AbstractBluetoothDevice {
 
     @Override
     public boolean isNameSupported(String aName) {
-        return false;
+        return aName != null && aName.startsWith("LA SURVEY,");
     }
 
     @Override
