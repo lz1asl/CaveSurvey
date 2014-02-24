@@ -28,6 +28,7 @@
     <string name="main_button_add">Добави</string>
     <string name="main_button_info">Информация</string>
     <string name="main_button_about">Относно</string>
+    <string name="main_button_help">Помощ</string>
     <string name="main_button_map">Карта</string>
 
     <string name="main_table_header_from">От</string>

@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.util.Linkify;
 import android.util.Log;
@@ -77,10 +78,19 @@ public class HomeActivity extends MainMenuActivity {
         case R.id.main_action_about:
             showAboutDialog();
             return true;
+        case R.id.main_action_help:
+            openHelp();
+            return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
 	}
+
+    private void openHelp() {
+        Uri uri = Uri.parse("https://github.com/lz1asl/CaveSurvey/wiki/User-Guide");
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        startActivity(intent);
+    }
 
     private void showAboutDialog() {
         try {

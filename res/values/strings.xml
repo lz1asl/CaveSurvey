@@ -28,6 +28,7 @@
     <string name="main_button_add">Add</string>
     <string name="main_button_info">Info</string>
     <string name="main_button_about">About</string>
+    <string name="main_button_help">Help</string>
     <string name="main_button_map">Map</string>
 
     <string name="main_table_header_from">From</string>
