@@ -264,7 +264,7 @@
     <string name="gps_longitude">Longitude</string>
     <string name="gps_accuracy">Точност (м)</string>
     <string name="gps_no_value">Няма стойност</string>
-    <string name="gps_save">Захади</string>
+    <string name="gps_save">Запази</string>
     <string name="gps_disabled">GPS забранен</string>
     <string name="gps_no_signal">Търсене на GPS позиция ....</string>
     <string name="gps_saved_location">Запазена позиция</string>
