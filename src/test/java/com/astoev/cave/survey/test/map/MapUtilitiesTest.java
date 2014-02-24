@@ -72,4 +72,34 @@ public class MapUtilitiesTest extends TestCase {
         assertFalse(MapUtilities.isSlopeInGradsValid(+120f));
     }
 
+    public void testGetMiddleAngle() {
+        assertEquals(20f, MapUtilities.getMiddleAngle(10f, 30f));
+        assertEquals(130f, MapUtilities.getMiddleAngle(50f, 210f));
+        assertEquals(330f, MapUtilities.getMiddleAngle(340f, 320f));
+        assertEquals(20f, MapUtilities.getMiddleAngle(340f, 60f));
+    }
+
+    public void testApplySlopeToDistance() {
+        assertEquals(20f, MapUtilities.applySlopeToDistance(20f, null));
+        assertEquals(20f, MapUtilities.applySlopeToDistance(20f, 0f));
+        // TODO it seem bad values are produced below
+//        assertEquals(10f, MapUtilities.applySlopeToDistance(20f, 45f));
+//        assertEquals(10f, MapUtilities.applySlopeToDistance(20f, -45f));
+//        assertEquals(0f, MapUtilities.applySlopeToDistance(20f, -90f));
+//        assertEquals(0f, MapUtilities.applySlopeToDistance(20f, 90f));
+    }
+
+    public void testAddDegrees() {
+        assertEquals(110f, MapUtilities.add90Degrees(20f));
+        assertEquals(210f, MapUtilities.add90Degrees(120f));
+        assertEquals(310f, MapUtilities.add90Degrees(220f));
+        assertEquals(50f, MapUtilities.add90Degrees(320f));
+    }
+
+    public void testMinusDegrees() {
+        assertEquals(10f, MapUtilities.minus90Degrees(100f));
+        assertEquals(220f, MapUtilities.minus90Degrees(310f));
+        assertEquals(330f, MapUtilities.minus90Degrees(60f));
+    }
+
 }
