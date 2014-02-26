@@ -2,6 +2,7 @@ package com.astoev.cave.survey.activity.dialog;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,7 +13,10 @@ import android.widget.EditText;
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.UIUtilities;
+import com.astoev.cave.survey.activity.main.MainActivity;
+import com.astoev.cave.survey.activity.main.PointActivity;
 import com.astoev.cave.survey.activity.map.MapUtilities;
+import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.model.Vector;
 import com.astoev.cave.survey.util.DaoUtil;
@@ -25,7 +29,7 @@ import java.sql.SQLException;
  */
 public class VectorDialog extends AzimuthDialog {
 
-    private Point mPoint;
+    private Leg mLeg;
 
     /**
      * @see android.support.v4.app.DialogFragment#onCreateDialog(android.os.Bundle)
@@ -65,13 +69,18 @@ public class VectorDialog extends AzimuthDialog {
                     vector.setDistance(StringUtils.getFromEditTextNotNull(distanceEdit));
                     vector.setAzimuth(StringUtils.getFromEditTextNotNull(azimuthEdit));
                     vector.setSlope(StringUtils.getFromEditTextNotNull(slopeEdit));
-                    vector.setPoint(mPoint);
+                    vector.setPoint(mLeg.getFromPoint());
 
                     DaoUtil.saveVector(vector);
                 } catch (SQLException e) {
                     Log.e(Constants.LOG_TAG_UI, "Failed to add vector", e);
                     UIUtilities.showNotification(R.string.error);
                 }
+
+                Intent intent = new Intent(getActivity(), PointActivity.class);
+                intent.putExtra(Constants.LEG_SELECTED, mLeg.getId());
+                startActivity(intent);
+
                 dialog.dismiss();
             }
         });
@@ -79,11 +88,11 @@ public class VectorDialog extends AzimuthDialog {
         return dialog;
     }
 
-    public Point getPoint() {
-        return mPoint;
+    public Leg getLeg() {
+        return mLeg;
     }
 
-    public void setPoint(Point aPoint) {
-        mPoint = aPoint;
+    public void setLeg(Leg aLeg) {
+        mLeg = aLeg;
     }
 }

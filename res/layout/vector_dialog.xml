@@ -22,6 +22,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/vector_azimuth"
         android:inputType="numberDecimal"
+        android:ellipsize="end"
         android:gravity="center"
         android:maxLength="3"
         android:hint="@string/azimuth"/>
@@ -33,6 +34,7 @@
         android:inputType="numberDecimal|numberSigned"
         android:maxLength="4"
         android:gravity="center"
+        android:ellipsize="end"
         android:hint="@string/slope"/>
 
     <Button

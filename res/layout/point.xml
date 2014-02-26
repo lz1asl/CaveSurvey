@@ -133,13 +133,6 @@
             android:visibility="invisible"
             android:layout_margin="10dp"
             android:layout_below="@id/saved_location_container">
-            <TableRow>
-                <TextView android:text="@string/point_vectors_counter" android:layout_margin="5dp"/>
-                <TextView android:text="@string/distance" android:layout_margin="5dp"/>
-                <TextView android:text="@string/azimuth" android:layout_margin="5dp"/>
-                <TextView android:text="@string/slope" android:layout_margin="5dp"/>
-                <TextView/>
-            </TableRow>
         </TableLayout>
 	    	    
 	</RelativeLayout>

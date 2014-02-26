@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.os.ResultReceiver;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -30,7 +31,6 @@ import com.astoev.cave.survey.activity.dialog.AzimuthDialog;
 import com.astoev.cave.survey.activity.dialog.SlopeDialog;
 import com.astoev.cave.survey.activity.dialog.VectorDialog;
 import com.astoev.cave.survey.activity.draw.DrawingActivity;
-import com.astoev.cave.survey.activity.map.MapUtilities;
 import com.astoev.cave.survey.fragment.LocationFragment;
 import com.astoev.cave.survey.model.Gallery;
 import com.astoev.cave.survey.model.Leg;
@@ -153,6 +153,8 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
             Leg legEdited = getCurrentLeg();
             GPSActivity.initSavedLocationContainer(legEdited.getFromPoint(), this, null);
         }
+
+        loadLegVectors(getCurrentLeg());
     }
     
     /**
@@ -432,12 +434,12 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 
     private void vectorButton() {
         VectorDialog dialog = new VectorDialog();
-        dialog.setPoint(getCurrentLeg().getFromPoint());
+        dialog.setLeg(getCurrentLeg());
+        dialog.setCancelable(true);
         dialog.show(getSupportFragmentManager(), VECTOR_DIALOG);
     }
 
     public void deleteButton() {
-        
         try {
             Leg legEdited = getCurrentLeg();
             boolean deleted = DaoUtil.deleteLeg(legEdited);
@@ -584,6 +586,8 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 
     @Override
     public void onBackPressed() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
         finish();
     }
 
@@ -821,10 +825,31 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
     private void loadLegVectors(Leg aLegEdited) {
         try {
             TableLayout vectorsTable = (TableLayout) findViewById(R.id.point_vectors_table);
+
             // data
             List<Vector> vectorsList = DaoUtil.getLegVectors(aLegEdited);
-            if (vectorsList != null) {
-                vectorsTable.setVisibility(View.VISIBLE);
+            if (vectorsList != null && vectorsList.size() > 0) {
+
+                // remove old data
+                vectorsTable.removeAllViews();
+
+                // set headers
+                TableRow header = new TableRow(this);
+                TextView counterHeader = new TextView(this);
+                counterHeader.setText(getString(R.string.point_vectors_counter));
+                header.addView(counterHeader);
+                TextView distanceHeader = new TextView(this);
+                distanceHeader.setText(getString(R.string.distance));
+                header.addView(distanceHeader);
+                TextView azimuthHeader = new TextView(this);
+                azimuthHeader.setText(getString(R.string.azimuth));
+                header.addView(azimuthHeader);
+                TextView slopeHeader = new TextView(this);
+                slopeHeader.setText(getString(R.string.slope));
+                header.addView(slopeHeader);
+                vectorsTable.addView(header);
+
+                // populate data
                 int index = 1;
                 for(Vector v: vectorsList) {
                     TableRow row = new TableRow(this);
@@ -834,23 +859,25 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                     row.addView(id);
 
                     TextView distance = new TextView(this);
-                    distance.setText(String.valueOf(v.getDistance()));
+                    distance.setText(StringUtils.floatToLabel(v.getDistance()));
                     distance.setGravity(Gravity.CENTER);
                     row.addView(distance);
 
                     TextView azimuth = new TextView(this);
-                    azimuth.setText(String.valueOf(v.getAzimuth()));
+                    azimuth.setText(StringUtils.floatToLabel(v.getAzimuth()));
                     azimuth.setGravity(Gravity.CENTER);
                     row.addView(azimuth);
 
                     TextView angle = new TextView(this);
-                    angle.setText(String.valueOf(v.getSlope()));
+                    angle.setText(StringUtils.floatToLabel(v.getSlope()));
                     angle.setGravity(Gravity.CENTER);
                     row.addView(angle);
 
                     vectorsTable.addView(row);
                     index++;
                 }
+
+                vectorsTable.setVisibility(View.VISIBLE);
             } else {
                 vectorsTable.setVisibility(View.INVISIBLE);
             }
