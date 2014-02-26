@@ -422,7 +422,8 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
     }
 
     private boolean checkSlope(EditText aEditText) {
-        boolean valid = MapUtilities.isSlopeValid(StringUtils.getFromEditTextNotNull(aEditText));
+        Float slope = StringUtils.getFromEditTextNotNull(aEditText);
+        boolean valid = slope == null || MapUtilities.isSlopeValid(slope);
 
         if (!valid) {
             aEditText.setError(aEditText.getContext().getString(R.string.invalid));
