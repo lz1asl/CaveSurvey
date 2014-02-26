@@ -77,10 +77,15 @@ public class InfoActivity extends MainMenuActivity {
             TextView projectNumPhotos = (TextView)findViewById(R.id.infoNumPhotos);
             projectNumPhotos.setText(StringUtils.intToLabel(projectInfo.getPhotos()));
 
-
-            ((TextView)findViewById(R.id.infoDistanceIn)).setText(Options.getOptionValue(Option.CODE_DISTANCE_UNITS));
-            ((TextView)findViewById(R.id.infoAzimuthIn)).setText(Options.getOptionValue(Option.CODE_AZIMUTH_UNITS));
-            ((TextView)findViewById(R.id.infoSlopeIn)).setText(Options.getOptionValue(Option.CODE_SLOPE_UNITS));
+            CharSequence distanceUnitsLabel = StringUtils.extractDynamicResource(
+                    getResources(), StringUtils.RESOURCE_PREFIX_UNITS + Options.getOptionValue(Option.CODE_DISTANCE_UNITS));
+            ((TextView)findViewById(R.id.infoDistanceIn)).setText(distanceUnitsLabel);
+            CharSequence azimuthUnitsLabel = StringUtils.extractDynamicResource(
+                    getResources(), StringUtils.RESOURCE_PREFIX_UNITS + Options.getOptionValue(Option.CODE_AZIMUTH_UNITS));
+            ((TextView)findViewById(R.id.infoAzimuthIn)).setText(azimuthUnitsLabel);
+            CharSequence slopeUnitsLabel = StringUtils.extractDynamicResource(
+                    getResources(), StringUtils.RESOURCE_PREFIX_UNITS + Options.getOptionValue(Option.CODE_SLOPE_UNITS));
+            ((TextView)findViewById(R.id.infoSlopeIn)).setText(slopeUnitsLabel);
             
             // set the value for azimuth build in processor
             if (Option.CODE_SENSOR_INTERNAL.equals(Options.getOption(Option.CODE_AZIMUTH_SENSOR).getValue())){

@@ -59,7 +59,7 @@
     <string name="accuracy">Точност</string>
     
     <!-- add popup -->
-    <string name="main_add_title">Добави отсечка</string>
+    <string name="main_add_title">Добави измерване</string>
     <string name="main_add_leg">Следваща отсечка</string>
     <string name="main_add_branch">Следваща галерия</string>
     <string name="main_add_middlepoint">Междинна точка</string>
@@ -196,7 +196,7 @@
     <string name="info_slope_in">Наклон в</string>
     <string name="info_azimuth_build_in_sensor">Азимут от вграден сензор -</string>
     
-    <string name="sensor_none">Липсва</string>
+    <string name="sensor_none">липсва</string>
     <string name="rotation_sensor">Завъртане</string>
     <string name="magnetic_sensor">Магнитен/Ускорение</string>
     <string name="orientation_sensor">Ориентация</string>
@@ -240,7 +240,7 @@
     <string name="azimuth_accuracy_no_value">-1</string>
     <string name="azimuth_orination">Ориентация:</string>
     <string name="azimuth_magnetic">Магнитен:</string>
-    <string name="azimuth_rotation">Заъвртане:</string>
+    <string name="azimuth_rotation">Завъртане:</string>
     <string name="azimuth_start">Старт</string>
     <string name="azimuth_stop">Стоп</string>
     <string name="sensor_test_title">Тест на сензорите</string>
@@ -275,5 +275,9 @@
     <string name="gps_db_error">Неуспешно запазване!</string>
     
     <string name="gps_enable_question">GPS е забранен! Искате ли да го разрешите?</string>
-    
+
+    <string name="unit_meters">метри</string>
+    <string name="unit_degrees">градуси</string>
+    <string name="unit_grads">гради</string>
+
 </resources>

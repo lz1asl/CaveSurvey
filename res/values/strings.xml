@@ -272,5 +272,11 @@
     <string name="gps_db_error">Unable to save location!</string>
     
     <string name="gps_enable_question">GPS is disabled! Would you like to enable it from Settings page?</string>
-    
+
+
+    <string name="unit_meters">meters</string>
+    <string name="unit_degrees">degrees</string>
+    <string name="unit_grads">grads</string>
+
+
 </resources>
