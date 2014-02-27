@@ -4,7 +4,7 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:layout_gravity="center"
+    android:layout_centerInParent="true"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <EditText
@@ -15,7 +15,8 @@
         android:maxLength="5"
         android:ellipsize="end"
         android:gravity="center"
-        android:hint="@string/distance"/>
+        android:hint="@string/distance"
+        android:layout_gravity="center"/>
 
     <EditText
         android:layout_width="wrap_content"
@@ -23,7 +24,7 @@
         android:id="@+id/vector_azimuth"
         android:inputType="numberDecimal"
         android:ellipsize="end"
-        android:gravity="center"
+        android:layout_gravity="center"
         android:maxLength="3"
         android:hint="@string/azimuth"/>
 
@@ -33,7 +34,7 @@
         android:id="@+id/vector_slope"
         android:inputType="numberDecimal|numberSigned"
         android:maxLength="4"
-        android:gravity="center"
+        android:layout_gravity="center"
         android:ellipsize="end"
         android:hint="@string/slope"/>
 
@@ -41,6 +42,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/vector_add"
+        android:layout_gravity="center"
         android:text="@string/main_button_add"/>
 
 </LinearLayout>

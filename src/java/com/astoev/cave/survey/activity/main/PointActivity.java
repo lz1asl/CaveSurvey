@@ -18,7 +18,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -851,7 +853,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 
                 // populate data
                 int index = 1;
-                for(Vector v: vectorsList) {
+                for(final Vector v: vectorsList) {
                     TableRow row = new TableRow(this);
                     TextView id = new TextView(this);
                     id.setText(String.valueOf(index));
@@ -872,6 +874,41 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                     angle.setText(StringUtils.floatToLabel(v.getSlope()));
                     angle.setGravity(Gravity.CENTER);
                     row.addView(angle);
+
+                    Button deleteButton = new Button(this);
+                    deleteButton.setText("-");
+                    final int finalIndex = index;
+                    deleteButton.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View aView) {
+                            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(PointActivity.this);
+                            dialogBuilder.setMessage(getString(R.string.point_vectors_delete, finalIndex))
+                                    .setCancelable(false)
+                                    .setPositiveButton(R.string.button_yes, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            Log.i(Constants.LOG_TAG_UI, "Delete vector");
+                                            try {
+                                                DaoUtil.deleteVector(v);
+                                                UIUtilities.showNotification(R.string.action_deleted);
+                                                loadLegVectors(getCurrentLeg());
+                                            } catch (Exception e) {
+                                                Log.e(Constants.LOG_TAG_UI, "Failed to delete vector", e);
+                                                UIUtilities.showNotification(R.string.error);
+                                            }
+                                            dialog.dismiss();
+                                        }
+                                    })
+                                    .setNegativeButton(R.string.button_no, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+                            AlertDialog alert = dialogBuilder.create();
+                            alert.show();
+
+                        }
+                    });
+                    row.addView(deleteButton);
 
                     vectorsTable.addView(row);
                     index++;

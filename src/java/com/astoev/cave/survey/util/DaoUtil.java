@@ -336,4 +336,8 @@ public class DaoUtil {
     public static void saveVector(Vector aVector) throws SQLException {
         Workspace.getCurrentInstance().getDBHelper().getVectorsDao().create(aVector);
     }
+
+    public static void deleteVector(Vector aVector) throws SQLException {
+        Workspace.getCurrentInstance().getDBHelper().getVectorsDao().delete(aVector);
+    }
 }

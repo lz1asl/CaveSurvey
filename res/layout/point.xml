@@ -132,6 +132,7 @@
             android:layout_height="wrap_content"
             android:visibility="invisible"
             android:layout_margin="10dp"
+            android:stretchColumns="*"
             android:layout_below="@id/saved_location_container">
         </TableLayout>
 	    	    

@@ -54,7 +54,8 @@
     <string name="slope">Clinometer</string>
 
     <string name="point_vectors_header">Vectors</string>
-    <string name="point_vectors_counter">#</string>
+    <string name="point_vectors_counter">Vector #</string>
+    <string name="point_vectors_delete">Delete vector %1$s?</string>
 
     <string name="slope_slope">Clinometer:</string>
     
