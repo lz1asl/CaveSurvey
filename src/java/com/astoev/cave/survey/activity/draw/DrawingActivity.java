@@ -146,6 +146,7 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
         currentPaint.setDither(true);
         currentPaint.setColor(currentColor);
         currentPaint.setStrokeWidth(currentSize);
+        currentPaint.setAlpha(200);
         if (0 == currentStyle) {
             currentPaint.setStyle(Paint.Style.STROKE);
             currentPaint.setStrokeJoin(Paint.Join.ROUND);
