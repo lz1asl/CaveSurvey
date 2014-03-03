@@ -12,11 +12,14 @@ import android.os.ResultReceiver;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.astoev.cave.survey.Constants;
@@ -25,6 +28,7 @@ import com.astoev.cave.survey.activity.MainMenuActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.activity.dialog.AzimuthDialog;
 import com.astoev.cave.survey.activity.dialog.SlopeDialog;
+import com.astoev.cave.survey.activity.dialog.VectorDialog;
 import com.astoev.cave.survey.activity.draw.DrawingActivity;
 import com.astoev.cave.survey.activity.map.MapUtilities;
 import com.astoev.cave.survey.fragment.LocationFragment;
@@ -34,6 +38,7 @@ import com.astoev.cave.survey.model.Note;
 import com.astoev.cave.survey.model.Option;
 import com.astoev.cave.survey.model.Photo;
 import com.astoev.cave.survey.model.Point;
+import com.astoev.cave.survey.model.Vector;
 import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.service.bluetooth.BluetoothService;
 import com.astoev.cave.survey.service.orientation.AzimuthChangedListener;
@@ -45,9 +50,12 @@ import com.astoev.cave.survey.util.StringUtils;
 import com.j256.ormlite.misc.TransactionManager;
 
 
+import org.w3c.dom.Text;
+
 import java.io.File;
 import java.sql.SQLException;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Callable;
 
@@ -65,6 +73,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 	
 	private static final String AZIMUTH_DIALOG = "azimuth_dialog";
 	private static final String SLOPE_DIALOG = "slope_dialog";
+    private static final String VECTOR_DIALOG = "vector_dialog";
 	
     private String mNewNote = null;
 
@@ -123,6 +132,8 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         if (legEdited != null){
             GPSActivity.initSavedLocationContainer(legEdited.getFromPoint(), this, savedInstanceState);
         }
+
+        loadLegVectors(legEdited);
     }
 
     @Override
@@ -317,25 +328,25 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
             // start validation
             boolean valid = true;
             final EditText distance = (EditText) findViewById(R.id.point_distance);
-            valid = valid && validateNumber(distance, true);
+            valid = valid && UIUtilities.validateNumber(distance, true);
 
             final EditText azimuth = (EditText) findViewById(R.id.point_azimuth);
-            valid = valid && validateNumber(azimuth, true) && checkAzimuth(azimuth);
+            valid = valid && UIUtilities.validateNumber(azimuth, true) && UIUtilities.checkAzimuth(azimuth);
 
             final EditText slope = (EditText) findViewById(R.id.point_slope);
-            valid = valid && validateNumber(slope, false) && checkSlope(slope);
+            valid = valid && UIUtilities.validateNumber(slope, false) && UIUtilities.checkSlope(slope);
 
             final EditText up = (EditText) findViewById(R.id.point_up);
-            valid = valid && validateNumber(up, false);
+            valid = valid && UIUtilities.validateNumber(up, false);
 
             final EditText down = (EditText) findViewById(R.id.point_down);
-            valid = valid && validateNumber(down, false);
+            valid = valid && UIUtilities.validateNumber(down, false);
 
             final EditText left = (EditText) findViewById(R.id.point_left);
-            valid = valid && validateNumber(left, false);
+            valid = valid && UIUtilities.validateNumber(left, false);
 
             final EditText right = (EditText) findViewById(R.id.point_right);
-            valid = valid && validateNumber(right, false);
+            valid = valid && UIUtilities.validateNumber(right, false);
 
             if (!valid) {
                 return false;
@@ -393,45 +404,6 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         return false;
     }
 
-    private boolean validateNumber(EditText aEditField, boolean isRequired) {
-        if (StringUtils.isEmpty(aEditField)) {
-            if (isRequired) {
-                aEditField.setError(aEditField.getContext().getString(R.string.required));
-                return false;
-            }
-            return true;
-        } else {
-            try {
-                Float.parseFloat(aEditField.getText().toString().trim());
-                return true;
-            } catch (NumberFormatException nfe) {
-                aEditField.setError(aEditField.getContext().getString(R.string.invalid));
-                return false;
-            }
-        }
-    }
-
-    private boolean checkAzimuth(EditText aEditText) {
-        boolean valid = MapUtilities.isAzimuthValid(StringUtils.getFromEditTextNotNull(aEditText));
-
-        if (!valid) {
-            aEditText.setError(aEditText.getContext().getString(R.string.invalid));
-        }
-
-        return valid;
-    }
-
-    private boolean checkSlope(EditText aEditText) {
-        Float slope = StringUtils.getFromEditTextNotNull(aEditText);
-        boolean valid = slope == null || MapUtilities.isSlopeValid(slope);
-
-        if (!valid) {
-            aEditText.setError(aEditText.getContext().getString(R.string.invalid));
-        }
-
-        return valid;
-    }
-
     public void noteButton(View aView) {
         Intent intent = new Intent(this, NoteActivity.class);
         intent.putExtra(Constants.LEG_SELECTED, getCurrentLeg().getId());
@@ -456,6 +428,12 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
     	Intent intent = new Intent(this, GPSActivity.class);
     	intent.putExtra(GPSActivity.POINT, parentPoint);
     	startActivity(intent);
+    }
+
+    private void vectorButton() {
+        VectorDialog dialog = new VectorDialog();
+        dialog.setPoint(getCurrentLeg().getFromPoint());
+        dialog.show(getSupportFragmentManager(), VECTOR_DIALOG);
     }
 
     public void deleteButton() {
@@ -645,6 +623,10 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                 photoButton();
                 return true;
             }
+            case R.id.point_action_add_vector : {
+                vectorButton();
+                return true;
+            }
             case R.id.point_action_delete: {
                 deleteButton();
                 return true;
@@ -665,6 +647,12 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         	// if there is no camera remove the photo button
         	MenuItem photoMenuItem = menu.findItem(R.id.point_action_photo);
         	photoMenuItem.setVisible(false);
+        }
+
+        // allow vectors for saved legs
+        if (currentLeg != null && !currentLeg.isNew()) {
+            MenuItem photoMenuItem = menu.findItem(R.id.point_action_add_vector);
+            photoMenuItem.setVisible(true);
         }
 
         try {
@@ -829,5 +817,46 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         final EditText slope = (EditText)findViewById(R.id.point_slope);
         slope.setText(String.valueOf(newValueArg));
     }
-	
+
+    private void loadLegVectors(Leg aLegEdited) {
+        try {
+            TableLayout vectorsTable = (TableLayout) findViewById(R.id.point_vectors_table);
+            // data
+            List<Vector> vectorsList = DaoUtil.getLegVectors(aLegEdited);
+            if (vectorsList != null) {
+                vectorsTable.setVisibility(View.VISIBLE);
+                int index = 1;
+                for(Vector v: vectorsList) {
+                    TableRow row = new TableRow(this);
+                    TextView id = new TextView(this);
+                    id.setText(String.valueOf(index));
+                    id.setGravity(Gravity.CENTER);
+                    row.addView(id);
+
+                    TextView distance = new TextView(this);
+                    distance.setText(String.valueOf(v.getDistance()));
+                    distance.setGravity(Gravity.CENTER);
+                    row.addView(distance);
+
+                    TextView azimuth = new TextView(this);
+                    azimuth.setText(String.valueOf(v.getAzimuth()));
+                    azimuth.setGravity(Gravity.CENTER);
+                    row.addView(azimuth);
+
+                    TextView angle = new TextView(this);
+                    angle.setText(String.valueOf(v.getSlope()));
+                    angle.setGravity(Gravity.CENTER);
+                    row.addView(angle);
+
+                    vectorsTable.addView(row);
+                    index++;
+                }
+            } else {
+                vectorsTable.setVisibility(View.INVISIBLE);
+            }
+        } catch (Exception e) {
+            Log.e(Constants.LOG_TAG_UI, "Failed to load vectors", e);
+            UIUtilities.showNotification(R.string.error);
+        }
+    }
 }

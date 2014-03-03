@@ -52,7 +52,10 @@
     <string name="distance">Length</string>
     <string name="azimuth">Compass</string>
     <string name="slope">Clinometer</string>
-    
+
+    <string name="point_vectors_header">Vectors</string>
+    <string name="point_vectors_counter">#</string>
+
     <string name="slope_slope">Clinometer:</string>
     
     <string name="sensor">Sensor</string>
@@ -67,10 +70,12 @@
     <string name="main_add_sketch">Draw</string>
     <string name="main_add_photo">Photo</string>
     <string name="main_add_gps">GPS</string>
+    <string name="main_add_vector">Vector</string>
     <string name="table_sketch_prefix">S</string>
     <string name="table_note_prefix">N</string>
     <string name="table_photo_prefix">P</string>
     <string name="table_location_prefix">L</string>
+    <string name="table_vector_prefix">V</string>
 
     <string name="gallery_after_first_point">Not available for first leg</string>
 

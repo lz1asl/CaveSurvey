@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_gravity="center"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/vector_distance"
+        android:inputType="numberDecimal"
+        android:maxLength="5"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:hint="@string/distance"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/vector_azimuth"
+        android:inputType="numberDecimal"
+        android:gravity="center"
+        android:maxLength="3"
+        android:hint="@string/azimuth"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/vector_slope"
+        android:inputType="numberDecimal|numberSigned"
+        android:maxLength="4"
+        android:gravity="center"
+        android:hint="@string/slope"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/vector_add"
+        android:text="@string/main_button_add"/>
+
+</LinearLayout>
