@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
@@ -18,6 +19,7 @@ import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.model.Gallery;
 import com.astoev.cave.survey.model.Leg;
+import com.astoev.cave.survey.model.Vector;
 import com.astoev.cave.survey.service.Workspace;
 import com.astoev.cave.survey.util.DaoUtil;
 
@@ -44,6 +46,8 @@ public class MapView extends View {
     Paint overlayPaint = new Paint();
     Paint youAreHerePaint = new Paint();
     Paint gridPaint = new Paint();
+    Paint vectorsPaint = new Paint();
+    Paint vectorPointPaint = new Paint();
     private float scale = 10;
     private int mapCenterMoveX = 0;
     private int mapCenterMoveY = 0;
@@ -69,7 +73,12 @@ public class MapView extends View {
         // semi transparent white
         gridPaint.setColor(Color.parseColor("#11FFFFFF"));
         gridPaint.setStrokeWidth(1);
-
+        vectorsPaint.setStrokeWidth(1);
+        vectorsPaint.setStyle(Paint.Style.STROKE);
+        vectorsPaint.setPathEffect(new DashPathEffect(new float[]{2, 4}, 0));
+        vectorsPaint.setAlpha(50);
+        vectorPointPaint.setStrokeWidth(1);
+        vectorPointPaint.setAlpha(50);
     }
 
     @Override
@@ -149,6 +158,8 @@ public class MapView extends View {
                             }
                             polygonPaint.setColor(galleryColors.get(l.getGalleryId()));
                             polygonWidthPaint.setColor(galleryColors.get(l.getGalleryId()));
+                            vectorsPaint.setColor(galleryColors.get(l.getGalleryId()));
+                            vectorPointPaint.setColor(galleryColors.get(l.getGalleryId()));
 
                             DaoUtil.refreshPoint(l.getFromPoint());
                             pointLabel = galleryNames.get(l.getGalleryId()) + l.getFromPoint().getName();
@@ -181,6 +192,8 @@ public class MapView extends View {
                             }
                             polygonPaint.setColor(galleryColors.get(l.getGalleryId()));
                             polygonWidthPaint.setColor(galleryColors.get(l.getGalleryId()));
+                            vectorsPaint.setColor(galleryColors.get(l.getGalleryId()));
+                            vectorPointPaint.setColor(galleryColors.get(l.getGalleryId()));
 
 //                            Log.i(Constants.LOG_TAG_UI, "Drawing leg " + l.getFromPoint().getName() + ":" + l.getToPoint().getName() + "-" + l.getGalleryId());
 
@@ -234,6 +247,18 @@ public class MapView extends View {
                             deltaY = -(float) (first.getRight() * Math.cos(galleryWidthAngle) * scale);
                             deltaX = (float) (first.getRight() * Math.sin(galleryWidthAngle) * scale);
                             canvas.drawCircle(mapCenterMoveX + first.getX() + deltaX, mapCenterMoveY + first.getY() + deltaY, MEASURE_POINT_RADIUS, polygonWidthPaint);
+                        }
+
+                        // vectors
+                        List<Vector> vectors = DaoUtil.getLegVectors(l);
+                        if (vectors != null) {
+                            for (Vector v: vectors) {
+                                float legDistance = MapUtilities.applySlopeToDistance(v.getDistance(), MapUtilities.getSlopeInDegrees(v.getSlope()));
+                                deltaY = -(float) (legDistance * Math.cos(Math.toRadians(MapUtilities.getAzimuthInDegrees(v.getAzimuth())))) * scale;
+                                deltaX = (float) (legDistance * Math.sin(Math.toRadians(MapUtilities.getAzimuthInDegrees(v.getAzimuth())))) * scale;
+                                canvas.drawLine(mapCenterMoveX + first.getX(), mapCenterMoveY + first.getY(), mapCenterMoveX + first.getX() + deltaX, mapCenterMoveY + first.getY() + deltaY, vectorsPaint);
+                                canvas.drawCircle(mapCenterMoveX + first.getX() + deltaX, mapCenterMoveY + first.getY() + deltaY, 2, vectorPointPaint);
+                            }
                         }
 
                         processedLegs.add(l.getId());
