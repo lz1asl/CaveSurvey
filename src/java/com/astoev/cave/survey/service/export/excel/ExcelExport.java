@@ -222,6 +222,39 @@ public class ExcelExport {
                     photoCell.setCellValue(name);
                     photoCell.setHyperlink(fileLink);
                 }
+
+                // vectors
+                List<Vector> vectors = DaoUtil.getLegVectors(l);
+                if (vectors != null) {
+                    int vectorCounter = 1;
+                    for(Vector v: vectors){
+                        rowCounter++;
+                        Row vectorRow = sheet.createRow(rowCounter);
+
+                        Cell vectorFrom = vectorRow.createCell(CELL_FROM);
+                        String fromPointName;
+                        if (l.getGalleryId().equals(lastGalleryId)) {
+                            fromPointName = galleryNames.get(l.getGalleryId()) + fromPoint.getName();
+                        } else {
+                            fromPointName = galleryNames.get(prevGalleryId) + fromPoint.getName();
+                        }
+                        vectorFrom.setCellValue(fromPointName);
+
+                        Cell vectorTo = vectorRow.createCell(CELL_TO);
+                        vectorTo.setCellValue(fromPointName + "-v" + vectorCounter);
+
+                        Cell vectorLength = vectorRow.createCell(CELL_LENGHT);
+                        vectorLength.setCellValue(StringUtils.floatToLabel(v.getDistance()));
+
+                        Cell vectorCompass = vectorRow.createCell(CELL_AZIMUTH);
+                        vectorCompass.setCellValue(StringUtils.floatToLabel(v.getAzimuth()));
+
+                        Cell vectorClinometer = vectorRow.createCell(CELL_SLOPE);
+                        vectorClinometer.setCellValue(StringUtils.floatToLabel(v.getSlope()));
+
+                        vectorCounter ++;
+                    }
+                }
             }
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             wb.write(out);
