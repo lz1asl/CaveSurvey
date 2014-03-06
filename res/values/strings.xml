@@ -14,6 +14,7 @@
     <string name="home_no_projects">No surveys yet!</string>
     <string name="home_new_project">New survey</string>
     <string name="home_button_new_exists">Survey %1$s exists!</string>
+    <string name="home_lang">Language</string>
 
     <!-- new project screen -->
     <string name="new_title">New Survey</string>
@@ -277,6 +278,12 @@
     <string name="unit_meters">meters</string>
     <string name="unit_degrees">degrees</string>
     <string name="unit_grads">grads</string>
+    
+    <string name="lang_title">Select language</string>
+    <string-array name="lang_array">
+        <item>English</item>
+        <item>Bulgarian</item>
+    </string-array>
 
 
 </resources>

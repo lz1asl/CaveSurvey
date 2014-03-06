@@ -1,5 +1,8 @@
 package com.astoev.cave.survey.activity;
 
+import java.util.Locale;
+
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -20,6 +23,28 @@ public abstract class BaseActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         Log.i(Constants.LOG_TAG_UI, "Creating activity " + this.getClass().getName());
         super.onCreate(savedInstanceState);
+        updateLocale();
+    }
+    
+    /**
+     * Updates the locale for every activity.
+     */
+    private void updateLocale(){
+        if (ConfigUtil.getContext() == null){
+            ConfigUtil.setContext(this);
+        }
+        String languageToLoad = ConfigUtil.getStringProperty(ConfigUtil.PREF_LOCALE);
+        if (languageToLoad != null){
+            
+            String defaultLang = Locale.getDefault().getLanguage();
+            if (!languageToLoad.equals(defaultLang)){
+                Locale locale = new Locale(languageToLoad); 
+                Locale.setDefault(locale);
+                Configuration config = new Configuration();
+                config.locale = locale;
+                getBaseContext().getResources().updateConfiguration(config,getBaseContext().getResources().getDisplayMetrics());
+            }
+        }
     }
 
 	/**

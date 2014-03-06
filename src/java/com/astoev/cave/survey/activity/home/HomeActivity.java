@@ -17,6 +17,7 @@ import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.MainMenuActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
+import com.astoev.cave.survey.activity.dialog.LanguageDialog;
 import com.astoev.cave.survey.activity.main.BTActivity;
 import com.astoev.cave.survey.activity.main.MainActivity;
 import com.astoev.cave.survey.activity.poc.SensorTestActivity;
@@ -32,6 +33,9 @@ import java.util.List;
  */
 public class HomeActivity extends MainMenuActivity {
 
+    /** Dialog name to enable Language dialog */
+    private static final String LANGUAGE_DIALOG = "LANGUAGE_DIALOG";
+    
     /**
      * Called when the activity is first created.
      */
@@ -81,6 +85,9 @@ public class HomeActivity extends MainMenuActivity {
         case R.id.main_action_help:
             openHelp();
             return true;
+        case R.id.action_language:
+            onLanguage();
+            return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -90,6 +97,11 @@ public class HomeActivity extends MainMenuActivity {
         Uri uri = Uri.parse("https://github.com/lz1asl/CaveSurvey/wiki/User-Guide");
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(intent);
+    }
+    
+    private void onLanguage(){
+        LanguageDialog languageDialog = new LanguageDialog();
+        languageDialog.show(getSupportFragmentManager(), LANGUAGE_DIALOG);
     }
 
     private void showAboutDialog() {

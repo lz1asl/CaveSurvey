@@ -21,7 +21,6 @@ import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.MainMenuActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
-import com.astoev.cave.survey.activity.home.HomeActivity;
 import com.astoev.cave.survey.activity.map.MapActivity;
 import com.astoev.cave.survey.activity.map.MapUtilities;
 import com.astoev.cave.survey.model.Gallery;
@@ -451,8 +450,7 @@ public class MainActivity extends MainMenuActivity {
 
     @Override
     public void onBackPressed() {
-        Intent setIntent = new Intent(this, HomeActivity.class);
-        startActivity(setIntent);
+        finish();
     }
 
 	/**
