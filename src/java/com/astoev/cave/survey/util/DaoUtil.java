@@ -18,6 +18,7 @@ import com.astoev.cave.survey.model.Photo;
 import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.model.Sketch;
+import com.astoev.cave.survey.model.Vector;
 import com.astoev.cave.survey.service.Workspace;
 import com.astoev.cave.survey.service.ormlite.DatabaseHelper;
 import com.j256.ormlite.dao.Dao;
@@ -317,5 +318,26 @@ public class DaoUtil {
         projectInfo.setPhotos(numPhotos);
         
         return projectInfo;
+    }
+
+    public static List<Vector> getLegVectors(Leg aLegEdited) throws SQLException {
+        QueryBuilder<Vector, Integer> vectorsQuery = Workspace.getCurrentInstance().getDBHelper().getVectorsDao().queryBuilder();
+        vectorsQuery.where().eq(Vector.COLUMN_POINT, aLegEdited.getFromPoint().getId());
+        vectorsQuery.orderBy(Vector.COLUMN_ID, true);
+        return vectorsQuery.query();
+    }
+
+    public static boolean hasVectorsByPoint(Point aFromPoint) throws SQLException {
+        QueryBuilder<Vector, Integer> vectorsQuery = Workspace.getCurrentInstance().getDBHelper().getVectorsDao().queryBuilder();
+        vectorsQuery.where().eq(Vector.COLUMN_POINT, aFromPoint.getId());
+        return vectorsQuery.countOf() > 0;
+    }
+
+    public static void saveVector(Vector aVector) throws SQLException {
+        Workspace.getCurrentInstance().getDBHelper().getVectorsDao().create(aVector);
+    }
+
+    public static void deleteVector(Vector aVector) throws SQLException {
+        Workspace.getCurrentInstance().getDBHelper().getVectorsDao().delete(aVector);
     }
 }

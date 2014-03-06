@@ -68,10 +68,16 @@
     <string name="main_add_sketch">Скица</string>
     <string name="main_add_photo">Снимка</string>
     <string name="main_add_gps">Координат</string>
+    <string name="main_add_vector">Нов лъч</string>
     <string name="table_sketch_prefix">S</string>
     <string name="table_note_prefix">N</string>
     <string name="table_photo_prefix">P</string>
     <string name="table_location_prefix">L</string>
+    <string name="table_vector_prefix">V</string>
+
+    <string name="point_vectors_header">Лъчи</string>
+    <string name="point_vectors_counter">Лъч #</string>
+    <string name="point_vectors_delete">Изтриване на лъч %1$s?</string>
 
     <string name="gallery_after_first_point">Недостъпно за първата отсечка</string>
 

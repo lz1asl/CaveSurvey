@@ -4,9 +4,12 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.widget.EditText;
 import android.widget.Toast;
 import com.astoev.cave.survey.R;
+import com.astoev.cave.survey.activity.map.MapUtilities;
 import com.astoev.cave.survey.util.ConfigUtil;
+import com.astoev.cave.survey.util.StringUtils;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -74,5 +77,45 @@ public class UIUtilities {
                 aContext.getString(R.string.busy), true);
         dialog.show();
     }
+
+    public static boolean validateNumber(EditText aEditField, boolean isRequired) {
+        if (StringUtils.isEmpty(aEditField)) {
+            if (isRequired) {
+                aEditField.setError(aEditField.getContext().getString(R.string.required));
+                return false;
+            }
+            return true;
+        } else {
+            try {
+                Float.parseFloat(aEditField.getText().toString().trim());
+                return true;
+            } catch (NumberFormatException nfe) {
+                aEditField.setError(aEditField.getContext().getString(R.string.invalid));
+                return false;
+            }
+        }
+    }
+
+    public static boolean checkAzimuth(EditText aEditText) {
+        boolean valid = MapUtilities.isAzimuthValid(StringUtils.getFromEditTextNotNull(aEditText));
+
+        if (!valid) {
+            aEditText.setError(aEditText.getContext().getString(R.string.invalid));
+        }
+
+        return valid;
+    }
+
+    public static boolean checkSlope(EditText aEditText) {
+        Float slope = StringUtils.getFromEditTextNotNull(aEditText);
+        boolean valid = slope == null || MapUtilities.isSlopeValid(slope);
+
+        if (!valid) {
+            aEditText.setError(aEditText.getContext().getString(R.string.invalid));
+        }
+
+        return valid;
+    }
+
 
 }

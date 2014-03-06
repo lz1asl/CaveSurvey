@@ -32,7 +32,14 @@
           android:title="@string/main_add_gps"
           android:visible="true"
           android:enabled="true"
-          myapp:showAsAction="ifRoom|withText"/>  
+          myapp:showAsAction="ifRoom|withText"/>
+
+    <item android:id="@+id/point_action_add_vector"
+          android:icon="@drawable/ic_action_new"
+          android:title="@string/main_add_vector"
+          android:visible="false"
+          android:enabled="true"
+          myapp:showAsAction="ifRoom|withText"/>
  
 	<item android:id="@+id/point_action_delete"
 	      android:icon="@drawable/ic_action_discard"

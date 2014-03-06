@@ -62,6 +62,7 @@ public class MainActivity extends MainMenuActivity {
     private String notePrefix;
     private String photoPrefix;
     private String locationPrefix;
+    private String vectorsPrevix;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,6 +72,7 @@ public class MainActivity extends MainMenuActivity {
         notePrefix     = getString(R.string.table_note_prefix);
         photoPrefix    = getString(R.string.table_photo_prefix);
         locationPrefix = getString(R.string.table_location_prefix);
+        vectorsPrevix  = getString(R.string.table_vector_prefix);
     }
 
     private void drawTable() {
@@ -180,6 +182,9 @@ public class MainActivity extends MainMenuActivity {
                 Location location = DaoUtil.getLocationByPoint(fromPoint);
                 if (location != null){
                     moreText.append(locationPrefix);
+                }
+                if (DaoUtil.hasVectorsByPoint(fromPoint)) {
+                    moreText.append(vectorsPrevix);
                 }
 
                 // reset the text appearance to small
