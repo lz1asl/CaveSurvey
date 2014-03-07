@@ -22,7 +22,7 @@ public class StringUtils {
     private static final String EMPTY_STRING = "";
     public static final String SPACE = " ";
 
-    public static final String RESOURCE_PREFIX_UNITS = "units_";
+    public static final String RESOURCE_PREFIX_UNITS = "unit_";
 
 
     public static String floatToLabel(Float aFloat) {
