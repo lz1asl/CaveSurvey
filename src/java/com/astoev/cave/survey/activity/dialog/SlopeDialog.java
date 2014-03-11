@@ -70,7 +70,7 @@ public class SlopeDialog extends AzimuthDialog {
         AlertDialog alertDialg = builder.create();
         
         // create azimuth processor to handle the azimuth sensors and value changes
-        orientationProcessor = OrientationProcessorFactory.getAzimuthProcessor(getActivity(), new SlopeChangedAdapter() {
+        orientationProcessor = OrientationProcessorFactory.getOrientationProcessor(getActivity(), new SlopeChangedAdapter() {
 
             /**
              * Slope callback method. Edits the slope text view with the new value

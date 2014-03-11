@@ -90,8 +90,8 @@ public class InfoActivity extends MainMenuActivity {
             // set the value for azimuth build in processor
             if (Option.CODE_SENSOR_INTERNAL.equals(Options.getOption(Option.CODE_AZIMUTH_SENSOR).getValue())){
                 TextView azimuthSensor = (TextView)findViewById(R.id.info_azimuth_sensor);
-                OrientationProcessor orientationProcessor = OrientationProcessorFactory.getAzimuthProcessor(this, null);
-                if (orientationProcessor.canReadAzimuth()){
+                OrientationProcessor orientationProcessor = OrientationProcessorFactory.getOrientationProcessor(this, null);
+                if (orientationProcessor.canReadOrientation()){
                     if (orientationProcessor instanceof RotationOrientationProcessor){
                         azimuthSensor.setText(getString(R.string.rotation_sensor));
                     } else if (orientationProcessor instanceof MagneticOrientationProcessor){

@@ -116,7 +116,7 @@ public class MagneticOrientationProcessor extends OrientationProcessor {
 	@Override
 	public void startListening(){
 
-		if (canReadAzimuth()){
+		if (canReadOrientation()){
             magneticSensor = getSensorMagnetic();
             accelerometerSensor = getSensorAccelerometer();
             
@@ -143,10 +143,10 @@ public class MagneticOrientationProcessor extends OrientationProcessor {
 	/**
 	 * Will be able to read only if both sensors are available
 	 * 
-	 * @see com.astoev.cave.survey.service.orientation.OrientationProcessor#canReadAzimuth()
+	 * @see com.astoev.cave.survey.service.orientation.OrientationProcessor#canReadOrientation()
 	 */
 	@Override
-	public boolean canReadAzimuth(){
+	public boolean canReadOrientation(){
 		return (getSensorMagnetic() != null && getSensorAccelerometer() != null);
 	}
 	

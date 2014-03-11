@@ -92,7 +92,7 @@ public class OrientationDeprecatedProcessor extends OrientationProcessor {
 	 */
 	@Override
 	public void startListening() {
-		if (canReadAzimuth()){
+		if (canReadOrientation()){
 			orientationSensor = getSensor();
             
             sensorManager.registerListener(this, orientationSensor, SENSOR_DELAY);

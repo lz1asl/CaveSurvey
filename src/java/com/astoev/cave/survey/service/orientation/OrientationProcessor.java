@@ -111,11 +111,12 @@ public abstract class OrientationProcessor implements SensorEventListener {
 	}
 
 	/**
-	 * Helper method that shows if the this processor can be read. 
+	 * Helper method that shows if the this processor can be read orientation. Actually checks if the sensor 
+	 * is correctly instantiated and available. 
 	 * 
 	 * @return true if the underlying sensor is available, otherwise false 
 	 */
-	public boolean canReadAzimuth(){
+	public boolean canReadOrientation(){
 		return (getSensor() != null);
 	}
 	
