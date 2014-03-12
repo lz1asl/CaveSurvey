@@ -588,8 +588,6 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
         finish();
     }
 
@@ -824,7 +822,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         slope.setText(String.valueOf(newValueArg));
     }
 
-    private void loadLegVectors(Leg aLegEdited) {
+    public void loadLegVectors(Leg aLegEdited) {
         try {
             TableLayout vectorsTable = (TableLayout) findViewById(R.id.point_vectors_table);
 

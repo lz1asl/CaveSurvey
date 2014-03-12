@@ -1,5 +1,6 @@
 package com.astoev.cave.survey.activity.dialog;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
@@ -77,10 +78,10 @@ public class VectorDialog extends AzimuthDialog {
                     UIUtilities.showNotification(R.string.error);
                 }
 
-                Intent intent = new Intent(getActivity(), PointActivity.class);
-                intent.putExtra(Constants.LEG_SELECTED, mLeg.getId());
-                startActivity(intent);
-
+                Activity parent = getActivity();
+                if (parent instanceof PointActivity) {
+                    ((PointActivity) parent).loadLegVectors(mLeg);
+                }
                 dialog.dismiss();
             }
         });
