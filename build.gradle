@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.7.1'
+        classpath 'com.android.tools.build:gradle:0.9.0'
     }
 }
 
@@ -45,8 +45,8 @@ task unitTest(type:Test, dependsOn: assemble) {
 check.dependsOn unitTest
 
 android {
-    compileSdkVersion 15
-    buildToolsVersion "18.0.1"
+    compileSdkVersion 19
+    buildToolsVersion "19.0.0"
 
     defaultConfig {
         minSdkVersion 7
