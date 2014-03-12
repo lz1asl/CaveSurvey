@@ -103,7 +103,7 @@ public class AzimuthDialog extends DialogFragment{
 		AlertDialog alertDialg = builder.create();
 		
 		// create azimuth processor to handle the azimuth sensors and value changes
-		orientationProcessor = OrientationProcessorFactory.getAzimuthProcessor(getActivity(), new AzimuthChangedAdapter() {
+		orientationProcessor = OrientationProcessorFactory.getOrientationProcessor(getActivity(), new AzimuthChangedAdapter() {
 		    
 		    /**
 		     * Azimuth callback method. Edits the azimuth text view with the new value

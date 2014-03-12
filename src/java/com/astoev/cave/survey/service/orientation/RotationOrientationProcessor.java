@@ -81,7 +81,7 @@ public class RotationOrientationProcessor extends OrientationProcessor {
 	 */
 	@Override
 	public void startListening() {
-		if (canReadAzimuth()){
+		if (canReadOrientation()){
 			rotationSensor = getSensor();
 			if (rotationSensor != null){
 				sensorManager.registerListener(this, rotationSensor, SENSOR_DELAY);

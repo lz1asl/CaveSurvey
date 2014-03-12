@@ -46,18 +46,20 @@ public class NewProjectActivity extends MainMenuActivity {
         // azimuth
         prepareSpinner(R.id.options_units_azimuth, R.array.azimuth_units);
         
-        // check if build in azimuth sensor is available
-        boolean hasBuildInAzimuthProcessor = OrientationProcessorFactory.canReadAzimuth(this);
+        // check if build in orientation sensor is available
+        boolean hasBuildInOrientationProcessor = OrientationProcessorFactory.canReadOrientation(this);
         int azimuthOptions = R.array.azimuth_read_type_all;
+        int slopepeOptions = R.array.slope_read_type_all;
         
-        if (!hasBuildInAzimuthProcessor){
+        if (!hasBuildInOrientationProcessor){
         	azimuthOptions = R.array.azimuth_read_type_manually;
+        	slopepeOptions = R.array.slope_read_type;
         }
         prepareSpinner(R.id.options_azimuth_type, azimuthOptions);
 
         // slope
         prepareSpinner(R.id.options_units_slope, R.array.slope_units);
-        prepareSpinner(R.id.options_slope_type, R.array.slope_read_type);
+        prepareSpinner(R.id.options_slope_type, slopepeOptions);
 
     }
     

@@ -186,8 +186,13 @@
         <item>През Bluetooth</item>
         <item>Вграден сензор</item>
     </string-array>
-
-
+    
+    <string-array name="slope_read_type_all">
+        <item>Ръчно</item>
+        <item>През Bluetooth</item>
+        <item>Вграден сензор</item>
+    </string-array>
+    
     <!-- about screen -->
     <string name="about_title">Относно CaveSurvey</string>
     <string name="about_paldin">http://sk-paldin.eu</string>

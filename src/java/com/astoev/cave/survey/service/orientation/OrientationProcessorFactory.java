@@ -14,22 +14,22 @@ public class OrientationProcessorFactory {
 
 	
 	/**
-	 * Tries to instantiate processor for azimuth. Will return instance by this priority list: rotation, 
+	 * Tries to instantiate processor for orientation. Will return instance by this priority list: rotation, 
 	 * magnetic, orientation
 	 * 
 	 * @param contextArg  - context to work with
 	 * @param listenerArg - listener to notify about changes
 	 * @return OrientationProcessor
 	 */
-	public static OrientationProcessor getAzimuthProcessor(Context contextArg, OrientationChangedListener listenerArg){
+	public static OrientationProcessor getOrientationProcessor(Context contextArg, OrientationChangedListener listenerArg){
 		
 		RotationOrientationProcessor rotationOrientationProcessor = new RotationOrientationProcessor(contextArg, listenerArg);
-		if (rotationOrientationProcessor.canReadAzimuth()){
+		if (rotationOrientationProcessor.canReadOrientation()){
 			return rotationOrientationProcessor;
 		}
 		
 		MagneticOrientationProcessor magneticOrientationProcessor = new MagneticOrientationProcessor(contextArg, listenerArg);
-		if (magneticOrientationProcessor.canReadAzimuth()){
+		if (magneticOrientationProcessor.canReadOrientation()){
 			return magneticOrientationProcessor;
 		}
 		
@@ -37,13 +37,13 @@ public class OrientationProcessorFactory {
 	}
 	
 	/**
-	 * Helper method to check if there is a processor who can effectively read the azimuth
+	 * Helper method to check if there is a processor who can effectively read the orientation change
 	 * 
 	 * @param contextArg 
-	 * @return true if there is at least single processor who can read the azimuth, otherwise false
+	 * @return true if there is at least single processor who can read the orientation, otherwise false
 	 */
-	public static boolean canReadAzimuth(Context contextArg){
-		return getAzimuthProcessor(contextArg, null).canReadAzimuth();
+	public static boolean canReadOrientation(Context contextArg){
+		return getOrientationProcessor(contextArg, null).canReadOrientation();
 	}
 	
 }

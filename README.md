@@ -31,7 +31,7 @@ Features
   - Supports multiple cave projects
   - Supports multiple cave galleries
   - Can add points to the sheet and manually enter measures
-  - For each point you can add note, take picture, draw simple sketch
+  - For each point you can add note, take picture, draw simple sketch, add vectors
   - Take GPS coordinates of a point (assuming visible sky)
   - Read compass from the build-in compass
   - Read inclination from the build-in sensors
@@ -39,9 +39,8 @@ Features
   - Display 2D map of the current measures(horizontal projection)
   - Can export to Excel
 
-  In progress:
-  - Map in vertical projection
-  - See the issues for complete list or roadmap
+  See the issues for complete list or roadmap.
+  Currently English and Bulgarian languages.
   
 
 Notes
