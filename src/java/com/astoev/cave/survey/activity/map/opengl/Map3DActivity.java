@@ -1,15 +1,15 @@
 package com.astoev.cave.survey.activity.map.opengl;
 
-import android.opengl.GLSurfaceView;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.MotionEvent;
+//import android.opengl.GLSurfaceView;
+//import android.os.Bundle;
+//import android.util.Log;
+//import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ZoomControls;
-import com.astoev.cave.survey.Constants;
-import com.astoev.cave.survey.R;
+//import android.widget.ZoomControls;
+//import com.astoev.cave.survey.Constants;
+//import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.BaseActivity;
-import com.astoev.cave.survey.activity.UIUtilities;
+//import com.astoev.cave.survey.activity.UIUtilities;
 
 /**
  * Created with IntelliJ IDEA.
@@ -20,9 +20,9 @@ import com.astoev.cave.survey.activity.UIUtilities;
  *
  * @see //www.jayway.com/2009/12/03/opengl-es-tutorial-for-android-part-i/
  */
-public class Map3DActivity extends BaseActivity implements View.OnTouchListener {
+public abstract class Map3DActivity extends BaseActivity implements View.OnTouchListener {
 
-    public void onCreate(Bundle savedInstanceState) {
+  /*  public void onCreate(Bundle savedInstanceState) {
 
         try {
             super.onCreate(savedInstanceState);
@@ -67,6 +67,6 @@ public class Map3DActivity extends BaseActivity implements View.OnTouchListener 
         }
 
         return true;
-    }
+    }*/
 
 }
