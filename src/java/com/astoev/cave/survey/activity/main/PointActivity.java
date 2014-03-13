@@ -873,12 +873,12 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                     angle.setGravity(Gravity.CENTER);
                     row.addView(angle);
 
-                    Button deleteButton = new Button(this);
-                    deleteButton.setText("-");
                     final int finalIndex = index;
-                    deleteButton.setOnClickListener(new OnClickListener() {
+                    final Vector finalVector = v;
+
+                    row.setOnLongClickListener(new View.OnLongClickListener() {
                         @Override
-                        public void onClick(View aView) {
+                        public boolean onLongClick(View v) {
                             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(PointActivity.this);
                             dialogBuilder.setMessage(getString(R.string.point_vectors_delete, finalIndex))
                                     .setCancelable(false)
@@ -886,7 +886,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                                         public void onClick(DialogInterface dialog, int id) {
                                             Log.i(Constants.LOG_TAG_UI, "Delete vector");
                                             try {
-                                                DaoUtil.deleteVector(v);
+                                                DaoUtil.deleteVector(finalVector);
                                                 UIUtilities.showNotification(R.string.action_deleted);
                                                 loadLegVectors(getCurrentLeg());
                                             } catch (Exception e) {
@@ -903,10 +903,9 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                                     });
                             AlertDialog alert = dialogBuilder.create();
                             alert.show();
-
+                            return true;
                         }
                     });
-                    row.addView(deleteButton);
 
                     vectorsTable.addView(row);
                     index++;
