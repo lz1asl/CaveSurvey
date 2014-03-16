@@ -3,6 +3,7 @@
  */
 package com.astoev.cave.survey.util;
 
+import java.io.File;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -25,6 +26,8 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.misc.TransactionManager;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.support.ConnectionSource;
+
+import org.apache.commons.io.FileUtils;
 
 /**
  * @author jmitrev
@@ -101,8 +104,12 @@ public class DaoUtil {
     }
 
     public static List<Leg> getCurrProjectLegs() throws SQLException {
+        return getProjectLegs(Workspace.getCurrentInstance().getActiveProjectId());
+    }
+
+    public static List<Leg> getProjectLegs(Integer aProjectId) throws SQLException {
         QueryBuilder<Leg, Integer> statementBuilder = Workspace.getCurrentInstance().getDBHelper().getLegDao().queryBuilder();
-        statementBuilder.where().eq(Leg.COLUMN_PROJECT_ID, Workspace.getCurrentInstance().getActiveProjectId());
+        statementBuilder.where().eq(Leg.COLUMN_PROJECT_ID, aProjectId);
         statementBuilder.orderBy(Leg.COLUMN_GALLERY_ID, true);
         statementBuilder.orderBy(Leg.COLUMN_FROM_POINT, true);
         statementBuilder.orderBy(Leg.COLUMN_TO_POINT, true);
@@ -339,5 +346,84 @@ public class DaoUtil {
 
     public static void deleteVector(Vector aVector) throws SQLException {
         Workspace.getCurrentInstance().getDBHelper().getVectorsDao().delete(aVector);
+    }
+
+    public static boolean deleteProject(final Integer aProjectId) {
+
+        Log.i(Constants.LOG_TAG_DB, "Delete project " + aProjectId);
+
+
+        try {
+            TransactionManager.callInTransaction(Workspace.getCurrentInstance().getDBHelper().getConnectionSource(), new Callable<Object>() {
+                public Object call() throws Exception {
+                    List<Leg> legs = getProjectLegs(aProjectId);
+                    if (legs != null) {
+                        for (Leg l: legs) {
+                            // delete photos
+                            List<Photo> photos = getAllPhotosByPoint(l.getFromPoint());
+                            if (photos != null  && photos.size() > 0) {
+                                for (Photo p: photos) {
+                                    FileUtils.deleteQuietly(new File(p.getFSPath()));
+                                    Workspace.getCurrentInstance().getDBHelper().getPhotoDao().delete(p);
+                                }
+                            }
+
+                            // delete sketches
+                            List<Sketch> sketches = getAllScetchesByPoint(l.getFromPoint());
+                            if (sketches != null && sketches.size() > 0) {
+                                for (Sketch s: sketches) {
+                                    FileUtils.deleteQuietly(new File(s.getFSPath()));
+                                    Workspace.getCurrentInstance().getDBHelper().getSketchDao().delete(s);
+                                }
+                            }
+
+                            // delete vectors
+                            List<Vector> vectors = getLegVectors(l);
+                            if (vectors != null && vectors.size() > 0) {
+                                Workspace.getCurrentInstance().getDBHelper().getVectorsDao().delete(vectors);
+                            }
+
+                            // delete locations
+                            Location location = getLocationByPoint(l.getFromPoint());
+                            if (location != null) {
+                                Workspace.getCurrentInstance().getDBHelper().getLocationDao().delete(location);
+                            }
+
+                            // delete points
+                            Workspace.getCurrentInstance().getDBHelper().getPointDao().delete(l.getFromPoint());
+                            Workspace.getCurrentInstance().getDBHelper().getPointDao().delete(l.getToPoint());
+
+                            // delete leg
+                            Workspace.getCurrentInstance().getDBHelper().getLegDao().delete(l);
+                        }
+                    }
+
+                    // delete galleries
+                    Gallery g;
+                    while ((g = DaoUtil.getLastGallery(aProjectId)) != null) {
+                        DaoUtil.deleteGallery(g);
+                    }
+
+                    // delete project
+                    Project p = getProject(aProjectId);
+                    Workspace.getCurrentInstance().getDBHelper().getProjectDao().delete(p);
+
+                    FileUtils.deleteQuietly(FileStorageUtil.getProjectHome(p.getName()));
+
+                    Log.i(Constants.LOG_TAG_DB, "Deleted project " + aProjectId);
+
+                    return null;
+                }
+            });
+        } catch (SQLException e) {
+            Log.e(Constants.LOG_TAG_DB, "Failed to delete project", e);
+            return false;
+        }
+
+        return true;
+    }
+
+    private static void deleteGallery(Gallery aG) throws SQLException {
+        Workspace.getCurrentInstance().getDBHelper().getGalleryDao().delete(aG);
     }
 }

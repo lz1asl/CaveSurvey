@@ -23,6 +23,7 @@ import com.astoev.cave.survey.activity.main.MainActivity;
 import com.astoev.cave.survey.activity.poc.SensorTestActivity;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Project;
+import com.astoev.cave.survey.util.DaoUtil;
 
 import java.util.List;
 
@@ -135,14 +136,14 @@ public class HomeActivity extends MainMenuActivity {
             	ArrayAdapter<Project> projectsAdapter = new ArrayAdapter<Project>(this, android.R.layout.simple_list_item_1, projectsArray);
             	projectsContainer.setAdapter(projectsAdapter);
             	
-            	// item clicked listener
-            	OnItemClickListener projectClickedListener = new OnItemClickListener() {
+            	// item clicked
+            	projectsContainer.setOnItemClickListener(new OnItemClickListener() {
 
-					@Override
-					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-						Project project = (Project)parent.getAdapter().getItem(position);
-						
+                        Project project = (Project)parent.getAdapter().getItem(position);
+
                         Log.i(Constants.LOG_TAG_UI, "Selected project " + project.getId());
                         getWorkspace().setActiveProject(project);
                         Leg lastProjectLeg = getWorkspace().getLastLeg();
@@ -150,10 +151,47 @@ public class HomeActivity extends MainMenuActivity {
 
                         Intent intent = new Intent(HomeActivity.this, MainActivity.class);
                         startActivity(intent);
-					}
-				};
-				
-            	projectsContainer.setOnItemClickListener(projectClickedListener);
+                    }
+                });
+
+                // item long pressed
+                projectsContainer.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                    @Override
+                    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                        try {
+                            final Project p = (Project)parent.getAdapter().getItem(position);
+                            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(HomeActivity.this);
+                            dialogBuilder.setMessage(getString(R.string.home_delete_project, p.getName()))
+                                    .setCancelable(false)
+                                    .setPositiveButton(R.string.button_yes, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            Log.i(Constants.LOG_TAG_UI, "Delete project");
+                                            try {
+                                                DaoUtil.deleteProject(p.getId());
+                                                UIUtilities.showNotification(R.string.action_deleted);
+                                                loadProjects();
+                                            } catch (Exception e) {
+                                                Log.e(Constants.LOG_TAG_UI, "Failed to delete project", e);
+                                                UIUtilities.showNotification(R.string.error);
+                                            }
+                                            dialog.dismiss();
+                                        }
+                                    })
+                                    .setNegativeButton(R.string.button_no, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+                            AlertDialog alert = dialogBuilder.create();
+                            alert.show();
+                            return true;
+                        } catch (Exception e) {
+                            Log.e(Constants.LOG_TAG_UI, "Failed to delete project", e);
+                            UIUtilities.showNotification(R.string.error);
+                            return false;
+                        }
+                    }
+                });
             	
             } else {
             	// no projects - show "No projects" label

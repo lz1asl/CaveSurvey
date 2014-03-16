@@ -13,7 +13,8 @@
     <!-- welcome screen -->
     <string name="home_no_projects">Няма проучвания!</string>
     <string name="home_new_project">Ново проучване</string>
-    <string name="home_button_new_exists">Survey %1$s exists!</string>
+    <string name="home_button_new_exists">Проучване %1$s вече съществува!</string>
+    <string name="home_delete_project">Изтрий проучване %1$s?</string>
     <string name="home_lang">Език</string>
 
     <!-- new project screen -->
