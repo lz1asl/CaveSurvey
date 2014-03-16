@@ -185,7 +185,6 @@
     <string-array name="slope_read_type">
         <item>Ръчно</item>
         <item>През Bluetooth</item>
-        <item>Вграден сензор</item>
     </string-array>
     
     <string-array name="slope_read_type_all">
