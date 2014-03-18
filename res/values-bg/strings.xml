@@ -172,7 +172,7 @@
     </string-array>
     
     <string-array name="azimuth_read_type_all">
-        <item>Ръчво</item>
+        <item>Ръчно</item>
         <item>Вграден сензор</item>
     </string-array>
 
@@ -242,6 +242,7 @@
     <string name="bt_state_none">Неразпознато състояние</string>
     <string name="bt_not_on">Bluetooth не е включен</string>
     <string name="bt_not_selected">Не е избрано устройство</string>
+    <string name="bt_supported_devices">Поддържа: %1$s</string>
 
     <string name="action_saved">Запазено</string>
     <string name="action_deleted">Изтрито</string>

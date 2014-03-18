@@ -39,7 +39,7 @@ public class CEMILDMBluetoothDevice extends AbstractBluetoothDevice {
 
     @Override
     public String getDescription() {
-        return "CEM iLDM";
+        return "CEM iLDM 150";
     }
 
     @Override

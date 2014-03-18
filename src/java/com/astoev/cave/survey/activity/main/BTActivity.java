@@ -16,6 +16,7 @@ import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.MainMenuActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.service.bluetooth.BluetoothService;
+import com.astoev.cave.survey.service.bluetooth.device.AbstractBluetoothDevice;
 import com.astoev.cave.survey.util.ConfigUtil;
 import com.astoev.cave.survey.util.StringUtils;
 
@@ -66,10 +67,26 @@ public class BTActivity extends MainMenuActivity {
 
             refreshDevicesList();
 
+            displaySupportedDevices();
+
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed during create", e);
             UIUtilities.showNotification(R.string.error);
         }
+    }
+
+    private void displaySupportedDevices() {
+        TextView devicesLabel = (TextView) findViewById(R.id.bt_supproted_devices);
+
+        StringBuilder devicesList = new StringBuilder();
+        for (AbstractBluetoothDevice device : BluetoothService.getSupportedDevices()) {
+            if (devicesList.length() > 0) {
+                devicesList.append(", ");
+            }
+            devicesList.append(device.getDescription());
+        }
+
+        devicesLabel.setText(getString(R.string.bt_supported_devices, devicesList.toString()));
     }
 
     @Override
@@ -87,14 +104,14 @@ public class BTActivity extends MainMenuActivity {
         prepareUI();
         BluetoothService.registerListeners(this);
     }
-    
+
     /**
-	 * @see com.astoev.cave.survey.activity.BaseActivity#getScreenTitle()
-	 */
-	@Override
-	protected String getScreenTitle() {
-		return getString(R.string.bt_devices);
-	}
+     * @see com.astoev.cave.survey.activity.BaseActivity#getScreenTitle()
+     */
+    @Override
+    protected String getScreenTitle() {
+        return getString(R.string.bt_devices);
+    }
 
     private void refreshDevicesList() {
 
@@ -117,7 +134,7 @@ public class BTActivity extends MainMenuActivity {
             if (tempName.equals(selectedDeviceName)) {
                 selectedDeviceIndex = index;
             }
-            index ++;
+            index++;
         }
 
         ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, devicesList);
@@ -176,7 +193,7 @@ public class BTActivity extends MainMenuActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
-            case R.id.bt_new:{
+            case R.id.bt_new: {
                 pairNewDevice();
                 return true;
             }

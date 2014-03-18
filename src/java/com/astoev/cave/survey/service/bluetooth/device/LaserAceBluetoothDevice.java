@@ -27,7 +27,7 @@ public class LaserAceBluetoothDevice extends AbstractBluetoothDevice {
 
     @Override
     public String getDescription() {
-        return "Laser Ace";
+        return "Trimble LaserAce 100";
     }
 
     @Override
