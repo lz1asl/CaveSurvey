@@ -26,6 +26,7 @@ public class NMEAUtil {
 
         try {
             String messageString = new String(aMessage);
+            Log.i(Constants.LOG_TAG_BT, "Got message " + messageString);
 
             List<Measure> measures = new ArrayList<Measure>();
             StringTokenizer tokenizer = new StringTokenizer(messageString, ",");

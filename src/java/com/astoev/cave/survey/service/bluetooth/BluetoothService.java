@@ -20,6 +20,7 @@ import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.service.bluetooth.device.AbstractBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.CEMILDMBluetoothDevice;
+import com.astoev.cave.survey.service.bluetooth.device.LaserAceBluetoothDevice;
 import com.astoev.cave.survey.util.ConfigUtil;
 
 import java.io.IOException;
@@ -41,6 +42,7 @@ public class BluetoothService {
     private static final Set<AbstractBluetoothDevice> SUPPORTED_DEVICES = new HashSet<AbstractBluetoothDevice>();
     static {
         SUPPORTED_DEVICES.add(new CEMILDMBluetoothDevice());
+//        SUPPORTED_DEVICES.add(new LaserAceBluetoothDevice());
     }
 
     private static ConnectThread mBusyThread = null;
@@ -265,6 +267,10 @@ public class BluetoothService {
 
     public static boolean isSupported(String aDeviceName) {
         return getSupportedDevice(aDeviceName) != null;
+    }
+
+    public static Set<AbstractBluetoothDevice> getSupportedDevices() {
+        return SUPPORTED_DEVICES;
     }
 
     public static boolean isSupported(BluetoothDevice aDevice) {

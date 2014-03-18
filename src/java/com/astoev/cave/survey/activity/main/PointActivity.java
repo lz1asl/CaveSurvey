@@ -262,7 +262,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                 return;
             }
 
-            Log.i(Constants.LOG_TAG_UI, "Register field? " + aMeasure);
+            Log.i(Constants.LOG_TAG_UI, "Register field " + aMeasure + "?");
             switch (aMeasure) {
                 case distance:
                 case up:
