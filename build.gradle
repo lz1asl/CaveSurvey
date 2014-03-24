@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.9.0'
+        classpath 'com.android.tools.build:gradle:0.9.+'
     }
 }
 
@@ -26,7 +26,7 @@ configurations {
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:19.0.0'
+    compile 'com.android.support:appcompat-v7:+'
     compile 'com.j256.ormlite:ormlite-core:4.47'
     compile 'com.j256.ormlite:ormlite-android:4.47'
     compile 'org.apache.poi:poi:3.9'
@@ -35,7 +35,7 @@ dependencies {
 
     unitTestCompile files("build/classes/defaultFlavor/release")
     unitTestCompile 'junit:junit:4+'
-    unitTestCompile 'com.google.android:android:4.0.1.2'
+    unitTestCompile 'com.google.android:android:4.+'
 }
 
 task unitTest(type:Test, dependsOn: assemble) {
