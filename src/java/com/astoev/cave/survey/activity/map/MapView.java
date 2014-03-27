@@ -37,6 +37,7 @@ import java.util.List;
 public class MapView extends View {
 
     public static final int POINT_RADIUS = 3;
+    public static final int MIDDLE_POINT_RADIUS = 2;
     public static final int MEASURE_POINT_RADIUS = 2;
     public static final int CURR_POINT_RADIUS = 8;
     private final static int LABEL_DEVIATION_X = 5;
@@ -75,7 +76,7 @@ public class MapView extends View {
         gridPaint.setStrokeWidth(1);
         vectorsPaint.setStrokeWidth(1);
         vectorsPaint.setStyle(Paint.Style.STROKE);
-        vectorsPaint.setPathEffect(new DashPathEffect(new float[]{2, 4}, 0));
+        vectorsPaint.setPathEffect(new DashPathEffect(new float[]{2, 6}, 0));
         vectorsPaint.setAlpha(50);
         vectorPointPaint.setStrokeWidth(1);
         vectorPointPaint.setAlpha(50);
@@ -221,11 +222,14 @@ public class MapView extends View {
                             }
 
                             DaoUtil.refreshPoint(l.getToPoint());
-                            if (!l.isMiddle()) {
+                            if (l.isMiddle()) {
+                                canvas.drawCircle(mapCenterMoveX + second.getX(), mapCenterMoveY + second.getY(), MIDDLE_POINT_RADIUS, polygonPaint);
+                            } else {
                                 pointLabel = galleryNames.get(l.getGalleryId()) + l.getToPoint().getName();
                                 canvas.drawText(pointLabel, mapCenterMoveX + second.getX() + LABEL_DEVIATION_X, mapCenterMoveY + second.getY() + LABEL_DEVIATION_Y, polygonPaint);
+                                canvas.drawCircle(mapCenterMoveX + second.getX(), mapCenterMoveY + second.getY(), POINT_RADIUS, polygonPaint);
                             }
-                            canvas.drawCircle(mapCenterMoveX + second.getX(), mapCenterMoveY + second.getY(), POINT_RADIUS, polygonPaint);
+
                         }
 
                         // leg
