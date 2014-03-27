@@ -280,19 +280,21 @@ public class MapView extends View {
                             }
                         }
 
-                        // vectors
-                        List<Vector> vectors = DaoUtil.getLegVectors(l);
-                        if (vectors != null) {
-                            for (Vector v: vectors) {
-                                float legDistance = MapUtilities.applySlopeToDistance(v.getDistance(), MapUtilities.getSlopeInDegrees(v.getSlope()));
-                                deltaY = -(float) (legDistance * Math.cos(Math.toRadians(MapUtilities.getAzimuthInDegrees(v.getAzimuth())))) * scale;
-                                deltaX = (float) (legDistance * Math.sin(Math.toRadians(MapUtilities.getAzimuthInDegrees(v.getAzimuth())))) * scale;
-                                if (l.isMiddle()) {
-                                    canvas.drawLine(mapCenterMoveX + second.getX(), mapCenterMoveY + second.getY(), mapCenterMoveX + second.getX() + deltaX, mapCenterMoveY + second.getY() + deltaY, vectorsPaint);
-                                    canvas.drawCircle(mapCenterMoveX + second.getX() + deltaX, mapCenterMoveY + second.getY() + deltaY, 2, vectorPointPaint);
-                                } else {
-                                    canvas.drawLine(mapCenterMoveX + first.getX(), mapCenterMoveY + first.getY(), mapCenterMoveX + first.getX() + deltaX, mapCenterMoveY + first.getY() + deltaY, vectorsPaint);
-                                    canvas.drawCircle(mapCenterMoveX + first.getX() + deltaX, mapCenterMoveY + first.getY() + deltaY, 2, vectorPointPaint);
+                        if (!l.isMiddle()) {
+                            // vectors
+                            List<Vector> vectors = DaoUtil.getLegVectors(l);
+                            if (vectors != null) {
+                                for (Vector v : vectors) {
+                                    float legDistance = MapUtilities.applySlopeToDistance(v.getDistance(), MapUtilities.getSlopeInDegrees(v.getSlope()));
+                                    deltaY = -(float) (legDistance * Math.cos(Math.toRadians(MapUtilities.getAzimuthInDegrees(v.getAzimuth())))) * scale;
+                                    deltaX = (float) (legDistance * Math.sin(Math.toRadians(MapUtilities.getAzimuthInDegrees(v.getAzimuth())))) * scale;
+                                    if (l.isMiddle()) {
+                                        canvas.drawLine(mapCenterMoveX + second.getX(), mapCenterMoveY + second.getY(), mapCenterMoveX + second.getX() + deltaX, mapCenterMoveY + second.getY() + deltaY, vectorsPaint);
+                                        canvas.drawCircle(mapCenterMoveX + second.getX() + deltaX, mapCenterMoveY + second.getY() + deltaY, 2, vectorPointPaint);
+                                    } else {
+                                        canvas.drawLine(mapCenterMoveX + first.getX(), mapCenterMoveY + first.getY(), mapCenterMoveX + first.getX() + deltaX, mapCenterMoveY + first.getY() + deltaY, vectorsPaint);
+                                        canvas.drawCircle(mapCenterMoveX + first.getX() + deltaX, mapCenterMoveY + first.getY() + deltaY, 2, vectorPointPaint);
+                                    }
                                 }
                             }
                         }
