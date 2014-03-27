@@ -40,4 +40,9 @@ public class LaserAceBluetoothDevice extends AbstractBluetoothDevice {
         // ignore requested measures for now, we should have full set of measures
         return NMEAUtil.decode(aResponseBytes);
     }
+
+    @Override
+    public boolean isPassiveBTConnection() {
+        return true;
+    }
 }

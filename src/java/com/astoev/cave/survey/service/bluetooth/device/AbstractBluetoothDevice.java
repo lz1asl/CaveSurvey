@@ -24,9 +24,10 @@ public abstract class AbstractBluetoothDevice {
 
     public abstract List<Measure> decodeMeasure(byte[] aResponseBytes, List<Constants.MeasureTypes> aMeasures) throws IOException, DataException;
 
+    public abstract boolean isPassiveBTConnection();
+
     public UUID getSPPUUID() {
         return UUID.fromString(getSPPUUIDString());
     }
-
 
 }

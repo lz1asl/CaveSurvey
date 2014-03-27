@@ -209,42 +209,45 @@ public class BluetoothService {
 //        mCurrContext = null;
     }
 
-    public static void selectDevice(String aDeviceAddress) {
+    public static void selectDevice(final String aDeviceAddress) {
         mCurrDevice = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(aDeviceAddress);
         mCurrDeviceSpec = getSupportedDevice(mCurrDevice.getName());
         Log.i(Constants.LOG_TAG_BT, "Selected " + aDeviceAddress + " : " + mCurrDevice + " of type " + mCurrDeviceSpec.getDescription());
 
-       // ping the device in background
-        new Thread() {
-            public void run() {
-                Log.i(Constants.LOG_TAG_BT, "Test device");
-                BluetoothSocket tester = null;
-                try {
-                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD_MR1) {
-                        tester = mCurrDevice.createRfcommSocketToServiceRecord(mCurrDeviceSpec.getSPPUUID());
-                    } else {
-                        tester = callSafeCreateInsecureRfcommSocketToServiceRecord(mCurrDevice);
-                    }
-                    tester.connect();
-                    Log.i(Constants.LOG_TAG_BT, "Device found!");
-                    UIUtilities.showNotification(R.string.bt_paired);
-                    mPaired = true;
-                } catch (Exception e) {
-                    mCurrDevice = null;
-                    mCurrDeviceSpec = null;
-                    UIUtilities.showNotification(R.string.bt_pair_failed);
-                    Log.e(Constants.LOG_TAG_BT, "Failed test to new device", e);
-                } finally {
-                    if (tester != null) {
-                        try {
-                            tester.close();
-                        } catch (IOException e) {
-                            Log.e(Constants.LOG_TAG_BT, "Failed to cleanup tester");
+
+        if (!mCurrDeviceSpec.isPassiveBTConnection()) {
+            // ping the device in background
+            new Thread() {
+                public void run() {
+                    Log.i(Constants.LOG_TAG_BT, "Test device");
+                    BluetoothSocket tester = null;
+                    try {
+                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD_MR1) {
+                            tester = mCurrDevice.createRfcommSocketToServiceRecord(mCurrDeviceSpec.getSPPUUID());
+                        } else {
+                            tester = callSafeCreateInsecureRfcommSocketToServiceRecord(mCurrDevice);
+                        }
+                        tester.connect();
+                        Log.i(Constants.LOG_TAG_BT, "Device found!");
+                        UIUtilities.showNotification(R.string.bt_paired);
+                        mPaired = true;
+                    } catch (Exception e) {
+                        mCurrDevice = null;
+                        mCurrDeviceSpec = null;
+                        UIUtilities.showNotification(R.string.bt_pair_failed);
+                        Log.e(Constants.LOG_TAG_BT, "Failed test to new device", e);
+                    } finally {
+                        if (tester != null) {
+                            try {
+                                tester.close();
+                            } catch (IOException e) {
+                                Log.e(Constants.LOG_TAG_BT, "Failed to cleanup tester");
+                            }
                         }
                     }
                 }
-            }
-        }.start();
+            }.start();
+        }
     }
     
     @TargetApi(Build.VERSION_CODES.GINGERBREAD_MR1)

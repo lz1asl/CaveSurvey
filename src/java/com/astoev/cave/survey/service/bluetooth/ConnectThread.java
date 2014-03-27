@@ -35,7 +35,7 @@ public class ConnectThread extends Thread {
     private BluetoothDevice mDevice;
     private AbstractBluetoothDevice mDeviceSpec;
     private InputStream mIn;
-    private OutputStream mOut;
+    private OutputStream mOut = null;
     private boolean running = true;
     private ResultReceiver mReceiver = null;
     private List<Constants.MeasureTypes> mMeasureTypes = null;
@@ -47,19 +47,27 @@ public class ConnectThread extends Thread {
         mDeviceSpec = aDeviceSpec;
 
         BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
-        if (adapter.isDiscovering()) {
-            adapter.cancelDiscovery();
+//        if (adapter.isDiscovering()) {
+//            adapter.cancelDiscovery();
+//        }
+
+        if (mDeviceSpec.isPassiveBTConnection()) {
+            Log.i(Constants.LOG_TAG_BT, "Prepare client passive connection");
+            mSocket = createSocketApi10Plus();
+            mSocket.connect();
+            mIn = mSocket.getInputStream();
+        } else {
+            Log.i(Constants.LOG_TAG_BT, "Prepare client active connection");
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD_MR1 || !mDeviceSpec.isPassiveBTConnection()) {
+                mSocket = mDevice.createRfcommSocketToServiceRecord(mDeviceSpec.getSPPUUID());
+            } else {
+                mSocket = createSocketApi10Plus();
+                mSocket.connect();
+                mIn = mSocket.getInputStream();
+                mOut = mSocket.getOutputStream();
+            }
         }
 
-        Log.i(Constants.LOG_TAG_BT, "Prepare client");
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD_MR1) {
-            mSocket = mDevice.createRfcommSocketToServiceRecord(mDeviceSpec.getSPPUUID());
-        } else {
-        	mSocket = createSocketApi10Plus();
-        }
-        mSocket.connect();
-        mIn = mSocket.getInputStream();
-        mOut = mSocket.getOutputStream();
     }
     
     @TargetApi(Build.VERSION_CODES.GINGERBREAD_MR1)
@@ -73,15 +81,17 @@ public class ConnectThread extends Thread {
 
         byte[] buffer = new byte[1024];
 
-        Log.i(Constants.LOG_TAG_BT, "Trigger measures");
-        try {
-            mDeviceSpec.triggerMeasures(mOut, mMeasureTypes);
-        } catch (IOException e) {
-            Log.e(Constants.LOG_TAG_BT, "Error triggering measure", e);
-            Bundle b = new Bundle();
-            b.putString("error", "Failed to talk to device");
-            mReceiver.send(Activity.RESULT_CANCELED, b);
-            return;
+        if (!mDeviceSpec.isPassiveBTConnection()) {
+            Log.i(Constants.LOG_TAG_BT, "Trigger measures");
+            try {
+                mDeviceSpec.triggerMeasures(mOut, mMeasureTypes);
+            } catch (IOException e) {
+                Log.e(Constants.LOG_TAG_BT, "Error triggering measure", e);
+                Bundle b = new Bundle();
+                b.putString("error", "Failed to talk to device");
+                mReceiver.send(Activity.RESULT_CANCELED, b);
+                return;
+            }
         }
 
         Log.i(Constants.LOG_TAG_BT, "Start reading ");

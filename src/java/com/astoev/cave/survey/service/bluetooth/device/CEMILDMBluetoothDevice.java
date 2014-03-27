@@ -106,6 +106,11 @@ public class CEMILDMBluetoothDevice extends AbstractBluetoothDevice {
         return null;
     }
 
+    @Override
+    public boolean isPassiveBTConnection() {
+        return false;
+    }
+
     private boolean isMeasureRequested(List<Constants.MeasureTypes> aMeasures, Constants.MeasureTypes aType) {
         for(Constants.MeasureTypes measure: aMeasures) {
             if (measure == aType) {
