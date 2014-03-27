@@ -683,7 +683,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         }
 
         // allow vectors for saved legs
-        if (currentLeg != null && !currentLeg.isNew()) {
+        if (currentLeg != null && !currentLeg.isNew() && !currLeg.isMiddle()) {
             MenuItem photoMenuItem = menu.findItem(R.id.point_action_add_vector);
             photoMenuItem.setVisible(true);
         }
@@ -852,6 +852,11 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
     }
 
     public void loadLegVectors(Leg aLegEdited) {
+        if (aLegEdited.isMiddle()) {
+            // no need to proceed
+            return;
+        }
+
         try {
             TableLayout vectorsTable = (TableLayout) findViewById(R.id.point_vectors_table);
 

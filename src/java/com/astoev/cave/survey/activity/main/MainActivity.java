@@ -175,25 +175,27 @@ public class MainActivity extends MainMenuActivity {
                 if (isDebug){
                 	moreText.append(l.getGalleryId()).append(" ");
                 }
-                
-                Sketch sketch = DaoUtil.getScetchByLeg(l);
-                if (sketch != null){
-                	moreText.append(sketchPrefix);
-                }
-                Note note = DaoUtil.getActiveLegNote(l);
-                if (note != null){
-                	moreText.append(notePrefix);
-                }
-                Photo photo = DaoUtil.getPhotoByLeg(l);
-                if (photo != null) {
-                	moreText.append(photoPrefix);
-                }
-                Location location = DaoUtil.getLocationByPoint(fromPoint);
-                if (location != null){
-                    moreText.append(locationPrefix);
-                }
-                if (DaoUtil.hasVectorsByPoint(fromPoint)) {
-                    moreText.append(vectorsPrevix);
+
+                if (!l.isMiddle()) {
+                    Sketch sketch = DaoUtil.getScetchByLeg(l);
+                    if (sketch != null){
+                        moreText.append(sketchPrefix);
+                    }
+                    Note note = DaoUtil.getActiveLegNote(l);
+                    if (note != null){
+                        moreText.append(notePrefix);
+                    }
+                    Photo photo = DaoUtil.getPhotoByLeg(l);
+                    if (photo != null) {
+                        moreText.append(photoPrefix);
+                    }
+                    Location location = DaoUtil.getLocationByPoint(fromPoint);
+                    if (location != null){
+                        moreText.append(locationPrefix);
+                    }
+                    if (DaoUtil.hasVectorsByPoint(fromPoint)) {
+                        moreText.append(vectorsPrevix);
+                    }
                 }
 
                 // reset the text appearance to small
