@@ -151,7 +151,8 @@ public class Workspace {
             int currProjectId = getActiveProjectId();
             Log.i(Constants.LOG_TAG_SERVICE, "Search last leg for project " + currProjectId);
             QueryBuilder<Leg, Integer> firstLegQuery = mDBHelper.getLegDao().queryBuilder();
-            firstLegQuery.where().eq(Leg.COLUMN_PROJECT_ID, currProjectId).and().eq(Leg.COLUMN_GALLERY_ID, aGalleryId);
+            firstLegQuery.where().eq(Leg.COLUMN_PROJECT_ID, currProjectId).and().eq(Leg.COLUMN_GALLERY_ID, aGalleryId)
+                    .and().isNull(Leg.COLUMN_MIDDLE_POINT_AT_DISTANCE);
             firstLegQuery.orderBy(Leg.COLUMN_ID, false);
             return mDBHelper.getLegDao().queryForFirst(firstLegQuery.prepare());
         } catch (Exception e) {
@@ -165,7 +166,7 @@ public class Workspace {
             int currProjectId = getActiveProjectId();
             Log.i(Constants.LOG_TAG_SERVICE, "Search last leg for project " + currProjectId);
             QueryBuilder<Leg, Integer> firstLegQuery = mDBHelper.getLegDao().queryBuilder();
-            firstLegQuery.where().eq(Leg.COLUMN_PROJECT_ID, currProjectId);
+            firstLegQuery.where().eq(Leg.COLUMN_PROJECT_ID, currProjectId).and().isNull(Leg.COLUMN_MIDDLE_POINT_AT_DISTANCE);
             firstLegQuery.orderBy(Leg.COLUMN_ID, false);
             return mDBHelper.getLegDao().queryForFirst(firstLegQuery.prepare());
         } catch (Exception e) {
@@ -177,8 +178,8 @@ public class Workspace {
     // TODO list need to be sorted, here last id is get, higher number is what we need
     public Point getLastGalleryPoint(Integer aGalleryId) throws SQLException {
         String lastPointInCurrentGalleryQuery = "select max(id) from points where id in(" +
-                "select from_point_id from legs where gallery_id = " + aGalleryId +
-                " union select to_point_id from legs where gallery_id = " + aGalleryId + ")";
+                "select from_point_id from legs where gallery_id = " + aGalleryId + " and middle_point_distance is null"
+                + " union select to_point_id from legs where gallery_id = " + aGalleryId + " and middle_point_distance is null)";
         GenericRawResults<String[]> lastPointResults = mDBHelper.getPointDao().queryRaw(lastPointInCurrentGalleryQuery);
         try {
             String[] lastPointIdString = lastPointResults.getResults().get(0);

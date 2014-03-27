@@ -217,7 +217,7 @@
     <!-- popup -->
     <string name="middle_leg_add">Добави междинно измерване</string>
     <string name="middle_leg_info">Отсечка  %1$s, %2$s%3$s</string>
-    <string name="middle_split_at">Раздели на</string>
+    <string name="middle_split_at">На разстояние</string>
     <string name="middle_create">Създай</string>
     <string name="middle_bad_value">Непозволена стойност</string>
     <string name="middle_leg_shorter">Твърде кратка</string>

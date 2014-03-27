@@ -28,6 +28,7 @@ public class Leg implements Serializable {
     public static final String COLUMN_TO_POINT = "to_point_id";
     public static final String COLUMN_DISTANCE_FROM_START = "distance_from_start";
     public static final String COLUMN_GALLERY_ID = "gallery_id";
+    public static final String COLUMN_MIDDLE_POINT_AT_DISTANCE = "middle_point_distance";
 
     @DatabaseField(generatedId = true, columnName = COLUMN_ID)
     private Integer mId;
@@ -55,16 +56,18 @@ public class Leg implements Serializable {
     private Float mDown;
     @DatabaseField(canBeNull = false, columnName = COLUMN_GALLERY_ID)
     private Integer mGalleryId;
+    @DatabaseField(columnName = COLUMN_MIDDLE_POINT_AT_DISTANCE)
+    private Float mMiddlePointDistance;
 
 
     public Leg() {
 
     }
 
-    public Leg(Point fromPoint, Point toPoint, Project project, Integer aGalleryId) {
-        this.mFromPoint = fromPoint;
-        this.mToPoint = toPoint;
-        this.mProject = project;
+    public Leg(Point aFromPoint, Point aToPoint, Project aProject, Integer aGalleryId) {
+        mFromPoint = aFromPoint;
+        mToPoint = aToPoint;
+        mProject = aProject;
         mGalleryId = aGalleryId;
     }
 
@@ -137,6 +140,10 @@ public class Leg implements Serializable {
 //        }
         builder.append(PointUtil.getGalleryNameForToPoint(mGalleryId));
         builder.append(endPoint.getName());
+
+        if (isMiddle()) {
+            builder.append("@").append(StringUtils.floatToLabel(mDistanceFromStart));
+        }
         return builder.toString();
     }
 
@@ -256,7 +263,15 @@ public class Leg implements Serializable {
         mGalleryId = aGalleryId;
     }
 
-	/**
+    public Float getMiddlePointDistance() {
+        return mMiddlePointDistance;
+    }
+
+    public void setMiddlePointDistance(Float aMiddlePointDistance) {
+        mMiddlePointDistance = aMiddlePointDistance;
+    }
+
+    /**
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -291,5 +306,9 @@ public class Leg implements Serializable {
 		builder.append("]");
 		return builder.toString();
 	}
+
+    public boolean isMiddle() {
+        return mMiddlePointDistance != null;
+    }
 
 }

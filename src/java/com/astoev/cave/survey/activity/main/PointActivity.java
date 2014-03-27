@@ -224,33 +224,42 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
             EditText distance = (EditText) findViewById(R.id.point_distance);
             setNotNull(distance, legEdited.getDistance());
             bindBTMeasures(distance, Constants.Measures.distance);
+            disableIfMiddle(legEdited, distance);
 
             // azimuth
             EditText azimuth = (EditText) findViewById(R.id.point_azimuth);
             setNotNull(azimuth, legEdited.getAzimuth());
             bindBTMeasures(azimuth, Constants.Measures.angle);
+            disableIfMiddle(legEdited, azimuth);
 
             // slope
             EditText slope = (EditText) findViewById(R.id.point_slope);
             slope.setText("0");
             setNotNull(slope, legEdited.getSlope());
             bindBTMeasures(slope, Constants.Measures.slope);
+            disableIfMiddle(legEdited, slope);
 
-            // fill note_text with its value
-            Note note = DaoUtil.getActiveLegNote(legEdited);
-            TextView textView = (TextView) findViewById(R.id.point_note_text);
-            if (note != null && note.getText() != null) {
-                textView.setText(note.getText());
-                textView.setClickable(true);
-            } else if (mNewNote != null) {
-                textView.setText(mNewNote);
-                textView.setClickable(true);
+            if (!legEdited.isMiddle()) {
+                // fill note_text with its value
+                Note note = DaoUtil.getActiveLegNote(legEdited);
+                TextView textView = (TextView) findViewById(R.id.point_note_text);
+                if (note != null && note.getText() != null) {
+                    textView.setText(note.getText());
+                    textView.setClickable(true);
+                } else if (mNewNote != null) {
+                    textView.setText(mNewNote);
+                    textView.setClickable(true);
+                }
             }
 
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to render point", e);
             UIUtilities.showNotification(R.string.error);
         }
+    }
+
+    private void disableIfMiddle(Leg aCurrentLeg, EditText anEditText) {
+        anEditText.setEnabled(!aCurrentLeg.isMiddle());
     }
 
     private void bindBTMeasures(EditText text, final Constants.Measures aMeasure) {
@@ -447,6 +456,10 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
             boolean deleted = DaoUtil.deleteLeg(legEdited);
             if (deleted){
                 UIUtilities.showNotification(R.string.action_deleted);
+
+                // ensure active leg present
+                getWorkspace().setActiveLeg(getWorkspace().getLastLeg());
+
                 onBackPressed();
             } 
         } catch (Exception e) {
@@ -644,10 +657,26 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
     public boolean onPrepareOptionsMenu(Menu menu) {
         // need to call super to prepare menu
         boolean flag =  super.onPrepareOptionsMenu(menu);
-        
+
+        Leg currLeg = getCurrentLeg();
+
+        if (currLeg.isMiddle()) {
+            MenuItem noteMenuItem = menu.findItem(R.id.point_action_note);
+            noteMenuItem.setVisible(false);
+
+            MenuItem drawingMenuItem = menu.findItem(R.id.point_action_draw);
+            drawingMenuItem.setVisible(false);
+
+            MenuItem gpsMenuItem = menu.findItem(R.id.point_action_gps);
+            gpsMenuItem.setVisible(false);
+
+            MenuItem vectorsMenuItem = menu.findItem(R.id.point_action_add_vector);
+            vectorsMenuItem.setVisible(false);
+        }
+
         // check if the device has a camera
         PackageManager packageManager = getPackageManager();
-        if (!packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA)){
+        if (!packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA) || currLeg.isMiddle()){
         	// if there is no camera remove the photo button
         	MenuItem photoMenuItem = menu.findItem(R.id.point_action_photo);
         	photoMenuItem.setVisible(false);

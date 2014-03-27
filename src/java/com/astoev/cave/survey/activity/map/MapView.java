@@ -148,23 +148,29 @@ public class MapView extends View {
                         }
 
                         if (mapPoints.get(l.getFromPoint().getId()) == null) {
-                            mapPoints.put(l.getFromPoint().getId(), first);
-
-                            //color
-                            if (galleryColors.get(l.getGalleryId(), Constants.NOT_FOUND) == Constants.NOT_FOUND) {
-                                galleryColors.put(l.getGalleryId(), MapUtilities.getNextGalleryColor(galleryColors.size()));
-                                Gallery gallery = DaoUtil.getGallery(l.getGalleryId());
-                                galleryNames.put(l.getGalleryId(), gallery.getName());
+                            if (!l.isMiddle()) {
+                                mapPoints.put(l.getFromPoint().getId(), first);
                             }
-                            polygonPaint.setColor(galleryColors.get(l.getGalleryId()));
-                            polygonWidthPaint.setColor(galleryColors.get(l.getGalleryId()));
-                            vectorsPaint.setColor(galleryColors.get(l.getGalleryId()));
-                            vectorPointPaint.setColor(galleryColors.get(l.getGalleryId()));
 
-                            DaoUtil.refreshPoint(l.getFromPoint());
-                            pointLabel = galleryNames.get(l.getGalleryId()) + l.getFromPoint().getName();
-                            canvas.drawText(pointLabel, mapCenterMoveX + first.getX() + LABEL_DEVIATION_X, mapCenterMoveY + first.getY() + LABEL_DEVIATION_Y, polygonPaint);
-                            canvas.drawCircle(mapCenterMoveX + first.getX(), mapCenterMoveY + first.getY(), POINT_RADIUS, polygonPaint);
+                            // draw first point
+                            if (!l.isMiddle()) {
+                                //color
+                                if (galleryColors.get(l.getGalleryId(), Constants.NOT_FOUND) == Constants.NOT_FOUND) {
+                                    galleryColors.put(l.getGalleryId(), MapUtilities.getNextGalleryColor(galleryColors.size()));
+                                    Gallery gallery = DaoUtil.getGallery(l.getGalleryId());
+                                    galleryNames.put(l.getGalleryId(), gallery.getName());
+                                }
+                                polygonPaint.setColor(galleryColors.get(l.getGalleryId()));
+                                polygonWidthPaint.setColor(galleryColors.get(l.getGalleryId()));
+                                vectorsPaint.setColor(galleryColors.get(l.getGalleryId()));
+                                vectorPointPaint.setColor(galleryColors.get(l.getGalleryId()));
+
+                                DaoUtil.refreshPoint(l.getFromPoint());
+
+                                pointLabel = galleryNames.get(l.getGalleryId()) + l.getFromPoint().getName();
+                                canvas.drawText(pointLabel, mapCenterMoveX + first.getX() + LABEL_DEVIATION_X, mapCenterMoveY + first.getY() + LABEL_DEVIATION_Y, polygonPaint);
+                                canvas.drawCircle(mapCenterMoveX + first.getX(), mapCenterMoveY + first.getY(), POINT_RADIUS, polygonPaint);
+                            }
                         }
 
                         float deltaX;
@@ -174,15 +180,22 @@ public class MapView extends View {
                             deltaX = 0;
                             deltaY = 0;
                         } else {
-                            float legDistance = MapUtilities.applySlopeToDistance(l.getDistance(), MapUtilities.getSlopeInDegrees(l.getSlope()));
+                            float legDistance;
+                            if (l.isMiddle()) {
+                                legDistance = MapUtilities.applySlopeToDistance(l.getMiddlePointDistance(), MapUtilities.getSlopeInDegrees(l.getSlope()));
+                            } else {
+                                legDistance = MapUtilities.applySlopeToDistance(l.getDistance(), MapUtilities.getSlopeInDegrees(l.getSlope()));
+                            }
                             deltaY = -(float) (legDistance * Math.cos(Math.toRadians(MapUtilities.getAzimuthInDegrees(l.getAzimuth())))) * scale;
                             deltaX = (float) (legDistance * Math.sin(Math.toRadians(MapUtilities.getAzimuthInDegrees(l.getAzimuth())))) * scale;
                         }
 
                         Point2D second = new Point2D(first.getX() + deltaX, first.getY() + deltaY);
 
-                        if (mapPoints.get(l.getToPoint().getId()) == null) {
-                            mapPoints.put(l.getToPoint().getId(), second);
+                        if (mapPoints.get(l.getToPoint().getId()) == null || l.isMiddle()) {
+                            if (!l.isMiddle()) {
+                                mapPoints.put(l.getToPoint().getId(), second);
+                            }
 
                             // color
                             if (galleryColors.get(l.getGalleryId(), Constants.NOT_FOUND) == Constants.NOT_FOUND) {
@@ -199,17 +212,26 @@ public class MapView extends View {
 
                             if (Workspace.getCurrentInstance().getActiveLegId().equals(l.getId())) {
                                 // you are here
-                                canvas.drawCircle(mapCenterMoveX + first.getX(), mapCenterMoveY + first.getY(), CURR_POINT_RADIUS, youAreHerePaint);
+                                if (l.isMiddle()) {
+                                    canvas.drawCircle(mapCenterMoveX + second.getX(), mapCenterMoveY + second.getY(), CURR_POINT_RADIUS, youAreHerePaint);
+                                } else {
+                                    canvas.drawCircle(mapCenterMoveX + first.getX(), mapCenterMoveY + first.getY(), CURR_POINT_RADIUS, youAreHerePaint);
+                                }
+
                             }
 
                             DaoUtil.refreshPoint(l.getToPoint());
-                            pointLabel = galleryNames.get(l.getGalleryId()) + l.getToPoint().getName();
-                            canvas.drawText(pointLabel, mapCenterMoveX + second.getX() + LABEL_DEVIATION_X, mapCenterMoveY + second.getY() + LABEL_DEVIATION_Y, polygonPaint);
+                            if (!l.isMiddle()) {
+                                pointLabel = galleryNames.get(l.getGalleryId()) + l.getToPoint().getName();
+                                canvas.drawText(pointLabel, mapCenterMoveX + second.getX() + LABEL_DEVIATION_X, mapCenterMoveY + second.getY() + LABEL_DEVIATION_Y, polygonPaint);
+                            }
                             canvas.drawCircle(mapCenterMoveX + second.getX(), mapCenterMoveY + second.getY(), POINT_RADIUS, polygonPaint);
                         }
 
                         // leg
-                        canvas.drawLine(mapCenterMoveX + first.getX(), mapCenterMoveY + first.getY(), mapCenterMoveX + second.getX(), mapCenterMoveY + second.getY(), polygonPaint);
+                        if (!l.isMiddle()) {
+                            canvas.drawLine(mapCenterMoveX + first.getX(), mapCenterMoveY + first.getY(), mapCenterMoveX + second.getX(), mapCenterMoveY + second.getY(), polygonPaint);
+                        }
 
                         Leg prevLeg = DaoUtil.getLegByToPoint(l.getFromPoint());
 
@@ -226,9 +248,14 @@ public class MapView extends View {
                                     galleryWidthAngle = Math.toRadians(MapUtilities.minus90Degrees(first.getAzimuth()));
                                 }
                             }
-                            deltaY = - (float) (first.getLeft() * Math.cos(galleryWidthAngle) * scale);
+
+                            deltaY = -(float) (first.getLeft() * Math.cos(galleryWidthAngle) * scale);
                             deltaX = (float) (first.getLeft() * Math.sin(galleryWidthAngle) * scale);
-                            canvas.drawCircle(mapCenterMoveX + first.getX() + deltaX, mapCenterMoveY + first.getY() + deltaY, MEASURE_POINT_RADIUS, polygonWidthPaint);
+                            if (l.isMiddle()) {
+                                canvas.drawCircle(mapCenterMoveX + second.getX() + deltaX, mapCenterMoveY + second.getY() + deltaY, MEASURE_POINT_RADIUS, polygonWidthPaint);
+                            } else {
+                                canvas.drawCircle(mapCenterMoveX + first.getX() + deltaX, mapCenterMoveY + first.getY() + deltaY, MEASURE_POINT_RADIUS, polygonWidthPaint);
+                            }
                         }
 
                         // right
@@ -246,7 +273,11 @@ public class MapView extends View {
                             }
                             deltaY = -(float) (first.getRight() * Math.cos(galleryWidthAngle) * scale);
                             deltaX = (float) (first.getRight() * Math.sin(galleryWidthAngle) * scale);
-                            canvas.drawCircle(mapCenterMoveX + first.getX() + deltaX, mapCenterMoveY + first.getY() + deltaY, MEASURE_POINT_RADIUS, polygonWidthPaint);
+                            if (l.isMiddle()) {
+                                canvas.drawCircle(mapCenterMoveX + second.getX() + deltaX, mapCenterMoveY + second.getY() + deltaY, MEASURE_POINT_RADIUS, polygonWidthPaint);
+                            } else {
+                                canvas.drawCircle(mapCenterMoveX + first.getX() + deltaX, mapCenterMoveY + first.getY() + deltaY, MEASURE_POINT_RADIUS, polygonWidthPaint);
+                            }
                         }
 
                         // vectors
@@ -256,8 +287,13 @@ public class MapView extends View {
                                 float legDistance = MapUtilities.applySlopeToDistance(v.getDistance(), MapUtilities.getSlopeInDegrees(v.getSlope()));
                                 deltaY = -(float) (legDistance * Math.cos(Math.toRadians(MapUtilities.getAzimuthInDegrees(v.getAzimuth())))) * scale;
                                 deltaX = (float) (legDistance * Math.sin(Math.toRadians(MapUtilities.getAzimuthInDegrees(v.getAzimuth())))) * scale;
-                                canvas.drawLine(mapCenterMoveX + first.getX(), mapCenterMoveY + first.getY(), mapCenterMoveX + first.getX() + deltaX, mapCenterMoveY + first.getY() + deltaY, vectorsPaint);
-                                canvas.drawCircle(mapCenterMoveX + first.getX() + deltaX, mapCenterMoveY + first.getY() + deltaY, 2, vectorPointPaint);
+                                if (l.isMiddle()) {
+                                    canvas.drawLine(mapCenterMoveX + second.getX(), mapCenterMoveY + second.getY(), mapCenterMoveX + second.getX() + deltaX, mapCenterMoveY + second.getY() + deltaY, vectorsPaint);
+                                    canvas.drawCircle(mapCenterMoveX + second.getX() + deltaX, mapCenterMoveY + second.getY() + deltaY, 2, vectorPointPaint);
+                                } else {
+                                    canvas.drawLine(mapCenterMoveX + first.getX(), mapCenterMoveY + first.getY(), mapCenterMoveX + first.getX() + deltaX, mapCenterMoveY + first.getY() + deltaY, vectorsPaint);
+                                    canvas.drawCircle(mapCenterMoveX + first.getX() + deltaX, mapCenterMoveY + first.getY() + deltaY, 2, vectorPointPaint);
+                                }
                             }
                         }
 

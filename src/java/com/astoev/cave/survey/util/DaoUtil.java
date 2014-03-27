@@ -113,7 +113,7 @@ public class DaoUtil {
         statementBuilder.orderBy(Leg.COLUMN_GALLERY_ID, true);
         statementBuilder.orderBy(Leg.COLUMN_FROM_POINT, true);
         statementBuilder.orderBy(Leg.COLUMN_TO_POINT, true);
-//        statementBuilder.orderBy(Leg.COLUMN_DISTANCE_FROM_START, true);
+		statementBuilder.orderBy(Leg.COLUMN_MIDDLE_POINT_AT_DISTANCE, true);
 
         return Workspace.getCurrentInstance().getDBHelper().getLegDao().query(statementBuilder.prepare());
     }

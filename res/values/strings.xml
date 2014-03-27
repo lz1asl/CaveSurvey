@@ -216,11 +216,14 @@
 
 
     <!-- popup -->
-    <string name="popup_distance">At distance</string>
-    <string name="popup_ok">Create</string>
-    <string name="popup_cancel">Cancel</string>
-    <string name="popup_bad_input">Bad value</string>
-
+    <string name="middle_leg_add">Add middle point</string>
+    <string name="middle_leg_info">Leg  %1$s, %2$s%3$s</string>
+    <string name="middle_split_at">At</string>
+    <string name="middle_create">Create</string>
+    <string name="middle_bad_value">Bad value</string>
+    <string name="middle_leg_shorter">Too short</string>
+    <string name="middle_leg_bigger">Too big</string>
+    <string name="middle_no_value">Distance required</string>
 
     <string name="error">Error occurred</string>
     <string name="busy">Please wait&#8230;</string>

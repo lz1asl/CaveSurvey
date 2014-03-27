@@ -119,7 +119,7 @@ public class FileStorageUtil {
 			Log.e(Constants.LOG_TAG_SERVICE, "Unable to write file: " + pictureFile.getAbsolutePath(), e);
 			throw e;
 		} finally {
-			closeOutputStream(os);
+			IOUtils.closeQuietly(os);
 		}
 
         Log.i(Constants.LOG_TAG_SERVICE, "Just wrote: " + pictureFile.getAbsolutePath());
@@ -228,21 +228,6 @@ public class FileStorageUtil {
             Log.i(Constants.LOG_TAG_SERVICE, "Export folder created");
         }
         return storageHome;
-    }
-    
-    /**
-     * Helper method to close safely an OutputStream
-     * 
-     * @param os - output stream instance
-     */
-    public static void closeOutputStream(OutputStream os){
-		if (os != null){
-			try {
-				os.close();
-			} catch (IOException e) {
-				Log.i(Constants.LOG_TAG_SERVICE, "Error while closing output stream");
-			}
-		}
     }
     
     /**

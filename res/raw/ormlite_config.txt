@@ -1,5 +1,5 @@
 #
-# generated on 2013/12/29 03:31:42
+# generated on 2014/03/24 10:22:46
 #
 # --table-start--
 dataClass=com.astoev.cave.survey.model.Gallery
@@ -88,6 +88,10 @@ columnName=down
 fieldName=mGalleryId
 columnName=gallery_id
 canBeNull=false
+# --field-end--
+# --field-start--
+fieldName=mMiddlePointDistance
+columnName=middle_point_distance
 # --field-end--
 # --table-fields-end--
 # --table-end--

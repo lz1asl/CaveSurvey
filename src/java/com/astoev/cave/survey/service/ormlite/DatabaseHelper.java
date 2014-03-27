@@ -22,7 +22,8 @@ import java.sql.SQLException;
  */
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION_1 = 1;
+    private static final int DATABASE_VERSION = 2;
     private static final String DATABASE_NAME = "CaveSurvey";
 
     private Dao<Leg, Integer> mLegDao;
@@ -79,9 +80,15 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, ConnectionSource connectionSource, int i, int i1) {
-        Log.e(Constants.LOG_TAG_DB, "Unsupported upgrade to v " + i + ":" + i1);
-        throw new RuntimeException("Update not supported yet");
+    public void onUpgrade(SQLiteDatabase aSqLiteDatabase, ConnectionSource aConnectionSource, int aOldVersion, int aNewVersion) {
+        if (DATABASE_VERSION_1 == aOldVersion && DATABASE_VERSION == aNewVersion) {
+            Log.i(Constants.LOG_TAG_DB, "Upgrading DB to V2");
+            aSqLiteDatabase.execSQL("alter table legs add column middle_point_distance decimal default null");
+            Log.i(Constants.LOG_TAG_DB, "Upgrade success");
+        } else {
+            Log.e(Constants.LOG_TAG_DB, "Unsupported upgrade from v " + aOldVersion + " to " + aNewVersion);
+            throw new RuntimeException("Update not supported yet");
+        }
     }
 
     public Dao<Leg, Integer> getLegDao() {

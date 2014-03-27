@@ -21,6 +21,7 @@ import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.MainMenuActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
+import com.astoev.cave.survey.activity.dialog.MiddlePointDialog;
 import com.astoev.cave.survey.activity.map.MapActivity;
 import com.astoev.cave.survey.activity.map.MapUtilities;
 import com.astoev.cave.survey.model.Gallery;
@@ -50,7 +51,8 @@ public class MainActivity extends MainMenuActivity {
 
     private static final int[] ADD_ITEM_LABELS = {R.string.main_add_leg,
             R.string.main_add_branch
-//            ,            R.string.main_add_middlepoint
+//            ,
+//            R.string.main_add_middlepoint
     };
 
     private SparseIntArray mGalleryColors = new SparseIntArray();
@@ -130,6 +132,7 @@ public class MainActivity extends MainMenuActivity {
                 Point fromPoint = l.getFromPoint();
                 DaoUtil.refreshPoint(fromPoint);
                 String fromPointString = fromPoint.getName();
+
                 if (lastGalleryId == null) {
                     lastGalleryId = l.getGalleryId();
                 }
@@ -154,9 +157,15 @@ public class MainActivity extends MainMenuActivity {
                 	toPointString = toPointString + "("+toPoint.getId()+")";
                 }
 
-                row.addView(createTextView(fromPointString, currentLeg, false, mGalleryColors.get(prevGalleryId)));
-                row.addView(createTextView(toPointString, currentLeg, false, mGalleryColors.get(l.getGalleryId())));
-                row.addView(createTextView(l.getDistance(), currentLeg, true));
+                if (l.isMiddle()) {
+                    row.addView(createTextView("", currentLeg, false, mGalleryColors.get(prevGalleryId)));
+                    row.addView(createTextView("", currentLeg, false, mGalleryColors.get(l.getGalleryId())));
+                    row.addView(createTextView("@" + l.getMiddlePointDistance(), currentLeg, true));
+                } else {
+                    row.addView(createTextView(fromPointString, currentLeg, false, mGalleryColors.get(prevGalleryId)));
+                    row.addView(createTextView(toPointString, currentLeg, false, mGalleryColors.get(l.getGalleryId())));
+                    row.addView(createTextView(l.getDistance(), currentLeg, true));
+                }
                 row.addView(createTextView(l.getAzimuth(), currentLeg, true));
                 row.addView(createTextView(l.getSlope(), currentLeg, true));
                 
@@ -269,117 +278,8 @@ public class MainActivity extends MainMenuActivity {
     }
 
     private void requestLengthAndAddMiddle() throws SQLException {
-
-        LayoutInflater li = LayoutInflater.from(this);
-        View promptsView = li.inflate(R.layout.number_popup, null);
-
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        alertDialogBuilder.setView(promptsView);
-
-        final EditText userInput = (EditText) promptsView.findViewById(R.id.popup_distance);
-        final Leg currLeg = getWorkspace().getActiveLeg();
-
-        // set dialog message
-        alertDialogBuilder
-                .setCancelable(true)
-                .setPositiveButton(getString(R.string.popup_ok),
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-
-                                Float distance = StringUtils.getFromEditTextNotNull(userInput);
-                                if (null == distance) {
-                                    UIUtilities.showNotification(R.string.popup_bad_input);
-                                    dialog.cancel();
-                                    return;
-                                }
-
-                                if (currLeg.getDistance() != null && currLeg.getDistance().floatValue() <= distance.floatValue()) {
-                                    UIUtilities.showNotification(R.string.popup_bad_input);
-                                    dialog.cancel();
-                                    return;
-                                }
-
-                                try {
-                                    addMiddle(distance.floatValue());
-                                } catch (SQLException e) {
-                                    Log.e(Constants.LOG_TAG_UI, "Error adding", e);
-                                    UIUtilities.showNotification(R.string.error);
-                                }
-                                dialog.cancel();
-                            }
-                        })
-                .setNegativeButton(getString(R.string.popup_cancel),
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
-
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.show();
+        new MiddlePointDialog().show(getSupportFragmentManager(), "middle_point_dialog");
     }
-
-    private void addMiddle(final float atDistance) throws SQLException {
-
-        Log.i(Constants.LOG_TAG_UI, "Creating middle point");
-       /* Integer newLegId = TransactionManager.callInTransaction(getWorkspace().getDBHelper().getConnectionSource(),
-                new Callable<Integer>() {
-                    public Integer call() throws Exception {
-                        try {
-                            Leg activeLeg = getWorkspace().getActiveLeg();
-                            float activeLegOrigDistance = activeLeg.getDistance();
-
-                            // another leg, starting from the current leg and in new gallery
-                            Point newFrom = activeLeg.getFromPoint();
-                            Point oldToPoint = activeLeg.getToPoint();
-                            DaoUtil.refreshPoint(newFrom);
-                            DaoUtil.refreshPoint(oldToPoint);
-
-
-                            // create new point
-                            Point newMiddlePoint = PointUtil.generateMiddlePoint(newFrom);
-                            getWorkspace().getDBHelper().getPointDao().create(newMiddlePoint);
-
-                            // split the old leg - update the existing and add new one
-                            activeLeg.setToPoint(newMiddlePoint);
-                            activeLeg.setDistance(atDistance);
-                            getWorkspace().getDBHelper().getLegDao().update(activeLeg);
-
-                            Leg newLeg = new Leg(newMiddlePoint, oldToPoint, activeLeg.getProject(), activeLeg.getGalleryId());
-
-                            // copy measurements to the new leg
-                            newLeg.setAzimuth(activeLeg.getAzimuth());
-                            newLeg.setDistance(activeLegOrigDistance - atDistance);
-                            newLeg.setLeft(activeLeg.getLeft());
-                            newLeg.setRight(activeLeg.getRight());
-                            newLeg.setTop(activeLeg.getTop());
-                            newLeg.setDown(activeLeg.getDown());
-                            getWorkspace().getDBHelper().getLegDao().create(newLeg);
-
-                            return newLeg.getId();
-                        } catch (Exception e) {
-                            Log.e(Constants.LOG_TAG_DB, "Failed to add middle point", e);
-                            throw e;
-                        }
-                    }
-                }
-
-        );
-        if (newLegId != null)
-
-        {
-            getWorkspace().setActiveLegId(newLegId);
-            Intent intent = new Intent(MainActivity.this, PointActivity.class);
-            intent.putExtra(Constants.LEG_SELECTED, newLegId);
-            startActivity(intent);
-        } else
-
-        {
-            UIUtilities.showNotification(R.string.error);
-        }*/
-
-    }
-
 
     private void addLeg(final boolean isDeviation) throws SQLException {
         Log.i(Constants.LOG_TAG_UI, "Creating leg");
