@@ -26,7 +26,6 @@ public class Leg implements Serializable {
     public static final String COLUMN_PROJECT_ID = "project_id";
     public static final String COLUMN_FROM_POINT = "from_point_id";
     public static final String COLUMN_TO_POINT = "to_point_id";
-    public static final String COLUMN_DISTANCE_FROM_START = "distance_from_start";
     public static final String COLUMN_GALLERY_ID = "gallery_id";
     public static final String COLUMN_MIDDLE_POINT_AT_DISTANCE = "middle_point_distance";
 
@@ -40,8 +39,6 @@ public class Leg implements Serializable {
     private Project mProject;
     @DatabaseField(columnName = "distance")
     private Float mDistance;
-    @DatabaseField(columnName = COLUMN_DISTANCE_FROM_START)
-    private Float mDistanceFromStart;
     @DatabaseField(columnName = "azimuth")
     private Float mAzimuth;
     @DatabaseField(columnName = "slope")
@@ -142,7 +139,7 @@ public class Leg implements Serializable {
         builder.append(endPoint.getName());
 
         if (isMiddle()) {
-            builder.append("@").append(StringUtils.floatToLabel(mDistanceFromStart));
+            builder.append("@").append(StringUtils.floatToLabel(mMiddlePointDistance));
         }
         return builder.toString();
     }
@@ -197,14 +194,6 @@ public class Leg implements Serializable {
 
     public void setDistance(Float aDistance) {
         mDistance = aDistance;
-    }
-
-    public Float getDistanceFromStart() {
-        return mDistanceFromStart;
-    }
-
-    public void setDistanceFromStart(Float aDistanceFromStart) {
-        mDistanceFromStart = aDistanceFromStart;
     }
 
     public Float getAzimuth() {
