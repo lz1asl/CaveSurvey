@@ -92,8 +92,7 @@ public class NoteActivity extends MainMenuActivity {
                                     }
 
                                     UIUtilities.showNotification(R.string.note_saved);
-                                    Intent intent = new Intent(NoteActivity.this, MainActivity.class);
-                                    startActivity(intent);
+                                    finish();
 
                                     Log.i(Constants.LOG_TAG_DB, "Note stored");
                                     return null;
