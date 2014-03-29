@@ -1,14 +1,13 @@
 package com.astoev.cave.survey.test.service.bluetooth.util;
 
-import java.util.List;
-
 import com.astoev.cave.survey.Constants;
-import static com.astoev.cave.survey.Constants.MeasureTypes;
 import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.Measure;
 import com.astoev.cave.survey.service.bluetooth.util.NMEAUtil;
 
 import junit.framework.TestCase;
+
+import java.util.List;
 
 public class NMEAUtilTest extends TestCase {
 
@@ -25,10 +24,10 @@ public class NMEAUtilTest extends TestCase {
     public void testDecodeSuccess() {
         ensureSucces("$PTNLA,HV,0.60,M,291.1,D,-1.12,D,0.60,M*61", 0.6f, 291.1f, -1.12f);
         ensureSucces("$PTNLA,HV,,M,287.5,D,-1.11,D,,M*61", null, 287.5f, -1.11f);
-        ensureSucces("$PTNLA,HV,1.87,M,343.2,D,17.02,D,1.96,M*77", 1.87f, 343.2f, 17.02f);
-        ensureSucces("$PTNLA,HV,1.58,M,341.5,D,9.15,D,1.60,M*40", 1.58f, 341.5f, 9.15f);
-        ensureSucces("$PTNLA,HV,1.60,M,356.2,D,8.59,D,1.62,M*41", 1.60f, 356.2f, 8.59f);
-        ensureSucces("$PTNLA,HV,1.62,M,351.5,D,8.45,D,1.64,M*48", 1.62f, 351.5f, 8.45f);
+        ensureSucces("$PTNLA,HV,1.87,M,343.2,D,17.02,D,1.96,M*77", 1.96f, 343.2f, 17.02f);
+        ensureSucces("$PTNLA,HV,1.58,M,341.5,D,9.15,D,1.60,M*40", 1.60f, 341.5f, 9.15f);
+        ensureSucces("$PTNLA,HV,1.60,M,356.2,D,8.59,D,1.62,M*41", 1.62f, 356.2f, 8.59f);
+        ensureSucces("$PTNLA,HV,1.62,M,351.5,D,8.45,D,1.64,M*48", 1.64f, 351.5f, 8.45f);
     }
 
     private void ensureFails(String aBadMessage) {

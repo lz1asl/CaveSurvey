@@ -3,10 +3,10 @@ package com.astoev.cave.survey.service.bluetooth.util;
 import android.util.Log;
 
 import com.astoev.cave.survey.Constants;
+import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.activity.map.MapUtilities;
 import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.Measure;
-import com.astoev.cave.survey.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,8 +55,7 @@ public class NMEAUtil {
                     throw new DataException("Negative distance");
                 }
 
-                Measure distanceMeasure = new Measure(Constants.MeasureTypes.distance, Constants.MeasureUnits.meters, distance);
-                measures.add(distanceMeasure);
+                // this is horizontal distance, so ignored now
             }
 
             // angle
@@ -87,18 +86,36 @@ public class NMEAUtil {
 
             // skip vertical distance
             if (distancePresent) {
-                tokenizer.nextToken();
+                distanceString = tokenizer.nextToken();
+                if ("M".equals(distanceString) || "F".equals(distanceString)) {
+                    // no distance, no need to skip distance units
+                    distancePresent = false;
+                } else {
+                    if (!"M".equals(tokenizer.nextToken())) {
+                        throw new DataException("Please measure in meters ");
+                    }
+
+                    float distance = Float.parseFloat(distanceString);
+                    if (distance < 0) {
+                        throw new DataException("Negative distance");
+                    }
+
+                    Measure distanceMeasure = new Measure(Constants.MeasureTypes.distance, Constants.MeasureUnits.meters, distance);
+                    measures.add(distanceMeasure);
+                }
             }
             tokenizer.nextToken("*");
 
             // checksum
             String calculatedCheck = getCheckSum(messageString);
             if (!calculatedCheck.equals(tokenizer.nextToken())) {
-                throw new DataException("Bad checksum");
+//                throw new DataException("Bad checksum");
+                UIUtilities.showNotification("Bad checksum ignored");
             }
 
             if (tokenizer.hasMoreTokens()) {
-                throw new DataException("Extra data found");
+//                throw new DataException("Extra data found");
+                UIUtilities.showNotification("Extra data found " + tokenizer.nextToken());
             }
 
             return measures;
