@@ -73,16 +73,16 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 	
     private String mNewNote = null;
 
-    private String currentPhotoPath;
+    private String mCurrentPhotoPath;
     
     /** Current leg to work with */
-    private Leg currentLeg = null;
+    private Leg mCurrentLeg = null;
     
-    private BTMeasureResultReceiver receiver = new BTMeasureResultReceiver(new Handler());
+    private BTMeasureResultReceiver mReceiver = new BTMeasureResultReceiver(new Handler());
     
-    private AzimuthDialog azimuthDialog;
+    private AzimuthDialog mAzimuthDialog;
     
-    private SlopeDialog slopeDialog;
+    private SlopeDialog mSlopeDialog;
 
 
     public void onCreate(Bundle savedInstanceState) {
@@ -141,7 +141,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
     protected void onResume() {
         super.onResume();
 
-        receiver.resetMeasureExpectations();
+        mReceiver.resetMeasureExpectations();
         
         //check if location is added and returned back to this activity
         Fragment fragment = this.getSupportFragmentManager().findFragmentById(R.id.saved_location_container);
@@ -158,13 +158,13 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 	 */
 	@Override
 	protected void onPause() {
-		if (azimuthDialog != null){
-			azimuthDialog.cancelDialog();
-			azimuthDialog.dismiss();
+		if (mAzimuthDialog != null){
+			mAzimuthDialog.cancelDialog();
+			mAzimuthDialog.dismiss();
 		}
-		if (slopeDialog != null){
-		    slopeDialog.cancelDialog();
-		    slopeDialog.dismiss();
+		if (mSlopeDialog != null){
+		    mSlopeDialog.cancelDialog();
+		    mSlopeDialog.dismiss();
 		}
 		super.onPause();
 	}
@@ -299,10 +299,10 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                     public void onFocusChange(View v, boolean hasFocus) {
                         if (hasFocus) {
                             Log.i(Constants.LOG_TAG_UI, "Send read command");
-                            receiver.awaitMeasure(aMeasure);
+                            mReceiver.awaitMeasure(aMeasure);
                             triggerBluetoothMeasure(aMeasure);
                         } else {
-                            receiver.ignoreMeasure(aMeasure);
+                            mReceiver.ignoreMeasure(aMeasure);
                         }
                     }
                 });
@@ -313,7 +313,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                     @Override
                     public void onClick(View v) {
                         Log.i(Constants.LOG_TAG_UI, "Send read command");
-                        receiver.awaitMeasure(aMeasure);
+                        mReceiver.awaitMeasure(aMeasure);
                         triggerBluetoothMeasure(aMeasure);
                     }
                 });
@@ -463,7 +463,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 
     private void triggerBluetoothMeasure(Constants.Measures aMeasure) {
         // register listeners & send command
-        BluetoothService.sendReadMeasureCommand(receiver, aMeasure);
+        BluetoothService.sendReadMeasureCommand(mReceiver, aMeasure);
         Log.i(Constants.LOG_TAG_UI, "Command sent for " + aMeasure);
     }
 
@@ -499,13 +499,13 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
     }
 
     public void readAzimuth(View view) {
-		azimuthDialog = new AzimuthDialog();
-		azimuthDialog.show(getSupportFragmentManager(), AZIMUTH_DIALOG);
+		mAzimuthDialog = new AzimuthDialog();
+		mAzimuthDialog.show(getSupportFragmentManager(), AZIMUTH_DIALOG);
     }
     
     public void readSlope(View view){
-        slopeDialog = new SlopeDialog();
-        slopeDialog.show(getSupportFragmentManager(), SLOPE_DIALOG);
+        mSlopeDialog = new SlopeDialog();
+        mSlopeDialog.show(getSupportFragmentManager(), SLOPE_DIALOG);
     }
 
     public void photoButton() {
@@ -535,7 +535,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 		// call capture image
 		if (photoFile != null){
 			
-			currentPhotoPath = photoFile.getAbsolutePath();
+			mCurrentPhotoPath = photoFile.getAbsolutePath();
 			
 			Log.i(Constants.LOG_TAG_SERVICE, "Going to capture image in: " + photoFile.getAbsolutePath());
 	        final Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -556,19 +556,19 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
     				try {
     					
     					// check if the file really exists
-    				    if (!FileStorageUtil.isFileExists(currentPhotoPath)){
+    				    if (!FileStorageUtil.isFileExists(mCurrentPhotoPath)){
     				    	UIUtilities.showNotification(R.string.export_io_error);
     				    	break;
     				    }
     				    
-    					File pictureFile = new File(currentPhotoPath);
+    					File pictureFile = new File(mCurrentPhotoPath);
     					
     					// broadcast that the file is added 
 			        	FileStorageUtil.notifyPictureAddedToGalery(this, pictureFile);
     					
-    					Log.i(Constants.LOG_TAG_SERVICE, "Image captured in: " + currentPhotoPath);
+    					Log.i(Constants.LOG_TAG_SERVICE, "Image captured in: " + mCurrentPhotoPath);
     					Photo photo = new Photo();
-    					photo.setFSPath(currentPhotoPath);
+    					photo.setFSPath(mCurrentPhotoPath);
 
     					Leg legEdited = getCurrentLeg();
     					Point currPoint = DaoUtil.getPoint(legEdited.getFromPoint().getId());
@@ -676,7 +676,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         }
 
         // allow vectors for saved legs
-        if (currentLeg != null && !currentLeg.isNew() && !currLeg.isMiddle()) {
+        if (mCurrentLeg != null && !mCurrentLeg.isNew() && !currLeg.isMiddle()) {
             MenuItem photoMenuItem = menu.findItem(R.id.point_action_add_vector);
             photoMenuItem.setVisible(true);
         }
@@ -705,16 +705,16 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
      * @return Leg instance
      */
     private Leg getCurrentLeg(){
-        if (currentLeg == null){
+        if (mCurrentLeg == null){
         	Bundle extras = getIntent().getExtras();
             try {
 				if (extras != null) {
 				    int currentLegSelectedId = extras.getInt(Constants.LEG_SELECTED);
 
                     if (currentLegSelectedId > 0) {
-				        currentLeg = DaoUtil.getLeg(currentLegSelectedId);
+				        mCurrentLeg = DaoUtil.getLeg(currentLegSelectedId);
 				        Log.i(Constants.LOG_TAG_UI, "PointView for leg with id: " + currentLegSelectedId);
-                        return currentLeg;
+                        return mCurrentLeg;
                     }
 				}
 
@@ -734,12 +734,12 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                 }
 
                 Log.i(Constants.LOG_TAG_UI, "PointView for new point");
-                currentLeg = new Leg(newFrom, newTo, getWorkspace().getActiveProject(), currGalleryId);
+                mCurrentLeg = new Leg(newFrom, newTo, getWorkspace().getActiveProject(), currGalleryId);
 			} catch (SQLException sqle) {
 				throw new RuntimeException(sqle);
 			}
         }
-        return currentLeg;
+        return mCurrentLeg;
     }
 
     private class BTMeasureResultReceiver extends ResultReceiver {
