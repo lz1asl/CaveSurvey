@@ -1,8 +1,8 @@
 package com.astoev.cave.survey;
 
-import java.util.Locale;
-
 import com.astoev.cave.survey.model.Option;
+
+import java.util.Locale;
 
 /**
  * Created by IntelliJ IDEA.

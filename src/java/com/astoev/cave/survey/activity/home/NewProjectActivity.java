@@ -7,15 +7,20 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.MainMenuActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.activity.main.PointActivity;
-import com.astoev.cave.survey.model.*;
+import com.astoev.cave.survey.model.Gallery;
+import com.astoev.cave.survey.model.Leg;
+import com.astoev.cave.survey.model.Option;
+import com.astoev.cave.survey.model.Point;
+import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.service.Options;
-import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.service.orientation.OrientationProcessorFactory;
+import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.util.PointUtil;
 import com.j256.ormlite.misc.TransactionManager;
 

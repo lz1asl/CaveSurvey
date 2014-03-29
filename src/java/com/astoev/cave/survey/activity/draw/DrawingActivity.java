@@ -4,12 +4,18 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.*;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.DashPathEffect;
+import android.graphics.Paint;
+import android.graphics.Path;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.BaseActivity;
@@ -106,41 +112,6 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
         super.onPause();
     }
     
-//    /**
-//     * @see com.astoev.cave.survey.activity.BaseActivity#onResume()
-//     */
-//    @Override
-//    protected void onResume() {
-//        drawingSurface.invalidate();
-//        super.onResume();
-//    }    
-    
-
-//    /*
-//     * @see android.support.v4.app.FragmentActivity#onSaveInstanceState(android.os.Bundle)
-//     */
-//    @Override
-//    protected void onSaveInstanceState(Bundle outStateArg) {
-//        outStateArg.putSerializable(KEY_COMMAND_MANAGER, drawingSurface.getCommandManager());
-//        
-//        super.onSaveInstanceState(outStateArg);
-//    }
-//
-//    /**
-//     * @see android.app.Activity#onRestoreInstanceState(android.os.Bundle)
-//     */
-//    @Override
-//    protected void onRestoreInstanceState(Bundle savedInstanceStateArg) {
-//        
-//        CommandManager commandManager = (CommandManager)savedInstanceStateArg.getSerializable(KEY_COMMAND_MANAGER);
-//        if (commandManager != null){
-//            drawingSurface.setCommandManager(commandManager);
-//        }
-//        
-//        super.onRestoreInstanceState(savedInstanceStateArg);
-//    }
-
-
     private void setCurrentPaint() {
         currentPaint = new Paint();
         currentPaint.setDither(true);

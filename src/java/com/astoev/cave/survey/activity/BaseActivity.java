@@ -1,14 +1,15 @@
 package com.astoev.cave.survey.activity;
 
-import java.util.Locale;
-
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.service.Workspace;
 import com.astoev.cave.survey.util.ConfigUtil;
+
+import java.util.Locale;
 
 /**
  * Created by IntelliJ IDEA.

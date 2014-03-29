@@ -6,15 +6,30 @@ import android.util.SparseArray;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
-import com.astoev.cave.survey.model.*;
+import com.astoev.cave.survey.model.Gallery;
+import com.astoev.cave.survey.model.Leg;
+import com.astoev.cave.survey.model.Location;
+import com.astoev.cave.survey.model.Note;
+import com.astoev.cave.survey.model.Option;
+import com.astoev.cave.survey.model.Photo;
+import com.astoev.cave.survey.model.Point;
+import com.astoev.cave.survey.model.Project;
+import com.astoev.cave.survey.model.Sketch;
+import com.astoev.cave.survey.model.Vector;
 import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.util.FileStorageUtil;
 import com.astoev.cave.survey.util.LocationUtil;
 import com.astoev.cave.survey.util.StringUtils;
+
 import org.apache.poi.hssf.usermodel.HSSFHyperlink;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.Hyperlink;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

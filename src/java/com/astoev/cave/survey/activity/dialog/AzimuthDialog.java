@@ -3,18 +3,6 @@
  */
 package com.astoev.cave.survey.activity.dialog;
 
-import java.lang.ref.WeakReference;
-import java.text.DecimalFormat;
-
-import com.astoev.cave.survey.Constants;
-import com.astoev.cave.survey.R;
-import com.astoev.cave.survey.model.Option;
-import com.astoev.cave.survey.service.Options;
-import com.astoev.cave.survey.service.orientation.AzimuthChangedAdapter;
-import com.astoev.cave.survey.service.orientation.AzimuthChangedListener;
-import com.astoev.cave.survey.service.orientation.OrientationProcessor;
-import com.astoev.cave.survey.service.orientation.OrientationProcessorFactory;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -30,6 +18,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.astoev.cave.survey.Constants;
+import com.astoev.cave.survey.R;
+import com.astoev.cave.survey.model.Option;
+import com.astoev.cave.survey.service.Options;
+import com.astoev.cave.survey.service.orientation.AzimuthChangedAdapter;
+import com.astoev.cave.survey.service.orientation.AzimuthChangedListener;
+import com.astoev.cave.survey.service.orientation.OrientationProcessor;
+import com.astoev.cave.survey.service.orientation.OrientationProcessorFactory;
+
+import java.lang.ref.WeakReference;
+import java.text.DecimalFormat;
 
 /**
  * Azimuth dialog shows a progress bar that waits 3 seconds and reads an azimuth. It notifies the parent 

@@ -3,8 +3,6 @@
  */
 package com.astoev.cave.survey.activity.poc;
 
-import java.text.DecimalFormat;
-
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -17,6 +15,8 @@ import com.astoev.cave.survey.service.orientation.MagneticOrientationProcessor;
 import com.astoev.cave.survey.service.orientation.OrientationDeprecatedProcessor;
 import com.astoev.cave.survey.service.orientation.RotationOrientationProcessor;
 import com.astoev.cave.survey.service.orientation.SlopeChangedAdapter;
+
+import java.text.DecimalFormat;
 
 /**
  * Activity that tests all available azimuth sensors and processor implementations

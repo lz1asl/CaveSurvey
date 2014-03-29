@@ -3,8 +3,6 @@
  */
 package com.astoev.cave.survey.activity.dialog;
 
-import com.astoev.cave.survey.R;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -12,6 +10,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.DialogFragment;
+
+import com.astoev.cave.survey.R;
 
 /**
  * DialogFragment that creates the dialog for asking the user if it would like to enable the GPS if it is 

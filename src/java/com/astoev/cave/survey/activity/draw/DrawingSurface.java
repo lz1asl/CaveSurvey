@@ -1,7 +1,5 @@
 package com.astoev.cave.survey.activity.draw;
 
-import java.lang.ref.WeakReference;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -11,6 +9,8 @@ import android.os.Message;
 import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+
+import java.lang.ref.WeakReference;
 
 /**
  * Created by IntelliJ IDEA.

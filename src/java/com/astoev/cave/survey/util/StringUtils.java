@@ -3,9 +3,6 @@ package com.astoev.cave.survey.util;
 import android.content.res.Resources;
 import android.widget.EditText;
 
-import com.astoev.cave.survey.model.Option;
-import com.astoev.cave.survey.service.Options;
-
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 

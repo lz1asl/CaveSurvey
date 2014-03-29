@@ -3,16 +3,16 @@
  */
 package com.astoev.cave.survey.fragment;
 
-import com.astoev.cave.survey.R;
-import com.astoev.cave.survey.model.Location;
-import com.astoev.cave.survey.util.LocationUtil;
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.astoev.cave.survey.R;
+import com.astoev.cave.survey.model.Location;
+import com.astoev.cave.survey.util.LocationUtil;
 
 /**
  * Fragment that shows information for particular Location. It expects the the Location to be set as argument

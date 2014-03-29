@@ -3,8 +3,6 @@
  */
 package com.astoev.cave.survey.activity.dialog;
 
-import java.text.DecimalFormat;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -21,6 +19,8 @@ import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.service.orientation.OrientationProcessorFactory;
 import com.astoev.cave.survey.service.orientation.SlopeChangedAdapter;
 import com.astoev.cave.survey.service.orientation.SlopeChangedListener;
+
+import java.text.DecimalFormat;
 
 /**
  * Slope dialog shows a progress bar that waits 3 seconds and reads an slope from internal sensor. It notifies 

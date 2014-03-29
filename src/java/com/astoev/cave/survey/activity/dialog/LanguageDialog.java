@@ -3,11 +3,6 @@
  */
 package com.astoev.cave.survey.activity.dialog;
 
-import java.util.Locale;
-
-import com.astoev.cave.survey.R;
-import com.astoev.cave.survey.util.ConfigUtil;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -17,6 +12,11 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.widget.ArrayAdapter;
+
+import com.astoev.cave.survey.R;
+import com.astoev.cave.survey.util.ConfigUtil;
+
+import java.util.Locale;
 
 /**
  * Dialog for choosing Language

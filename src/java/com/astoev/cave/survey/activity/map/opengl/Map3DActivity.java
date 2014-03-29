@@ -4,11 +4,14 @@ package com.astoev.cave.survey.activity.map.opengl;
 //import android.os.Bundle;
 //import android.util.Log;
 //import android.view.MotionEvent;
+
 import android.view.View;
+
+import com.astoev.cave.survey.activity.BaseActivity;
+
 //import android.widget.ZoomControls;
 //import com.astoev.cave.survey.Constants;
 //import com.astoev.cave.survey.R;
-import com.astoev.cave.survey.activity.BaseActivity;
 //import com.astoev.cave.survey.activity.UIUtilities;
 
 /**

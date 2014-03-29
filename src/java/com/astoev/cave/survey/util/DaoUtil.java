@@ -3,11 +3,6 @@
  */
 package com.astoev.cave.survey.util;
 
-import java.io.File;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.concurrent.Callable;
-
 import android.util.Log;
 
 import com.astoev.cave.survey.Constants;
@@ -28,6 +23,11 @@ import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.support.ConnectionSource;
 
 import org.apache.commons.io.FileUtils;
+
+import java.io.File;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.concurrent.Callable;
 
 /**
  * @author jmitrev

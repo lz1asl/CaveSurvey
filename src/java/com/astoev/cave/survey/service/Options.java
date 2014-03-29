@@ -1,6 +1,7 @@
 package com.astoev.cave.survey.service;
 
 import android.util.Log;
+
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.model.Option;
 import com.j256.ormlite.stmt.QueryBuilder;

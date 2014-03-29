@@ -3,8 +3,6 @@
  */
 package com.astoev.cave.survey.activity.main;
 
-import java.sql.SQLException;
-
 import android.location.Location;
 import android.location.LocationProvider;
 import android.os.Bundle;
@@ -24,6 +22,8 @@ import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.service.gps.GPSProcessor;
 import com.astoev.cave.survey.service.gps.LocationListenerAdapter;
 import com.astoev.cave.survey.util.DaoUtil;
+
+import java.sql.SQLException;
 
 /**
  * Activity that handles capturing GPS location

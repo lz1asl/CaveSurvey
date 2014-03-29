@@ -20,7 +20,6 @@ import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.service.bluetooth.device.AbstractBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.CEMILDMBluetoothDevice;
-import com.astoev.cave.survey.service.bluetooth.device.LaserAceBluetoothDevice;
 import com.astoev.cave.survey.util.ConfigUtil;
 
 import java.io.IOException;
