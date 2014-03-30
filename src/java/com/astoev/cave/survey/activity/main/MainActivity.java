@@ -92,7 +92,6 @@ public class MainActivity extends MainMenuActivity {
             activeLegName.setText(activeLeg.buildLegDescription());
 
             TableLayout table = (TableLayout) findViewById(R.id.mainTable);
-            Log.i(Constants.LOG_TAG_UI, "Found " + table);
 
             // prepare grid
             table.removeAllViews();
@@ -342,6 +341,7 @@ public class MainActivity extends MainMenuActivity {
 
                     Intent intent = new Intent(MainActivity.this, MainActivity.class);
                     startActivity(intent);
+                    dialog.dismiss();
                 }
             });
             AlertDialog alert = builder.create();
