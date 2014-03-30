@@ -120,8 +120,6 @@ public class ExcelExport {
             Cell headerPhoto = headerRow.createCell(CELL_PHOTO);
             headerPhoto.setCellValue(mContext.getString(R.string.main_table_header_photo));
 
-            // Create the drawing patriarch.  This is the top level container for all shapes.
-//            Drawing drawingPatriarch = sheet.createDrawingPatriarch();
             CreationHelper helper = wb.getCreationHelper();
 
             // legs
@@ -149,7 +147,9 @@ public class ExcelExport {
                 DaoUtil.refreshPoint(fromPoint);
 
                 if (l.getGalleryId().equals(lastGalleryId)) {
-                    from.setCellValue(galleryNames.get(l.getGalleryId()) + fromPoint.getName());
+                    if (!l.isMiddle()) {
+                        from.setCellValue(galleryNames.get(l.getGalleryId()) + fromPoint.getName());
+                    }
                     prevGalleryId = l.getGalleryId();
                 } else {
                     prevGalleryId = DaoUtil.getLegByToPoint(l.getFromPoint()).getGalleryId();
@@ -159,18 +159,27 @@ public class ExcelExport {
                 Cell to = legRow.createCell(CELL_TO);
                 Point toPoint = l.getToPoint();
                 DaoUtil.refreshPoint(toPoint);
-                to.setCellValue(galleryNames.get(l.getGalleryId()) + toPoint.getName());
+                if (!l.isMiddle()) {
+                    to.setCellValue(galleryNames.get(l.getGalleryId()) + toPoint.getName());
+                }
                 Cell length = legRow.createCell(CELL_LENGHT);
-                if (l.getDistance() != null) {
-                    length.setCellValue(StringUtils.floatToLabel(l.getDistance()));
+                if (l.isMiddle()) {
+                    length.setCellValue("@" + StringUtils.floatToLabel(l.getMiddlePointDistance()));
+                } else {
+                    if (l.getDistance() != null) {
+                        length.setCellValue(StringUtils.floatToLabel(l.getDistance()));
+                    }
                 }
-                Cell compass = legRow.createCell(CELL_AZIMUTH);
-                if (l.getAzimuth() != null) {
-                    compass.setCellValue(StringUtils.floatToLabel(l.getAzimuth()));
-                }
-                Cell clinometer = legRow.createCell(CELL_SLOPE);
-                if (l.getSlope() != null) {
-                    clinometer.setCellValue(StringUtils.floatToLabel(l.getSlope()));
+
+                if (!l.isMiddle()) {
+                    Cell compass = legRow.createCell(CELL_AZIMUTH);
+                    if (l.getAzimuth() != null) {
+                        compass.setCellValue(StringUtils.floatToLabel(l.getAzimuth()));
+                    }
+                    Cell clinometer = legRow.createCell(CELL_SLOPE);
+                    if (l.getSlope() != null) {
+                        clinometer.setCellValue(StringUtils.floatToLabel(l.getSlope()));
+                    }
                 }
                 Cell left = legRow.createCell(CELL_LEFT);
                 if (l.getLeft() != null) {
@@ -188,86 +197,89 @@ public class ExcelExport {
                 if (l.getDown() != null) {
                     down.setCellValue(StringUtils.floatToLabel(l.getDown()));
                 }
-                Cell note = legRow.createCell(CELL_NOTE);
 
-                Note n = DaoUtil.getActiveLegNote(l);
-                if (n != null) {
-                    note.setCellValue(n.getText());
-                }
+                if (!l.isMiddle()) {
+                    Cell note = legRow.createCell(CELL_NOTE);
 
-                lastGalleryId = l.getGalleryId();
-                
-                // location
-                Location location = DaoUtil.getLocationByPoint(fromPoint);
-                if (location != null){
-                    Cell latitude = legRow.createCell(CELL_LATITUDE);
-                    latitude.setCellValue(LocationUtil.formatLatitude(location.getLatitude()));
-                    Cell longitude = legRow.createCell(CELL_LONGITUDE);
-                    longitude.setCellValue(LocationUtil.formatLongitude(location.getLongitude()));
-                    Cell altitude = legRow.createCell(CELL_ALTTITUDE);
-                    altitude.setCellValue(location.getAltitude());
-                    Cell accuracy = legRow.createCell(CELL_ACCURACY);
-                    accuracy.setCellValue(location.getAccuracy());
-                }
-                
-                // sketch
-                Sketch sketch = DaoUtil.getScetchByLeg(l);
-                if (sketch != null){
-                    Hyperlink  fileLink= helper.createHyperlink(HSSFHyperlink.LINK_FILE);
-                    
-                    Cell sketchCell = legRow.createCell(CELL_DRAWING);
-                    String path = sketch.getFSPath();
-                    String name = new File(path).getName();
-                    
-                    fileLink.setAddress(name);
-                    sketchCell.setCellValue(name);
-                    sketchCell.setHyperlink(fileLink);
-                }
-                
-                // picture
-                Photo photo = DaoUtil.getPhotoByLeg(l);
-                if (photo != null){
-                    Hyperlink  fileLink= helper.createHyperlink(HSSFHyperlink.LINK_FILE);
-                    
-                    Cell photoCell = legRow.createCell(CELL_PHOTO);
-                    String path = photo.getFSPath();
-                    String name = new File(path).getName();
-                    
-                    fileLink.setAddress(name);
-                    photoCell.setCellValue(name);
-                    photoCell.setHyperlink(fileLink);
-                }
+                    Note n = DaoUtil.getActiveLegNote(l);
+                    if (n != null) {
+                        note.setCellValue(n.getText());
+                    }
 
-                // vectors
-                List<Vector> vectors = DaoUtil.getLegVectors(l);
-                if (vectors != null) {
-                    int vectorCounter = 1;
-                    for(Vector v: vectors){
-                        rowCounter++;
-                        Row vectorRow = sheet.createRow(rowCounter);
+                    lastGalleryId = l.getGalleryId();
 
-                        Cell vectorFrom = vectorRow.createCell(CELL_FROM);
-                        String fromPointName;
-                        if (l.getGalleryId().equals(lastGalleryId)) {
-                            fromPointName = galleryNames.get(l.getGalleryId()) + fromPoint.getName();
-                        } else {
-                            fromPointName = galleryNames.get(prevGalleryId) + fromPoint.getName();
+                    // location
+                    Location location = DaoUtil.getLocationByPoint(fromPoint);
+                    if (location != null) {
+                        Cell latitude = legRow.createCell(CELL_LATITUDE);
+                        latitude.setCellValue(LocationUtil.formatLatitude(location.getLatitude()));
+                        Cell longitude = legRow.createCell(CELL_LONGITUDE);
+                        longitude.setCellValue(LocationUtil.formatLongitude(location.getLongitude()));
+                        Cell altitude = legRow.createCell(CELL_ALTTITUDE);
+                        altitude.setCellValue(location.getAltitude());
+                        Cell accuracy = legRow.createCell(CELL_ACCURACY);
+                        accuracy.setCellValue(location.getAccuracy());
+                    }
+
+                    // sketch
+                    Sketch sketch = DaoUtil.getScetchByLeg(l);
+                    if (sketch != null) {
+                        Hyperlink fileLink = helper.createHyperlink(HSSFHyperlink.LINK_FILE);
+
+                        Cell sketchCell = legRow.createCell(CELL_DRAWING);
+                        String path = sketch.getFSPath();
+                        String name = new File(path).getName();
+
+                        fileLink.setAddress(name);
+                        sketchCell.setCellValue(name);
+                        sketchCell.setHyperlink(fileLink);
+                    }
+
+                    // picture
+                    Photo photo = DaoUtil.getPhotoByLeg(l);
+                    if (photo != null) {
+                        Hyperlink fileLink = helper.createHyperlink(HSSFHyperlink.LINK_FILE);
+
+                        Cell photoCell = legRow.createCell(CELL_PHOTO);
+                        String path = photo.getFSPath();
+                        String name = new File(path).getName();
+
+                        fileLink.setAddress(name);
+                        photoCell.setCellValue(name);
+                        photoCell.setHyperlink(fileLink);
+                    }
+
+                    // vectors
+                    List<Vector> vectors = DaoUtil.getLegVectors(l);
+                    if (vectors != null) {
+                        int vectorCounter = 1;
+                        for (Vector v : vectors) {
+                            rowCounter++;
+                            Row vectorRow = sheet.createRow(rowCounter);
+
+                            Cell vectorFrom = vectorRow.createCell(CELL_FROM);
+                            String fromPointName;
+                            if (l.getGalleryId().equals(lastGalleryId)) {
+                                fromPointName = galleryNames.get(l.getGalleryId()) + fromPoint.getName();
+                            } else {
+                                fromPointName = galleryNames.get(prevGalleryId) + fromPoint.getName();
+                            }
+                            vectorFrom.setCellValue(fromPointName);
+
+                            Cell vectorTo = vectorRow.createCell(CELL_TO);
+                            vectorTo.setCellValue(fromPointName + "-v" + vectorCounter);
+
+                            Cell vectorLength = vectorRow.createCell(CELL_LENGHT);
+                            vectorLength.setCellValue(StringUtils.floatToLabel(v.getDistance()));
+
+                            Cell vectorCompass = vectorRow.createCell(CELL_AZIMUTH);
+                            vectorCompass.setCellValue(StringUtils.floatToLabel(v.getAzimuth()));
+
+                            Cell vectorClinometer = vectorRow.createCell(CELL_SLOPE);
+                            vectorClinometer.setCellValue(StringUtils.floatToLabel(v.getSlope()));
+
+                            vectorCounter++;
                         }
-                        vectorFrom.setCellValue(fromPointName);
-
-                        Cell vectorTo = vectorRow.createCell(CELL_TO);
-                        vectorTo.setCellValue(fromPointName + "-v" + vectorCounter);
-
-                        Cell vectorLength = vectorRow.createCell(CELL_LENGHT);
-                        vectorLength.setCellValue(StringUtils.floatToLabel(v.getDistance()));
-
-                        Cell vectorCompass = vectorRow.createCell(CELL_AZIMUTH);
-                        vectorCompass.setCellValue(StringUtils.floatToLabel(v.getAzimuth()));
-
-                        Cell vectorClinometer = vectorRow.createCell(CELL_SLOPE);
-                        vectorClinometer.setCellValue(StringUtils.floatToLabel(v.getSlope()));
-
-                        vectorCounter ++;
                     }
                 }
             }
