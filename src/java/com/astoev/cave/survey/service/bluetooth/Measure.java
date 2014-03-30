@@ -52,4 +52,13 @@ public class Measure {
     public void setValue(Float aValue) {
         mValue = aValue;
     }
+
+    @Override
+    public String toString() {
+        return "Measure{" +
+                "mMeasureType=" + mMeasureType +
+                ", mMeasureUnit=" + mMeasureUnit +
+                ", mValue=" + mValue +
+                '}';
+    }
 }

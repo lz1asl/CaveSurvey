@@ -2,7 +2,6 @@ package com.astoev.cave.survey.service.bluetooth;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.os.Build;
@@ -19,6 +18,7 @@ import org.apache.commons.io.IOUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -47,11 +47,7 @@ public class ConnectThread extends Thread {
         mDevice = aDevice;
         mDeviceSpec = aDeviceSpec;
 
-        BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
-//        if (adapter.isDiscovering()) {
-//            adapter.cancelDiscovery();
-//        }
-
+        // prepare to read/write
         if (mDeviceSpec.isPassiveBTConnection()) {
             Log.i(Constants.LOG_TAG_BT, "Prepare client passive connection");
             mSocket = createSocketApi10Plus();
@@ -96,23 +92,25 @@ public class ConnectThread extends Thread {
         }
 
         Log.i(Constants.LOG_TAG_BT, "Start reading ");
+        int numBytes;
         while (running) {
             try {
-                int i = mIn.read(buffer);
+               numBytes = mIn.read(buffer);
+               if (numBytes > 0) {
 
+                   List<Measure> measures = mDeviceSpec.decodeMeasure(Arrays.copyOf(buffer, numBytes), mMeasureTypes);
 
-               List<Measure> measures = mDeviceSpec.decodeMeasure(buffer, mMeasureTypes);
-
-                if (measures != null) {
-                    for (Measure m: measures) {
-                        Bundle b = new Bundle();
-                        b.putFloat(Constants.MEASURE_VALUE_KEY, m.getValue());
-                        b.putString(Constants.MEASURE_TYPE_KEY, m.getMeasureType().toString());
-                        b.putString(Constants.MEASURE_UNIT_KEY, m.getMeasureUnit().toString());
-                        b.putString(Constants.MEASURE_TARGET_KEY, mTarget.toString());
-                        mReceiver.send(Activity.RESULT_OK, b);
-                    }
-                }
+                   if (measures != null) {
+                       for (Measure m : measures) {
+                           Bundle b = new Bundle();
+                           b.putFloat(Constants.MEASURE_VALUE_KEY, m.getValue());
+                           b.putString(Constants.MEASURE_TYPE_KEY, m.getMeasureType().toString());
+                           b.putString(Constants.MEASURE_UNIT_KEY, m.getMeasureUnit().toString());
+                           b.putString(Constants.MEASURE_TARGET_KEY, mTarget.toString());
+                           mReceiver.send(Activity.RESULT_OK, b);
+                       }
+                   }
+               }
 
                 sleep(20);
             } catch (DataException de) {

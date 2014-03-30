@@ -28,6 +28,7 @@ public class NMEAUtilTest extends TestCase {
         ensureSucces("$PTNLA,HV,1.58,M,341.5,D,9.15,D,1.60,M*40", 1.60f, 341.5f, 9.15f);
         ensureSucces("$PTNLA,HV,1.60,M,356.2,D,8.59,D,1.62,M*41", 1.62f, 356.2f, 8.59f);
         ensureSucces("$PTNLA,HV,1.62,M,351.5,D,8.45,D,1.64,M*48", 1.64f, 351.5f, 8.45f);
+        ensureSucces("$PTNLA,HV,1.62,M,351.5,D,8.45,D,1.64,M*48\n", 1.64f, 351.5f, 8.45f);
     }
 
     private void ensureFails(String aBadMessage) {

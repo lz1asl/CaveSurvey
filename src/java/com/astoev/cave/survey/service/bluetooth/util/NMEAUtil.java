@@ -25,11 +25,11 @@ public class NMEAUtil {
         }
 
         try {
-            String messageString = new String(aMessage);
+            String messageString = new String(aMessage).trim();
             Log.i(Constants.LOG_TAG_BT, "Got message " + messageString);
 
             List<Measure> measures = new ArrayList<Measure>();
-            StringTokenizer tokenizer = new StringTokenizer(messageString, ",");
+            StringTokenizer tokenizer = new StringTokenizer(messageString, ",*");
 
             // header
             if (!"$PTNLA".equals(tokenizer.nextToken())) {
@@ -70,6 +70,8 @@ public class NMEAUtil {
 
             Measure angleMeasure = new Measure(Constants.MeasureTypes.angle, Constants.MeasureUnits.degrees, angle);
             measures.add(angleMeasure);
+            Log.i(Constants.LOG_TAG_BT, "Got angle " + angleMeasure);
+
 
             // slope
             float slope = Float.parseFloat(tokenizer.nextToken());
@@ -83,16 +85,16 @@ public class NMEAUtil {
 
             Measure slopeMeasure = new Measure(Constants.MeasureTypes.slope, Constants.MeasureUnits.degrees, slope);
             measures.add(slopeMeasure);
+            Log.i(Constants.LOG_TAG_BT, "Got slope " + slopeMeasure);
 
             // skip vertical distance
             if (distancePresent) {
                 distanceString = tokenizer.nextToken();
                 if ("M".equals(distanceString) || "F".equals(distanceString)) {
                     // no distance, no need to skip distance units
-                    distancePresent = false;
                 } else {
                     if (!"M".equals(tokenizer.nextToken())) {
-                        throw new DataException("Please measure in meters ");
+                        throw new DataException("Please measure in meters");
                     }
 
                     float distance = Float.parseFloat(distanceString);
@@ -102,20 +104,18 @@ public class NMEAUtil {
 
                     Measure distanceMeasure = new Measure(Constants.MeasureTypes.distance, Constants.MeasureUnits.meters, distance);
                     measures.add(distanceMeasure);
+                    Log.i(Constants.LOG_TAG_BT, "Got distance " + distanceMeasure);
                 }
             }
-            tokenizer.nextToken("*");
 
             // checksum
             String calculatedCheck = getCheckSum(messageString);
             if (!calculatedCheck.equals(tokenizer.nextToken())) {
-//                throw new DataException("Bad checksum");
-                UIUtilities.showNotification("Bad checksum ignored");
+                throw new DataException("Bad checksum");
             }
 
             if (tokenizer.hasMoreTokens()) {
-//                throw new DataException("Extra data found");
-                UIUtilities.showNotification("Extra data found " + tokenizer.nextToken());
+                throw new DataException("Extra data found");
             }
 
             return measures;
