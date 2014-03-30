@@ -3,6 +3,7 @@ package com.astoev.cave.survey.service.bluetooth.device;
 import android.util.Log;
 
 import com.astoev.cave.survey.Constants;
+import static com.astoev.cave.survey.Constants.MeasureTypes;
 import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.Measure;
 import com.astoev.cave.survey.util.ByteUtils;
@@ -107,6 +108,18 @@ public class CEMILDMBluetoothDevice extends AbstractBluetoothDevice {
     @Override
     public boolean isPassiveBTConnection() {
         return false;
+    }
+
+    @Override
+    public boolean isMeasureSupported(Constants.MeasureTypes aMeasureType) {
+        switch (aMeasureType){
+            case distance:
+                return true;
+            case slope:
+                return true;
+            default:
+                return false;
+        }
     }
 
     private boolean isMeasureRequested(List<Constants.MeasureTypes> aMeasures, Constants.MeasureTypes aType) {

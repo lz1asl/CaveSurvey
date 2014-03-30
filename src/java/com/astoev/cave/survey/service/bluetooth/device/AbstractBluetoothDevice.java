@@ -26,6 +26,8 @@ public abstract class AbstractBluetoothDevice {
 
     public abstract boolean isPassiveBTConnection();
 
+    public abstract boolean isMeasureSupported(Constants.MeasureTypes aMeasureType);
+
     public UUID getSPPUUID() {
         return UUID.fromString(getSPPUUIDString());
     }

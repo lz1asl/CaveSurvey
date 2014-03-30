@@ -45,4 +45,18 @@ public class LaserAceBluetoothDevice extends AbstractBluetoothDevice {
     public boolean isPassiveBTConnection() {
         return true;
     }
+
+    @Override
+    public boolean isMeasureSupported(Constants.MeasureTypes aMeasureType) {
+        switch (aMeasureType){
+            case distance:
+                return true;
+            case angle:
+                return true;
+            case slope:
+                return true;
+            default:
+                return false;
+        }
+    }
 }
