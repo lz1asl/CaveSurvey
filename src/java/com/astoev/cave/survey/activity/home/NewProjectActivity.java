@@ -209,6 +209,7 @@ public class NewProjectActivity extends MainMenuActivity {
                 getWorkspace().setActiveLeg(getWorkspace().getActiveOrFirstLeg());
                 intent.putExtra(Constants.LEG_SELECTED, getWorkspace().getActiveLegId());
                 startActivity(intent);
+                finish();
             } else {
                 Log.e(Constants.LOG_TAG_DB, "No project created");
                 UIUtilities.showNotification(R.string.error);
