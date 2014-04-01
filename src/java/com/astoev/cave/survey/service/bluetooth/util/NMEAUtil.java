@@ -106,6 +106,11 @@ public class NMEAUtil {
                     measures.add(distanceMeasure);
                     Log.i(Constants.LOG_TAG_BT, "Got distance " + distanceMeasure);
                 }
+            } else {
+                // skip the 999's and measure type
+                tokenizer.nextToken();
+                tokenizer.nextToken();
+                tokenizer.nextToken();
             }
 
             // checksum
