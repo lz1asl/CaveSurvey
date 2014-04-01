@@ -169,11 +169,13 @@
 
     <string-array name="azimuth_read_type_manually">
         <item>Manually</item>
+        <item>From Bluetooth</item>
     </string-array>
     
     <string-array name="azimuth_read_type_all">
         <item>Manually</item>
         <item>Built-in sensor</item>
+        <item>From Bluetooth</item>
     </string-array>
 
     <string name="options_units_slope">Slope</string>

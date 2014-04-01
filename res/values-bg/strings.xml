@@ -169,11 +169,13 @@
 
     <string-array name="azimuth_read_type_manually">
         <item>Ръчно</item>
+        <item>През Bluetooth</item>
     </string-array>
     
     <string-array name="azimuth_read_type_all">
         <item>Ръчно</item>
         <item>Вграден сензор</item>
+        <item>През Bluetooth</item>
     </string-array>
 
     <string name="options_units_slope">Наклон</string>
