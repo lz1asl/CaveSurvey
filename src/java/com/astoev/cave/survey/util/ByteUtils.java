@@ -22,4 +22,29 @@ public class ByteUtils {
     public static byte toByte(char paramChar) {
         return (byte) "0123456789ABCDEF".indexOf(paramChar);
     }
+
+    public static byte[] copyBytes(byte[] anOrigByteArray, int aLength) {
+        byte result[] = new byte[aLength];
+        for (int i=0; i<aLength; i++) {
+            result[i] = anOrigByteArray[i];
+        }
+        return result;
+    }
+
+    public static float[] copyBytes(float[] anOrigFloatArray, int aLength) {
+        float result[] = new float[aLength];
+        for (int i=0; i<aLength; i++) {
+            result[i] = anOrigFloatArray[i];
+        }
+        return result;
+    }
+
+    public static String[] copyBytes(String[] anOrigStringArray, int aLength) {
+        String result[] = new String[aLength];
+        for (int i=0; i<aLength; i++) {
+            result[i] = anOrigStringArray[i];
+        }
+        return result;
+    }
+
 }

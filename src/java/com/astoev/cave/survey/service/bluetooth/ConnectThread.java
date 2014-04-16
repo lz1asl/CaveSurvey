@@ -12,13 +12,13 @@ import android.util.Log;
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.device.AbstractBluetoothDevice;
+import com.astoev.cave.survey.util.ByteUtils;
 
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -66,10 +66,10 @@ public class ConnectThread extends Thread {
         }
 
     }
-    
+
     @TargetApi(Build.VERSION_CODES.GINGERBREAD_MR1)
-    private BluetoothSocket createSocketApi10Plus() throws IOException{
-    	return mDevice.createInsecureRfcommSocketToServiceRecord(mDeviceSpec.getSPPUUID());
+    private BluetoothSocket createSocketApi10Plus() throws IOException {
+        return mDevice.createInsecureRfcommSocketToServiceRecord(mDeviceSpec.getSPPUUID());
     }
 
     @Override
@@ -95,22 +95,38 @@ public class ConnectThread extends Thread {
         int numBytes;
         while (running) {
             try {
-               numBytes = mIn.read(buffer);
-               if (numBytes > 0) {
+                numBytes = mIn.read(buffer);
+                if (numBytes > 0) {
 
-                   List<Measure> measures = mDeviceSpec.decodeMeasure(Arrays.copyOf(buffer, numBytes), mMeasureTypes);
+                    List<Measure> measures = mDeviceSpec.decodeMeasure(ByteUtils.copyBytes(buffer, numBytes), mMeasureTypes);
 
-                   if (measures != null) {
-                       for (Measure m : measures) {
-                           Bundle b = new Bundle();
-                           b.putFloat(Constants.MEASURE_VALUE_KEY, m.getValue());
-                           b.putString(Constants.MEASURE_TYPE_KEY, m.getMeasureType().toString());
-                           b.putString(Constants.MEASURE_UNIT_KEY, m.getMeasureUnit().toString());
-                           b.putString(Constants.MEASURE_TARGET_KEY, mTarget.toString());
-                           mReceiver.send(Activity.RESULT_OK, b);
-                       }
-                   }
-               }
+                    if (measures != null && measures.size() > 0) {
+                        Bundle b = new Bundle();
+                        float[] valuesArray = new float[measures.size()];
+                        String[] typesArray = new String[measures.size()];
+                        String[] unitsArray = new String[measures.size()];
+                        String[] targetsArray = new String[measures.size()];
+                        int actualMeasuresCount = 0;
+
+                        for (int i = 0; i < measures.size(); i++) {
+                            Measure m = measures.get(i);
+                            if (!mMeasureTypes.contains(m.getMeasureType())) {
+                                continue;
+                            }
+
+                            valuesArray[actualMeasuresCount] = m.getValue();
+                            typesArray[actualMeasuresCount] = m.getMeasureType().toString();
+                            unitsArray[actualMeasuresCount] = m.getMeasureUnit().toString();
+                            targetsArray[actualMeasuresCount] = mTarget.toString();
+                            actualMeasuresCount++;
+                        }
+                        b.putFloatArray(Constants.MEASURE_VALUE_KEY, ByteUtils.copyBytes(valuesArray, actualMeasuresCount));
+                        b.putStringArray(Constants.MEASURE_TYPE_KEY, ByteUtils.copyBytes(typesArray, actualMeasuresCount));
+                        b.putStringArray(Constants.MEASURE_UNIT_KEY, ByteUtils.copyBytes(unitsArray, actualMeasuresCount));
+                        b.putStringArray(Constants.MEASURE_TARGET_KEY, ByteUtils.copyBytes(targetsArray, actualMeasuresCount));
+                        mReceiver.send(Activity.RESULT_OK, b);
+                    }
+                }
 
                 sleep(20);
             } catch (DataException de) {

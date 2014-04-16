@@ -62,26 +62,28 @@ import java.util.concurrent.Callable;
  * Time: 1:15 AM
  * To change this template use File | Settings | File Templates.
  */
-public class PointActivity extends MainMenuActivity implements AzimuthChangedListener, SlopeChangedListener{
+public class PointActivity extends MainMenuActivity implements AzimuthChangedListener, SlopeChangedListener {
 
-	private static final int REQUEST_IMAGE_CAPTURE = 1;
-	private static final int REQIEST_EDIT_NOTE = 2;
-	
-	private static final String AZIMUTH_DIALOG = "azimuth_dialog";
-	private static final String SLOPE_DIALOG = "slope_dialog";
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final int REQIEST_EDIT_NOTE = 2;
+
+    private static final String AZIMUTH_DIALOG = "azimuth_dialog";
+    private static final String SLOPE_DIALOG = "slope_dialog";
     private static final String VECTOR_DIALOG = "vector_dialog";
-	
+
     private String mNewNote = null;
 
     private String mCurrentPhotoPath;
-    
-    /** Current leg to work with */
+
+    /**
+     * Current leg to work with
+     */
     private Leg mCurrentLeg = null;
-    
+
     private BTMeasureResultReceiver mReceiver = new BTMeasureResultReceiver(new Handler());
-    
+
     private AzimuthDialog mAzimuthDialog;
-    
+
     private SlopeDialog mSlopeDialog;
 
 
@@ -89,43 +91,43 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.point);
         mNewNote = null;
-        
+
         // initialize the view with leg data only if the activity is new
-        if (savedInstanceState == null){
+        if (savedInstanceState == null) {
             loadPointData();
         }
 
         // if the azimuth is read from build in sensors add onClickListener to show azimuth dialog
-        if (Option.CODE_SENSOR_INTERNAL.equals(Options.getOptionValue(Option.CODE_AZIMUTH_SENSOR))){
-        	Log.i(Constants.LOG_TAG_UI, "Will register onClickListener for Azimuth");
-        	EditText azimuth = (EditText) findViewById(R.id.point_azimuth);
-        	azimuth.setOnClickListener(new OnClickListener(){
+        if (Option.CODE_SENSOR_INTERNAL.equals(Options.getOptionValue(Option.CODE_AZIMUTH_SENSOR))) {
+            Log.i(Constants.LOG_TAG_UI, "Will register onClickListener for Azimuth");
+            EditText azimuth = (EditText) findViewById(R.id.point_azimuth);
+            azimuth.setOnClickListener(new OnClickListener() {
 
-				/**
-				 * @see android.view.View.OnClickListener#onClick(android.view.View)
-				 */
-				@Override
-				public void onClick(View v) {
-					readAzimuth(v);
-				}
-        	});
+                /**
+                 * @see android.view.View.OnClickListener#onClick(android.view.View)
+                 */
+                @Override
+                public void onClick(View v) {
+                    readAzimuth(v);
+                }
+            });
         }
-        
+
         // if the slope is read from build in sensors add onClickListener to show slope dialog
-        if (Option.CODE_SENSOR_INTERNAL.equals(Options.getOptionValue(Option.CODE_SLOPE_SENSOR))){
+        if (Option.CODE_SENSOR_INTERNAL.equals(Options.getOptionValue(Option.CODE_SLOPE_SENSOR))) {
             Log.i(Constants.LOG_TAG_UI, "Will register onClickListener for Slope");
             EditText slope = (EditText) findViewById(R.id.point_slope);
             slope.setOnClickListener(new OnClickListener() {
-                
+
                 @Override
                 public void onClick(View viewArg) {
                     readSlope(viewArg);
                 }
             });
         }
-        
+
         Leg legEdited = getCurrentLeg();
-        if (legEdited != null){
+        if (legEdited != null) {
             GPSActivity.initSavedLocationContainer(legEdited.getFromPoint(), this, savedInstanceState);
         }
 
@@ -142,52 +144,52 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         super.onResume();
 
         mReceiver.resetMeasureExpectations();
-        
+
         //check if location is added and returned back to this activity
         Fragment fragment = this.getSupportFragmentManager().findFragmentById(R.id.saved_location_container);
-        if (!(fragment instanceof LocationFragment)){
+        if (!(fragment instanceof LocationFragment)) {
             Leg legEdited = getCurrentLeg();
             GPSActivity.initSavedLocationContainer(legEdited.getFromPoint(), this, null);
         }
 
         loadLegVectors(getCurrentLeg());
     }
-    
+
     /**
-	 * @see android.support.v4.app.FragmentActivity#onPause()
-	 */
-	@Override
-	protected void onPause() {
-		if (mAzimuthDialog != null){
-			mAzimuthDialog.cancelDialog();
-			mAzimuthDialog.dismiss();
-		}
-		if (mSlopeDialog != null){
-		    mSlopeDialog.cancelDialog();
-		    mSlopeDialog.dismiss();
-		}
-		super.onPause();
-	}
+     * @see android.support.v4.app.FragmentActivity#onPause()
+     */
+    @Override
+    protected void onPause() {
+        if (mAzimuthDialog != null) {
+            mAzimuthDialog.cancelDialog();
+            mAzimuthDialog.dismiss();
+        }
+        if (mSlopeDialog != null) {
+            mSlopeDialog.cancelDialog();
+            mSlopeDialog.dismiss();
+        }
+        super.onPause();
+    }
 
-	/**
+    /**
      * Shows the current leg as activity title
-     * 
-	 * @see com.astoev.cave.survey.activity.BaseActivity#getScreenTitle()
-	 */
-	@Override
-	protected String getScreenTitle() {
+     *
+     * @see com.astoev.cave.survey.activity.BaseActivity#getScreenTitle()
+     */
+    @Override
+    protected String getScreenTitle() {
         try {
-			StringBuilder builder = new StringBuilder(getString(R.string.leg));
-			builder.append(getCurrentLeg().buildLegDescription(true));
-			
-			return builder.toString();
-		} catch (SQLException e) {
-			Log.e(Constants.LOG_TAG_UI, "Failed to create activity's name", e);
-		}
-        return null;
-	}
+            StringBuilder builder = new StringBuilder(getString(R.string.leg));
+            builder.append(getCurrentLeg().buildLegDescription(true));
 
-	private void loadPointData() {
+            return builder.toString();
+        } catch (SQLException e) {
+            Log.e(Constants.LOG_TAG_UI, "Failed to create activity's name", e);
+        }
+        return null;
+    }
+
+    private void loadPointData() {
         Log.i(Constants.LOG_TAG_UI, "Loading point data");
 
         try {
@@ -365,7 +367,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                     new Callable<Integer>() {
                         public Integer call() throws Exception {
 
-                        	Leg legEdited = getCurrentLeg();
+                            Leg legEdited = getCurrentLeg();
 
                             if (getIntent().getBooleanExtra(Constants.GALLERY_NEW, false)) {
                                 Gallery newGallery = DaoUtil.createGallery(false);
@@ -373,7 +375,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                             }
 
                             if (legEdited.isNew()) {
-                            	getWorkspace().getDBHelper().getPointDao().create(legEdited.getToPoint());
+                                getWorkspace().getDBHelper().getPointDao().create(legEdited.getToPoint());
                                 getWorkspace().getDBHelper().getLegDao().create(legEdited);
                             }
 
@@ -402,7 +404,8 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                             UIUtilities.showNotification(R.string.action_saved);
                             return 0;
                         }
-                    });
+                    }
+            );
             return true;
         } catch (Exception e) {
             UIUtilities.showNotification(R.string.error);
@@ -431,9 +434,9 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 
     public void gpsButton() {
         Point parentPoint = getCurrentLeg().getFromPoint();
-    	Intent intent = new Intent(this, GPSActivity.class);
-    	intent.putExtra(GPSActivity.POINT, parentPoint);
-    	startActivity(intent);
+        Intent intent = new Intent(this, GPSActivity.class);
+        intent.putExtra(GPSActivity.POINT, parentPoint);
+        startActivity(intent);
     }
 
     private void vectorButton() {
@@ -447,14 +450,14 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         try {
             Leg legEdited = getCurrentLeg();
             boolean deleted = DaoUtil.deleteLeg(legEdited);
-            if (deleted){
+            if (deleted) {
                 UIUtilities.showNotification(R.string.action_deleted);
 
                 // ensure active leg present
                 getWorkspace().setActiveLeg(getWorkspace().getLastLeg());
 
                 onBackPressed();
-            } 
+            }
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to delete point", e);
             UIUtilities.showNotification(R.string.error);
@@ -499,90 +502,89 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
     }
 
     public void readAzimuth(View view) {
-		mAzimuthDialog = new AzimuthDialog();
-		mAzimuthDialog.show(getSupportFragmentManager(), AZIMUTH_DIALOG);
+        mAzimuthDialog = new AzimuthDialog();
+        mAzimuthDialog.show(getSupportFragmentManager(), AZIMUTH_DIALOG);
     }
-    
-    public void readSlope(View view){
+
+    public void readSlope(View view) {
         mSlopeDialog = new SlopeDialog();
         mSlopeDialog.show(getSupportFragmentManager(), SLOPE_DIALOG);
     }
 
     public void photoButton() {
         // picture http://www.tutorialforandroid.com/2010/10/take-picture-in-android-with.html
-    	// https://developer.android.com/training/camera/photobasics.html
+        // https://developer.android.com/training/camera/photobasics.html
 
-    	File photoFile = null;
-		try {
-			String projectName = getWorkspace().getActiveProject().getName();
-			Leg workingLeg = getCurrentLeg();
+        File photoFile = null;
+        try {
+            String projectName = getWorkspace().getActiveProject().getName();
+            Leg workingLeg = getCurrentLeg();
             Point pointFrom = workingLeg.getFromPoint();
             DaoUtil.refreshPoint(pointFrom);
 
-			// create file where to capture the image
+            // create file where to capture the image
             String galleryName = PointUtil.getGalleryNameForFromPoint(pointFrom, workingLeg.getGalleryId());
-			String filePrefix = FileStorageUtil.getFilePrefixForPicture(pointFrom, galleryName);
-			photoFile = FileStorageUtil.createPictureFile(this, projectName, filePrefix, FileStorageUtil.JPG_FILE_EXTENSION);
-			
-		} catch (SQLException e) {
-			UIUtilities.showNotification(R.string.error);
-			return;
-		} catch (Exception e) {
-			UIUtilities.showNotification(R.string.export_io_error);
-			return;
-		}
-		 
-		// call capture image
-		if (photoFile != null){
-			
-			mCurrentPhotoPath = photoFile.getAbsolutePath();
-			
-			Log.i(Constants.LOG_TAG_SERVICE, "Going to capture image in: " + photoFile.getAbsolutePath());
-	        final Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-	        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
-	        startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
-		} 
+            String filePrefix = FileStorageUtil.getFilePrefixForPicture(pointFrom, galleryName);
+            photoFile = FileStorageUtil.createPictureFile(this, projectName, filePrefix, FileStorageUtil.JPG_FILE_EXTENSION);
+
+        } catch (SQLException e) {
+            UIUtilities.showNotification(R.string.error);
+            return;
+        } catch (Exception e) {
+            UIUtilities.showNotification(R.string.export_io_error);
+            return;
+        }
+
+        // call capture image
+        if (photoFile != null) {
+
+            mCurrentPhotoPath = photoFile.getAbsolutePath();
+
+            Log.i(Constants.LOG_TAG_SERVICE, "Going to capture image in: " + photoFile.getAbsolutePath());
+            final Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+            startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+        }
     }
 
     // photo is captured
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent aData) {
-    	
+
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
-                case REQUEST_IMAGE_CAPTURE:
-                {
-                	Log.i(Constants.LOG_TAG_SERVICE, "Got image");
-    				try {
-    					
-    					// check if the file really exists
-    				    if (!FileStorageUtil.isFileExists(mCurrentPhotoPath)){
-    				    	UIUtilities.showNotification(R.string.export_io_error);
-    				    	break;
-    				    }
-    				    
-    					File pictureFile = new File(mCurrentPhotoPath);
-    					
-    					// broadcast that the file is added 
-			        	FileStorageUtil.notifyPictureAddedToGalery(this, pictureFile);
-    					
-    					Log.i(Constants.LOG_TAG_SERVICE, "Image captured in: " + mCurrentPhotoPath);
-    					Photo photo = new Photo();
-    					photo.setFSPath(mCurrentPhotoPath);
+                case REQUEST_IMAGE_CAPTURE: {
+                    Log.i(Constants.LOG_TAG_SERVICE, "Got image");
+                    try {
 
-    					Leg legEdited = getCurrentLeg();
-    					Point currPoint = DaoUtil.getPoint(legEdited.getFromPoint().getId());
-    					photo.setPoint(currPoint);
+                        // check if the file really exists
+                        if (!FileStorageUtil.isFileExists(mCurrentPhotoPath)) {
+                            UIUtilities.showNotification(R.string.export_io_error);
+                            break;
+                        }
 
-    					getWorkspace().getDBHelper().getPhotoDao().create(photo);
-    					Log.i(Constants.LOG_TAG_SERVICE, "Image stored");
-    					
-    				} catch (SQLException e) {
-    					Log.e(Constants.LOG_TAG_UI, "Picture object not saved", e);
-    					UIUtilities.showNotification(R.string.error);
-    				}
+                        File pictureFile = new File(mCurrentPhotoPath);
+
+                        // broadcast that the file is added
+                        FileStorageUtil.notifyPictureAddedToGalery(this, pictureFile);
+
+                        Log.i(Constants.LOG_TAG_SERVICE, "Image captured in: " + mCurrentPhotoPath);
+                        Photo photo = new Photo();
+                        photo.setFSPath(mCurrentPhotoPath);
+
+                        Leg legEdited = getCurrentLeg();
+                        Point currPoint = DaoUtil.getPoint(legEdited.getFromPoint().getId());
+                        photo.setPoint(currPoint);
+
+                        getWorkspace().getDBHelper().getPhotoDao().create(photo);
+                        Log.i(Constants.LOG_TAG_SERVICE, "Image stored");
+
+                    } catch (SQLException e) {
+                        Log.e(Constants.LOG_TAG_UI, "Picture object not saved", e);
+                        UIUtilities.showNotification(R.string.error);
+                    }
                 }
-                    break;
+                break;
                 case REQIEST_EDIT_NOTE:
                     mNewNote = aData.getStringExtra("note");
                     TextView textView = (TextView) findViewById(R.id.point_note_text);
@@ -633,7 +635,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                 photoButton();
                 return true;
             }
-            case R.id.point_action_add_vector : {
+            case R.id.point_action_add_vector: {
                 vectorButton();
                 return true;
             }
@@ -649,7 +651,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         // need to call super to prepare menu
-        boolean flag =  super.onPrepareOptionsMenu(menu);
+        boolean flag = super.onPrepareOptionsMenu(menu);
 
         Leg currLeg = getCurrentLeg();
 
@@ -669,10 +671,10 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 
         // check if the device has a camera
         PackageManager packageManager = getPackageManager();
-        if (!packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA) || currLeg.isMiddle()){
-        	// if there is no camera remove the photo button
-        	MenuItem photoMenuItem = menu.findItem(R.id.point_action_photo);
-        	photoMenuItem.setVisible(false);
+        if (!packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA) || currLeg.isMiddle()) {
+            // if there is no camera remove the photo button
+            MenuItem photoMenuItem = menu.findItem(R.id.point_action_photo);
+            photoMenuItem.setVisible(false);
         }
 
         // allow vectors for saved legs
@@ -697,26 +699,26 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         deleteMenuOption.setEnabled(false);
         return flag;
     }
-    
+
     /**
      * Helper method to build the current leg. If the leg is new will create from and to points. The id of the
      * new leg will always be null. If the leg is currently edited it is obtained from the workspace.
-     * 
+     *
      * @return Leg instance
      */
-    private Leg getCurrentLeg(){
-        if (mCurrentLeg == null){
-        	Bundle extras = getIntent().getExtras();
+    private Leg getCurrentLeg() {
+        if (mCurrentLeg == null) {
+            Bundle extras = getIntent().getExtras();
             try {
-				if (extras != null) {
-				    int currentLegSelectedId = extras.getInt(Constants.LEG_SELECTED);
+                if (extras != null) {
+                    int currentLegSelectedId = extras.getInt(Constants.LEG_SELECTED);
 
                     if (currentLegSelectedId > 0) {
-				        mCurrentLeg = DaoUtil.getLeg(currentLegSelectedId);
-				        Log.i(Constants.LOG_TAG_UI, "PointView for leg with id: " + currentLegSelectedId);
+                        mCurrentLeg = DaoUtil.getLeg(currentLegSelectedId);
+                        Log.i(Constants.LOG_TAG_UI, "PointView for leg with id: " + currentLegSelectedId);
                         return mCurrentLeg;
                     }
-				}
+                }
 
                 Log.i(Constants.LOG_TAG_UI, "Create new leg");
                 Integer currGalleryId = getWorkspace().getActiveGalleryId();
@@ -735,79 +737,92 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 
                 Log.i(Constants.LOG_TAG_UI, "PointView for new point");
                 mCurrentLeg = new Leg(newFrom, newTo, getWorkspace().getActiveProject(), currGalleryId);
-			} catch (SQLException sqle) {
-				throw new RuntimeException(sqle);
-			}
+            } catch (SQLException sqle) {
+                throw new RuntimeException(sqle);
+            }
         }
         return mCurrentLeg;
     }
 
     private class BTMeasureResultReceiver extends ResultReceiver {
-            private Set<Constants.Measures> expectedMeasures = new HashSet<Constants.Measures>();
+        private Set<Constants.Measures> expectedMeasures = new HashSet<Constants.Measures>();
 
         public BTMeasureResultReceiver(Handler handler) {
             super(handler);
         }
 
         @Override
-            protected void onReceiveResult(int aResultCode, Bundle aResultData) {
+        protected void onReceiveResult(int aResultCode, Bundle aResultData) {
 
-                switch (aResultCode) {
-                    case Activity.RESULT_OK:
+            switch (aResultCode) {
+                case Activity.RESULT_OK:
 
-                        float aMeasure = aResultData.getFloat(Constants.MEASURE_VALUE_KEY);
-                        Constants.Measures type = Constants.Measures.valueOf(aResultData.getString(Constants.MEASURE_TARGET_KEY));
+
+                    float[] measuresArray = aResultData.getFloatArray(Constants.MEASURE_VALUE_KEY);
+                    String[] targetsArray = aResultData.getStringArray(Constants.MEASURE_TARGET_KEY);
+                    // not yet used
+//                    String[] typesArray = aResultData.getStringArray(Constants.MEASURE_TYPE_KEY);
+//                    String[] unitsArray = aResultData.getStringArray(Constants.MEASURE_UNIT_KEY);
+
+
+                    for (int i = 0; i < measuresArray.length; i++) {
+                        Constants.Measures type = Constants.Measures.valueOf(targetsArray[i]);
                         if (!expectsMeasure(type)) {
-                            Log.i(Constants.LOG_TAG_SERVICE, "Unexpected measure " + type + " : " + aMeasure);
+                            Log.i(Constants.LOG_TAG_SERVICE, "Unexpected measure " + type + " : " + type);
                             return;
                         }
 
+                        final float measure = measuresArray[i];
+
+
                         switch (type) {
                             case distance:
-                                Log.i(Constants.LOG_TAG_UI, "Got distance " + aMeasure);
-                                populateMeasure(aMeasure, R.id.point_distance);
+                                Log.i(Constants.LOG_TAG_UI, "Got distance " + measure);
+                                populateMeasure(measure, R.id.point_distance);
                                 break;
 
                             case angle:
-                                Log.i(Constants.LOG_TAG_UI, "Got angle " + aMeasure);
-                                populateMeasure(aMeasure, R.id.point_azimuth);
+                                Log.i(Constants.LOG_TAG_UI, "Got angle " + measure);
+                                populateMeasure(measure, R.id.point_azimuth);
                                 break;
 
                             case slope:
-                                Log.i(Constants.LOG_TAG_UI, "Got slope " + aMeasure);
-                                populateMeasure(aMeasure, R.id.point_slope);
+                                Log.i(Constants.LOG_TAG_UI, "Got slope " + measure);
+                                populateMeasure(measure, R.id.point_slope);
                                 break;
 
                             case up:
-                                Log.i(Constants.LOG_TAG_UI, "Got up " + aMeasure);
-                                populateMeasure(aMeasure, R.id.point_up);
+                                Log.i(Constants.LOG_TAG_UI, "Got up " + measure);
+                                populateMeasure(measure, R.id.point_up);
                                 break;
 
                             case down:
-                                Log.i(Constants.LOG_TAG_UI, "Got down " + aMeasure);
-                                populateMeasure(aMeasure, R.id.point_down);
+                                Log.i(Constants.LOG_TAG_UI, "Got down " + measure);
+                                populateMeasure(measure, R.id.point_down);
                                 break;
 
                             case left:
-                                Log.i(Constants.LOG_TAG_UI, "Got left " + aMeasure);
-                                populateMeasure(aMeasure, R.id.point_left);
+                                Log.i(Constants.LOG_TAG_UI, "Got left " + measure);
+                                populateMeasure(measure, R.id.point_left);
                                 break;
 
                             case right:
-                                Log.i(Constants.LOG_TAG_UI, "Got right " + aMeasure);
-                                populateMeasure(aMeasure, R.id.point_right);
+                                Log.i(Constants.LOG_TAG_UI, "Got right " + measure);
+                                populateMeasure(measure, R.id.point_right);
                                 break;
 
                             default:
                                 Log.i(Constants.LOG_TAG_UI, "Ignore type " + type);
                         }
-                    break;
+                        break;
+                    }
 
-                    default:
-                        UIUtilities.showNotification(aResultData.getString("error"));
-                }
-
+                default:
+                    UIUtilities.showNotification(aResultData.getString("error"));
             }
+
+
+        }
 
         public boolean expectsMeasure(Constants.Measures aMeasure) {
             return expectedMeasures.contains(aMeasure);
@@ -826,21 +841,21 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         }
     }
 
-	/**
-	 * @see com.astoev.cave.survey.service.orientation.AzimuthChangedListener#onAzimuthChanged(float)
-	 */
-	@Override
-	public void onAzimuthChanged(float newValueArg) {
+    /**
+     * @see com.astoev.cave.survey.service.orientation.AzimuthChangedListener#onAzimuthChanged(float)
+     */
+    @Override
+    public void onAzimuthChanged(float newValueArg) {
         final EditText azimuth = (EditText) findViewById(R.id.point_azimuth);
-		azimuth.setText(String.valueOf(newValueArg));
-	}
+        azimuth.setText(String.valueOf(newValueArg));
+    }
 
     /**
      * @see com.astoev.cave.survey.service.orientation.SlopeChangedListener#onSlopeChanged(float)
      */
     @Override
     public void onSlopeChanged(float newValueArg) {
-        final EditText slope = (EditText)findViewById(R.id.point_slope);
+        final EditText slope = (EditText) findViewById(R.id.point_slope);
         slope.setText(String.valueOf(newValueArg));
     }
 
@@ -878,7 +893,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 
                 // populate data
                 int index = 1;
-                for(final Vector v: vectorsList) {
+                for (final Vector v : vectorsList) {
                     TableRow row = new TableRow(this);
                     TextView id = new TextView(this);
                     id.setText(String.valueOf(index));
