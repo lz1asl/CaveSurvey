@@ -171,6 +171,10 @@ public class NewProjectActivity extends MainMenuActivity {
                                 case 1:
                                     Log.i(Constants.LOG_TAG_UI, "Read azimuth from build-in sensor");
                                     Options.createOption(Option.CODE_AZIMUTH_SENSOR, Option.CODE_SENSOR_INTERNAL);
+                                    break;
+                                case 2:
+                                    Log.i(Constants.LOG_TAG_UI, "Read azimuth from bluetooth");
+                                    Options.createOption(Option.CODE_AZIMUTH_SENSOR, Option.CODE_SENSOR_BLUETOOTH);
                             }
 
                             // slope
