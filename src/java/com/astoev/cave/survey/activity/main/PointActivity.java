@@ -268,38 +268,38 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
             }
 
             Log.i(Constants.LOG_TAG_UI, "Register field " + aMeasure + "?");
-            switch (aMeasure) {
-                case distance:
-                case up:
-                case down:
-                case left:
-                case right:
-                    if (!Option.CODE_SENSOR_BLUETOOTH.equals(Options.getOptionValue(Option.CODE_DISTANCE_SENSOR))) {
-                        return;
-                    }
-                    break;
+                            switch (aMeasure) {
+                                case distance:
+                                case up:
+                                case down:
+                                case left:
+                                case right:
+                                    if (!Option.CODE_SENSOR_BLUETOOTH.equals(Options.getOptionValue(Option.CODE_DISTANCE_SENSOR))) {
+                                        return;
+                                    }
+                                    break;
 
-                case angle:
-                    if (!Option.CODE_SENSOR_BLUETOOTH.equals(Options.getOptionValue(Option.CODE_AZIMUTH_SENSOR))) {
-                        return;
-                    }
-                    break;
+                                case angle:
+                                    if (!Option.CODE_SENSOR_BLUETOOTH.equals(Options.getOptionValue(Option.CODE_AZIMUTH_SENSOR))) {
+                                        return;
+                                    }
+                                    break;
 
-                case slope:
-                    if (!Option.CODE_SENSOR_BLUETOOTH.equals(Options.getOptionValue(Option.CODE_SLOPE_SENSOR))) {
-                        return;
-                    }
-                    break;
-            }
+                                case slope:
+                                    if (!Option.CODE_SENSOR_BLUETOOTH.equals(Options.getOptionValue(Option.CODE_SLOPE_SENSOR))) {
+                                        return;
+                                    }
+                                    break;
+                            }
 
-            // supported for the measure, add the listener
-            if (StringUtils.isEmpty(text)) {
-                // no current falue, just moving focus to the cell requests measure from BT
-                Log.i(Constants.LOG_TAG_UI, "Add BT focus listener");
-                text.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                    @Override
-                    public void onFocusChange(View v, boolean hasFocus) {
-                        if (hasFocus) {
+                            // supported for the measure, add the listener
+                            if (StringUtils.isEmpty(text)) {
+                                // no current falue, just moving focus to the cell requests measure from BT
+                                Log.i(Constants.LOG_TAG_UI, "Add BT focus listener");
+                                text.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                                    @Override
+                                    public void onFocusChange(View v, boolean hasFocus) {
+                                        if (hasFocus) {
                             Log.i(Constants.LOG_TAG_UI, "Send read command");
                             mReceiver.awaitMeasure(aMeasure);
                             triggerBluetoothMeasure(aMeasure);

@@ -320,4 +320,9 @@ public class BluetoothService {
         statusText.append(BluetoothService.isPaired() ? aContext.getString(R.string.bt_paired) : aContext.getString(R.string.bt_not_paired));
         return statusText.toString();
     }
+
+    // for the current device
+    public static boolean isMeasureSupported(Constants.MeasureTypes aMeasureType) {
+        return mCurrDeviceSpec != null && mCurrDeviceSpec.isMeasureSupported(aMeasureType);
+    }
 }

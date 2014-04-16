@@ -55,8 +55,13 @@ public class ConnectThread extends Thread {
             mIn = mSocket.getInputStream();
         } else {
             Log.i(Constants.LOG_TAG_BT, "Prepare client active connection");
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD_MR1 || !mDeviceSpec.isPassiveBTConnection()) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD_MR1) {
                 mSocket = mDevice.createRfcommSocketToServiceRecord(mDeviceSpec.getSPPUUID());
+                if (!mDeviceSpec.isPassiveBTConnection()) {
+                    mSocket.connect();
+                    mIn = mSocket.getInputStream();
+                    mOut = mSocket.getOutputStream();
+                }
             } else {
                 mSocket = createSocketApi10Plus();
                 mSocket.connect();
