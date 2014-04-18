@@ -237,6 +237,7 @@
     <string name="bt_devices">Paired Devices</string>
     <string name="bt_new_device">New Device</string>
     <string name="bt_paired">Paired</string>
+    <string name="bt_connected">Connection success</string>
     <string name="bt_not_paired">Not Paired</string>
     <string name="bt_pair_failed">Device offline or not compatible</string>
     <string name="bt_state_unknown">Unknown state</string>

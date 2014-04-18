@@ -154,7 +154,7 @@ public class BluetoothService {
         new Thread() {
             public void run() {
                 try {
-                    Log.i(Constants.LOG_TAG_BT, "Test command");
+                    Log.i(Constants.LOG_TAG_BT, "Send read command");
                     if (mBusyThread != null) {
                         mBusyThread.cancel();
                     }
@@ -206,7 +206,6 @@ public class BluetoothService {
             mCurrContext.unregisterReceiver(r);
         }
         mRegisteredReceivers.clear();
-//        mCurrContext = null;
     }
 
     public static void selectDevice(final String aDeviceAddress) {
@@ -229,7 +228,7 @@ public class BluetoothService {
                         }
                         tester.connect();
                         Log.i(Constants.LOG_TAG_BT, "Device found!");
-                        UIUtilities.showNotification(R.string.bt_paired);
+                        UIUtilities.showNotification(R.string.bt_connected);
                         mPaired = true;
                     } catch (Exception e) {
                         mCurrDevice = null;

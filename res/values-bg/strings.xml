@@ -236,6 +236,7 @@
     <string name="bt_devices">Сдвоено устройство</string>
     <string name="bt_new_device">Добави устройство</string>
     <string name="bt_paired">Сдвоен</string>
+    <string name="bt_connected">Установена връзка</string>
     <string name="bt_not_paired">Не е сдвоен</string>
     <string name="bt_pair_failed">Устройството е несъвместимо или неналично</string>
     <string name="bt_state_unknown">Неразпознато състояние</string>

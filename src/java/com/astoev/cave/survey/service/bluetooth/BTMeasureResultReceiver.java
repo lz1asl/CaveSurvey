@@ -31,12 +31,12 @@ import java.util.Set;
  */
 public class BTMeasureResultReceiver extends ResultReceiver {
 
-    private Activity mParentActivity;
+    private BTResultAware mTarget;
     private Set<Constants.Measures> mExpectedMeasures = new HashSet<Constants.Measures>();
 
-    public BTMeasureResultReceiver(Activity anActivity) {
+    public BTMeasureResultReceiver(BTResultAware aTarget) {
         super(new Handler());
-        mParentActivity = anActivity;
+        mTarget = aTarget;
     }
 
     @Override
@@ -63,7 +63,7 @@ public class BTMeasureResultReceiver extends ResultReceiver {
                     final float measure = measuresArray[i];
 
                     // screen specific population of the measures
-                    ((BTResultAware) mParentActivity).onReceiveMeasures(type, measure);
+                    mTarget.onReceiveMeasures(type, measure);
                 }
 
             default:
@@ -89,12 +89,7 @@ public class BTMeasureResultReceiver extends ResultReceiver {
         mExpectedMeasures.clear();
     }
 
-    public void populateMeasure(float aMeasure, int anEditTextId) {
-        EditText field = (EditText) mParentActivity.findViewById(anEditTextId);
-        StringUtils.setNotNull(field, aMeasure);
-    }
-
-    public void bindBTMeasures(EditText text, final Constants.Measures aMeasure) {
+    public void bindBTMeasures(EditText text, final Constants.Measures aMeasure, boolean aDirectSendCommandFlag) {
 
         if (BluetoothService.isBluetoothSupported()) {
 
@@ -144,33 +139,39 @@ public class BTMeasureResultReceiver extends ResultReceiver {
                     break;
             }
 
-            // supported for the measure, add the listener
-            if (StringUtils.isEmpty(text)) {
-                // no current falue, just moving focus to the cell requests measure from BT
-                Log.i(Constants.LOG_TAG_UI, "Add BT focus listener");
-                text.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                    @Override
-                    public void onFocusChange(View v, boolean hasFocus) {
-                        if (hasFocus) {
+            if (aDirectSendCommandFlag) {
+                Log.i(Constants.LOG_TAG_UI, "Send read command early");
+                awaitMeasure(aMeasure);
+                triggerBluetoothMeasure(aMeasure);
+            } else {
+                // supported for the measure, add the listener
+                if (StringUtils.isEmpty(text)) {
+                    // no current falue, just moving focus to the cell requests measure from BT
+                    Log.i(Constants.LOG_TAG_UI, "Add BT focus listener");
+                    text.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                        @Override
+                        public void onFocusChange(View v, boolean hasFocus) {
+                            if (hasFocus) {
+                                Log.i(Constants.LOG_TAG_UI, "Send read command");
+                                awaitMeasure(aMeasure);
+                                triggerBluetoothMeasure(aMeasure);
+                            } else {
+                                ignoreMeasure(aMeasure);
+                            }
+                        }
+                    });
+                } else {
+                    // trigger BT read only if you tap twice
+                    Log.i(Constants.LOG_TAG_UI, "Add BT click listener");
+                    text.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
                             Log.i(Constants.LOG_TAG_UI, "Send read command");
                             awaitMeasure(aMeasure);
                             triggerBluetoothMeasure(aMeasure);
-                        } else {
-                            ignoreMeasure(aMeasure);
                         }
-                    }
-                });
-            } else {
-                // trigger BT read only if you tap twice
-                Log.i(Constants.LOG_TAG_UI, "Add BT click listener");
-                text.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Log.i(Constants.LOG_TAG_UI, "Send read command");
-                        awaitMeasure(aMeasure);
-                        triggerBluetoothMeasure(aMeasure);
-                    }
-                });
+                    });
+                }
             }
         }
     }
@@ -180,8 +181,8 @@ public class BTMeasureResultReceiver extends ResultReceiver {
             return true;
         }
 
-        if (showBTOptions) {
-            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(mParentActivity);
+       /* if (showBTOptions) {
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(mParentView.getContext());
             dialogBuilder.setMessage(R.string.bt_not_selected)
                     .setCancelable(false)
                     .setPositiveButton(R.string.button_yes, new DialogInterface.OnClickListener() {
@@ -197,7 +198,7 @@ public class BTMeasureResultReceiver extends ResultReceiver {
                     });
             AlertDialog alert = dialogBuilder.create();
             alert.show();
-        }
+        }*/
         return false;
     }
 

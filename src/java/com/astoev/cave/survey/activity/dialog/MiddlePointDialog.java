@@ -20,6 +20,7 @@ import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Option;
 import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.service.Workspace;
+import com.astoev.cave.survey.service.bluetooth.BTMeasureResultReceiver;
 import com.astoev.cave.survey.service.bluetooth.BTResultAware;
 import com.astoev.cave.survey.util.StringUtils;
 import com.j256.ormlite.misc.TransactionManager;
@@ -33,6 +34,9 @@ import java.util.concurrent.Callable;
  */
 public class MiddlePointDialog extends DialogFragment implements BTResultAware {
 
+    BTMeasureResultReceiver mReceiver;
+    View view;
+
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         super.onCreateDialog(savedInstanceState);
 
@@ -40,7 +44,7 @@ public class MiddlePointDialog extends DialogFragment implements BTResultAware {
         builder.setTitle(getString(R.string.middle_leg_add));
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        final View view = inflater.inflate(R.layout.middle_point_dialog, null);
+        view = inflater.inflate(R.layout.middle_point_dialog, null);
         builder.setView(view);
 
         try {
@@ -57,6 +61,11 @@ public class MiddlePointDialog extends DialogFragment implements BTResultAware {
             Log.e(Constants.LOG_TAG_UI, "Failed to add middle point", e);
             UIUtilities.showNotification(R.string.error);
         }
+
+        // Bluetooth registrations
+        mReceiver = new BTMeasureResultReceiver(this);
+        EditText distanceField = (EditText) view.findViewById(R.id.middle_distance);
+        mReceiver.bindBTMeasures(distanceField, Constants.Measures.distance, true);
 
         final Dialog dialog = builder.create();
 
@@ -134,6 +143,19 @@ public class MiddlePointDialog extends DialogFragment implements BTResultAware {
 
     @Override
     public void onReceiveMeasures(Constants.Measures aMeasureTarget, float aMeasureValue) {
-        // TODO
+        switch (aMeasureTarget) {
+            case distance:
+                Log.i(Constants.LOG_TAG_UI, "Got middle distance " + aMeasureValue);
+                populateMeasure(aMeasureValue, R.id.middle_distance);
+                break;
+
+            default:
+                Log.i(Constants.LOG_TAG_UI, "Ignore type " + aMeasureTarget);
+        }
+    }
+
+    private void populateMeasure(float aMeasure, int anEditTextId) {
+        EditText field = (EditText) view.findViewById(anEditTextId);
+        StringUtils.setNotNull(field, aMeasure);
     }
 }
