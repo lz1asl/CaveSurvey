@@ -16,6 +16,7 @@ import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.activity.main.PointActivity;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Vector;
+import com.astoev.cave.survey.service.bluetooth.BTMeasureResultReceiver;
 import com.astoev.cave.survey.service.bluetooth.BTResultAware;
 import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.util.StringUtils;
@@ -27,7 +28,9 @@ import java.sql.SQLException;
  */
 public class VectorDialog extends AzimuthDialog implements BTResultAware {
 
+    private BTMeasureResultReceiver mReceiver;
     private Leg mLeg;
+    private View mView;
 
     /**
      * @see android.support.v4.app.DialogFragment#onCreateDialog(android.os.Bundle)
@@ -39,7 +42,17 @@ public class VectorDialog extends AzimuthDialog implements BTResultAware {
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
         final View view = inflater.inflate(R.layout.vector_dialog, null);
+        mView = view;
         builder.setView(view);
+
+        // Bluetooth registrations
+        mReceiver = new BTMeasureResultReceiver(this);
+        EditText distanceField = (EditText) mView.findViewById(R.id.vector_distance);
+        mReceiver.bindBTMeasures(distanceField, Constants.Measures.distance, false);
+        EditText angleField = (EditText) mView.findViewById(R.id.vector_azimuth);
+        mReceiver.bindBTMeasures(angleField, Constants.Measures.angle, false);
+        EditText slopeField = (EditText) mView.findViewById(R.id.vector_slope);
+        mReceiver.bindBTMeasures(slopeField, Constants.Measures.slope, false);
 
         final Dialog dialog = builder.create();
 
@@ -96,6 +109,30 @@ public class VectorDialog extends AzimuthDialog implements BTResultAware {
 
     @Override
     public void onReceiveMeasures(Constants.Measures aMeasureTarget, float aMeasureValue) {
-        // TODO
+        switch (aMeasureTarget) {
+            case distance:
+                Log.i(Constants.LOG_TAG_UI, "Got vector distance " + aMeasureValue);
+                populateMeasure(aMeasureValue, R.id.vector_distance);
+                break;
+
+            case angle:
+                Log.i(Constants.LOG_TAG_UI, "Got vector angle " + aMeasureValue);
+                populateMeasure(aMeasureValue, R.id.vector_azimuth);
+                break;
+
+            case slope:
+                Log.i(Constants.LOG_TAG_UI, "Got vector slope " + aMeasureValue);
+                populateMeasure(aMeasureValue, R.id.vector_slope);
+                break;
+
+            default:
+                Log.i(Constants.LOG_TAG_UI, "Ignore type " + aMeasureTarget);
+        }
     }
+
+    private void populateMeasure(float aMeasure, int anEditTextId) {
+        EditText field = (EditText) mView.findViewById(anEditTextId);
+        StringUtils.setNotNull(field, aMeasure);
+    }
+
 }

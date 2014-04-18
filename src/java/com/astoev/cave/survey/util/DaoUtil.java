@@ -250,6 +250,9 @@ public class DaoUtil {
                     int deleted = dbHelper.getSketchDao().delete(sketchList);
                     Log.d(Constants.LOG_TAG_DB, "Deleted sketches:" + deleted);
                 }
+
+                // TODO delete middle points
+                // TODO delete vectors
                 
                 // delete leg
                 int deletedLeg = dbHelper.getLegDao().delete(legArg);

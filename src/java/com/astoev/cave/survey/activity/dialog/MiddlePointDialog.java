@@ -34,8 +34,8 @@ import java.util.concurrent.Callable;
  */
 public class MiddlePointDialog extends DialogFragment implements BTResultAware {
 
-    BTMeasureResultReceiver mReceiver;
-    View view;
+    private BTMeasureResultReceiver mReceiver;
+    private View mView;
 
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         super.onCreateDialog(savedInstanceState);
@@ -44,12 +44,12 @@ public class MiddlePointDialog extends DialogFragment implements BTResultAware {
         builder.setTitle(getString(R.string.middle_leg_add));
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        view = inflater.inflate(R.layout.middle_point_dialog, null);
-        builder.setView(view);
+        mView = inflater.inflate(R.layout.middle_point_dialog, null);
+        builder.setView(mView);
 
         try {
             final Leg currLeg = Workspace.getCurrentInstance().getActiveLeg();
-            TextView label = (TextView) view.findViewById(R.id.middleLegInfo);
+            TextView label = (TextView) mView.findViewById(R.id.middleLegInfo);
             CharSequence distanceUnitsLabel = StringUtils.extractDynamicResource(
                     getResources(), StringUtils.RESOURCE_PREFIX_UNITS + Options.getOptionValue(Option.CODE_DISTANCE_UNITS));
             label.setText(getString(
@@ -64,17 +64,17 @@ public class MiddlePointDialog extends DialogFragment implements BTResultAware {
 
         // Bluetooth registrations
         mReceiver = new BTMeasureResultReceiver(this);
-        EditText distanceField = (EditText) view.findViewById(R.id.middle_distance);
+        EditText distanceField = (EditText) mView.findViewById(R.id.middle_distance);
         mReceiver.bindBTMeasures(distanceField, Constants.Measures.distance, true);
 
         final Dialog dialog = builder.create();
 
-        Button createButton = (Button) view.findViewById(R.id.middle_create);
+        Button createButton = (Button) mView.findViewById(R.id.middle_create);
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
-                    EditText distanceInput = (EditText) view.findViewById(R.id.middle_distance);
+                    EditText distanceInput = (EditText) mView.findViewById(R.id.middle_distance);
                     Float distance = StringUtils.getFromEditTextNotNull(distanceInput);
                     if (null == distance) {
                         distanceInput.setError(getString(R.string.middle_no_value));
@@ -97,7 +97,7 @@ public class MiddlePointDialog extends DialogFragment implements BTResultAware {
                     Leg theNewLeg = addMiddle(currLeg, distance.floatValue());
 
                     // show PointActivity
-                    Intent intent = new Intent(view.getContext(), PointActivity.class);
+                    Intent intent = new Intent(mView.getContext(), PointActivity.class);
                     intent.putExtra(Constants.LEG_SELECTED, theNewLeg.getId());
                     Workspace.getCurrentInstance().setActiveLeg(theNewLeg);
                     startActivity(intent);
@@ -155,7 +155,7 @@ public class MiddlePointDialog extends DialogFragment implements BTResultAware {
     }
 
     private void populateMeasure(float aMeasure, int anEditTextId) {
-        EditText field = (EditText) view.findViewById(anEditTextId);
+        EditText field = (EditText) mView.findViewById(anEditTextId);
         StringUtils.setNotNull(field, aMeasure);
     }
 }
