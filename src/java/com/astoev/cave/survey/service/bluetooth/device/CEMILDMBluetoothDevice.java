@@ -112,14 +112,7 @@ public class CEMILDMBluetoothDevice extends AbstractBluetoothDevice {
 
     @Override
     public boolean isMeasureSupported(Constants.MeasureTypes aMeasureType) {
-        switch (aMeasureType){
-            case distance:
-                return true;
-            case slope:
-                return true;
-            default:
-                return false;
-        }
+        return MeasureTypes.distance.equals(aMeasureType) || MeasureTypes.slope.equals(aMeasureType);
     }
 
     private boolean isMeasureRequested(List<Constants.MeasureTypes> aMeasures, Constants.MeasureTypes aType) {

@@ -1,6 +1,6 @@
 package com.astoev.cave.survey.service.bluetooth.device;
 
-import com.astoev.cave.survey.Constants;
+import com.astoev.cave.survey.Constants.MeasureTypes;
 import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.Measure;
 import com.astoev.cave.survey.service.bluetooth.util.NMEAUtil;
@@ -31,12 +31,12 @@ public class LaserAceBluetoothDevice extends AbstractBluetoothDevice {
     }
 
     @Override
-    public void triggerMeasures(OutputStream aStream, List<Constants.MeasureTypes> aMeasures) throws IOException {
+    public void triggerMeasures(OutputStream aStream, List<MeasureTypes> aMeasures) throws IOException {
         // should not be required
     }
 
     @Override
-    public List<Measure> decodeMeasure(byte[] aResponseBytes, List<Constants.MeasureTypes> aMeasures) throws IOException, DataException {
+    public List<Measure> decodeMeasure(byte[] aResponseBytes, List<MeasureTypes> aMeasures) throws IOException, DataException {
         // ignore requested measures for now, we should have full set of measures
         return NMEAUtil.decode(aResponseBytes);
     }
@@ -47,16 +47,8 @@ public class LaserAceBluetoothDevice extends AbstractBluetoothDevice {
     }
 
     @Override
-    public boolean isMeasureSupported(Constants.MeasureTypes aMeasureType) {
-        switch (aMeasureType){
-            case distance:
-                return true;
-            case angle:
-                return true;
-            case slope:
-                return true;
-            default:
-                return false;
-        }
+    public boolean isMeasureSupported(MeasureTypes aMeasureType) {
+        // all current distance, angle and inclination are returned on each measure
+        return true;
     }
 }

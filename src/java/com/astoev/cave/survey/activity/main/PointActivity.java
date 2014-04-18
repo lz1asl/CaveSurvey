@@ -39,6 +39,8 @@ import com.astoev.cave.survey.model.Photo;
 import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.model.Vector;
 import com.astoev.cave.survey.service.Options;
+import com.astoev.cave.survey.service.bluetooth.BTMeasureResultReceiver;
+import com.astoev.cave.survey.service.bluetooth.BTResultAware;
 import com.astoev.cave.survey.service.bluetooth.BluetoothService;
 import com.astoev.cave.survey.service.orientation.AzimuthChangedListener;
 import com.astoev.cave.survey.service.orientation.SlopeChangedListener;
@@ -62,7 +64,7 @@ import java.util.concurrent.Callable;
  * Time: 1:15 AM
  * To change this template use File | Settings | File Templates.
  */
-public class PointActivity extends MainMenuActivity implements AzimuthChangedListener, SlopeChangedListener {
+public class PointActivity extends MainMenuActivity implements AzimuthChangedListener, SlopeChangedListener, BTResultAware {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int REQIEST_EDIT_NOTE = 2;
@@ -80,7 +82,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
      */
     private Leg mCurrentLeg = null;
 
-    private BTMeasureResultReceiver mReceiver = new BTMeasureResultReceiver(new Handler());
+    private BTMeasureResultReceiver mReceiver = new BTMeasureResultReceiver(this);
 
     private AzimuthDialog mAzimuthDialog;
 
@@ -198,41 +200,41 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 
             // up
             EditText up = (EditText) findViewById(R.id.point_up);
-            setNotNull(up, legEdited.getTop());
-            bindBTMeasures(up, Constants.Measures.up);
+            StringUtils.setNotNull(up, legEdited.getTop());
+            mReceiver.bindBTMeasures(up, Constants.Measures.up);
 
             // down
             EditText down = (EditText) findViewById(R.id.point_down);
-            setNotNull(down, legEdited.getDown());
-            bindBTMeasures(down, Constants.Measures.down);
+            StringUtils.setNotNull(down, legEdited.getDown());
+            mReceiver.bindBTMeasures(down, Constants.Measures.down);
 
             // left
             EditText left = (EditText) findViewById(R.id.point_left);
-            setNotNull(left, legEdited.getLeft());
-            bindBTMeasures(left, Constants.Measures.left);
+            StringUtils.setNotNull(left, legEdited.getLeft());
+            mReceiver.bindBTMeasures(left, Constants.Measures.left);
 
             // right
             EditText right = (EditText) findViewById(R.id.point_right);
-            setNotNull(right, legEdited.getRight());
-            bindBTMeasures(right, Constants.Measures.right);
+            StringUtils.setNotNull(right, legEdited.getRight());
+            mReceiver.bindBTMeasures(right, Constants.Measures.right);
 
             // distance
             EditText distance = (EditText) findViewById(R.id.point_distance);
-            setNotNull(distance, legEdited.getDistance());
-            bindBTMeasures(distance, Constants.Measures.distance);
+            StringUtils.setNotNull(distance, legEdited.getDistance());
+            mReceiver.bindBTMeasures(distance, Constants.Measures.distance);
             disableIfMiddle(legEdited, distance);
 
             // azimuth
             EditText azimuth = (EditText) findViewById(R.id.point_azimuth);
-            setNotNull(azimuth, legEdited.getAzimuth());
-            bindBTMeasures(azimuth, Constants.Measures.angle);
+            StringUtils.setNotNull(azimuth, legEdited.getAzimuth());
+            mReceiver.bindBTMeasures(azimuth, Constants.Measures.angle);
             disableIfMiddle(legEdited, azimuth);
 
             // slope
             EditText slope = (EditText) findViewById(R.id.point_slope);
             slope.setText("0");
-            setNotNull(slope, legEdited.getSlope());
-            bindBTMeasures(slope, Constants.Measures.slope);
+            StringUtils.setNotNull(slope, legEdited.getSlope());
+            mReceiver.bindBTMeasures(slope, Constants.Measures.slope);
             disableIfMiddle(legEdited, slope);
 
             if (!legEdited.isMiddle()) {
@@ -256,92 +258,6 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 
     private void disableIfMiddle(Leg aCurrentLeg, EditText anEditText) {
         anEditText.setEnabled(!aCurrentLeg.isMiddle());
-    }
-
-    private void bindBTMeasures(EditText text, final Constants.Measures aMeasure) {
-
-        if (BluetoothService.isBluetoothSupported()) {
-
-            if (!ensureDeviceSelected(false)) {
-                Log.i(Constants.LOG_TAG_UI, "No device");
-                return;
-            }
-
-            Log.i(Constants.LOG_TAG_UI, "Register field " + aMeasure + "?");
-            switch (aMeasure) {
-                case distance:
-                case up:
-                case down:
-                case left:
-                case right:
-                    if (!Option.CODE_SENSOR_BLUETOOTH.equals(Options.getOptionValue(Option.CODE_DISTANCE_SENSOR))) {
-                        return;
-                    }
-
-                    if (BluetoothService.isMeasureSupported(Constants.MeasureTypes.distance)) {
-                        return;
-                    }
-                    break;
-
-                case angle:
-                    if (!Option.CODE_SENSOR_BLUETOOTH.equals(Options.getOptionValue(Option.CODE_AZIMUTH_SENSOR))) {
-                        return;
-                    }
-
-                    if (BluetoothService.isMeasureSupported(Constants.MeasureTypes.angle)) {
-                        return;
-                    }
-                    break;
-
-                case slope:
-                    if (!Option.CODE_SENSOR_BLUETOOTH.equals(Options.getOptionValue(Option.CODE_SLOPE_SENSOR))) {
-                        return;
-                    }
-
-                    if (BluetoothService.isMeasureSupported(Constants.MeasureTypes.slope)) {
-                        return;
-                    }
-
-                    break;
-            }
-
-            // supported for the measure, add the listener
-            if (StringUtils.isEmpty(text)) {
-                // no current falue, just moving focus to the cell requests measure from BT
-                Log.i(Constants.LOG_TAG_UI, "Add BT focus listener");
-                text.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                    @Override
-                    public void onFocusChange(View v, boolean hasFocus) {
-                        if (hasFocus) {
-                            Log.i(Constants.LOG_TAG_UI, "Send read command");
-                            mReceiver.awaitMeasure(aMeasure);
-                            triggerBluetoothMeasure(aMeasure);
-                        } else {
-                            mReceiver.ignoreMeasure(aMeasure);
-                        }
-                    }
-                });
-            } else {
-                // trigger BT read only if you tap twice
-                Log.i(Constants.LOG_TAG_UI, "Add BT click listener");
-                text.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Log.i(Constants.LOG_TAG_UI, "Send read command");
-                        mReceiver.awaitMeasure(aMeasure);
-                        triggerBluetoothMeasure(aMeasure);
-                    }
-                });
-            }
-        }
-    }
-
-    private void setNotNull(EditText aEditText, Float aValue) {
-        if (aValue != null) {
-            aEditText.setText(StringUtils.floatToLabel(aValue));
-        } else {
-            aEditText.setText("");
-        }
     }
 
     private boolean saveLeg() {
@@ -475,43 +391,6 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
             Log.e(Constants.LOG_TAG_UI, "Failed to delete point", e);
             UIUtilities.showNotification(R.string.error);
         }
-    }
-
-    private void triggerBluetoothMeasure(Constants.Measures aMeasure) {
-        // register listeners & send command
-        BluetoothService.sendReadMeasureCommand(mReceiver, aMeasure);
-        Log.i(Constants.LOG_TAG_UI, "Command sent for " + aMeasure);
-    }
-
-    private void populateMeasure(float aMeasure, int anEditTextId) {
-        EditText up = (EditText) findViewById(anEditTextId);
-        setNotNull(up, aMeasure);
-    }
-
-    private boolean ensureDeviceSelected(boolean showBTOptions) {
-        if (BluetoothService.isDeviceSelected()) {
-            return true;
-        }
-
-        if (showBTOptions) {
-            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-            dialogBuilder.setMessage(R.string.bt_not_selected)
-                    .setCancelable(false)
-                    .setPositiveButton(R.string.button_yes, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            Intent intent = new Intent(PointActivity.this, BTActivity.class);
-                            startActivity(intent);
-                        }
-                    })
-                    .setNegativeButton(R.string.button_no, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.cancel();
-                        }
-                    });
-            AlertDialog alert = dialogBuilder.create();
-            alert.show();
-        }
-        return false;
     }
 
     public void readAzimuth(View view) {
@@ -757,103 +636,6 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         return mCurrentLeg;
     }
 
-    private class BTMeasureResultReceiver extends ResultReceiver {
-        private Set<Constants.Measures> expectedMeasures = new HashSet<Constants.Measures>();
-
-        public BTMeasureResultReceiver(Handler handler) {
-            super(handler);
-        }
-
-        @Override
-        protected void onReceiveResult(int aResultCode, Bundle aResultData) {
-
-            switch (aResultCode) {
-                case Activity.RESULT_OK:
-
-
-                    float[] measuresArray = aResultData.getFloatArray(Constants.MEASURE_VALUE_KEY);
-                    String[] targetsArray = aResultData.getStringArray(Constants.MEASURE_TARGET_KEY);
-                    // not yet used
-//                    String[] typesArray = aResultData.getStringArray(Constants.MEASURE_TYPE_KEY);
-//                    String[] unitsArray = aResultData.getStringArray(Constants.MEASURE_UNIT_KEY);
-
-
-                    for (int i = 0; i < measuresArray.length; i++) {
-                        Constants.Measures type = Constants.Measures.valueOf(targetsArray[i]);
-                        if (!expectsMeasure(type)) {
-                            Log.i(Constants.LOG_TAG_SERVICE, "Unexpected measure " + type + " : " + type);
-                            return;
-                        }
-
-                        final float measure = measuresArray[i];
-
-
-                        switch (type) {
-                            case distance:
-                                Log.i(Constants.LOG_TAG_UI, "Got distance " + measure);
-                                populateMeasure(measure, R.id.point_distance);
-                                break;
-
-                            case angle:
-                                Log.i(Constants.LOG_TAG_UI, "Got angle " + measure);
-                                populateMeasure(measure, R.id.point_azimuth);
-                                break;
-
-                            case slope:
-                                Log.i(Constants.LOG_TAG_UI, "Got slope " + measure);
-                                populateMeasure(measure, R.id.point_slope);
-                                break;
-
-                            case up:
-                                Log.i(Constants.LOG_TAG_UI, "Got up " + measure);
-                                populateMeasure(measure, R.id.point_up);
-                                break;
-
-                            case down:
-                                Log.i(Constants.LOG_TAG_UI, "Got down " + measure);
-                                populateMeasure(measure, R.id.point_down);
-                                break;
-
-                            case left:
-                                Log.i(Constants.LOG_TAG_UI, "Got left " + measure);
-                                populateMeasure(measure, R.id.point_left);
-                                break;
-
-                            case right:
-                                Log.i(Constants.LOG_TAG_UI, "Got right " + measure);
-                                populateMeasure(measure, R.id.point_right);
-                                break;
-
-                            default:
-                                Log.i(Constants.LOG_TAG_UI, "Ignore type " + type);
-                        }
-                        break;
-                    }
-
-                default:
-                    UIUtilities.showNotification(aResultData.getString("error"));
-            }
-
-
-        }
-
-        public boolean expectsMeasure(Constants.Measures aMeasure) {
-            return expectedMeasures.contains(aMeasure);
-        }
-
-        public void awaitMeasure(Constants.Measures aMeasure) {
-            expectedMeasures.add(aMeasure);
-        }
-
-        public void ignoreMeasure(Constants.Measures aMeasure) {
-            expectedMeasures.remove(aMeasure);
-        }
-
-        public void resetMeasureExpectations() {
-            expectedMeasures.clear();
-        }
-    }
-
     /**
      * @see com.astoev.cave.survey.service.orientation.AzimuthChangedListener#onAzimuthChanged(float)
      */
@@ -973,6 +755,49 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to load vectors", e);
             UIUtilities.showNotification(R.string.error);
+        }
+    }
+
+    @Override
+    public void onReceiveMeasures(Constants.Measures aMeasureTarget, float aMeasureValue) {
+        switch (aMeasureTarget) {
+            case distance:
+                Log.i(Constants.LOG_TAG_UI, "Got distance " + aMeasureValue);
+                mReceiver.populateMeasure(aMeasureValue, R.id.point_distance);
+                break;
+
+            case angle:
+                Log.i(Constants.LOG_TAG_UI, "Got angle " + aMeasureValue);
+                mReceiver.populateMeasure(aMeasureValue, R.id.point_azimuth);
+                break;
+
+            case slope:
+                Log.i(Constants.LOG_TAG_UI, "Got slope " + aMeasureValue);
+                mReceiver.populateMeasure(aMeasureValue, R.id.point_slope);
+                break;
+
+            case up:
+                Log.i(Constants.LOG_TAG_UI, "Got up " + aMeasureValue);
+                mReceiver.populateMeasure(aMeasureValue, R.id.point_up);
+                break;
+
+            case down:
+                Log.i(Constants.LOG_TAG_UI, "Got down " + aMeasureValue);
+                mReceiver.populateMeasure(aMeasureValue, R.id.point_down);
+                break;
+
+            case left:
+                Log.i(Constants.LOG_TAG_UI, "Got left " + aMeasureValue);
+                mReceiver.populateMeasure(aMeasureValue, R.id.point_left);
+                break;
+
+            case right:
+                Log.i(Constants.LOG_TAG_UI, "Got right " + aMeasureValue);
+                mReceiver.populateMeasure(aMeasureValue, R.id.point_right);
+                break;
+
+            default:
+                Log.i(Constants.LOG_TAG_UI, "Ignore type " + aMeasureTarget);
         }
     }
 }

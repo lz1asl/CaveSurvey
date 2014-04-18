@@ -20,6 +20,7 @@ import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Option;
 import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.service.Workspace;
+import com.astoev.cave.survey.service.bluetooth.BTResultAware;
 import com.astoev.cave.survey.util.StringUtils;
 import com.j256.ormlite.misc.TransactionManager;
 
@@ -27,9 +28,10 @@ import java.sql.SQLException;
 import java.util.concurrent.Callable;
 
 /**
+ * Dialog for chosing middle point length.
  * Created by astoev on 2/8/14.
  */
-public class MiddlePointDialog extends DialogFragment {
+public class MiddlePointDialog extends DialogFragment implements BTResultAware {
 
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         super.onCreateDialog(savedInstanceState);
@@ -130,4 +132,8 @@ public class MiddlePointDialog extends DialogFragment {
         );
     }
 
+    @Override
+    public void onReceiveMeasures(Constants.Measures aMeasureTarget, float aMeasureValue) {
+        // TODO
+    }
 }

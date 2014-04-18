@@ -31,7 +31,7 @@ import com.astoev.cave.survey.util.DaoUtil;
 import java.util.List;
 
 /**
- * 
+ * Home activity for managing projects and general settings.
  * @author astoev
  * @author jmitrev
  */

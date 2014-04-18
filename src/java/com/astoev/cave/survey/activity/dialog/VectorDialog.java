@@ -16,6 +16,7 @@ import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.activity.main.PointActivity;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Vector;
+import com.astoev.cave.survey.service.bluetooth.BTResultAware;
 import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.util.StringUtils;
 
@@ -24,7 +25,7 @@ import java.sql.SQLException;
 /**
  * Created by astoev on 3/3/14.
  */
-public class VectorDialog extends AzimuthDialog {
+public class VectorDialog extends AzimuthDialog implements BTResultAware {
 
     private Leg mLeg;
 
@@ -91,5 +92,10 @@ public class VectorDialog extends AzimuthDialog {
 
     public void setLeg(Leg aLeg) {
         mLeg = aLeg;
+    }
+
+    @Override
+    public void onReceiveMeasures(Constants.Measures aMeasureTarget, float aMeasureValue) {
+        // TODO
     }
 }
