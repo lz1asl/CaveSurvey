@@ -96,7 +96,7 @@
 			          android:layout_height="wrap_content"
 			          android:layout_weight="1"
 			          android:gravity="center"
-			          android:maxLength="3"
+			          android:maxLength="5"
 			          android:ems="5"/>
 			<EditText android:id="@+id/point_slope"
 			    	  android:inputType="numberDecimal|numberSigned"
@@ -104,7 +104,7 @@
 			          android:layout_height="wrap_content"
 			          android:layout_weight="1"
 			          android:gravity="center"
-			          android:maxLength="4"
+			          android:maxLength="5"
 			          android:ems="5"/>
 	    </LinearLayout>
 	    <TextView android:id="@+id/point_note_text"
