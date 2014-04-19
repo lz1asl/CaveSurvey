@@ -65,7 +65,7 @@ public class MiddlePointDialog extends DialogFragment implements BTResultAware {
         // Bluetooth registrations
         mReceiver = new BTMeasureResultReceiver(this);
         EditText distanceField = (EditText) mView.findViewById(R.id.middle_distance);
-        mReceiver.bindBTMeasures(distanceField, Constants.Measures.distance, true);
+        mReceiver.bindBTMeasures(distanceField, Constants.Measures.distance, true, null);
 
         final Dialog dialog = builder.create();
 

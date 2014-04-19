@@ -48,11 +48,11 @@ public class VectorDialog extends AzimuthDialog implements BTResultAware {
         // Bluetooth registrations
         mReceiver = new BTMeasureResultReceiver(this);
         EditText distanceField = (EditText) mView.findViewById(R.id.vector_distance);
-        mReceiver.bindBTMeasures(distanceField, Constants.Measures.distance, false);
+        mReceiver.bindBTMeasures(distanceField, Constants.Measures.distance, false, new Constants.Measures[] {Constants.Measures.angle, Constants.Measures.slope} );
         EditText angleField = (EditText) mView.findViewById(R.id.vector_azimuth);
-        mReceiver.bindBTMeasures(angleField, Constants.Measures.angle, false);
+        mReceiver.bindBTMeasures(angleField, Constants.Measures.angle, false, new Constants.Measures[] {Constants.Measures.distance, Constants.Measures.slope});
         EditText slopeField = (EditText) mView.findViewById(R.id.vector_slope);
-        mReceiver.bindBTMeasures(slopeField, Constants.Measures.slope, false);
+        mReceiver.bindBTMeasures(slopeField, Constants.Measures.slope, false, new Constants.Measures[] {Constants.Measures.angle, Constants.Measures.distance});
 
         final Dialog dialog = builder.create();
 

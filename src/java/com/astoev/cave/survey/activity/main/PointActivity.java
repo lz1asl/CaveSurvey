@@ -201,40 +201,40 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
             // up
             EditText up = (EditText) findViewById(R.id.point_up);
             StringUtils.setNotNull(up, legEdited.getTop());
-            mReceiver.bindBTMeasures(up, Constants.Measures.up, false);
+            mReceiver.bindBTMeasures(up, Constants.Measures.up, false, null);
 
             // down
             EditText down = (EditText) findViewById(R.id.point_down);
             StringUtils.setNotNull(down, legEdited.getDown());
-            mReceiver.bindBTMeasures(down, Constants.Measures.down, false);
+            mReceiver.bindBTMeasures(down, Constants.Measures.down, false, null);
 
             // left
             EditText left = (EditText) findViewById(R.id.point_left);
             StringUtils.setNotNull(left, legEdited.getLeft());
-            mReceiver.bindBTMeasures(left, Constants.Measures.left, false);
+            mReceiver.bindBTMeasures(left, Constants.Measures.left, false, null);
 
             // right
             EditText right = (EditText) findViewById(R.id.point_right);
             StringUtils.setNotNull(right, legEdited.getRight());
-            mReceiver.bindBTMeasures(right, Constants.Measures.right, false);
+            mReceiver.bindBTMeasures(right, Constants.Measures.right, false, null);
 
             // distance
             EditText distance = (EditText) findViewById(R.id.point_distance);
             StringUtils.setNotNull(distance, legEdited.getDistance());
-            mReceiver.bindBTMeasures(distance, Constants.Measures.distance, false);
+            mReceiver.bindBTMeasures(distance, Constants.Measures.distance, false, new Constants.Measures[] {Constants.Measures.angle, Constants.Measures.slope});
             disableIfMiddle(legEdited, distance);
 
             // azimuth
             EditText azimuth = (EditText) findViewById(R.id.point_azimuth);
             StringUtils.setNotNull(azimuth, legEdited.getAzimuth());
-            mReceiver.bindBTMeasures(azimuth, Constants.Measures.angle, false);
+            mReceiver.bindBTMeasures(azimuth, Constants.Measures.angle, false, new Constants.Measures[] {Constants.Measures.distance, Constants.Measures.slope});
             disableIfMiddle(legEdited, azimuth);
 
             // slope
             EditText slope = (EditText) findViewById(R.id.point_slope);
             slope.setText("0");
             StringUtils.setNotNull(slope, legEdited.getSlope());
-            mReceiver.bindBTMeasures(slope, Constants.Measures.slope, false);
+            mReceiver.bindBTMeasures(slope, Constants.Measures.slope, false, new Constants.Measures[] {Constants.Measures.angle, Constants.Measures.distance});
             disableIfMiddle(legEdited, slope);
 
             if (!legEdited.isMiddle()) {

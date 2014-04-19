@@ -40,7 +40,7 @@ public class ConnectThread extends Thread {
     private boolean running = true;
     private ResultReceiver mReceiver = null;
     private List<Constants.MeasureTypes> mMeasureTypes = null;
-    private Constants.Measures mTarget;
+    private List<Constants.Measures> mTargets = null;
 
 
     public ConnectThread(BluetoothDevice aDevice, AbstractBluetoothDevice aDeviceSpec) throws IOException {
@@ -122,7 +122,7 @@ public class ConnectThread extends Thread {
                             valuesArray[actualMeasuresCount] = m.getValue();
                             typesArray[actualMeasuresCount] = m.getMeasureType().toString();
                             unitsArray[actualMeasuresCount] = m.getMeasureUnit().toString();
-                            targetsArray[actualMeasuresCount] = mTarget.toString();
+                            targetsArray[actualMeasuresCount] = mTargets.get(mMeasureTypes.indexOf(m.getMeasureType())).toString();
                             actualMeasuresCount++;
                         }
                         b.putFloatArray(Constants.MEASURE_VALUE_KEY, ByteUtils.copyBytes(valuesArray, actualMeasuresCount));
@@ -175,11 +175,7 @@ public class ConnectThread extends Thread {
         this.mMeasureTypes = aMeasureTypes;
     }
 
-    public void setTarget(Constants.Measures aTarget) {
-        mTarget = aTarget;
-    }
-
-    public Constants.Measures getTarget() {
-        return mTarget;
+    public void setTargets(List<Constants.Measures> aTargets) {
+        mTargets = aTargets;
     }
 }

@@ -40,6 +40,7 @@ public class BluetoothService {
 
 
     private static final Set<AbstractBluetoothDevice> SUPPORTED_DEVICES = new HashSet<AbstractBluetoothDevice>();
+
     static {
         SUPPORTED_DEVICES.add(new CEMILDMBluetoothDevice());
         SUPPORTED_DEVICES.add(new LaserAceBluetoothDevice());
@@ -150,7 +151,7 @@ public class BluetoothService {
         }
     }
 
-    public static void sendReadMeasureCommand(final ResultReceiver receiver, final Constants.Measures aMeasure) {
+    public static void sendReadMeasureCommand(final ResultReceiver receiver, final Constants.Measures aMeasure, final Constants.Measures[] aMeasuresWelcome) {
         new Thread() {
             public void run() {
                 try {
@@ -162,26 +163,20 @@ public class BluetoothService {
                     mBusyThread.setReceiver(receiver);
 
                     List<Constants.MeasureTypes> measureTypes = new ArrayList<Constants.MeasureTypes>();
+                    List<Constants.Measures> measureTargets = new ArrayList<Constants.Measures>();
 
-                    switch (aMeasure) {
-                        case distance:
-                        case up:
-                        case down:
-                        case left:
-                        case right:
-                            measureTypes.add(Constants.MeasureTypes.distance);
-                            break;
+                    measureTypes.add(getType(aMeasure));
+                    measureTargets.add(aMeasure);
 
-                        case angle:
-                            measureTypes.add(Constants.MeasureTypes.angle);
-                            break;
-
-                        case slope:
-                            measureTypes.add(Constants.MeasureTypes.slope);
-                            break;
+                    if (aMeasuresWelcome != null) {
+                        for (Constants.Measures m : aMeasuresWelcome) {
+                            measureTypes.add(getType(m));
+                            measureTargets.add(m);
+                        }
                     }
+
                     mBusyThread.setMeasureTypes(measureTypes);
-                    mBusyThread.setTarget(aMeasure);
+                    mBusyThread.setTargets(measureTargets);
                     mBusyThread.start();
                 } catch (Exception e) {
                     Log.e(Constants.LOG_TAG_BT, "Failed", e);
@@ -189,6 +184,26 @@ public class BluetoothService {
                     if (mBusyThread != null) {
                         mBusyThread.cancel();
                     }
+                }
+            }
+
+            private Constants.MeasureTypes getType(Constants.Measures aMeasure) {
+                switch (aMeasure) {
+                    case distance:
+                    case up:
+                    case down:
+                    case left:
+                    case right:
+                        return Constants.MeasureTypes.distance;
+
+                    case angle:
+                        return Constants.MeasureTypes.angle;
+
+                    case slope:
+                        return Constants.MeasureTypes.slope;
+
+                    default:
+                        return null;
                 }
             }
         }.start();
@@ -248,9 +263,9 @@ public class BluetoothService {
             }.start();
         }
     }
-    
+
     @TargetApi(Build.VERSION_CODES.GINGERBREAD_MR1)
-    public static BluetoothSocket callSafeCreateInsecureRfcommSocketToServiceRecord(BluetoothDevice deviceaArg) throws IOException{
+    public static BluetoothSocket callSafeCreateInsecureRfcommSocketToServiceRecord(BluetoothDevice deviceaArg) throws IOException {
         return deviceaArg.createInsecureRfcommSocketToServiceRecord(mCurrDeviceSpec.getSPPUUID());
     }
 
@@ -259,7 +274,7 @@ public class BluetoothService {
     }
 
     public static AbstractBluetoothDevice getSupportedDevice(String aDeviceName) {
-        for (AbstractBluetoothDevice device: SUPPORTED_DEVICES) {
+        for (AbstractBluetoothDevice device : SUPPORTED_DEVICES) {
             if (device.isNameSupported(aDeviceName)) {
                 return device;
             }
@@ -282,7 +297,7 @@ public class BluetoothService {
     public static List<Pair<String, String>> getPairedCompatibleDevices() {
         List<Pair<String, String>> result = new ArrayList<Pair<String, String>>();
         Set<BluetoothDevice> devices = BluetoothAdapter.getDefaultAdapter().getBondedDevices();
-        for(BluetoothDevice d: devices) {
+        for (BluetoothDevice d : devices) {
             if (isSupported(d.getName())) {
                 result.add(new Pair<String, String>(d.getName(), d.getAddress()));
             }

@@ -5,9 +5,6 @@ package com.astoev.cave.survey.service.bluetooth;
  */
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
@@ -16,9 +13,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.astoev.cave.survey.Constants;
-import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.UIUtilities;
-import com.astoev.cave.survey.activity.main.BTActivity;
 import com.astoev.cave.survey.model.Option;
 import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.util.StringUtils;
@@ -81,6 +76,14 @@ public class BTMeasureResultReceiver extends ResultReceiver {
         mExpectedMeasures.add(aMeasure);
     }
 
+    public void awaitMeasures(Constants.Measures[] aMeasures) {
+        if (aMeasures != null) {
+            for (Constants.Measures m : aMeasures) {
+                mExpectedMeasures.add(m);
+            }
+        }
+    }
+
     public void ignoreMeasure(Constants.Measures aMeasure) {
         mExpectedMeasures.remove(aMeasure);
     }
@@ -89,7 +92,7 @@ public class BTMeasureResultReceiver extends ResultReceiver {
         mExpectedMeasures.clear();
     }
 
-    public void bindBTMeasures(EditText text, final Constants.Measures aMeasure, boolean aDirectSendCommandFlag) {
+    public void bindBTMeasures(final EditText text, final Constants.Measures aMeasure, boolean aDirectSendCommandFlag, final Constants.Measures[] otherMeasuresWelcome) {
 
         if (BluetoothService.isBluetoothSupported()) {
 
@@ -141,8 +144,10 @@ public class BTMeasureResultReceiver extends ResultReceiver {
 
             if (aDirectSendCommandFlag) {
                 Log.i(Constants.LOG_TAG_UI, "Send read command early");
+                resetMeasureExpectations();
                 awaitMeasure(aMeasure);
-                triggerBluetoothMeasure(aMeasure);
+                awaitMeasures(otherMeasuresWelcome);
+                triggerBluetoothMeasure(aMeasure, otherMeasuresWelcome);
             } else {
                 // supported for the measure, add the listener
                 if (StringUtils.isEmpty(text)) {
@@ -153,8 +158,10 @@ public class BTMeasureResultReceiver extends ResultReceiver {
                         public void onFocusChange(View v, boolean hasFocus) {
                             if (hasFocus) {
                                 Log.i(Constants.LOG_TAG_UI, "Send read command");
+                                resetMeasureExpectations();
                                 awaitMeasure(aMeasure);
-                                triggerBluetoothMeasure(aMeasure);
+                                awaitMeasures(otherMeasuresWelcome);
+                                triggerBluetoothMeasure(aMeasure, otherMeasuresWelcome);
                             } else {
                                 ignoreMeasure(aMeasure);
                             }
@@ -167,8 +174,10 @@ public class BTMeasureResultReceiver extends ResultReceiver {
                         @Override
                         public void onClick(View v) {
                             Log.i(Constants.LOG_TAG_UI, "Send read command");
+                            resetMeasureExpectations();
                             awaitMeasure(aMeasure);
-                            triggerBluetoothMeasure(aMeasure);
+                            awaitMeasures(otherMeasuresWelcome);
+                            triggerBluetoothMeasure(aMeasure, otherMeasuresWelcome);
                         }
                     });
                 }
@@ -202,9 +211,9 @@ public class BTMeasureResultReceiver extends ResultReceiver {
         return false;
     }
 
-    private void triggerBluetoothMeasure(Constants.Measures aMeasure) {
+    private void triggerBluetoothMeasure(Constants.Measures aMeasure, Constants.Measures[] otherMeasuresWelcome) {
         // register listeners & send command
-        BluetoothService.sendReadMeasureCommand(this, aMeasure);
+        BluetoothService.sendReadMeasureCommand(this, aMeasure, otherMeasuresWelcome);
         Log.i(Constants.LOG_TAG_UI, "Command sent for " + aMeasure);
     }
 }
