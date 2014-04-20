@@ -51,6 +51,7 @@ One of the possible target configurations is to read the distance and inclinatio
   Test devices:
   - Testing with both Android 2.1(cheap and small) and 4.3(better hardware). Have not decided for the right device yet but will try with Motorola Defy +. The smartphone need to have water protection, compass, SPP Bluetooth profile.
   - iLDM-150 laser distance meter (IP54) with build in clinometer and Bluetooth transfer from CEM
+  - Trimble LaserAce 1000 has very accurate measures (distance/clinometer/azimuth) and is recommended for any places where cave environment will not be of direct impact for the device. Most expensive hardware used here.
   - Leica and Bosh have awesome distance meters with Bluetooth but are much more expensive.
   - Feel free to join our team and help with other hardware/functionalities
   
@@ -62,6 +63,7 @@ Precision
 Having precise instruments is important to do a proper work. Anyway in most caves centimeter precision is never possible.
 
 For iLDM-150 CEM have specified precision of 1.5mm for the distance and 0.5' from the clinometer.
+For LaserAce [this](https://www.trimble.com/mappingGIS/laserace1000.aspx) is the manifacturer info provided.
 For the Android build-in compass - you have to consult your device manifacturer, but if small enough and you use short legs there should be no problem (error will distribute and compensate anyway).
 
 If you are paranoic you can still use CaveSurvey in manual mode only - type the proper values from the existing tools you use. It will save you the Excel work later.
