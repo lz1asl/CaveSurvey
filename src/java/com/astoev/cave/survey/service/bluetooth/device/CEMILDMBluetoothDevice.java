@@ -85,12 +85,13 @@ public class CEMILDMBluetoothDevice extends AbstractBluetoothDevice {
                 m.setValue(measure / 10);
                 m.setMeasureUnit(Constants.MeasureUnits.degrees);
                 m.setMeasure(Constants.Measures.slope);
+                m.setMeasureType(MeasureTypes.slope);
                 return singleMeasureToResult(m);
             }
 
             if (j == 2 && measure > -26843545) {
                 Log.i(Constants.LOG_TAG_BT, "Read distance " + measure / 1000);
-                if (!isMeasureRequested(aMeasures, Constants.MeasureTypes.slope)) {
+                if (!isMeasureRequested(aMeasures, Constants.MeasureTypes.distance)) {
                     Measure m = new Measure();
 
                     m.setValue(measure / 1000);
