@@ -327,7 +327,11 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                                 getWorkspace().getDBHelper().getNoteDao().create(note);
                             }
 
-                            getWorkspace().setActiveLeg(legEdited);
+                            if (legEdited.isMiddle()) {
+                                getWorkspace().setActiveLeg(DaoUtil.getLegByToPoint(legEdited.getToPoint()));
+                            } else {
+                                getWorkspace().setActiveLeg(legEdited);
+                            }
 
                             Log.i(Constants.LOG_TAG_UI, "Saved");
                             UIUtilities.showNotification(R.string.action_saved);

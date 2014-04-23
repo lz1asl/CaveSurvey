@@ -320,6 +320,11 @@ public class MainActivity extends MainMenuActivity {
             int selectedItem = -1;
             int counter = 0;
             for (Leg l : legs) {
+
+                if (l.isMiddle()) {
+                    continue;
+                }
+
                 itemsList.add(l.buildLegDescription());
                 if (l.getId().equals(getWorkspace().getActiveLegId())) {
                     selectedItem = counter;
@@ -342,6 +347,7 @@ public class MainActivity extends MainMenuActivity {
                     Intent intent = new Intent(MainActivity.this, MainActivity.class);
                     startActivity(intent);
                     dialog.dismiss();
+                    finish();
                 }
             });
             AlertDialog alert = builder.create();
