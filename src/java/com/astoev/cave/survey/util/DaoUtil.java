@@ -288,7 +288,7 @@ public class DaoUtil {
         for (Leg l : legs) {
             
             // TODO calculate the correct distance and depth
-            if (l.getDistance() != null) {
+            if (!l.isMiddle() && l.getDistance() != null) {
                 totalLength += l.getDistance();
             }
 
