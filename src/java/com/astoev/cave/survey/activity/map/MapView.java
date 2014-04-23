@@ -241,7 +241,7 @@ public class MapView extends View {
 
                         // left
                         if (first.getLeft() != null && first.getLeft()> 0) {
-                            if (prevLeg == null) {
+                            if (prevLeg == null  || l.isMiddle()) {
                                 // first point by 90 degree left
                                 galleryWidthAngle = Math.toRadians(MapUtilities.minus90Degrees(first.getAzimuth()));
                             } else {
@@ -264,7 +264,7 @@ public class MapView extends View {
 
                         // right
                         if (first.getRight() != null && first.getRight()> 0) {
-                            if (prevLeg == null) {
+                            if (prevLeg == null || l.isMiddle()) {
                                 // first point by 90 degree left
                                 galleryWidthAngle = Math.toRadians(MapUtilities.add90Degrees(first.getAzimuth()));
                             } else {
