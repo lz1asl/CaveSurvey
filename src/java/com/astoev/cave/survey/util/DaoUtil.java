@@ -221,48 +221,58 @@ public class DaoUtil {
             public Object call() throws Exception {
                 Log.d(Constants.LOG_TAG_DB, "Deleting " + workspace.getActiveLegId());
 
-                Point toPoint = legArg.getToPoint();
-                
-                // delete note
-                Note note = DaoUtil.getNoteByPoint(toPoint);
-                if (note != null) {
-                    int deleted = dbHelper.getNoteDao().delete(note);
-                    Log.d(Constants.LOG_TAG_DB, "Deleted note:" + deleted);
-                }
-                
-                // delete location
-                Location location  = DaoUtil.getLocationByPoint(toPoint);
-                if (location != null){
-                    int deleted = dbHelper.getLocationDao().delete(location);
-                    Log.d(Constants.LOG_TAG_DB, "Deleted location:" + deleted);
-                }
-                
-                // delete photos
-                List<Photo> photosList = DaoUtil.getAllPhotosByPoint(toPoint);
-                if (photosList != null && !photosList.isEmpty()){
-                    int deleted = dbHelper.getPhotoDao().delete(photosList);
-                    Log.d(Constants.LOG_TAG_DB, "Deleted photos:" + deleted);
-                }
-                
-                // delete sketches
-                List<Sketch> sketchList = DaoUtil.getAllScetchesByPoint(toPoint);
-                if (sketchList != null && !sketchList.isEmpty()){
-                    int deleted = dbHelper.getSketchDao().delete(sketchList);
-                    Log.d(Constants.LOG_TAG_DB, "Deleted sketches:" + deleted);
-                }
+                if (legArg.isMiddle()) {
 
-                // TODO delete middle points
-                // TODO delete vectors
-                
-                // delete leg
-                int deletedLeg = dbHelper.getLegDao().delete(legArg);
-                Log.d(Constants.LOG_TAG_DB, "Deleted leg:" + deletedLeg);
-                
-                // delete to point
-                int deletedPoint = dbHelper.getPointDao().delete(toPoint);
-                Log.d(Constants.LOG_TAG_DB, "Deleted point:" + deletedPoint);
+                    // delete middle leg
+                    int deletedLeg = dbHelper.getLegDao().delete(legArg);
+                    Log.d(Constants.LOG_TAG_DB, "Deleted middle leg:" + deletedLeg);
 
-                workspace.setActiveLeg(workspace.getLastLeg());
+                    workspace.setActiveLeg(DaoUtil.getLegByToPoint(legArg.getToPoint()));
+                } else {
+
+                    Point toPoint = legArg.getToPoint();
+
+                    // delete note
+                    Note note = DaoUtil.getNoteByPoint(toPoint);
+                    if (note != null) {
+                        int deleted = dbHelper.getNoteDao().delete(note);
+                        Log.d(Constants.LOG_TAG_DB, "Deleted note:" + deleted);
+                    }
+
+                    // delete location
+                    Location location = DaoUtil.getLocationByPoint(toPoint);
+                    if (location != null) {
+                        int deleted = dbHelper.getLocationDao().delete(location);
+                        Log.d(Constants.LOG_TAG_DB, "Deleted location:" + deleted);
+                    }
+
+                    // delete photos
+                    List<Photo> photosList = DaoUtil.getAllPhotosByPoint(toPoint);
+                    if (photosList != null && !photosList.isEmpty()) {
+                        int deleted = dbHelper.getPhotoDao().delete(photosList);
+                        Log.d(Constants.LOG_TAG_DB, "Deleted photos:" + deleted);
+                    }
+
+                    // delete sketches
+                    List<Sketch> sketchList = DaoUtil.getAllScetchesByPoint(toPoint);
+                    if (sketchList != null && !sketchList.isEmpty()) {
+                        int deleted = dbHelper.getSketchDao().delete(sketchList);
+                        Log.d(Constants.LOG_TAG_DB, "Deleted sketches:" + deleted);
+                    }
+
+                    // TODO delete middle points
+                    // TODO delete vectors
+
+                    // delete leg
+                    int deletedLeg = dbHelper.getLegDao().delete(legArg);
+                    Log.d(Constants.LOG_TAG_DB, "Deleted leg:" + deletedLeg);
+
+                    // delete to point
+                    int deletedPoint = dbHelper.getPointDao().delete(toPoint);
+                    Log.d(Constants.LOG_TAG_DB, "Deleted point:" + deletedPoint);
+
+                    workspace.setActiveLeg(workspace.getLastLeg());
+                }
 
                 return null;
             }

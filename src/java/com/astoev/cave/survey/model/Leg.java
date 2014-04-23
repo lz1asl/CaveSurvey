@@ -147,6 +147,12 @@ public class Leg implements Serializable {
     public static boolean canDelete(Leg aLeg) throws SQLException {
         // may enable deletion if already saved
         if (!aLeg.isNew()) {
+
+            // allow middles to be deleted
+            if (aLeg.isMiddle()) {
+                return true;
+            }
+
             Leg lastLeg = Workspace.getCurrentInstance().getLastLeg(aLeg.getGalleryId());
             // only last leg for now and no other galleries start from here
             if (lastLeg.getId().equals(aLeg.getId()) && !DaoUtil.hasLegsByFromPoint(aLeg.getToPoint())) {
