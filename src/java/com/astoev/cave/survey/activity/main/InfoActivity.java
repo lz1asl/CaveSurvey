@@ -117,8 +117,12 @@ public class InfoActivity extends MainMenuActivity {
 
             ExcelExport export = new ExcelExport(this);
             String exportPath = export.runExport(getWorkspace().getActiveProject());
+            if (StringUtils.isEmpty(exportPath)) {
+                UIUtilities.showNotification(this, R.string.export_io_error, exportPath);
+            } else {
+                UIUtilities.showNotification(this, R.string.export_done, exportPath);
+            }
 
-            UIUtilities.showNotification(this, R.string.export_done, exportPath);
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to export project", e);
             UIUtilities.showNotification(R.string.error);
