@@ -143,10 +143,17 @@ public class DaoUtil {
     }
 
     public static Leg getLegByToPoint(Point aToPoint) throws SQLException {
-        // TODO this will work as soon as we keep a tree of legs. Once we start closing circles will break
+        // TODO this will work as soon as we keep a tree of legs. Once we start closing circles will break and will have to change the logic
         QueryBuilder<Leg, Integer> query = Workspace.getCurrentInstance().getDBHelper().getLegDao().queryBuilder();
-        query.where().eq(Leg.COLUMN_TO_POINT, aToPoint.getId());
+        query.where().eq(Leg.COLUMN_TO_POINT, aToPoint.getId()).and().isNull(Leg.COLUMN_MIDDLE_POINT_AT_DISTANCE);
         return query.queryForFirst();
+    }
+
+    public static List<Leg> getMiddleLegsByToPoint(Point aToPoint) throws SQLException {
+        // TODO this will work as soon as we keep a tree of legs. Once we start closing circles will break and will have to change the logic
+        QueryBuilder<Leg, Integer> query = Workspace.getCurrentInstance().getDBHelper().getLegDao().queryBuilder();
+        query.where().eq(Leg.COLUMN_TO_POINT, aToPoint.getId()).and().isNotNull(Leg.COLUMN_MIDDLE_POINT_AT_DISTANCE);
+        return query.query();
     }
 
     public static boolean hasLegsByFromPoint(Point aFromPoint) throws SQLException {
@@ -205,12 +212,12 @@ public class DaoUtil {
     /**
      * Deletes a leg its toPoint and all the data that is related to toPoint
      * 
-     * @param legArg - leg to delete
+     * @param aLegToDelete - leg to delete
      * @return true if the leg is successfully deleted
      * @throws SQLException if there is a problem with DB
      */
-    public static boolean deleteLeg(final Leg legArg) throws SQLException{
-        if (legArg.isNew()){
+    public static boolean deleteLeg(final Leg aLegToDelete) throws SQLException{
+        if (aLegToDelete.isNew()){
             return false;
         }
         
@@ -221,51 +228,67 @@ public class DaoUtil {
             public Object call() throws Exception {
                 Log.d(Constants.LOG_TAG_DB, "Deleting " + workspace.getActiveLegId());
 
-                if (legArg.isMiddle()) {
+                if (aLegToDelete.isMiddle()) {
 
                     // delete middle leg
-                    int deletedLeg = dbHelper.getLegDao().delete(legArg);
+                    int deletedLeg = dbHelper.getLegDao().delete(aLegToDelete);
                     Log.d(Constants.LOG_TAG_DB, "Deleted middle leg:" + deletedLeg);
 
-                    workspace.setActiveLeg(DaoUtil.getLegByToPoint(legArg.getToPoint()));
+                    workspace.setActiveLeg(getLegByToPoint(aLegToDelete.getToPoint()));
                 } else {
 
-                    Point toPoint = legArg.getToPoint();
+                    Point toPoint = aLegToDelete.getToPoint();
 
                     // delete note
-                    Note note = DaoUtil.getNoteByPoint(toPoint);
+                    Note note = getNoteByPoint(toPoint);
                     if (note != null) {
                         int deleted = dbHelper.getNoteDao().delete(note);
                         Log.d(Constants.LOG_TAG_DB, "Deleted note:" + deleted);
                     }
 
                     // delete location
-                    Location location = DaoUtil.getLocationByPoint(toPoint);
+                    Location location = getLocationByPoint(toPoint);
                     if (location != null) {
                         int deleted = dbHelper.getLocationDao().delete(location);
                         Log.d(Constants.LOG_TAG_DB, "Deleted location:" + deleted);
                     }
 
                     // delete photos
-                    List<Photo> photosList = DaoUtil.getAllPhotosByPoint(toPoint);
+                    List<Photo> photosList = getAllPhotosByPoint(toPoint);
                     if (photosList != null && !photosList.isEmpty()) {
                         int deleted = dbHelper.getPhotoDao().delete(photosList);
                         Log.d(Constants.LOG_TAG_DB, "Deleted photos:" + deleted);
                     }
 
                     // delete sketches
-                    List<Sketch> sketchList = DaoUtil.getAllScetchesByPoint(toPoint);
+                    List<Sketch> sketchList = getAllScetchesByPoint(toPoint);
                     if (sketchList != null && !sketchList.isEmpty()) {
                         int deleted = dbHelper.getSketchDao().delete(sketchList);
                         Log.d(Constants.LOG_TAG_DB, "Deleted sketches:" + deleted);
                     }
 
-                    // TODO delete middle points
-                    // TODO delete vectors
+                    List<Vector> legVectors = getLegVectors(aLegToDelete);
+                    if (legVectors != null) {
+                        for (Vector v: legVectors) {
+                            Log.d(Constants.LOG_TAG_DB, "Deleting vector:" + v.getId());
+                            deleteVector(v);
+                        }
+
+                    }
 
                     // delete leg
-                    int deletedLeg = dbHelper.getLegDao().delete(legArg);
+                    int deletedLeg = dbHelper.getLegDao().delete(aLegToDelete);
                     Log.d(Constants.LOG_TAG_DB, "Deleted leg:" + deletedLeg);
+
+
+                    // delete middle points
+                    List<Leg> legMiddles = getMiddleLegsByToPoint(toPoint);
+                    if (legMiddles != null) {
+                        for(Leg l: legMiddles) {
+                            Log.d(Constants.LOG_TAG_DB, "Deleting middle:" + l.getId());
+                            dbHelper.getLegDao().delete(l);
+                        }
+                    }
 
                     // delete to point
                     int deletedPoint = dbHelper.getPointDao().delete(toPoint);
