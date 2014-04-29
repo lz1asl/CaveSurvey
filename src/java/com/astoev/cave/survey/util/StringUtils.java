@@ -1,10 +1,14 @@
 package com.astoev.cave.survey.util;
 
 import android.content.res.Resources;
+import android.util.Log;
 import android.widget.EditText;
+
+import com.astoev.cave.survey.Constants;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.Locale;
 
 /**
  * Created by IntelliJ IDEA.
@@ -15,12 +19,19 @@ import java.text.NumberFormat;
  */
 public class StringUtils {
 
-    private static final NumberFormat DECIMAL_FORMAT = new DecimalFormat("#####.###");
+    private static final NumberFormat DECIMAL_FORMAT = buildFormatter();
+
     private static final String EMPTY_STRING = "";
     public static final String SPACE = " ";
 
     public static final String RESOURCE_PREFIX_UNITS = "unit_";
 
+    private static NumberFormat buildFormatter() {
+        NumberFormat nf = NumberFormat.getNumberInstance(Locale.US);
+        DecimalFormat df = (DecimalFormat)nf;
+        df.applyPattern("#####.###");
+        return df;
+    }
 
     public static String floatToLabel(Float aFloat) {
         if (null == aFloat) {
@@ -38,7 +49,7 @@ public class StringUtils {
         if (StringUtils.isEmpty(aEditField)) {
             return null;
         }
-        return Float.parseFloat(aEditField.getText().toString());
+        return getFloat(aEditField.getText().toString());
     }
 
     public static boolean isEmpty(EditText aEditText) {
@@ -64,6 +75,24 @@ public class StringUtils {
     public static CharSequence extractDynamicResource(Resources aResources, String aKey) {
         return aResources.getText(aResources.getIdentifier(
                 aKey, "string", "com.astoev.cave.survey"));
+    }
+
+    public static boolean isStringValidFloat(String aString) {
+       return getFloat(aString) != null;
+    }
+
+    public static Float getFloat(String aString) {
+        try {
+            return DECIMAL_FORMAT.parse(fixComasInNumber(aString)).floatValue();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    // because of comma instead of dot for Bulgarian input
+    private static String fixComasInNumber(String aString) {
+        return aString.replace(',', '.');
     }
 
 }

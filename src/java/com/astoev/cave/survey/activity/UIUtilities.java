@@ -14,6 +14,7 @@ import com.astoev.cave.survey.util.StringUtils;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.text.NumberFormat;
 
 /**
  * Created by IntelliJ IDEA.
@@ -87,10 +88,9 @@ public class UIUtilities {
             }
             return true;
         } else {
-            try {
-                Float.parseFloat(aEditField.getText().toString().trim());
+            if (StringUtils.isStringValidFloat(aEditField.getText().toString().trim())) {
                 return true;
-            } catch (NumberFormatException nfe) {
+            } else {
                 aEditField.setError(aEditField.getContext().getString(R.string.invalid));
                 return false;
             }
