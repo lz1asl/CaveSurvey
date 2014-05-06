@@ -237,7 +237,7 @@ public class MapView extends View {
                             canvas.drawLine(mapCenterMoveX + first.getX(), mapCenterMoveY + first.getY(), mapCenterMoveX + second.getX(), mapCenterMoveY + second.getY(), polygonPaint);
                         }
 
-                        Leg prevLeg = DaoUtil.getLegByToPoint(l.getFromPoint());
+                        Leg prevLeg = DaoUtil.getLegByToPointId(l.getFromPoint().getId());
 
                         // left
                         if (first.getLeft() != null && first.getLeft()> 0) {

@@ -138,7 +138,7 @@ public class MainActivity extends MainMenuActivity {
                     fromPointString =  mGalleryNames.get(l.getGalleryId()) + fromPointString;
                     prevGalleryId = l.getGalleryId();
                 } else {
-                    prevGalleryId = DaoUtil.getLegByToPoint(l.getFromPoint()).getGalleryId();
+                    prevGalleryId = DaoUtil.getLegByToPointId(l.getFromPoint().getId()).getGalleryId();
                     fromPointString =  mGalleryNames.get(prevGalleryId) + fromPointString;
                 }
 
@@ -254,7 +254,7 @@ public class MainActivity extends MainMenuActivity {
                         // next leg
                         addLeg(false);
                     } else if (1 == item) {
-                        Leg prevLeg = DaoUtil.getLegByToPoint(Workspace.getCurrentInstance().getActiveLeg().getFromPoint());
+                        Leg prevLeg = DaoUtil.getLegByToPointId(Workspace.getCurrentInstance().getActiveLeg().getFromPoint().getId());
                         if (prevLeg == null) {
                             // not supported
                             UIUtilities.showNotification(R.string.gallery_after_first_point);

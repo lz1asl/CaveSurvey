@@ -142,10 +142,26 @@ public class DaoUtil {
         return query.queryForFirst();
     }
 
-    public static Leg getLegByToPoint(Point aToPoint) throws SQLException {
+    public static Leg getLegByToPointId(long aToPointId) throws SQLException {
         // TODO this will work as soon as we keep a tree of legs. Once we start closing circles will break and will have to change the logic
         QueryBuilder<Leg, Integer> query = Workspace.getCurrentInstance().getDBHelper().getLegDao().queryBuilder();
-        query.where().eq(Leg.COLUMN_TO_POINT, aToPoint.getId()).and().isNull(Leg.COLUMN_MIDDLE_POINT_AT_DISTANCE);
+        query.where().eq(Leg.COLUMN_TO_POINT, aToPointId).and().isNull(Leg.COLUMN_MIDDLE_POINT_AT_DISTANCE);
+        return query.queryForFirst();
+    }
+
+    // previous leg in same gallery or null
+    public static Leg getGalleryPrevLeg(Leg aLeg) throws SQLException {
+        QueryBuilder<Leg, Integer> query = Workspace.getCurrentInstance().getDBHelper().getLegDao().queryBuilder();
+        query.where().eq(Leg.COLUMN_TO_POINT, aLeg.getFromPoint().getId()).and().isNull(Leg.COLUMN_MIDDLE_POINT_AT_DISTANCE)
+                .and().eq(Leg.COLUMN_GALLERY_ID, aLeg.getGalleryId());
+        return query.queryForFirst();
+    }
+
+    // next leg in same gallery or null
+    public static Leg getGalleryNextLeg(Leg aLeg) throws SQLException {
+        QueryBuilder<Leg, Integer> query = Workspace.getCurrentInstance().getDBHelper().getLegDao().queryBuilder();
+        query.where().eq(Leg.COLUMN_FROM_POINT, aLeg.getToPoint().getId()).and().isNull(Leg.COLUMN_MIDDLE_POINT_AT_DISTANCE)
+                .and().eq(Leg.COLUMN_GALLERY_ID, aLeg.getGalleryId());
         return query.queryForFirst();
     }
 
@@ -234,7 +250,7 @@ public class DaoUtil {
                     int deletedLeg = dbHelper.getLegDao().delete(aLegToDelete);
                     Log.d(Constants.LOG_TAG_DB, "Deleted middle leg:" + deletedLeg);
 
-                    workspace.setActiveLeg(getLegByToPoint(aLegToDelete.getToPoint()));
+                    workspace.setActiveLeg(getLegByToPointId(aLegToDelete.getToPoint().getId()));
                 } else {
 
                     Point toPoint = aLegToDelete.getToPoint();

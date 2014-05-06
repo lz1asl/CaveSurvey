@@ -1,20 +1,18 @@
 package com.astoev.cave.survey.activity.main;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.ResultReceiver;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
@@ -41,7 +39,6 @@ import com.astoev.cave.survey.model.Vector;
 import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.service.bluetooth.BTMeasureResultReceiver;
 import com.astoev.cave.survey.service.bluetooth.BTResultAware;
-import com.astoev.cave.survey.service.bluetooth.BluetoothService;
 import com.astoev.cave.survey.service.orientation.AzimuthChangedListener;
 import com.astoev.cave.survey.service.orientation.SlopeChangedListener;
 import com.astoev.cave.survey.util.DaoUtil;
@@ -52,9 +49,7 @@ import com.j256.ormlite.misc.TransactionManager;
 
 import java.io.File;
 import java.sql.SQLException;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.Callable;
 
 /**
@@ -64,7 +59,7 @@ import java.util.concurrent.Callable;
  * Time: 1:15 AM
  * To change this template use File | Settings | File Templates.
  */
-public class PointActivity extends MainMenuActivity implements AzimuthChangedListener, SlopeChangedListener, BTResultAware {
+public class PointActivity extends MainMenuActivity implements AzimuthChangedListener, SlopeChangedListener, BTResultAware, View.OnTouchListener {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int REQIEST_EDIT_NOTE = 2;
@@ -87,6 +82,10 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
     private AzimuthDialog mAzimuthDialog;
 
     private SlopeDialog mSlopeDialog;
+
+    // swipe detection variables
+    private float x1, x2;
+    private static final int MIN_SWIPE_DISTANCE = 150;
 
 
     public void onCreate(Bundle savedInstanceState) {
@@ -134,6 +133,10 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         }
 
         loadLegVectors(legEdited);
+
+        // make swipe work
+        View view = findViewById(R.id.point_main_view);
+        view.setOnTouchListener(this);
     }
 
     @Override
@@ -221,20 +224,20 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
             // distance
             EditText distance = (EditText) findViewById(R.id.point_distance);
             StringUtils.setNotNull(distance, legEdited.getDistance());
-            mReceiver.bindBTMeasures(distance, Constants.Measures.distance, false, new Constants.Measures[] {Constants.Measures.angle, Constants.Measures.slope});
+            mReceiver.bindBTMeasures(distance, Constants.Measures.distance, false, new Constants.Measures[]{Constants.Measures.angle, Constants.Measures.slope});
             disableIfMiddle(legEdited, distance);
 
             // azimuth
             EditText azimuth = (EditText) findViewById(R.id.point_azimuth);
             StringUtils.setNotNull(azimuth, legEdited.getAzimuth());
-            mReceiver.bindBTMeasures(azimuth, Constants.Measures.angle, false, new Constants.Measures[] {Constants.Measures.distance, Constants.Measures.slope});
+            mReceiver.bindBTMeasures(azimuth, Constants.Measures.angle, false, new Constants.Measures[]{Constants.Measures.distance, Constants.Measures.slope});
             disableIfMiddle(legEdited, azimuth);
 
             // slope
             EditText slope = (EditText) findViewById(R.id.point_slope);
             slope.setText("0");
             StringUtils.setNotNull(slope, legEdited.getSlope());
-            mReceiver.bindBTMeasures(slope, Constants.Measures.slope, false, new Constants.Measures[] {Constants.Measures.angle, Constants.Measures.distance});
+            mReceiver.bindBTMeasures(slope, Constants.Measures.slope, false, new Constants.Measures[]{Constants.Measures.angle, Constants.Measures.distance});
             disableIfMiddle(legEdited, slope);
 
             if (!legEdited.isMiddle()) {
@@ -328,7 +331,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                             }
 
                             if (legEdited.isMiddle()) {
-                                getWorkspace().setActiveLeg(DaoUtil.getLegByToPoint(legEdited.getToPoint()));
+                                getWorkspace().setActiveLeg(DaoUtil.getLegByToPointId(legEdited.getToPoint().getId()));
                             } else {
                                 getWorkspace().setActiveLeg(legEdited);
                             }
@@ -808,6 +811,54 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
     private void populateMeasure(float aMeasure, int anEditTextId) {
         EditText field = (EditText) findViewById(anEditTextId);
         StringUtils.setNotNull(field, aMeasure);
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        // detect swipes to switch the current point
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                x1 = event.getX();
+                break;
+            case MotionEvent.ACTION_UP:
+                x2 = event.getX();
+                float deltaX = x2 - x1;
+                if (Math.abs(deltaX) > MIN_SWIPE_DISTANCE) {
+                    try {
+                        Leg currLeg = getCurrentLeg();
+                        if (!currLeg.isNew()) {
+                            Leg nextPoint;
+                            if (deltaX > 0) {
+                                Log.i(Constants.LOG_TAG_UI, "swipe right");
+                                nextPoint = DaoUtil.getGalleryPrevLeg(currLeg);
+                            } else {
+                                Log.i(Constants.LOG_TAG_UI, "swipe left");
+                                nextPoint = DaoUtil.getGalleryNextLeg(getCurrentLeg());
+                            }
+                            swipeTo(nextPoint);
+                        }
+                    } catch (Exception e) {
+                        Log.e(Constants.LOG_TAG_UI, "Failed to swipe", e);
+                        UIUtilities.showNotification(R.string.error);
+                    }
+                }
+                break;
+        }
+
+        // propagate back to allow scrolls etc
+        return super.onTouchEvent(event);
+    }
+
+    private void swipeTo(Leg aNextLeg) {
+        if (aNextLeg != null) {
+            Intent intent = new Intent(PointActivity.this, PointActivity.class);
+            intent.putExtra(Constants.LEG_SELECTED, aNextLeg.getId());
+            getWorkspace().setActiveLeg(aNextLeg);
+            startActivity(intent);
+            finish();
+        } else {
+            UIUtilities.showNotification(R.string.point_swipe_not_possible);
+        }
     }
 
 }

@@ -79,6 +79,7 @@
     <string name="point_vectors_header">Лъчи</string>
     <string name="point_vectors_counter">Лъч #</string>
     <string name="point_vectors_delete">Изтриване на лъч %1$s?</string>
+    <string name="point_swipe_not_possible">Достигнат край на галерията</string>
 
     <string name="gallery_after_first_point">Недостъпно за първата отсечка</string>
 

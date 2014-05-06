@@ -94,7 +94,7 @@ public class PointUtil {
      * @throws SQLException
      */
     public static String getGalleryNameForFromPoint(Point pointArg, Integer galleryId) throws SQLException{
-        Leg prevLeg = DaoUtil.getLegByToPoint(pointArg);
+        Leg prevLeg = DaoUtil.getLegByToPointId(pointArg.getId());
         
         if (galleryId != null) {
             if (prevLeg != null &&  !prevLeg.getGalleryId().equals(galleryId)) {

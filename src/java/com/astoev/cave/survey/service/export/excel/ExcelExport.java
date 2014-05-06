@@ -152,7 +152,7 @@ public class ExcelExport {
                     }
                     prevGalleryId = l.getGalleryId();
                 } else {
-                    prevGalleryId = DaoUtil.getLegByToPoint(l.getFromPoint()).getGalleryId();
+                    prevGalleryId = DaoUtil.getLegByToPointId(l.getFromPoint().getId()).getGalleryId();
                     from.setCellValue(galleryNames.get(prevGalleryId) + fromPoint.getName());
                 }
 
