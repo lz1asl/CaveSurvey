@@ -27,6 +27,7 @@ import com.astoev.cave.survey.activity.poc.SensorTestActivity;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.util.DaoUtil;
+import com.astoev.cave.survey.util.StringUtils;
 
 import java.util.List;
 
@@ -111,7 +112,8 @@ public class HomeActivity extends MainMenuActivity {
     private void showAboutDialog() {
         try {
             Dialog dialog = new Dialog(this);
-            dialog.setTitle(R.string.about_title);
+            String title = getString(R.string.about_title) + StringUtils.SPACE + getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+            dialog.setTitle(title);
             dialog.setContentView(R.layout.about);
             TextView url = (TextView) dialog.findViewById(R.id.aboutUrl);
             Linkify.addLinks(url, Linkify.WEB_URLS);

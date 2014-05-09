@@ -1,31 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
-              android:padding="10dp">
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:padding="10dp">
 
-    <TextView android:id="@+id/aboutUrl" android:layout_width="fill_parent"
-              android:layout_height="wrap_content"
-              android:text="@string/about_paldin" android:gravity="center_horizontal"
-              android:layout_weight="0.00"/>
+    <TextView
+        android:id="@+id/aboutUrl"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.00"
+        android:gravity="center_horizontal"
+        android:text="@string/about_paldin" />
 
-    <TextView android:id="@+id/aboutUrl2" android:layout_width="fill_parent"
-              android:layout_height="wrap_content"
-              android:text="@string/about_paldin2" android:gravity="center_horizontal"
-              android:layout_weight="0.00"/>
+    <TextView
+        android:id="@+id/aboutUrl2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.00"
+        android:gravity="center_horizontal"
+        android:text="@string/about_paldin2" />
 
-    <ImageView android:src="@drawable/paldin" 
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:layout_gravity="center_horizontal"
-               android:layout_margin="20dp"
-               android:contentDescription="@string/sk_paldin"/>
-
-    <!--<TextView android:layout_width="fill_parent"
-              android:layout_height="wrap_content"
-              android:text="@string/about_info"
-              android:layout_gravity="bottom"
-              android:gravity="bottom"/>-->
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="20dp"
+        android:contentDescription="@string/sk_paldin"
+        android:src="@drawable/paldin" />
 
 </LinearLayout>
