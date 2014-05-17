@@ -111,7 +111,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                     aSqLiteDatabase.execSQL("alter table vectors add column gallery_id decimal default null");
                     aSqLiteDatabase.execSQL("alter table photos add column gallery_id decimal default null");
                     aSqLiteDatabase.execSQL("alter table sketches add column gallery_id decimal default null");
-                    adf
+                    aSqLiteDatabase.execSQL("alter table notes add column gallery_id decimal default null");
                     Log.i(Constants.LOG_TAG_DB, "Upgrade success");
                 }
 

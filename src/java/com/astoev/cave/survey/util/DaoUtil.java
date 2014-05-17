@@ -34,15 +34,9 @@ import java.util.concurrent.Callable;
  */
 public class DaoUtil {
 
-    public static Note getActiveLegNote(Leg aActiveLeg) throws SQLException {
+    public static Note getActiveLegNote(Leg anActiveLeg) throws SQLException {
         QueryBuilder<Note, Integer> query = Workspace.getCurrentInstance().getDBHelper().getNoteDao().queryBuilder();
-        query.where().eq(Note.COLUMN_POINT_ID, aActiveLeg.getFromPoint().getId());
-        return Workspace.getCurrentInstance().getDBHelper().getNoteDao().queryForFirst(query.prepare());
-    }
-
-    public static Note getNoteByPoint(Point pointArg) throws SQLException {
-        QueryBuilder<Note, Integer> query = Workspace.getCurrentInstance().getDBHelper().getNoteDao().queryBuilder();
-        query.where().eq(Note.COLUMN_POINT_ID, pointArg.getId());
+        query.where().eq(Note.COLUMN_POINT_ID, anActiveLeg.getFromPoint().getId()).and().eq(Note.COLUMN_GALLERY_ID, anActiveLeg.getGalleryId());
         return Workspace.getCurrentInstance().getDBHelper().getNoteDao().queryForFirst(query.prepare());
     }
 
@@ -251,7 +245,7 @@ public class DaoUtil {
                     Point toPoint = aLegToDelete.getToPoint();
 
                     // delete note
-                    Note note = getNoteByPoint(toPoint);
+                    Note note = getActiveLegNote(aLegToDelete);
                     if (note != null) {
                         int deleted = dbHelper.getNoteDao().delete(note);
                         Log.d(Constants.LOG_TAG_DB, "Deleted note:" + deleted);

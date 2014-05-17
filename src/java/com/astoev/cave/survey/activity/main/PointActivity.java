@@ -327,6 +327,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                                 // create new note
                                 Note note = new Note(mNewNote);
                                 note.setPoint(legEdited.getFromPoint());
+                                note.setGalleryId(legEdited.getGalleryId());
                                 getWorkspace().getDBHelper().getNoteDao().create(note);
                             }
 
