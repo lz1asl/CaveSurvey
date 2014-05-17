@@ -81,6 +81,7 @@ public class VectorDialog extends AzimuthDialog implements BTResultAware {
                     vector.setAzimuth(StringUtils.getFromEditTextNotNull(azimuthEdit));
                     vector.setSlope(StringUtils.getFromEditTextNotNull(slopeEdit));
                     vector.setPoint(mLeg.getFromPoint());
+                    vector.setGalleryId(mLeg.getGalleryId());
 
                     DaoUtil.saveVector(vector);
                 } catch (SQLException e) {

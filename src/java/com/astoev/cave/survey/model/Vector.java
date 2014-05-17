@@ -18,12 +18,15 @@ public class Vector implements Serializable {
 	private static final long serialVersionUID = 201401022247L;
 	
     public static final String COLUMN_POINT = "point_id";
+    public static final String COLUMN_GALLERY_ID = "gallery_id";
     public static final String COLUMN_ID = "id";
 
     @DatabaseField(generatedId = true, columnName = COLUMN_ID)
     private Integer mId;
     @DatabaseField(canBeNull = false, foreign = true, columnName = COLUMN_POINT)
     private Point mPoint;
+    @DatabaseField(canBeNull = false, columnName = COLUMN_GALLERY_ID)
+    private Integer mGalleryId;
     @DatabaseField(columnName = "distance")
     private Float mDistance;
     @DatabaseField(columnName = "azimuth")
@@ -72,5 +75,13 @@ public class Vector implements Serializable {
 
     public void setSlope(Float aSlope) {
         mSlope = aSlope;
+    }
+
+    public Integer getGalleryId() {
+        return mGalleryId;
+    }
+
+    public void setGalleryId(Integer galleryId) {
+        mGalleryId = galleryId;
     }
 }

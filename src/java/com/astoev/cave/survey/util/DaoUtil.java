@@ -381,7 +381,7 @@ public class DaoUtil {
 
     public static List<Vector> getLegVectors(Leg aLegEdited) throws SQLException {
         QueryBuilder<Vector, Integer> vectorsQuery = Workspace.getCurrentInstance().getDBHelper().getVectorsDao().queryBuilder();
-        vectorsQuery.where().eq(Vector.COLUMN_POINT, aLegEdited.getFromPoint().getId());
+        vectorsQuery.where().eq(Vector.COLUMN_POINT, aLegEdited.getFromPoint().getId()).and().eq(Vector.COLUMN_GALLERY_ID, aLegEdited.getGalleryId());
         vectorsQuery.orderBy(Vector.COLUMN_ID, true);
         return vectorsQuery.query();
     }

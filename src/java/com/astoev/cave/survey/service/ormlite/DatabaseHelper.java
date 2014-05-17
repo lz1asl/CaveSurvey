@@ -33,7 +33,8 @@ import java.sql.SQLException;
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private static final int DATABASE_VERSION_1 = 1;
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION_2 = 2;
+    private static final int DATABASE_VERSION_LATEST = 3;
     private static final String DATABASE_NAME = "CaveSurvey";
 
     private Dao<Leg, Integer> mLegDao;
@@ -48,7 +49,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private Dao<Vector, Integer> mVectorsDao;
 
     public DatabaseHelper(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION, R.raw.ormlite_config);
+        super(context, DATABASE_NAME, null, DATABASE_VERSION_LATEST, R.raw.ormlite_config);
         Log.i(Constants.LOG_TAG_DB, "Initialize DatabaseHelper");
         try {
             mLegDao = getDao(Leg.class);
@@ -91,13 +92,34 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase aSqLiteDatabase, ConnectionSource aConnectionSource, int aOldVersion, int aNewVersion) {
-        if (DATABASE_VERSION_1 == aOldVersion && DATABASE_VERSION == aNewVersion) {
-            Log.i(Constants.LOG_TAG_DB, "Upgrading DB to V2");
-            aSqLiteDatabase.execSQL("alter table legs add column middle_point_distance decimal default null");
-            Log.i(Constants.LOG_TAG_DB, "Upgrade success");
+
+        if (aOldVersion < DATABASE_VERSION_LATEST) {
+
+            Log.i(Constants.LOG_TAG_DB, "Performing DB update...");
+
+            try {
+                aSqLiteDatabase.beginTransaction();
+
+                if (aOldVersion < DATABASE_VERSION_2) {
+                    Log.i(Constants.LOG_TAG_DB, "Upgrading DB to V2");
+                    aSqLiteDatabase.execSQL("alter table legs add column middle_point_distance decimal default null");
+                    Log.i(Constants.LOG_TAG_DB, "Upgrade success");
+                }
+
+                if (aOldVersion < DATABASE_VERSION_LATEST) {
+                    Log.i(Constants.LOG_TAG_DB, "Upgrading DB to V3");
+                    aSqLiteDatabase.execSQL("alter table vectors add column gallery_id decimal default null");
+                    adf
+                    Log.i(Constants.LOG_TAG_DB, "Upgrade success");
+                }
+
+            } finally {
+                aSqLiteDatabase.endTransaction();
+            }
+
+            Log.i(Constants.LOG_TAG_DB, "End DB update...");
         } else {
-            Log.e(Constants.LOG_TAG_DB, "Unsupported upgrade from v " + aOldVersion + " to " + aNewVersion);
-            throw new RuntimeException("Update not supported yet");
+            Log.i(Constants.LOG_TAG_DB, "DB up to update");
         }
     }
 
