@@ -213,6 +213,7 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
             // create DB record
             Sketch drawing = new Sketch();
             drawing.setPoint(activePoint);
+            drawing.setGalleryId(activeLeg.getGalleryId());
             drawing.setFSPath(path);
             getWorkspace().getDBHelper().getSketchDao().create(drawing);
 

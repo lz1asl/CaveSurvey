@@ -47,7 +47,9 @@ public class DaoUtil {
     }
 
     public static Sketch getScetchByLeg(Leg legArg) throws SQLException {
-        return getScetchByPoint(legArg.getFromPoint());
+        QueryBuilder<Sketch, Integer> query = Workspace.getCurrentInstance().getDBHelper().getSketchDao().queryBuilder();
+        query.where().eq(Sketch.COLUMN_POINT_ID, legArg.getFromPoint().getId()).and().eq(Sketch.COLUMN_GALLERY_ID, legArg.getGalleryId());
+        return Workspace.getCurrentInstance().getDBHelper().getSketchDao().queryForFirst(query.prepare());
     }
 
     public static Photo getPhotoByLeg(Leg aLeg) throws SQLException {
@@ -59,13 +61,7 @@ public class DaoUtil {
 
     }
 
-    public static Sketch getScetchByPoint(Point pointArg) throws SQLException {
-        QueryBuilder<Sketch, Integer> query = Workspace.getCurrentInstance().getDBHelper().getSketchDao().queryBuilder();
-        query.where().eq(Sketch.COLUMN_POINT_ID, pointArg.getId());
-        return Workspace.getCurrentInstance().getDBHelper().getSketchDao().queryForFirst(query.prepare());
-    }
-
-    public static List<Sketch> getAllScetchesByPoint(Point pointArg) throws SQLException {
+    public static List<Sketch> getAllSketchesByPoint(Point pointArg) throws SQLException {
         QueryBuilder<Sketch, Integer> query = Workspace.getCurrentInstance().getDBHelper().getSketchDao().queryBuilder();
         query.where().eq(Sketch.COLUMN_POINT_ID, pointArg.getId());
         return Workspace.getCurrentInstance().getDBHelper().getSketchDao().query(query.prepare());
@@ -276,7 +272,7 @@ public class DaoUtil {
                     }
 
                     // delete sketches
-                    List<Sketch> sketchList = getAllScetchesByPoint(toPoint);
+                    List<Sketch> sketchList = getAllSketchesByPoint(toPoint);
                     if (sketchList != null && !sketchList.isEmpty()) {
                         int deleted = dbHelper.getSketchDao().delete(sketchList);
                         Log.d(Constants.LOG_TAG_DB, "Deleted sketches:" + deleted);
@@ -348,7 +344,7 @@ public class DaoUtil {
             Point fromPoint = l.getFromPoint();
 
             // drawings
-            List<Sketch> sketchesList = DaoUtil.getAllScetchesByPoint(fromPoint);
+            List<Sketch> sketchesList = DaoUtil.getAllSketchesByPoint(fromPoint);
             if (sketchesList != null && !sketchesList.isEmpty()) {
                 numDrawings += sketchesList.size();
             }
@@ -420,7 +416,7 @@ public class DaoUtil {
                             }
 
                             // delete sketches
-                            List<Sketch> sketches = getAllScetchesByPoint(l.getFromPoint());
+                            List<Sketch> sketches = getAllSketchesByPoint(l.getFromPoint());
                             if (sketches != null && sketches.size() > 0) {
                                 for (Sketch s : sketches) {
                                     FileUtils.deleteQuietly(new File(s.getFSPath()));
