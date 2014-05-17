@@ -39,8 +39,8 @@ public class DaoUtil {
         query.where().eq(Note.COLUMN_POINT_ID, aActiveLeg.getFromPoint().getId());
         return Workspace.getCurrentInstance().getDBHelper().getNoteDao().queryForFirst(query.prepare());
     }
-    
-    public static Note getNoteByPoint(Point pointArg) throws SQLException{
+
+    public static Note getNoteByPoint(Point pointArg) throws SQLException {
         QueryBuilder<Note, Integer> query = Workspace.getCurrentInstance().getDBHelper().getNoteDao().queryBuilder();
         query.where().eq(Note.COLUMN_POINT_ID, pointArg.getId());
         return Workspace.getCurrentInstance().getDBHelper().getNoteDao().queryForFirst(query.prepare());
@@ -49,9 +49,14 @@ public class DaoUtil {
     public static Sketch getScetchByLeg(Leg legArg) throws SQLException {
         return getScetchByPoint(legArg.getFromPoint());
     }
-    
-    public static Photo getPhotoByLeg(Leg legALeg) throws SQLException{
-    	return getPhotoByPoint(legALeg.getFromPoint());
+
+    public static Photo getPhotoByLeg(Leg aLeg) throws SQLException {
+
+        QueryBuilder<Photo, Integer> query = Workspace.getCurrentInstance().getDBHelper().getPhotoDao().queryBuilder();
+        query.where().eq(Photo.COLUMN_POINT_ID, aLeg.getFromPoint().getId()).and()
+                .eq(Photo.COLUMN_GALLERY_ID, aLeg.getGalleryId());
+        return Workspace.getCurrentInstance().getDBHelper().getPhotoDao().queryForFirst(query.prepare());
+
     }
 
     public static Sketch getScetchByPoint(Point pointArg) throws SQLException {
@@ -59,26 +64,20 @@ public class DaoUtil {
         query.where().eq(Sketch.COLUMN_POINT_ID, pointArg.getId());
         return Workspace.getCurrentInstance().getDBHelper().getSketchDao().queryForFirst(query.prepare());
     }
-    
+
     public static List<Sketch> getAllScetchesByPoint(Point pointArg) throws SQLException {
         QueryBuilder<Sketch, Integer> query = Workspace.getCurrentInstance().getDBHelper().getSketchDao().queryBuilder();
         query.where().eq(Sketch.COLUMN_POINT_ID, pointArg.getId());
         return Workspace.getCurrentInstance().getDBHelper().getSketchDao().query(query.prepare());
     }
 
-    
-    public static Photo getPhotoByPoint(Point pointArg) throws SQLException {
-    	QueryBuilder<Photo, Integer> query = Workspace.getCurrentInstance().getDBHelper().getPhotoDao().queryBuilder();
-    	query.where().eq(Photo.COLUMN_POINT_ID, pointArg.getId());
-    	return Workspace.getCurrentInstance().getDBHelper().getPhotoDao().queryForFirst(query.prepare());
-    }
-    
+
     public static List<Photo> getAllPhotosByPoint(Point pointArg) throws SQLException {
         QueryBuilder<Photo, Integer> query = Workspace.getCurrentInstance().getDBHelper().getPhotoDao().queryBuilder();
         query.where().eq(Photo.COLUMN_POINT_ID, pointArg.getId());
         return Workspace.getCurrentInstance().getDBHelper().getPhotoDao().query(query.prepare());
     }
-    
+
     public static Location getLocationByPoint(Point pointArg) throws SQLException {
         Dao<Location, Integer> locationDao = Workspace.getCurrentInstance().getDBHelper().getLocationDao();
         QueryBuilder<Location, Integer> query = locationDao.queryBuilder();
@@ -113,7 +112,7 @@ public class DaoUtil {
         statementBuilder.orderBy(Leg.COLUMN_GALLERY_ID, true);
         statementBuilder.orderBy(Leg.COLUMN_FROM_POINT, true);
         statementBuilder.orderBy(Leg.COLUMN_TO_POINT, true);
-		statementBuilder.orderBy(Leg.COLUMN_MIDDLE_POINT_AT_DISTANCE, true);
+        statementBuilder.orderBy(Leg.COLUMN_MIDDLE_POINT_AT_DISTANCE, true);
 
         return Workspace.getCurrentInstance().getDBHelper().getLegDao().query(statementBuilder.prepare());
     }
@@ -183,30 +182,30 @@ public class DaoUtil {
         query.where().eq(Gallery.COLUMN_PROJECT_ID, aActiveProjectId);
         return query.countOf();
     }
-    
+
     /**
-     * DAO method that saves or update the location of Point based on GPS location 
-     * 
+     * DAO method that saves or update the location of Point based on GPS location
+     *
      * @param parentPointArg - parent Point
      * @param gpsLocationArg - GPS Location
      * @throws SQLException if there is a problem working with the DB
      */
     public static void saveLocationToPoint(final Point parentPointArg, final android.location.Location gpsLocationArg)
-        throws SQLException {
-        
+            throws SQLException {
+
         ConnectionSource connetionSource = Workspace.getCurrentInstance().getDBHelper().getConnectionSource();
         TransactionManager.callInTransaction(connetionSource, new Callable<Integer>() {
 
             @Override
             public Integer call() throws Exception {
                 Location oldLocation = getLocationByPoint(parentPointArg);
-                if (oldLocation != null){
+                if (oldLocation != null) {
                     oldLocation.setLatitude(gpsLocationArg.getLatitude());
                     oldLocation.setLongitude(gpsLocationArg.getLongitude());
-                    oldLocation.setAltitude((int)gpsLocationArg.getAltitude());
-                    oldLocation.setAccuracy((int)gpsLocationArg.getAccuracy());
+                    oldLocation.setAltitude((int) gpsLocationArg.getAltitude());
+                    oldLocation.setAccuracy((int) gpsLocationArg.getAccuracy());
                     Workspace.getCurrentInstance().getDBHelper().getLocationDao().update(oldLocation);
-                    
+
                     Log.i(Constants.LOG_TAG_DB, "Update location with id:" + oldLocation.getId() + " for point:" + parentPointArg.getId());
                     return oldLocation.getId();
                 } else {
@@ -214,32 +213,32 @@ public class DaoUtil {
                     newLocation.setPoint(parentPointArg);
                     newLocation.setLatitude(gpsLocationArg.getLatitude());
                     newLocation.setLongitude(gpsLocationArg.getLongitude());
-                    newLocation.setAltitude((int)gpsLocationArg.getAltitude());
-                    newLocation.setAccuracy((int)gpsLocationArg.getAccuracy());
+                    newLocation.setAltitude((int) gpsLocationArg.getAltitude());
+                    newLocation.setAccuracy((int) gpsLocationArg.getAccuracy());
                     Workspace.getCurrentInstance().getDBHelper().getLocationDao().create(newLocation);
-                    
+
                     Log.i(Constants.LOG_TAG_DB, "Creted location with id:" + newLocation.getId() + " for point:" + parentPointArg.getId());
                     return newLocation.getId();
                 }
             }
         });
     }
-    
+
     /**
      * Deletes a leg its toPoint and all the data that is related to toPoint
-     * 
+     *
      * @param aLegToDelete - leg to delete
      * @return true if the leg is successfully deleted
      * @throws SQLException if there is a problem with DB
      */
-    public static boolean deleteLeg(final Leg aLegToDelete) throws SQLException{
-        if (aLegToDelete.isNew()){
+    public static boolean deleteLeg(final Leg aLegToDelete) throws SQLException {
+        if (aLegToDelete.isNew()) {
             return false;
         }
-        
+
         final Workspace workspace = Workspace.getCurrentInstance();
         final DatabaseHelper dbHelper = Workspace.getCurrentInstance().getDBHelper();
-        
+
         TransactionManager.callInTransaction(dbHelper.getConnectionSource(), new Callable<Object>() {
             public Object call() throws Exception {
                 Log.d(Constants.LOG_TAG_DB, "Deleting " + workspace.getActiveLegId());
@@ -285,7 +284,7 @@ public class DaoUtil {
 
                     List<Vector> legVectors = getLegVectors(aLegToDelete);
                     if (legVectors != null) {
-                        for (Vector v: legVectors) {
+                        for (Vector v : legVectors) {
                             Log.d(Constants.LOG_TAG_DB, "Deleting vector:" + v.getId());
                             deleteVector(v);
                         }
@@ -300,7 +299,7 @@ public class DaoUtil {
                     // delete middle points
                     List<Leg> legMiddles = getMiddleLegsByToPoint(toPoint);
                     if (legMiddles != null) {
-                        for(Leg l: legMiddles) {
+                        for (Leg l : legMiddles) {
                             Log.d(Constants.LOG_TAG_DB, "Deleting middle:" + l.getId());
                             dbHelper.getLegDao().delete(l);
                         }
@@ -315,27 +314,27 @@ public class DaoUtil {
 
                 return null;
             }
-        });        
+        });
         return true;
     }
-    
+
     /**
      * Creates an ProjectInfo that sums up the project
-     * 
+     *
      * @return ProjectInfo
      * @throws SQLException if there is an DB problem
      */
-    public static ProjectInfo getProjectInfo() throws SQLException{
-        
+    public static ProjectInfo getProjectInfo() throws SQLException {
+
         List<Leg> legs = DaoUtil.getCurrProjectLegs();
         Project project = Workspace.getCurrentInstance().getActiveProject();
         String name = project.getName();
         String creationDate = project.getCreationDateFormatted();
-        
+
         float totalLength = 0, totalDepth = 0;
         int numNotes = 0, numDrawings = 0, numCoordinates = 0, numPhotos = 0;
         for (Leg l : legs) {
-            
+
             // TODO calculate the correct distance and depth
             if (!l.isMiddle() && l.getDistance() != null) {
                 totalLength += l.getDistance();
@@ -343,39 +342,39 @@ public class DaoUtil {
 
             // notes
             if (DaoUtil.getActiveLegNote(l) != null) {
-                numNotes ++;
+                numNotes++;
             }
 
             Point fromPoint = l.getFromPoint();
-            
+
             // drawings
             List<Sketch> sketchesList = DaoUtil.getAllScetchesByPoint(fromPoint);
-            if (sketchesList != null && !sketchesList.isEmpty()){
+            if (sketchesList != null && !sketchesList.isEmpty()) {
                 numDrawings += sketchesList.size();
             }
 
             // gps
             Location locaiton = DaoUtil.getLocationByPoint(fromPoint);
-            if (locaiton != null ) {
-                numCoordinates ++;
+            if (locaiton != null) {
+                numCoordinates++;
             }
 
             // photos
-            List<Photo>  photos = DaoUtil.getAllPhotosByPoint(fromPoint);
+            List<Photo> photos = DaoUtil.getAllPhotosByPoint(fromPoint);
             if (photos != null && !photos.isEmpty()) {
                 numPhotos += photos.size();
             }
         }
-        
-        int numGalleries = (int)DaoUtil.getGalleriesCount(project.getId());
-        
+
+        int numGalleries = (int) DaoUtil.getGalleriesCount(project.getId());
+
         ProjectInfo projectInfo = new ProjectInfo(name, creationDate, numGalleries, legs.size(), totalLength, totalDepth);
-        
+
         projectInfo.setNotes(numNotes);
         projectInfo.setSketches(numDrawings);
         projectInfo.setLocations(numCoordinates);
         projectInfo.setPhotos(numPhotos);
-        
+
         return projectInfo;
     }
 
@@ -410,11 +409,11 @@ public class DaoUtil {
                 public Object call() throws Exception {
                     List<Leg> legs = getProjectLegs(aProjectId);
                     if (legs != null) {
-                        for (Leg l: legs) {
+                        for (Leg l : legs) {
                             // delete photos
                             List<Photo> photos = getAllPhotosByPoint(l.getFromPoint());
-                            if (photos != null  && photos.size() > 0) {
-                                for (Photo p: photos) {
+                            if (photos != null && photos.size() > 0) {
+                                for (Photo p : photos) {
                                     FileUtils.deleteQuietly(new File(p.getFSPath()));
                                     Workspace.getCurrentInstance().getDBHelper().getPhotoDao().delete(p);
                                 }
@@ -423,7 +422,7 @@ public class DaoUtil {
                             // delete sketches
                             List<Sketch> sketches = getAllScetchesByPoint(l.getFromPoint());
                             if (sketches != null && sketches.size() > 0) {
-                                for (Sketch s: sketches) {
+                                for (Sketch s : sketches) {
                                     FileUtils.deleteQuietly(new File(s.getFSPath()));
                                     Workspace.getCurrentInstance().getDBHelper().getSketchDao().delete(s);
                                 }

@@ -474,6 +474,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                         Leg legEdited = getCurrentLeg();
                         Point currPoint = DaoUtil.getPoint(legEdited.getFromPoint().getId());
                         photo.setPoint(currPoint);
+                        photo.setGalleryId(legEdited.getGalleryId());
 
                         getWorkspace().getDBHelper().getPhotoDao().create(photo);
                         Log.i(Constants.LOG_TAG_SERVICE, "Image stored");

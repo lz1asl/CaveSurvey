@@ -14,11 +14,14 @@ import com.j256.ormlite.table.DatabaseTable;
 public class Photo {
 
     public static final String COLUMN_POINT_ID  = "point_id";
+    public static final String COLUMN_GALLERY_ID = "gallery_id";
 
     @DatabaseField(generatedId = true, columnName = "id")
     private Integer mId;
     @DatabaseField(foreign = true, columnName = COLUMN_POINT_ID)
     private Point mPoint;
+    @DatabaseField(canBeNull = false, columnName = COLUMN_GALLERY_ID)
+    private Integer mGalleryId;
     @DatabaseField(columnName = "path")
     private String mFSPath;
 
@@ -44,5 +47,13 @@ public class Photo {
 
     public void setFSPath(String aFSPath) {
         mFSPath = aFSPath;
+    }
+
+    public Integer getGalleryId() {
+        return mGalleryId;
+    }
+
+    public void setGalleryId(Integer galleryId) {
+        mGalleryId = galleryId;
     }
 }
