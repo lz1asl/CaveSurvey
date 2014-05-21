@@ -109,9 +109,23 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 if (aOldVersion < DATABASE_VERSION_LATEST) {
                     Log.i(Constants.LOG_TAG_DB, "Upgrading DB to V3");
                     aSqLiteDatabase.execSQL("alter table vectors add column gallery_id decimal default null");
+                    aSqLiteDatabase.execSQL("update vectors set gallery_id = " +
+                            "(select min(gallery_id) from legs where from_point_id = id)");
+
                     aSqLiteDatabase.execSQL("alter table photos add column gallery_id decimal default null");
+                    aSqLiteDatabase.execSQL("update photos set gallery_id = " +
+                            "(select min(gallery_id) from legs where from_point_id = id)");
+
                     aSqLiteDatabase.execSQL("alter table sketches add column gallery_id decimal default null");
+                    aSqLiteDatabase.execSQL("update sketches set gallery_id = " +
+                            "(select min(gallery_id) from legs where from_point_id = id)");
+
                     aSqLiteDatabase.execSQL("alter table notes add column gallery_id decimal default null");
+                    aSqLiteDatabase.execSQL("update notes set gallery_id = " +
+                            "(select min(gallery_id) from legs where from_point_id = id)");
+
+                    aSqLiteDatabase.setTransactionSuccessful();
+
                     Log.i(Constants.LOG_TAG_DB, "Upgrade success");
                 }
 

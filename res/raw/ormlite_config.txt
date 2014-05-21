@@ -1,9 +1,9 @@
 #
-# generated on 2014/03/29 03:31:42
+# generated on 2014/05/17 08:31:12
 #
 # --table-start--
-dataClass=com.astoev.cave.survey.model.Gallery
-tableName=galleries
+dataClass=com.astoev.cave.survey.model.Note
+tableName=notes
 # --table-fields-start--
 # --field-start--
 fieldName=mId
@@ -11,15 +11,124 @@ columnName=id
 generatedId=true
 # --field-end--
 # --field-start--
-fieldName=mProject
-columnName=project_id
+fieldName=mPoint
+columnName=point_id
 canBeNull=false
 foreign=true
-foreignAutoRefresh=true
+# --field-end--
+# --field-start--
+fieldName=mGalleryId
+columnName=gallery_id
+canBeNull=false
+# --field-end--
+# --field-start--
+fieldName=mText
+columnName=text
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=com.astoev.cave.survey.model.Point
+tableName=points
+# --table-fields-start--
+# --field-start--
+fieldName=mId
+columnName=id
+generatedId=true
 # --field-end--
 # --field-start--
 fieldName=mName
 columnName=name
+canBeNull=false
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=com.astoev.cave.survey.model.Sketch
+tableName=sketches
+# --table-fields-start--
+# --field-start--
+fieldName=mId
+columnName=id
+generatedId=true
+# --field-end--
+# --field-start--
+fieldName=mPoint
+columnName=point_id
+canBeNull=false
+foreign=true
+# --field-end--
+# --field-start--
+fieldName=mGalleryId
+columnName=gallery_id
+canBeNull=false
+# --field-end--
+# --field-start--
+fieldName=mFSPath
+columnName=path
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=com.astoev.cave.survey.model.Photo
+tableName=photos
+# --table-fields-start--
+# --field-start--
+fieldName=mId
+columnName=id
+generatedId=true
+# --field-end--
+# --field-start--
+fieldName=mPoint
+columnName=point_id
+foreign=true
+# --field-end--
+# --field-start--
+fieldName=mGalleryId
+columnName=gallery_id
+canBeNull=false
+# --field-end--
+# --field-start--
+fieldName=mFSPath
+columnName=path
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=com.astoev.cave.survey.model.Vector
+tableName=vectors
+# --table-fields-start--
+# --field-start--
+fieldName=mId
+columnName=id
+generatedId=true
+# --field-end--
+# --field-start--
+fieldName=mPoint
+columnName=point_id
+canBeNull=false
+foreign=true
+# --field-end--
+# --field-start--
+fieldName=mGalleryId
+columnName=gallery_id
+canBeNull=false
+# --field-end--
+# --field-start--
+fieldName=mDistance
+columnName=distance
+# --field-end--
+# --field-start--
+fieldName=mAzimuth
+columnName=azimuth
+# --field-end--
+# --field-start--
+fieldName=mSlope
+columnName=slope
 # --field-end--
 # --table-fields-end--
 # --table-end--
@@ -126,30 +235,8 @@ columnName=accuracy
 # --table-end--
 #################################
 # --table-start--
-dataClass=com.astoev.cave.survey.model.Note
-tableName=notes
-# --table-fields-start--
-# --field-start--
-fieldName=mId
-columnName=id
-generatedId=true
-# --field-end--
-# --field-start--
-fieldName=mPoint
-columnName=point_id
-canBeNull=false
-foreign=true
-# --field-end--
-# --field-start--
-fieldName=mText
-columnName=text
-# --field-end--
-# --table-fields-end--
-# --table-end--
-#################################
-# --table-start--
-dataClass=com.astoev.cave.survey.model.Option
-tableName=options
+dataClass=com.astoev.cave.survey.model.Gallery
+tableName=galleries
 # --table-fields-start--
 # --field-start--
 fieldName=mId
@@ -164,54 +251,8 @@ foreign=true
 foreignAutoRefresh=true
 # --field-end--
 # --field-start--
-fieldName=mCode
-columnName=code
-# --field-end--
-# --field-start--
-fieldName=mValue
-columnName=value
-# --field-end--
-# --field-start--
-fieldName=mNote
-columnName=note
-# --field-end--
-# --table-fields-end--
-# --table-end--
-#################################
-# --table-start--
-dataClass=com.astoev.cave.survey.model.Photo
-tableName=photos
-# --table-fields-start--
-# --field-start--
-fieldName=mId
-columnName=id
-generatedId=true
-# --field-end--
-# --field-start--
-fieldName=mPoint
-columnName=point_id
-foreign=true
-# --field-end--
-# --field-start--
-fieldName=mFSPath
-columnName=path
-# --field-end--
-# --table-fields-end--
-# --table-end--
-#################################
-# --table-start--
-dataClass=com.astoev.cave.survey.model.Point
-tableName=points
-# --table-fields-start--
-# --field-start--
-fieldName=mId
-columnName=id
-generatedId=true
-# --field-end--
-# --field-start--
 fieldName=mName
 columnName=name
-canBeNull=false
 # --field-end--
 # --table-fields-end--
 # --table-end--
@@ -243,8 +284,8 @@ dataPersister=DATE
 # --table-end--
 #################################
 # --table-start--
-dataClass=com.astoev.cave.survey.model.Sketch
-tableName=sketches
+dataClass=com.astoev.cave.survey.model.Option
+tableName=options
 # --table-fields-start--
 # --field-start--
 fieldName=mId
@@ -252,44 +293,23 @@ columnName=id
 generatedId=true
 # --field-end--
 # --field-start--
-fieldName=mPoint
-columnName=point_id
+fieldName=mProject
+columnName=project_id
 canBeNull=false
 foreign=true
+foreignAutoRefresh=true
 # --field-end--
 # --field-start--
-fieldName=mFSPath
-columnName=path
-# --field-end--
-# --table-fields-end--
-# --table-end--
-#################################
-# --table-start--
-dataClass=com.astoev.cave.survey.model.Vector
-tableName=vectors
-# --table-fields-start--
-# --field-start--
-fieldName=mId
-columnName=id
-generatedId=true
+fieldName=mCode
+columnName=code
 # --field-end--
 # --field-start--
-fieldName=mPoint
-columnName=point_id
-canBeNull=false
-foreign=true
+fieldName=mValue
+columnName=value
 # --field-end--
 # --field-start--
-fieldName=mDistance
-columnName=distance
-# --field-end--
-# --field-start--
-fieldName=mAzimuth
-columnName=azimuth
-# --field-end--
-# --field-start--
-fieldName=mSlope
-columnName=slope
+fieldName=mNote
+columnName=note
 # --field-end--
 # --table-fields-end--
 # --table-end--
