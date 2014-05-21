@@ -171,15 +171,13 @@ public class ExcelExport {
                     }
                 }
 
-                if (!l.isMiddle()) {
-                    Cell compass = legRow.createCell(CELL_AZIMUTH);
-                    if (l.getAzimuth() != null) {
-                        compass.setCellValue(StringUtils.floatToLabel(l.getAzimuth()));
-                    }
-                    Cell clinometer = legRow.createCell(CELL_SLOPE);
-                    if (l.getSlope() != null) {
-                        clinometer.setCellValue(StringUtils.floatToLabel(l.getSlope()));
-                    }
+                Cell compass = legRow.createCell(CELL_AZIMUTH);
+                if (l.getAzimuth() != null) {
+                    compass.setCellValue(StringUtils.floatToLabel(l.getAzimuth()));
+                }
+                Cell clinometer = legRow.createCell(CELL_SLOPE);
+                if (l.getSlope() != null) {
+                    clinometer.setCellValue(StringUtils.floatToLabel(l.getSlope()));
                 }
                 Cell left = legRow.createCell(CELL_LEFT);
                 if (l.getLeft() != null) {
