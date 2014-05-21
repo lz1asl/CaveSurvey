@@ -190,7 +190,7 @@ public class MainActivity extends MainMenuActivity {
                     if (location != null){
                         moreText.append(locationPrefix);
                     }
-                    if (DaoUtil.hasVectorsByPoint(fromPoint)) {
+                    if (DaoUtil.hasVectorsByLeg(l)) {
                         moreText.append(vectorsPrevix);
                     }
                 }

@@ -35,6 +35,10 @@ import java.util.concurrent.Callable;
 public class DaoUtil {
 
     public static Note getActiveLegNote(Leg anActiveLeg) throws SQLException {
+        if (anActiveLeg.isNew()) {
+            return null;
+        }
+
         QueryBuilder<Note, Integer> query = Workspace.getCurrentInstance().getDBHelper().getNoteDao().queryBuilder();
         query.where().eq(Note.COLUMN_POINT_ID, anActiveLeg.getFromPoint().getId()).and().eq(Note.COLUMN_GALLERY_ID, anActiveLeg.getGalleryId());
         return Workspace.getCurrentInstance().getDBHelper().getNoteDao().queryForFirst(query.prepare());
@@ -368,16 +372,16 @@ public class DaoUtil {
         return projectInfo;
     }
 
-    public static List<Vector> getLegVectors(Leg aLegEdited) throws SQLException {
+    public static List<Vector> getLegVectors(Leg aLeg) throws SQLException {
         QueryBuilder<Vector, Integer> vectorsQuery = Workspace.getCurrentInstance().getDBHelper().getVectorsDao().queryBuilder();
-        vectorsQuery.where().eq(Vector.COLUMN_POINT, aLegEdited.getFromPoint().getId()).and().eq(Vector.COLUMN_GALLERY_ID, aLegEdited.getGalleryId());
+        vectorsQuery.where().eq(Vector.COLUMN_POINT, aLeg.getFromPoint().getId()).and().eq(Vector.COLUMN_GALLERY_ID, aLeg.getGalleryId());
         vectorsQuery.orderBy(Vector.COLUMN_ID, true);
         return vectorsQuery.query();
     }
 
-    public static boolean hasVectorsByPoint(Point aFromPoint) throws SQLException {
+    public static boolean hasVectorsByLeg(Leg aLeg) throws SQLException {
         QueryBuilder<Vector, Integer> vectorsQuery = Workspace.getCurrentInstance().getDBHelper().getVectorsDao().queryBuilder();
-        vectorsQuery.where().eq(Vector.COLUMN_POINT, aFromPoint.getId());
+        vectorsQuery.where().eq(Vector.COLUMN_POINT, aLeg.getFromPoint().getId()).and().eq(Vector.COLUMN_GALLERY_ID, aLeg.getGalleryId());
         return vectorsQuery.countOf() > 0;
     }
 

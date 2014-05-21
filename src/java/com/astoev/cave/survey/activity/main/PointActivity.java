@@ -664,6 +664,12 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
     }
 
     public void loadLegVectors(Leg aLegEdited) {
+
+        if (aLegEdited.isNew()) {
+            // no vectors anyway
+            return;
+        }
+
         if (aLegEdited.isMiddle()) {
             // no need to proceed
             return;
