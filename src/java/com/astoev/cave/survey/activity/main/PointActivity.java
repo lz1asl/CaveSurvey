@@ -497,6 +497,15 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 
     @Override
     public void onBackPressed() {
+        Leg currLeg = getCurrentLeg();
+        if (!currLeg.isNew() && currLeg.isMiddle()) {
+            try {
+                getWorkspace().setActiveLeg(DaoUtil.getLegByToPointId(currLeg.getToPoint().getId()));
+            } catch (SQLException e) {
+                Log.e(Constants.LOG_TAG_UI, "Failed to locate parent leg", e);
+                UIUtilities.showNotification(R.string.error);
+            }
+        }
         finish();
     }
 
