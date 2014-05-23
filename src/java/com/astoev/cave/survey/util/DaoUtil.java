@@ -158,10 +158,10 @@ public class DaoUtil {
         return query.queryForFirst();
     }
 
-    public static List<Leg> getMiddleLegsByToPoint(Point aToPoint) throws SQLException {
-        // TODO this will work as soon as we keep a tree of legs. Once we start closing circles will break and will have to change the logic
+    public static List<Leg> getLegsMiddles(Leg aLeg) throws SQLException {
         QueryBuilder<Leg, Integer> query = Workspace.getCurrentInstance().getDBHelper().getLegDao().queryBuilder();
-        query.where().eq(Leg.COLUMN_TO_POINT, aToPoint.getId()).and().isNotNull(Leg.COLUMN_MIDDLE_POINT_AT_DISTANCE);
+        query.where().eq(Leg.COLUMN_TO_POINT, aLeg.getId()).and().eq(Leg.COLUMN_GALLERY_ID, aLeg.getGalleryId()).and().isNotNull(Leg.COLUMN_MIDDLE_POINT_AT_DISTANCE);
+        query.orderBy(Leg.COLUMN_MIDDLE_POINT_AT_DISTANCE, true);
         return query.query();
     }
 
@@ -291,7 +291,7 @@ public class DaoUtil {
 
 
                     // delete middle points
-                    List<Leg> legMiddles = getMiddleLegsByToPoint(toPoint);
+                    List<Leg> legMiddles = getLegsMiddles(aLegToDelete);
                     if (legMiddles != null) {
                         for (Leg l : legMiddles) {
                             Log.d(Constants.LOG_TAG_DB, "Deleting middle:" + l.getId());
