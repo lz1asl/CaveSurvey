@@ -20,6 +20,7 @@ import com.astoev.cave.survey.service.ormlite.DatabaseHelper;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.misc.TransactionManager;
 import com.j256.ormlite.stmt.QueryBuilder;
+import com.j256.ormlite.stmt.Where;
 import com.j256.ormlite.support.ConnectionSource;
 
 import org.apache.commons.io.FileUtils;
@@ -96,19 +97,26 @@ public class DaoUtil {
         return Workspace.getCurrentInstance().getDBHelper().getGalleryDao().queryForId(aId);
     }
 
-    public static List<Leg> getCurrProjectLegs() throws SQLException {
-        return getProjectLegs(Workspace.getCurrentInstance().getActiveProjectId());
+    public static List<Leg> getCurrProjectLegs(boolean includeMiddles) throws SQLException {
+        return getProjectLegs(Workspace.getCurrentInstance().getActiveProjectId(), includeMiddles);
     }
 
-    public static List<Leg> getProjectLegs(Integer aProjectId) throws SQLException {
-        QueryBuilder<Leg, Integer> statementBuilder = Workspace.getCurrentInstance().getDBHelper().getLegDao().queryBuilder();
-        statementBuilder.where().eq(Leg.COLUMN_PROJECT_ID, aProjectId);
-        statementBuilder.orderBy(Leg.COLUMN_GALLERY_ID, true);
-        statementBuilder.orderBy(Leg.COLUMN_FROM_POINT, true);
-        statementBuilder.orderBy(Leg.COLUMN_TO_POINT, true);
-        statementBuilder.orderBy(Leg.COLUMN_MIDDLE_POINT_AT_DISTANCE, true);
+    public static List<Leg> getProjectLegs(Integer aProjectId, boolean includeMiddles) throws SQLException {
+        QueryBuilder<Leg, Integer> query = Workspace.getCurrentInstance().getDBHelper().getLegDao().queryBuilder();
+        Where<Leg, Integer> where = query.where().eq(Leg.COLUMN_PROJECT_ID, aProjectId);
+        if (!includeMiddles) {
+            where.and().isNull(Leg.COLUMN_MIDDLE_POINT_AT_DISTANCE);
+        }
 
-        return Workspace.getCurrentInstance().getDBHelper().getLegDao().query(statementBuilder.prepare());
+        query.orderBy(Leg.COLUMN_GALLERY_ID, true);
+        query.orderBy(Leg.COLUMN_FROM_POINT, true);
+        query.orderBy(Leg.COLUMN_TO_POINT, true);
+
+        if (includeMiddles) {
+            query.orderBy(Leg.COLUMN_MIDDLE_POINT_AT_DISTANCE, true);
+        }
+
+        return Workspace.getCurrentInstance().getDBHelper().getLegDao().query(query.prepare());
     }
 
     public static void refreshPoint(Point aPoint) throws SQLException {
@@ -320,7 +328,7 @@ public class DaoUtil {
      */
     public static ProjectInfo getProjectInfo() throws SQLException {
 
-        List<Leg> legs = DaoUtil.getCurrProjectLegs();
+        List<Leg> legs = DaoUtil.getCurrProjectLegs(false);
         Project project = Workspace.getCurrentInstance().getActiveProject();
         String name = project.getName();
         String creationDate = project.getCreationDateFormatted();
@@ -330,7 +338,7 @@ public class DaoUtil {
         for (Leg l : legs) {
 
             // TODO calculate the correct distance and depth
-            if (!l.isMiddle() && l.getDistance() != null) {
+            if (l.getDistance() != null) {
                 totalLength += l.getDistance();
             }
 
@@ -401,7 +409,7 @@ public class DaoUtil {
         try {
             TransactionManager.callInTransaction(Workspace.getCurrentInstance().getDBHelper().getConnectionSource(), new Callable<Object>() {
                 public Object call() throws Exception {
-                    List<Leg> legs = getProjectLegs(aProjectId);
+                    List<Leg> legs = getProjectLegs(aProjectId, false);
                     if (legs != null) {
                         for (Leg l : legs) {
                             // delete photos
@@ -426,6 +434,15 @@ public class DaoUtil {
                             List<Vector> vectors = getLegVectors(l);
                             if (vectors != null && vectors.size() > 0) {
                                 Workspace.getCurrentInstance().getDBHelper().getVectorsDao().delete(vectors);
+                            }
+
+                            // delete middle points
+                            List<Leg> legMiddles = getLegsMiddles(l);
+                            if (legMiddles != null) {
+                                for (Leg m : legMiddles) {
+                                    Log.d(Constants.LOG_TAG_DB, "Deleting middle:" + m.getId());
+                                    Workspace.getCurrentInstance().getDBHelper().getLegDao().delete(m);
+                                }
                             }
 
                             // delete locations

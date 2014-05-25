@@ -123,7 +123,7 @@ public class ExcelExport {
             CreationHelper helper = wb.getCreationHelper();
 
             // legs
-            List<Leg> legs = DaoUtil.getCurrProjectLegs();
+            List<Leg> legs = DaoUtil.getCurrProjectLegs(false);
 
             int rowCounter = 0;
             Integer lastGalleryId = null, prevGalleryId;

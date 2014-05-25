@@ -96,7 +96,7 @@ public class MainActivity extends MainMenuActivity {
             // prepare grid
             table.removeAllViews();
 
-            List<Leg> legs = DaoUtil.getCurrProjectLegs();
+            List<Leg> legs = DaoUtil.getCurrProjectLegs(true);
 
             boolean currentLeg;
             Integer lastGalleryId = null, prevGalleryId;
@@ -315,10 +315,11 @@ public class MainActivity extends MainMenuActivity {
         Log.i(Constants.LOG_TAG_UI, "Change active leg");
         try {
 
-            final List<Leg> legs = DaoUtil.getCurrProjectLegs();
+            final List<Leg> legs = DaoUtil.getCurrProjectLegs(false);
             List<String> itemsList = new ArrayList<String>();
             int selectedItem = -1;
             int counter = 0;
+            Integer activeLegId = getWorkspace().getActiveLegId();
             for (Leg l : legs) {
 
                 if (l.isMiddle()) {
@@ -326,7 +327,7 @@ public class MainActivity extends MainMenuActivity {
                 }
 
                 itemsList.add(l.buildLegDescription());
-                if (l.getId().equals(getWorkspace().getActiveLegId())) {
+                if (l.getId().equals(activeLegId)) {
                     selectedItem = counter;
                 } else {
                     counter++;
