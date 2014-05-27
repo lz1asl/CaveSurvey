@@ -25,6 +25,7 @@ import com.astoev.cave.survey.util.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFHyperlink;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Hyperlink;
 import org.apache.poi.ss.usermodel.Row;
@@ -139,7 +140,7 @@ public class ExcelExport {
                     exportArroundMeasures(l, legRow);
 
                     // note
-                    exportNote(l, legRow);
+                    exportNote(l, legRow, wb);
 
                     // location
                     exportLocation(legRow, fromPoint);
@@ -191,7 +192,7 @@ public class ExcelExport {
                             exportArroundMeasures(l, middleRow);
 
                             // export extras skipped above
-                            exportNote(l, middleRow);
+                            exportNote(l, middleRow, wb);
                             exportLocation(middleRow, fromPoint);
                             exportSketches(helper, l, middleRow);
                             exportPhotos(helper, l, middleRow);
@@ -274,11 +275,14 @@ public class ExcelExport {
         exportLegSlope(l, legRow);
     }
 
-    private void exportNote(Leg l, Row legRow) throws SQLException {
+    private void exportNote(Leg l, Row legRow, Workbook wb) throws SQLException {
         Cell note = legRow.createCell(CELL_NOTE);
         Note n = DaoUtil.getActiveLegNote(l);
         if (n != null) {
             note.setCellValue(n.getText());
+            CellStyle cs = wb.createCellStyle();
+            cs.setWrapText(true);
+            note.setCellStyle(cs);
         }
     }
 
