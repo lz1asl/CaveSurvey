@@ -168,7 +168,8 @@ public class DaoUtil {
 
     public static List<Leg> getLegsMiddles(Leg aLeg) throws SQLException {
         QueryBuilder<Leg, Integer> query = Workspace.getCurrentInstance().getDBHelper().getLegDao().queryBuilder();
-        query.where().eq(Leg.COLUMN_TO_POINT, aLeg.getId()).and().eq(Leg.COLUMN_GALLERY_ID, aLeg.getGalleryId()).and().isNotNull(Leg.COLUMN_MIDDLE_POINT_AT_DISTANCE);
+        query.where().eq(Leg.COLUMN_FROM_POINT, aLeg.getFromPoint().getId()).and().eq(Leg.COLUMN_GALLERY_ID, aLeg.getGalleryId())
+                .and().isNotNull(Leg.COLUMN_MIDDLE_POINT_AT_DISTANCE);
         query.orderBy(Leg.COLUMN_MIDDLE_POINT_AT_DISTANCE, true);
         return query.query();
     }
