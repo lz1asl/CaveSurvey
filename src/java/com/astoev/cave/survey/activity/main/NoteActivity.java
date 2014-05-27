@@ -88,10 +88,14 @@ public class NoteActivity extends MainMenuActivity {
                                         // create new
                                         existingNote = new Note(noteText.getText().toString());
                                         existingNote.setPoint(activeLeg.getFromPoint());
+                                        existingNote.setGalleryId(activeLeg.getGalleryId());
                                         getWorkspace().getDBHelper().getNoteDao().create(existingNote);
                                     }
 
                                     UIUtilities.showNotification(R.string.note_saved);
+                                    Intent data = new Intent();
+                                    data.putExtra("note", noteText.getText().toString());
+                                    setResult(RESULT_OK, data);
                                     finish();
 
                                     Log.i(Constants.LOG_TAG_DB, "Note stored");
