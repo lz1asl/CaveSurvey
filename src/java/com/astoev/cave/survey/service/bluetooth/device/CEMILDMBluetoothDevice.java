@@ -91,7 +91,7 @@ public class CEMILDMBluetoothDevice extends AbstractBluetoothDevice {
 
             if (j == 2 && measure > -26843545) {
                 Log.i(Constants.LOG_TAG_BT, "Read distance " + measure / 1000);
-                if (!isMeasureRequested(aMeasures, Constants.MeasureTypes.distance)) {
+                if (isMeasureRequested(aMeasures, Constants.MeasureTypes.distance)) {
                     Measure m = new Measure();
 
                     m.setValue(measure / 1000);
@@ -118,7 +118,7 @@ public class CEMILDMBluetoothDevice extends AbstractBluetoothDevice {
 
     private boolean isMeasureRequested(List<Constants.MeasureTypes> aMeasures, Constants.MeasureTypes aType) {
         for(Constants.MeasureTypes measure: aMeasures) {
-            if (measure == aType) {
+            if (measure.equals(aType)) {
                 return true;
             }
         }
