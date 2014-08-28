@@ -1,0 +1,213 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>jQuery Alert Dialogs</title>
+		<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+		<meta name="description" content="This is a demonstration page." />
+		<meta name="keywords" content="alert, confirm, prompt, demo" />
+		
+		<style type="text/css">
+			BODY,
+			HTML {
+				padding: 0px;
+				margin: 0px;
+			}
+			BODY {
+				font-family: Arial, Helvetica, sans-serif;
+				font-size: 12px;
+				background: #FFF;
+				padding: 15px;
+			}
+			
+			H1 {
+				font-size: 20px;
+				font-weight: normal;
+			}
+			
+			H2 {
+				font-size: 16px;
+				font-weight: normal;
+			}
+			
+			FIELDSET {
+				border: solid 1px #CCC;
+				-moz-border-radius: 16px;
+				-webkit-border-radius: 16px;
+				border-radius: 16px;
+				padding: 1em 2em;
+				margin: 1em 0em;
+			}
+			
+			LEGEND {
+				color: #666;
+				font-size: 16px;
+				padding: 0em .5em;
+			}
+			
+			PRE {
+				font-family: "Courier New", monospace;
+				font-size: 11px;
+				color: #666;
+				background: #F8F8F8;
+				padding: 1em;
+				-moz-border-radius: 8px;
+				-webkit-border-radius: 8px;
+				border-radius: 8px;
+			}
+			
+			/* Custom dialog styles */
+			#popup_container.style_1 {
+				font-family: Georgia, serif;
+				color: #A4C6E2;
+				background: #005294;
+				border-color: #113F66;
+			}
+			
+			#popup_container.style_1 #popup_title {
+				color: #FFF;
+				font-weight: normal;
+				text-align: left;
+				background: #76A5CC;
+				border: solid 1px #005294;
+				padding-left: 1em;
+			}
+			
+			#popup_container.style_1 #popup_content {
+				background: none;
+			}
+			
+			#popup_container.style_1 #popup_message {
+				padding-left: 0em;
+			}
+			
+			#popup_container.style_1 INPUT[type='button'] {
+				border: outset 2px #76A5CC;
+				color: #A4C6E2;
+				background: #3778AE;
+			}
+			
+		</style>
+		
+		<!-- Dependencies -->
+		<script src="jquery.js" type="text/javascript"></script>
+		<script src="jquery.ui.draggable.js" type="text/javascript"></script>
+		
+		<!-- Core files -->
+		<script src="jquery.alerts.js" type="text/javascript"></script>
+		<link href="jquery.alerts.css" rel="stylesheet" type="text/css" media="screen" />
+		
+		<!-- Example script -->
+		<script type="text/javascript">
+			
+			$(document).ready( function() {
+				
+				$("#alert_button").click( function() {
+					jAlert('This is a custom alert box', 'Alert Dialog');
+				});
+				
+				$("#confirm_button").click( function() {
+					jConfirm('Can you confirm this?', 'Confirmation Dialog', function(r) {
+						jAlert('Confirmed: ' + r, 'Confirmation Results');
+					});
+				});
+				
+				$("#prompt_button").click( function() {
+					jPrompt('Type something:', 'Prefilled value', 'Prompt Dialog', function(r) {
+						if( r ) alert('You entered ' + r);
+					});
+				});
+				
+				$("#alert_button_with_html").click( function() {
+					jAlert('You can use HTML, such as <strong>bold</strong>, <em>italics</em>, and <u>underline</u>!');
+				});
+				
+				$(".alert_style_example").click( function() {
+					$.alerts.dialogClass = $(this).attr('id'); // set custom style class
+					jAlert('This is the custom class called &ldquo;style_1&rdquo;', 'Custom Styles', function() {
+						$.alerts.dialogClass = null; // reset to default
+					});
+				});
+			});
+			
+		</script>
+		
+	</head>
+	
+	<body>
+		
+		<h1><a href="http://abeautifulsite.net/2008/12/jquery-alert-dialogs/">&laquo; jQuery Alert Dialogs (Alert, Confirm, &amp; Prompt Replacements)</a></h1>
+		
+		<h2>Basic Examples</h2>
+		
+		<fieldset>
+			<legend>Alert</legend>
+<pre>
+jAlert('This is a custom alert box', 'Alert Dialog');
+</pre>
+			<p>
+				<input id="alert_button" type="button" value="Show Alert" />
+			</p>
+		</fieldset>
+		
+		
+		<fieldset>
+			<legend>Confirm</legend>
+<pre>
+jConfirm('Can you confirm this?', 'Confirmation Dialog', function(r) {
+    jAlert('Confirmed: ' + r, 'Confirmation Results');
+});
+</pre>
+			<p>
+				<input id="confirm_button" type="button" value="Show Confirm" />
+			</p>
+		</fieldset>
+		
+		<fieldset>
+			<legend>Prompt</legend>
+<pre>
+jPrompt('Type something:', 'Prefilled value', 'Prompt Dialog', function(r) {
+    if( r ) alert('You entered ' + r);
+});
+</pre>
+			<p>
+				<input id="prompt_button" type="button" value="Show Prompt" />
+			</p>
+		</fieldset>
+		
+		
+		
+		<h2>Additional Examples</h2>
+		<fieldset>
+			<legend>With HTML</legend>
+<pre>
+jAlert('You can use HTML, such as <strong>bold</strong>, <em>italics</em>, and <u>underline</u>!');
+</pre>
+			<p>
+				<input id="alert_button_with_html" type="button" value="Show Alert" />
+			</p>
+		</fieldset>
+		
+		<fieldset>
+			<legend>Alternate Styles</legend>
+			<p>
+				By changing the value of the <samp>$.alerts.dialogClass</samp> property (and creating
+				your own CSS class), you can changes the style of your dialogs:
+			</p>
+			
+			<p>
+				<input id="style_1" class="alert_style_example" type="button" value="Style 1" />
+			</p>
+			
+			<p>
+				View the plugin source for additional properties that can be modifed at runtime.
+			</p>
+		</fieldset>
+		
+		
+		<p>
+			<a href="http://abeautifulsite.net/2008/09/jquery-context-menu-plugin/">Back to the project page</a>
+		</p>
+		
+	</body>
+	
+</html>

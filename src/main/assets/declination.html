@@ -1,0 +1,11 @@
+<script>
+
+
+    var altitudeKm = $("#cave_altitude").val() / 1000;
+    var latitudeDegrees = $("#cave_latitude").val();
+    var longitudeDegrees = $("#cave_longitude").val();
+    var yearFloat = 2008;
+    var calcDec = new WorldMagneticModel();
+    alert(calcDec.declination(altitudeKm, latitudeDegrees, longitudeDegrees, yearFloat));
+    document.write(calcDec);
+</script>

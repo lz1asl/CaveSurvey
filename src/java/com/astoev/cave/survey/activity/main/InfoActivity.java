@@ -24,6 +24,7 @@ import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.util.FileStorageUtil;
 import com.astoev.cave.survey.util.ProjectInfo;
 import com.astoev.cave.survey.util.StringUtils;
+import com.mkyong.android.WebViewActivity;
 
 import java.io.File;
 
@@ -204,6 +205,11 @@ public class InfoActivity extends MainMenuActivity {
 				exportProject();
 				return true;
 			}
+            case R.id.info_action_openstopo: {
+                Intent intent = new Intent(InfoActivity.this, WebViewActivity.class);
+                startActivity(intent);
+                return true;
+            }
 			case R.id.info_action_view_files:{
 				onViewFiles();
 				return true;

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<!--
+ * @author Alessandro Vernassa
+ * @copyright Copyright (c) 2013
+ * @license http://opensource.org/licenses/gpl-license.php GNU General Public License
+-->
+<html>
+    <head>
+        <title>OpensTopo</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link href="res/favicon.ico" rel="icon" type="image/png" />
+        <!-- fogli di stile -->
+        <link rel="stylesheet" href="js/libs/jquery/jquery-ui/css/base/jquery-ui.css" />
+        <link rel="stylesheet" href="js/libs/jquery/jquery-ui/css/base/jquery.ui.theme.css" />
+        <link rel="stylesheet" href="js/libs/jquery/jquery.layout/layout-default-latest.css" />
+        <link rel="stylesheet" href="js/libs/jquery/jquery.alerts/jquery.alerts.css" />
+        <link rel="stylesheet" media="screen" href="js/libs/jquery/jquery.handsontable.full.css">
+        <link rel="stylesheet" media="screen" href="res/style.css" />
+        <link rel="stylesheet" href="js/libs/jquery/jMenu/css/jMenu.jquery.css" />
+        <script src="config.js"></script>
+        <script  src="js/libs/jquery/jquery.js"></script>
+        <script src="js/libs/splx_utilities/splx_utility.js"></script> 
+        <script src="js/libs/splx_utilities/splx_i18n.js"></script>
+        <script type="text/javascript">
+            splx.include("languages/" + config['lang'] + ".js", false);
+        </script>
+        <script src="languages/it.js"></script>
+        <script src="languages/en.js"></script>
+        <script src="languages/sk.js"></script>
+        <script defer="defer" src="js/libs/splx_utilities/splx_canvans.js"></script>
+        <script defer="defer" src="js/libs/splx_utilities/splx_3dgraphics.js"></script>
+        <script defer="defer" src="js/libs/Therion/therion.js"></script>
+        <script defer="defer" src="js/libs/VisualTopo/VisualTopo.js"></script>
+        <script defer="defer" src="js/libs/DXFwriter/splx_dxf.js"></script>
+        <script defer="defer" src="js/libs/SVGwriter/splx_svg.js"></script>
+
+        <script defer="defer" src="js/libs/KMLwriter/cave2kml.js"></script>
+        <script defer="defer" src="js/libs/proj4js/proj4js-combined.js"></script>
+
+
+        <script defer="defer" src="js/libs/jquery/jquery-ui/jquery-ui.js"></script>
+        <script defer="defer" src="js/libs/jquery/jquery.layout/jquery.layout.js"></script>
+        <script defer="defer" src="js/libs/jquery/jMenu/jMenu.jquery.js"></script>
+        <script defer="defer" src="js/libs/jquery/jquery.alerts/jquery.alerts.js"></script>
+
+        <script  src="js/libs/jquery/jquery.handsontable.full.js"></script>
+
+        <script defer="defer" src="js/caveObject.js"></script>
+        <script defer="defer" src="js/libs/ShapeCanvan.class.js"></script>
+        <script defer="defer" src="js/functions.js"></script>
+        <script defer="defer" src="js/functions_form.js"></script>
+        <script defer="defer" src="js/libs/actions.js"></script>
+        
+         <script  src="js/WorldMagneticModel.js"></script>
+    </head>
+    <body  style="overflow:hidden">
+        <div style="position:absolute;height:100%;width:100%;top:0px;left:0px;background-color: #000000;color:#ffffff;z-index:99" id="loading">
+            <div style="width:100%;text-align:center;position:absolute;color:#ffffff;top:30%">
+                <h1>OpensTopo</h1>by<br />Alessandro Vernassa<br /><span style="color:yellow">www.openspeleo.org</span>
+            </div></div>
+        <header class="ui-layout-north"  >
+            <input type="file" id="files" name="files[]" accept="text/*" style="display:none" />
+            <input type="file" id="filesadd" name="files[]" accept="text/*" style="display:none" />
+            <div class="menubar">
+                <ul id="menu">
+                    <li><a class="fNiv" id="mainmenu" ><span data-i18n="Aa">menu</span></a><ul>
+                            <li>
+                                <a data-i18n="auto">Project</a>
+                                <ul>
+                                    <li><a class="actionopen" href="#" data-i18n="Aa"  >open project</a></li>
+                                    <li><a class="actionadd" href="#" data-i18n="Aa"  >append data</a></li>
+                                    <li><a class="actionsaveas" href="#" data-i18n="Aa" >save project</a></li>
+                                    <li><a class="actionnewproject" href="#" data-i18n="Aa" >new project</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a data-i18n="auto">Export</a>
+                                <ul>
+                                    <li><a class="actionexportDXFPlan" href="#" data-i18n="auto"  >Export plan to dxf</a></li>
+                                    <li><a class="actionexportDXF" href="#" data-i18n="auto" >Export 3d to dxf</a></li>
+                                    <li><a class="actionSaveToDXFSection" href="#" data-i18n="auto" >Export section to dxf</a></li>
+                                    <li><a class="actionSaveToDXFAll" href="#" data-i18n="auto" >Export all to dxf</a></li>
+                                    <li><a class="actionSaveToKML" href="#" data-i18n="auto" >Export to kml</a></li>
+                                    <li><a class="actionSaveToSVGAll" href="#" data-i18n="auto" >Export to svg</a></li>
+                                    <li><a class="actionSaveToCSV" href="#" data-i18n="auto" >Export to csv</a></li>                                    
+                                </ul>
+                            </li>
+                            <li><a class="actionopen" href="#" data-i18n="Aa"  >import data</a></li>
+                            <li><a class="actionadd" href="#" data-i18n="Aa"  >append data</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="toolbar">
+                <div id="processing" style="text-align:center;z-index:90;display:none;width:100%;height: 20px;background-color: #000000;color:#ffffff;position:absolute;top:30px;left:0px;" data-i18n-title="processing in progress" data-i18n="Aa" >processing in progress</div>
+                <span data-i18n-title="automatic processing" data-i18n="Aa">automatic processing:</span>
+                <input id="autocompile" type="checkbox" name="autocompile" value="" checked="checked" />
+                <img class="actionnewproject" alt="" src="res/document-new.png" data-i18n-title="New project" />
+                <img class="actionopen" alt="" src="res/document-open.png"  data-i18n-title="Open project" />
+                <img class="actionsaveas" alt="" src="res/document-save.png" data-i18n-title="Save project" />
+                <img class="actioncompile" alt="" src="res/apply.png" data-i18n-title="Process data" />
+                <span data-i18n-title="Export" data-i18n="Aa">export</span>: 
+                <img class="actionSaveToKML" alt="" src="res/kml.png" data-i18n-title="Export to kml" />
+                <img class="actionexportDXF" alt="" src="res/dxf.png" data-i18n-title="Export 3d to dxf" />
+                <img class="actionSaveToDXFAll" alt="" src="res/dxf_all.png" data-i18n-title="Export all to dxf" />
+                <img class="actionSaveToSVGAll" alt="" src="res/svg.png" data-i18n-title="Export all to svg" />
+                <img class="actionSaveToTherion" alt="" src="res/therion.png" data-i18n-title="Export to Therion" />
+                <input id="filenameopened" type="text" name="filename" value="no_name" />
+
+                <!--
+                <button class="actionexportTherion" >Export to Therion</button>
+                <button class="actionexportDXFPlan" data-i18n="auto" >Export plan to dxf</button>
+                <button class="actionexportDXF" data-i18n="auto" >Export 3d to dxf</button>
+                <button class="actionSaveToDXFSection"  data-i18n="auto" >Export section to dxf</button>
+                <button class="actionSaveToKML"  data-i18n="auto" >Export to kml</button>
+                -->
+                <!--<button  onclick="$('#cells').resize();" class="" >init grid</button>-->
+            </div>
+        </header>
+        <section id="cellscontent" class="ui-layout-west" style="overflow:auto;width:600px" >
+            <div id="cells" style="overflow:auto;height:100%;width:100%"></div>
+        </section>
+        <section id="cavecontainer" class="ui-layout-center" style="overflow:auto;" >
+            <div id="caveform">
+                <label data-i18n="Aa">name</label><input size="30" id="cave_name" value="" /><br />
+                <label ><span data-i18n="Aa">longitude</span>/<span data-i18n="Aa">latitude</span></label><span class="xy">E:</span><input  class="coords" size="10" id="cave_longitude" value="" /><span class="xy">N:</span><input  class="coords" size="10" id="cave_latitude" value="" /><br />
+                <label ><span data-i18n="Aa">UTM wgs84</span></label><span class="xy">X:</span><input   class="coords" size="10" id="cave_utm_x" value="" /><span class="xy">Y:</span><input   class="coords" size="10" id="cave_utm_y" value="" />Zone:<input  id="cave_utm_zone" size="2" value="" /><br />
+              
+                <label data-i18n="Aa">altitude</label><input  size="5" id="cave_altitude" value="" />m.<br />
+                <label data-i18n="Aa">georeferenced point</label><input  class="coords" size="10" id="cave_geoPoint" value="" /><br />
+                <label data-i18n="Aa">entrance point</label><input   class="coords" size="10" id="cave_startPoint" value="" /><br />
+                <label data-i18n="Aa">magnetic declination</label><input  class="coords"  size="10" id="cave_northdeclination" value="" />°<br />
+            </div>
+            <div id="tabs">
+                <ul>
+                    <li><a href="#tabs-1"  data-i18n="Aa" >preview</a></li>
+                    <li><a href="#tabs-2"  data-i18n="Aa" >animation</a></li>
+                    <li><a href="#tabs-3"  data-i18n="Aa">section</a></li>
+                    <li><a href="#tabs-4"  data-i18n="Aa">info</a></li>
+                </ul>
+                <div id="tabs-1">
+                    <div id="cavepreview">
+                        <canvas class="preview"  width="300" height="300"></canvas>
+                        <br />
+                        <img alt="zoom original" src="res/zoom-original.png" class="zoom_original" /> 
+                        <img alt="zoom all" src="res/zoom-all.png" class="zoom_all" /> 
+                        <img alt="zoom in" src="res/zoom-in.png" class="zoom_inc" /> 
+                        <img alt="zoom out" src="res/zoom-out.png" class="zoom_dec" /> 
+                        <img alt="rotate left" src="res/rotate-left.png" class="y_dec" /> 
+                        <img alt="rotate right" src="res/rotate-right.png" class="y_inc" /> 
+                        <img alt="rotate left" src="res/rotate-up.png" class="x_inc" /> 
+                        <img alt="rotate right" src="res/rotate-down.png" class="x_dec" /> 
+                        <img alt="rotate on z left" src="res/rotate-z-left.png" class="z_dec" /> 
+                        <img alt="rotate om z right" src="res/rotate-z-right.png" class="z_inc" /> 
+
+                        <img style="border:1px solid red" alt="prospective" src="res/prosp.png" class="prosp" /> 
+                        <img style="border:1px solid #00ff00" alt="layer_text" src="res/layer_text.png" class="layer_text" /> 
+                        <input type="hidden" class="layer_text" value="1"/>      
+                        <input type="hidden" class="xpan" value="0" />
+                        <input type="hidden" class="ypan" value="0" />
+                        <input type="hidden" class="zoom" value="-1"/>
+                        <input type="hidden" class="xoffset" value="0"/>
+                        <input type="hidden" class="yoffset" value="0"/>
+                        <input type="hidden" class="zoffset" value="0"/>
+                        <input type="hidden" class="xrotation" value="0"/>
+                        <input type="hidden" class="yrotation" value="0"/>
+                        <input type="hidden" class="zrotation" value="0"/>            
+                        <input type="hidden" class="prosp" value="0"/>      
+                    </div>
+                </div>
+                <div id="tabs-2">
+                    <div id="animation">
+                        <canvas class="preview"  width="300" height="300"></canvas>
+                        <br />
+                        <img alt="zoom original" src="res/zoom-original.png" class="zoom_original" /> 
+                        <img alt="zoom all" src="res/zoom-all.png" class="zoom_all" /> 
+                        <img alt="zoom in" src="res/zoom-in.png" class="zoom_inc" /> 
+                        <img alt="zoom out" src="res/zoom-out.png" class="zoom_dec" /> 
+                        <input type="hidden" class="xpan" value="0" />
+                        <input type="hidden" class="ypan" value="0" />
+                        <input type="hidden" class="zoom" value="1" />
+                        <input type="hidden" class="xoffset" value="0" />
+                        <input type="hidden" class="yoffset" value="0" />
+                        <input type="hidden" class="zoffset" value="0" />
+                        <input type="hidden" class="xrotation" value="90" />
+                        <input type="hidden" class="yrotation" value="0" />
+                        <input type="hidden" class="zrotation" value="0"  />            
+                        <input type="hidden" class="prosp" value="1"/>
+                        <img style="border:1px solid #00ff00" alt="layer_text" src="res/layer_text.png" class="layer_text" /> 
+                        <input type="hidden" class="layer_text" value="1"/>      
+                        <img style="border:1px solid #00ff00" alt="prospective" src="res/prosp.png" class="prosp" /> 
+                    </div>
+                </div>
+                <div id="tabs-3">
+                    <div id="cavesection">
+                        <canvas class="preview"  width="300" height="300"></canvas>
+                        <br />
+                        <img alt="zoom original" src="res/zoom-original.png" class="zoom_original" /> 
+                        <img alt="zoom all" src="res/zoom-all.png" class="zoom_all" /> 
+                        <img alt="zoom in" src="res/zoom-in.png" class="zoom_inc" /> 
+                        <img alt="zoom out" src="res/zoom-out.png" class="zoom_dec" /> 
+                        <img alt="right" src="res/fn_left.png" class="move_left" /> 
+                        <img alt="left" src="res/fn_up.png" class="move_up" /> 
+                        <img alt="right" src="res/fn_down.png" class="move_down" /> 
+                        <img alt="left" src="res/fn_right.png" class="move_right" /> 
+                        <input type="hidden" class="xpan" value="0" />
+                        <input type="hidden" class="ypan" value="0" />
+                        <input type="hidden" class="zoom" value="1" />
+                        <input type="hidden" class="xoffset" value="0" />
+                        <input type="hidden" class="yoffset" value="0" />
+                        <input type="hidden" class="zoffset" value="0" />
+                        <input type="hidden" class="xrotation" value="90" />
+                        <input type="hidden" class="yrotation" value="-90" />
+                        <input type="hidden" class="zrotation" value="0" />            
+                        <input type="hidden" class="prosp" value=""/>
+                        <img style="border:1px solid #00ff00" alt="layer_text" src="res/layer_text.png" class="layer_text" /> 
+                        <input type="hidden" class="layer_text" value="1"/>      
+                    </div>
+                </div>
+                <div id="tabs-4"  >
+                    <div>
+                        <span  data-i18n="Aa" >length</span>:<input readonly="readonly" class="cave_len" value="0" /><br />
+                        <span  data-i18n="Aa" >total depth</span>:<input readonly="readonly" class="cave_depht" value="0" /><br />
+                        <span  data-i18n="Aa">positive depth</span>:<input readonly="readonly" class="cave_positive_depht" value="0" /><br />
+                        <span  data-i18n="Aa">negative depth</span>:<input readonly="readonly" class="cave_negative_depht" value="0" /><br />
+                    </div>
+                </div>
+            </div>
+        </section>
+    </body>
+</html>

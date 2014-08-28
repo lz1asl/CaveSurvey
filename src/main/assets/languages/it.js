@@ -1,0 +1,73 @@
+/**
+ * @author Alessandro Vernassa <speleoalex@gmail.com>
+ * @copyright Copyright (c) 2013
+ * @license http://opensource.org/licenses/gpl-license.php GNU General Public License
+ */
+
+if (typeof(__language) === 'undefined')
+    __language = new Array();
+
+__language['it'] = {
+    "Want to create a new project? Unsaved data will be lost": "Vuoi creare un nuovo progetto?I dati non salvati verranno persi",
+    "open project": "apri un progetto esistente",
+    "save project": "salva il progetto sul disco",
+    "new project": "crea un nuovo progetto",
+    "menu": "menu",
+    "from": "da",
+    "name": "Nome",
+    "project": "progetto",
+    "export": "esporta",
+    "entrance": "ingresso",
+    "to": "a",
+    "length": "lunghezza",
+    "compass": "bussola",
+    "clino": "inclinazione",
+    "left": "sx",
+    "right": "dx",
+    "top": "alto",
+    "bottom": "basso",
+    "note": "note",
+    "latitude": "latitudine",
+    "longitude": "longitudine",
+    "entrance point": "punto di ingresso",
+    "altitude": "altitutine",
+    "preview": "anteprima",
+    "animation": "animazione",
+    "section": "sezione",
+    "plan": "pianta",
+    "info": "info",
+    "process data": "elabora i dati",
+    "total depth": "dislivello totale",
+    "positive depth": "dislivello positivo",
+    "negative depth": "dislivello negativo",
+    "magnetic declination": "declinazione magnetica",
+    "export to dxf": "esporta in dxf",
+    "export plan to dxf": "esporta pianta in dxf",
+    "export section to dxf": "esporta sezione in dxf",
+    "export to kml": "esporta in kml",
+    "export 3d to dxf": "esporta il 3d in dxf",
+    "export to therion": "Esporta in formato Therion",
+    "Explorer is not supported. Use the browser Chrome or Firefox": "Explorer non è supportato. Utilizzare il browser Chrome o Firefox",
+    "Your browser does not support all the features required to run this program.": "Il tuo browser non supporta tutte le funzioni richieste per eseguire questo programma",
+    "export all to dxf": "esporta tutto in dxf",
+    "this feature is not yet implemented": "questa funzione non è stata ancora implementata",
+    "i can not import this file": "Non riesco ad importare questo tipo di file",
+    "insert row above": "indirisci una riga sopra",
+    "insert row below": "indirisci una riga sotto",
+    "remove row": "rimuovi riga",
+    "set units of measurement": "inserisci nuove unità di misura da qui",
+    "import data": "importa dati",    
+    "append data":"aggiungi dati al progetto",
+    "prefix": "prefisso",    
+    "would like to add a prefix to all the points?":"Vorresti aggiungere un prefisso ai capisaldi?",
+    "yes":"si",
+    "no":"no",
+    "virtual point of joining":"punto virtuale di unione",
+    "automatic processing":"elabora automaticamente",
+    "georeferenced point":"punto georeferenziato",
+    "processing in progress":"elaborazione in corso",
+    "georeferenced":"georeferenziato",
+    "set date of measurement":"inserisci data misurazioni",
+    "set georeferenced points":"inserisci punti georeferenziati"
+};
+
