@@ -2,23 +2,16 @@ package com.astoev.cave.survey.service.export.excel;
 
 import android.content.Context;
 import android.util.Log;
-import android.util.SparseArray;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
-import com.astoev.cave.survey.model.Gallery;
-import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Location;
-import com.astoev.cave.survey.model.Note;
 import com.astoev.cave.survey.model.Option;
 import com.astoev.cave.survey.model.Photo;
-import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.model.Sketch;
-import com.astoev.cave.survey.model.Vector;
 import com.astoev.cave.survey.service.Options;
-import com.astoev.cave.survey.util.DaoUtil;
-import com.astoev.cave.survey.util.FileStorageUtil;
+import com.astoev.cave.survey.service.export.AbstractExport;
 import com.astoev.cave.survey.util.LocationUtil;
 import com.astoev.cave.survey.util.StringUtils;
 
@@ -35,8 +28,8 @@ import org.apache.poi.ss.usermodel.Workbook;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.sql.SQLException;
-import java.util.List;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Exports the project's data as xsl file  
@@ -48,7 +41,7 @@ import java.util.List;
  * @author astoev
  * @author jmitrev
  */
-public class ExcelExport {
+public class ExcelExport extends AbstractExport {
 
     private static int CELL_FROM = 0;
     private static int CELL_TO = 1;
@@ -66,309 +59,128 @@ public class ExcelExport {
     private static int CELL_ACCURACY = 13;
     private static int CELL_DRAWING = 14;
     private static int CELL_PHOTO = 15;
-    
-    private Context mContext;
+
+    private Workbook wb;
+    private Sheet sheet;
+    private CreationHelper helper;
+
+    private Row legRow;
 
     public ExcelExport(Context aContext) {
-        mContext = aContext;
+        super(aContext);
     }
 
-    public String runExport(Project aProject) throws Exception {
-
+    @Override
+    protected void prepare(Project aProject) {
         Log.i(Constants.LOG_TAG_SERVICE, "Start excel export ");
+        wb = new HSSFWorkbook();
+        sheet = createHeader(aProject.getName(), wb);
+        helper = wb.getCreationHelper();
+    }
 
-        Workbook wb = new HSSFWorkbook();
+    @Override
+    protected void prepareEntity(int rowCounter) {
+        legRow = sheet.createRow(rowCounter);
+    }
 
-        try {
+    @Override
+    protected InputStream getContent() throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        wb.write(out);
+        return new ByteArrayInputStream(out.toByteArray());
+    }
 
-            Sheet sheet = createHeader(aProject.getName(), wb);
-
-            CreationHelper helper = wb.getCreationHelper();
-
-            // legs
-            List<Leg> legs = DaoUtil.getCurrProjectLegs(false);
-
-            int rowCounter = 0;
-            Integer lastGalleryId = null, prevGalleryId = null;
-            SparseArray<String> galleryNames = new SparseArray<String>();
-
-            for (Leg l : legs) {
-
-
-                Point fromPoint = l.getFromPoint();
-                DaoUtil.refreshPoint(fromPoint);
-                Point toPoint = l.getToPoint();
-                DaoUtil.refreshPoint(toPoint);
-
-                if (Constants.STRING_NOT_FOUND.equals(galleryNames.get(l.getGalleryId(), Constants.STRING_NOT_FOUND))) {
-                    Gallery gallery = DaoUtil.getGallery(l.getGalleryId());
-                    galleryNames.put(l.getGalleryId(), gallery.getName());
-                }
-                if (lastGalleryId == null) {
-                    lastGalleryId = l.getGalleryId();
-                }
-
-                if (l.getGalleryId().equals(lastGalleryId)) {
-                    prevGalleryId = l.getGalleryId();
-                } else {
-                    prevGalleryId = DaoUtil.getLegByToPointId(l.getFromPoint().getId()).getGalleryId();
-                }
-
-                List<Leg> middles = DaoUtil.getLegsMiddles(l);
-
-                // postpone display logic if will be handled inside middles
-                if (middles == null || middles.size() == 0) {
-
-                    rowCounter++;
-
-                    Row legRow = sheet.createRow(rowCounter);
-                    Cell from = legRow.createCell(CELL_FROM);
-
-                    if (l.getGalleryId().equals(lastGalleryId)) {
-                        from.setCellValue(galleryNames.get(l.getGalleryId()) + fromPoint.getName());
-                    } else {
-                        from.setCellValue(galleryNames.get(prevGalleryId) + fromPoint.getName());
-                    }
-
-                    Cell to = legRow.createCell(CELL_TO);
-                    to.setCellValue(galleryNames.get(l.getGalleryId()) + toPoint.getName());
-
-                    // distance, azimuth, inclination
-                    exportLegMeasures(l, legRow);
-
-                    //up/down/left/right
-                    exportArroundMeasures(l, legRow);
-
-                    // note
-                    exportNote(l, legRow, wb);
-
-                    // location
-                    exportLocation(legRow, fromPoint);
-
-                    // sketch
-                    exportSketches(helper, l, legRow);
-
-                    // picture
-                    exportPhotos(helper, l, legRow);
-
-                }
-
-                // middles
-                if (middles != null && middles.size() > 0) {
-
-                    int index = 0;
-                    float prevLength = 0;
-                    String fromPointName;
-                    if (l.getGalleryId().equals(prevGalleryId)) {
-                        fromPointName = galleryNames.get(l.getGalleryId()) + fromPoint.getName();
-                    } else {
-                        fromPointName = galleryNames.get(prevGalleryId) + fromPoint.getName();
-                    }
-                    String toPointName = galleryNames.get(l.getGalleryId()) + toPoint.getName();
-                    String lastMiddleName = null;
-
-                    // middles
-                    Leg prevMiddle = null;
-                    for (Leg middle : middles) {
-                        rowCounter++;
-                        index ++;
-                        Row middleRow = sheet.createRow(rowCounter);
-
-                        Cell middleFrom = middleRow.createCell(CELL_FROM);
-                        middleFrom.setCellValue(lastMiddleName == null ? fromPointName : lastMiddleName);
-
-                        Cell middleTo = middleRow.createCell(CELL_TO);
-                        middleTo.setCellValue(fromPointName + "-" + toPointName + "@" + StringUtils.floatToLabel(middle.getMiddlePointDistance()));
-                        lastMiddleName = middleTo.getStringCellValue();
-
-                        Cell middleLength = middleRow.createCell(CELL_LENGHT);
-                        middleLength.setCellValue(StringUtils.floatToLabel(middle.getMiddlePointDistance() - prevLength));
-
-                        exportLegCompass(l, middleRow);
-                        exportLegSlope(l, middleRow);
-
-
-                        if (index == 1) {
-                            exportArroundMeasures(l, middleRow);
-
-                            // export extras skipped above
-                            exportNote(l, middleRow, wb);
-                            exportLocation(middleRow, fromPoint);
-                            exportSketches(helper, l, middleRow);
-                            exportPhotos(helper, l, middleRow);
-                        } else {
-                            exportArroundMeasures(prevMiddle, middleRow);
-                        }
-
-                        prevLength = middle.getMiddlePointDistance();
-                        prevMiddle = middle;
-                    }
-
-                    // last explicit leg
-                    rowCounter++;
-                    Row middleLastRow = sheet.createRow(rowCounter);
-
-                    Cell middleLastFrom = middleLastRow.createCell(CELL_FROM);
-                    middleLastFrom.setCellValue(lastMiddleName);
-
-                    Cell middleLastTo = middleLastRow.createCell(CELL_TO);
-                    middleLastTo.setCellValue(toPointName);
-
-                    Cell middleLastDistance = middleLastRow.createCell(CELL_LENGHT);
-                    middleLastDistance.setCellValue(StringUtils.floatToLabel(l.getDistance() - prevLength));
-
-                    exportLegCompass(l, middleLastRow);
-                    exportLegSlope(l, middleLastRow);
-
-                    exportArroundMeasures(middles.get(middles.size()-1), middleLastRow);
-
-                }
-
-                // vectors
-                List<Vector> vectors = DaoUtil.getLegVectors(l);
-                if (vectors != null) {
-                    int vectorCounter = 1;
-                    for (Vector v : vectors) {
-                        rowCounter++;
-                        Row vectorRow = sheet.createRow(rowCounter);
-
-                        Cell vectorFrom = vectorRow.createCell(CELL_FROM);
-                        String fromPointName;
-                        if (l.getGalleryId().equals(prevGalleryId)) {
-                            fromPointName = galleryNames.get(l.getGalleryId()) + fromPoint.getName();
-                        } else {
-                            fromPointName = galleryNames.get(prevGalleryId) + fromPoint.getName();
-                        }
-                        vectorFrom.setCellValue(fromPointName);
-
-                        Cell vectorTo = vectorRow.createCell(CELL_TO);
-                        vectorTo.setCellValue(fromPointName + "-" + galleryNames.get(l.getGalleryId()) + toPoint.getName() + "-v" + vectorCounter);
-
-                        Cell vectorLength = vectorRow.createCell(CELL_LENGHT);
-                        vectorLength.setCellValue(StringUtils.floatToLabel(v.getDistance()));
-
-                        Cell vectorCompass = vectorRow.createCell(CELL_AZIMUTH);
-                        vectorCompass.setCellValue(StringUtils.floatToLabel(v.getAzimuth()));
-
-                        Cell vectorClinometer = vectorRow.createCell(CELL_SLOPE);
-                        vectorClinometer.setCellValue(StringUtils.floatToLabel(v.getSlope()));
-
-                        vectorCounter++;
-                    }
-                }
-
-                lastGalleryId = l.getGalleryId();
-            }
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-            wb.write(out);
-            ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
-            return FileStorageUtil.addProjectExport(aProject, in);
-        } catch (Exception t) {
-            Log.e(Constants.LOG_TAG_SERVICE, "Failed with export", t);
-            throw t;
+    @Override
+    protected void setValue(Entities entityType, String aLabel) {
+        switch (entityType) {
+            case FROM:
+                Cell from = legRow.createCell(CELL_FROM);
+                from.setCellValue(aLabel);
+                break;
+            case TO:
+                Cell to = legRow.createCell(CELL_TO);
+                to.setCellValue(aLabel);
+                break;
+            case NOTE:
+                Cell note = legRow.createCell(CELL_NOTE);
+                note.setCellValue(aLabel);
+                CellStyle cs = wb.createCellStyle();
+                cs.setWrapText(true);
+                note.setCellStyle(cs);
+                break;
         }
     }
 
-    private void exportLegMeasures(Leg l, Row legRow) throws SQLException {
-        exportLegDistance(l, legRow);
-        exportLegCompass(l,legRow);
-        exportLegSlope(l, legRow);
-    }
-
-    private void exportNote(Leg l, Row legRow, Workbook wb) throws SQLException {
-        Cell note = legRow.createCell(CELL_NOTE);
-        Note n = DaoUtil.getActiveLegNote(l);
-        if (n != null) {
-            note.setCellValue(n.getText());
-            CellStyle cs = wb.createCellStyle();
-            cs.setWrapText(true);
-            note.setCellStyle(cs);
+    @Override
+    protected void setValue(Entities entityType, Float aValue) {
+        switch (entityType) {
+            case DISTANCE:
+                Cell length = legRow.createCell(CELL_LENGHT);
+                length.setCellValue(StringUtils.floatToLabel(aValue));
+                break;
+            case COMPASS:
+                Cell compass = legRow.createCell(CELL_AZIMUTH);
+                compass.setCellValue(StringUtils.floatToLabel(aValue));
+                break;
+            case INCLINATION :
+                Cell clinometer = legRow.createCell(CELL_SLOPE);
+                clinometer.setCellValue(StringUtils.floatToLabel(aValue));
+                break;
+            case LEFT :
+                Cell left = legRow.createCell(CELL_LEFT);
+                left.setCellValue(StringUtils.floatToLabel(aValue));
+                break;
+            case RIGHT:
+                Cell right = legRow.createCell(CELL_RIGHT);
+                right.setCellValue(StringUtils.floatToLabel(aValue));
+                break;
+            case UP:
+                Cell up = legRow.createCell(CELL_UP);
+                up.setCellValue(StringUtils.floatToLabel(aValue));
+                break;
+            case DOWN:
+                Cell down = legRow.createCell(CELL_DOWN);
+                down.setCellValue(StringUtils.floatToLabel(aValue));
+                break;
         }
     }
 
-    private void exportLegSlope(Leg l, Row legRow) throws SQLException {
-        Cell clinometer = legRow.createCell(CELL_SLOPE);
-        if (l.getSlope() != null) {
-            clinometer.setCellValue(StringUtils.floatToLabel(l.getSlope()));
-        }
+    @Override
+    protected void setPhoto(Photo photo) {
+        Hyperlink fileLink = helper.createHyperlink(HSSFHyperlink.LINK_FILE);
+
+        Cell photoCell = legRow.createCell(CELL_PHOTO);
+        String path = photo.getFSPath();
+        String name = new File(path).getName();
+
+        fileLink.setAddress(name);
+        photoCell.setCellValue(name);
+        photoCell.setHyperlink(fileLink);
     }
 
-    private void exportLegDistance(Leg l, Row legRow) throws SQLException {
-        Cell length = legRow.createCell(CELL_LENGHT);
-        if (l.getDistance() != null) {
-            length.setCellValue(StringUtils.floatToLabel(l.getDistance()));
-        }
+    @Override
+    protected void setLocation(Location aLocation) {
+        Cell latitude = legRow.createCell(CELL_LATITUDE);
+        latitude.setCellValue(LocationUtil.formatLatitude(aLocation.getLatitude()));
+        Cell longitude = legRow.createCell(CELL_LONGITUDE);
+        longitude.setCellValue(LocationUtil.formatLongitude(aLocation.getLongitude()));
+        Cell altitude = legRow.createCell(CELL_ALTTITUDE);
+        altitude.setCellValue(aLocation.getAltitude());
+        Cell accuracy = legRow.createCell(CELL_ACCURACY);
+        accuracy.setCellValue(aLocation.getAccuracy());
     }
 
+    @Override
+    protected void setDrawing(Sketch aSketch) {
+        Hyperlink fileLink = helper.createHyperlink(HSSFHyperlink.LINK_FILE);
 
-    private void exportLegCompass(Leg l, Row legRow) throws SQLException {
-        Cell compass = legRow.createCell(CELL_AZIMUTH);
-        if (l.getAzimuth() != null) {
-            compass.setCellValue(StringUtils.floatToLabel(l.getAzimuth()));
-        }
-    }
+        Cell sketchCell = legRow.createCell(CELL_DRAWING);
+        String path = aSketch.getFSPath();
+        String name = new File(path).getName();
 
-    private void exportArroundMeasures(Leg l, Row legRow) throws SQLException {
-        Cell left = legRow.createCell(CELL_LEFT);
-        if (l.getLeft() != null) {
-            left.setCellValue(StringUtils.floatToLabel(l.getLeft()));
-        }
-        Cell right = legRow.createCell(CELL_RIGHT);
-        if (l.getRight() != null) {
-            right.setCellValue(StringUtils.floatToLabel(l.getRight()));
-        }
-        Cell up = legRow.createCell(CELL_UP);
-        if (l.getTop() != null) {
-            up.setCellValue(StringUtils.floatToLabel(l.getTop()));
-        }
-        Cell down = legRow.createCell(CELL_DOWN);
-        if (l.getDown() != null) {
-            down.setCellValue(StringUtils.floatToLabel(l.getDown()));
-        }
-    }
-
-    private void exportPhotos(CreationHelper helper, Leg l, Row legRow) throws SQLException {
-        Photo photo = DaoUtil.getPhotoByLeg(l);
-        if (photo != null) {
-            Hyperlink fileLink = helper.createHyperlink(HSSFHyperlink.LINK_FILE);
-
-            Cell photoCell = legRow.createCell(CELL_PHOTO);
-            String path = photo.getFSPath();
-            String name = new File(path).getName();
-
-            fileLink.setAddress(name);
-            photoCell.setCellValue(name);
-            photoCell.setHyperlink(fileLink);
-        }
-    }
-
-    private void exportSketches(CreationHelper helper, Leg l, Row legRow) throws SQLException {
-        Sketch sketch = DaoUtil.getScetchByLeg(l);
-        if (sketch != null) {
-            Hyperlink fileLink = helper.createHyperlink(HSSFHyperlink.LINK_FILE);
-
-            Cell sketchCell = legRow.createCell(CELL_DRAWING);
-            String path = sketch.getFSPath();
-            String name = new File(path).getName();
-
-            fileLink.setAddress(name);
-            sketchCell.setCellValue(name);
-            sketchCell.setHyperlink(fileLink);
-        }
-    }
-
-    private void exportLocation(Row legRow, Point fromPoint) throws SQLException {
-        Location location = DaoUtil.getLocationByPoint(fromPoint);
-        if (location != null) {
-            Cell latitude = legRow.createCell(CELL_LATITUDE);
-            latitude.setCellValue(LocationUtil.formatLatitude(location.getLatitude()));
-            Cell longitude = legRow.createCell(CELL_LONGITUDE);
-            longitude.setCellValue(LocationUtil.formatLongitude(location.getLongitude()));
-            Cell altitude = legRow.createCell(CELL_ALTTITUDE);
-            altitude.setCellValue(location.getAltitude());
-            Cell accuracy = legRow.createCell(CELL_ACCURACY);
-            accuracy.setCellValue(location.getAccuracy());
-        }
+        fileLink.setAddress(name);
+        sketchCell.setCellValue(name);
+        sketchCell.setHyperlink(fileLink);
     }
 
     private Sheet createHeader(String aProjectName, Workbook wb) {
@@ -414,4 +226,5 @@ public class ExcelExport {
         headerPhoto.setCellValue(mContext.getString(R.string.main_table_header_photo));
         return sheet;
     }
+
 }
