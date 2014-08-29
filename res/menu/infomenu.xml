@@ -9,7 +9,7 @@
 	      myapp:showAsAction="ifRoom|withText"/>
     <item android:id="@+id/info_action_openstopo"
         android:icon="@drawable/ic_action_import_export"
-        android:title="@string/export_title"
+        android:title="@string/export_openstopo_title"
         android:visible="true"
         myapp:showAsAction="ifRoom|withText"/>
     <item android:id="@+id/info_action_view_files"
