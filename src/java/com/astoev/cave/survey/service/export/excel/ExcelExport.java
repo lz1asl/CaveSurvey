@@ -91,6 +91,11 @@ public class ExcelExport extends AbstractExport {
     }
 
     @Override
+    protected String getExtension() {
+        return ".xls";
+    }
+
+    @Override
     protected void setValue(Entities entityType, String aLabel) {
         switch (entityType) {
             case FROM:

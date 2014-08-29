@@ -44,6 +44,7 @@ public abstract class AbstractExport {
     protected abstract void setLocation(Location aLocation);
     protected abstract void setDrawing(Sketch aSketch);
     protected abstract InputStream getContent() throws IOException;
+    protected abstract String getExtension();
 
     // public method for starting export
     public String runExport(Project aProject) throws Exception {
@@ -138,12 +139,9 @@ public abstract class AbstractExport {
                         prepareEntity(rowCounter);
 
                         setValue(Entities.FROM, lastMiddleName == null ? fromPointName : lastMiddleName);
-
                         lastMiddleName = fromPointName + "-" + toPointName + "@" + StringUtils.floatToLabel(middle.getMiddlePointDistance());
                         setValue(Entities.TO, lastMiddleName);
-
                         setValue(Entities.DISTANCE, middle.getMiddlePointDistance() - prevLength);
-
                         exportLegCompass(l);
                         exportLegSlope(l);
 
@@ -170,9 +168,7 @@ public abstract class AbstractExport {
 
                     setValue(Entities.FROM, lastMiddleName);
                     setValue(Entities.TO, toPointName);
-
                     setValue(Entities.DISTANCE, l.getDistance() - prevLength);
-
                     exportLegCompass(l);
                     exportLegSlope(l);
 
@@ -207,7 +203,7 @@ public abstract class AbstractExport {
                 lastGalleryId = l.getGalleryId();
             }
             InputStream in = getContent();
-            return FileStorageUtil.addProjectExport(aProject, in);
+            return FileStorageUtil.addProjectExport(aProject, in, getExtension());
         } catch (Exception t) {
             Log.e(Constants.LOG_TAG_SERVICE, "Failed with export", t);
             throw t;
@@ -221,7 +217,6 @@ public abstract class AbstractExport {
     }
 
     private void exportNote(Leg l) throws SQLException {
-
         Note n = DaoUtil.getActiveLegNote(l);
         if (n != null) {
             setValue(Entities.NOTE, n.getText());
