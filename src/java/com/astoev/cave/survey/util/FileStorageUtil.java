@@ -31,7 +31,6 @@ import java.util.Date;
  */
 public class FileStorageUtil {
 
-    private static final String EXCEL_FILE_EXTENSION = ".xls";
     private static final String PNG_FILE_EXTENSION = ".png";
     private static final String NAME_DELIMITER = "_";
     
@@ -45,7 +44,7 @@ public class FileStorageUtil {
 
 
     @SuppressLint("SimpleDateFormat")
-	public static String addProjectExport(Project aProject, InputStream aStream) {
+	public static String addProjectExport(Project aProject, InputStream aStream, String anExtension) {
 
         File projectHome = getProjectHome(aProject.getName());
         if (projectHome == null) {
@@ -63,7 +62,7 @@ public class FileStorageUtil {
             // ensure unique name
             while (true) {
                 exportName = aProject.getName() + NAME_DELIMITER + dateFormat.format(new Date()) + NAME_DELIMITER + index;
-                exportFile = new File(projectHome, exportName + EXCEL_FILE_EXTENSION);
+                exportFile = new File(projectHome, exportName + anExtension);
                 if (exportFile.exists()) {
                     index++;
                 } else {

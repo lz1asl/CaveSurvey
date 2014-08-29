@@ -15,6 +15,7 @@ import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.model.Option;
 import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.service.export.excel.ExcelExport;
+import com.astoev.cave.survey.service.export.json.OpensTopoJsonExport;
 import com.astoev.cave.survey.service.orientation.MagneticOrientationProcessor;
 import com.astoev.cave.survey.service.orientation.OrientationDeprecatedProcessor;
 import com.astoev.cave.survey.service.orientation.OrientationProcessor;
@@ -206,9 +207,30 @@ public class InfoActivity extends MainMenuActivity {
 				return true;
 			}
             case R.id.info_action_openstopo: {
-                Intent intent = new Intent(InfoActivity.this, WebViewActivity.class);
-                startActivity(intent);
-                return true;
+
+
+                try {
+                    // export
+                    Log.i(Constants.LOG_TAG_SERVICE, "Start json export");
+                    OpensTopoJsonExport export = new OpensTopoJsonExport(this);
+                    String exportPath = export.runExport(getWorkspace().getActiveProject());
+                    if (StringUtils.isEmpty(exportPath)) {
+                        UIUtilities.showNotification(this, R.string.export_io_error, exportPath);
+                    } else {
+                        UIUtilities.showNotification(this, R.string.export_done, exportPath);
+                    }
+
+                    // load ui
+                    Intent intent = new Intent(InfoActivity.this, WebViewActivity.class);
+                    startActivity(intent);
+                    return true;
+
+                } catch (Exception e) {
+                    Log.e(Constants.LOG_TAG_UI, "Failed to export project", e);
+                    UIUtilities.showNotification(R.string.error);
+                }
+
+
             }
 			case R.id.info_action_view_files:{
 				onViewFiles();
