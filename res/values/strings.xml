@@ -307,7 +307,7 @@
 
 
     <!--opens topo -->
-    <string name="export_openstopo_title">Export</string>
+    <string name="export_openstopo_title">Opens Topo</string>
     <string name="enterFileName">Enter file name:</string>
     <string name="saveButtonText">Save</string>
     <string name="cancelButtonText">Cancel</string>
