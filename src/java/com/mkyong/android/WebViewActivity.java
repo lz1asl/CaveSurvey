@@ -238,7 +238,7 @@ public class WebViewActivity extends Activity {
 
 			// ------------DownloadListener--------------------------------<
 			// -----------load index.html---------------------------------->
-			webView.loadUrl("file:///android_asset/index.html");
+			webView.loadUrl("file:///android_asset/index.html?data=" + getIntent().getStringExtra("path"));
 			// ----------load index.html----------------------------------<
 			// --------------webview settings------------------------------>
 			webView.getSettings().setJavaScriptEnabled(true);
@@ -250,10 +250,12 @@ public class WebViewActivity extends Activity {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                 webView.getSettings().setAllowContentAccess(true);
             }
-			 webView.getSettings().setAllowFileAccess(true);
-			// webView.getSettings().setAllowFileAccessFromFileURLs(true);
-			// webView.getSettings().setAllowUniversalAccessFromFileURLs(true);
-			// webView.getSettings().setBuiltInZoomControls(false);
+			webView.getSettings().setAllowFileAccess(true);
+            webView.getSettings().setAllowContentAccess(true);
+			webView.getSettings().setAllowFileAccessFromFileURLs(true);
+			webView.getSettings().setAllowUniversalAccessFromFileURLs(true);
+			webView.getSettings().setBuiltInZoomControls(true);
+
 			
 			webView.getSettings().setDatabasePath(
 					"/data/data/" + this.getPackageName() + "/databases/");
@@ -263,7 +265,7 @@ public class WebViewActivity extends Activity {
 		    webView.getSettings().setDomStorageEnabled(true);
 			webView.getSettings().setGeolocationEnabled(true);
 			webView.getSettings().setGeolocationDatabasePath(
-					"/data/data/" + this.getPackageName()); 
+					"/data/data/" + this.getPackageName());
 			// --------------webview settings------------------------------<
 			Log.i("SPLX", "Start app");
 		}

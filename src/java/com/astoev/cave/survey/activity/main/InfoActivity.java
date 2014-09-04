@@ -218,11 +218,12 @@ public class InfoActivity extends MainMenuActivity {
                         UIUtilities.showNotification(this, R.string.export_io_error, exportPath);
                     } else {
                         UIUtilities.showNotification(this, R.string.export_done, exportPath);
+                        // load ui
+                        Intent intent = new Intent(InfoActivity.this, WebViewActivity.class);
+                        intent.putExtra("path", exportPath);
+                        startActivity(intent);
                     }
 
-                    // load ui
-                    Intent intent = new Intent(InfoActivity.this, WebViewActivity.class);
-                    startActivity(intent);
                     return true;
 
                 } catch (Exception e) {

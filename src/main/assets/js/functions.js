@@ -1469,19 +1469,45 @@ var animateShape = false;
 var canv, canvanimation, canvansection;
 //init default cave object --->
 
-caveObj.data = [
-    {"from": null, "to": null, "len": "m", "compass": "deg", "clino": "deg", "top": "m", "left": "m", "right": "m", "bottom": "m", "r": null},
-    {"from": "26 febbraio 1984", "to": null, "len": null, "compass": null, "clino": null, "top": null, "left": null, "right": null, "bottom": null, "r": null, "note": "S.Zoja, L.Briganti"},
-    {"from": "I", "to": "0", "len": 0, "compass": "0.00", "clino": "0.00", "top": "0.8", "left": "0.6", "right": "0.8", "bottom": "1", "r": ""},
-    {"from": "0", "to": "1", "len": "6.1", "compass": "230.00", "clino": "0.00", "top": "3", "left": "1", "right": "0", "bottom": "0.5", "r": "", "note": "ingresso"},
-    {"from": "1", "to": "2", "len": "8.7", "compass": "169.00", "clino": "0.00", "top": "2.5", "left": "0", "right": "1", "bottom": "0.5", "r": ""},
-    {"from": "2", "to": "3", "len": "8.4", "compass": "206.00", "clino": "0.00", "top": "2", "left": "1", "right": "0", "bottom": "0.5", "r": ""},
-    {"from": "3", "to": "4", "len": "6.8", "compass": "255.00", "clino": "0.00", "top": "1", "left": "2.5", "right": "0", "bottom": "0.5", "r": ""},
-    {"from": "4", "to": "5", "len": "5.3", "compass": "196.00", "clino": "0.00", "top": "1", "left": "0.1", "right": "1.5", "bottom": "0.5", "r": ""},
-    {"from": "5", "to": "6", "len": "13.8", "compass": "249.00", "clino": "0.00", "top": "0.5", "left": "0.5", "right": "0.5", "bottom": "0.5", "r": ""},
-    {"from": "6", "to": "7", "len": "8", "compass": "251.00", "clino": "0.00", "top": "0.5", "left": "0.5", "right": "3", "bottom": "0.5", "r": ""},
-    {"from": "7", "to": "8", "len": "4.1", "compass": "250.00", "clino": "0.00", "top": "0", "left": "1", "right": "1", "bottom": "0.5", "r": ""}
-];
+//caveObj.data = [
+//    {"from": null, "to": null, "len": "m", "compass": "deg", "clino": "deg", "top": "m", "left": "m", "right": "m", "bottom": "m", "r": null},
+//    {"from": "26 febbraio 1984", "to": null, "len": null, "compass": null, "clino": null, "top": null, "left": null, "right": null, "bottom": null, "r": null, "note": "S.Zoja, L.Briganti"},
+//    {"from": "I", "to": "0", "len": 0, "compass": "0.00", "clino": "0.00", "top": "0.8", "left": "0.6", "right": "0.8", "bottom": "1", "r": ""},
+//    {"from": "0", "to": "1", "len": "6.1", "compass": "230.00", "clino": "0.00", "top": "3", "left": "1", "right": "0", "bottom": "0.5", "r": "", "note": "ingresso"},
+//    {"from": "1", "to": "2", "len": "8.7", "compass": "169.00", "clino": "0.00", "top": "2.5", "left": "0", "right": "1", "bottom": "0.5", "r": ""},
+//    {"from": "2", "to": "3", "len": "8.4", "compass": "206.00", "clino": "0.00", "top": "2", "left": "1", "right": "0", "bottom": "0.5", "r": ""},
+//    {"from": "3", "to": "4", "len": "6.8", "compass": "255.00", "clino": "0.00", "top": "1", "left": "2.5", "right": "0", "bottom": "0.5", "r": ""},
+//    {"from": "4", "to": "5", "len": "5.3", "compass": "196.00", "clino": "0.00", "top": "1", "left": "0.1", "right": "1.5", "bottom": "0.5", "r": ""},
+//    {"from": "5", "to": "6", "len": "13.8", "compass": "249.00", "clino": "0.00", "top": "0.5", "left": "0.5", "right": "0.5", "bottom": "0.5", "r": ""},
+//    {"from": "6", "to": "7", "len": "8", "compass": "251.00", "clino": "0.00", "top": "0.5", "left": "0.5", "right": "3", "bottom": "0.5", "r": ""},
+//    {"from": "7", "to": "8", "len": "4.1", "compass": "250.00", "clino": "0.00", "top": "0", "left": "1", "right": "1", "bottom": "0.5", "r": ""}
+//];
+
+function getQueryParameter ( parameterName ) {
+  var queryString = window.top.location.search.substring(1);
+  var parameterName = parameterName + "=";
+  if ( queryString.length > 0 ) {
+    begin = queryString.indexOf ( parameterName );
+    if ( begin != -1 ) {
+      begin += parameterName.length;
+      end = queryString.indexOf ( "&" , begin );
+        if ( end == -1 ) {
+        end = queryString.length
+      }
+      return unescape ( queryString.substring ( begin, end ) );
+    }
+  }
+  return "null";
+}
+
+var projectFilePath = getQueryParameter('data');
+//alert(projectFilePath);
+jQuery.get(projectFilePath, function(data) {
+    alert('got data ' + data);
+    caveObj.data = data;
+}).fail(function(error) {
+    alert( "Error loading data "  + error);
+});
 
 caveObj.name = "Grotta Fada";
 caveObj.altitude = "125";
