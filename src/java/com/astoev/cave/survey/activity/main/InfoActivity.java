@@ -25,7 +25,7 @@ import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.util.FileStorageUtil;
 import com.astoev.cave.survey.util.ProjectInfo;
 import com.astoev.cave.survey.util.StringUtils;
-import com.mkyong.android.WebViewActivity;
+import com.astoev.cave.survey.openstopo.WebViewActivity;
 
 import java.io.File;
 

@@ -77,7 +77,7 @@
         <activity android:name="com.astoev.cave.survey.activity.main.GPSActivity"/>
 	
 	<activity
-            android:name="com.mkyong.android.WebViewActivity"
+            android:name=".openstopo.WebViewActivity"
             android:configChanges="orientation"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
