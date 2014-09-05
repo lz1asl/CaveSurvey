@@ -38,11 +38,37 @@ public class OpensTopoJsonExport extends AbstractExport {
     protected void prepare(Project aProject) {
         Log.i(Constants.LOG_TAG_SERVICE, "Start JSON export ");
         rows = new ArrayList<Map<String, Object>>();
+        Map<String, Object> headerRow = new HashMap<String, Object>();
+        // TODO fix units
+        headerRow.put("from", null);
+        headerRow.put("to", null);
+        headerRow.put("len", "m");
+        headerRow.put("compass", "deg");
+        headerRow.put("clino", "deg");
+        headerRow.put("top", "m");
+        headerRow.put("left", "m");
+        headerRow.put("right", "m");
+        headerRow.put("bottom", "m");
+        headerRow.put("r", null);
+
+        rows.add(headerRow);
     }
 
     @Override
     protected void prepareEntity(int rowCounter) {
         row = new HashMap<String, Object>();
+
+        row.put("from", "");
+        row.put("to", "");
+        row.put("len", "");
+        row.put("compass", "");
+        row.put("clino", "");
+        row.put("top", "");
+        row.put("left", "");
+        row.put("right", "");
+        row.put("bottom", "");
+        row.put("r", "");
+
         rows.add(row);
     }
 
@@ -64,7 +90,7 @@ public class OpensTopoJsonExport extends AbstractExport {
 
     @Override
     protected void setValue(Entities entityType, Float aValue) {
-        populateValue(entityType, aValue);
+        populateValue(entityType, "" + aValue);
     }
 
     private void populateValue(Entities entityType, Object aValue) {
