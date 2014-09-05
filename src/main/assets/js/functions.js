@@ -1509,6 +1509,7 @@ jQuery.get(projectFilePath, function(data) {
     alert( "Error loading data "  + error);
 });
 
+// TODO set name etc
 caveObj.name = "Grotta Fada";
 caveObj.altitude = "125";
 caveObj.longitude = "9.949350";
