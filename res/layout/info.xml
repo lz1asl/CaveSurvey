@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:id="@+id/scrollView">
     <TableLayout android:layout_width="fill_parent"
-             android:layout_height="wrap_content"
+             android:layout_height="fill_parent"
              android:padding="10dp">
         <TableRow>
             <TextView
@@ -149,21 +149,29 @@
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/info_distance_in"/>
+                    android:text="@string/info_distance_in"
+                    android:layout_weight="1"
+                    android:gravity="left"/>
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/infoDistanceIn"/>
+                    android:id="@+id/infoDistanceIn"
+                    android:gravity="center_horizontal"
+                    android:layout_weight="1"/>
         </TableRow>
         <TableRow >
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/info_azimuth_in"/>
+                    android:text="@string/info_azimuth_in"
+                    android:layout_weight="1"
+                    android:gravity="left"/>
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/infoAzimuthIn"/>
+                    android:id="@+id/infoAzimuthIn"
+                    android:gravity="center_horizontal"
+                    android:layout_weight="1"/>
         </TableRow>
         <LinearLayout android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
@@ -175,17 +183,23 @@
             <TextView android:id="@+id/info_azimuth_sensor"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/sensor_none"/>
+                    android:text="@string/sensor_none"
+                    android:gravity="center_horizontal"
+                    android:layout_weight="1"/>
         </LinearLayout>
         <TableRow>
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/info_slope_in"/>
+                    android:text="@string/info_slope_in"
+                    android:layout_weight="1"
+                    android:gravity="left"/>
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/infoSlopeIn"/>
+                    android:id="@+id/infoSlopeIn"
+                    android:gravity="center_horizontal"
+                    android:layout_weight="1"/>
         </TableRow>
     </TableLayout>
 </ScrollView>

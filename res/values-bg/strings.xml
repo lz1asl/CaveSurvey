@@ -209,7 +209,7 @@
     <string name="info_distance_in">Разстояние в</string>
     <string name="info_azimuth_in">Азимут в</string>
     <string name="info_slope_in">Наклон в</string>
-    <string name="info_azimuth_build_in_sensor">Азимут от вграден сензор -</string>
+    <string name="info_azimuth_build_in_sensor">Азимут от вграден сензор</string>
     
     <string name="sensor_none">липсва</string>
     <string name="rotation_sensor">Завъртане</string>
