@@ -9,12 +9,10 @@ import com.astoev.cave.survey.model.Photo;
 import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.model.Sketch;
 import com.astoev.cave.survey.service.export.AbstractExport;
-import com.astoev.cave.survey.util.StringUtils;
-import com.google.gson.Gson;
+
+import com.google.gson.GsonBuilder;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -74,7 +72,7 @@ public class OpensTopoJsonExport extends AbstractExport {
 
     @Override
     protected InputStream getContent() {
-        String json = new Gson().toJson(rows);
+        String json = new GsonBuilder().serializeNulls().setPrettyPrinting().create().toJson(rows);
         return IOUtils.toInputStream(json);
     }
 
