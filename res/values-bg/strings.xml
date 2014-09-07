@@ -137,7 +137,7 @@
     <string name="info_num_photos"># снимки</string>
 
 
-    <string name="export_title">Експорт</string>
+    <string name="export_xls">Excel eкспорт</string>
     <string name="export_view_files">Файлове</string>
     <string name="export_done">Експортирано в %1$s</string>
     <string name="export_io_error">Неуспешно писане на SD картата</string>

@@ -137,7 +137,7 @@
     <string name="info_num_photos"># photos</string>
 
 
-    <string name="export_title">Export</string>
+    <string name="export_xls">Excel export</string>
     <string name="export_view_files">Files</string>
     <string name="export_done">Exported to %1$s</string>
     <string name="export_io_error">Failed to write to SD card</string>
