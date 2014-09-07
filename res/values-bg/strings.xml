@@ -28,7 +28,7 @@
     <string name="main_button_change">Избери</string>
     <string name="main_button_change_title">Избери отсечка</string>
     <string name="main_button_add">Добави</string>
-    <string name="main_button_info">Информация</string>
+    <string name="main_button_data">Данни</string>
     <string name="main_button_about">Относно</string>
     <string name="main_button_help">Помощ</string>
     <string name="main_button_map">Карта</string>
@@ -302,6 +302,7 @@
         <item>Английски</item>
         <item>Български</item>
     </string-array>
-    
+
+    <!-- TODO translate openstopo -->
     
 </resources>

@@ -28,7 +28,7 @@
     <string name="main_button_change">Select</string>
     <string name="main_button_change_title">Change leg</string>
     <string name="main_button_add">Add</string>
-    <string name="main_button_info">Info</string>
+    <string name="main_button_data">Data</string>
     <string name="main_button_about">About</string>
     <string name="main_button_help">Help</string>
     <string name="main_button_map">Map</string>
@@ -307,7 +307,7 @@
 
 
     <!--opens topo -->
-    <string name="export_openstopo_title">Opens Topo</string>
+    <string name="export_openstopo_title">OpensTopo</string>
     <string name="enterFileName">Enter file name:</string>
     <string name="saveButtonText">Save</string>
     <string name="cancelButtonText">Cancel</string>
