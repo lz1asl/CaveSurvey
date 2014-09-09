@@ -237,7 +237,7 @@ public class WebViewActivity extends Activity {
 
 			// ------------DownloadListener--------------------------------<
 			// -----------load index.html---------------------------------->
-			webView.loadUrl("file:///android_asset/index.html?data=" + getIntent().getStringExtra("path"));
+			webView.loadUrl("file:///android_asset/index.html?caveSurveyFilePath=" + getIntent().getStringExtra("path"));
 			// ----------load index.html----------------------------------<
 			// --------------webview settings------------------------------>
 			webView.getSettings().setJavaScriptEnabled(true);
