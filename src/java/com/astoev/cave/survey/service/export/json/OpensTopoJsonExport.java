@@ -27,6 +27,7 @@ public class OpensTopoJsonExport extends AbstractExport {
 
     private List<Map<String, Object>> rows;
     private Map<String, Object> row;
+    private Map<String, Object> project;
 
     public OpensTopoJsonExport(Context aContext) {
         super(aContext);
@@ -35,6 +36,16 @@ public class OpensTopoJsonExport extends AbstractExport {
     @Override
     protected void prepare(Project aProject) {
         Log.i(Constants.LOG_TAG_SERVICE, "Start JSON export ");
+
+        project = new HashMap<String, Object>();
+        project.put("name", aProject.getName());
+        project.put("altitude", "0");
+        project.put("longitude", "0.0");
+        project.put("latitude", "0.0");
+        project.put("startPoint", "0");
+        project.put("geoPoint", "0");
+        project.put("northdeclination", "0");
+
         rows = new ArrayList<Map<String, Object>>();
         Map<String, Object> headerRow = new HashMap<String, Object>();
         // TODO fix units
@@ -50,6 +61,7 @@ public class OpensTopoJsonExport extends AbstractExport {
         headerRow.put("r", null);
 
         rows.add(headerRow);
+        project.put("data", rows);
     }
 
     @Override
@@ -72,7 +84,7 @@ public class OpensTopoJsonExport extends AbstractExport {
 
     @Override
     protected InputStream getContent() {
-        String json = new GsonBuilder().serializeNulls().setPrettyPrinting().create().toJson(rows);
+        String json = new GsonBuilder().serializeNulls().setPrettyPrinting().create().toJson(project);
         return IOUtils.toInputStream(json);
     }
 
