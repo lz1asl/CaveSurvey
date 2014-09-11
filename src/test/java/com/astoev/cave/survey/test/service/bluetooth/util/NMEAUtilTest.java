@@ -11,7 +11,7 @@ import java.util.List;
 
 public class NMEAUtilTest extends TestCase {
 
-    public void testDecodeErrors() {
+    public void testLaserAceDecodeErrors() {
 
         ensureFails(null);
         ensureFails("asdf");
@@ -21,7 +21,7 @@ public class NMEAUtilTest extends TestCase {
         ensureFails("$PTNLA,HV,1.87,M,343.2,D,17.02,D,1.96,M*77\n234");
     }
 
-    public void testDecodeSuccess() {
+    public void testLaserAceDecodeSuccess() {
         ensureSucces("$PTNLA,HV,0.60,M,291.1,D,-1.12,D,0.60,M*61", 0.6f, 291.1f, -1.12f);
         ensureSucces("$PTNLA,HV,,M,287.5,D,-1.11,D,,M*61", null, 287.5f, -1.11f);
         ensureSucces("$PTNLA,HV,1.87,M,343.2,D,17.02,D,1.96,M*77", 1.96f, 343.2f, 17.02f);
@@ -36,9 +36,9 @@ public class NMEAUtilTest extends TestCase {
         try {
             List<Measure> measures;
             if (aBadMessage == null) {
-                measures = NMEAUtil.decode(null);
+                measures = NMEAUtil.decodeTrimbleLaserAce(null);
             } else {
-                measures = NMEAUtil.decode(aBadMessage.getBytes());
+                measures = NMEAUtil.decodeTrimbleLaserAce(aBadMessage.getBytes());
             }
 
             if (measures != null) {
@@ -51,7 +51,7 @@ public class NMEAUtilTest extends TestCase {
 
     private void ensureSucces(String aMessage, Float aDistance, float anAzimuth, float anAngle) {
         try {
-            List<Measure> measures = NMEAUtil.decode(aMessage.getBytes());
+            List<Measure> measures = NMEAUtil.decodeTrimbleLaserAce(aMessage.getBytes());
             assertNotNull(measures);
 
             for (Measure m: measures) {

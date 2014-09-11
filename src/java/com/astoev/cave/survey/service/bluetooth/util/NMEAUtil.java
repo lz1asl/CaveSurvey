@@ -18,7 +18,7 @@ import java.util.StringTokenizer;
  */
 public class NMEAUtil {
 
-    public static List<Measure> decode(byte [] aMessage) throws DataException {
+    public static List<Measure> decodeTrimbleLaserAce(byte[] aMessage) throws DataException {
 
         if (aMessage == null || aMessage.length <=0) {
             throw new DataException("Empty message");
