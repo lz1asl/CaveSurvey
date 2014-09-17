@@ -7,6 +7,7 @@ import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.activity.map.MapUtilities;
 import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.Measure;
+import com.astoev.cave.survey.service.bluetooth.device.TruPulse360BBluetoothDevice;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -146,24 +147,29 @@ public class NMEAUtil {
             Log.i(Constants.LOG_TAG_BT, "Got message " + messageString);
 
             List<Measure> measures = new ArrayList<Measure>();
-            StringTokenizer tokenizer = new StringTokenizer(messageString, ",*");
+            StringTokenizer tokenizer = new StringTokenizer(messageString, ",*", true);
 
             // header
             if (!"$PLTIT".equals(tokenizer.nextToken())) {
                 throw new DataException("Bad header");
             }
+            tokenizer.nextToken();
+
             if (!"HV".equals(tokenizer.nextToken())) {
                 throw new DataException("Bad vector");
             }
+            tokenizer.nextToken();
 
-       /*      // distance
+             // distance
             String distanceString = tokenizer.nextToken();
+            tokenizer.nextToken();
+            String units = tokenizer.nextToken();
             boolean distancePresent = true;
-            if ("M".equals(distanceString) || "F".equals(distanceString)) {
+            if ("M".equals(units) || "F".equals(units) || "Y".equals(units)) {
                 // no distance, no need to skip distance units
                 distancePresent = false;
             } else {
-                if (!"M".equals(tokenizer.nextToken())) {
+                if (!"M".equals(units)) {
                     throw new DataException("Please measure in meters ");
                 }
 
@@ -174,6 +180,7 @@ public class NMEAUtil {
 
                 // this is horizontal distance, so ignored now
             }
+            tokenizer.nextToken();
 
             // angle
             float angle = Float.parseFloat(tokenizer.nextToken());
@@ -181,6 +188,7 @@ public class NMEAUtil {
                 throw new DataException("Invalid azimuth");
             }
 
+            tokenizer.nextToken();
             if (!"D".equals(tokenizer.nextToken())) {
                 throw new DataException("Please measure angle in degrees");
             }
@@ -188,6 +196,7 @@ public class NMEAUtil {
             Measure angleMeasure = new Measure(Constants.MeasureTypes.angle, Constants.MeasureUnits.degrees, angle);
             measures.add(angleMeasure);
             Log.i(Constants.LOG_TAG_BT, "Got angle " + angleMeasure);
+            tokenizer.nextToken();
 
 
             // slope
@@ -196,6 +205,7 @@ public class NMEAUtil {
                 throw new DataException("Invalid slope");
             }
 
+            tokenizer.nextToken();
             if (!"D".equals(tokenizer.nextToken())) {
                 throw new DataException("Please measure slope in degrees");
             }
@@ -203,11 +213,14 @@ public class NMEAUtil {
             Measure slopeMeasure = new Measure(Constants.MeasureTypes.slope, Constants.MeasureUnits.degrees, slope);
             measures.add(slopeMeasure);
             Log.i(Constants.LOG_TAG_BT, "Got slope " + slopeMeasure);
+            tokenizer.nextToken();
 
             // skip vertical distance
             if (distancePresent) {
                 distanceString = tokenizer.nextToken();
-                if ("M".equals(distanceString) || "F".equals(distanceString)) {
+                tokenizer.nextToken();
+                units = tokenizer.nextToken();
+                if ("M".equals(units) || "F".equals(units)) {
                     // no distance, no need to skip distance units
                 } else {
                     if (!"M".equals(tokenizer.nextToken())) {
@@ -222,6 +235,7 @@ public class NMEAUtil {
                     Measure distanceMeasure = new Measure(Constants.MeasureTypes.distance, Constants.MeasureUnits.meters, distance);
                     measures.add(distanceMeasure);
                     Log.i(Constants.LOG_TAG_BT, "Got distance " + distanceMeasure);
+
                 }
             } else {
                 // skip the 999's and measure type
@@ -231,6 +245,7 @@ public class NMEAUtil {
             }
 
             // checksum
+            tokenizer.nextToken();
             String calculatedCheck = getCheckSum(messageString);
             if (!calculatedCheck.equals(tokenizer.nextToken())) {
                 throw new DataException("Bad checksum");
@@ -239,7 +254,7 @@ public class NMEAUtil {
             if (tokenizer.hasMoreTokens()) {
                 throw new DataException("Extra data found");
             }
-*/
+
             return measures;
 
         } catch (NoSuchElementException nse) {

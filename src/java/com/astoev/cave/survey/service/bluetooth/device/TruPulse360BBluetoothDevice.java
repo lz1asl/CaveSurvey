@@ -3,6 +3,7 @@ package com.astoev.cave.survey.service.bluetooth.device;
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.Measure;
+import com.astoev.cave.survey.service.bluetooth.util.NMEAUtil;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -30,12 +31,12 @@ public class TruPulse360BBluetoothDevice extends AbstractBluetoothDevice {
 
     @Override
     public void triggerMeasures(OutputStream aStream, List<Constants.MeasureTypes> aMeasures) throws IOException {
-
+        // todo is this actually needed?
     }
 
     @Override
     public List<Measure> decodeMeasure(byte[] aResponseBytes, List<Constants.MeasureTypes> aMeasures) throws IOException, DataException {
-        return null;
+        return NMEAUtil.decodeTruPulse(aResponseBytes);
     }
 
     @Override

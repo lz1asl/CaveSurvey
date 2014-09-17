@@ -46,12 +46,11 @@ public class NMEAUtilTest extends TestCase {
     }
 
     @Test
-    public void testTruPulseSuccess() {
-        fail("TODO");
+    public void testTruPulseSuccess() throws IOException {
 //        ensureTruPulseSucces(|"$PLTIT,HV,18.00,F,185.20,D,6.90,D,18.00,F*66", , , );
-//        ensureTruPulseSucces("$PLTIT,HV,7.01,M,0.00,D,3.00,D,7.01,M*64", , , );
-//        ensureTruPulseSucces("$PLTIT,HV,,,187.10,D,8.40,D,,*64", , , );
-//        ensureTruPulseSucces("$PLTIT,HV,,,347.20,D,,,,*3F", , , );
+        ensureTruPulseSucces("$PLTIT,HV,7.01,M,0.00,D,3.00,D,7.01,M*64", 7.01f, 0.0f, 3.0f);
+//        ensureTruPulseSucces("$PLTIT,HV,,,187.10,D,8.40,D,,*64", null, 187.1f, 8.40f);
+//        ensureTruPulseSucces("$PLTIT,HV,,,347.20,D,,,,*3F", null, 347.2f, null);
 //        ensureTruPulseSucces("$PLTIT,HV,6.00,Y,179.40,D,7.20,D,6.10,Y*68", , , );
 //        ensureTruPulseSucces("$PLTIT,HV,5.90,Y,265.70,D,11.60,D,6.00,Y*5D", , , );
     }
@@ -77,11 +76,11 @@ public class NMEAUtilTest extends TestCase {
         ensureSucces(aMessage, aDistance, anAzimuth, anAngle, new LaserAceBluetoothDevice());
     }
 
-    private void ensureTruPulseSucces(String aMessage, Float aDistance, float anAzimuth, float anAngle) throws IOException {
+    private void ensureTruPulseSucces(String aMessage, Float aDistance, float anAzimuth, Float anAngle) throws IOException {
         ensureSucces(aMessage, aDistance, anAzimuth, anAngle, new TruPulse360BBluetoothDevice());
     }
 
-    private void ensureSucces(String aMessage, Float aDistance, float anAzimuth, float anAngle, AbstractBluetoothDevice aDeviceSpec) throws IOException {
+    private void ensureSucces(String aMessage, Float aDistance, float anAzimuth, Float anAngle, AbstractBluetoothDevice aDeviceSpec) throws IOException {
         try {
             List<Constants.MeasureTypes> types = new ArrayList<Constants.MeasureTypes>();
             types.add(Constants.MeasureTypes.distance);
@@ -106,8 +105,12 @@ public class NMEAUtilTest extends TestCase {
                         assertEquals(Constants.MeasureUnits.degrees, m.getMeasureUnit());
                         break;
                     case slope:
-                        assertEquals(anAngle, m.getValue());
-                        assertEquals(Constants.MeasureUnits.degrees, m.getMeasureUnit());
+                        if (anAngle == null) {
+                            fail("Slope not expected");
+                        } else {
+                            assertEquals(anAngle, m.getValue());
+                            assertEquals(Constants.MeasureUnits.degrees, m.getMeasureUnit());
+                        }
                         break;
                 }
             }
