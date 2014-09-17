@@ -1,5 +1,9 @@
 package com.astoev.cave.survey.test.service.bluetooth.util;
 
+import android.test.ActivityTestCase;
+import android.test.AndroidTestCase;
+import android.test.InstrumentationTestCase;
+
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.Measure;
@@ -10,6 +14,9 @@ import com.astoev.cave.survey.service.bluetooth.util.NMEAUtil;
 
 import junit.framework.TestCase;
 
+import org.junit.Test;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +34,7 @@ public class NMEAUtilTest extends TestCase {
     }
 
     @Test
-    public void testLaserAceDecodeSuccess() {
+    public void testLaserAceDecodeSuccess() throws IOException {
         ensureLASucces("$PTNLA,HV,0.60,M,291.1,D,-1.12,D,0.60,M*61", 0.6f, 291.1f, -1.12f);
         ensureLASucces("$PTNLA,HV,,M,287.5,D,-1.11,D,,M*61", null, 287.5f, -1.11f);
         ensureLASucces("$PTNLA,HV,1.87,M,343.2,D,17.02,D,1.96,M*77", 1.96f, 343.2f, 17.02f);
@@ -40,12 +47,13 @@ public class NMEAUtilTest extends TestCase {
 
     @Test
     public void testTruPulseSuccess() {
-        ensureTruPulseSucces(|"$PLTIT,HV,18.00,F,185.20,D,6.90,D,18.00,F*66", , , );
-        ensureTruPulseSucces("$PLTIT,HV,7.01,M,0.00,D,3.00,D,7.01,M*64", , , );
-        ensureTruPulseSucces("$PLTIT,HV,,,187.10,D,8.40,D,,*64", , , );
-        ensureTruPulseSucces("$PLTIT,HV,,,347.20,D,,,,*3F", , , );
-        ensureTruPulseSucces("$PLTIT,HV,6.00,Y,179.40,D,7.20,D,6.10,Y*68", , , );
-        ensureTruPulseSucces("$PLTIT,HV,5.90,Y,265.70,D,11.60,D,6.00,Y*5D", , , );
+        fail("TODO");
+//        ensureTruPulseSucces(|"$PLTIT,HV,18.00,F,185.20,D,6.90,D,18.00,F*66", , , );
+//        ensureTruPulseSucces("$PLTIT,HV,7.01,M,0.00,D,3.00,D,7.01,M*64", , , );
+//        ensureTruPulseSucces("$PLTIT,HV,,,187.10,D,8.40,D,,*64", , , );
+//        ensureTruPulseSucces("$PLTIT,HV,,,347.20,D,,,,*3F", , , );
+//        ensureTruPulseSucces("$PLTIT,HV,6.00,Y,179.40,D,7.20,D,6.10,Y*68", , , );
+//        ensureTruPulseSucces("$PLTIT,HV,5.90,Y,265.70,D,11.60,D,6.00,Y*5D", , , );
     }
 
     private void ensureFails(String aBadMessage) {
@@ -65,15 +73,15 @@ public class NMEAUtilTest extends TestCase {
         }
     }
 
-    private void ensureLASucces(String aMessage, Float aDistance, float anAzimuth, float anAngle) {
-        ensureSucces(aMessage, aDistance, anAzimuth, anAngle, LaserAceBluetoothDevice);
+    private void ensureLASucces(String aMessage, Float aDistance, float anAzimuth, float anAngle) throws IOException {
+        ensureSucces(aMessage, aDistance, anAzimuth, anAngle, new LaserAceBluetoothDevice());
     }
 
-    private void ensureTruPulseSucces(String aMessage, Float aDistance, float anAzimuth, float anAngle) {
-        ensureSucces(aMessage, aDistance, anAzimuth, anAngle, TruPulse360BBluetoothDevice);
+    private void ensureTruPulseSucces(String aMessage, Float aDistance, float anAzimuth, float anAngle) throws IOException {
+        ensureSucces(aMessage, aDistance, anAzimuth, anAngle, new TruPulse360BBluetoothDevice());
     }
 
-    private void ensureSucces(String aMessage, Float aDistance, float anAzimuth, float anAngle, AbstractBluetoothDevice aDeviceSpec) {
+    private void ensureSucces(String aMessage, Float aDistance, float anAzimuth, float anAngle, AbstractBluetoothDevice aDeviceSpec) throws IOException {
         try {
             List<Constants.MeasureTypes> types = new ArrayList<Constants.MeasureTypes>();
             types.add(Constants.MeasureTypes.distance);
