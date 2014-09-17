@@ -108,9 +108,12 @@ public class NMEAUtil {
                 }
             } else {
                 // skip the 999's and measure type
-                tokenizer.nextToken();
-                tokenizer.nextToken();
-                tokenizer.nextToken();
+                String border = "";
+                int count = 0;
+                while (!"M".equals(border) && count < 3) {
+                    border = tokenizer.nextToken();
+                    count ++;
+                }
             }
 
             // checksum
