@@ -5,6 +5,8 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.ToggleButton;
 import android.widget.ZoomControls;
 
 import com.astoev.cave.survey.R;
@@ -44,6 +46,15 @@ public class MapActivity extends MainMenuActivity implements View.OnTouchListene
                 map.zoomOut();
                 zoom.setIsZoomOutEnabled(map.canZoomOut());
                 zoom.setIsZoomInEnabled(map.canZoomIn());
+            }
+        });
+
+        final ToggleButton viewSelector = (ToggleButton) findViewById(R.id.mapHorizonatalToggle);
+        viewSelector.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                map.setHorizontalPlan(true);
             }
         });
     }
