@@ -54,7 +54,7 @@ public class MapActivity extends MainMenuActivity implements View.OnTouchListene
 
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                map.setHorizontalPlan(true);
+                map.setHorizontalPlan(!isChecked);
             }
         });
     }

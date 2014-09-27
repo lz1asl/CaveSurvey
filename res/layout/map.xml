@@ -30,6 +30,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerInParent="true"
-        android:id="@+id/mapHorizonatalToggle"/>
+        android:id="@+id/mapHorizonatalToggle"
+        android:textOff="Plan"
+        android:textOn="Section"/>
 
 </RelativeLayout>
