@@ -62,12 +62,38 @@ public class MapUtilities {
         }
     }
 
+    public static Float getAzimuthInDegrees(Float anAzimuth, String currUnits) {
+        if (null == anAzimuth) {
+            return null;
+        }
+
+        if (Option.UNIT_DEGREES.equals(currUnits)) {
+            return anAzimuth;
+        } else {
+            // convert from grads to degrees
+            return anAzimuth * Constants.GRAD_TO_DEC;
+        }
+    }
+
     public static Float getSlopeInDegrees(Float aSlope) {
         if (null == aSlope) {
             return null;
         }
 
         if (Option.UNIT_DEGREES.equals(Options.getOptionValue(Option.CODE_SLOPE_UNITS))) {
+            return aSlope;
+        } else {
+            // convert from grads to degrees
+            return aSlope * Constants.GRAD_TO_DEC;
+        }
+    }
+
+    public static Float getSlopeInDegrees(Float aSlope, String currUnits) {
+        if (null == aSlope) {
+            return null;
+        }
+
+        if (Option.UNIT_DEGREES.equals(currUnits)) {
             return aSlope;
         } else {
             // convert from grads to degrees
