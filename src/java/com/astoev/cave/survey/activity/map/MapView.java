@@ -189,7 +189,6 @@ public class MapView extends View {
 
                         float deltaX;
                         float deltaY;
-                        double galleryWidthAngle;
                         if (horizontalPlan) {
                             if (l.getDistance() == null || l.getAzimuth() == null) {
                                 deltaX = 0;
@@ -270,16 +269,16 @@ public class MapView extends View {
 
                         if (horizontalPlan) {
                             // left
-                            calculateAndDrawSide(canvas, l, first, second, prevLeg, first.getLeft(), azimuthUnits, true, true);
+                            calculateAndDrawSide(canvas, l, first, second, prevLeg, first.getLeft(), azimuthUnits, true);
 
                             // right
-                            calculateAndDrawSide(canvas, l, first, second, prevLeg, first.getRight(), azimuthUnits, false, true);
+                            calculateAndDrawSide(canvas, l, first, second, prevLeg, first.getRight(), azimuthUnits, false);
                         } else {
                             // top
-                            calculateAndDrawSide(canvas, l, first, second, prevLeg, first.getLeft(), azimuthUnits, true, false);
+                            calculateAndDrawSide(canvas, l, first, second, prevLeg, first.getLeft(), azimuthUnits, true);
 
                             // down
-                            calculateAndDrawSide(canvas, l, first, second, prevLeg, first.getRight(), azimuthUnits, false, false);
+                            calculateAndDrawSide(canvas, l, first, second, prevLeg, first.getRight(), azimuthUnits, false);
                         }
 
                         if (!l.isMiddle()) {
@@ -408,15 +407,15 @@ public class MapView extends View {
         return buff.toByteArray();
     }
 
-    private void calculateAndDrawSide(Canvas canvas, Leg l, Point2D first, Point2D second, Leg prevLeg, Float aMeasure,String azimuthUnits, boolean left, boolean rotate) {
+    private void calculateAndDrawSide(Canvas canvas, Leg l, Point2D first, Point2D second, Leg prevLeg, Float aMeasure, String azimuthUnits, boolean left) {
         double galleryWidthAngle;
         if (aMeasure != null && aMeasure > 0) {
 
-            float angle = first.getAngle();
 
+            // first or middle by 90'
             if (prevLeg == null || l.isMiddle()) {
-
-                if (rotate) {
+                float angle = first.getAngle();
+                if (horizontalPlan) {
                     if (left) {
                         angle = MapUtilities.minus90Degrees(angle);
                     } else {
@@ -429,24 +428,33 @@ public class MapView extends View {
                 }
                 galleryWidthAngle = Math.toRadians(angle);
             } else {
-                // each other by the bisector
+                float angle = first.getAngle();
+                // each next in the gallery by the bisector
                 if (l.getGalleryId().equals(prevLeg.getGalleryId())) {
 
                     angle = MapUtilities.getMiddleAngle(MapUtilities.getAzimuthInDegrees(prevLeg.getAzimuth(), azimuthUnits), angle);
 
-                    if (rotate) {
+                    if (horizontalPlan) {
                         if (left) {
                             angle = MapUtilities.minus90Degrees(angle);
                         } else {
                             angle = MapUtilities.add90Degrees(angle);
                         }
+                    } else {
+                        if (!left) {
+                            angle = MapUtilities.add90Degrees(MapUtilities.add90Degrees(angle));
+                        }
                     }
-                } else {
-                    if (rotate) {
+                } else { // new galleries again by 90'
+                    if (horizontalPlan) {
                         if (left) {
                             angle = MapUtilities.minus90Degrees(angle);
                         } else {
                             angle = MapUtilities.add90Degrees(angle);
+                        }
+                    } else {
+                        if (!left) {
+                            angle = MapUtilities.add90Degrees(MapUtilities.add90Degrees(angle));
                         }
                     }
                 }
