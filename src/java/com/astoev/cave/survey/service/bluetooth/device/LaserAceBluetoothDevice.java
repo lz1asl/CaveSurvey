@@ -38,7 +38,7 @@ public class LaserAceBluetoothDevice extends AbstractBluetoothDevice {
     @Override
     public List<Measure> decodeMeasure(byte[] aResponseBytes, List<MeasureTypes> aMeasures) throws IOException, DataException {
         // ignore requested measures for now, we should have full set of measures
-        return NMEAUtil.decode(aResponseBytes);
+        return NMEAUtil.decodeTrimbleLaserAce(aResponseBytes);
     }
 
     @Override
