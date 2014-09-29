@@ -11,19 +11,19 @@ public class Point2D {
 
     private Float x, y;
     private Float left=0f, right=0f;
-    private Float azimuth=0f;
+    private Float angle=0f;
 
     public Point2D(Float x, Float y) {
         this.x = x;
         this.y = y;
     }
 
-    public Point2D(Float x, Float y, Float left, Float right, Float azimuth) {
+    public Point2D(Float x, Float y, Float left, Float right, Float angle) {
         this.x = x;
         this.y = y;
         this.left = left;
         this.right = right;
-        this.azimuth = azimuth;
+        this.angle = angle;
     }
 
     public float getX() {
@@ -58,12 +58,12 @@ public class Point2D {
         this.right = right;
     }
 
-    public Float getAzimuth() {
-        return azimuth;
+    public Float getAngle() {
+        return angle;
     }
 
-    public void setAzimuth(Float azimuth) {
-        this.azimuth = azimuth;
+    public void setAngle(Float angle) {
+        this.angle = angle;
     }
 }
 

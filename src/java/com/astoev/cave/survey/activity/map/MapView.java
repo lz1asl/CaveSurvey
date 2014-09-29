@@ -19,7 +19,9 @@ import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.model.Gallery;
 import com.astoev.cave.survey.model.Leg;
+import com.astoev.cave.survey.model.Option;
 import com.astoev.cave.survey.model.Vector;
+import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.service.Workspace;
 import com.astoev.cave.survey.util.DaoUtil;
 
@@ -42,25 +44,27 @@ public class MapView extends View {
     public static final int CURR_POINT_RADIUS = 8;
     private final static int LABEL_DEVIATION_X = 5;
     private final static int LABEL_DEVIATION_Y = 5;
-    Paint polygonPaint = new Paint();
-    Paint polygonWidthPaint = new Paint();
-    Paint overlayPaint = new Paint();
-    Paint youAreHerePaint = new Paint();
-    Paint gridPaint = new Paint();
-    Paint vectorsPaint = new Paint();
-    Paint vectorPointPaint = new Paint();
+    private Paint polygonPaint = new Paint();
+    private Paint polygonWidthPaint = new Paint();
+    private Paint overlayPaint = new Paint();
+    private Paint youAreHerePaint = new Paint();
+    private Paint gridPaint = new Paint();
+    private Paint vectorsPaint = new Paint();
+    private Paint vectorPointPaint = new Paint();
     private float scale = 10;
     private int mapCenterMoveX = 0;
     private int mapCenterMoveY = 0;
     private float initialMoveX = 0;
     private float initialMoveY = 0;
-    Point northCenter = new Point();
+    private Point northCenter = new Point();
 
-    List<Integer> processedLegs = new ArrayList<Integer>();
+    private List<Integer> processedLegs = new ArrayList<Integer>();
     
     private SparseArray<Point2D> mapPoints = new SparseArray<Point2D>();
     private SparseIntArray galleryColors = new SparseIntArray();
     private SparseArray<String> galleryNames = new SparseArray<String>();
+
+    private boolean horizontalPlan = true;
 
     public MapView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -100,6 +104,9 @@ public class MapView extends View {
 
             int spacing = 5;
 
+            String azimuthUnits = Options.getOptionValue(Option.CODE_AZIMUTH_UNITS);
+            String slopeUnits = Options.getOptionValue(Option.CODE_SLOPE_UNITS);
+
             // grid
             int gridStep = 20;
             for (int x=0; x<maxX; x++) {
@@ -127,24 +134,30 @@ public class MapView extends View {
                         Point2D first;
 
                         if (processedLegs.size() == 0) {
-                            first = new Point2D(Float.valueOf(centerX), Float.valueOf(centerY), l.getLeft(), l.getRight(), MapUtilities.getAzimuthInDegrees(l.getAzimuth()));
+                            if (horizontalPlan) {
+                                first = new Point2D(Float.valueOf(centerX), Float.valueOf(centerY), l.getLeft(), l.getRight(), MapUtilities.getAzimuthInDegrees(l.getAzimuth(), azimuthUnits));
+                            } else {
+                                first = new Point2D(Float.valueOf(centerX), Float.valueOf(centerY), l.getTop(), l.getDown(), MapUtilities.getSlopeInDegrees(l.getSlope(), slopeUnits));
+                            }
                         } else {
                             // update previously created point with the correct values for left/right/up/down
                             first = mapPoints.get(l.getFromPoint().getId());
-                            if (l.getLeft() != null ) {
+                            if (horizontalPlan) {
                                 first.setLeft(l.getLeft());
-                            } else {
-                                first.setLeft(null);
-                            }
-                            if (l.getRight() != null) {
                                 first.setRight(l.getRight());
+                                if (l.getAzimuth() != null) {
+                                    first.setAngle(MapUtilities.getAzimuthInDegrees(l.getAzimuth(), azimuthUnits));
+                                } else {
+                                    first.setAngle(null);
+                                }
                             } else {
-                                first.setRight(null);
-                            }
-                            if (l.getAzimuth() != null) {
-                                first.setAzimuth(MapUtilities.getAzimuthInDegrees(l.getAzimuth()));
-                            } else {
-                                first.setAzimuth(null);
+                                first.setLeft(l.getTop());
+                                first.setRight(l.getDown());
+                                if (l.getSlope() != null) {
+                                    first.setAngle(MapUtilities.getSlopeInDegrees(l.getSlope(), slopeUnits));
+                                } else {
+                                    first.setAngle(null);
+                                }
                             }
                         }
 
@@ -176,19 +189,34 @@ public class MapView extends View {
 
                         float deltaX;
                         float deltaY;
-                        double galleryWidthAngle;
-                        if (l.getDistance() == null || l.getAzimuth() == null) {
-                            deltaX = 0;
-                            deltaY = 0;
-                        } else {
-                            float legDistance;
-                            if (l.isMiddle()) {
-                                legDistance = MapUtilities.applySlopeToDistance(l.getMiddlePointDistance(), MapUtilities.getSlopeInDegrees(l.getSlope()));
+                        if (horizontalPlan) {
+                            if (l.getDistance() == null || l.getAzimuth() == null) {
+                                deltaX = 0;
+                                deltaY = 0;
                             } else {
-                                legDistance = MapUtilities.applySlopeToDistance(l.getDistance(), MapUtilities.getSlopeInDegrees(l.getSlope()));
+                                float legDistance;
+                                if (l.isMiddle()) {
+                                    legDistance = MapUtilities.applySlopeToDistance(l.getMiddlePointDistance(), MapUtilities.getSlopeInDegrees(l.getSlope(), slopeUnits));
+                                } else {
+                                    legDistance = MapUtilities.applySlopeToDistance(l.getDistance(), MapUtilities.getSlopeInDegrees(l.getSlope(), slopeUnits));
+                                }
+                                deltaY = -(float) (legDistance * Math.cos(Math.toRadians(MapUtilities.getAzimuthInDegrees(l.getAzimuth(), azimuthUnits)))) * scale;
+                                deltaX = (float) (legDistance * Math.sin(Math.toRadians(MapUtilities.getAzimuthInDegrees(l.getAzimuth(), azimuthUnits)))) * scale;
                             }
-                            deltaY = -(float) (legDistance * Math.cos(Math.toRadians(MapUtilities.getAzimuthInDegrees(l.getAzimuth())))) * scale;
-                            deltaX = (float) (legDistance * Math.sin(Math.toRadians(MapUtilities.getAzimuthInDegrees(l.getAzimuth())))) * scale;
+                        } else {
+                            if (l.getDistance() == null || l.getSlope() == null) {
+                                deltaX = 0;
+                                deltaY = 0;
+                            } else {
+                                float legDistance;
+                                if (l.isMiddle()) {
+                                    legDistance = l.getMiddlePointDistance();
+                                } else {
+                                    legDistance = l.getDistance();
+                                }
+                                deltaY = -(float) (legDistance * Math.cos(Math.toRadians(MapUtilities.add90Degrees(MapUtilities.getSlopeInDegrees(l.getSlope(), slopeUnits))))) * scale;
+                                deltaX = (float) (legDistance * Math.sin(Math.toRadians(MapUtilities.add90Degrees(MapUtilities.getSlopeInDegrees(l.getSlope(), slopeUnits))))) * scale;
+                            }
                         }
 
                         Point2D second = new Point2D(first.getX() + deltaX, first.getY() + deltaY);
@@ -239,49 +267,18 @@ public class MapView extends View {
 
                         Leg prevLeg = DaoUtil.getLegByToPointId(l.getFromPoint().getId());
 
-                        // left
-                        if (first.getLeft() != null && first.getLeft()> 0) {
-                            if (prevLeg == null  || l.isMiddle()) {
-                                // first point by 90 degree left
-                                galleryWidthAngle = Math.toRadians(MapUtilities.minus90Degrees(first.getAzimuth()));
-                            } else {
-                                // each other by the bisector
-                                if (l.getGalleryId().equals(prevLeg.getGalleryId())) {
-                                    galleryWidthAngle = Math.toRadians(MapUtilities.minus90Degrees(MapUtilities.getMiddleAngle(MapUtilities.getAzimuthInDegrees(prevLeg.getAzimuth()), first.getAzimuth())));
-                                } else {
-                                    galleryWidthAngle = Math.toRadians(MapUtilities.minus90Degrees(first.getAzimuth()));
-                                }
-                            }
+                        if (horizontalPlan) {
+                            // left
+                            calculateAndDrawSide(canvas, l, first, second, prevLeg, first.getLeft(), azimuthUnits, true);
 
-                            deltaY = -(float) (first.getLeft() * Math.cos(galleryWidthAngle) * scale);
-                            deltaX = (float) (first.getLeft() * Math.sin(galleryWidthAngle) * scale);
-                            if (l.isMiddle()) {
-                                canvas.drawCircle(mapCenterMoveX + second.getX() + deltaX, mapCenterMoveY + second.getY() + deltaY, MEASURE_POINT_RADIUS, polygonWidthPaint);
-                            } else {
-                                canvas.drawCircle(mapCenterMoveX + first.getX() + deltaX, mapCenterMoveY + first.getY() + deltaY, MEASURE_POINT_RADIUS, polygonWidthPaint);
-                            }
-                        }
+                            // right
+                            calculateAndDrawSide(canvas, l, first, second, prevLeg, first.getRight(), azimuthUnits, false);
+                        } else {
+                            // top
+                            calculateAndDrawSide(canvas, l, first, second, prevLeg, first.getLeft(), azimuthUnits, true);
 
-                        // right
-                        if (first.getRight() != null && first.getRight()> 0) {
-                            if (prevLeg == null || l.isMiddle()) {
-                                // first point by 90 degree left
-                                galleryWidthAngle = Math.toRadians(MapUtilities.add90Degrees(first.getAzimuth()));
-                            } else {
-                                // each other by the bisector
-                                if (l.getGalleryId().equals(prevLeg.getGalleryId())) {
-                                    galleryWidthAngle = Math.toRadians(MapUtilities.add90Degrees(MapUtilities.getMiddleAngle(MapUtilities.getAzimuthInDegrees(prevLeg.getAzimuth()), first.getAzimuth())));
-                                } else {
-                                    galleryWidthAngle = Math.toRadians(MapUtilities.add90Degrees(first.getAzimuth()));
-                                }
-                            }
-                            deltaY = -(float) (first.getRight() * Math.cos(galleryWidthAngle) * scale);
-                            deltaX = (float) (first.getRight() * Math.sin(galleryWidthAngle) * scale);
-                            if (l.isMiddle()) {
-                                canvas.drawCircle(mapCenterMoveX + second.getX() + deltaX, mapCenterMoveY + second.getY() + deltaY, MEASURE_POINT_RADIUS, polygonWidthPaint);
-                            } else {
-                                canvas.drawCircle(mapCenterMoveX + first.getX() + deltaX, mapCenterMoveY + first.getY() + deltaY, MEASURE_POINT_RADIUS, polygonWidthPaint);
-                            }
+                            // down
+                            calculateAndDrawSide(canvas, l, first, second, prevLeg, first.getRight(), azimuthUnits, false);
                         }
 
                         if (!l.isMiddle()) {
@@ -289,15 +286,28 @@ public class MapView extends View {
                             List<Vector> vectors = DaoUtil.getLegVectors(l);
                             if (vectors != null) {
                                 for (Vector v : vectors) {
-                                    float legDistance = MapUtilities.applySlopeToDistance(v.getDistance(), MapUtilities.getSlopeInDegrees(v.getSlope()));
-                                    deltaY = -(float) (legDistance * Math.cos(Math.toRadians(MapUtilities.getAzimuthInDegrees(v.getAzimuth())))) * scale;
-                                    deltaX = (float) (legDistance * Math.sin(Math.toRadians(MapUtilities.getAzimuthInDegrees(v.getAzimuth())))) * scale;
-                                    if (l.isMiddle()) {
-                                        canvas.drawLine(mapCenterMoveX + second.getX(), mapCenterMoveY + second.getY(), mapCenterMoveX + second.getX() + deltaX, mapCenterMoveY + second.getY() + deltaY, vectorsPaint);
-                                        canvas.drawCircle(mapCenterMoveX + second.getX() + deltaX, mapCenterMoveY + second.getY() + deltaY, 2, vectorPointPaint);
+                                    if (horizontalPlan) {
+                                        float legDistance = MapUtilities.applySlopeToDistance(v.getDistance(), MapUtilities.getSlopeInDegrees(v.getSlope(), slopeUnits));
+                                        deltaY = -(float) (legDistance * Math.cos(Math.toRadians(MapUtilities.getAzimuthInDegrees(v.getAzimuth(), azimuthUnits)))) * scale;
+                                        deltaX = (float) (legDistance * Math.sin(Math.toRadians(MapUtilities.getAzimuthInDegrees(v.getAzimuth(), azimuthUnits)))) * scale;
+                                        if (l.isMiddle()) {
+                                            canvas.drawLine(mapCenterMoveX + second.getX(), mapCenterMoveY + second.getY(), mapCenterMoveX + second.getX() + deltaX, mapCenterMoveY + second.getY() + deltaY, vectorsPaint);
+                                            canvas.drawCircle(mapCenterMoveX + second.getX() + deltaX, mapCenterMoveY + second.getY() + deltaY, 2, vectorPointPaint);
+                                        } else {
+                                            canvas.drawLine(mapCenterMoveX + first.getX(), mapCenterMoveY + first.getY(), mapCenterMoveX + first.getX() + deltaX, mapCenterMoveY + first.getY() + deltaY, vectorsPaint);
+                                            canvas.drawCircle(mapCenterMoveX + first.getX() + deltaX, mapCenterMoveY + first.getY() + deltaY, 2, vectorPointPaint);
+                                        }
                                     } else {
-                                        canvas.drawLine(mapCenterMoveX + first.getX(), mapCenterMoveY + first.getY(), mapCenterMoveX + first.getX() + deltaX, mapCenterMoveY + first.getY() + deltaY, vectorsPaint);
-                                        canvas.drawCircle(mapCenterMoveX + first.getX() + deltaX, mapCenterMoveY + first.getY() + deltaY, 2, vectorPointPaint);
+                                        float legDistance = v.getDistance();
+                                        deltaY = -(float) (legDistance * Math.cos(Math.toRadians(MapUtilities.getSlopeInDegrees(v.getSlope(), slopeUnits)))) * scale;
+                                        deltaX = (float) (legDistance * Math.sin(Math.toRadians(MapUtilities.getSlopeInDegrees(v.getSlope(), slopeUnits)))) * scale;
+                                        if (l.isMiddle()) {
+                                            canvas.drawLine(mapCenterMoveX + second.getX(), mapCenterMoveY + second.getY(), mapCenterMoveX + second.getX() + deltaX, mapCenterMoveY + second.getY() + deltaY, vectorsPaint);
+                                            canvas.drawCircle(mapCenterMoveX + second.getX() + deltaX, mapCenterMoveY + second.getY() + deltaY, 2, vectorPointPaint);
+                                        } else {
+                                            canvas.drawLine(mapCenterMoveX + first.getX(), mapCenterMoveY + first.getY(), mapCenterMoveX + first.getX() + deltaX, mapCenterMoveY + first.getY() + deltaY, vectorsPaint);
+                                            canvas.drawCircle(mapCenterMoveX + first.getX() + deltaX, mapCenterMoveY + first.getY() + deltaY, 2, vectorPointPaint);
+                                        }
                                     }
                                 }
                             }
@@ -336,6 +346,7 @@ public class MapView extends View {
         }
     }
 
+
     public void zoomOut() {
         scale--;
         invalidate();
@@ -352,6 +363,15 @@ public class MapView extends View {
 
     public boolean canZoomIn() {
         return scale < 50;
+    }
+
+    public boolean isHorizontalPlan() {
+        return horizontalPlan;
+    }
+
+    public void setHorizontalPlan(boolean horizontalPlan) {
+        this.horizontalPlan = horizontalPlan;
+        invalidate();
     }
 
     public void resetMove(float aX, float aY) {
@@ -385,6 +405,76 @@ public class MapView extends View {
         ByteArrayOutputStream buff = new ByteArrayOutputStream();
         returnedBitmap.compress(Bitmap.CompressFormat.PNG, 50, buff);
         return buff.toByteArray();
+    }
+
+    private void calculateAndDrawSide(Canvas canvas, Leg l, Point2D first, Point2D second, Leg prevLeg, Float aMeasure, String azimuthUnits, boolean left) {
+        double galleryWidthAngle;
+        if (aMeasure != null && aMeasure > 0) {
+
+
+            // first or middle by 90'
+            if (prevLeg == null || l.isMiddle()) {
+                float angle = first.getAngle();
+                if (horizontalPlan) {
+                    if (left) {
+                        angle = MapUtilities.minus90Degrees(angle);
+                    } else {
+                        angle = MapUtilities.add90Degrees(angle);
+                    }
+                } else {
+                    if (!left) {
+                        angle = MapUtilities.add90Degrees(MapUtilities.add90Degrees(angle));
+                    }
+                }
+                galleryWidthAngle = Math.toRadians(angle);
+            } else {
+                float angle = first.getAngle();
+                // each next in the gallery by the bisector
+                if (l.getGalleryId().equals(prevLeg.getGalleryId())) {
+
+                    angle = MapUtilities.getMiddleAngle(MapUtilities.getAzimuthInDegrees(prevLeg.getAzimuth(), azimuthUnits), angle);
+
+                    if (horizontalPlan) {
+                        if (left) {
+                            angle = MapUtilities.minus90Degrees(angle);
+                        } else {
+                            angle = MapUtilities.add90Degrees(angle);
+                        }
+                    } else {
+                        if (!left) {
+                            angle = MapUtilities.add90Degrees(MapUtilities.add90Degrees(angle));
+                        }
+                    }
+                } else { // new galleries again by 90'
+                    if (horizontalPlan) {
+                        if (left) {
+                            angle = MapUtilities.minus90Degrees(angle);
+                        } else {
+                            angle = MapUtilities.add90Degrees(angle);
+                        }
+                    } else {
+                        if (!left) {
+                            angle = MapUtilities.add90Degrees(MapUtilities.add90Degrees(angle));
+                        }
+                    }
+                }
+
+                galleryWidthAngle = Math.toRadians(angle);
+            }
+
+            float deltaY = -(float) (aMeasure * Math.cos(galleryWidthAngle) * scale);
+            float deltaX = (float) (aMeasure * Math.sin(galleryWidthAngle) * scale);
+            drawSideMeasurePoint(canvas, l.isMiddle(), first, second, deltaX, deltaY);
+        }
+    }
+
+    private void drawSideMeasurePoint(Canvas aCanvas, boolean isMiddle, Point2D aFirst, Point2D aSecond, float aDeltaX, float aDeltaY) {
+        if (isMiddle) {
+            aCanvas.drawCircle(mapCenterMoveX + aSecond.getX() + aDeltaX, mapCenterMoveY + aSecond.getY() + aDeltaY, MEASURE_POINT_RADIUS, polygonWidthPaint);
+        } else {
+            aCanvas.drawCircle(mapCenterMoveX + aFirst.getX() + aDeltaX, mapCenterMoveY + aFirst.getY() + aDeltaY, MEASURE_POINT_RADIUS, polygonWidthPaint);
+        }
+
     }
 
 }
