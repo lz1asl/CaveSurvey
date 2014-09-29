@@ -45,7 +45,7 @@ public class BluetoothService {
     static {
         SUPPORTED_DEVICES.add(new CEMILDMBluetoothDevice());
         SUPPORTED_DEVICES.add(new LaserAceBluetoothDevice());
-        SUPPORTED_DEVICES.add(new TruPulse360BBluetoothDevice());
+//        SUPPORTED_DEVICES.add(new TruPulse360BBluetoothDevice());
     }
 
     private static ConnectThread mBusyThread = null;

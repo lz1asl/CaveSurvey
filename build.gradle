@@ -3,46 +3,32 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.11.+'
+        classpath 'com.android.tools.build:gradle:0.12.2'
     }
 }
 
 apply plugin: 'android'
 
-sourceSets {
-    unitTest {
-        java.srcDir file('src/test/java')
-        resources.srcDir file('src/test/res')
-    }
-}
-
 repositories {
     mavenCentral()
 }
 
-configurations {
-    unitTestCompile.extendsFrom runtime
-    unitTestRuntime.extendsFrom unitTestCompile
-}
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:+'
+    compile 'com.android.support:appcompat-v7:18.0.+'
     compile 'com.j256.ormlite:ormlite-core:4.47'
     compile 'com.j256.ormlite:ormlite-android:4.47'
     compile 'org.apache.poi:poi:3.9'
     compile 'commons-io:commons-io:2.4'
     compile 'commons-codec:commons-codec:1.7'
+    compile 'com.google.code.gson:gson:2.3'
 
-    unitTestCompile files("build/classes/defaultFlavor/release")
-    unitTestCompile 'junit:junit:4+'
-    unitTestCompile 'com.google.android:android:4.+'
+    androidTestCompile files("build/classes/defaultFlavor/release")
+    androidTestCompile 'junit:junit:4+'
+//    androidTestCompile 'com.google.android:android:4.+'
 }
 
-task unitTest(type:Test, dependsOn: assemble) {
-    testClassesDir = project.sourceSets.unitTest.output.classesDir
-    classpath = project.sourceSets.unitTest.runtimeClasspath
-}
-check.dependsOn unitTest
+
 
 android {
     compileSdkVersion 19
@@ -52,6 +38,7 @@ android {
         minSdkVersion 7
         targetSdkVersion 15
     }
+
 
     signingConfigs {
         release {
@@ -86,6 +73,8 @@ android {
             java.srcDirs = ['src/java']
             res.srcDirs = ['res']
         }
+
+        instrumentTest.setRoot('src/instrumentTest')
     }
 
     packagingOptions {
