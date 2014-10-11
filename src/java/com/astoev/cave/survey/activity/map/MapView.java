@@ -99,8 +99,18 @@ public class MapView extends View {
             int maxX = canvas.getWidth();
             int maxY = canvas.getHeight();
 
-            int centerX = maxX / 2;
-            int centerY = maxY / 2;
+            int centerX;
+            int centerY;
+
+            if (horizontalPlan) {
+                // starting from the center of the screen
+                centerX = maxX / 2;
+                centerY = maxY / 2;
+            } else {
+                // slightly more left for the vertical plan (advancing to right)
+                centerX = maxX / 4;
+                centerY = maxY / 2;
+            }
 
             int spacing = 5;
 
@@ -214,7 +224,7 @@ public class MapView extends View {
                                 } else {
                                     legDistance = l.getDistance();
                                 }
-                                deltaY = -(float) (legDistance * Math.cos(Math.toRadians(MapUtilities.add90Degrees(MapUtilities.getSlopeInDegrees(l.getSlope(), slopeUnits))))) * scale;
+                                deltaY = (float) (legDistance * Math.cos(Math.toRadians(MapUtilities.add90Degrees(MapUtilities.getSlopeInDegrees(l.getSlope(), slopeUnits))))) * scale;
                                 deltaX = (float) (legDistance * Math.sin(Math.toRadians(MapUtilities.add90Degrees(MapUtilities.getSlopeInDegrees(l.getSlope(), slopeUnits))))) * scale;
                             }
                         }
@@ -275,10 +285,10 @@ public class MapView extends View {
                             calculateAndDrawSide(canvas, l, first, second, prevLeg, first.getRight(), azimuthUnits, false);
                         } else {
                             // top
-                            calculateAndDrawSide(canvas, l, first, second, prevLeg, first.getLeft(), azimuthUnits, true);
+//                            calculateAndDrawSide(canvas, l, first, second, prevLeg, first.getLeft(), azimuthUnits, true);
 
                             // down
-                            calculateAndDrawSide(canvas, l, first, second, prevLeg, first.getRight(), azimuthUnits, false);
+//                            calculateAndDrawSide(canvas, l, first, second, prevLeg, first.getRight(), azimuthUnits, false);
                         }
 
                         if (!l.isMiddle()) {
@@ -298,16 +308,16 @@ public class MapView extends View {
                                             canvas.drawCircle(mapCenterMoveX + first.getX() + deltaX, mapCenterMoveY + first.getY() + deltaY, 2, vectorPointPaint);
                                         }
                                     } else {
-                                        float legDistance = v.getDistance();
-                                        deltaY = -(float) (legDistance * Math.cos(Math.toRadians(MapUtilities.getSlopeInDegrees(v.getSlope(), slopeUnits)))) * scale;
-                                        deltaX = (float) (legDistance * Math.sin(Math.toRadians(MapUtilities.getSlopeInDegrees(v.getSlope(), slopeUnits)))) * scale;
-                                        if (l.isMiddle()) {
-                                            canvas.drawLine(mapCenterMoveX + second.getX(), mapCenterMoveY + second.getY(), mapCenterMoveX + second.getX() + deltaX, mapCenterMoveY + second.getY() + deltaY, vectorsPaint);
-                                            canvas.drawCircle(mapCenterMoveX + second.getX() + deltaX, mapCenterMoveY + second.getY() + deltaY, 2, vectorPointPaint);
-                                        } else {
-                                            canvas.drawLine(mapCenterMoveX + first.getX(), mapCenterMoveY + first.getY(), mapCenterMoveX + first.getX() + deltaX, mapCenterMoveY + first.getY() + deltaY, vectorsPaint);
-                                            canvas.drawCircle(mapCenterMoveX + first.getX() + deltaX, mapCenterMoveY + first.getY() + deltaY, 2, vectorPointPaint);
-                                        }
+//                                        float legDistance = v.getDistance();
+//                                        deltaY = -(float) (legDistance * Math.cos(Math.toRadians(MapUtilities.getSlopeInDegrees(v.getSlope(), slopeUnits)))) * scale;
+//                                        deltaX = (float) (legDistance * Math.sin(Math.toRadians(MapUtilities.getSlopeInDegrees(v.getSlope(), slopeUnits)))) * scale;
+//                                        if (l.isMiddle()) {
+//                                            canvas.drawLine(mapCenterMoveX + second.getX(), mapCenterMoveY + second.getY(), mapCenterMoveX + second.getX() + deltaX, mapCenterMoveY + second.getY() + deltaY, vectorsPaint);
+//                                            canvas.drawCircle(mapCenterMoveX + second.getX() + deltaX, mapCenterMoveY + second.getY() + deltaY, 2, vectorPointPaint);
+//                                        } else {
+//                                            canvas.drawLine(mapCenterMoveX + first.getX(), mapCenterMoveY + first.getY(), mapCenterMoveX + first.getX() + deltaX, mapCenterMoveY + first.getY() + deltaY, vectorsPaint);
+//                                            canvas.drawCircle(mapCenterMoveX + first.getX() + deltaX, mapCenterMoveY + first.getY() + deltaY, 2, vectorPointPaint);
+//                                        }
                                     }
                                 }
                             }
@@ -421,10 +431,6 @@ public class MapView extends View {
                     } else {
                         angle = MapUtilities.add90Degrees(angle);
                     }
-                } else {
-                    if (!left) {
-                        angle = MapUtilities.add90Degrees(MapUtilities.add90Degrees(angle));
-                    }
                 }
                 galleryWidthAngle = Math.toRadians(angle);
             } else {
@@ -440,10 +446,6 @@ public class MapView extends View {
                         } else {
                             angle = MapUtilities.add90Degrees(angle);
                         }
-                    } else {
-                        if (!left) {
-                            angle = MapUtilities.add90Degrees(MapUtilities.add90Degrees(angle));
-                        }
                     }
                 } else { // new galleries again by 90'
                     if (horizontalPlan) {
@@ -451,10 +453,6 @@ public class MapView extends View {
                             angle = MapUtilities.minus90Degrees(angle);
                         } else {
                             angle = MapUtilities.add90Degrees(angle);
-                        }
-                    } else {
-                        if (!left) {
-                            angle = MapUtilities.add90Degrees(MapUtilities.add90Degrees(angle));
                         }
                     }
                 }
