@@ -32,7 +32,6 @@
         android:layout_centerInParent="true"
         android:id="@+id/mapHorizonatalToggle"
         android:textOff="Plan"
-        android:textOn="Section"
-        android:enabled="false"/>
+        android:textOn="Section"/>
 
 </RelativeLayout>
