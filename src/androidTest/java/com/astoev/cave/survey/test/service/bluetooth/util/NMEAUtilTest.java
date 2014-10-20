@@ -49,6 +49,7 @@ public class NMEAUtilTest extends TestCase {
     public void testTruPulseSuccess() throws IOException {
 //        ensureTruPulseSucces(|"$PLTIT,HV,18.00,F,185.20,D,6.90,D,18.00,F*66", , , );
         ensureTruPulseSucces("$PLTIT,HV,7.01,M,0.00,D,3.00,D,7.01,M*64", 7.01f, 0.0f, 3.0f);
+        ensureTruPulseSucces("$PLTIT,HV,0.60,M,115.90,D,1.80,D,0.60,M*62", 0.60f, 115.9f, 1.8f);
 //        ensureTruPulseSucces("$PLTIT,HV,,,187.10,D,8.40,D,,*64", null, 187.1f, 8.40f);
 //        ensureTruPulseSucces("$PLTIT,HV,,,347.20,D,,,,*3F", null, 347.2f, null);
 //        ensureTruPulseSucces("$PLTIT,HV,6.00,Y,179.40,D,7.20,D,6.10,Y*68", , , );
