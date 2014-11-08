@@ -33,7 +33,10 @@ public class TruPulse360BBluetoothDevice extends AbstractBluetoothDevice {
 
     @Override
     public void triggerMeasures(OutputStream aStream, List<Constants.MeasureTypes> aMeasures) throws IOException {
-        IOUtils.write("$PLTIT,RQ,ID\n", aStream);
+//        IOUtils.write("$MM,0\n", aStream);
+//        IOUtils.write("$DU,0\n", aStream);
+//        IOUtils.write("$AU,0\n", aStream);
+        IOUtils.write("$PLTIT,RQ,HV\n", aStream);
     }
 
     @Override
