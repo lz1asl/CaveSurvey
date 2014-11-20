@@ -42,8 +42,8 @@ public class MapView extends View {
     public static final int MIDDLE_POINT_RADIUS = 2;
     public static final int MEASURE_POINT_RADIUS = 2;
     public static final int CURR_POINT_RADIUS = 8;
-    private final static int LABEL_DEVIATION_X = 5;
-    private final static int LABEL_DEVIATION_Y = 5;
+    private final static int LABEL_DEVIATION_X = 10;
+    private final static int LABEL_DEVIATION_Y = 15;
     private Paint polygonPaint = new Paint();
     private Paint polygonWidthPaint = new Paint();
     private Paint overlayPaint = new Paint();
@@ -214,7 +214,7 @@ public class MapView extends View {
                                 deltaX = (float) (legDistance * Math.sin(Math.toRadians(MapUtilities.getAzimuthInDegrees(l.getAzimuth(), azimuthUnits)))) * scale;
                             }
                         } else {
-                            if (l.getDistance() == null || l.getSlope() == null) {
+                            if (l.getDistance() == null || l.getDistance() == 0) {
                                 deltaX = 0;
                                 deltaY = 0;
                             } else {
@@ -224,8 +224,8 @@ public class MapView extends View {
                                 } else {
                                     legDistance = l.getDistance();
                                 }
-                                deltaY = (float) (legDistance * Math.cos(Math.toRadians(MapUtilities.add90Degrees(MapUtilities.getSlopeInDegrees(l.getSlope(), slopeUnits))))) * scale;
-                                deltaX = (float) (legDistance * Math.sin(Math.toRadians(MapUtilities.add90Degrees(MapUtilities.getSlopeInDegrees(l.getSlope(), slopeUnits))))) * scale;
+                                deltaY = (float) (legDistance * Math.cos(Math.toRadians(MapUtilities.add90Degrees(MapUtilities.getSlopeInDegrees(l.getSlope() == null ? 0 : l.getSlope(), slopeUnits))))) * scale;
+                                deltaX = (float) (legDistance * Math.sin(Math.toRadians(MapUtilities.add90Degrees(MapUtilities.getSlopeInDegrees(l.getSlope() == null ? 0 : l.getSlope(), slopeUnits))))) * scale;
                             }
                         }
 
