@@ -328,13 +328,15 @@ public class MapView extends View {
             //left
             canvas.drawLine(spacing, maxY - spacing, spacing, spacing, overlayPaint);
 
-            // north
-            northCenter.set(maxX - 20, 30);
-            canvas.drawLine(northCenter.x, northCenter.y, northCenter.x + 10, northCenter.y + 10, overlayPaint);
-            canvas.drawLine(northCenter.x + 10, northCenter.y + 10, northCenter.x, northCenter.y - 20, overlayPaint);
-            canvas.drawLine(northCenter.x, northCenter.y - 20, northCenter.x - 10, northCenter.y + 10, overlayPaint);
-            canvas.drawLine(northCenter.x - 10, northCenter.y + 10, northCenter.x, northCenter.y, overlayPaint);
-            canvas.drawText("N", northCenter.x + 5, northCenter.y - 10, overlayPaint);
+            if (horizontalPlan) {
+                // north
+                northCenter.set(maxX - 20, 30);
+                canvas.drawLine(northCenter.x, northCenter.y, northCenter.x + 10, northCenter.y + 10, overlayPaint);
+                canvas.drawLine(northCenter.x + 10, northCenter.y + 10, northCenter.x, northCenter.y - 20, overlayPaint);
+                canvas.drawLine(northCenter.x, northCenter.y - 20, northCenter.x - 10, northCenter.y + 10, overlayPaint);
+                canvas.drawLine(northCenter.x - 10, northCenter.y + 10, northCenter.x, northCenter.y, overlayPaint);
+                canvas.drawText("N", northCenter.x + 5, northCenter.y - 10, overlayPaint);
+            }
 
             canvas.drawText("x" + (int)scale, 20, 25, overlayPaint);
 
