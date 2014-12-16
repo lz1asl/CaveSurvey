@@ -260,7 +260,8 @@
     <string name="azimuth_rotation">Завъртане:</string>
     <string name="azimuth_start">Старт</string>
     <string name="azimuth_stop">Стоп</string>
-    <string name="sensor_test_title">Тест на сензорите</string>
+    <string name="sensor_test_title">Вградени сензори</string>
+    <string name="sensor_test_header">Тест на вградените сензори</string>
 
     <string name="SENSOR_STATUS_UNRELIABLE">Ненадежден</string>
     <string name="SENSOR_STATUS_ACCURACY_LOW">Ниска точност</string>

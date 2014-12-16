@@ -4,6 +4,19 @@
               android:orientation="vertical">
 
     <!-- Header -->
+    <LinearLayout android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:orientation="horizontal"
+        android:layout_margin="10dp">
+        <TextView android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:text="@string/sensor_test_header"
+            android:ellipsize="end" android:singleLine="true"
+            android:gravity="center"
+            android:textAppearance="@android:style/TextAppearance.Large"/>
+    </LinearLayout>
+    <!-- Table header -->
     <LinearLayout android:layout_height="wrap_content" 
               android:layout_width="fill_parent" 
               android:orientation="horizontal"

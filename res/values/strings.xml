@@ -261,7 +261,8 @@
     <string name="azimuth_rotation">Rotation:</string>
     <string name="azimuth_start">Start</string>
     <string name="azimuth_stop">Stop</string>
-    <string name="sensor_test_title">Sensor Test</string>
+    <string name="sensor_test_title">Build-in Sensors</string>
+    <string name="sensor_test_header">Test Build-in Sensors</string>
 
     <string name="SENSOR_STATUS_UNRELIABLE">UNRELIABLE</string>
     <string name="SENSOR_STATUS_ACCURACY_LOW">LOW</string>
@@ -320,7 +321,7 @@
     <string name="newFolderButtonText">New folder</string>
     <string name="newFolderDialogMessage">Create new folder</string>
     <string name="createButtonText">Create</string>
-    <string name="folderCreationOk">Folder created sucessfully</string>
+    <string name="folderCreationOk">Folder created successfully</string>
     <string name="folderCreationError">Error while creating folder</string>
     <string name="information">Information</string>
 
