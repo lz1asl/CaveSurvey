@@ -26,7 +26,7 @@ dependencies {
     compile 'com.google.code.gson:gson:2.3'
 
     androidTestCompile files("build/classes/defaultFlavor/release")
-    androidTestCompile 'junit:junit:4+' //4.10
+    androidTestCompile 'junit:junit:4.12'
 //    androidTestCompile 'com.google.android:android:4.+'
 }
 
