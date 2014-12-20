@@ -263,6 +263,7 @@
     <string name="sensor_test_title">Вградени сензори</string>
     <string name="sensor_test_header">Тест на вградените сензори</string>
     <string name="sensor_choose_header">Избор на вграден сензор</string>
+    <string name="no_sensors">Няма налични вградени сензори</string>
 
     <string name="SENSOR_STATUS_UNRELIABLE">Ненадежден</string>
     <string name="SENSOR_STATUS_ACCURACY_LOW">Ниска точност</string>

@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -207,10 +208,17 @@ public class SensorTestActivity extends MainMenuActivity {
                 }
             });
         } else {
-            // TODO: no available sensors !
+            // no available sensors !
+            //disable spinner for choosing sensors
+            LinearLayout sensorsLinearLayout = (LinearLayout)findViewById(R.id.sensors_spinner_layout);
+            sensorsLinearLayout.setVisibility(View.GONE);
+
+            // change the text for sensors choose header
+            TextView sensorsChooseText = (TextView)findViewById(R.id.sensor_choose_text);
+            sensorsChooseText.setText(R.string.no_sensors);
         }
 
-	}
+	}// end of onCreate
 
     private String[] createTranslateArray(Integer[] availableSensorsArrayArg){
         String[] translateArray = new String[availableSensorsArrayArg.length];
