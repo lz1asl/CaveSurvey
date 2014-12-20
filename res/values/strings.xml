@@ -263,6 +263,7 @@
     <string name="azimuth_stop">Stop</string>
     <string name="sensor_test_title">Build-in Sensors</string>
     <string name="sensor_test_header">Test Build-in Sensors</string>
+    <string name="sensor_choose_header">Choose Build-in sensor</string>
 
     <string name="SENSOR_STATUS_UNRELIABLE">UNRELIABLE</string>
     <string name="SENSOR_STATUS_ACCURACY_LOW">LOW</string>

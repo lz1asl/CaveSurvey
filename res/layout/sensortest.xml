@@ -139,5 +139,29 @@
                 android:onClick="onStop"
                 android:enabled="false"/>
     </LinearLayout>
-    
+
+    <!-- Choose block header -->
+    <LinearLayout android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:orientation="horizontal"
+        android:layout_margin="10dp">
+        <TextView android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:text="@string/sensor_choose_header"
+            android:ellipsize="end" android:singleLine="true"
+            android:gravity="center"
+            android:textAppearance="@android:style/TextAppearance.Large"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="10dp">
+        <Spinner android:id="@+id/sensors_spinner"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
 </LinearLayout>              

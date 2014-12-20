@@ -6,6 +6,8 @@ import android.content.SharedPreferences;
 
 /**
  * Created by astoev on 12/27/13.
+ *
+ * @author astoev
  */
 public class ConfigUtil {
 
@@ -16,6 +18,7 @@ public class ConfigUtil {
     public static final String PROP_CURR_BT_DEVICE_ADDRESS = "curr_bt_device_addr";
     public static final String PROP_CURR_BT_DEVICE_NAME = "curr_bt_device_name";
     public static final String PREF_LOCALE = "language_pref";
+    public static final String PREF_SENSOR = "sensor_pref";
 
     private static Activity mAppContext;
 
