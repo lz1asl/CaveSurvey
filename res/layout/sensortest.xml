@@ -69,7 +69,6 @@
                   android:text="@string/azimuth_accuracy_no_value"/>
     </LinearLayout>
 
-    
     <!-- Magnetic sensor -->
     <LinearLayout android:layout_height="wrap_content" 
               android:layout_width="fill_parent" 
