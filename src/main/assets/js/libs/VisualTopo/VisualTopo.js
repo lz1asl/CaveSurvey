@@ -104,7 +104,6 @@ function ops_GetCaveObjectByVisualtopo(str)
         if (tmp_r[0] === "Entree")
         {
             cave.startPoint = tmp_r[1];
-            cave.geoPoint = tmp_r[1];
         }
 
         else
@@ -115,11 +114,14 @@ function ops_GetCaveObjectByVisualtopo(str)
             cave.name = CaveParams[0].replace(/^Trou /, "");
             var source = new Proj4js.Proj('EPSG:4326');
             var dest = new Proj4js.Proj('EPSG:4326');
-            cave.altitude = parseFloat(CaveParams[3]);
-           
+            cave.altitude = CaveParams[3];
+            cave.longitude = CaveParams[1];
+            cave.latitude = CaveParams[2];
+            //alert(CaveParams[4]+"cc");
             //wgs84
             if (CaveParams[4] === "UTM32")
             {
+                //alert("dd");
                 source = new Proj4js.Proj("UTM32");//wgs84 UTM 32T  su pamb
             }
             else if (CaveParams[4] === "UTM33")
@@ -136,24 +138,17 @@ function ops_GetCaveObjectByVisualtopo(str)
             {
                 source = new Proj4js.Proj("UTM33E");//UTM 33N su pamb
             }
-            else
-            {
-                source = new Proj4js.Proj("UTM32");//wgs84 UTM 32T  su pamb
-            }
 
+            var pIng = new Proj4js.Point(parseFloat(cave.longitude) * 1000.0, parseFloat(cave.latitude) * 1000, caveObj.altitude);   //any object will do as long as it has 'x' and 'y' properties
 
-            var pIng = new Proj4js.Point(parseFloat(CaveParams[1]) * 1000.0, parseFloat(CaveParams[2]) * 1000, parseFloat(cave.altitude));   //any object will do as long as it has 'x' and 'y' properties
-            //console.log(pIng);
-            Proj4js.transform(source, dest, pIng);      //do the transformation.  x and y are modified in place   
-            //console.log(pIng);
-            // alert(dest.x);
             //splx.print_r(pIng);
+            Proj4js.transform(source, dest, pIng);      //do the transformation.  x and y are modified in place   
             // splx.print_r(pIng);
             cave.longitude = pIng.x;
             cave.latitude = pIng.y;
 
 
-            //splx.print_r(cave);
+            // splx.print_r(cave);
         }
 
         if (tmp_r[0] === "Param")
@@ -195,7 +190,7 @@ function ops_GetCaveObjectByVisualtopo(str)
         {
             var from = 0;
             var to = 0;
-            var len = 0;
+            var length = 0;
             var compass = 0;
             var clino = 0;
             var top = 0;
@@ -216,7 +211,7 @@ function ops_GetCaveObjectByVisualtopo(str)
                 to = tmp_r[1];
                 if (isTopofilo)
                 {
-                    len = (parseFloat(tmp_r[3]) - parseFloat(tmp_r[2])) / 100.0;
+                    length = (parseFloat(tmp_r[3]) - parseFloat(tmp_r[2])) / 100.0;
                     compass = tmp_r[4];
                     clino = tmp_r[5];
                     left = (tmp_r[6] === "*") ? "" : tmp_r[6];
@@ -227,7 +222,7 @@ function ops_GetCaveObjectByVisualtopo(str)
                 }
                 else
                 {
-                    len = parseFloat(tmp_r[2]);
+                    length = parseFloat(tmp_r[2]);
                     compass = tmp_r[3];
                     clino = tmp_r[4];
                     left = (tmp_r[5] === "*") ? "" : tmp_r[5];
@@ -239,7 +234,7 @@ function ops_GetCaveObjectByVisualtopo(str)
                 tmp_datarow = {
                     from: from,
                     to: to,
-                    len: len,
+                    length: length,
                     compass: compass,
                     clino: clino,
                     top: top,
@@ -251,12 +246,12 @@ function ops_GetCaveObjectByVisualtopo(str)
 
                 data.push(tmp_datarow);
                 lastpoint = tmp_datarow.to;
-
+                
             }
         }
     }
     cave.data = data;
-    console.log(cave);
+    //splx.print_r(cave);
 
     return cave;
 }

@@ -57,6 +57,6 @@ __language['sk'] = {
     "insert row below": "vlož riadok pod",
     "remove row": "vymazať riadok",
     "set units of measurement": "nastavenie jednotiek merania",
-	"import data": "importovať dáta",    
-	"append project":"pripojiť dáta"
+    "import data": "importovať data",    
+    "append project":"append project"
 };

@@ -68,6 +68,6 @@ __language['it'] = {
     "processing in progress":"elaborazione in corso",
     "georeferenced":"georeferenziato",
     "set date of measurement":"inserisci data misurazioni",
-    "set georeferenced points":"inserisci punti georeferenziati"
+    "":""
 };
 

@@ -660,11 +660,11 @@ function ops_import(filename, str, append)
             {
                 row = new Array();
                 row = tmpcaveObj.data[i];
-                if (row['from'] !== null && row['from'] !== "" && row['from'] !== "-" && row['from'] !== "")
+                if (row['from'] !== "" && row['from'] !== "-")
                 {
                     row['from'] = prefix + row['from'];
                 }
-                if (row['to'] !== null && row['to'] !== "" && row['to'] !== "-" && row['to'] !== undefined && row['to'] !== null)
+                if (row['to'] !== "" && row['to'] !== "-" && row['to'] !== undefined && row['to'] !== null)
                 {
                     row['to'] = prefix + row['to'];
                 }

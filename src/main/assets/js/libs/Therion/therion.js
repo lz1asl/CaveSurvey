@@ -1,4 +1,4 @@
-lenstr_trim = function(str) {
+str_trim = function(str) {
     return str.replace(/^\s+|\s+$/g, '');
 };
 str_ltrim = function(str) {
@@ -28,7 +28,7 @@ function th_GetSection(str, sectionname)
 function ops_GetCaveObjectByThconfig(str)
 {
     alert(th_GetSection(str, "source"));
-    alert("funzione in fase di implementazione");
+    alert("finzione in fase di implementazione");
 }/*
  test = "153_3 153_4  4.07   88.1 -23.5  0.65 [0.0 1.80] [1.00 5.00] 1.00";
  test2 = test.replace(/\[([a-zA-Z0-9.]*) ([a-zA-Z0-9.]*)\]/g, "$1,$2");
@@ -112,14 +112,7 @@ function ops_GetCaveObjectByTherion(str)
                     break;
                 case "station":
                     tmp_datarow['from'] = elements[1];
-                    var sep = "";
-                    for (var i in elements)
-                    {
-                        if (i > 1) {
-                            tmp_datarow['note'] += sep + elements[i];
-                            sep = " ";
-                        }
-                    }
+
                     break;
                 default:
                     tmp_datarow["r"] = (inv !== true) ? "" : "<";
@@ -201,7 +194,7 @@ function ops_GetCaveObjectByTherion(str)
                 var tmp_datarow = {
                     from: from,
                     to: "",
-                    len: "",
+                    length: "",
                     compass: "",
                     clino: "",
                     r: "",
@@ -290,40 +283,13 @@ function ops_SaveToTherion() {
     str += "encoding  utf-8\n";
     str += "\nsurvey " + name + " -title \"" + caveObj.name + "\"";
     str += "\n\ncenterline";
-    var isUtm = true;
+    str += "\ncs long-lat";
     if (!isNaN(caveObj.northdeclination) && caveObj.northdeclination !== "")
     {
         str += "\ndeclination " + caveObj.northdeclination + " deg";
     }
 
-    if (!isUtm)
-    {
-        //fix geo ---->
-        str += "\ncs long-lat";
-        str += "\nfix " + caveObj.geoPoint + " " + caveObj.longitude + " " + caveObj.latitude + " " + caveObj.altitude + "\n";
-        //fix geo ----<
-    }
-    else
-    {
-        //fix utm ---->
-        str += "\ncs utm" + $("#cave_utm_zone").val();
-        str += "\nfix " + caveObj.geoPoint + " " + $("#cave_utm_x").val() + " " + $("#cave_utm_y").val() + " " + caveObj.altitude + "\n";
-        //fix utm ----<
-    }
-    //cerco tutti i fix
-    for (var i in caveObj.data)
-    {
-        var item = caveObj.data[i];
-        if ((item['from'] !== undefined && item['from'] !== null && item['from'] !== "") && (item['to'] === null || item['to'] === ""))
-        {
-            if (item['note'] !== undefined && item['note'] !== null && item['note'].search("utm32:") !== -1)
-            {
-                str += "\ncs utm32";
-                var tmp = item['note'].replace("utm32:", "");
-                str += "\nfix " + item['from'] + " " + tmp + "\n";
-            }
-        }
-    }
+    str += "\nfix " + caveObj.startPoint + " " + caveObj.longitude + " " + caveObj.latitude + " " + caveObj.altitude + "\n";
 
 //    str += "\ndata normal from to length compass clino left up down right \n";
     var strheader = "data normal from to length compass clino";
@@ -331,7 +297,7 @@ function ops_SaveToTherion() {
     var extend = "";
     for (var i in caveObj.data)
     {
-
+        
         var item = caveObj.data[i];
         if ((item['from'] === undefined || item['from'] === null || item['from'] === "") && (item['to'] === null || item['to'] === ""))
         {
@@ -512,25 +478,25 @@ function ops_SaveToTherion() {
             //----top--->
             if (item['top'] !== undefined && item['top'] !== "" && item['top'] !== null)
             {
-                str += " " + makeBTLR(item['top'], unit_top);
+                str += " " + (item['top'] * unit_top);
             }
             //----top---<
             //----bottom--->
             if (item['bottom'] !== undefined && item['bottom'] !== "" && item['bottom'] !== null)
             {
-                str += " " + makeBTLR(item['bottom'], unit_bottom);
+                str += " " + (item['bottom'] * unit_bottom);
             }
             //----bottom---<
             //----left--->
             if (item['left'] !== undefined && item['left'] !== "" && item['left'] !== null)
             {
-                str += " " + makeBTLR(item['left'], unit_left);
+                str += " " + (item['left'] * unit_left);
             }
             //----left---<
             //----right--->
             if (item['right'] !== undefined && item['right'] !== "" && item['right'] !== null)
             {
-                str += " " + makeBTLR(item['right'], unit_right);
+                str += " " + (item['right'] * unit_right);
             }
             //----right---<
             //----lateral------------------------------------------------------<
@@ -559,7 +525,7 @@ function ops_SaveToTherion() {
     str += "\nencoding  utf-8";
     str += "\nsource " + filename;
     str += "\n";
-    str += "\nexport map -proj plan -layout-symbol-show group centerline -layout-debug station-names -o " + filename + "-" + _i18n("plan") + ".pdf";
+    str += "\nexport map -proj plan -o " + filename + "-" + _i18n("plan") + ".pdf";
     str += "\n";
     str += "\nexport model  -o " + filename + ".kml";
     str += "\n";
@@ -581,27 +547,4 @@ function ops_SaveToTherion() {
     Download.save(str, filename);
 }
 
-/**
- * 
- * @param {type} str
- * @param {type} unit
- * @returns {String}
- */
-function makeBTLR(str, unit) {
-    var strout = "";
-    if (str.search(";") != -1)
-    {
-        var tmp = str.split(";");
-        if (!isNaN(tmp[0]) && !isNaN(tmp[1]))
-        {
-            strout += "[";
-            strout += tmp[0] * unit;
-            strout += " ";
-            strout += tmp[1] * unit;
-            strout += "]";
-        }
-    }
-    else
-        strout = str * unit;
-    return strout;
-}
+
