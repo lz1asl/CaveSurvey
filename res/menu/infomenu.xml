@@ -15,6 +15,6 @@
     <item android:id="@+id/info_action_openstopo"
         android:icon="@drawable/ic_action_import_export"
         android:title="@string/export_openstopo_title"
-        android:visible="false"
+        android:visible="true"
         myapp:showAsAction="ifRoom|withText"/>
 </menu>    

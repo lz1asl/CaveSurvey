@@ -1979,10 +1979,12 @@ $(document).ready(function() {
     ops_validateform();
     setTimeout("onAppResize('init');", 1000);
 
-
-    jQuery.get(getQueryParameter('caveSurveyFilePath'), function(caveSurveyData) {
+    var jsonFile = getQueryParameter('caveSurveyFilePath');
+    // alert('read ' + jsonFile);
+    jQuery.get(jsonFile, function(caveSurveyData) {
+            // alert('loaded bytes ' + caveSurveyData);
             //caveObj.data = jQuery.parseJSON(caveSurveyData);
-            ops_import('CaveSurvey', caveSurveyData, false);
+            ops_import(escape(jsonFile), caveSurveyData, false);
     });
 
 });

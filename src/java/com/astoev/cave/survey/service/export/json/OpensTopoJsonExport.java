@@ -84,7 +84,9 @@ public class OpensTopoJsonExport extends AbstractExport {
 
     @Override
     protected InputStream getContent() {
-        String json = new GsonBuilder().serializeNulls().setPrettyPrinting().create().toJson(project);
+        String json = new GsonBuilder().serializeNulls()
+                //.setPrettyPrinting()
+                .create().toJson(project);
         return IOUtils.toInputStream(json);
     }
 

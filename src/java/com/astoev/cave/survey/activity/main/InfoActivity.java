@@ -27,6 +27,8 @@ import com.astoev.cave.survey.util.ProjectInfo;
 import com.astoev.cave.survey.util.StringUtils;
 import com.astoev.cave.survey.openstopo.WebViewActivity;
 
+import org.apache.commons.codec.net.URLCodec;
+
 import java.io.File;
 
 /**
@@ -220,7 +222,7 @@ public class InfoActivity extends MainMenuActivity {
                         UIUtilities.showNotification(this, R.string.export_done, exportPath);
                         // load ui
                         Intent intent = new Intent(InfoActivity.this, WebViewActivity.class);
-                        intent.putExtra("path", exportPath);
+                        intent.putExtra("path", new URLCodec().encode(exportPath));
                         startActivity(intent);
                     }
 
