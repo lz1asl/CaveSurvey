@@ -44,6 +44,8 @@ public class MapView extends View {
     public static final int CURR_POINT_RADIUS = 8;
     private final static int LABEL_DEVIATION_X = 10;
     private final static int LABEL_DEVIATION_Y = 15;
+    private static final int [] GRID_STEPS = new int[] {20,10, 5, 5, 2, 2, 2, 2, 1, 1, 1};
+    private final int SPACING = 5;
     private Paint polygonPaint = new Paint();
     private Paint polygonWidthPaint = new Paint();
     private Paint overlayPaint = new Paint();
@@ -51,7 +53,7 @@ public class MapView extends View {
     private Paint gridPaint = new Paint();
     private Paint vectorsPaint = new Paint();
     private Paint vectorPointPaint = new Paint();
-    private float scale = 10;
+    private int scale = 10;
     private int mapCenterMoveX = 0;
     private int mapCenterMoveY = 0;
     private float initialMoveX = 0;
@@ -112,25 +114,30 @@ public class MapView extends View {
                 centerY = maxY / 2;
             }
 
-            int spacing = 5;
-
             String azimuthUnits = Options.getOptionValue(Option.CODE_AZIMUTH_UNITS);
             String slopeUnits = Options.getOptionValue(Option.CODE_SLOPE_UNITS);
 
-            // grid
-            int gridStep = 20;
-            for (int x=0; x<maxX; x++) {
-                canvas.drawLine(x*gridStep + spacing, spacing, x*gridStep + spacing, maxY - spacing, gridPaint);
-            }
+            int gridStepIndex = scale/5;
 
-            for (int y=0; y<maxY; y++) {
-                canvas.drawLine(spacing, y*gridStep + spacing, maxX - spacing, y*gridStep + spacing, gridPaint);
-            }
+            // grid scale
+            int gridStep = GRID_STEPS[gridStepIndex] * scale;
 
-            String pointLabel;
+            // grid start
+            int gridStartX = mapCenterMoveX % gridStep - SPACING + centerX - (centerX / gridStep) * gridStep;
+            int gridStartY = mapCenterMoveY % gridStep - SPACING + centerY - (centerY / gridStep) * gridStep;
+
+            // grid horizontal lines
+            for (int x=0; x<maxX/gridStep; x++) {
+                canvas.drawLine(x*gridStep + SPACING + gridStartX, SPACING, x*gridStep + SPACING + gridStartX, maxY - SPACING, gridPaint);
+            }
+            // grid vertical lines
+            for (int y=0; y<maxY/gridStep; y++) {
+                canvas.drawLine(SPACING, y*gridStep + SPACING + gridStartY, maxX - SPACING, y*gridStep + SPACING + gridStartY, gridPaint);
+            }
 
             // load the points
             List<Leg> legs = DaoUtil.getCurrProjectLegs(true);
+            String pointLabel;
 
             while (processedLegs.size() < legs.size()) {
                 for (Leg l : legs) {
@@ -192,7 +199,9 @@ public class MapView extends View {
                                 DaoUtil.refreshPoint(l.getFromPoint());
 
                                 pointLabel = galleryNames.get(l.getGalleryId()) + l.getFromPoint().getName();
-                                canvas.drawText(pointLabel, mapCenterMoveX + first.getX() + LABEL_DEVIATION_X, mapCenterMoveY + first.getY() + LABEL_DEVIATION_Y, polygonPaint);
+                                if (scale >= 3) {
+                                    canvas.drawText(pointLabel, mapCenterMoveX + first.getX() + LABEL_DEVIATION_X, mapCenterMoveY + first.getY() + LABEL_DEVIATION_Y, polygonPaint);
+                                }
                                 canvas.drawCircle(mapCenterMoveX + first.getX(), mapCenterMoveY + first.getY(), POINT_RADIUS, polygonPaint);
                             }
                         }
@@ -264,7 +273,9 @@ public class MapView extends View {
                                 canvas.drawCircle(mapCenterMoveX + second.getX(), mapCenterMoveY + second.getY(), MIDDLE_POINT_RADIUS, polygonPaint);
                             } else {
                                 pointLabel = galleryNames.get(l.getGalleryId()) + l.getToPoint().getName();
-                                canvas.drawText(pointLabel, mapCenterMoveX + second.getX() + LABEL_DEVIATION_X, mapCenterMoveY + second.getY() + LABEL_DEVIATION_Y, polygonPaint);
+                                if (scale >= 3) {
+                                    canvas.drawText(pointLabel, mapCenterMoveX + second.getX() + LABEL_DEVIATION_X, mapCenterMoveY + second.getY() + LABEL_DEVIATION_Y, polygonPaint);
+                                }
                                 canvas.drawCircle(mapCenterMoveX + second.getX(), mapCenterMoveY + second.getY(), POINT_RADIUS, polygonPaint);
                             }
 
@@ -277,21 +288,21 @@ public class MapView extends View {
 
                         Leg prevLeg = DaoUtil.getLegByToPointId(l.getFromPoint().getId());
 
-                        if (horizontalPlan) {
-                            // left
-                            calculateAndDrawSide(canvas, l, first, second, prevLeg, first.getLeft(), azimuthUnits, true);
-
-                            // right
-                            calculateAndDrawSide(canvas, l, first, second, prevLeg, first.getRight(), azimuthUnits, false);
-                        } else {
-                            // top
+                        if (scale >= 5) {
+                            if (horizontalPlan) {
+                                // left
+                                calculateAndDrawSide(canvas, l, first, second, prevLeg, first.getLeft(), azimuthUnits, true);
+                                // right
+                                calculateAndDrawSide(canvas, l, first, second, prevLeg, first.getRight(), azimuthUnits, false);
+                            } else {
+                                // top
 //                            calculateAndDrawSide(canvas, l, first, second, prevLeg, first.getLeft(), azimuthUnits, true);
-
-                            // down
+                                // down
 //                            calculateAndDrawSide(canvas, l, first, second, prevLeg, first.getRight(), azimuthUnits, false);
+                            }
                         }
 
-                        if (!l.isMiddle()) {
+                        if (!l.isMiddle() && scale >= 10) {
                             // vectors
                             List<Vector> vectors = DaoUtil.getLegVectors(l);
                             if (vectors != null) {
@@ -320,25 +331,36 @@ public class MapView extends View {
 
             // borders
             //top
-            canvas.drawLine(spacing, spacing, maxX - spacing, spacing, overlayPaint);
+            canvas.drawLine(SPACING, SPACING, maxX - SPACING, SPACING, overlayPaint);
             //right
-            canvas.drawLine(maxX - spacing, spacing, maxX - spacing, maxY - spacing, overlayPaint);
+            canvas.drawLine(maxX - SPACING, SPACING, maxX - SPACING, maxY - SPACING, overlayPaint);
             // bottom
-            canvas.drawLine(spacing, maxY - spacing, maxX - spacing, maxY - spacing, overlayPaint);
+            canvas.drawLine(SPACING, maxY - SPACING, maxX - SPACING, maxY - SPACING, overlayPaint);
             //left
-            canvas.drawLine(spacing, maxY - spacing, spacing, spacing, overlayPaint);
+            canvas.drawLine(SPACING, maxY - SPACING, SPACING, SPACING, overlayPaint);
 
             if (horizontalPlan) {
-                // north
+                // north arrow
                 northCenter.set(maxX - 20, 30);
                 canvas.drawLine(northCenter.x, northCenter.y, northCenter.x + 10, northCenter.y + 10, overlayPaint);
                 canvas.drawLine(northCenter.x + 10, northCenter.y + 10, northCenter.x, northCenter.y - 20, overlayPaint);
                 canvas.drawLine(northCenter.x, northCenter.y - 20, northCenter.x - 10, northCenter.y + 10, overlayPaint);
                 canvas.drawLine(northCenter.x - 10, northCenter.y + 10, northCenter.x, northCenter.y, overlayPaint);
                 canvas.drawText("N", northCenter.x + 5, northCenter.y - 10, overlayPaint);
+            } else {
+                //  up wrrow
+                northCenter.set(maxX - 15, 10);
+                canvas.drawLine(northCenter.x + 1, northCenter.y, northCenter.x + 6, northCenter.y + 10, overlayPaint);
+                canvas.drawLine(northCenter.x - 5, northCenter.y + 10, northCenter.x, northCenter.y, overlayPaint);
+                canvas.drawLine(northCenter.x, northCenter.y -1, northCenter.x, northCenter.y + 20, overlayPaint);
             }
 
-            canvas.drawText("x" + (int)scale, 20, 25, overlayPaint);
+            // scale
+            canvas.drawText("x" + scale, 25 + gridStep/2, 45, overlayPaint);
+            canvas.drawLine(30, 25, 30, 35, overlayPaint);
+            canvas.drawLine(30, 30, 30 + gridStep, 30, overlayPaint);
+            canvas.drawLine(30 + gridStep, 25, 30 + gridStep, 35, overlayPaint);
+            canvas.drawText(GRID_STEPS[gridStepIndex]  + "m" , 25 + gridStep/2, 25, overlayPaint);
 
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to draw map activity", e);
@@ -410,7 +432,6 @@ public class MapView extends View {
     private void calculateAndDrawSide(Canvas canvas, Leg l, Point2D first, Point2D second, Leg prevLeg, Float aMeasure, String azimuthUnits, boolean left) {
         double galleryWidthAngle;
         if (aMeasure != null && aMeasure > 0) {
-
 
             // first or middle by 90'
             if (prevLeg == null || l.isMiddle()) {
