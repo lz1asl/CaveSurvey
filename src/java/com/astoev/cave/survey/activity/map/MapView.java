@@ -46,13 +46,13 @@ public class MapView extends View {
     private final static int LABEL_DEVIATION_Y = 15;
     private static final int [] GRID_STEPS = new int[] {20,10, 5, 5, 2, 2, 2, 2, 1, 1, 1};
     private final int SPACING = 5;
-    private Paint polygonPaint = new Paint();
-    private Paint polygonWidthPaint = new Paint();
-    private Paint overlayPaint = new Paint();
-    private Paint youAreHerePaint = new Paint();
-    private Paint gridPaint = new Paint();
-    private Paint vectorsPaint = new Paint();
-    private Paint vectorPointPaint = new Paint();
+    private final Paint polygonPaint = new Paint();
+    private final Paint polygonWidthPaint = new Paint();
+    private final Paint overlayPaint = new Paint();
+    private final Paint youAreHerePaint = new Paint();
+    private final Paint gridPaint = new Paint();
+    private final Paint vectorsPaint = new Paint();
+    private final Paint vectorPointPaint = new Paint();
     private int scale = 10;
     private int mapCenterMoveX = 0;
     private int mapCenterMoveY = 0;
@@ -393,6 +393,9 @@ public class MapView extends View {
 
     public void setHorizontalPlan(boolean horizontalPlan) {
         this.horizontalPlan = horizontalPlan;
+        scale = 10;
+        mapCenterMoveX = 0;
+        mapCenterMoveY = 0;
         invalidate();
     }
 
