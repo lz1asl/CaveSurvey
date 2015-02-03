@@ -424,7 +424,7 @@ public class MapView extends View {
         draw(canvas);
 
         // crop borders etc
-        returnedBitmap = Bitmap.createBitmap(returnedBitmap, 30, 30, this.getWidth() - 60, this.getHeight() - 60);
+        returnedBitmap = Bitmap.createBitmap(returnedBitmap, 6, 6, this.getWidth() - 50, this.getHeight() - 70);
 
         // return
         ByteArrayOutputStream buff = new ByteArrayOutputStream();
