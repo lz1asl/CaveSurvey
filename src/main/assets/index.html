@@ -65,15 +65,6 @@
                 <ul id="menu">
                     <li><a class="fNiv" id="mainmenu" ><span data-i18n="Aa">menu</span></a><ul>
                             <li>
-                                <a data-i18n="auto">Project</a>
-                                <ul>
-                                    <li><a class="actionopen" href="#" data-i18n="Aa"  >open project</a></li>
-                                    <li><a class="actionadd" href="#" data-i18n="Aa"  >append data</a></li>
-                                    <li><a class="actionsaveas" href="#" data-i18n="Aa" >save project</a></li>
-                                    <li><a class="actionnewproject" href="#" data-i18n="Aa" >new project</a></li>
-                                </ul>
-                            </li>
-                            <li>
                                 <a data-i18n="auto">Export</a>
                                 <ul>
                                     <li><a class="actionexportDXFPlan" href="#" data-i18n="auto"  >Export plan to dxf</a></li>
@@ -82,11 +73,11 @@
                                     <li><a class="actionSaveToDXFAll" href="#" data-i18n="auto" >Export all to dxf</a></li>
                                     <li><a class="actionSaveToKML" href="#" data-i18n="auto" >Export to kml</a></li>
                                     <li><a class="actionSaveToSVGAll" href="#" data-i18n="auto" >Export to svg</a></li>
-                                    <li><a class="actionSaveToCSV" href="#" data-i18n="auto" >Export to csv</a></li>                                    
+                                    <li><a class="actionSaveToCSV" href="#" data-i18n="auto" >Export to csv</a></li>
+                                    <li><a class="actionSaveToTherion" href="#" data-i18n="auto" >Export to Therion</a></li>
                                 </ul>
                             </li>
-                            <li><a class="actionopen" href="#" data-i18n="Aa"  >import data</a></li>
-                            <li><a class="actionadd" href="#" data-i18n="Aa"  >append data</a></li>
+                            <li><a class="actionexit" href="#" data-i18n="Aa"  >Back to CaveSurvey</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -95,9 +86,6 @@
                 <div id="processing" style="text-align:center;z-index:90;display:none;width:100%;height: 20px;background-color: #000000;color:#ffffff;position:absolute;top:30px;left:0px;" data-i18n-title="processing in progress" data-i18n="Aa" >processing in progress</div>
                 <span data-i18n-title="automatic processing" data-i18n="Aa">automatic processing:</span>
                 <input id="autocompile" type="checkbox" name="autocompile" value="" checked="checked" />
-                <img class="actionnewproject" alt="" src="res/document-new.png" data-i18n-title="New project" />
-                <img class="actionopen" alt="" src="res/document-open.png"  data-i18n-title="Open project" />
-                <img class="actionsaveas" alt="" src="res/document-save.png" data-i18n-title="Save project" />
                 <img class="actioncompile" alt="" src="res/apply.png" data-i18n-title="Process data" />
                 <span data-i18n-title="Export" data-i18n="Aa">export</span>: 
                 <img class="actionSaveToKML" alt="" src="res/kml.png" data-i18n-title="Export to kml" />
@@ -107,14 +95,6 @@
                 <img class="actionSaveToTherion" alt="" src="res/therion.png" data-i18n-title="Export to Therion" />
                 <input id="filenameopened" type="text" name="filename" value="no_name" />
 
-                <!--
-                <button class="actionexportTherion" >Export to Therion</button>
-                <button class="actionexportDXFPlan" data-i18n="auto" >Export plan to dxf</button>
-                <button class="actionexportDXF" data-i18n="auto" >Export 3d to dxf</button>
-                <button class="actionSaveToDXFSection"  data-i18n="auto" >Export section to dxf</button>
-                <button class="actionSaveToKML"  data-i18n="auto" >Export to kml</button>
-                -->
-                <!--<button  onclick="$('#cells').resize();" class="" >init grid</button>-->
             </div>
         </header>
         <section id="cellscontent" class="ui-layout-west" style="overflow:auto;width:600px" >
