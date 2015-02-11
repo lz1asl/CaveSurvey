@@ -63,7 +63,6 @@
  -->                   	   
         </activity>
 
-        <!--<activity android:name=".activity.map.opengl.Map3DActivity"/>-->
         <activity android:name="com.astoev.cave.survey.activity.main.BTActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
