@@ -26,10 +26,10 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
     private Bitmap mBitmap;
     private Bitmap mOldBitmap;
     public boolean isDrawing = true;
+    public boolean isInitialized = false;
     public DrawingPath previewPath;
 
     private CommandManager commandManager;
-    private Handler previewDoneHandler;
 
     public DrawingSurface(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -38,7 +38,6 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 
         commandManager = new CommandManager();
         thread = new DrawThread(getHolder());
-        previewDoneHandler = new PreviewDoneHandler(this);
     }
 
     class DrawThread extends Thread {
@@ -60,7 +59,7 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
             while (_run) {
                 if (isDrawing) {
                     try {
-                        canvas = mSurfaceHolder.lockCanvas(null);
+                        canvas = mSurfaceHolder.lockCanvas();
 
                         if (mBitmap == null) {
                             mBitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888);
@@ -76,14 +75,25 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
                             canvas.drawBitmap(mOldBitmap, left, top, null);
                         }
 
-                        commandManager.executeAll(c, previewDoneHandler);
+                        commandManager.executeAll(c);
                         previewPath.draw(c);
 
                         canvas.drawBitmap(mBitmap, 0, 0, null);
+
                     } finally {
                         mSurfaceHolder.unlockCanvasAndPost(canvas);
                     }
+
+                    if (!isInitialized) {
+                        isInitialized = true;
+                        isDrawing = false;
+                    }
                 }
+            }
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
     }
@@ -158,34 +168,4 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
         mOldBitmap = aOldBitmap;
     }
     
-    public CommandManager getCommandManager() {
-        return commandManager;
-    }
-
-    public void setCommandManager(CommandManager commandManagerArg) {
-        commandManager = commandManagerArg;
-    }
-
-    /**
-     * Handler implementation
-     * 
-     * @author jmitrev
-     */
-    public static class PreviewDoneHandler extends Handler{
-    	
-    	private WeakReference<DrawingSurface> reference;
-    	
-    	public PreviewDoneHandler(DrawingSurface surfaceArg)
-    	{
-    		reference = new WeakReference<DrawingSurface>(surfaceArg);
-    	}
-    	
-        @Override
-        public void handleMessage(Message msg) {
-        	DrawingSurface drawingSurface = reference.get();
-        	if (drawingSurface != null){
-        		drawingSurface.isDrawing = false;	
-        	}
-        }
-    }
 }

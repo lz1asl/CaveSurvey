@@ -20,7 +20,6 @@ import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.BaseActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
-import com.astoev.cave.survey.activity.draw.brush.Brush;
 import com.astoev.cave.survey.activity.draw.brush.PenBrush;
 import com.astoev.cave.survey.activity.map.MapUtilities;
 import com.astoev.cave.survey.model.Leg;
@@ -58,7 +57,7 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
     private int currentSize = 3;
     private int currentStyle = 0;
 
-    private Brush currentBrush;
+    private PenBrush currentBrush;
     
     /** Helper flag that shows if this drawing is related with map.*/
     private boolean isMap;
