@@ -1979,13 +1979,21 @@ $(document).ready(function() {
     ops_validateform();
     setTimeout("onAppResize('init');", 1000);
 
-    var jsonFile = getQueryParameter('caveSurveyFilePath');
+    //var jsonFile = Android.getCaveSurveyFilePath();
     // alert('read ' + jsonFile);
-    jQuery.get(jsonFile, function(caveSurveyData) {
-            // alert('loaded bytes ' + caveSurveyData);
-            //caveObj.data = jQuery.parseJSON(caveSurveyData);
-            ops_import(escape(jsonFile), caveSurveyData, false);
-    });
+    //jQuery.get(jsonFile, function(caveSurveyData) {
+    //        // alert('loaded bytes ' + caveSurveyData);
+    //        //caveObj.data = jQuery.parseJSON(caveSurveyData);
+    //        ops_import(escape(jsonFile), caveSurveyData, false);
+    //});
+
+    var jsonFile = CaveSurveyJSInterface.getProjectFile();
+    //alert('got file ' + jsonFile);
+    var caveSurveyData = CaveSurveyJSInterface.getProjectData();
+    //alert('got data ' + caveSurveyData);
+
+    ops_import(jsonFile, caveSurveyData, false);
+    caveObj.data = jQuery.parseJSON(caveSurveyData);
 
 });
 

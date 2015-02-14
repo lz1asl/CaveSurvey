@@ -203,7 +203,7 @@ public class FileStorageUtil {
     }
 
     @SuppressWarnings("deprecation")
-    private static File getStorageHome() {
+    public static File getStorageHome() {
         if (!isExternalStorageWritable()) {
             Log.e(Constants.LOG_TAG_UI, "Storage unavailable");
             return null;

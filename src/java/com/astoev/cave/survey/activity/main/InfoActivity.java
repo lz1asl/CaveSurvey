@@ -27,8 +27,6 @@ import com.astoev.cave.survey.util.FileStorageUtil;
 import com.astoev.cave.survey.util.ProjectInfo;
 import com.astoev.cave.survey.util.StringUtils;
 
-import org.apache.commons.codec.net.URLCodec;
-
 import java.io.File;
 
 /**
@@ -222,7 +220,7 @@ public class InfoActivity extends MainMenuActivity {
                         // load ui
                         Log.i(Constants.LOG_TAG_SERVICE, "exported to " + exportPath);
                         Intent intent = new Intent(InfoActivity.this, WebViewActivity.class);
-                        intent.putExtra("path", new URLCodec().encode(exportPath));
+                        intent.putExtra("path", exportPath);
                         startActivity(intent);
                     }
 

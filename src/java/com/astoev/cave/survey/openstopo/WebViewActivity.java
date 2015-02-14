@@ -15,18 +15,21 @@ import android.util.Base64;
 import android.util.Log;
 import android.webkit.DownloadListener;
 import android.webkit.GeolocationPermissions;
+import android.webkit.JavascriptInterface;
 import android.webkit.URLUtil;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.Toast;
 
+import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.UIUtilities;
 
 import org.apache.commons.io.IOUtils;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -241,23 +244,21 @@ public class WebViewActivity extends Activity {
             });
 
             // ------------DownloadListener--------------------------------<
-            // -----------load index.html---------------------------------->
-            webView.loadUrl("file:///android_asset/index.html?caveSurveyFilePath=" + getIntent().getStringExtra("path"));
-            // ----------load index.html----------------------------------<
+            webView.loadUrl("file:///android_asset/index.html");
+
             // --------------webview settings------------------------------>
             webView.getSettings().setJavaScriptEnabled(true);
             webView.getSettings()
                     .setJavaScriptCanOpenWindowsAutomatically(true);
             webView.getSettings().setSupportMultipleWindows(true);
-            // webView.getSettings().setLoadWithOverviewMode(true);
+            webView.getSettings().setLoadWithOverviewMode(true);
             // TODO check if this is ok with older devices
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                 webView.getSettings().setAllowContentAccess(true);
             }
             webView.getSettings().setAllowFileAccess(true);
-            webView.getSettings().setAllowContentAccess(true);
-            webView.getSettings().setAllowFileAccessFromFileURLs(true);
-            webView.getSettings().setAllowUniversalAccessFromFileURLs(true);
+//            webView.getSettings().setAllowFileAccessFromFileURLs(true);
+//            webView.getSettings().setAllowUniversalAccessFromFileURLs(true);
             webView.getSettings().setBuiltInZoomControls(true);
 
 
@@ -270,11 +271,44 @@ public class WebViewActivity extends Activity {
             webView.getSettings().setGeolocationEnabled(true);
             webView.getSettings().setGeolocationDatabasePath(
                     "/data/data/" + this.getPackageName());
+
+            // pass json to the web view
+            webView.addJavascriptInterface(new CaveSurveyJSInterface(getIntent().getStringExtra("path")), "CaveSurveyJSInterface");
+
             // --------------webview settings------------------------------<
             Log.i("SPLX", "Start app");
         }
         if (savedInstanceState != null)
             ((WebView) findViewById(R.id.webView1)).restoreState(savedInstanceState);
+    }
+
+    // json interface
+    class CaveSurveyJSInterface {
+
+        public CaveSurveyJSInterface(String aPath) {
+            caveSurveyFilePath = aPath;
+        }
+
+        String caveSurveyFilePath;
+
+        @JavascriptInterface
+        public String getProjectFile() {
+            return caveSurveyFilePath;
+        }
+
+        @JavascriptInterface
+        public String getProjectData() {
+            InputStream in = null;
+            try {
+                in = new FileInputStream(caveSurveyFilePath);
+                return IOUtils.toString(in);
+            } catch (Exception e) {
+                Log.e(Constants.LOG_TAG_UI, "Failed to load json", e);
+            } finally {
+                IOUtils.closeQuietly(in);
+            }
+            return null;
+        }
     }
 
 }
