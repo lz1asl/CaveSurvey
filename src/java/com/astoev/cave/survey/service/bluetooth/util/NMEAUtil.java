@@ -3,11 +3,9 @@ package com.astoev.cave.survey.service.bluetooth.util;
 import android.util.Log;
 
 import com.astoev.cave.survey.Constants;
-import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.activity.map.MapUtilities;
 import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.Measure;
-import com.astoev.cave.survey.service.bluetooth.device.TruPulse360BBluetoothDevice;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +19,7 @@ public class NMEAUtil {
 
     public static List<Measure> decodeTrimbleLaserAce(byte[] aMessage) throws DataException {
 
-        if (aMessage == null || aMessage.length <=0) {
+        if (aMessage == null || aMessage.length <= 0) {
             throw new DataException("Empty message");
         }
 
@@ -113,7 +111,7 @@ public class NMEAUtil {
                 int count = 0;
                 while (!"M".equals(border) && count < 3) {
                     border = tokenizer.nextToken();
-                    count ++;
+                    count++;
                 }
             }
 
@@ -138,7 +136,7 @@ public class NMEAUtil {
 
     public static List<Measure> decodeTruPulse(byte[] aMessage) throws DataException {
 
-        if (aMessage == null || aMessage.length <=0) {
+        if (aMessage == null || aMessage.length <= 0) {
             throw new DataException("Empty message");
         }
 
@@ -148,6 +146,11 @@ public class NMEAUtil {
 
             List<Measure> measures = new ArrayList<Measure>();
             StringTokenizer tokenizer = new StringTokenizer(messageString, ",*", true);
+
+            // ignore OKs
+            if (messageString.startsWith("$OK")) {
+                return measures;
+            }
 
             // header
             if (!"$PLTIT".equals(tokenizer.nextToken())) {
@@ -160,12 +163,12 @@ public class NMEAUtil {
             }
             tokenizer.nextToken();
 
-             // distance
+            // distance
             String distanceString = tokenizer.nextToken();
             tokenizer.nextToken();
             String units = tokenizer.nextToken();
             boolean distancePresent = true;
-            if ("M".equals(units) || "F".equals(units) || "Y".equals(units)) {
+            if ("F".equals(units) || "Y".equals(units)) { //"M".equals(units) ||
                 // no distance, no need to skip distance units
                 distancePresent = false;
             } else {
