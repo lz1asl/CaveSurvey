@@ -6,6 +6,7 @@ import com.astoev.cave.survey.service.bluetooth.Measure;
 import com.astoev.cave.survey.service.bluetooth.util.NMEAUtil;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 
@@ -33,6 +34,11 @@ public class LaserAceBluetoothDevice extends AbstractBluetoothDevice {
     @Override
     public void triggerMeasures(OutputStream aStream, List<MeasureTypes> aMeasures) throws IOException {
         // should not be required
+    }
+
+    @Override
+    public void configure(InputStream anInput, OutputStream anOutput) throws IOException {
+        // TODO
     }
 
     @Override

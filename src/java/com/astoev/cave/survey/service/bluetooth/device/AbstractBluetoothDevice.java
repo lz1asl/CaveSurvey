@@ -5,6 +5,7 @@ import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.Measure;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.UUID;
@@ -21,6 +22,8 @@ public abstract class AbstractBluetoothDevice {
     public abstract String getDescription();
 
     public abstract void triggerMeasures(OutputStream aStream, List<Constants.MeasureTypes> aMeasures) throws IOException;
+
+    public abstract void configure(InputStream anInput, OutputStream anOutput) throws IOException;
 
     public abstract List<Measure> decodeMeasure(byte[] aResponseBytes, List<Constants.MeasureTypes> aMeasures) throws IOException, DataException;
 

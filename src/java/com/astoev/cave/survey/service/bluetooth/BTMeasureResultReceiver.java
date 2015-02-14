@@ -101,7 +101,7 @@ public class BTMeasureResultReceiver extends ResultReceiver {
                 return;
             }
 
-            Log.i(Constants.LOG_TAG_UI, "Register field " + aMeasure + "?");
+            Log.d(Constants.LOG_TAG_UI, "Register field " + aMeasure + "?");
             switch (aMeasure) {
                 case distance:
                 case up:
@@ -157,7 +157,7 @@ public class BTMeasureResultReceiver extends ResultReceiver {
                         @Override
                         public void onFocusChange(View v, boolean hasFocus) {
                             if (hasFocus) {
-                                Log.i(Constants.LOG_TAG_UI, "Send read command");
+                                Log.i(Constants.LOG_TAG_UI, "Send read command for empty field");
                                 resetMeasureExpectations();
                                 awaitMeasure(aMeasure);
                                 awaitMeasures(otherMeasuresWelcome);
@@ -173,7 +173,7 @@ public class BTMeasureResultReceiver extends ResultReceiver {
                     text.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Log.i(Constants.LOG_TAG_UI, "Send read command");
+                            Log.i(Constants.LOG_TAG_UI, "Send read command, tapped twice");
                             resetMeasureExpectations();
                             awaitMeasure(aMeasure);
                             awaitMeasures(otherMeasuresWelcome);
@@ -214,6 +214,6 @@ public class BTMeasureResultReceiver extends ResultReceiver {
     private void triggerBluetoothMeasure(Constants.Measures aMeasure, Constants.Measures[] otherMeasuresWelcome) {
         // register listeners & send command
         BluetoothService.sendReadMeasureCommand(this, aMeasure, otherMeasuresWelcome);
-        Log.i(Constants.LOG_TAG_UI, "Command sent for " + aMeasure);
+        Log.i(Constants.LOG_TAG_UI, "Command scheduled for " + aMeasure);
     }
 }

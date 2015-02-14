@@ -21,7 +21,6 @@ import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.service.bluetooth.device.AbstractBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.CEMILDMBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.LaserAceBluetoothDevice;
-import com.astoev.cave.survey.service.bluetooth.device.TruPulse360BBluetoothDevice;
 import com.astoev.cave.survey.util.ConfigUtil;
 
 import java.io.IOException;
@@ -157,7 +156,7 @@ public class BluetoothService {
         new Thread() {
             public void run() {
                 try {
-                    Log.i(Constants.LOG_TAG_BT, "Send read command");
+                    Log.i(Constants.LOG_TAG_BT, "Send read command for " + aMeasure);
                     if (mBusyThread != null) {
                         mBusyThread.cancel();
                     }
@@ -289,6 +288,7 @@ public class BluetoothService {
     }
 
     public static Set<AbstractBluetoothDevice> getSupportedDevices() {
+        // TODO sort
         return SUPPORTED_DEVICES;
     }
 

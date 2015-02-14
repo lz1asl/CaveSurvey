@@ -9,6 +9,7 @@ import com.astoev.cave.survey.service.bluetooth.Measure;
 import com.astoev.cave.survey.util.ByteUtils;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -45,6 +46,11 @@ public class CEMILDMBluetoothDevice extends AbstractBluetoothDevice {
     public void triggerMeasures(OutputStream aStream, List<Constants.MeasureTypes> aMeasures) throws IOException {
         // TODO map types to the message?, here single read is asked
         aStream.write(ByteUtils.hexStringToByte("D5F0E00D"));
+    }
+
+    @Override
+    public void configure(InputStream anInput, OutputStream anOutput) throws IOException {
+        // TODO
     }
 
     @Override
