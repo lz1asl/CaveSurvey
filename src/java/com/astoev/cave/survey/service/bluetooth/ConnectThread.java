@@ -16,6 +16,7 @@ import com.astoev.cave.survey.util.ByteUtils;
 
 import org.apache.commons.io.IOUtils;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -98,38 +99,55 @@ public class ConnectThread extends Thread {
 
         Log.i(Constants.LOG_TAG_BT, "Start reading ");
         int numBytes;
+        ByteArrayOutputStream message = new ByteArrayOutputStream();
+
         while (running) {
+
             try {
+
                 numBytes = mIn.read(buffer);
-                if (numBytes > 0) {
+                if (numBytes > 0 || message.size() > 0) {
 
-                    List<Measure> measures = mDeviceSpec.decodeMeasure(ByteUtils.copyBytes(buffer, numBytes), mMeasureTypes);
 
-                    if (measures != null && measures.size() > 0) {
-                        Bundle b = new Bundle();
-                        float[] valuesArray = new float[measures.size()];
-                        String[] typesArray = new String[measures.size()];
-                        String[] unitsArray = new String[measures.size()];
-                        String[] targetsArray = new String[measures.size()];
-                        int actualMeasuresCount = 0;
+                    Log.d(Constants.LOG_TAG_BT, "Got bytes " + new String(ByteUtils.copyBytes(buffer, numBytes)));
 
-                        for (int i = 0; i < measures.size(); i++) {
-                            Measure m = measures.get(i);
-                            if (!mMeasureTypes.contains(m.getMeasureType())) {
-                                continue;
+                    message.write(buffer, 0, numBytes);
+
+                    if (mIn.available() > 0 || !new String(ByteUtils.copyBytes(buffer, numBytes)).endsWith("\n")) {
+                        Log.d(Constants.LOG_TAG_BT, "has more chars " + mIn.available() + " current " + message.size());
+
+                        continue;
+                    } else {
+
+                        List<Measure> measures = mDeviceSpec.decodeMeasure(message.toByteArray(), mMeasureTypes);
+                        message = new ByteArrayOutputStream();
+
+                        if (measures != null && measures.size() > 0) {
+                            Bundle b = new Bundle();
+                            float[] valuesArray = new float[measures.size()];
+                            String[] typesArray = new String[measures.size()];
+                            String[] unitsArray = new String[measures.size()];
+                            String[] targetsArray = new String[measures.size()];
+                            int actualMeasuresCount = 0;
+
+                            for (int i = 0; i < measures.size(); i++) {
+                                Measure m = measures.get(i);
+                                if (!mMeasureTypes.contains(m.getMeasureType())) {
+                                    continue;
+                                }
+
+                                valuesArray[actualMeasuresCount] = m.getValue();
+                                typesArray[actualMeasuresCount] = m.getMeasureType().toString();
+                                unitsArray[actualMeasuresCount] = m.getMeasureUnit().toString();
+                                targetsArray[actualMeasuresCount] = mTargets.get(mMeasureTypes.indexOf(m.getMeasureType())).toString();
+                                actualMeasuresCount++;
                             }
-
-                            valuesArray[actualMeasuresCount] = m.getValue();
-                            typesArray[actualMeasuresCount] = m.getMeasureType().toString();
-                            unitsArray[actualMeasuresCount] = m.getMeasureUnit().toString();
-                            targetsArray[actualMeasuresCount] = mTargets.get(mMeasureTypes.indexOf(m.getMeasureType())).toString();
-                            actualMeasuresCount++;
+                            b.putFloatArray(Constants.MEASURE_VALUE_KEY, ByteUtils.copyBytes(valuesArray, actualMeasuresCount));
+                            b.putStringArray(Constants.MEASURE_TYPE_KEY, ByteUtils.copyBytes(typesArray, actualMeasuresCount));
+                            b.putStringArray(Constants.MEASURE_UNIT_KEY, ByteUtils.copyBytes(unitsArray, actualMeasuresCount));
+                            b.putStringArray(Constants.MEASURE_TARGET_KEY, ByteUtils.copyBytes(targetsArray, actualMeasuresCount));
+                            mReceiver.send(Activity.RESULT_OK, b);
                         }
-                        b.putFloatArray(Constants.MEASURE_VALUE_KEY, ByteUtils.copyBytes(valuesArray, actualMeasuresCount));
-                        b.putStringArray(Constants.MEASURE_TYPE_KEY, ByteUtils.copyBytes(typesArray, actualMeasuresCount));
-                        b.putStringArray(Constants.MEASURE_UNIT_KEY, ByteUtils.copyBytes(unitsArray, actualMeasuresCount));
-                        b.putStringArray(Constants.MEASURE_TARGET_KEY, ByteUtils.copyBytes(targetsArray, actualMeasuresCount));
-                        mReceiver.send(Activity.RESULT_OK, b);
                     }
                 }
 
