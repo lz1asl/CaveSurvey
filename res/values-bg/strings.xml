@@ -20,8 +20,10 @@
     <!-- new project screen -->
     <string name="new_title">Ново проучване</string>
     <string name="new_button_create">Създай</string>
-    <string name="new_project_name">Име</string>
-    <string name="new_project_name_required">Въведи име</string>
+
+    <string name="project_header">Проучване</string>
+    <string name="project_name">Име</string>
+    <string name="project_name_required">Въведи име</string>
 
     <!-- main screen -->
     <string name="main_leg">Текущ</string>
@@ -124,7 +126,9 @@
     <string name="map_edit">Редактирай</string>
 
     <!-- info screen -->
-    <string name="info_title">Проучване</string>
+    <string name="update_project">Запази</string>
+    <string name="message_project_udpated">Проектът е запазен</string>
+    <string name="statistics">Статистика</string>
     <string name="info_created">Създадено</string>
     <string name="info_galleries"># галерии</string>
     <string name="info_legs"># отсечки</string>

@@ -13,20 +13,10 @@ import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.activity.main.PointActivity;
 import com.astoev.cave.survey.dto.ProjectConfig;
 import com.astoev.cave.survey.fragment.ProjectFragment;
-import com.astoev.cave.survey.model.Gallery;
-import com.astoev.cave.survey.model.Leg;
-import com.astoev.cave.survey.model.Option;
-import com.astoev.cave.survey.model.Point;
+import com.astoev.cave.survey.manager.ProjectManager;
 import com.astoev.cave.survey.model.Project;
-import com.astoev.cave.survey.service.Options;
-import com.astoev.cave.survey.util.DaoUtil;
-import com.astoev.cave.survey.util.PointUtil;
-import com.j256.ormlite.misc.TransactionManager;
 
-import java.sql.SQLException;
-import java.util.Date;
 import java.util.List;
-import java.util.concurrent.Callable;
 
 /**
  * Created by IntelliJ IDEA.
@@ -65,7 +55,7 @@ public class NewProjectActivity extends MainMenuActivity {
             EditText projectNameField = (EditText) findViewById(R.id.new_projectname);
             final String newProjectName = projectNameField.getText().toString();
             if (newProjectName.trim().equals("")) {
-                projectNameField.setError(getString(R.string.new_project_name_required));
+                projectNameField.setError(getString(R.string.project_name_required));
                 return;
             }
 
@@ -77,43 +67,8 @@ public class NewProjectActivity extends MainMenuActivity {
                 return;
             }
 
-            final Project project = TransactionManager.callInTransaction(getWorkspace().getDBHelper().getConnectionSource(),
-                    new Callable<Project>() {
-                        public Project call() throws SQLException {
-
-                            // project
-                            Project newProject = new Project();
-                            newProject.setName(projectConfig.getName());
-                            newProject.setCreationDate(new Date());
-                            getWorkspace().getDBHelper().getProjectDao().create(newProject);
-                            getWorkspace().setActiveProject(newProject);
-
-                            // gallery
-                            Gallery firstGallery = DaoUtil.createGallery(true);
-
-                            // points
-                            Point startPoint = PointUtil.createFirstPoint();
-                            getWorkspace().getDBHelper().getPointDao().create(startPoint);
-                            Point secondPoint = PointUtil.createSecondPoint();
-                            getWorkspace().getDBHelper().getPointDao().create(secondPoint);
-
-                            // first leg
-                            Leg firstLeg = new Leg(startPoint, secondPoint, newProject, firstGallery.getId());
-                            getWorkspace().getDBHelper().getLegDao().create(firstLeg);
-                            getWorkspace().setActiveLeg(firstLeg);
-
-                            // project units
-                            Log.i(Constants.LOG_TAG_UI, projectConfig.toString());
-                            Options.createOption(Option.CODE_DISTANCE_UNITS, projectConfig.getDistanceUnits());
-                            Options.createOption(Option.CODE_DISTANCE_SENSOR, projectConfig.getDistanceSensor());
-                            Options.createOption(Option.CODE_AZIMUTH_UNITS, projectConfig.getAzimuthUnits());
-                            Options.createOption(Option.CODE_AZIMUTH_SENSOR, projectConfig.getAzimuthSensor());
-                            Options.createOption(Option.CODE_SLOPE_UNITS, projectConfig.getSlopeUnits());
-                            Options.createOption(Option.CODE_SLOPE_SENSOR, projectConfig.getSlopeSensor());
-
-                            return newProject;
-                        }
-                    });
+            // create the project
+            final Project project = ProjectManager.instance().createProject(projectConfig);
 
             if (project != null) {
                 Intent intent = new Intent(NewProjectActivity.this, PointActivity.class);

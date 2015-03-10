@@ -6,15 +6,18 @@ package com.astoev.cave.survey.util;
 import android.util.Log;
 
 import com.astoev.cave.survey.Constants;
+import com.astoev.cave.survey.dto.ProjectConfig;
 import com.astoev.cave.survey.model.Gallery;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Location;
 import com.astoev.cave.survey.model.Note;
+import com.astoev.cave.survey.model.Option;
 import com.astoev.cave.survey.model.Photo;
 import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.model.Sketch;
 import com.astoev.cave.survey.model.Vector;
+import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.service.Workspace;
 import com.astoev.cave.survey.service.ormlite.DatabaseHelper;
 import com.j256.ormlite.dao.Dao;
@@ -379,6 +382,35 @@ public class DaoUtil {
         projectInfo.setPhotos(numPhotos);
 
         return projectInfo;
+    }
+
+    /**
+     * Helper method that reads active project's configuration
+     *
+     * @return ProjectConfig
+     */
+    public static ProjectConfig getProjectConfig(){
+        ProjectConfig config = new ProjectConfig();
+
+        Project project = Workspace.getCurrentInstance().getActiveProject();
+        String name = project.getName();
+
+        String distanceUnits = Options.getOptionValue(Option.CODE_DISTANCE_UNITS);
+        String distanceSensor = Options.getOptionValue(Option.CODE_DISTANCE_SENSOR);
+        String azimuthUnits = Options.getOptionValue(Option.CODE_AZIMUTH_UNITS);
+        String azimuthSensor = Options.getOptionValue(Option.CODE_AZIMUTH_SENSOR);
+        String slopeUnits = Options.getOptionValue(Option.CODE_SLOPE_UNITS);
+        String slopeSensor = Options.getOptionValue(Option.CODE_SLOPE_SENSOR);
+
+        config.setName(name);
+        config.setDistanceUnits(distanceUnits);
+        config.setDistanceSensor(distanceSensor);
+        config.setAzimuthUnits(azimuthUnits);
+        config.setAzimuthSensor(azimuthSensor);
+        config.setSlopeUnits(slopeUnits);
+        config.setSlopeSensor(slopeSensor);
+
+        return config;
     }
 
     public static List<Vector> getLegVectors(Leg aLeg) throws SQLException {

@@ -20,8 +20,10 @@
     <!-- new project screen -->
     <string name="new_title">New Survey</string>
     <string name="new_button_create">Create</string>
-    <string name="new_project_name">Name</string>
-    <string name="new_project_name_required">Enter name</string>
+
+    <string name="project_header">Survey</string>
+    <string name="project_name">Name</string>
+    <string name="project_name_required">Enter name</string>
 
     <!-- main screen -->
     <string name="main_leg">Current</string>
@@ -124,7 +126,9 @@
     <string name="map_edit">Edit</string>
 
     <!-- info screen -->
-    <string name="info_title">Project</string>
+    <string name="update_project">Update</string>
+    <string name="message_project_udpated">Project updated</string>
+    <string name="statistics">Statistics</string>
     <string name="info_created">Created</string>
     <string name="info_galleries"># galleries</string>
     <string name="info_legs"># legs</string>

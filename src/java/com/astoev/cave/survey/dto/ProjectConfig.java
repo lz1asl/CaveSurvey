@@ -1,5 +1,7 @@
 package com.astoev.cave.survey.dto;
 
+import java.io.Serializable;
+
 /**
  * Holds the configuration while creating or updating a project with ProjectFragment.
  *
@@ -7,7 +9,7 @@ package com.astoev.cave.survey.dto;
  *
  * @author Jivko Mitrev
  */
-public class ProjectConfig {
+public class ProjectConfig implements Serializable {
 
     private String name;
 

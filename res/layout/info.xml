@@ -4,24 +4,34 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:id="@+id/scrollView">
+    
     <TableLayout android:layout_width="fill_parent"
-             android:layout_height="fill_parent"
+             android:layout_height="wrap_content"
              android:padding="10dp">
         <TableRow>
+            <FrameLayout android:id="@+id/projectInfoContainer"
+                         android:layout_width="0px"
+                         android:layout_height="match_parent"
+                         android:layout_weight="1"/>
+        </TableRow>
+
+        <TableRow>
+            <Button android:id="@+id/updateProject"
+                android:text="@string/update_project"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="10dp"
+                android:onClick="update"
+                />
+        </TableRow>
+
+        <TableRow>
             <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/info_title"
-                    android:layout_weight="1"
-                    android:gravity="left"
-                    android:textAppearance="?android:attr/textAppearanceLarge"/>
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:id="@+id/infoProjectName"
-                    android:layout_weight="1"
-                    android:textAppearance="?android:attr/textAppearanceLarge"/>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/statistics"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:textAppearance="?android:attr/textAppearanceLarge"/>
         </TableRow>
 
         <TableRow>
@@ -144,62 +154,19 @@
                     android:id="@+id/infoRawDistance"/>
         </TableRow>
 
-        <!-- measures -->
         <TableRow>
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/info_distance_in"
-                    android:layout_weight="1"
-                    android:gravity="left"/>
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/infoDistanceIn"
-                    android:gravity="center_horizontal"
-                    android:layout_weight="1"/>
-        </TableRow>
-        <TableRow >
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/info_azimuth_in"
-                    android:layout_weight="1"
-                    android:gravity="left"/>
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/infoAzimuthIn"
-                    android:gravity="center_horizontal"
-                    android:layout_weight="1"/>
-        </TableRow>
-        <LinearLayout android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:orientation="horizontal">
             <TextView android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
                       android:text="@string/info_azimuth_build_in_sensor"
-                      android:layout_marginRight="5dp"/>
+                      android:layout_weight="1"
+                      android:gravity="left"/>
             <TextView android:id="@+id/info_azimuth_sensor"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/sensor_none"
                     android:gravity="center_horizontal"
                     android:layout_weight="1"/>
-        </LinearLayout>
-        <TableRow>
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/info_slope_in"
-                    android:layout_weight="1"
-                    android:gravity="left"/>
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/infoSlopeIn"
-                    android:gravity="center_horizontal"
-                    android:layout_weight="1"/>
         </TableRow>
+
     </TableLayout>
 </ScrollView>

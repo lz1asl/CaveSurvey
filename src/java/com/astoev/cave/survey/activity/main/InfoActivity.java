@@ -6,12 +6,17 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.MainMenuActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
+import com.astoev.cave.survey.dto.ProjectConfig;
+import com.astoev.cave.survey.fragment.ProjectFragment;
+import com.astoev.cave.survey.manager.ProjectManager;
 import com.astoev.cave.survey.model.Option;
 import com.astoev.cave.survey.openstopo.WebViewActivity;
 import com.astoev.cave.survey.service.Options;
@@ -48,11 +53,16 @@ public class InfoActivity extends MainMenuActivity {
         setContentView(R.layout.info);
 
         try {
+            if (findViewById(R.id.projectInfoContainer) != null){
+                if (savedInstanceState == null){
+                    ProjectConfig projectConfig = DaoUtil.getProjectConfig();
+                    ProjectFragment projectFragment = ProjectFragment.newInstance(projectConfig);
+
+                    getSupportFragmentManager().beginTransaction().add(R.id.projectInfoContainer, projectFragment).commit();
+                }
+            }
 
             ProjectInfo projectInfo = DaoUtil.getProjectInfo();
-            // prepare labels
-            TextView projectName = (TextView) findViewById(R.id.infoProjectName);
-            projectName.setText(projectInfo.getName());
 
             TextView projectCreated = (TextView) findViewById(R.id.infoProjectCreated);
             projectCreated.setText(projectInfo.getCreationDate());
@@ -79,16 +89,6 @@ public class InfoActivity extends MainMenuActivity {
 
             TextView projectNumPhotos = (TextView) findViewById(R.id.infoNumPhotos);
             projectNumPhotos.setText(StringUtils.intToLabel(projectInfo.getPhotos()));
-
-            CharSequence distanceUnitsLabel = StringUtils.extractDynamicResource(
-                    getResources(), StringUtils.RESOURCE_PREFIX_UNITS + Options.getOptionValue(Option.CODE_DISTANCE_UNITS));
-            ((TextView) findViewById(R.id.infoDistanceIn)).setText(distanceUnitsLabel);
-            CharSequence azimuthUnitsLabel = StringUtils.extractDynamicResource(
-                    getResources(), StringUtils.RESOURCE_PREFIX_UNITS + Options.getOptionValue(Option.CODE_AZIMUTH_UNITS));
-            ((TextView) findViewById(R.id.infoAzimuthIn)).setText(azimuthUnitsLabel);
-            CharSequence slopeUnitsLabel = StringUtils.extractDynamicResource(
-                    getResources(), StringUtils.RESOURCE_PREFIX_UNITS + Options.getOptionValue(Option.CODE_SLOPE_UNITS));
-            ((TextView) findViewById(R.id.infoSlopeIn)).setText(slopeUnitsLabel);
 
             // set the value for azimuth build in processor
             if (Option.CODE_SENSOR_INTERNAL.equals(Options.getOption(Option.CODE_AZIMUTH_SENSOR).getValue())) {
@@ -178,7 +178,6 @@ public class InfoActivity extends MainMenuActivity {
             Log.i(Constants.LOG_TAG_SERVICE, "ACTION_VIEW with */* resolved");
             intent.setDataAndType(contentUri, MIME_TYPE_ANY);
             startActivity(Intent.createChooser(intent, chooserTitle));
-            return;
 
         } else {
             Log.e(Constants.LOG_TAG_SERVICE, "No project folder for project:" + projectName);
@@ -207,7 +206,6 @@ public class InfoActivity extends MainMenuActivity {
                 return true;
             }
             case R.id.info_action_openstopo: {
-
 
                 try {
                     // export
@@ -240,5 +238,35 @@ public class InfoActivity extends MainMenuActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    /**
+     * Button action method to update a project configuration
+     *
+     * @param viewArg - view
+     */
+    public void update(View viewArg){
+        Log.v(Constants.LOG_TAG_UI, "Updating project");
+
+        ProjectFragment projectFragment = (ProjectFragment)getSupportFragmentManager().findFragmentById(R.id.projectInfoContainer);
+        final ProjectConfig projectConfig = projectFragment.getProjectConfig();
+
+        EditText projectNameField = (EditText) findViewById(R.id.new_projectname);
+        final String newProjectName = projectNameField.getText().toString();
+        if (newProjectName.trim().equals("")) {
+            projectNameField.setError(getString(R.string.project_name_required));
+            return;
+        }
+
+        try {
+            ProjectManager.instance().updateProject(projectConfig);
+
+            UIUtilities.showNotification(R.string.message_project_udpated);
+
+        } catch (Exception e) {
+            Log.e(Constants.LOG_TAG_UI, "Failed to update project", e);
+            UIUtilities.showNotification(R.string.error);
+        }
+
     }
 }

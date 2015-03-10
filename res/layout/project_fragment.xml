@@ -6,7 +6,7 @@
 
     <!-- name -->
     <TextView android:id="@+id/new_project_title"
-        android:text="@string/new_title"
+        android:text="@string/project_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="left"
@@ -18,7 +18,7 @@
         android:lines="1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/new_project_name"
+        android:hint="@string/project_name"
         android:layout_below="@id/new_project_title"/>
 
     <!-- units & measure -->
