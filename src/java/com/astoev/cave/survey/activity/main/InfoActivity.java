@@ -261,6 +261,7 @@ public class InfoActivity extends MainMenuActivity {
         try {
             ProjectManager.instance().updateProject(projectConfig);
 
+            finish();
             UIUtilities.showNotification(R.string.message_project_udpated);
 
         } catch (Exception e) {
