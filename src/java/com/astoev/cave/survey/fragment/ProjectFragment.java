@@ -81,6 +81,7 @@ public class ProjectFragment extends Fragment {
             // there is a project config. Working in edit mode
             EditText projectNameField = (EditText) view.findViewById(R.id.new_projectname);
             projectNameField.setText(config.getName());
+            projectNameField.setEnabled(false);
 
             prepareSpinner(view, R.id.options_units_distance,  R.array.distance_units, DISTANCE_UNIT, config.getDistanceUnits(), false);
             prepareSpinner(view, R.id.options_distance_type, R.array.distance_read_type, DISTANCE_SENSOR, config.getDistanceSensor());

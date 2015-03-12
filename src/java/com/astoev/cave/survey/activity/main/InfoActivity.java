@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.astoev.cave.survey.Constants;
@@ -251,12 +250,13 @@ public class InfoActivity extends MainMenuActivity {
         ProjectFragment projectFragment = (ProjectFragment)getSupportFragmentManager().findFragmentById(R.id.projectInfoContainer);
         final ProjectConfig projectConfig = projectFragment.getProjectConfig();
 
-        EditText projectNameField = (EditText) findViewById(R.id.new_projectname);
-        final String newProjectName = projectNameField.getText().toString();
-        if (newProjectName.trim().equals("")) {
-            projectNameField.setError(getString(R.string.project_name_required));
-            return;
-        }
+        // project name is not editable for the moment, so not checking for empty string
+//        EditText projectNameField = (EditText) findViewById(R.id.new_projectname);
+//        final String newProjectName = projectNameField.getText().toString();
+//        if (newProjectName.trim().equals("")) {
+//            projectNameField.setError(getString(R.string.project_name_required));
+//            return;
+//        }
 
         try {
             ProjectManager.instance().updateProject(projectConfig);

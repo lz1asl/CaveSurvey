@@ -98,15 +98,16 @@ public class ProjectManager {
                     public Project call() throws SQLException {
 
                         Project project = Workspace.getCurrentInstance().getActiveProject();
-                        String newName = projectConfigArg.getName();
-
-                        // update project name if needed
-                        if (!project.getName().equals(projectConfigArg.getName())){
-                            project.setName(newName);
-                            Workspace.getCurrentInstance().getDBHelper().getProjectDao().update(project);
-
-                            Log.i(Constants.LOG_TAG_DB, "Project name updated to: " + newName);
-                        }
+                        // not updating the name of the project for the moment
+//                        String newName = projectConfigArg.getName();
+//
+//                        // update project name if needed
+//                        if (!project.getName().equals(projectConfigArg.getName())){
+//                            project.setName(newName);
+//                            Workspace.getCurrentInstance().getDBHelper().getProjectDao().update(project);
+//
+//                            Log.i(Constants.LOG_TAG_DB, "Project name updated to: " + newName);
+//                        }
 
                         Options.updateOption(Option.CODE_DISTANCE_SENSOR, projectConfigArg.getDistanceSensor());
                         Options.updateOption(Option.CODE_AZIMUTH_SENSOR, projectConfigArg.getAzimuthSensor());
