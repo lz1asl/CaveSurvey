@@ -2,12 +2,18 @@ package com.astoev.cave.survey.activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.astoev.cave.survey.R;
+import com.astoev.cave.survey.activity.main.BTActivity;
 import com.astoev.cave.survey.activity.map.MapUtilities;
 import com.astoev.cave.survey.util.ConfigUtil;
 import com.astoev.cave.survey.util.StringUtils;
@@ -118,5 +124,49 @@ public class UIUtilities {
         return valid;
     }
 
+    // see http://developer.android.com/guide/topics/ui/notifiers/notifications.html
+    private static void showStatusBarMessage(Context aContext, int aIcon, Class anActivityClass, String aMessage) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(aContext);
+        builder.setSmallIcon(aIcon);
+        builder.setContentTitle(aContext.getString(R.string.app_name));
+        builder.setContentText(aMessage);
+
+
+        // Creates an explicit intent for an Activity in your app
+        Intent resultIntent = new Intent(aContext, anActivityClass);
+
+        // The stack builder object will contain an artificial back stack for the
+        // started Activity.
+        // This ensures that navigating backward from the Activity leads out of
+        // your application to the Home screen.
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(aContext);
+        // Adds the back stack for the Intent (but not the Intent itself)
+        stackBuilder.addParentStack(anActivityClass);
+        // Adds the Intent that starts the Activity to the top of the stack
+        stackBuilder.addNextIntent(resultIntent);
+        PendingIntent resultPendingIntent =
+                stackBuilder.getPendingIntent(
+                        0,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
+        builder.setContentIntent(resultPendingIntent);
+
+        builder.setAutoCancel(true);
+
+        NotificationManager mNotificationManager =
+                (NotificationManager) aContext.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        mNotificationManager.cancelAll();
+        mNotificationManager.notify(1, builder.build());
+    }
+
+
+    public static void showDeviceConnectedNotification(Context aContext, String aDevice) {
+        showStatusBarMessage(aContext, R.drawable.logo, BTActivity.class, aContext.getString(R.string.bt_device_connected, aDevice));
+    }
+
+    public static void showDeviceDisconnectedNotification(Context aContext, String aDevice) {
+        showStatusBarMessage(aContext, R.drawable.logo, BTActivity.class, aContext.getString(R.string.bt_device_lost, aDevice));
+    }
 
 }

@@ -251,6 +251,8 @@
     <string name="bt_not_on">Bluetooth не е включен</string>
     <string name="bt_not_selected">Не е избрано устройство</string>
     <string name="bt_supported_devices">Поддържа: %1$s</string>
+    <string name="bt_device_connected">Свързан с: %1$s</string>
+    <string name="bt_device_lost">Загубена връзка: %1$s</string>
 
     <string name="action_saved">Запазено</string>
     <string name="action_deleted">Изтрито</string>
