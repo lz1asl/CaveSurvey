@@ -22,7 +22,7 @@ public class TruPulse360BBluetoothDevice extends AbstractBluetoothDevice {
 
     @Override
     public boolean isNameSupported(String aName) {
-        return aName != null && aName.startsWith("TP360B");
+        return deviceNameStartsWith(aName, "TP360B");
     }
 
     @Override
@@ -94,5 +94,11 @@ public class TruPulse360BBluetoothDevice extends AbstractBluetoothDevice {
     public boolean isMeasureSupported(Constants.MeasureTypes aMeasureType) {
         // has all distance, clino and azimuth
         return true;
+    }
+
+    @Override
+    public boolean isFullPacketAvailable(byte[] aBytesBuffer) {
+        // TODO
+        return false;
     }
 }

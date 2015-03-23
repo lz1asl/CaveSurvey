@@ -18,7 +18,7 @@ public class LaserAceBluetoothDevice extends AbstractBluetoothDevice {
 
     @Override
     public boolean isNameSupported(String aName) {
-        return aName != null && aName.startsWith("LA SURVEY,");
+        return deviceNameStartsWith(aName, "LA SURVEY,");
     }
 
     @Override
@@ -56,5 +56,11 @@ public class LaserAceBluetoothDevice extends AbstractBluetoothDevice {
     public boolean isMeasureSupported(MeasureTypes aMeasureType) {
         // all current distance, angle and inclination are returned on each measure
         return true;
+    }
+
+    @Override
+    public boolean isFullPacketAvailable(byte[] aBytesBuffer) {
+        // TODO
+        return false;
     }
 }

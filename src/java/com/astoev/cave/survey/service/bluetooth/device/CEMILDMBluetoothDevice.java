@@ -12,9 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * CEM iLDM Laser distance meters
@@ -22,14 +20,10 @@ import java.util.Set;
  */
 public class CEMILDMBluetoothDevice extends AbstractBluetoothDevice {
 
-    private static final Set<String> SUPPORTED_DEVICES = new HashSet<String>();
-    static {
-        SUPPORTED_DEVICES.add("iLDM-150");
-    }
 
     @Override
     public boolean isNameSupported(String aName) {
-        return SUPPORTED_DEVICES.contains(aName);
+        return deviceNameEquals(aName, "iLDM-150");
     }
 
     @Override
@@ -120,6 +114,12 @@ public class CEMILDMBluetoothDevice extends AbstractBluetoothDevice {
     @Override
     public boolean isMeasureSupported(Constants.MeasureTypes aMeasureType) {
         return MeasureTypes.distance.equals(aMeasureType) || MeasureTypes.slope.equals(aMeasureType);
+    }
+
+    @Override
+    public boolean isFullPacketAvailable(byte[] aBytesBuffer) {
+        // TODO
+        return false;
     }
 
     private boolean isMeasureRequested(List<Constants.MeasureTypes> aMeasures, Constants.MeasureTypes aType) {
