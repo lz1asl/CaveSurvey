@@ -41,11 +41,6 @@ public class DistoXBluetoothDevice extends AbstractBluetoothDevice {
     }
 
     @Override
-    public boolean isPassiveBTConnection() {
-        return false;
-    }
-
-    @Override
     public boolean isMeasureSupported(Constants.MeasureTypes aMeasureType) {
         return false;
     }

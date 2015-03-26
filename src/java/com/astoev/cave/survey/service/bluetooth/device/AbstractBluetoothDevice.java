@@ -64,12 +64,6 @@ public abstract class AbstractBluetoothDevice {
      */
     public abstract List<Measure> decodeMeasure(byte[] aResponseBytes, List<Constants.MeasureTypes> aMeasures) throws IOException, DataException;
 
-    /**
-     * Does the device need command to send measures or they are streamed automatically?
-     *
-     * @return
-     */
-    public abstract boolean isPassiveBTConnection();
 
     /**
      * Hardware specific information what measures can be performed, e.g. distance only or distance + clino or distance + clino + angle.

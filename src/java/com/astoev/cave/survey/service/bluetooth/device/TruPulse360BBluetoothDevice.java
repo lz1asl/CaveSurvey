@@ -81,11 +81,6 @@ public class TruPulse360BBluetoothDevice extends AbstractBluetoothDevice {
     }
 
     @Override
-    public boolean isPassiveBTConnection() {
-        return false;
-    }
-
-    @Override
     public boolean isMeasureSupported(Constants.MeasureTypes aMeasureType) {
         // has all distance, clino and azimuth
         return true;

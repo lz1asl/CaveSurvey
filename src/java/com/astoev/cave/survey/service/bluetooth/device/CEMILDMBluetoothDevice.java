@@ -102,11 +102,6 @@ public class CEMILDMBluetoothDevice extends AbstractBluetoothDevice {
     }
 
     @Override
-    public boolean isPassiveBTConnection() {
-        return false;
-    }
-
-    @Override
     public boolean isMeasureSupported(Constants.MeasureTypes aMeasureType) {
         return MeasureTypes.distance.equals(aMeasureType) || MeasureTypes.slope.equals(aMeasureType);
     }

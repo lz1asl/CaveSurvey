@@ -43,11 +43,6 @@ public class LaserAceBluetoothDevice extends AbstractBluetoothDevice {
     }
 
     @Override
-    public boolean isPassiveBTConnection() {
-        return true;
-    }
-
-    @Override
     public boolean isMeasureSupported(MeasureTypes aMeasureType) {
         // all current distance, angle and inclination are returned on each measure
         return true;
