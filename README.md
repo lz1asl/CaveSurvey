@@ -49,7 +49,7 @@ Notes
 One of the possible target configurations is to read the distance and inclination from Bluetooth and use the build-in compass from the device. In this case both waterproof Android 4.x + iLDM-150 are about $250.
 
   Test devices:
-  - Testing with both Android 2.1(cheap and small) and 4.3(better hardware). Have not decided for the right device yet but will try with Motorola Defy +. The smartphone need to have water protection, compass, SPP Bluetooth profile.
+  - Testing with both Android 2.1(cheap and small), and 4.3 up to 5.0(better hardware). Have not decided for the right device yet but will try with Motorola Defy+. The smartphone need to have water protection, compass, SPP Bluetooth profile.
   - iLDM-150 laser distance meter (IP54) with build in clinometer and Bluetooth transfer from CEM
   - Trimble LaserAce 1000 has very accurate measures (distance/clinometer/azimuth) and is recommended for any places where cave environment will not be of direct impact for the device. Most expensive hardware used here.
   - Leica and Bosh have awesome distance meters with Bluetooth but are much more expensive.
@@ -82,7 +82,7 @@ Developed by members of caving club [Paldin](http://sk-paldin.eu/) Plovdiv, Bulg
 
 ![Picture](res/drawable-mdpi/paldin.jpg)
 
-Use the official version at [Google Play](https://play.google.com/store/apps/details?id=com.astoev.cave.survey) or the [latest build](https://razhodki.ci.cloudbees.com/job/CaveSurvey/lastSuccessfulBuild/artifact/build/apk/CaveSurvey-defaultFlavor-release.apk).
+Use the official version at [Google Play](https://play.google.com/store/apps/details?id=com.astoev.cave.survey) or the [latest build](https://razhodki.ci.cloudbees.com/job/CaveSurvey/lastSuccessfulBuild/artifact/build/apk/CaveSurvey-defaultFlavor-release.apk) for devces without Google Play (tested to work on BlackBerry Q5).
 
 ![CloudBees](http://www.cloudbees.com/sites/default/files/Button-Built-on-CB-1.png)
 
