@@ -17,6 +17,7 @@ public class DistoXBluetoothDevice extends AbstractBluetoothDevice {
 
     @Override
     public boolean isNameSupported(String aName) {
+        // TODO filtering logic
         return false;
     }
 
@@ -27,26 +28,34 @@ public class DistoXBluetoothDevice extends AbstractBluetoothDevice {
 
     @Override
     public void triggerMeasures(OutputStream aStream, List<Constants.MeasureTypes> aMeasures) throws IOException {
-        // TODO
+        // not needed, measures sent automatically
     }
 
     @Override
     public void configure(InputStream anInput, OutputStream anOutput) throws IOException {
-
+        // not supported by DistoX
     }
 
     @Override
     public List<Measure> decodeMeasure(byte[] aResponseBytes, List<Constants.MeasureTypes> aMeasures) throws IOException, DataException {
+        // TODO implement packet parsing logic
         return null;
     }
 
     @Override
     public boolean isMeasureSupported(Constants.MeasureTypes aMeasureType) {
-        return false;
+        // all measures available on each shot
+        return true;
     }
 
     @Override
     public boolean isFullPacketAvailable(byte[] aBytesBuffer) {
+        // TODO define logic
         return false;
+    }
+
+    @Override
+    public void ack(OutputStream aStream) {
+        // TODO acknowledge packet received
     }
 }
