@@ -21,11 +21,6 @@ public class DistoXBluetoothDevice extends AbstractBluetoothDevice {
     }
 
     @Override
-    protected String getSPPUUIDString() {
-        return null;
-    }
-
-    @Override
     public String getDescription() {
         return "DistoX";
     }

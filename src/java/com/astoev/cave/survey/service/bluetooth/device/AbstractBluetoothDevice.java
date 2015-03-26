@@ -24,7 +24,9 @@ public abstract class AbstractBluetoothDevice {
      */
     public abstract boolean isNameSupported(String aName);
 
-    protected abstract String getSPPUUIDString();
+    protected String getSPPUUIDString() {
+        return "00001101-0000-1000-8000-00805F9B34FB";
+    }
 
     /**
      * Used to display information about the device.

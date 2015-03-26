@@ -26,11 +26,6 @@ public class TruPulse360BBluetoothDevice extends AbstractBluetoothDevice {
     }
 
     @Override
-    protected String getSPPUUIDString() {
-        return "00001101-0000-1000-8000-00805F9B34FB";
-    }
-
-    @Override
     public String getDescription() {
         return "Laser Technology Inc TruPulse 360B";
     }
