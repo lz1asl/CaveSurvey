@@ -4,6 +4,7 @@ import com.astoev.cave.survey.Constants.MeasureTypes;
 import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.Measure;
 import com.astoev.cave.survey.service.bluetooth.util.NMEAUtil;
+import com.astoev.cave.survey.util.ByteUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -60,7 +61,7 @@ public class LaserAceBluetoothDevice extends AbstractBluetoothDevice {
 
     @Override
     public boolean isFullPacketAvailable(byte[] aBytesBuffer) {
-        // TODO
-        return false;
+        return NMEAUtil.isFullSizeMessage(aBytesBuffer);
     }
+
 }

@@ -89,6 +89,24 @@ public abstract class AbstractBluetoothDevice {
      */
     public abstract boolean isFullPacketAvailable(byte[] aBytesBuffer);
 
+    /**
+     * Used to acknowledge message received.
+     * Need to be overriden only in case actual ack performed.
+     * @param aStream
+     */
+    public void ack(OutputStream aStream) {
+        // no default implementation
+    }
+
+    /**
+     * May be used from implementations to keep the remote device on.
+     * @param aStreamOut
+     * @param aStreamIn
+     */
+    public void keepAlive(OutputStream aStreamOut, InputStream aStreamIn){
+
+    }
+
 
     protected boolean deviceNameStartsWith(String aDeviceName, String aStart) {
         return StringUtils.isNotEmpty(aDeviceName) && aDeviceName.startsWith(aStart);

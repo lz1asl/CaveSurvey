@@ -118,8 +118,8 @@ public class CEMILDMBluetoothDevice extends AbstractBluetoothDevice {
 
     @Override
     public boolean isFullPacketAvailable(byte[] aBytesBuffer) {
-        // TODO
-        return false;
+        // 25 bytes messages for CEM iLDM
+        return aBytesBuffer.length >= 25;
     }
 
     private boolean isMeasureRequested(List<Constants.MeasureTypes> aMeasures, Constants.MeasureTypes aType) {
@@ -137,4 +137,19 @@ public class CEMILDMBluetoothDevice extends AbstractBluetoothDevice {
         return measures;
     }
 
+
+    @Override
+    public void keepAlive(OutputStream aStreamOut, InputStream aStreamIn) {
+        /**
+         * AH!  if you send:            (1 Times / Minute)
+         byte[] bout = new byte[25];
+         bout[0]  = (byte) 213;
+         bout[1]  = (byte) 239;        // or other
+         bout[2]  = (byte) 225;
+         bout[3]  = (byte) 130;
+         ...
+
+         the Device stays on
+         */
+    }
 }

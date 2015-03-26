@@ -98,7 +98,6 @@ public class TruPulse360BBluetoothDevice extends AbstractBluetoothDevice {
 
     @Override
     public boolean isFullPacketAvailable(byte[] aBytesBuffer) {
-        // TODO
-        return false;
+        return NMEAUtil.isFullSizeMessage(aBytesBuffer);
     }
 }

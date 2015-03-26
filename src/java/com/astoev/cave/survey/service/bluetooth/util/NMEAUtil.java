@@ -17,6 +17,8 @@ import java.util.StringTokenizer;
  */
 public class NMEAUtil {
 
+    public static final String NEW_LINE = "\n";
+
     public static List<Measure> decodeTrimbleLaserAce(byte[] aMessage) throws DataException {
 
         if (aMessage == null || aMessage.length <= 0) {
@@ -281,5 +283,11 @@ public class NMEAUtil {
             hex = "0" + hex;
 
         return hex.toUpperCase();
+    }
+
+
+    public static boolean isFullSizeMessage(byte[] aBytesBuffer) {
+        // new line delimited NMEA messages
+        return new String(aBytesBuffer).endsWith(NEW_LINE);
     }
 }
