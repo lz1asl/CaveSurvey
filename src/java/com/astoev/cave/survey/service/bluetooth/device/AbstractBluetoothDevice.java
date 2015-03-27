@@ -14,7 +14,7 @@ import java.util.UUID;
 /**
  * Created by astoev on 2/21/14.
  */
-public abstract class AbstractBluetoothDevice {
+public abstract class AbstractBluetoothDevice implements Comparable {
 
     /**
      * Used to filter paired devices by name.
@@ -110,5 +110,10 @@ public abstract class AbstractBluetoothDevice {
 
     protected boolean deviceNameEquals(String aDeviceName, String aStart) {
         return StringUtils.isNotEmpty(aDeviceName) && aDeviceName.equals(aStart);
+    }
+
+    @Override
+    public int compareTo(Object another) {
+        return getDescription().compareTo(((AbstractBluetoothDevice) another).getDescription());
     }
 }

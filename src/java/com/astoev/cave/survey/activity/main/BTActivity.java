@@ -172,7 +172,7 @@ public class BTActivity extends MainMenuActivity {
         Log.i(Constants.LOG_TAG_UI, "Try to use " + device.first + ":" + device.second);
 
         // store & propagate
-        BluetoothService.selectDevice(device.second);
+//        BluetoothService.selectDevice(device.second); // TODO
         ConfigUtil.setStringProperty(ConfigUtil.PROP_CURR_BT_DEVICE_NAME, device.first);
         ConfigUtil.setStringProperty(ConfigUtil.PROP_CURR_BT_DEVICE_ADDRESS, device.second);
 

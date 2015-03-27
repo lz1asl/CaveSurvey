@@ -18,13 +18,16 @@ import android.widget.TextView;
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.UIUtilities;
+import com.astoev.cave.survey.activity.main.BTActivity;
 import com.astoev.cave.survey.service.bluetooth.device.AbstractBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.CEMILDMBluetoothDevice;
+import com.astoev.cave.survey.service.bluetooth.device.DistoXBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.LaserAceBluetoothDevice;
 import com.astoev.cave.survey.util.ConfigUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -45,87 +48,23 @@ public class BluetoothService {
         SUPPORTED_DEVICES.add(new CEMILDMBluetoothDevice());
         SUPPORTED_DEVICES.add(new LaserAceBluetoothDevice());
 //        SUPPORTED_DEVICES.add(new TruPulse360BBluetoothDevice());
+//        SUPPORTED_DEVICES.add(new DistoXBluetoothDevice());
     }
 
-    private static ConnectThread mBusyThread = null;
-    private static BluetoothDevice mCurrDevice = null;
-    private static AbstractBluetoothDevice mCurrDeviceSpec = null;
-    private static boolean mPaired = false;
+    private static ConnectThread mCommunicationThread = null;
+    private static BluetoothDevice mSelectedDevice = null;
+    private static AbstractBluetoothDevice mSelectedDeviceSpec = null;
     private static Activity mCurrContext = null;
-    private static List<BroadcastReceiver> mRegisteredReceivers = new ArrayList<BroadcastReceiver>();
 
-    private static BroadcastReceiver mConnectedReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            try {
-                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                if (!isSupported(device)) {
-                    // ignore other devices
-                    Log.i(Constants.LOG_TAG_BT, "Bonded unsupported device");
-                    return;
-                }
 
-                UIUtilities.showNotification(R.string.bt_paired);
-                Log.i(Constants.LOG_TAG_BT, "Paired with " + device.getName());
-                mPaired = true;
-                mCurrDevice = device;
-                mCurrDeviceSpec = getSupportedDevice(device.getName());
 
-                TextView status = (TextView) mCurrContext.findViewById(R.id.bt_status);
-                status.setText(BluetoothService.getCurrDeviceStatusLabel(mCurrContext));
-
-            } catch (Exception e) {
-                Log.e(Constants.LOG_TAG_BT, "Failed during pair", e);
-                UIUtilities.showNotification(R.string.error);
-            }
-        }
-    };
-    private static BroadcastReceiver mDisconnectedReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            try {
-                if (mCurrDevice == null) {
-                    // ignore event if don't expect to be paired with device
-                    Log.i(Constants.LOG_TAG_BT, "Ignore disconnect, no curr device");
-                    return;
-                }
-
-                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                if (!isSupported(device)) {
-                    // ignore other devices
-                    Log.i(Constants.LOG_TAG_BT, "Ignore disconnect, device not supported");
-                    return;
-                }
-
-                if (mCurrDevice.getName().equals(device.getName()) && mCurrDevice.getAddress().equals(device.getAddress())) {
-                    mCurrDevice = null;
-                    mCurrDeviceSpec = null;
-                    mPaired = false;
-                    UIUtilities.showNotification(R.string.bt_not_paired);
-                    Log.i(Constants.LOG_TAG_BT, "Disconnected");
-
-                    stop();
-
-                    TextView status = (TextView) mCurrContext.findViewById(R.id.bt_status);
-                    status.setText(BluetoothService.getCurrDeviceStatusLabel(mCurrContext));
-                } else {
-                    // ignore events for other non paired devices
-                    Log.i(Constants.LOG_TAG_BT, "Ignore disconnect, not curr device");
-                }
-
-            } catch (Exception e) {
-                Log.e(Constants.LOG_TAG_BT, "Failed during disconnect", e);
-                UIUtilities.showNotification(R.string.error);
-            }
-        }
-    };
 
     public static boolean isBluetoothSupported() {
         return BluetoothAdapter.getDefaultAdapter() != null;
     }
 
     public static boolean isDeviceSelected() {
-        return mCurrDevice != null;
+        return mSelectedDevice != null;
     }
 
     public static boolean askBluetoothOn(Activity aParentActivity) {
@@ -135,143 +74,81 @@ public class BluetoothService {
         return false;
     }
 
-    public static void registerListeners(final Activity aContext) {
 
-        mCurrContext = aContext;
 
-        if (!mRegisteredReceivers.contains(mConnectedReceiver)) {
-            mRegisteredReceivers.add(mConnectedReceiver);
-            mCurrContext.registerReceiver(mConnectedReceiver,
-                    new IntentFilter(BluetoothDevice.ACTION_ACL_CONNECTED));
-        }
+    public static void sendReadMeasureCommand(final ResultReceiver receiver, final Constants.Measures aMeasure, final Constants.Measures[] aMeasuresWelcome) {
 
-        if (!mRegisteredReceivers.contains(mDisconnectedReceiver)) {
-            mRegisteredReceivers.add(mDisconnectedReceiver);
-            mCurrContext.registerReceiver(mDisconnectedReceiver,
-                    new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED));
+        if (mCommunicationThread != null) {
+
+            Log.i(Constants.LOG_TAG_BT, "Send read command for " + aMeasure);
+
+            List<Constants.MeasureTypes> measureTypes = new ArrayList<Constants.MeasureTypes>();
+            List<Constants.Measures> measureTargets = new ArrayList<Constants.Measures>();
+
+            measureTypes.add(getMeasureTypeFromTarget(aMeasure));
+            measureTargets.add(aMeasure);
+
+            if (aMeasuresWelcome != null) {
+                for (Constants.Measures m : aMeasuresWelcome) {
+                    measureTypes.add(getMeasureTypeFromTarget(m));
+                    measureTargets.add(m);
+                }
+            }
+
+            mCommunicationThread.awaitMeasures(measureTypes, measureTargets, receiver);
+        } else {
+            Log.d(Constants.LOG_TAG_BT, "Drop BT command : inactive communication : " + aMeasure);
         }
     }
 
-    public static void sendReadMeasureCommand(final ResultReceiver receiver, final Constants.Measures aMeasure, final Constants.Measures[] aMeasuresWelcome) {
-        new Thread() {
-            public void run() {
-                try {
-                    Log.i(Constants.LOG_TAG_BT, "Send read command for " + aMeasure);
-                    if (mBusyThread != null) {
-                        mBusyThread.cancel();
-                    }
-                    mBusyThread = new ConnectThread(mCurrDevice, mCurrDeviceSpec);
-                    mBusyThread.setReceiver(receiver);
+    public static Constants.MeasureTypes getMeasureTypeFromTarget(Constants.Measures aMeasure) {
+        switch (aMeasure) {
+            case distance:
+            case up:
+            case down:
+            case left:
+            case right:
+                return Constants.MeasureTypes.distance;
 
-                    List<Constants.MeasureTypes> measureTypes = new ArrayList<Constants.MeasureTypes>();
-                    List<Constants.Measures> measureTargets = new ArrayList<Constants.Measures>();
+            case angle:
+                return Constants.MeasureTypes.angle;
 
-                    measureTypes.add(getType(aMeasure));
-                    measureTargets.add(aMeasure);
+            case slope:
+                return Constants.MeasureTypes.slope;
 
-                    if (aMeasuresWelcome != null) {
-                        for (Constants.Measures m : aMeasuresWelcome) {
-                            measureTypes.add(getType(m));
-                            measureTargets.add(m);
-                        }
-                    }
-
-                    mBusyThread.setMeasureTypes(measureTypes);
-                    mBusyThread.setTargets(measureTargets);
-                    mBusyThread.start();
-                } catch (Exception e) {
-                    Log.e(Constants.LOG_TAG_BT, "Failed", e);
-                    UIUtilities.showNotification(R.string.error);
-                    if (mBusyThread != null) {
-                        mBusyThread.cancel();
-                    }
-                }
-            }
-
-            private Constants.MeasureTypes getType(Constants.Measures aMeasure) {
-                switch (aMeasure) {
-                    case distance:
-                    case up:
-                    case down:
-                    case left:
-                    case right:
-                        return Constants.MeasureTypes.distance;
-
-                    case angle:
-                        return Constants.MeasureTypes.angle;
-
-                    case slope:
-                        return Constants.MeasureTypes.slope;
-
-                    default:
-                        return null;
-                }
-            }
-        }.start();
+            default:
+                return null;
+        }
     }
 
     public static void stop() {
-        if (mBusyThread != null) {
-            mBusyThread.cancel();
+        if (mCommunicationThread != null) {
+            mCommunicationThread.cancel();
         }
-        mCurrDevice = null;
-        mCurrDeviceSpec = null;
-        mPaired = false;
-
-        for (BroadcastReceiver r : mRegisteredReceivers) {
-            mCurrContext.unregisterReceiver(r);
-        }
-        mRegisteredReceivers.clear();
     }
 
-    public static void selectDevice(final String aDeviceAddress) {
-        mCurrDevice = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(aDeviceAddress);
-        mCurrDeviceSpec = getSupportedDevice(mCurrDevice.getName());
-        Log.i(Constants.LOG_TAG_BT, "Selected " + aDeviceAddress + " : " + mCurrDevice + " of type " + mCurrDeviceSpec.getDescription());
+    public static synchronized void selectDevice(final String aDeviceAddress) throws InterruptedException {
+        mSelectedDevice = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(aDeviceAddress);
+        mSelectedDeviceSpec = getSupportedDevice(mSelectedDevice.getName());
 
+        Log.i(Constants.LOG_TAG_BT, "Selected " + aDeviceAddress + " : " + mSelectedDevice + " of type " + mSelectedDeviceSpec.getDescription());
 
-        if (!mCurrDeviceSpec.isPassiveBTConnection()) {
-            // ping the device in background
-            new Thread() {
-                public void run() {
-                    Log.i(Constants.LOG_TAG_BT, "Test device");
-                    BluetoothSocket tester = null;
-                    try {
-                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD_MR1) {
-                            tester = mCurrDevice.createRfcommSocketToServiceRecord(mCurrDeviceSpec.getSPPUUID());
-                        } else {
-                            tester = callSafeCreateInsecureRfcommSocketToServiceRecord(mCurrDevice);
-                        }
-                        tester.connect();
-                        Log.i(Constants.LOG_TAG_BT, "Device found!");
-                        UIUtilities.showNotification(R.string.bt_connected);
-                        mPaired = true;
-                    } catch (Exception e) {
-                        mCurrDevice = null;
-                        mCurrDeviceSpec = null;
-                        UIUtilities.showNotification(R.string.bt_pair_failed);
-                        Log.e(Constants.LOG_TAG_BT, "Failed test to new device", e);
-                    } finally {
-                        if (tester != null) {
-                            try {
-                                tester.close();
-                            } catch (IOException e) {
-                                Log.e(Constants.LOG_TAG_BT, "Failed to cleanup tester");
-                            }
-                        }
-                    }
-                }
-            }.start();
+        if (mCommunicationThread != null) {
+            mCommunicationThread.cancel();
+            mCommunicationThread.join();
         }
+
+        mCommunicationThread = new ConnectThread(mSelectedDevice, mSelectedDeviceSpec);
+        mCommunicationThread.start();
     }
 
     @TargetApi(Build.VERSION_CODES.GINGERBREAD_MR1)
     public static BluetoothSocket callSafeCreateInsecureRfcommSocketToServiceRecord(BluetoothDevice deviceaArg) throws IOException {
-        return deviceaArg.createInsecureRfcommSocketToServiceRecord(mCurrDeviceSpec.getSPPUUID());
+        return deviceaArg.createInsecureRfcommSocketToServiceRecord(mSelectedDeviceSpec.getSPPUUID());
     }
 
     public static boolean isPaired() {
-        return mPaired;
+        return mCommunicationThread != null && mCommunicationThread.ismPaired();
     }
 
     public static AbstractBluetoothDevice getSupportedDevice(String aDeviceName) {
@@ -287,9 +164,10 @@ public class BluetoothService {
         return getSupportedDevice(aDeviceName) != null;
     }
 
-    public static Set<AbstractBluetoothDevice> getSupportedDevices() {
-        // TODO sort
-        return SUPPORTED_DEVICES;
+    public static List<AbstractBluetoothDevice> getSupportedDevices() {
+        List<AbstractBluetoothDevice> devicesByDescription = new ArrayList(SUPPORTED_DEVICES);
+        Collections.sort(devicesByDescription);
+        return devicesByDescription;
     }
 
     public static boolean isSupported(BluetoothDevice aDevice) {
@@ -308,11 +186,11 @@ public class BluetoothService {
     }
 
     public static String getCurrDeviceStatus() {
-        if (mCurrDevice == null) {
+        if (mSelectedDevice == null) {
             return ConfigUtil.getContext().getString(R.string.bt_state_unknown);
         }
 
-        switch (mCurrDevice.getBondState()) {
+        switch (mSelectedDevice.getBondState()) {
             case BluetoothDevice.BOND_BONDED:
                 return mCurrContext.getString(R.string.bt_state_bonded);
 
@@ -339,6 +217,12 @@ public class BluetoothService {
 
     // for the current device
     public static boolean isMeasureSupported(Constants.MeasureTypes aMeasureType) {
-        return mCurrDeviceSpec != null && mCurrDeviceSpec.isMeasureSupported(aMeasureType);
+        return mSelectedDeviceSpec != null && mSelectedDeviceSpec.isMeasureSupported(aMeasureType);
+    }
+
+    public static void registerListeners(BTActivity btActivity) {
+        if (mCommunicationThread != null) {
+            mCommunicationThread.registerListeners(btActivity);
+        }
     }
 }
