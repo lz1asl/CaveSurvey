@@ -204,7 +204,7 @@
     <!-- about screen -->
     <string name="about_title">About CaveSurvey</string>
     <string name="about_paldin">http://sk-paldin.eu</string>
-    <string name="about_paldin2">http://github.com/lz1asl/CaveSurvey</string>
+    <string name="about_paldin2">https://github.com/lz1asl/CaveSurvey</string>
     <!--<string name="about_info">Station names convention :\nA1 -> A2 -> A3 : legs in gallery A\nA2 -> B1 : new gallery\nA2
         -> A2.1 -> A2.2 : middle points
     </string>-->
