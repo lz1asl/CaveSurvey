@@ -191,7 +191,7 @@ public class ConnectThread extends Thread {
                             Bundle b = new Bundle();
                             b.putString("error", "Failed to talk to device");
                             mReceiver.send(Activity.RESULT_CANCELED, b);
-                            continue;
+                            cancel();
                         }
 
                         Log.i(Constants.LOG_TAG_BT, "Start reading ");
@@ -284,11 +284,13 @@ public class ConnectThread extends Thread {
     }
 
     public void cancel() {
-        String deviceDescription = "";
+
+
         if (mDeviceSpec != null) {
-            deviceDescription = mDeviceSpec.getDescription();
+            // display notification only if expected device to be lost
+            UIUtilities.showDeviceDisconnectedNotification(ConfigUtil.getContext(), mDeviceSpec.getDescription());
         }
-        UIUtilities.showDeviceDisconnectedNotification(ConfigUtil.getContext(), deviceDescription);
+
         try {
             Log.i(Constants.LOG_TAG_BT, "Cancel client");
             running = false;
