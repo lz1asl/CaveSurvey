@@ -48,7 +48,7 @@ public class ConnectThread extends Thread {
     private InputStream mIn;
     private OutputStream mOut = null;
     private boolean running = true;
-    private long connectedAtTimestamp;
+    private long lastActiveTimestamp;
     private ResultReceiver mReceiver = null;
     private List<Constants.MeasureTypes> mMeasureTypes = null;
     private List<Constants.Measures> mTargets = null;
@@ -69,12 +69,12 @@ public class ConnectThread extends Thread {
         return mDevice.createInsecureRfcommSocketToServiceRecord(mDeviceSpec.getSPPUUID());
     }
 
-    private static BroadcastReceiver mConnectedReceiver = new BroadcastReceiver() {
+    private BroadcastReceiver mConnectedReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-           /* try {
+            try {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                if (!isSupported(device)) {
+                if (!BluetoothService.isSupported(device)) {
                     // ignore other devices
                     Log.i(Constants.LOG_TAG_BT, "Bonded unsupported device");
                     return;
@@ -83,46 +83,46 @@ public class ConnectThread extends Thread {
                 UIUtilities.showNotification(R.string.bt_paired);
                 Log.i(Constants.LOG_TAG_BT, "Paired with " + device.getName());
                 mPaired = true;
-                mSelectedDevice = device;
-                mSelectedDeviceSpec = getSupportedDevice(device.getName());
+                mDevice = device;
+                mDeviceSpec = BluetoothService.getSupportedDevice(device.getName());
 
-                TextView status = (TextView) mCurrContext.findViewById(R.id.bt_status);
-                status.setText(BluetoothService.getCurrDeviceStatusLabel(mCurrContext));
+                TextView status = (TextView) ConfigUtil.getContext().findViewById(R.id.bt_status);
+                status.setText(BluetoothService.getCurrDeviceStatusLabel(ConfigUtil.getContext()));
 
             } catch (Exception e) {
                 Log.e(Constants.LOG_TAG_BT, "Failed during pair", e);
                 UIUtilities.showNotification(R.string.error);
-            }*/// TODO
+            }
         }
     };
-    private static BroadcastReceiver mDisconnectedReceiver = new BroadcastReceiver() {
+    private BroadcastReceiver mDisconnectedReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            /*try {
-                if (mSelectedDevice == null) {
+            try {
+                if (mDevice == null) {
                     // ignore event if don't expect to be paired with device
                     Log.i(Constants.LOG_TAG_BT, "Ignore disconnect, no curr device");
                     return;
                 }
 
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                if (!isSupported(device)) {
+                if (!BluetoothService.isSupported(device)) {
                     // ignore other devices
                     Log.i(Constants.LOG_TAG_BT, "Ignore disconnect, device not supported");
                     return;
                 }
 
-                if (mSelectedDevice.getName().equals(device.getName()) && mSelectedDevice.getAddress().equals(device.getAddress())) {
-                    mSelectedDevice = null;
-                    mSelectedDeviceSpec = null;
+                if (mDevice.getName().equals(device.getName()) && mDevice.getAddress().equals(device.getAddress())) {
+                    mDevice = null;
+                    mDeviceSpec = null;
                     mPaired = false;
                     UIUtilities.showNotification(R.string.bt_not_paired);
                     Log.i(Constants.LOG_TAG_BT, "Disconnected");
 
-                    stop();
+                    running = false;
 
-                    TextView status = (TextView) mCurrContext.findViewById(R.id.bt_status);
-                    status.setText(BluetoothService.getCurrDeviceStatusLabel(mCurrContext));
+                    TextView status = (TextView) ConfigUtil.getContext().findViewById(R.id.bt_status);
+                    status.setText(BluetoothService.getCurrDeviceStatusLabel(ConfigUtil.getContext()));
                 } else {
                     // ignore events for other non paired devices
                     Log.i(Constants.LOG_TAG_BT, "Ignore disconnect, not curr device");
@@ -131,11 +131,11 @@ public class ConnectThread extends Thread {
             } catch (Exception e) {
                 Log.e(Constants.LOG_TAG_BT, "Failed during disconnect", e);
                 UIUtilities.showNotification(R.string.error);
-            }*/ // TODO
+            }
         }
     };
 
-    public static void registerListeners(final Activity aContext) {
+    public void registerListeners(final Activity aContext) {
 
         if (!mRegisteredReceivers.contains(mConnectedReceiver)) {
             mRegisteredReceivers.add(mConnectedReceiver);
@@ -172,7 +172,7 @@ public class ConnectThread extends Thread {
             Log.i(Constants.LOG_TAG_BT, "Device found!");
             UIUtilities.showNotification(R.string.bt_connected);
             UIUtilities.showDeviceConnectedNotification(ConfigUtil.getContext(), mDeviceSpec.getDescription());
-            connectedAtTimestamp = System.currentTimeMillis();
+            lastActiveTimestamp = System.currentTimeMillis();
 
             ByteArrayOutputStream message = new ByteArrayOutputStream();
             byte[] buffer = new byte[1024];
@@ -201,6 +201,7 @@ public class ConnectThread extends Thread {
 
                             Log.d(Constants.LOG_TAG_BT, "Got bytes " + new String(ByteUtils.copyBytes(buffer, numBytes)));
                             message.write(buffer, 0, numBytes);
+                            lastActiveTimestamp = System.currentTimeMillis();
 
                             if (!mDeviceSpec.isFullPacketAvailable(message.toByteArray())) {
                                 // expect more data
@@ -208,6 +209,7 @@ public class ConnectThread extends Thread {
                                 continue;
                             } else {
                                 // process the data
+                                Log.i(Constants.LOG_TAG_BT, "Decoding message");
                                 List<Measure> measures = mDeviceSpec.decodeMeasure(message.toByteArray(), mMeasureTypes);
 
                                 // reset the buffers for the next message
@@ -251,9 +253,11 @@ public class ConnectThread extends Thread {
                         sleep(20);
 
                     } else {
-                        if (connectedAtTimestamp + KEEP_ALIVE_INTERVAL > System.currentTimeMillis()) {
+                        if (lastActiveTimestamp + KEEP_ALIVE_INTERVAL < System.currentTimeMillis()) {
                             // no active task and more than a minute passive - wake up the device if supported
+                            Log.i(Constants.LOG_TAG_BT, "Send keep alive if supported");
                             mDeviceSpec.keepAlive(mOut, mIn);
+                            lastActiveTimestamp = System.currentTimeMillis();
                         }
                     }
 
@@ -280,7 +284,11 @@ public class ConnectThread extends Thread {
     }
 
     public void cancel() {
-        UIUtilities.showDeviceDisconnectedNotification(ConfigUtil.getContext(), mDeviceSpec.getDescription());
+        String deviceDescription = "";
+        if (mDeviceSpec != null) {
+            deviceDescription = mDeviceSpec.getDescription();
+        }
+        UIUtilities.showDeviceDisconnectedNotification(ConfigUtil.getContext(), deviceDescription);
         try {
             Log.i(Constants.LOG_TAG_BT, "Cancel client");
             running = false;

@@ -127,7 +127,7 @@ public class BluetoothService {
         }
     }
 
-    public static synchronized void selectDevice(final String aDeviceAddress) throws InterruptedException {
+    public static synchronized void selectDevice(final String aDeviceAddress) {
         mSelectedDevice = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(aDeviceAddress);
         mSelectedDeviceSpec = getSupportedDevice(mSelectedDevice.getName());
 
@@ -135,7 +135,11 @@ public class BluetoothService {
 
         if (mCommunicationThread != null) {
             mCommunicationThread.cancel();
-            mCommunicationThread.join();
+            try {
+                mCommunicationThread.join();
+            } catch (InterruptedException e) {
+                Log.e(Constants.LOG_TAG_BT, "Interrupted waiting old thread to complete, e");
+            }
         }
 
         mCommunicationThread = new ConnectThread(mSelectedDevice, mSelectedDeviceSpec);
@@ -221,6 +225,7 @@ public class BluetoothService {
     }
 
     public static void registerListeners(BTActivity btActivity) {
+        mCurrContext = btActivity;
         if (mCommunicationThread != null) {
             mCommunicationThread.registerListeners(btActivity);
         }
