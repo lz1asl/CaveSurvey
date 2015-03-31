@@ -9,6 +9,7 @@ import android.view.MenuItem;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
+import com.astoev.cave.survey.service.bluetooth.BluetoothService;
 
 /**
  * Created by IntelliJ IDEA.
@@ -77,6 +78,8 @@ public class MainMenuActivity extends BaseActivity {
                             public void onClick(DialogInterface dialog, int id) {
                                 Log.i(Constants.LOG_TAG_UI, "Exit app");
                                 getWorkspace().clean();
+                                BluetoothService.stop();
+                                UIUtilities.cleanStatusBarMessages(MainMenuActivity.this);
                                 MainMenuActivity.this.moveTaskToBack(true);
                             }
                         })

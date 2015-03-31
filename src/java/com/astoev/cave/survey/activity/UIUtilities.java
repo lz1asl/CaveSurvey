@@ -153,11 +153,11 @@ public class UIUtilities {
 
         builder.setAutoCancel(true);
 
-        NotificationManager mNotificationManager =
+        NotificationManager notificationManager =
                 (NotificationManager) aContext.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        mNotificationManager.cancelAll();
-        mNotificationManager.notify(1, builder.build());
+        notificationManager.cancelAll();
+        notificationManager.notify(1, builder.build());
     }
 
 
@@ -167,6 +167,13 @@ public class UIUtilities {
 
     public static void showDeviceDisconnectedNotification(Context aContext, String aDevice) {
         showStatusBarMessage(aContext, R.drawable.logo, BTActivity.class, aContext.getString(R.string.bt_device_lost, aDevice));
+    }
+
+    public static void cleanStatusBarMessages(Context aContext) {
+        NotificationManager notificationManager =
+                (NotificationManager) aContext.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        notificationManager.cancelAll();
     }
 
 }
