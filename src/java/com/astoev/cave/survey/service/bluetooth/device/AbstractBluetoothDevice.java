@@ -96,10 +96,11 @@ public abstract class AbstractBluetoothDevice implements Comparable {
 
     /**
      * May be used from implementations to keep the remote device on.
+     * Streams should not be closed.
      * @param aStreamOut
      * @param aStreamIn
      */
-    public void keepAlive(OutputStream aStreamOut, InputStream aStreamIn){
+    public void keepAlive(OutputStream aStreamOut, InputStream aStreamIn) throws IOException {
 
     }
 

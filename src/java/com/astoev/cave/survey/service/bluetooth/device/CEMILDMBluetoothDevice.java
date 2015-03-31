@@ -8,6 +8,8 @@ import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.Measure;
 import com.astoev.cave.survey.util.ByteUtils;
 
+import org.apache.commons.io.IOUtils;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -129,17 +131,15 @@ public class CEMILDMBluetoothDevice extends AbstractBluetoothDevice {
 
 
     @Override
-    public void keepAlive(OutputStream aStreamOut, InputStream aStreamIn) {
-        /**
-         * AH!  if you send:            (1 Times / Minute)
+    public void keepAlive(OutputStream aStreamOut, InputStream aStreamIn) throws IOException {
+
+         // if you send (1 Times / Minute)  the Device stays on
          byte[] bout = new byte[25];
          bout[0]  = (byte) 213;
          bout[1]  = (byte) 239;        // or other
          bout[2]  = (byte) 225;
          bout[3]  = (byte) 130;
-         ...
 
-         the Device stays on
-         */
+        IOUtils.write(bout, aStreamOut);
     }
 }
