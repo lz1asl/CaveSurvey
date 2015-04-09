@@ -7,53 +7,54 @@ Cave surveying application for Android devices
 The Story
 =========
 
-Preparing a cave map is a tough activity. For example if you want to map a gallery you usually pick reference points for the main polyline going trough that gallery. Between every two poins distance, angle and inclination is measured and on each one (and on any other specific place) distance to the top, bottom and both sides is measured. Usually this is written to a paper sheet, later transformed in to Excel spreadsheet and processed with a variety of existing tools.
-Well, in real life this process is much harder and very error prone. CaveSurvey targets the process of collecting measures and tries to improve it. See examples in the [User Guide](https://github.com/lz1asl/CaveSurvey/wiki/User-Guide).
+Preparing a cave map is a tough activity. For example if you want to map a gallery you usually pick reference points for the main polyline going trough that gallery. Between every two stations distance, angle and inclination are measured. On each station (and at any other specific gallery place) the distances to the top, bottom and both sides are measured. Usually this is written to a sheet of paper, later transferred into Excel spreadsheet and processed with a variety of existing tools.
+Well, in real life this process is much harder and error prone than it sounds. CaveSurvey targets the process of collecting measurements and tries to improve it. See examples in the [User Guide](https://github.com/lz1asl/CaveSurvey/wiki/User-Guide).
 
 
-Goal
-====
+Goals
+=====
 
-CaveSurvey is tool for mapping caves having (at least) Android device and (optionally) laser distance meter or other measure devices:
- - Having the measures sheet in digital format from the beginning (eliminating typo errors)
- - Easy to enter measures (not all cave parts are pleasant place to stay)
- - Able to export the sheet in Excel format for further processing (not being primary tool for the final map artifact, such tools exist and are awesome)
- - Being able to draw simple map of the main line (detect big measure erros on place) or create simple sketch for a point.
- - Aid measures collection (reduce number of measure instruments needed and/or need to manually type the value):
-  - using build-in sensors if available (as compass, clinometer) and tools (take a picture, take GPS location of the entrance, type a note, etc)
-  - using Bluetooth to integrate external laser distance meter - distance and in some cases clinometer measures
+CaveSurvey is a tool for mapping caves using (at least) an Android device and (optionally) a laser distance meter and/or other measuring devices by:
+ - keeping the measurements sheet in digital format during the survey (thus eliminating typo errors)
+ - making it easy to enter measurements (because not all caves are a pleasant place to stay)
+ - allowing you to export the data in Excel format for further processing (and not being a tool for the creation of a final map, such tools already exist and are awesome)
+ - drawing a simple map of the main line (allowing the detection of big measurement erros on site)
+ - allowing the creation of simple sketches
+ - aiding measurement collection (reducing the number of measuring instruments needed and/or the need to manually type the value):
+  - by using built-in sensors if available (as compass and clinometer) and tools (take pictures, save the GPS locations of the entrances, type notes, etc)
+  - by using Bluetooth to integrate external laser distance meters (to read distance and in some cases compass and clinometer measurements)
 
 
 Features
 ========
 
- Currently CaveSurvey can:
-  - Supports multiple cave projects
-  - Supports multiple cave galleries
-  - Can add points to the sheet and manually enter measures
-  - For each point you can add note, take picture, draw simple sketch, add vectors
-  - Take GPS coordinates of a point (assuming visible sky)
-  - Read compass from the build-in compass
-  - Read inclination from the build-in sensors
-  - Read measures from Bluetooth laser distance meter (currently supported only CEM iLDM-150 - distance + inclination)
-  - Display 2D map of the current measures(horizontal projection)
-  - Can export to Excel
+ Currently with CaveSurvey you can:
+  - make multiple cave surveys
+  - split a survey into galleries
+  - add stations and interim points
+  - save notes, pictures, drawings, GPS coordinates and vectors at any station
+  - input measurements:
+   - manually
+   - from the built-in sensors
+   - from Bluetooth
+  - preview a 2D plan/section map of the current survey
+  - export to Excel
 
-  See the issues for complete list or roadmap.
-  Currently English and Bulgarian languages.
+  See the current [issues](https://github.com/lz1asl/CaveSurvey/issues) to see what we are working on.
+  The supported languages so far are English and Bulgarian.
   
 
 Notes
 =====
 
-One of the possible target configurations is to read the distance and inclination from Bluetooth and use the build-in compass from the device. In this case both waterproof Android 4.x + iLDM-150 are about $250.
+One of the possible target configurations is to read the distance and inclination from Bluetooth and use the built-in compass of the device. In this case both a waterproof Android 4.x device and CEM iLDM-150 cost about $250.
 
-  Test devices:
-  - Testing with both Android 2.1(cheap and small), and 4.3 up to 5.0(better hardware). Have not decided for the right device yet but will try with Motorola Defy+. The smartphone need to have water protection, compass, SPP Bluetooth profile.
-  - iLDM-150 laser distance meter (IP54) with build in clinometer and Bluetooth transfer from CEM
-  - Trimble LaserAce 1000 has very accurate measures (distance/clinometer/azimuth) and is recommended for any places where cave environment will not be of direct impact for the device. Most expensive hardware used here.
-  - Leica and Bosh have awesome distance meters with Bluetooth but are much more expensive.
-  - Feel free to join our team and help with other hardware/functionalities
+Test devices:
+  - We have tested from Android 2.1(cheap and small) up to 5.0 (better hardware and protection). Smartphones are recommended to have water protection (to survive), a compass (to read from), SPP Bluetooth profile (to connect instruments).
+  - CEM iLDM-150 laser distance meter (IP54) with built-in clinometer and Bluetooth
+  - Trimble LaserAce 1000 (very accurate) that provides distance, clinometer and azimuth
+  - LTI TruPulse 360
+  - Feel free to join our team and help adding other devices/functionalities
   
 
 
