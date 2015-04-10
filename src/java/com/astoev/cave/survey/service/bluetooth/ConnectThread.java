@@ -271,6 +271,7 @@ public class ConnectThread extends Thread {
                     Bundle b = new Bundle();
                     b.putString("error", de.getMessage());
                     mReceiver.send(Activity.RESULT_CANCELED, b);
+                    mReceiver = null;
                     continue;
                 }
 
@@ -304,7 +305,11 @@ public class ConnectThread extends Thread {
         }
 
         for (BroadcastReceiver r : mRegisteredReceivers) {
-            ConfigUtil.getContext().unregisterReceiver(r);
+            try {
+                ConfigUtil.getContext().unregisterReceiver(r);
+            } catch (Exception e) {
+                // ignore
+            }
         }
         mRegisteredReceivers.clear();
     }
