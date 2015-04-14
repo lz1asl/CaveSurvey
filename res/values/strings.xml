@@ -148,7 +148,7 @@
     <string name="io_error">Unable to access SD card</string>
     
     <!-- options -->
-    <string name="measures_title">Measures</string>
+    <string name="measures_title">Measurements</string>
 <!-- 
     <string-array name="options_modes">
         <item>Manual enter</item>
