@@ -14,7 +14,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -32,13 +31,12 @@ import com.astoev.cave.survey.fragment.LocationFragment;
 import com.astoev.cave.survey.model.Gallery;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Note;
-import com.astoev.cave.survey.model.Option;
 import com.astoev.cave.survey.model.Photo;
 import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.model.Vector;
-import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.service.bluetooth.BTMeasureResultReceiver;
 import com.astoev.cave.survey.service.bluetooth.BTResultAware;
+import com.astoev.cave.survey.service.bluetooth.util.MeasurementsUtil;
 import com.astoev.cave.survey.service.orientation.AzimuthChangedListener;
 import com.astoev.cave.survey.service.orientation.SlopeChangedListener;
 import com.astoev.cave.survey.util.DaoUtil;
@@ -64,8 +62,6 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int REQIEST_EDIT_NOTE = 2;
 
-    private static final String AZIMUTH_DIALOG = "azimuth_dialog";
-    private static final String SLOPE_DIALOG = "slope_dialog";
     private static final String VECTOR_DIALOG = "vector_dialog";
 
     private String mNewNote = null;
@@ -79,9 +75,9 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 
     private BTMeasureResultReceiver mReceiver = new BTMeasureResultReceiver(this);
 
-    private AzimuthDialog mAzimuthDialog;
+    private AzimuthDialog mAzimuthDialog = new AzimuthDialog();
 
-    private SlopeDialog mSlopeDialog;
+    private SlopeDialog mSlopeDialog = new SlopeDialog();;
 
     // swipe detection variables
     private float x1, x2;
@@ -98,34 +94,13 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
             loadPointData();
         }
 
-        // if the azimuth is read from build in sensors add onClickListener to show azimuth dialog
-        if (Option.CODE_SENSOR_INTERNAL.equals(Options.getOptionValue(Option.CODE_AZIMUTH_SENSOR))) {
-            Log.i(Constants.LOG_TAG_UI, "Will register onClickListener for Azimuth");
-            EditText azimuth = (EditText) findViewById(R.id.point_azimuth);
-            azimuth.setOnClickListener(new OnClickListener() {
+        // handle double click for reading built-in azimuth
+        EditText azimuth = (EditText) findViewById(R.id.point_azimuth);
+        MeasurementsUtil.bindAzimuthAwareField(azimuth, mAzimuthDialog, getSupportFragmentManager());
 
-                /**
-                 * @see android.view.View.OnClickListener#onClick(android.view.View)
-                 */
-                @Override
-                public void onClick(View v) {
-                    readAzimuth(v);
-                }
-            });
-        }
-
-        // if the slope is read from build in sensors add onClickListener to show slope dialog
-        if (Option.CODE_SENSOR_INTERNAL.equals(Options.getOptionValue(Option.CODE_SLOPE_SENSOR))) {
-            Log.i(Constants.LOG_TAG_UI, "Will register onClickListener for Slope");
-            EditText slope = (EditText) findViewById(R.id.point_slope);
-            slope.setOnClickListener(new OnClickListener() {
-
-                @Override
-                public void onClick(View viewArg) {
-                    readSlope(viewArg);
-                }
-            });
-        }
+        // handle double click for reading built-in slope
+        EditText slope = (EditText) findViewById(R.id.point_slope);
+        MeasurementsUtil.bindSlopeAwareField(slope, mSlopeDialog, getSupportFragmentManager());
 
         Leg legEdited = getCurrentLeg();
         if (legEdited != null) {
@@ -377,7 +352,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
     }
 
     private void vectorButton() {
-        VectorDialog dialog = new VectorDialog();
+        VectorDialog dialog = new VectorDialog(getSupportFragmentManager());
         dialog.setLeg(getCurrentLeg());
         dialog.setCancelable(true);
         dialog.show(getSupportFragmentManager(), VECTOR_DIALOG);
@@ -399,16 +374,6 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
             Log.e(Constants.LOG_TAG_UI, "Failed to delete point", e);
             UIUtilities.showNotification(R.string.error);
         }
-    }
-
-    public void readAzimuth(View view) {
-        mAzimuthDialog = new AzimuthDialog();
-        mAzimuthDialog.show(getSupportFragmentManager(), AZIMUTH_DIALOG);
-    }
-
-    public void readSlope(View view) {
-        mSlopeDialog = new SlopeDialog();
-        mSlopeDialog.show(getSupportFragmentManager(), SLOPE_DIALOG);
     }
 
     public void photoButton() {
