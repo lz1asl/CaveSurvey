@@ -230,4 +230,6 @@ public class BluetoothService {
             mCommunicationThread.registerListeners(btActivity);
         }
     }
+
+
 }

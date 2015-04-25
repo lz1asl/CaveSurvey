@@ -14,8 +14,6 @@ import android.widget.TextView;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
-import com.astoev.cave.survey.model.Option;
-import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.service.orientation.OrientationProcessorFactory;
 import com.astoev.cave.survey.service.orientation.SlopeChangedAdapter;
 import com.astoev.cave.survey.service.orientation.SlopeChangedListener;
@@ -28,7 +26,7 @@ import java.text.DecimalFormat;
  * 
  * @author jmitrev
  */
-public class SlopeDialog extends AzimuthDialog {
+public class SlopeDialog extends BaseBuildInMeasureDialog {
     
     /** Slope value view*/
     private TextView slopeView;
@@ -43,14 +41,6 @@ public class SlopeDialog extends AzimuthDialog {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         formater = new DecimalFormat("#.#");
         
-        if (Option.UNIT_DEGREES.equals(Options.getOptionValue(Option.CODE_SLOPE_UNITS))){
-            isInDegrees = true;
-            unitsString = " " + getString(R.string.degrees);
-        } else {
-            isInDegrees = false;
-            unitsString = " " + getString(R.string.grads);
-        }
-        
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(getString(R.string.slope));
         
@@ -60,8 +50,8 @@ public class SlopeDialog extends AzimuthDialog {
 
         // add key listener to handle the back button
         builder.setOnKeyListener(new BackKeyListener(this));
-        
-        // progress bar view 
+
+        // progress bar view
         progressBar = (ProgressBar)view.findViewById(R.id.slope_progress);
         
         slopeView = (TextView)view.findViewById(R.id.slope_value);
@@ -90,11 +80,6 @@ public class SlopeDialog extends AzimuthDialog {
         });
         orientationProcessor.startListening();
         
-        // create a handler and a thread that will drive the progress bar
-        progressHandler = new ProgressHandler(this);
-        progressThread = new ProgressThread(progressHandler);
-        progressThread.start();
-        
         return alertDialg;
     }
     
@@ -110,5 +95,12 @@ public class SlopeDialog extends AzimuthDialog {
             ((SlopeChangedListener)activity).onSlopeChanged(lastValue);
         } 
         dismiss();
+    }
+
+    @Override
+    public void onPause() {
+        cancelDialog();
+
+        super.onPause();
     }
 }

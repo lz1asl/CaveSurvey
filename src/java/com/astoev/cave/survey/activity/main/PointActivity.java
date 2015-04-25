@@ -142,11 +142,9 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
     protected void onPause() {
         if (mAzimuthDialog != null) {
             mAzimuthDialog.cancelDialog();
-            mAzimuthDialog.dismiss();
         }
         if (mSlopeDialog != null) {
             mSlopeDialog.cancelDialog();
-            mSlopeDialog.dismiss();
         }
         super.onPause();
     }

@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,7 +30,7 @@ import java.sql.SQLException;
 /**
  * Created by astoev on 3/3/14.
  */
-public class VectorDialog extends AzimuthDialog implements BTResultAware {
+public class VectorDialog extends DialogFragment implements BTResultAware {
 
     private BTMeasureResultReceiver mReceiver;
     private Leg mLeg;
@@ -153,19 +154,6 @@ public class VectorDialog extends AzimuthDialog implements BTResultAware {
     private void populateMeasure(float aMeasure, int anEditTextId) {
         EditText field = (EditText) mView.findViewById(anEditTextId);
         StringUtils.setNotNull(field, aMeasure);
-    }
-
-    @Override
-    public void onPause() {
-        if (mAzimuthDialog != null) {
-            mAzimuthDialog.cancelDialog();
-            mAzimuthDialog.dismiss();
-        }
-        if (mSlopeDialog != null) {
-            mSlopeDialog.cancelDialog();
-            mSlopeDialog.dismiss();
-        }
-        super.onPause();
     }
 
 }
