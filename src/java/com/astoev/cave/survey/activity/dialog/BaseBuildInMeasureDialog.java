@@ -9,6 +9,7 @@ import android.os.Message;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 
 import com.astoev.cave.survey.Constants;
@@ -50,7 +51,10 @@ public class BaseBuildInMeasureDialog extends DialogFragment {
     /** OrientationProcessor that handles the work with the sensors*/
     protected OrientationProcessor orientationProcessor;
 
+    /** Last value for the slope from the sensor */
     protected float lastValue;
+
+    protected EditText targetTextBox;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -72,6 +76,10 @@ public class BaseBuildInMeasureDialog extends DialogFragment {
         progressThread.start();
 
         return null;
+    }
+
+    public void setTargetTextBox(EditText aTargetTextBox) {
+        this.targetTextBox = aTargetTextBox;
     }
 
     /**
@@ -100,6 +108,7 @@ public class BaseBuildInMeasureDialog extends DialogFragment {
             int total = msg.arg1;
             dialog.progressBar.setProgress(total);
             dialog.progressBar.setSecondaryProgress(total);
+            dialog.progressBar.invalidate();
             if (total >= PROGRESS_MAX_VALUE) {
                 dialog.progressThread.setState(ProgressThread.STATE_DONE);
                 dialog.notifyEndProgress();
@@ -162,11 +171,9 @@ public class BaseBuildInMeasureDialog extends DialogFragment {
      */
     protected void notifyEndProgress(){
         orientationProcessor.stopListening();
-        Activity activity = getActivity();
 
-        if (activity != null && activity instanceof AzimuthChangedListener){
-            ((AzimuthChangedListener)activity).onAzimuthChanged(lastValue);
-        }
+        targetTextBox.setText(String.valueOf(lastValue));
+
         dismiss();
     }
 

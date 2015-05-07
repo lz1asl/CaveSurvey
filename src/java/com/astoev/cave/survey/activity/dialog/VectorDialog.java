@@ -22,6 +22,7 @@ import com.astoev.cave.survey.model.Vector;
 import com.astoev.cave.survey.service.bluetooth.BTMeasureResultReceiver;
 import com.astoev.cave.survey.service.bluetooth.BTResultAware;
 import com.astoev.cave.survey.service.bluetooth.util.MeasurementsUtil;
+import com.astoev.cave.survey.service.orientation.AzimuthChangedListener;
 import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.util.StringUtils;
 
@@ -30,14 +31,11 @@ import java.sql.SQLException;
 /**
  * Created by astoev on 3/3/14.
  */
-public class VectorDialog extends DialogFragment implements BTResultAware {
+public class VectorDialog extends DialogFragment implements BTResultAware, AzimuthChangedListener {
 
     private BTMeasureResultReceiver mReceiver;
     private Leg mLeg;
     private View mView;
-
-    private AzimuthDialog mAzimuthDialog = new AzimuthDialog();
-    private SlopeDialog mSlopeDialog = new SlopeDialog();
 
     FragmentManager mSupportFragmentManager;
 
@@ -66,13 +64,15 @@ public class VectorDialog extends DialogFragment implements BTResultAware {
         // Bluetooth registrations
         mReceiver = new BTMeasureResultReceiver(this);
         EditText distanceField = (EditText) mView.findViewById(R.id.vector_distance);
-        mReceiver.bindBTMeasures(distanceField, Constants.Measures.distance, false, new Constants.Measures[] {Constants.Measures.angle, Constants.Measures.slope} );
+        mReceiver.bindBTMeasures(distanceField, Constants.Measures.distance, false, new Constants.Measures[] {Constants.Measures.angle, Constants.Measures.slope});
+
         EditText angleField = (EditText) mView.findViewById(R.id.vector_azimuth);
         mReceiver.bindBTMeasures(angleField, Constants.Measures.angle, false, new Constants.Measures[] {Constants.Measures.distance, Constants.Measures.slope});
-        MeasurementsUtil.bindAzimuthAwareField(angleField, mAzimuthDialog, mSupportFragmentManager);
+        MeasurementsUtil.bindAzimuthAwareField(angleField, mSupportFragmentManager);
+
         EditText slopeField = (EditText) mView.findViewById(R.id.vector_slope);
         mReceiver.bindBTMeasures(slopeField, Constants.Measures.slope, false, new Constants.Measures[] {Constants.Measures.angle, Constants.Measures.distance});
-        MeasurementsUtil.bindSlopeAwareField(slopeField, mSlopeDialog, mSupportFragmentManager);
+        MeasurementsUtil.bindSlopeAwareField(slopeField, mSupportFragmentManager);
 
         final Dialog dialog = builder.create();
 
@@ -149,6 +149,15 @@ public class VectorDialog extends DialogFragment implements BTResultAware {
             default:
                 Log.i(Constants.LOG_TAG_UI, "Ignore type " + aMeasureTarget);
         }
+    }
+
+    /**
+     * @see com.astoev.cave.survey.service.orientation.AzimuthChangedListener#onAzimuthChanged(float)
+     */
+    @Override
+    public void onAzimuthChanged(float newValueArg) {
+        EditText angleField = (EditText) mView.findViewById(R.id.vector_azimuth);
+        angleField.setText(String.valueOf(newValueArg));
     }
 
     private void populateMeasure(float aMeasure, int anEditTextId) {

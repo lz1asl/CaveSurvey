@@ -31,16 +31,16 @@ public class SlopeDialog extends BaseBuildInMeasureDialog {
     /** Slope value view*/
     private TextView slopeView;
     
-    /** Last value for the slope from the sensor */
-    private float lastValue;
-    
+
     /**
      * @see android.support.v4.app.DialogFragment#onCreateDialog(android.os.Bundle)
      */
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        formater = new DecimalFormat("#.#");
-        
+
+        // parent initialization
+        super.onCreateDialog(savedInstanceState);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(getString(R.string.slope));
         
@@ -78,29 +78,12 @@ public class SlopeDialog extends BaseBuildInMeasureDialog {
                 slopeView.setText(formater.format(lastValue) + unitsString);
             }
         });
+
         orientationProcessor.startListening();
         
         return alertDialg;
     }
     
-    /**
-     * Helper method called to notify that progress bar is filled and the dialog should be dismissed. 
-     * Stops the azimuth processor notifies the parent activity and will dismiss the dialog
-     */
-    protected void notifyEndProgress(){
-        orientationProcessor.stopListening();
-        Activity activity = getActivity();
-        
-        if (activity != null && activity instanceof SlopeChangedListener){ 
-            ((SlopeChangedListener)activity).onSlopeChanged(lastValue);
-        } 
-        dismiss();
-    }
 
-    @Override
-    public void onPause() {
-        cancelDialog();
 
-        super.onPause();
-    }
 }

@@ -23,8 +23,6 @@ import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.MainMenuActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
-import com.astoev.cave.survey.activity.dialog.AzimuthDialog;
-import com.astoev.cave.survey.activity.dialog.SlopeDialog;
 import com.astoev.cave.survey.activity.dialog.VectorDialog;
 import com.astoev.cave.survey.activity.draw.DrawingActivity;
 import com.astoev.cave.survey.fragment.LocationFragment;
@@ -75,10 +73,6 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 
     private BTMeasureResultReceiver mReceiver = new BTMeasureResultReceiver(this);
 
-    private AzimuthDialog mAzimuthDialog = new AzimuthDialog();
-
-    private SlopeDialog mSlopeDialog = new SlopeDialog();;
-
     // swipe detection variables
     private float x1, x2;
     private static final int MIN_SWIPE_DISTANCE = 150;
@@ -96,11 +90,11 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 
         // handle double click for reading built-in azimuth
         EditText azimuth = (EditText) findViewById(R.id.point_azimuth);
-        MeasurementsUtil.bindAzimuthAwareField(azimuth, mAzimuthDialog, getSupportFragmentManager());
+        MeasurementsUtil.bindAzimuthAwareField(azimuth, getSupportFragmentManager());
 
         // handle double click for reading built-in slope
         EditText slope = (EditText) findViewById(R.id.point_slope);
-        MeasurementsUtil.bindSlopeAwareField(slope, mSlopeDialog, getSupportFragmentManager());
+        MeasurementsUtil.bindSlopeAwareField(slope, getSupportFragmentManager());
 
         Leg legEdited = getCurrentLeg();
         if (legEdited != null) {
@@ -140,12 +134,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
      */
     @Override
     protected void onPause() {
-        if (mAzimuthDialog != null) {
-            mAzimuthDialog.cancelDialog();
-        }
-        if (mSlopeDialog != null) {
-            mSlopeDialog.cancelDialog();
-        }
+        MeasurementsUtil.closeDialogs();
         super.onPause();
     }
 

@@ -19,6 +19,7 @@
 	              android:text="@string/azimuth_no_value"
 	              android:textAppearance="?android:attr/textAppearanceLarge"/>
     </LinearLayout>
+
     <LinearLayout android:layout_height="wrap_content"
                   android:layout_width="fill_parent"
                   android:layout_margin="10dp">
@@ -33,14 +34,18 @@
                   android:text="@string/azimuth_no_value"
                   android:textAppearance="?android:attr/textAppearanceLarge"/>
     </LinearLayout>
-    
-    <ProgressBar android:id="@+id/azimuth_progress"
-                 android:progress="0"
-                 android:max="3"
-                 android:layout_height="5dp"
-                 android:layout_width="fill_parent"
-                 android:maxHeight="2dp"
-                 style="@android:style/Widget.ProgressBar.Horizontal"
-                 android:layout_margin="10dp"/> 
-    
+
+    <LinearLayout android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_margin="10dp">
+        <ProgressBar android:id="@+id/azimuth_progress"
+            android:progress="0"
+            android:max="3"
+            android:layout_height="5dp"
+            android:layout_width="fill_parent"
+            android:maxHeight="2dp"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:layout_margin="10dp"/>
+    </LinearLayout>
+
 </LinearLayout>
