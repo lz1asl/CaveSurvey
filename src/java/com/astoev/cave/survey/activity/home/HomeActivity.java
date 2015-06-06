@@ -24,23 +24,37 @@ import com.astoev.cave.survey.activity.dialog.LanguageDialog;
 import com.astoev.cave.survey.activity.main.BTActivity;
 import com.astoev.cave.survey.activity.main.MainActivity;
 import com.astoev.cave.survey.activity.poc.SensorTestActivity;
+import com.astoev.cave.survey.manager.ProjectManager;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.util.DaoUtil;
+import com.astoev.cave.survey.util.FileStorageUtil;
 import com.astoev.cave.survey.util.StringUtils;
 
+import org.apache.commons.io.IOUtils;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.util.List;
 
 /**
  * Home activity for managing projects and general settings.
+ *
  * @author astoev
  * @author jmitrev
  */
 public class HomeActivity extends MainMenuActivity {
 
-    /** Dialog name to enable Language dialog */
+    /**
+     * Dialog name to enable Language dialog
+     */
     private static final String LANGUAGE_DIALOG = "LANGUAGE_DIALOG";
-    
+
     /**
      * Called when the activity is first created.
      */
@@ -48,63 +62,97 @@ public class HomeActivity extends MainMenuActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home);
+
+        // to be enabled only for debug purposes
+        // runDumpLogThread();
     }
-    
+
+    // dump android logs to a file, see http://stackoverflow.com/questions/6175002/write-android-logcat-data-to-a-file
+    private void runDumpLogThread() {
+        new Thread() {
+            @Override
+            public void run() {
+                InputStream in = null;
+                OutputStream out = null;
+                try {
+
+                    Process process = Runtime.getRuntime().exec("logcat -d");
+                    BufferedReader bufferedReader = new BufferedReader(
+                            new InputStreamReader(process.getInputStream()));
+                    File logFile = new File(FileStorageUtil.getStorageHome(), "CaveSurvey.log");
+                    out = new FileOutputStream(logFile);
+
+                    String line;
+                    while ((line = bufferedReader.readLine()) != null) {
+                        IOUtils.write(line, out);
+                        Thread.sleep(100);
+                    }
+
+                } catch (Exception e) {
+                    Log.e(Constants.LOG_TAG_SERVICE, "Failed to copy output", e);
+                } finally {
+                    IOUtils.closeQuietly(in);
+                    IOUtils.closeQuietly(out);
+                }
+            }
+        }.start();
+    }
+
     @Override
     protected void onResume() {
-    	// first we reset the ws
+        // first we reset the ws
 
-    	// then we call the parent that will set a title depending on the active project
+        // then we call the parent that will set a title depending on the active project
         super.onResume();
-    	
+
         loadProjects();
     }
-    
-	/**
-	 * @see com.astoev.cave.survey.activity.MainMenuActivity#getChildsOptionsMenu()
-	 */
-	@Override
-	protected int getChildsOptionsMenu() {
-		return R.menu.homemenu;
-	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		Log.i(Constants.LOG_TAG_UI, "Home menu selected - " + item.toString());
-		switch (item.getItemId()) {
-		case R.id.action_new_project:{
-			newProjectOnClick();
-			return true;
-		}
-		case R.id.action_setup_bt : {
-			pairBtDevice();
-			return true;
-		}
-		case R.id.action_azimuth_test : {
-			onAzimuthTest();
-			return true;
-		}
-        case R.id.main_action_about:
-            showAboutDialog();
-            return true;
-        case R.id.main_action_help:
-            openHelp();
-            return true;
-        case R.id.action_language:
-            onLanguage();
-            return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-	}
+    /**
+     * @see com.astoev.cave.survey.activity.MainMenuActivity#getChildsOptionsMenu()
+     */
+    @Override
+    protected int getChildsOptionsMenu() {
+        return R.menu.homemenu;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.i(Constants.LOG_TAG_UI, "Home menu selected - " + item.toString());
+        switch (item.getItemId()) {
+            case R.id.action_new_project: {
+                newProjectOnClick();
+                return true;
+            }
+            case R.id.action_setup_bt: {
+                pairBtDevice();
+                return true;
+            }
+            case R.id.action_azimuth_test: {
+                onAzimuthTest();
+                return true;
+            }
+            case R.id.main_action_about:
+                showAboutDialog();
+                return true;
+            case R.id.main_action_help:
+                openHelp();
+                return true;
+            case R.id.action_language:
+                onLanguage();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
     private void openHelp() {
         Uri uri = Uri.parse("https://github.com/lz1asl/CaveSurvey/wiki/User-Guide");
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(intent);
     }
-    
-    private void onLanguage(){
+
+    private void onLanguage() {
         LanguageDialog languageDialog = new LanguageDialog();
         languageDialog.show(getSupportFragmentManager(), LANGUAGE_DIALOG);
     }
@@ -130,24 +178,24 @@ public class HomeActivity extends MainMenuActivity {
         try {
 
             ListView projectsContainer = (ListView) findViewById(R.id.homeProjects);
-            
+
             final List<Project> projectsList = getWorkspace().getDBHelper().getProjectDao().queryForAll();
-            
+
             if (projectsList.size() > 0) {
                 Project[] projectsArray = new Project[projectsList.size()];
                 projectsArray = projectsList.toArray(projectsArray);
-            	
+
                 // populate the projects in the list using adapter
-            	ArrayAdapter<Project> projectsAdapter = new ArrayAdapter<Project>(this, android.R.layout.simple_list_item_1, projectsArray);
-            	projectsContainer.setAdapter(projectsAdapter);
-            	
-            	// item clicked
-            	projectsContainer.setOnItemClickListener(new OnItemClickListener() {
+                ArrayAdapter<Project> projectsAdapter = new ArrayAdapter<Project>(this, android.R.layout.simple_list_item_1, projectsArray);
+                projectsContainer.setAdapter(projectsAdapter);
+
+                // item clicked
+                projectsContainer.setOnItemClickListener(new OnItemClickListener() {
 
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                        Project project = (Project)parent.getAdapter().getItem(position);
+                        Project project = (Project) parent.getAdapter().getItem(position);
 
                         Log.i(Constants.LOG_TAG_UI, "Selected project " + project.getId());
                         getWorkspace().setActiveProject(project);
@@ -164,7 +212,7 @@ public class HomeActivity extends MainMenuActivity {
                     @Override
                     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                         try {
-                            final Project p = (Project)parent.getAdapter().getItem(position);
+                            final Project p = (Project) parent.getAdapter().getItem(position);
                             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(HomeActivity.this);
                             dialogBuilder.setMessage(getString(R.string.home_delete_project, p.getName()))
                                     .setCancelable(false)
@@ -197,12 +245,12 @@ public class HomeActivity extends MainMenuActivity {
                         }
                     }
                 });
-            	
+
             } else {
-            	// no projects - show "No projects" label
-            	String[] value = {getResources().getString(R.string.home_no_projects)};
-            	ArrayAdapter<String> noprojectsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, value);
-            	projectsContainer.setAdapter(noprojectsAdapter);
+                // no projects - show "No projects" label
+                String[] value = {getResources().getString(R.string.home_no_projects)};
+                ArrayAdapter<String> noprojectsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, value);
+                projectsContainer.setAdapter(noprojectsAdapter);
 
                 projectsContainer.setAdapter(noprojectsAdapter);
 
@@ -242,11 +290,11 @@ public class HomeActivity extends MainMenuActivity {
         Intent intent = new Intent(this, NewProjectActivity.class);
         startActivity(intent);
     }
-    
-    private void onAzimuthTest(){
-    	Log.i(Constants.LOG_TAG_UI, "Azimuth Test");
-    	Intent intent = new Intent(this, SensorTestActivity.class);
-    	startActivity(intent);
+
+    private void onAzimuthTest() {
+        Log.i(Constants.LOG_TAG_UI, "Azimuth Test");
+        Intent intent = new Intent(this, SensorTestActivity.class);
+        startActivity(intent);
     }
 
     @Override
