@@ -1,7 +1,6 @@
 package com.astoev.cave.survey.activity.draw;
 
 import android.graphics.Canvas;
-import android.os.Handler;
 
 import java.util.ArrayList;
 import java.util.Collections;

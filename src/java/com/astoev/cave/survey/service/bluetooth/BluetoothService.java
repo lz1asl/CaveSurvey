@@ -5,23 +5,17 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Build;
 import android.os.ResultReceiver;
 import android.util.Log;
 import android.util.Pair;
-import android.widget.TextView;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
-import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.activity.main.BTActivity;
 import com.astoev.cave.survey.service.bluetooth.device.AbstractBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.CEMILDMBluetoothDevice;
-import com.astoev.cave.survey.service.bluetooth.device.DistoXBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.LaserAceBluetoothDevice;
 import com.astoev.cave.survey.util.ConfigUtil;
 

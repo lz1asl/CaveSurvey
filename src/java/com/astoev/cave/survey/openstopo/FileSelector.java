@@ -1,9 +1,5 @@
 package com.astoev.cave.survey.openstopo;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -24,6 +20,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.astoev.cave.survey.R;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Create the file selection dialog. This class will create a custom dialog for

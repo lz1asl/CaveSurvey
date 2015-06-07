@@ -3,7 +3,6 @@ package com.astoev.cave.survey.service.bluetooth.device;
 import android.util.Log;
 
 import com.astoev.cave.survey.Constants;
-import static com.astoev.cave.survey.Constants.MeasureTypes;
 import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.Measure;
 import com.astoev.cave.survey.util.ByteUtils;
@@ -15,6 +14,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.astoev.cave.survey.Constants.MeasureTypes;
 
 /**
  * CEM iLDM Laser distance meters

@@ -10,8 +10,6 @@ import com.astoev.cave.survey.activity.dialog.AzimuthDialog;
 import com.astoev.cave.survey.activity.dialog.SlopeDialog;
 import com.astoev.cave.survey.model.Option;
 import com.astoev.cave.survey.service.Options;
-import com.astoev.cave.survey.service.orientation.AzimuthChangedListener;
-import com.astoev.cave.survey.service.orientation.SlopeChangedListener;
 
 /**
  * Created by astoev on 4/20/15.

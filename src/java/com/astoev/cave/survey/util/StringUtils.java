@@ -1,10 +1,7 @@
 package com.astoev.cave.survey.util;
 
 import android.content.res.Resources;
-import android.util.Log;
 import android.widget.EditText;
-
-import com.astoev.cave.survey.Constants;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;

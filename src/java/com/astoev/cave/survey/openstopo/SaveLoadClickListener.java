@@ -1,7 +1,5 @@
 package com.astoev.cave.survey.openstopo;
 
-import java.io.File;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.view.Gravity;
@@ -10,6 +8,8 @@ import android.view.View.OnClickListener;
 import android.widget.Toast;
 
 import com.astoev.cave.survey.R;
+
+import java.io.File;
 
 /**
  * This Listener handles Save or Load button clicks.

@@ -20,7 +20,6 @@ import com.astoev.cave.survey.util.StringUtils;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.text.NumberFormat;
 
 /**
  * Created by IntelliJ IDEA.

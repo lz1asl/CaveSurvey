@@ -9,7 +9,6 @@ import com.astoev.cave.survey.model.Photo;
 import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.model.Sketch;
 import com.astoev.cave.survey.service.export.AbstractExport;
-
 import com.google.gson.GsonBuilder;
 
 import org.apache.commons.io.IOUtils;
