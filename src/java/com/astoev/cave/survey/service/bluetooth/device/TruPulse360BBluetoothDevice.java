@@ -7,8 +7,6 @@ import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.Measure;
 import com.astoev.cave.survey.service.bluetooth.util.NMEAUtil;
 
-import org.apache.commons.io.IOUtils;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -32,22 +30,23 @@ public class TruPulse360BBluetoothDevice extends AbstractBluetoothDevice {
 
     @Override
     public void triggerMeasures(OutputStream aStream, List<Constants.MeasureTypes> aMeasures) throws IOException {
-        // no need to trigger+
+        // no need to trigger
     }
 
     @Override
     public void configure(InputStream anInput, OutputStream anOutput) throws IOException {
         Log.i(Constants.LOG_TAG_BT, "Configure device");
 
+
         Log.d(Constants.LOG_TAG_BT, "True distance");
-        IOUtils.write("$MM,0\n", anOutput);
+        sendLogged("$MM,0\n", anOutput, false);
         Log.d(Constants.LOG_TAG_BT, "Distance in meters");
-        IOUtils.write("$DU,0\n", anOutput);
+        sendLogged("$DU,0\n", anOutput, false);
         Log.d(Constants.LOG_TAG_BT, "Angle in degrees");
-        IOUtils.write("$AU,0\n", anOutput);
+        sendLogged("$AU,0\n", anOutput, false);
 
         Log.d(Constants.LOG_TAG_BT, "Start listening");
-        IOUtils.write("$GO\n", anOutput);
+        sendLogged("$GO\n", anOutput, false);
 
         Log.d(Constants.LOG_TAG_BT, "Command sent ");
     }

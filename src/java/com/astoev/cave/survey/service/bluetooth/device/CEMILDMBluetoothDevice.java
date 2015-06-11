@@ -37,7 +37,7 @@ public class CEMILDMBluetoothDevice extends AbstractBluetoothDevice {
     @Override
     public void triggerMeasures(OutputStream aStream, List<Constants.MeasureTypes> aMeasures) throws IOException {
         // TODO need better command to read values with single device measure
-        IOUtils.write(ByteUtils.hexStringToByte("D5F0E00D"), aStream);
+        sendLogged("D5F0E00D", aStream, false);
     }
 
     @Override

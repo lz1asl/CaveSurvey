@@ -1,9 +1,14 @@
 package com.astoev.cave.survey.service.bluetooth.device;
 
+import android.util.Log;
+
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.Measure;
+import com.astoev.cave.survey.util.ByteUtils;
 import com.astoev.cave.survey.util.StringUtils;
+
+import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -111,6 +116,15 @@ public abstract class AbstractBluetoothDevice implements Comparable {
 
     protected boolean deviceNameEquals(String aDeviceName, String aStart) {
         return StringUtils.isNotEmpty(aDeviceName) && aDeviceName.equals(aStart);
+    }
+
+    protected void sendLogged(String aMessage, OutputStream aStream, boolean aHexString) throws IOException {
+        Log.d(Constants.LOG_TAG_BT, "Send to device " + aMessage + " : " + aHexString);
+        if (aHexString) {
+            IOUtils.write(ByteUtils.hexStringToByte("D5F0E00D"), aStream);
+        } else {
+            IOUtils.write(aMessage, aStream);
+        }
     }
 
     @Override
