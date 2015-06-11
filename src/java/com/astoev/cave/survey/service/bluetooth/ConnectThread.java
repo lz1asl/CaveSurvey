@@ -268,10 +268,16 @@ public class ConnectThread extends Thread {
                     }
 
                 } catch (DataException de) {
+                    Log.e(Constants.LOG_TAG_BT, "Data exception: " + de.getMessage(), de);
+                    // reset messasge in case of error
+                    message = new ByteArrayOutputStream();
+                    buffer = new byte[1024];
+
                     Bundle b = new Bundle();
                     b.putString("error", de.getMessage());
                     mReceiver.send(Activity.RESULT_CANCELED, b);
                     mReceiver = null;
+
                     continue;
                 }
 
