@@ -165,7 +165,7 @@ public class UIUtilities {
     }
 
     public static void showDeviceDisconnectedNotification(Context aContext, String aDevice) {
-        showStatusBarMessage(aContext, R.drawable.logo, BTActivity.class, aContext.getString(R.string.bt_device_lost, aDevice));
+        showStatusBarMessage(aContext, R.drawable.logo_greyed, BTActivity.class, aContext.getString(R.string.bt_device_lost, aDevice));
     }
 
     public static void cleanStatusBarMessages(Context aContext) {
