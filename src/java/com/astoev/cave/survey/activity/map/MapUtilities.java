@@ -152,6 +152,14 @@ public class MapUtilities {
         }
     }
 
+    public static float getSlopeOrHorizontallyIfMissing(Float aSlope) {
+        if (aSlope == null) {
+            return 0f;
+        } else {
+            return aSlope;
+        }
+    }
+
     public static boolean isAzimuthInDegreesValid(Float anAzimuth) {
         return anAzimuth != null && anAzimuth >= 0 && anAzimuth < Option.MAX_VALUE_AZIMUTH_DEGREES;
     }

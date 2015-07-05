@@ -313,8 +313,10 @@ public class MapView extends View {
                                         deltaX = (float) (legDistance * Math.sin(Math.toRadians(MapUtilities.getAzimuthInDegrees(v.getAzimuth(), azimuthUnits)))) * scale;
                                     } else {
                                         float legDistance = v.getDistance();
-                                        deltaY = (float) (legDistance * Math.cos(Math.toRadians(MapUtilities.add90Degrees(MapUtilities.getSlopeInDegrees(v.getSlope(), slopeUnits))))) * scale;
-                                        deltaX = (float) (legDistance * Math.sin(Math.toRadians(MapUtilities.add90Degrees(MapUtilities.getSlopeInDegrees(v.getSlope(), slopeUnits))))) * scale;
+                                        deltaY = (float) (legDistance * Math.cos(Math.toRadians(MapUtilities.add90Degrees(
+                                                MapUtilities.getSlopeInDegrees(MapUtilities.getSlopeOrHorizontallyIfMissing(v.getSlope()), slopeUnits))))) * scale;
+                                        deltaX = (float) (legDistance * Math.sin(Math.toRadians(MapUtilities.add90Degrees(
+                                                MapUtilities.getSlopeInDegrees(MapUtilities.getSlopeOrHorizontallyIfMissing(v.getSlope()), slopeUnits))))) * scale;
                                     }
                                     canvas.drawLine(mapCenterMoveX + first.getX(), mapCenterMoveY + first.getY(), mapCenterMoveX + first.getX() + deltaX, mapCenterMoveY + first.getY() + deltaY, vectorsPaint);
                                     canvas.drawCircle(mapCenterMoveX + first.getX() + deltaX, mapCenterMoveY + first.getY() + deltaY, 2, vectorPointPaint);
