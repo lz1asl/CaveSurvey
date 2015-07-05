@@ -25,13 +25,16 @@ import com.astoev.cave.survey.activity.MainMenuActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.activity.dialog.VectorDialog;
 import com.astoev.cave.survey.activity.draw.DrawingActivity;
+import com.astoev.cave.survey.activity.map.MapUtilities;
 import com.astoev.cave.survey.fragment.LocationFragment;
 import com.astoev.cave.survey.model.Gallery;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Note;
+import com.astoev.cave.survey.model.Option;
 import com.astoev.cave.survey.model.Photo;
 import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.model.Vector;
+import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.service.bluetooth.BTMeasureResultReceiver;
 import com.astoev.cave.survey.service.bluetooth.BTResultAware;
 import com.astoev.cave.survey.service.bluetooth.util.MeasurementsUtil;
@@ -477,34 +480,31 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         Log.i(Constants.LOG_TAG_UI, "Point activity's menu selected - " + item.toString());
 
         switch (item.getItemId()) {
-            case R.id.point_action_save: {
+            case R.id.point_action_save:
                 saveButton();
                 return true;
-            }
-            case R.id.point_action_note: {
+            case R.id.point_action_note:
                 noteButton(null);
                 return true;
-            }
-            case R.id.point_action_draw: {
+            case R.id.point_action_draw:
                 drawingButton();
                 return true;
-            }
-            case R.id.point_action_gps: {
+            case R.id.point_action_gps:
                 gpsButton();
                 return true;
-            }
-            case R.id.point_action_photo: {
+            case R.id.point_action_photo:
                 photoButton();
                 return true;
-            }
-            case R.id.point_action_add_vector: {
+            case R.id.point_action_add_vector:
                 vectorButton();
                 return true;
-            }
-            case R.id.point_action_delete: {
+            case R.id.point_action_delete:
                 deleteButton();
                 return true;
-            }
+            case R.id.point_action_reverse:
+                reverseLeg();
+                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -529,6 +529,9 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 
             MenuItem vectorsMenuItem = menu.findItem(R.id.point_action_add_vector);
             vectorsMenuItem.setVisible(false);
+
+            MenuItem reverseMenuItem = menu.findItem(R.id.point_action_reverse);
+            reverseMenuItem.setVisible(false);
         }
 
         // check if the device has a camera
@@ -827,6 +830,57 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
             finish();
         } else {
             UIUtilities.showNotification(R.string.point_swipe_not_possible);
+        }
+    }
+
+
+    private void reverseLeg() {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(PointActivity.this);
+        try {
+
+            // validate
+            final EditText azimuth = (EditText) findViewById(R.id.point_azimuth);
+            final EditText slope = (EditText) findViewById(R.id.point_slope);
+
+            if (UIUtilities.validateNumber(azimuth, true) && UIUtilities.checkAzimuth(azimuth)
+                    && UIUtilities.validateNumber(slope, false) && UIUtilities.checkSlope(slope) ) {
+
+                dialogBuilder.setMessage(getString(R.string.main_reverse_message, mCurrentLeg.buildLegDescription()))
+                        .setCancelable(false)
+                        .setPositiveButton(R.string.button_yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                Log.i(Constants.LOG_TAG_UI, "Reverse leg");
+
+
+                                // if values are present update them in the UI only, they will be persisted on "save"
+                                try {
+                                    Float currAzimuth = MapUtilities.getAzimuthInDegrees(StringUtils.getFromEditTextNotNull(azimuth));
+                                    if (currAzimuth != null) {
+                                        Float reversedAzimuth = MapUtilities.add90Degrees(MapUtilities.add90Degrees(currAzimuth));
+                                        populateMeasure(reversedAzimuth, R.id.point_azimuth);
+                                    }
+                                    Float currSlope = StringUtils.getFromEditTextNotNull(slope);
+                                    if (currSlope != null && currSlope != 0) {
+                                        populateMeasure(-currSlope, R.id.point_slope);
+                                    }
+                                } catch (Exception e) {
+                                    Log.e(Constants.LOG_TAG_UI, "Failed to reverse leg", e);
+                                    UIUtilities.showNotification(R.string.error);
+                                }
+                                dialog.dismiss();
+                            }
+                        })
+                        .setNegativeButton(R.string.button_no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                            }
+                        });
+                AlertDialog alert = dialogBuilder.create();
+                alert.show();
+            }
+        } catch (Exception e) {
+            Log.e(Constants.LOG_TAG_UI, "Failed to build reverse dialog", e);
+            UIUtilities.showNotification(R.string.error);
         }
     }
 

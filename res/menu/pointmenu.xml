@@ -40,7 +40,14 @@
           android:visible="false"
           android:enabled="true"
           myapp:showAsAction="ifRoom|withText"/>
- 
+
+	<item android:id="@+id/point_action_reverse"
+		android:icon="@drawable/ic_action_import_export"
+		android:title="@string/main_reverse"
+		android:visible="true"
+		android:enabled="true"
+		myapp:showAsAction="ifRoom|withText"/>
+
 	<item android:id="@+id/point_action_delete"
 	      android:icon="@drawable/ic_action_discard"
 	      android:title="@string/point_delete"
