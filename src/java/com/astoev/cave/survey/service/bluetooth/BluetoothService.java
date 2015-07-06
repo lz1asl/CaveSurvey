@@ -225,5 +225,12 @@ public class BluetoothService {
         }
     }
 
+    public static void unregisterListeners(BTActivity btActivity) {
+        mCurrContext = btActivity;
+        if (mCommunicationThread != null) {
+            mCommunicationThread.unregisterListeners(btActivity);
+        }
+    }
+
 
 }

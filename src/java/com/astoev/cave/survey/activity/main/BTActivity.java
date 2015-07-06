@@ -202,4 +202,11 @@ public class BTActivity extends MainMenuActivity {
         }
     }
 
+    @Override
+    protected void onPause() {
+        // Unregister since the activity is not visible
+        BluetoothService.unregisterListeners(this);
+        super.onPause();
+    }
+
 }

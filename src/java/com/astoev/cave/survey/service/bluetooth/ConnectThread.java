@@ -150,6 +150,19 @@ public class ConnectThread extends Thread {
         }
     }
 
+    public void unregisterListeners(final Activity aContext) {
+
+        if (mRegisteredReceivers.contains(mConnectedReceiver)) {
+            mRegisteredReceivers.remove(mConnectedReceiver);
+            aContext.unregisterReceiver(mConnectedReceiver);
+        }
+
+        if (mRegisteredReceivers.contains(mDisconnectedReceiver)) {
+            mRegisteredReceivers.remove(mDisconnectedReceiver);
+            aContext.unregisterReceiver(mDisconnectedReceiver);
+        }
+    }
+
     @Override
     public void run() {
 
