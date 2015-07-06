@@ -166,24 +166,29 @@ public class NMEAUtil {
             tokenizer.nextToken();
 
             // distance
+            boolean distancePresent = false;
+            String units;
             String distanceString = tokenizer.nextToken();
-            tokenizer.nextToken();
-            String units = tokenizer.nextToken();
-            boolean distancePresent = true;
-            if ("F".equals(units) || "Y".equals(units)) { //"M".equals(units) ||
-                // no distance, no need to skip distance units
+            if (",".equals(distanceString)) {
                 distancePresent = false;
             } else {
-                if (!"M".equals(units)) {
-                    throw new DataException("Please measure in meters ");
-                }
+                tokenizer.nextToken();
 
-                float distance = Float.parseFloat(distanceString);
-                if (distance < 0) {
-                    throw new DataException("Negative distance");
-                }
+                units = tokenizer.nextToken();
 
-                // this is horizontal distance, so ignored now
+                if ("M".equals(units) || "F".equals(units) || "Y".equals(units)) {
+                    if (!"M".equals(units)) {
+                        throw new DataException("Please measure in meters ");
+                    }
+
+
+                    float distance = Float.parseFloat(distanceString);
+                    if (distance < 0) {
+                        throw new DataException("Negative distance");
+                    }
+                    distancePresent = true;
+                    // this is horizontal distance, so ignored now
+                }
             }
             tokenizer.nextToken();
 
@@ -225,10 +230,8 @@ public class NMEAUtil {
                 distanceString = tokenizer.nextToken();
                 tokenizer.nextToken();
                 units = tokenizer.nextToken();
-                if ("M".equals(units) || "F".equals(units)) {
-                    // no distance, no need to skip distance units
-                } else {
-                    if (!"M".equals(tokenizer.nextToken())) {
+                if ("M".equals(units) || "F".equals(units) || "Y".equals(units)) {
+                    if (!"M".equals(units)) {
                         throw new DataException("Please measure in meters");
                     }
 
@@ -240,12 +243,9 @@ public class NMEAUtil {
                     Measure distanceMeasure = new Measure(Constants.MeasureTypes.distance, Constants.MeasureUnits.meters, distance);
                     measures.add(distanceMeasure);
                     Log.i(Constants.LOG_TAG_BT, "Got distance " + distanceMeasure);
-
                 }
             } else {
-                // skip the 999's and measure type
-                tokenizer.nextToken();
-                tokenizer.nextToken();
+                // skip the ,,'s for missing distance
                 tokenizer.nextToken();
             }
 
