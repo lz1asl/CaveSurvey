@@ -51,9 +51,9 @@ One of the possible target configurations is to read the distance and inclinatio
 
 Test devices:
   - We have tested from Android 2.1(cheap and small) up to 5.0 (better hardware and protection). Smartphones are recommended to have water protection (to survive), a compass (to read from), SPP Bluetooth profile (to connect instruments).
-  - CEM iLDM-150 laser distance meter (IP54) with built-in clinometer and Bluetooth
-  - Trimble LaserAce 1000 (very accurate) that provides distance, clinometer and azimuth
-  - LTI TruPulse 360
+  - [CEM iLDM-150](https://github.com/lz1asl/CaveSurvey/wiki/iLDM-150) laser distance meter (IP54) with built-in clinometer and Bluetooth
+  - [Trimble LaserAce 1000](https://github.com/lz1asl/CaveSurvey/wiki/Laser-Ace-100) (very accurate) that provides distance, clinometer and azimuth
+  - [LTI TruPulse 360B](https://github.com/lz1asl/CaveSurvey/wiki/LTI-TruPulse-360B)
   - Feel free to join our team and help adding other devices/functionalities
   
 
