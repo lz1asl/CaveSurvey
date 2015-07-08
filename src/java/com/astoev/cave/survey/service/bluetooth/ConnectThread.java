@@ -180,7 +180,7 @@ public class ConnectThread extends Thread {
             mIn = mSocket.getInputStream();
             mOut = mSocket.getOutputStream();
 
-            mDeviceSpec.configure(mIn, mOut);
+//            mDeviceSpec.configure(mIn, mOut);
 
             Log.i(Constants.LOG_TAG_BT, "Device found!");
             UIUtilities.showNotification(R.string.bt_connected);
