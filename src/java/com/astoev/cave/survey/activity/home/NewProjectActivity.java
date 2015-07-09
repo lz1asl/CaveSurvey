@@ -15,6 +15,7 @@ import com.astoev.cave.survey.dto.ProjectConfig;
 import com.astoev.cave.survey.fragment.ProjectFragment;
 import com.astoev.cave.survey.manager.ProjectManager;
 import com.astoev.cave.survey.model.Project;
+import com.astoev.cave.survey.util.StringUtils;
 
 import java.util.List;
 
@@ -51,10 +52,9 @@ public class NewProjectActivity extends MainMenuActivity {
             ProjectFragment projectFragment = (ProjectFragment)getSupportFragmentManager().findFragmentById(R.id.project_container);
             final ProjectConfig projectConfig = projectFragment.getProjectConfig();
 
-            //TODO handle this cases
             EditText projectNameField = (EditText) findViewById(R.id.new_projectname);
             final String newProjectName = projectNameField.getText().toString();
-            if (newProjectName.trim().equals("")) {
+            if (StringUtils.isEmpty(newProjectName)) {
                 projectNameField.setError(getString(R.string.project_name_required));
                 return;
             }

@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -82,8 +83,9 @@ public class ProjectFragment extends Fragment {
             EditText projectNameField = (EditText) view.findViewById(R.id.new_projectname);
             projectNameField.setText(config.getName());
             projectNameField.setEnabled(false);
+            projectNameField.setInputType(EditorInfo.TYPE_NULL);
 
-            prepareSpinner(view, R.id.options_units_distance,  R.array.distance_units, DISTANCE_UNIT, config.getDistanceUnits(), false);
+            prepareSpinner(view, R.id.options_units_distance, R.array.distance_units, DISTANCE_UNIT, config.getDistanceUnits(), false);
             prepareSpinner(view, R.id.options_distance_type, R.array.distance_read_type, DISTANCE_SENSOR, config.getDistanceSensor());
 
             prepareSpinner(view, R.id.options_units_azimuth, R.array.azimuth_units, AZIMUTH_UNIT, config.getAzimuthUnits(), false);
