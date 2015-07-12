@@ -162,10 +162,10 @@ public class MainActivity extends MainMenuActivity {
                     row.addView(createTextView(fromPointString, currentLeg, false, mGalleryColors.get(prevGalleryId)));
                     row.addView(createTextView(toPointString, currentLeg, false, mGalleryColors.get(l.getGalleryId())));
                     row.addView(createTextView(l.getDistance(), currentLeg, true));
+                    row.addView(createTextView(l.getAzimuth(), currentLeg, true));
+                    row.addView(createTextView(l.getSlope(), currentLeg, true));
                 }
-                row.addView(createTextView(l.getAzimuth(), currentLeg, true));
-                row.addView(createTextView(l.getSlope(), currentLeg, true));
-                
+
                 StringBuilder moreText = new StringBuilder();
                 
                 //TODO Debug
