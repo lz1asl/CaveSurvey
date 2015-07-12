@@ -86,10 +86,17 @@ public class MapView extends View {
         vectorsPaint.setAlpha(50);
         vectorPointPaint.setStrokeWidth(1);
         vectorPointPaint.setAlpha(50);
+
+        // need to instruct that changes to the canvas will be made, otherwise the screen might become blank
+        // see http://stackoverflow.com/questions/12261435/canvas-does-not-draw-in-custom-view
+        setWillNotDraw(false);
     }
 
     @Override
     public void onDraw(Canvas canvas) {
+
+        // need to call parent
+        super.onDraw(canvas);
 
         try {
             processedLegs.clear();
