@@ -141,6 +141,7 @@
     <string name="info_num_drawings"># drawings</string>
     <string name="info_num_coordinates"># coordinates</string>
     <string name="info_num_photos"># photos</string>
+    <string name="info_num_vectors"># vectors</string>
 
 
     <string name="export_xls">Excel export</string>

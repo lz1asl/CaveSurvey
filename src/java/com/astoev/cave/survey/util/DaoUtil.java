@@ -338,7 +338,7 @@ public class DaoUtil {
         String creationDate = project.getCreationDateFormatted();
 
         float totalLength = 0, totalDepth = 0;
-        int numNotes = 0, numDrawings = 0, numCoordinates = 0, numPhotos = 0;
+        int numNotes = 0, numDrawings = 0, numCoordinates = 0, numPhotos = 0, numVectors = 0;
         for (Leg l : legs) {
 
             // TODO calculate the correct distance and depth
@@ -370,6 +370,12 @@ public class DaoUtil {
             if (photos != null && !photos.isEmpty()) {
                 numPhotos += photos.size();
             }
+
+            // vectors
+            List<Vector> vectors = DaoUtil.getLegVectors(l);
+            if (vectors != null && !vectors.isEmpty()) {
+                numVectors += vectors.size();
+            }
         }
 
         int numGalleries = (int) DaoUtil.getGalleriesCount(project.getId());
@@ -380,6 +386,7 @@ public class DaoUtil {
         projectInfo.setSketches(numDrawings);
         projectInfo.setLocations(numCoordinates);
         projectInfo.setPhotos(numPhotos);
+        projectInfo.setVectors(numVectors);
 
         return projectInfo;
     }

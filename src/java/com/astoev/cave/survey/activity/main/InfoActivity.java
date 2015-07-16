@@ -89,6 +89,9 @@ public class InfoActivity extends MainMenuActivity {
             TextView projectNumPhotos = (TextView) findViewById(R.id.infoNumPhotos);
             projectNumPhotos.setText(StringUtils.intToLabel(projectInfo.getPhotos()));
 
+            TextView projectNumVectors = (TextView) findViewById(R.id.infoNumVectors);
+            projectNumVectors.setText(StringUtils.intToLabel(projectInfo.getVectors()));
+
             // set the value for azimuth build in processor
             if (Option.CODE_SENSOR_INTERNAL.equals(Options.getOption(Option.CODE_AZIMUTH_SENSOR).getValue())) {
                 TextView azimuthSensor = (TextView) findViewById(R.id.info_azimuth_sensor);

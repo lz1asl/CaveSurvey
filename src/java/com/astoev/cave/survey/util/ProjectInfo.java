@@ -39,6 +39,8 @@ public class ProjectInfo {
     
     /** Number of photos */
     private int photos;
+
+    private int vectors;
     
     /**
      * Constructor for ProjectInfo
@@ -198,5 +200,8 @@ public class ProjectInfo {
     public void setGalleries(int galleriesArg) {
         galleries = galleriesArg;
     }
-    
+
+    public int getVectors() { return vectors; }
+
+    public void setVectors(int vectors) { this.vectors = vectors; }
 }

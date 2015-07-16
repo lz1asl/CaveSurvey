@@ -141,6 +141,7 @@
     <string name="info_num_drawings"># скици</string>
     <string name="info_num_coordinates"># координати</string>
     <string name="info_num_photos"># снимки</string>
+    <string name="info_num_vectors"># лъчи</string>
 
 
     <string name="export_xls">Excel eкспорт</string>
