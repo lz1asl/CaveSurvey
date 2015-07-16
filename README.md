@@ -56,24 +56,14 @@ Test devices:
   - [LTI TruPulse 360B](https://github.com/lz1asl/CaveSurvey/wiki/LTI-TruPulse-360B)
   - Feel free to join our team and help adding other devices/functionalities
   
-
+In most caves it is not possible to create the whole map underground (as some other apps offer). I'm not confident in drawing stuff with muddy fingers, so get the data you can quick and get safe home to enjoy it.
 
 Precision
 =========
 
-Having precise instruments is important to do a proper work. Anyway in most caves centimeter precision is never possible.
-
-For iLDM-150 CEM have specified precision of 1.5mm for the distance and 0.5' from the clinometer.
-For LaserAce [this](https://www.trimble.com/mappingGIS/laserace1000.aspx) is the manifacturer info provided.
-For the Android build-in compass - you have to consult your device manifacturer, but if small enough and you use short legs there should be no problem (error will distribute and compensate anyway).
-
-If you are paranoic you can still use CaveSurvey in manual mode only - type the proper values from the existing tools you use. It will save you the Excel work later.
-
-
-Links
-====
-
-Another Android app is [Abris](https://play.google.com/store/apps/details?id=com.shturmsoft.abris&hl=en). They are already alive and have focus on creating the whole map underground. I have to admit they have done a great job, but I'm not confident in drawing stuff with muddy fingers.
+Having precise instruments is important to do a proper work. Anyway in most caves centimeter precision is never possible. See the device pages in the Wiki for details.
+For the Android build-in sensors - you have to consult your device specifications, but if good enough and you use short legs there should be no problem (error will distribute and compensate anyway).
+If you are paranoic you can still use CaveSurvey in manual mode only - type manually the proper values from the existing tools you use. It will save you the Excel homework later.
 
 
 About
@@ -83,7 +73,7 @@ Developed by members of caving club [Paldin](http://sk-paldin.eu/) Plovdiv, Bulg
 
 ![Picture](res/drawable-mdpi/paldin.jpg)
 
-Use the official version at [Google Play](https://play.google.com/store/apps/details?id=com.astoev.cave.survey) or the [latest build](https://razhodki.ci.cloudbees.com/job/CaveSurvey/lastSuccessfulBuild/artifact/build/apk/CaveSurvey-defaultFlavor-release.apk) for devces without Google Play (tested to work on BlackBerry Q5).
+Use the official version at [Google Play](https://play.google.com/store/apps/details?id=com.astoev.cave.survey) or the [latest build](https://razhodki.ci.cloudbees.com/job/CaveSurvey/lastSuccessfulBuild/artifact/build/apk/CaveSurvey-defaultFlavor-release.apk) for devces without Google Play (tested to also work on BlackBerry Q5).
 
 ![CloudBees](http://www.cloudbees.com/sites/default/files/Button-Built-on-CB-1.png)
 
