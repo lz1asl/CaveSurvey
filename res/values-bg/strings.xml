@@ -21,12 +21,12 @@
     <string name="new_title">Ново проучване</string>
     <string name="new_button_create">Създай</string>
 
-    <string name="project_header">Проучване</string>
+    <string name="project_header">Име на проучване</string>
     <string name="project_name">Име</string>
     <string name="project_name_required">Въведи име</string>
 
     <!-- main screen -->
-    <string name="main_leg">Текущ</string>
+    <string name="main_leg">Текуща отсечка</string>
     <string name="main_button_change">Избери</string>
     <string name="main_button_change_title">Избери отсечка</string>
     <string name="main_button_add">Добави</string>
@@ -150,7 +150,8 @@
     <string name="io_error">Неуспешен достъп до SD картата</string>
     
     <!-- options -->
-    <string name="measures_title">Измерване</string>
+    <string name="measures_title">Измервания</string>
+
 <!-- 
     <string-array name="options_modes">
         <item>Manual enter</item>
@@ -159,7 +160,7 @@
     </string-array>
  -->
  
-    <string name="options_units_distance">Измерване на разстояние</string>
+    <string name="options_units_distance">Разстояние:</string>
     <string-array name="distance_units">
         <item>Метри</item>
     </string-array>
@@ -168,7 +169,7 @@
         <item>През Bluetooth</item>
     </string-array>
 
-    <string name="options_units_azimuth">Измерване на азимут</string>
+    <string name="options_units_azimuth">Азимут:</string>
     <string-array name="azimuth_units">
         <item>Градуси</item>
         <item>Гради</item>
@@ -185,7 +186,7 @@
         <item>През Bluetooth</item>
     </string-array>
 
-    <string name="options_units_slope">Наклон</string>
+    <string name="options_units_slope">Наклон:</string>
     <string-array name="slope_units">
         <item>Гадуси</item>
         <item>Гради</item>
@@ -215,9 +216,9 @@
     <string name="info_distance_in">Разстояние в</string>
     <string name="info_azimuth_in">Азимут в</string>
     <string name="info_slope_in">Наклон в</string>
-    <string name="info_azimuth_build_in_sensor">Азимут от вграден сензор</string>
+    <string name="info_azimuth_build_in_sensor">Избран вграден сензор</string>
     
-    <string name="sensor_none">липсва</string>
+    <string name="sensor_none">-</string>
     <string name="rotation_sensor">Завъртане</string>
     <string name="magnetic_sensor">Магнитен/Ускорение</string>
     <string name="orientation_sensor">Ориентация</string>

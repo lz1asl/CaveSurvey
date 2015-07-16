@@ -21,12 +21,12 @@
     <string name="new_title">New Survey</string>
     <string name="new_button_create">Create</string>
 
-    <string name="project_header">Survey</string>
+    <string name="project_header">Survey Name</string>
     <string name="project_name">Name</string>
     <string name="project_name_required">Enter name</string>
 
     <!-- main screen -->
-    <string name="main_leg">Current</string>
+    <string name="main_leg">Current leg</string>
     <string name="main_button_change">Select</string>
     <string name="main_button_change_title">Change leg</string>
     <string name="main_button_add">Add</string>
@@ -150,7 +150,7 @@
     <string name="io_error">Unable to access SD card</string>
     
     <!-- options -->
-    <string name="measures_title">Measurements</string>
+    <string name="measures_title">Data Input</string>
 <!-- 
     <string-array name="options_modes">
         <item>Manual enter</item>
@@ -159,7 +159,7 @@
     </string-array>
  -->
  
-    <string name="options_units_distance">Read Distance</string>
+    <string name="options_units_distance">Distance:</string>
     <string-array name="distance_units">
         <item>Meters</item>
     </string-array>
@@ -168,7 +168,7 @@
         <item>From Bluetooth</item>
     </string-array>
 
-    <string name="options_units_azimuth">Read Azimuth</string>
+    <string name="options_units_azimuth">Azimuth:</string>
     <string-array name="azimuth_units">
         <item>Degrees</item>
         <item>Grad</item>
@@ -185,7 +185,7 @@
         <item>From Bluetooth</item>
     </string-array>
 
-    <string name="options_units_slope">Slope</string>
+    <string name="options_units_slope">Slope:</string>
     <string-array name="slope_units">
         <item>Degrees</item>
         <item>Grad</item>
@@ -216,9 +216,9 @@
     <string name="info_distance_in">Distance in</string>
     <string name="info_azimuth_in">Azimuth in</string>
     <string name="info_slope_in">Slope in</string>
-    <string name="info_azimuth_build_in_sensor">Azimuth build-in sensor</string>
+    <string name="info_azimuth_build_in_sensor">Build-in sensor configured</string>
     
-    <string name="sensor_none">None</string>
+    <string name="sensor_none">-</string>
     <string name="rotation_sensor">Rotation</string>
     <string name="magnetic_sensor">Magnetic/Accelerometer</string>
     <string name="orientation_sensor">Orientation</string>

@@ -27,7 +27,8 @@
         android:layout_height="wrap_content"
         android:text="@string/measures_title"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:layout_below="@id/new_projectname"/>
+        android:layout_below="@id/new_projectname"
+        android:paddingTop="10dp"/>
 
     <!-- distance -->
     <TextView android:id="@+id/new_distance_text"

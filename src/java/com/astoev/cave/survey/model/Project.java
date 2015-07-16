@@ -1,14 +1,18 @@
 package com.astoev.cave.survey.model;
 
 import com.astoev.cave.survey.Constants;
+import com.astoev.cave.survey.util.ConfigUtil;
+import com.astoev.cave.survey.util.StringUtils;
 import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by IntelliJ IDEA.
@@ -70,7 +74,18 @@ public class Project {
     }
 
     public String getCreationDateFormatted() {
-        SimpleDateFormat df = new SimpleDateFormat(Constants.DATE_FORMAT, Constants.DEFAULT_LOCALE);
+
+
+        Locale locale;
+        String savedLanguage = ConfigUtil.getStringProperty(ConfigUtil.PREF_LOCALE);
+        if (StringUtils.isEmpty(savedLanguage)){
+            // use any default formatting
+            locale = Locale.getDefault();
+        } else {
+            // format depending on the locale
+            locale = new Locale(savedLanguage);
+        }
+        DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, locale);
         return df.format(mCreationDate);
     }
 

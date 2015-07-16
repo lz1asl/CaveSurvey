@@ -162,10 +162,11 @@
                 android:layout_weight="1"/>
         </TableRow>
 
-        <TableRow>
+        <TableRow android:paddingTop="10dp">
             <Button android:id="@+id/updateProject"
                 android:text="@string/update_project"
                 android:layout_gravity="center_horizontal"
+                android:layout_span="2"
                 android:layout_marginBottom="10dp"
                 android:onClick="update"
                 />
