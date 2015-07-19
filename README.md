@@ -54,6 +54,7 @@ Test devices:
   - [CEM iLDM-150](https://github.com/lz1asl/CaveSurvey/wiki/iLDM-150) laser distance meter (IP54) with built-in clinometer and Bluetooth
   - [Trimble LaserAce 1000](https://github.com/lz1asl/CaveSurvey/wiki/Laser-Ace-100) (very accurate) that provides distance, clinometer and azimuth
   - [LTI TruPulse 360B](https://github.com/lz1asl/CaveSurvey/wiki/LTI-TruPulse-360B)
+  - [DistoX](https://github.com/lz1asl/CaveSurvey/wiki/DistoX) is under testing
   - Feel free to join our team and help adding other devices/functionalities
   
 In most caves it is not possible to create the whole map underground (as some other apps offer). I'm not confident in drawing stuff with muddy fingers, so get the data you can quick and get safe home to enjoy it.
