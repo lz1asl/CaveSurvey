@@ -37,8 +37,10 @@ public class TruPulse360BBluetoothDevice extends AbstractBluetoothDevice {
 
     @Override
     public void configure(InputStream anInput, OutputStream anOutput) throws IOException {
-        Log.i(Constants.LOG_TAG_BT, "Configure device");
+        Log.i(Constants.LOG_TAG_BT, "Configure LTI disabled");
 
+/*
+        Log.i(Constants.LOG_TAG_BT, "Configure device");
 
         Log.d(Constants.LOG_TAG_BT, "True distance");
         sendLogged("$MM,0\n", anOutput, false);
@@ -56,7 +58,7 @@ public class TruPulse360BBluetoothDevice extends AbstractBluetoothDevice {
         sendLogged("$GO\n", anOutput, false);
         Log.d(Constants.LOG_TAG_BT, "Response: " + IOUtils.toString(anInput));
 
-        Log.d(Constants.LOG_TAG_BT, "Config commands sent ");
+        Log.d(Constants.LOG_TAG_BT, "Config commands sent ");*/
     }
 
     @Override
