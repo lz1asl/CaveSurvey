@@ -94,8 +94,9 @@ public abstract class AbstractBluetoothDevice implements Comparable {
      * Used to acknowledge message received.
      * Need to be overriden only in case actual ack performed.
      * @param aStream
+     * @param aMessage the original packet
      */
-    public void ack(OutputStream aStream) {
+    public void ack(OutputStream aStream, byte[] aMessage) throws IOException {
         // no default implementation
     }
 

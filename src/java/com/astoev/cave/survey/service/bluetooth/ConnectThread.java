@@ -180,7 +180,7 @@ public class ConnectThread extends Thread {
             mIn = mSocket.getInputStream();
             mOut = mSocket.getOutputStream();
 
-//            mDeviceSpec.configure(mIn, mOut);
+            mDeviceSpec.configure(mIn, mOut);
 
             Log.i(Constants.LOG_TAG_BT, "Device found!");
             UIUtilities.showNotification(R.string.bt_connected);
@@ -221,6 +221,10 @@ public class ConnectThread extends Thread {
                                 Log.d(Constants.LOG_TAG_BT, "Expect more chars " + mIn.available() + " current " + message.size());
                                 continue;
                             } else {
+
+                                // acknowledge received
+                                mDeviceSpec.ack(mOut, message.toByteArray());
+
                                 // process the data
                                 Log.i(Constants.LOG_TAG_BT, "Decoding message");
                                 List<Measure> measures = mDeviceSpec.decodeMeasure(message.toByteArray(), mMeasureTypes);
@@ -230,9 +234,6 @@ public class ConnectThread extends Thread {
                                 buffer = new byte[1024];
 
                                 if (measures != null && measures.size() > 0) {
-
-                                    // acknowledge received
-                                    mDeviceSpec.ack(mOut);
 
                                     // populate the result
                                     Bundle b = new Bundle();
