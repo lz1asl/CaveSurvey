@@ -189,7 +189,7 @@
 
     <string name="options_units_slope">Наклон:</string>
     <string-array name="slope_units">
-        <item>Гадуси</item>
+        <item>Градуси</item>
         <item>Гради</item>
     </string-array>
 
