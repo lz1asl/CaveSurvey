@@ -24,7 +24,7 @@ public abstract class AbstractDeviceProtocolTest extends TestCase {
                     Constants.MeasureTypes.angle, Constants.MeasureTypes.slope);
 
             List<Measure> measures = aDeviceSpec.decodeMeasure(aMessage, types);
-            assertNotNull(measures);
+            assertNotNull("Measurements expected", measures);
             // 3 minus the nulls passed results expected
             int numMeasuresExpected = 3 - Collections.frequency(Arrays.asList(aDistance, anAzimuth, anAngle), null);
             assertEquals(numMeasuresExpected, measures.size());
@@ -36,7 +36,7 @@ public abstract class AbstractDeviceProtocolTest extends TestCase {
                         if (aDistance == null) {
                             fail("Distance not expected");
                         } else {
-                            assertEquals(aDistance, m.getValue());
+                            assertEquals(aDistance, m.getValue(), 0.001);
                             assertEquals(Constants.MeasureUnits.meters, m.getMeasureUnit());
                             if (measuresProcessed.contains(m.getMeasureType())) {
                                 fail();
@@ -49,7 +49,7 @@ public abstract class AbstractDeviceProtocolTest extends TestCase {
                         if (anAzimuth == null) {
                             fail("Angle not detected");
                         } else {
-                            assertEquals(anAzimuth, m.getValue());
+                            assertEquals(anAzimuth, m.getValue(), 0.001);
                             assertEquals(Constants.MeasureUnits.degrees, m.getMeasureUnit());
                             if (measuresProcessed.contains(m.getMeasureType())) {
                                 fail();
@@ -62,7 +62,7 @@ public abstract class AbstractDeviceProtocolTest extends TestCase {
                         if (anAngle == null) {
                             fail("Slope not expected");
                         } else {
-                            assertEquals(anAngle, m.getValue());
+                            assertEquals(anAngle, m.getValue(), 0.001);
                             assertEquals(Constants.MeasureUnits.degrees, m.getMeasureUnit());
                             if (measuresProcessed.contains(m.getMeasureType())) {
                                 fail();
