@@ -1,8 +1,13 @@
 package com.astoev.cave.survey.service.bluetooth.device;
 
+import android.util.Log;
+
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.Measure;
+import com.astoev.cave.survey.service.bluetooth.util.DistoXProtocol;
+
+import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,8 +22,7 @@ public class DistoXBluetoothDevice extends AbstractBluetoothDevice {
 
     @Override
     public boolean isNameSupported(String aName) {
-        // TODO filtering logic
-        return false;
+        return deviceNameStartsWith(aName, "DistoX");
     }
 
     @Override
@@ -33,12 +37,17 @@ public class DistoXBluetoothDevice extends AbstractBluetoothDevice {
 
     @Override
     public void configure(InputStream anInput, OutputStream anOutput) throws IOException {
-        // not supported by DistoX
+        // not needed
     }
 
     @Override
     public List<Measure> decodeMeasure(byte[] aResponseBytes, List<Constants.MeasureTypes> aMeasures) throws IOException, DataException {
-        // TODO implement packet parsing logic
+
+        Log.i(Constants.LOG_TAG_BT, "Data packet : " + DistoXProtocol.isDataPacket(aResponseBytes));
+        if (DistoXProtocol.isDataPacket(aResponseBytes)) {
+            Log.i(Constants.LOG_TAG_BT, DistoXProtocol.describeDataPacket(aResponseBytes));
+            return DistoXProtocol.parseDataPacket(aResponseBytes);
+        }
         return null;
     }
 
@@ -50,12 +59,16 @@ public class DistoXBluetoothDevice extends AbstractBluetoothDevice {
 
     @Override
     public boolean isFullPacketAvailable(byte[] aBytesBuffer) {
-        // TODO define logic
-        return false;
+        // full message expected
+//        Log.i(Constants.LOG_TAG_BT, "Check package " + DistoXProtocol.describeDataPacket(aBytesBuffer));
+        return true;
     }
 
     @Override
-    public void ack(OutputStream aStream) {
-        // TODO acknowledge packet received
+    public void ack(OutputStream aStream, byte[] aBytesBffer) throws IOException {
+        byte [] ack = DistoXProtocol.createAcknowledgementPacket(aBytesBffer);
+        Log.i(Constants.LOG_TAG_BT, "Generate ack " + DistoXProtocol.describeAcknowledgementPacket(ack));
+        IOUtils.write(ack, aStream);
+        aStream.flush();
     }
 }

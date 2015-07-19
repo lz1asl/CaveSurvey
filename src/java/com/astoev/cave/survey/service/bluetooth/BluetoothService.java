@@ -16,6 +16,7 @@ import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.main.BTActivity;
 import com.astoev.cave.survey.service.bluetooth.device.AbstractBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.CEMILDMBluetoothDevice;
+import com.astoev.cave.survey.service.bluetooth.device.DistoXBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.LaserAceBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.TruPulse360BBluetoothDevice;
 import com.astoev.cave.survey.util.ConfigUtil;
@@ -43,7 +44,7 @@ public class BluetoothService {
         SUPPORTED_DEVICES.add(new CEMILDMBluetoothDevice());
         SUPPORTED_DEVICES.add(new LaserAceBluetoothDevice());
         SUPPORTED_DEVICES.add(new TruPulse360BBluetoothDevice());
-//        SUPPORTED_DEVICES.add(new DistoXBluetoothDevice());
+        SUPPORTED_DEVICES.add(new DistoXBluetoothDevice());
     }
 
     private static ConnectThread mCommunicationThread = null;
