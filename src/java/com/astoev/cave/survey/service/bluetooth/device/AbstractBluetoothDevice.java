@@ -67,7 +67,7 @@ public abstract class AbstractBluetoothDevice implements Comparable {
      * @throws IOException
      * @throws DataException
      */
-    public abstract List<Measure> decodeMeasure(byte[] aResponseBytes, List<Constants.MeasureTypes> aMeasures) throws IOException, DataException;
+    public abstract List<Measure> decodeMeasure(byte[] aResponseBytes, List<Constants.MeasureTypes> aMeasures) throws DataException;
 
 
     /**

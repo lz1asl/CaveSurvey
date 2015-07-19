@@ -5,7 +5,6 @@ import android.util.Log;
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.Measure;
-import com.astoev.cave.survey.util.ByteUtils;
 
 import org.apache.commons.io.IOUtils;
 

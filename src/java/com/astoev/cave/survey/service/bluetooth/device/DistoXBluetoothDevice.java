@@ -41,7 +41,7 @@ public class DistoXBluetoothDevice extends AbstractBluetoothDevice {
     }
 
     @Override
-    public List<Measure> decodeMeasure(byte[] aResponseBytes, List<Constants.MeasureTypes> aMeasures) throws IOException, DataException {
+    public List<Measure> decodeMeasure(byte[] aResponseBytes, List<Constants.MeasureTypes> aMeasures) throws DataException {
 
         Log.i(Constants.LOG_TAG_BT, "Data packet : " + DistoXProtocol.isDataPacket(aResponseBytes));
         if (DistoXProtocol.isDataPacket(aResponseBytes)) {
