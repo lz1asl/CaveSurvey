@@ -22,7 +22,7 @@ CaveSurvey is a tool for mapping caves using (at least) an Android device and (o
  - allowing the creation of simple sketches
  - aiding measurement collection (reducing the number of measuring instruments needed and/or the need to manually type the value):
   - by using built-in sensors if available (as compass and clinometer) and tools (take pictures, save the GPS locations of the entrances, type notes, etc)
-  - by using Bluetooth to integrate external laser distance meters (to read distance and in some cases compass and clinometer measurements)
+  - by using Bluetooth to integrate external laser distance meters (to read distance and in some cases compass and clinometer measurements), see the list of supported devices below
 
 
 Features
