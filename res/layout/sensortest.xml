@@ -22,6 +22,7 @@
                 android:layout_height="wrap_content"
                 android:clickable="true"
                 android:src="@drawable/ic_info_white"
+                android:contentDescription="@string/information"
                 android:onClick="onSensorsTestInfo"/>
         </LinearLayout>
         <!-- Table header -->
@@ -168,6 +169,7 @@
                 android:layout_height="wrap_content"
                 android:clickable="true"
                 android:src="@drawable/ic_info_white"
+                android:contentDescription="@string/information"
                 android:onClick="onSensorsChooseInfo"/>
         </LinearLayout>
         <LinearLayout android:id="@+id/sensors_spinner_layout"
