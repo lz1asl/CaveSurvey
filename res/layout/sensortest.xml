@@ -17,6 +17,12 @@
                 android:ellipsize="end" android:singleLine="true"
                 android:gravity="center"
                 android:textAppearance="@android:style/TextAppearance.Large"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:src="@drawable/ic_info_white"
+                android:onClick="onSensorsTestInfo"/>
         </LinearLayout>
         <!-- Table header -->
         <LinearLayout android:layout_height="wrap_content"
@@ -154,7 +160,15 @@
                 android:text="@string/sensor_choose_header"
                 android:ellipsize="end" android:singleLine="true"
                 android:gravity="center"
-                android:textAppearance="@android:style/TextAppearance.Large"/>
+                android:textAlignment="center"
+                android:textAppearance="@android:style/TextAppearance.Large"
+                android:onClick="onSensorsChooseInfo"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:src="@drawable/ic_info_white"
+                android:onClick="onSensorsChooseInfo"/>
         </LinearLayout>
         <LinearLayout android:id="@+id/sensors_spinner_layout"
             android:layout_width="fill_parent"

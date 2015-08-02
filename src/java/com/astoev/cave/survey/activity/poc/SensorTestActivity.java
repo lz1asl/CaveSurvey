@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.MainMenuActivity;
+import com.astoev.cave.survey.fragment.InfoDialogFragment;
 import com.astoev.cave.survey.service.orientation.AzimuthChangedAdapter;
 import com.astoev.cave.survey.service.orientation.MagneticOrientationProcessor;
 import com.astoev.cave.survey.service.orientation.OrientationDeprecatedProcessor;
@@ -34,6 +35,10 @@ import java.util.ArrayList;
  * @author Zhivko Mitrev
  */
 public class SensorTestActivity extends MainMenuActivity {
+
+    /** Dialog name to enable choose sensors tooltip dialog */
+    private static final String CHOOSE_SENSORS_TOOLTIP_DIALOG = "CHOOSE_SENSORS_TOOLTIP_DIALOG";
+    private static final String TEST_SENSORS_TOOLTIP_DIALOG = "TEST_SENSORS_TOOLTIP_DIALOG";
 
     private Integer[] availableSensorsArray;
 
@@ -313,6 +318,38 @@ public class SensorTestActivity extends MainMenuActivity {
 			stopButton.setEnabled(false);
 		}
 	}
+
+    /**
+     * Action method that handles the tooltip for choosing a sensor
+     *
+     * @param viewArg - view to use
+     */
+    public void onSensorsChooseInfo(View viewArg){
+        InfoDialogFragment infoDialog = new InfoDialogFragment();
+
+        Bundle bundle = new Bundle();
+        String message = getString(R.string.sensor_choose_tooltip);
+        bundle.putString(InfoDialogFragment.MESSAGE, message);
+        infoDialog.setArguments(bundle);
+
+        infoDialog.show(getSupportFragmentManager(), CHOOSE_SENSORS_TOOLTIP_DIALOG);
+    }
+
+    /**
+     * Action method that handles the tooltip for testing sensors
+     *
+     * @param viewArg - view to use
+     */
+    public void  onSensorsTestInfo(View viewArg){
+        InfoDialogFragment infoDialog = new InfoDialogFragment();
+
+        Bundle bundle = new Bundle();
+        String message = getString(R.string.sensor_test_tooltip);
+        bundle.putString(InfoDialogFragment.MESSAGE, message);
+        infoDialog.setArguments(bundle);
+
+        infoDialog.show(getSupportFragmentManager(), TEST_SENSORS_TOOLTIP_DIALOG);
+    }
 //
 //    public static class MyAdapter extends ArrayAdapter<CharSequence>{
 //

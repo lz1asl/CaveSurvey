@@ -274,6 +274,20 @@
     <string name="sensor_test_header">Test Build-in Sensors</string>
     <string name="sensor_choose_header">Choose Build-in sensor</string>
     <string name="no_sensors">No available Build-in sensors</string>
+    <string name="sensor_choose_tooltip">You can choose the most appropriate build in sensor that fits your need of accuracy</string>
+    <string name="sensor_test_tooltip">
+        You can test build-in senors. Just keep in mind that none of them is reliable instrument for taking measurements even they report maximum accuracy.\n\n
+        Sensors:\n
+        * Orientation – Software-based deprecated sensor that determines device\'s position.\n
+        * Magnetic – Based on hardware magnetic and accelerometer sensors. Usually provides good accuracy.\n
+        * Rotation - Software-based motion sensor. Uses a device\'s gyroscope (in addition to other sensors) to improve stability and performance.\n\n
+        Accuracy:\n
+        -1 - The values returned by this sensor cannot be trusted because the sensor had no contact with what it was measuring\n
+        0 - The values returned by this sensor cannot be trusted, calibration is needed or the environment doesn\'t allow readings\n
+        1 - This sensor is reporting data with low accuracy, calibration with the environment is needed\n
+        2 - This sensor is reporting data with an average level of accuracy, calibration with the environment may improve the readings\n
+        3 - This sensor is reporting data with maximum accuracy
+    </string>
 
     <string name="SENSOR_STATUS_UNRELIABLE">UNRELIABLE</string>
     <string name="SENSOR_STATUS_ACCURACY_LOW">LOW</string>
