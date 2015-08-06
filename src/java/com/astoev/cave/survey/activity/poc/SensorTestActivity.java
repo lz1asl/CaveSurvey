@@ -116,7 +116,16 @@ public class SensorTestActivity extends MainMenuActivity {
 			
 			@Override
 			public void onAccuracyChanged(int accuracyArg) {
-				magneticAccuracyView.setText(String.valueOf(accuracyArg));
+
+                // Format the value from int to String (prevents loosing leading 0 for the first sensor)
+                StringBuilder builder = new StringBuilder();
+                if (accuracyArg < 10){
+                    builder.append("0 ").append(accuracyArg);
+                } else {
+                    builder.append(accuracyArg / 10).append(" ")
+                    .append(accuracyArg % 10);
+                }
+				magneticAccuracyView.setText(builder.toString());
 			}
 		});
         rotationOrientationProcessor = new RotationOrientationProcessor(this, new AzimuthChangedAdapter() {
@@ -155,7 +164,7 @@ public class SensorTestActivity extends MainMenuActivity {
         });
 
         //  determine orientation sensors that are available on the device
-        ArrayList<Integer> sensorsList = new ArrayList<Integer>();
+        ArrayList<Integer> sensorsList = new ArrayList<>();
         if (rotationOrientationProcessor.canReadOrientation()){
             sensorsList.add(OrientationProcessorFactory.SENSOR_TYPE_ROTATION);
         }
