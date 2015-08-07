@@ -1,12 +1,10 @@
 package com.astoev.cave.survey.activity.home;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.util.Linkify;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,7 +12,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
@@ -24,18 +21,17 @@ import com.astoev.cave.survey.activity.dialog.LanguageDialog;
 import com.astoev.cave.survey.activity.main.BTActivity;
 import com.astoev.cave.survey.activity.main.MainActivity;
 import com.astoev.cave.survey.activity.poc.SensorTestActivity;
+import com.astoev.cave.survey.fragment.AboutDialogFragment;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.util.FileStorageUtil;
-import com.astoev.cave.survey.util.StringUtils;
 
 import org.apache.commons.io.IOUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.List;
@@ -44,7 +40,7 @@ import java.util.List;
  * Home activity for managing projects and general settings.
  *
  * @author astoev
- * @author jmitrev
+ * @author Jivko Mitrev
  */
 public class HomeActivity extends MainMenuActivity {
 
@@ -52,6 +48,8 @@ public class HomeActivity extends MainMenuActivity {
      * Dialog name to enable Language dialog
      */
     private static final String LANGUAGE_DIALOG = "LANGUAGE_DIALOG";
+
+    private static final String ABOUT_DIALOG = "ABOUT_DIALOG";
 
     /**
      * Called when the activity is first created.
@@ -70,7 +68,6 @@ public class HomeActivity extends MainMenuActivity {
         new Thread() {
             @Override
             public void run() {
-                InputStream in = null;
                 OutputStream out = null;
                 try {
 
@@ -89,7 +86,6 @@ public class HomeActivity extends MainMenuActivity {
                 } catch (Exception e) {
                     Log.e(Constants.LOG_TAG_SERVICE, "Failed to copy output", e);
                 } finally {
-                    IOUtils.closeQuietly(in);
                     IOUtils.closeQuietly(out);
                 }
             }
@@ -156,20 +152,9 @@ public class HomeActivity extends MainMenuActivity {
     }
 
     private void showAboutDialog() {
-        try {
-            Dialog dialog = new Dialog(this);
-            String title = getString(R.string.about_title) + StringUtils.SPACE + getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
-            dialog.setTitle(title);
-            dialog.setContentView(R.layout.about);
-            TextView url = (TextView) dialog.findViewById(R.id.aboutUrl);
-            Linkify.addLinks(url, Linkify.WEB_URLS);
-            TextView url2 = (TextView) dialog.findViewById(R.id.aboutUrl2);
-            Linkify.addLinks(url2, Linkify.WEB_URLS);
-            dialog.show();
-        } catch (Exception e) {
-            Log.e(Constants.LOG_TAG_UI, "Failed toshow about", e);
-            UIUtilities.showNotification(R.string.error);
-        }
+
+        AboutDialogFragment aboutDialogFragment = new AboutDialogFragment();
+        aboutDialogFragment.show(getSupportFragmentManager(), ABOUT_DIALOG);
     }
 
     private void loadProjects() {
