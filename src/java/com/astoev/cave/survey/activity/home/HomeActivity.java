@@ -21,7 +21,7 @@ import com.astoev.cave.survey.activity.dialog.LanguageDialog;
 import com.astoev.cave.survey.activity.main.BTActivity;
 import com.astoev.cave.survey.activity.main.MainActivity;
 import com.astoev.cave.survey.activity.poc.SensorTestActivity;
-import com.astoev.cave.survey.fragment.AboutDialogFragment;
+import com.astoev.cave.survey.activity.dialog.AboutDialog;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.util.DaoUtil;
@@ -153,7 +153,7 @@ public class HomeActivity extends MainMenuActivity {
 
     private void showAboutDialog() {
 
-        AboutDialogFragment aboutDialogFragment = new AboutDialogFragment();
+        AboutDialog aboutDialogFragment = new AboutDialog();
         aboutDialogFragment.show(getSupportFragmentManager(), ABOUT_DIALOG);
     }
 

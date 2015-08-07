@@ -1,4 +1,4 @@
-package com.astoev.cave.survey.fragment;
+package com.astoev.cave.survey.activity.dialog;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -25,7 +25,7 @@ import com.astoev.cave.survey.util.StringUtils;
  *
  * @author Zhivko Mitrev
  */
-public class AboutDialogFragment extends DialogFragment {
+public class AboutDialog extends DialogFragment {
 
     /**
      * @see DialogFragment#onCreateDialog(Bundle)
