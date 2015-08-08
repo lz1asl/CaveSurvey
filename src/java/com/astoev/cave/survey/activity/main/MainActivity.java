@@ -5,6 +5,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
@@ -20,6 +22,8 @@ import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.MainMenuActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
+import com.astoev.cave.survey.activity.dialog.AddNewDialog;
+import com.astoev.cave.survey.activity.dialog.AddNewSelectedHandler;
 import com.astoev.cave.survey.activity.dialog.MiddlePointDialog;
 import com.astoev.cave.survey.activity.map.MapActivity;
 import com.astoev.cave.survey.activity.map.MapUtilities;
@@ -46,12 +50,7 @@ import java.util.List;
  * Time: 3:04 PM
  * To change this template use File | Settings | File Templates.
  */
-public class MainActivity extends MainMenuActivity {
-
-    private static final int[] ADD_ITEM_LABELS = {R.string.main_add_leg,
-            R.string.main_add_branch,
-            R.string.main_add_middlepoint
-    };
+public class MainActivity extends MainMenuActivity implements AddNewSelectedHandler{
 
     private SparseIntArray mGalleryColors = new SparseIntArray();
     private SparseArray<String> mGalleryNames = new SparseArray<String>();
@@ -62,7 +61,7 @@ public class MainActivity extends MainMenuActivity {
     private String notePrefix;
     private String photoPrefix;
     private String locationPrefix;
-    private String vectorsPrevix;
+    private String vectorsPrefix;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,7 +71,7 @@ public class MainActivity extends MainMenuActivity {
         notePrefix     = getString(R.string.table_note_prefix);
         photoPrefix    = getString(R.string.table_photo_prefix);
         locationPrefix = getString(R.string.table_location_prefix);
-        vectorsPrevix  = getString(R.string.table_vector_prefix);
+        vectorsPrefix = getString(R.string.table_vector_prefix);
     }
 
     private void drawTable() {
@@ -191,7 +190,7 @@ public class MainActivity extends MainMenuActivity {
                         moreText.append(locationPrefix);
                     }
                     if (DaoUtil.hasVectorsByLeg(l)) {
-                        moreText.append(vectorsPrevix);
+                        moreText.append(vectorsPrefix);
                     }
                 }
 
@@ -238,42 +237,44 @@ public class MainActivity extends MainMenuActivity {
     public void addButtonClick() {
 
         Log.i(Constants.LOG_TAG_UI, "Adding");
+        AddNewDialog addNewDialog = new AddNewDialog();
+        addNewDialog.show(getSupportFragmentManager(), AddNewDialog.ADD_NEW_DIALOG);
+    }
 
-        final String[] labels = new String[ADD_ITEM_LABELS.length];
-        for (int i = 0; i < ADD_ITEM_LABELS.length; i++) {
-            labels[i] = getString(ADD_ITEM_LABELS[i]);
+    /**
+     * Handles the selected element for AddNewDialog
+     *
+     * @param itemArg item selected
+     */
+    public void addNewSelected(int itemArg){
+
+        // dissmiss the dialog
+        Fragment prev = getSupportFragmentManager().findFragmentByTag(AddNewDialog.ADD_NEW_DIALOG);
+        if (prev != null) {
+            DialogFragment df = (DialogFragment) prev;
+            df.dismiss();
         }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.main_add_title);
-
-        builder.setSingleChoiceItems(labels, -1, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int item) {
-                try {
-                    if (0 == item) {
-                        // next leg
-                        addLeg(false);
-                    } else if (1 == item) {
-                        Leg prevLeg = DaoUtil.getLegByToPointId(Workspace.getCurrentInstance().getActiveLeg().getFromPoint().getId());
-                        if (prevLeg == null) {
-                            // not supported
-                            UIUtilities.showNotification(R.string.gallery_after_first_point);
-                        } else {
-                            // next gallery
-                            addLeg(true);
-                        }
-                    } else if (2 == item) {
-                        requestLengthAndAddMiddle();
-                    }
-                } catch (Exception e) {
-                    Log.e(Constants.LOG_TAG_UI, "Error adding", e);
-                    UIUtilities.showNotification(R.string.error);
+        try {
+            if (0 == itemArg) {
+                // next leg
+                addLeg(false);
+            } else if (1 == itemArg) {
+                Leg prevLeg = DaoUtil.getLegByToPointId(Workspace.getCurrentInstance().getActiveLeg().getFromPoint().getId());
+                if (prevLeg == null) {
+                    // not supported
+                    UIUtilities.showNotification(R.string.gallery_after_first_point);
+                } else {
+                    // next gallery
+                    addLeg(true);
                 }
-                dialog.dismiss();
+            } else if (2 == itemArg) {
+                requestLengthAndAddMiddle();
             }
-        });
-        AlertDialog alert = builder.create();
-        alert.show();
+        } catch (Exception e) {
+            Log.e(Constants.LOG_TAG_UI, "Error adding", e);
+            UIUtilities.showNotification(R.string.error);
+        }
     }
 
     private void requestLengthAndAddMiddle() throws SQLException {
