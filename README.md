@@ -49,21 +49,18 @@ Notes
 
 One of the possible target configurations is to read the distance and inclination from Bluetooth and use the built-in compass of the device. In this case both a waterproof Android 4.x device and CEM iLDM-150 cost about $250.
 
-Test devices:
-  - We have tested from Android 2.1(cheap and small) up to 5.0 (better hardware and protection). Smartphones are recommended to have water protection (to survive), a compass (to read from), SPP Bluetooth profile (to connect instruments).
-  - [CEM iLDM-150](https://github.com/lz1asl/CaveSurvey/wiki/iLDM-150) laser distance meter (IP54) with built-in clinometer and Bluetooth
-  - [Trimble LaserAce 1000](https://github.com/lz1asl/CaveSurvey/wiki/Laser-Ace-100) (very accurate) that provides distance, clinometer and azimuth
-  - [LTI TruPulse 360B](https://github.com/lz1asl/CaveSurvey/wiki/LTI-TruPulse-360B)
-  - [DistoX](https://github.com/lz1asl/CaveSurvey/wiki/DistoX) is under testing
-  - Feel free to join our team and help adding other devices/functionalities
+We have tested from Android 2.1(cheap and small) up to 5.0 (better hardware and protection). Smartphones are recommended to have water protection (to survive), a compass (to read from) and a SPP Bluetooth profile (to connect instruments).
+See the list of current [Measurement Devices](https://github.com/lz1asl/CaveSurvey/wiki/Measurement-Devices)
+
+Feel free to join our team and help adding other devices/functionalities
   
 In most caves it is not possible to create the whole map underground (as some other apps offer). I'm not confident in drawing stuff with muddy fingers, so get the data you can quick and get safe home to enjoy it.
 
 Precision
 =========
 
-Having precise instruments is important to do a proper work. Anyway in most caves centimeter precision is never possible. See the device pages in the Wiki for details.
-For the Android build-in sensors - you have to consult your device specifications, but if good enough and you use short legs there should be no problem (error will distribute and compensate anyway).
+Having precise instruments is important to do a proper work. Anyway in most caves centimeter precision is never possible.
+For the Android build-in sensors - you have to consult your device specifications and test within CaveSurvey, but if good enough and you use short legs there should be no problem (error will distribute and compensate anyway).
 If you are paranoic you can still use CaveSurvey in manual mode only - type manually the proper values from the existing tools you use. It will save you the Excel homework later.
 
 
@@ -80,3 +77,9 @@ Use the official version at [Google Play](https://play.google.com/store/apps/det
 
 
 This software is free to use and modify. Well, we provide no guarantee in any kind but are open for ideas and collaborations. Contact us at cave.survey.project@gmail.com.
+
+
+Related Projects
+================
+
+[CaveSurveyBTEmulator](https://github.com/lz1asl/CaveSurveyBTEmulator) is utility project that helps us to emulate communication with Bluetooth measurement device that we don't currently have while developing.
