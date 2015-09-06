@@ -309,6 +309,7 @@ public class ConnectThread extends Thread {
 
         if (mDeviceSpec != null) {
             // display notification only if expected device to be lost
+            // TODO only show notification if previously connected
             UIUtilities.showDeviceDisconnectedNotification(ConfigUtil.getContext(), mDeviceSpec.getDescription());
         }
 
