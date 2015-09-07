@@ -49,7 +49,7 @@ Notes
 
 One of the possible target configurations is to read the distance and inclination from Bluetooth and use the built-in compass of the device. In this case both a waterproof Android 4.x device and CEM iLDM-150 cost about $250.
 
-We have tested from Android 2.1(cheap and small) up to 5.0 (better hardware and protection). Smartphones are recommended to have water protection (to survive), a compass (to read from) and a SPP Bluetooth profile (to connect instruments).
+We have tested from Android 2.1(cheap and small) up to 5.0 (better hardware and protection). The APK should also work on BlackBerry Q5 and probably others. Smartphones are recommended to have water protection (to survive), a compass (to read from) and a SPP Bluetooth profile (to connect instruments).
 See the list of current [Measurement Devices](https://github.com/lz1asl/CaveSurvey/wiki/Measurement-Devices)
 
 Feel free to join our team and help adding other devices/functionalities
@@ -71,15 +71,15 @@ Developed by members of caving club [Paldin](http://sk-paldin.eu/) Plovdiv, Bulg
 
 ![Picture](res/drawable-mdpi/paldin.jpg)
 
-Use the official version at [Google Play](https://play.google.com/store/apps/details?id=com.astoev.cave.survey) or the [latest build](https://razhodki.ci.cloudbees.com/job/CaveSurvey/lastSuccessfulBuild/artifact/build/outputs/apk/CaveSurvey-defaultFlavor-release.apk) for devces without Google Play (tested to also work on BlackBerry Q5).
+You can use the official version at [Google Play](https://play.google.com/store/apps/details?id=com.astoev.cave.survey) or the [latest beta build](https://razhodki.ci.cloudbees.com/job/CaveSurvey/lastSuccessfulBuild/artifact/build/outputs/apk/CaveSurvey-defaultFlavor-release.apk) for devces without Google Play.
 
 ![CloudBees](http://www.cloudbees.com/sites/default/files/Button-Built-on-CB-1.png)
 
 
-This software is free to use and modify. Well, we provide no guarantee in any kind but are open for ideas and collaborations. Contact us at cave.survey.project@gmail.com.
+This software is free to use and modify. We provide no guarantee in any kind but are open for ideas and collaborations. Contact us at cave.survey.project@gmail.com.
 
 
 Related Projects
 ================
 
-[CaveSurveyBTEmulator](https://github.com/lz1asl/CaveSurveyBTEmulator) is utility project that helps us to emulate communication with Bluetooth measurement device that we don't currently have while developing.
+[CaveSurveyBTEmulator](https://github.com/lz1asl/CaveSurveyBTEmulator) is utility project that helps us to emulate the communication with Bluetooth measurement devices that we don't currently have while developing.
