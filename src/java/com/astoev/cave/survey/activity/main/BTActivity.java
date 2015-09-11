@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -76,17 +77,15 @@ public class BTActivity extends MainMenuActivity {
     }
 
     private void displaySupportedDevices() {
-        TextView devicesLabel = (TextView) findViewById(R.id.bt_supproted_devices);
+        LinearLayout devicesList = (LinearLayout) findViewById(R.id.bt_container);
 
-        StringBuilder devicesList = new StringBuilder();
-        for (AbstractBluetoothDevice device : BluetoothService.getSupportedDevices()) {
-            if (devicesList.length() > 0) {
-                devicesList.append(", ");
+        if (devicesList.getChildCount() <= 2) { // don't duplicate
+            for (AbstractBluetoothDevice device : BluetoothService.getSupportedDevices()) {
+                TextView deviceLabel = new TextView(getApplicationContext());
+                deviceLabel.setText("\t\u2022 " + device.getDescription());
+                devicesList.addView(deviceLabel);
             }
-            devicesList.append(device.getDescription());
         }
-
-        devicesLabel.setText(getString(R.string.bt_supported_devices, devicesList.toString()));
     }
 
     @Override
