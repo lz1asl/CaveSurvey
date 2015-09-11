@@ -29,6 +29,26 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:layout_below="@id/new_projectname"
         android:paddingTop="10dp"/>
+    <LinearLayout android:id="@+id/new_measure_hints"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="10dp"
+        android:layout_below="@id/new_measure_text">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="fill_parent"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/data_input_units"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="fill_parent"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/data_input_source"/>
+    </LinearLayout>
 
     <!-- distance -->
     <TextView android:id="@+id/new_distance_text"
@@ -36,7 +56,7 @@
         android:layout_height="wrap_content"
         android:text="@string/options_units_distance"
         android:layout_marginLeft="5dp"
-        android:layout_below="@id/new_measure_text"/>
+        android:layout_below="@id/new_measure_hints"/>
     <LinearLayout android:id="@+id/distance_units_layout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

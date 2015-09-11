@@ -152,6 +152,8 @@
     
     <!-- options -->
     <string name="measures_title">Измервания</string>
+    <string name="data_input_units">Единици</string>
+    <string name="data_input_source">Източник</string>
 
 <!-- 
     <string-array name="options_modes">
@@ -345,5 +347,5 @@
     <string name="folderCreationOk">Папката създадена успешно</string>
     <string name="folderCreationError">Грешка при създаването на папка</string>
     <string name="information">Информация</string>
-    
+
 </resources>

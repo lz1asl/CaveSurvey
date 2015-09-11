@@ -152,6 +152,8 @@
     
     <!-- options -->
     <string name="measures_title">Data Input</string>
+    <string name="data_input_units">Units</string>
+    <string name="data_input_source">Source</string>
 <!-- 
     <string-array name="options_modes">
         <item>Manual enter</item>
