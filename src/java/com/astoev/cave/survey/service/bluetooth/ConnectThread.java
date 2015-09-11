@@ -48,7 +48,7 @@ public class ConnectThread extends Thread {
     private InputStream mIn;
     private OutputStream mOut = null;
     private boolean running = true;
-    private long lastActiveTimestamp;
+    private Long lastActiveTimestamp = null;
     private ResultReceiver mReceiver = null;
     private List<Constants.MeasureTypes> mMeasureTypes = null;
     private List<Constants.Measures> mTargets = null;
@@ -120,6 +120,8 @@ public class ConnectThread extends Thread {
                     Log.i(Constants.LOG_TAG_BT, "Disconnected");
 
                     running = false;
+
+                    UIUtilities.showDeviceDisconnectedNotification(ConfigUtil.getContext(), mDeviceSpec.getDescription());
 
                     TextView status = (TextView) ConfigUtil.getContext().findViewById(R.id.bt_status);
                     status.setText(BluetoothService.getCurrDeviceStatusLabel(ConfigUtil.getContext()));
@@ -307,9 +309,8 @@ public class ConnectThread extends Thread {
     public void cancel() {
 
 
-        if (mDeviceSpec != null) {
-            // display notification only if expected device to be lost
-            // TODO only show notification if previously connected
+        if (mDeviceSpec != null && lastActiveTimestamp != null) {
+            // show notification if device expected and only if the device was active
             UIUtilities.showDeviceDisconnectedNotification(ConfigUtil.getContext(), mDeviceSpec.getDescription());
         }
 
