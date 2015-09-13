@@ -29,26 +29,29 @@ public class LeicaDistoBluetoothDevice extends AbstractBluetoothDevice {
 
     @Override
     public void triggerMeasures(OutputStream aStream, List<Constants.MeasureTypes> aMeasures) throws IOException {
-
+        // TODO
     }
 
     @Override
     public void configure(InputStream anInput, OutputStream anOutput) throws IOException {
-
+        // TODO
     }
 
     @Override
     public List<Measure> decodeMeasure(byte[] aResponseBytes, List<Constants.MeasureTypes> aMeasures) throws DataException {
+        // TODO
         return null;
     }
 
     @Override
-    public boolean isMeasureSupported(Constants.MeasureTypes aMeasureType) {
+    public boolean isMeasureSupported(String aName, Constants.MeasureTypes aMeasureType) {
+        // TODO depending on the model
         return false;
     }
 
     @Override
     public boolean isFullPacketAvailable(byte[] aBytesBuffer) {
+        // TODO
         return false;
     }
 }

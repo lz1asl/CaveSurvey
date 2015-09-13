@@ -219,7 +219,7 @@ public class BluetoothService {
 
     // for the current device
     public static boolean isMeasureSupported(Constants.MeasureTypes aMeasureType) {
-        return mSelectedDeviceSpec != null && mSelectedDeviceSpec.isMeasureSupported(aMeasureType);
+        return mSelectedDeviceSpec != null && mSelectedDeviceSpec.isMeasureSupported(mSelectedDevice.getName(), aMeasureType);
     }
 
     public static void registerListeners(BTActivity btActivity) {

@@ -65,7 +65,8 @@ public class TruPulse360BBluetoothDevice extends AbstractBluetoothDevice {
     }
 
     @Override
-    public boolean isMeasureSupported(Constants.MeasureTypes aMeasureType) {
+    public boolean isMeasureSupported(String aName, Constants.MeasureTypes aMeasureType) {
+        // single device supported, name ignored
         // has all distance, clino and azimuth
         return true;
     }

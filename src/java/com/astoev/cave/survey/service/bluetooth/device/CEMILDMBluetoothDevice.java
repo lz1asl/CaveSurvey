@@ -104,7 +104,8 @@ public class CEMILDMBluetoothDevice extends AbstractBluetoothDevice {
     }
 
     @Override
-    public boolean isMeasureSupported(Constants.MeasureTypes aMeasureType) {
+    public boolean isMeasureSupported(String aName, Constants.MeasureTypes aMeasureType) {
+        // single CEM device supported, name ignored
         return MeasureTypes.distance.equals(aMeasureType) || MeasureTypes.slope.equals(aMeasureType);
     }
 

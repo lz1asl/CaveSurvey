@@ -75,7 +75,7 @@ public abstract class AbstractBluetoothDevice implements Comparable {
      * @param aMeasureType
      * @return
      */
-    public abstract boolean isMeasureSupported(Constants.MeasureTypes aMeasureType);
+    public abstract boolean isMeasureSupported(String aName, Constants.MeasureTypes aMeasureType);
 
     public UUID getSPPUUID() {
         return UUID.fromString(getSPPUUIDString());
