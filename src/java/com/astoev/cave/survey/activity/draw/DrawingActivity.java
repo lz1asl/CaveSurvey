@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
@@ -51,6 +52,7 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
 
     private Button redoBtn;
     private Button undoBtn;
+    private ImageButton saveBtn;
 
     private int currentColor = Color.WHITE;
     private int currentSize = 3;
@@ -76,9 +78,13 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
 
         redoBtn = (Button) findViewById(R.id.redoBtn);
         undoBtn = (Button) findViewById(R.id.undoBtn);
+        saveBtn = (ImageButton) findViewById(R.id.saveDrawingBtn);
 
         redoBtn.setEnabled(false);
         undoBtn.setEnabled(false);
+
+        // nothing to save yet
+        saveBtn.setEnabled(false);
 
         try {
 
@@ -143,6 +149,7 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
 
             undoBtn.setEnabled(true);
             redoBtn.setEnabled(false);
+            saveBtn.setEnabled(true);
             drawingSurface.invalidate();
         }
 
