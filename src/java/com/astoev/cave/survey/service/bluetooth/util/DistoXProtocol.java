@@ -24,7 +24,6 @@ public class DistoXProtocol {
     private static final int DECLINATION_HIGH_BYTE = 4;
     private static final int INCLINATION_LOW_BYTE = 5;
     private static final int INCLINATION_HIGH_BYTE = 6;
-    private static final int ROLL_ANGLE_HIGH_BYTE = 7;
 
     private static final int SEQUENCE_BIT_MASK = 0x80;
     private static final int ACKNOWLEDGEMENT_PACKET_BASE = 0x55;
@@ -50,34 +49,50 @@ public class DistoXProtocol {
 
         List<Measure> measures = new ArrayList<Measure>();
 
-        int d0 = (int)(dataPacket[ADMIN] & 0x40 );
-        int d1  = (int)(dataPacket[DISTANCE_LOW_BYTE] & 0xff);
-        if (d1 < 0) d1 += 256;
-        int d2  = (int)(dataPacket[DISTANCE_HIGH_BYTE] & 0xff);
-        if (d2 < 0) d2 += 256;
-        // double d =  (((int)mBuffer[0]) & 0x40) * 1024.0 + (mBuffer[1] & 0xff) * 1.0 + (mBuffer[2] & 0xff) * 256.0;
+        int d0 = dataPacket[ADMIN] & 0x40;
+        int d1  = dataPacket[DISTANCE_LOW_BYTE] & 0xff;
+        if (d1 < 0) {
+            d1 += 256;
+        }
+        int d2  = dataPacket[DISTANCE_HIGH_BYTE] & 0xff;
+        if (d2 < 0) {
+            d2 += 256;
+        }
         Double distance =  (d0 * 1024 + d2 * 256 + d1 * 1) / 1000.0; // in mm
 
 
-        int b3 = (int)(dataPacket[DECLINATION_LOW_BYTE] & 0xff); if ( b3 < 0 ) b3 += 256;
-        int b4 = (int)(dataPacket[DECLINATION_HIGH_BYTE] & 0xff); if ( b4 < 0 ) b4 += 256;
-        // double b = (mBuffer[3] & 0xff) + (mBuffer[4] & 0xff) * 256.0;
+        int b3 = dataPacket[DECLINATION_LOW_BYTE] & 0xff;
+        if (b3 < 0)  {
+            b3 += 256;
+        }
+        int b4 =  dataPacket[DECLINATION_HIGH_BYTE] & 0xff;
+        if (b4 < 0) {
+            b4 += 256;
+        }
         double b = b3 + b4 * 256.0;
         Double bearing  = b * 180.0 / 32768.0;
 
-        int c5 = (int)(dataPacket[INCLINATION_LOW_BYTE] & 0xff); if ( c5 < 0 ) c5 += 256;
-        int c6 = (int)(dataPacket[INCLINATION_HIGH_BYTE] & 0xff); if ( c6 < 0 ) c6 += 256;
-        // double c = (mBuffer[5] & 0xff) + (mBuffer[6] & 0xff) * 256.0;
+        int c5 = dataPacket[INCLINATION_LOW_BYTE] & 0xff;
+        if (c5 < 0) {
+            c5 += 256;
+        }
+        int c6 = dataPacket[INCLINATION_HIGH_BYTE] & 0xff;
+        if (c6 < 0) {
+            c6 += 256;
+        }
         double c = c5 + c6 * 256.0;
-        Double inclination    = c * 90.0  / 16384.0; // 90/0x4000;
-        if ( c >= 32768 ) { inclination = (65536 - c) * (-90.0) / 16384.0; }
+        Double inclination = c * 90.0 / 16384.0; // 90/0x4000;
+        if ( c >= 32768 ) {
+            inclination = (65536 - c) * (-90.0) / 16384.0;
+        }
 
-        int r7 = (int)(dataPacket[7]/* & 0xff*/); if ( r7 < 0 ) r7 += 256;
-        // double r = (mBuffer[7] & 0xff);
+        int r7 = dataPacket[7];
+        if (r7 < 0) {
+            r7 += 256;
+        }
         double r = r7;
         double roll = r * 180.0 / 128.0;
 
-//        Leg leg = new Leg(distance, bearing, inclination);
 
 
         Measure angleMeasure = new Measure(Constants.MeasureTypes.angle, Constants.MeasureUnits.degrees, bearing.floatValue());

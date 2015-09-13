@@ -15,6 +15,8 @@ import java.io.OutputStream;
 import java.util.List;
 
 /**
+ * DistoX v1 or v2 device.
+ *
  * Created by astoev on 3/26/15.
  */
 public class DistoXBluetoothDevice extends AbstractBluetoothDevice {
