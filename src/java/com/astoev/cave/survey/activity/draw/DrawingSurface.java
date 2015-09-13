@@ -5,8 +5,12 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.PorterDuff;
 import android.util.AttributeSet;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
+import android.util.Log;
+import android.view.View;
+
+import com.astoev.cave.survey.Constants;
+import com.astoev.cave.survey.R;
+import com.astoev.cave.survey.activity.UIUtilities;
 
 /**
  * Created by IntelliJ IDEA.
@@ -15,83 +19,48 @@ import android.view.SurfaceView;
  * Time: 2:15 AM
  * Link: http://www.tutorialforandroid.com/
  */
-public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callback {
+public class DrawingSurface extends View {
 
-    private Boolean _run;
-    protected DrawThread thread;
-    private Bitmap mBitmap;
-    private Bitmap mOldBitmap;
-    public boolean isDrawing = true;
-    public boolean isInitialized = false;
     public DrawingPath previewPath;
-
+    private Bitmap mOldBitmap;
     private CommandManager commandManager;
 
     public DrawingSurface(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        getHolder().addCallback(this);
-
         commandManager = new CommandManager();
-        thread = new DrawThread(getHolder());
+
+
+        // disable optimizations causing drawing path not visible
+        setWillNotDraw(false);
     }
 
-    class DrawThread extends Thread {
-        private SurfaceHolder mSurfaceHolder;
+    @Override
+    public void onDraw(Canvas aCanvas) {
 
+        // need to call parent
+        super.onDraw(aCanvas);
 
-        public DrawThread(SurfaceHolder surfaceHolder) {
-            mSurfaceHolder = surfaceHolder;
+        try {
 
-        }
+            aCanvas.drawColor(0, PorterDuff.Mode.CLEAR);
 
-        public void setRunning(boolean run) {
-            _run = run;
-        }
-
-        @Override
-        public void run() {
-            Canvas canvas = null;
-            while (_run) {
-                if (isDrawing) {
-                    try {
-                        canvas = mSurfaceHolder.lockCanvas();
-
-                        if (mBitmap == null) {
-                            mBitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888);
-                        }
-                        final Canvas c = new Canvas(mBitmap);
-
-                        c.drawColor(0, PorterDuff.Mode.CLEAR);
-                        canvas.drawColor(0, PorterDuff.Mode.CLEAR);
-
-                        if (mOldBitmap != null) {
-                            int left = (canvas.getWidth() - mOldBitmap.getWidth())/2;
-                            int top = (canvas.getHeight() - mOldBitmap.getHeight())/2;
-                            canvas.drawBitmap(mOldBitmap, left, top, null);
-                        }
-
-                        commandManager.executeAll(c);
-                        previewPath.draw(c);
-
-                        canvas.drawBitmap(mBitmap, 0, 0, null);
-
-                    } finally {
-                        mSurfaceHolder.unlockCanvasAndPost(canvas);
-                    }
-
-                    if (!isInitialized) {
-                        isInitialized = true;
-                        isDrawing = false;
-                    }
-                }
+            // old bitmap, e.g. map below the drawing
+            if (mOldBitmap != null) {
+                int left = (aCanvas.getWidth() - mOldBitmap.getWidth()) / 2;
+                int top = (aCanvas.getHeight() - mOldBitmap.getHeight()) / 2;
+                aCanvas.drawBitmap(mOldBitmap, left, top, null);
             }
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+
+            // user notes above
+            commandManager.executeAll(aCanvas);
+            previewPath.draw(aCanvas);
+
+        } catch (Exception e) {
+            Log.e(Constants.LOG_TAG_UI, "Failed to draw", e);
+            UIUtilities.showNotification(R.string.error);
         }
+
     }
 
 
@@ -104,20 +73,11 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
     }
 
     public void redo() {
-        isDrawing = true;
         commandManager.redo();
     }
-    
-    /**
-     * Helper method that stops the draw thread to save the drawing
-     */
-    public void stopToSave(){
-    	isDrawing = false;
-    	thread.setRunning(false);
-    }
+
 
     public void undo() {
-        isDrawing = true;
         commandManager.undo();
     }
 
@@ -126,42 +86,29 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
     }
 
     public Bitmap getBitmap() {
-        return mBitmap;
+
+        // repeat the drawing in a buffer and return to be saved
+        Bitmap bitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+
+        if (mOldBitmap != null) {
+            int left = (canvas.getWidth() - mOldBitmap.getWidth()) / 2;
+            int top = (canvas.getHeight() - mOldBitmap.getHeight()) / 2;
+            canvas.drawBitmap(mOldBitmap, left, top, null);
+        }
+
+        commandManager.executeAll(canvas);
+        previewPath.draw(canvas);
+        return bitmap;
     }
 
     public Bitmap getOldBitmap() {
         return mOldBitmap;
     }
 
-    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        mBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-    }
-
-
-    public void surfaceCreated(SurfaceHolder holder) {
-        if (thread == null){
-            thread = new DrawThread(getHolder());
-        }
-        thread.setRunning(true);
-        thread.start();
-    }
-
-    public void surfaceDestroyed(SurfaceHolder holder) {
-        boolean retry = true;
-        thread.setRunning(false);
-        while (retry) {
-            try {
-                thread.join();
-                retry = false;
-            } catch (InterruptedException e) {
-                // we will try it again and again...
-            }
-        }
-        thread = null;
-    }
 
     public void setOldBitmap(Bitmap aOldBitmap) {
         mOldBitmap = aOldBitmap;
     }
-    
+
 }

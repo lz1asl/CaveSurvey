@@ -70,6 +70,7 @@ public class MapView extends View {
 
     public MapView(Context context, AttributeSet attrs) {
         super(context, attrs);
+
         polygonPaint.setColor(Color.RED);
         polygonPaint.setStrokeWidth(2);
         polygonWidthPaint.setColor(Color.RED);

@@ -44,8 +44,7 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
 	public final static String MAP_FLAG = "com.astoev.cave.survey.MAP_FLAG";
 	public final static String SKETCH_BASE = "com.astoev.cave.survey.SKETCH_BASE";
 	
-//	  private final static String KEY_COMMAND_MANAGER = "COMMAND_MANAGER";
-	
+
     private DrawingSurface drawingSurface;
     private DrawingPath currentDrawingPath;
     private Paint currentPaint;
@@ -89,8 +88,8 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
             byte [] backgroundBytes = getIntent().getByteArrayExtra(SKETCH_BASE);
             if (null != backgroundBytes) {
                 drawingSurface.setOldBitmap(BitmapFactory.decodeByteArray(backgroundBytes, 0, backgroundBytes.length, null));
-                drawingSurface.invalidate();
             }
+            drawingSurface.invalidate();
 
             // read the flag if this drawing is related with a map or a point(default)
             Intent intent = getIntent();
@@ -100,15 +99,6 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
             Log.e(Constants.LOG_TAG_UI, "Failed to load drawing", e);
             UIUtilities.showNotification(R.string.error);
         }
-    }
-    
-    /**
-     * @see android.support.v4.app.FragmentActivity#onPause()
-     */
-    @Override
-    protected void onPause() {
-        drawingSurface.stopToSave();
-        super.onPause();
     }
     
     private void setCurrentPaint() {
@@ -133,19 +123,16 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
 
     public boolean onTouch(View view, MotionEvent motionEvent) {
         if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-            drawingSurface.isDrawing = true;
-
             currentDrawingPath = new DrawingPath();
             currentDrawingPath.paint = currentPaint;
             currentDrawingPath.path = new Path();
             currentBrush.mouseDown(currentDrawingPath.path, motionEvent.getX(), motionEvent.getY());
             currentBrush.mouseDown(drawingSurface.previewPath.path, motionEvent.getX(), motionEvent.getY());
-
+            drawingSurface.invalidate();
         } else if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
-            drawingSurface.isDrawing = true;
             currentBrush.mouseMove(currentDrawingPath.path, motionEvent.getX(), motionEvent.getY());
             currentBrush.mouseMove(drawingSurface.previewPath.path, motionEvent.getX(), motionEvent.getY());
-
+            drawingSurface.invalidate();
         } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
 
             currentBrush.mouseUp(drawingSurface.previewPath.path, motionEvent.getX(), motionEvent.getY());
@@ -156,6 +143,7 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
 
             undoBtn.setEnabled(true);
             redoBtn.setEnabled(false);
+            drawingSurface.invalidate();
         }
 
         return true;
@@ -180,11 +168,11 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
                 undoBtn.setEnabled(true);
                 break;
         }
+        drawingSurface.invalidate();
     }
 
     public void saveDrawing(View aView) {
 
-    	drawingSurface.stopToSave();
         try {
             Leg activeLeg = getWorkspace().getActiveOrFirstLeg();
             Point activePoint = activeLeg.getFromPoint();
@@ -296,14 +284,4 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
 
     }
 
-	/**
-	 * @see android.support.v7.app.ActionBarActivity#onBackPressed()
-	 */
-	@Override
-	public void onBackPressed() {
-		// stop drawing thread before going back
-    	drawingSurface.stopToSave();
-		super.onBackPressed();
-	}
-    
 }
