@@ -34,7 +34,6 @@ public class CommandManager {
         if (length > 0) {
             final DrawingPath undoCommand = currentStack.get(length - 1);
             currentStack.remove(length - 1);
-            undoCommand.undo();
             redoStack.add(undoCommand);
         }
     }

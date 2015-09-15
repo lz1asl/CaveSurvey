@@ -19,7 +19,4 @@ public class DrawingPath implements ICanvasCommand {
         canvas.drawPath(path, paint);
     }
 
-    public void undo() {
-        //Todo this would be changed later
-    }
 }
