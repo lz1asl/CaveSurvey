@@ -188,12 +188,7 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
             // store to SD
             ByteArrayOutputStream buff = new ByteArrayOutputStream();
 
-            if (drawingSurface.getOldBitmap() != null){
-                Bitmap image = MapUtilities.combineBitmaps(drawingSurface.getOldBitmap(), drawingSurface.getBitmap());
-                image.compress(Bitmap.CompressFormat.PNG, 50, buff);
-            } else {
-                drawingSurface.getBitmap().compress(Bitmap.CompressFormat.PNG, 50, buff);
-            }
+            drawingSurface.getBitmap().compress(Bitmap.CompressFormat.PNG, 50, buff);
 
             String filePrefix;
             if (isMap){

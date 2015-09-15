@@ -42,25 +42,27 @@ public class DrawingSurface extends View {
         super.onDraw(aCanvas);
 
         try {
-
-            aCanvas.drawColor(0, PorterDuff.Mode.CLEAR);
-
-            // old bitmap, e.g. map below the drawing
-            if (mOldBitmap != null) {
-                int left = (aCanvas.getWidth() - mOldBitmap.getWidth()) / 2;
-                int top = (aCanvas.getHeight() - mOldBitmap.getHeight()) / 2;
-                aCanvas.drawBitmap(mOldBitmap, left, top, null);
-            }
-
-            // user notes above
-            commandManager.executeAll(aCanvas);
-            previewPath.draw(aCanvas);
-
+            drawOldBitmapAndCurrentPaths(aCanvas);
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to draw", e);
             UIUtilities.showNotification(R.string.error);
         }
 
+    }
+
+    private void drawOldBitmapAndCurrentPaths(Canvas aCanvas) {
+        aCanvas.drawColor(0, PorterDuff.Mode.CLEAR);
+
+        // old bitmap, e.g. map below the drawing
+        if (mOldBitmap != null) {
+            int left = (aCanvas.getWidth() - mOldBitmap.getWidth()) / 2;
+            int top = (aCanvas.getHeight() - mOldBitmap.getHeight()) / 2;
+            aCanvas.drawBitmap(mOldBitmap, left, top, null);
+        }
+
+        // user notes above
+        commandManager.executeAll(aCanvas);
+        previewPath.draw(aCanvas);
     }
 
 
@@ -90,15 +92,7 @@ public class DrawingSurface extends View {
         // repeat the drawing in a buffer and return to be saved
         Bitmap bitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
-
-        if (mOldBitmap != null) {
-            int left = (canvas.getWidth() - mOldBitmap.getWidth()) / 2;
-            int top = (canvas.getHeight() - mOldBitmap.getHeight()) / 2;
-            canvas.drawBitmap(mOldBitmap, left, top, null);
-        }
-
-        commandManager.executeAll(canvas);
-        previewPath.draw(canvas);
+        drawOldBitmapAndCurrentPaths(canvas);
         return bitmap;
     }
 

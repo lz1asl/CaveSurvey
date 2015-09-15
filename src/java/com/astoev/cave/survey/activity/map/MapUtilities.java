@@ -21,22 +21,6 @@ public class MapUtilities {
         return COLORS[colorIndex];
     }
 
-    public static Bitmap combineBitmaps(Bitmap first, Bitmap second) {
-        Bitmap bmOverlay;
-        if (first != null) {
-            bmOverlay = Bitmap.createBitmap(first.getWidth(), first.getHeight(), first.getConfig());
-        } else {
-            bmOverlay = Bitmap.createBitmap(second.getWidth(), second.getHeight(), second.getConfig());
-        }
-        Canvas canvas = new Canvas(bmOverlay);
-        canvas.drawBitmap(first, new Matrix(), null);
-        if (second != null) {
-            canvas.drawBitmap(second, 0, 0, null);
-        }
-
-        return bmOverlay;
-    }
-
     public static Float getMiddleAngle(Float aFirstAzimuth, Float aSecondAzimuth) {
         if (aFirstAzimuth.equals(aSecondAzimuth)) {
             return aFirstAzimuth;
