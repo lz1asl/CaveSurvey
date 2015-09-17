@@ -9,19 +9,17 @@ import android.graphics.Path;
  * Time: 10:51 PM
  * To change this template use File | Settings | File Templates.
  */
-public class PenBrush implements IBrush {
-    @Override
+public class PenBrush {
+
     public void mouseDown(Path path, float x, float y) {
         path.moveTo(x, y);
         path.lineTo(x, y);
     }
 
-    @Override
     public void mouseMove(Path path, float x, float y) {
         path.lineTo(x, y);
     }
 
-    @Override
     public void mouseUp(Path path, float x, float y) {
         path.lineTo(x, y);
     }

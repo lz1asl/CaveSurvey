@@ -11,7 +11,8 @@ import android.graphics.Path;
  * Time: 12:44 AM
  * Link: http://www.tutorialforandroid.com/
  */
-public class DrawingPath implements ICanvasCommand {
+public class DrawingPath {
+
     public Path path;
     public Paint paint;
 
