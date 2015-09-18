@@ -10,8 +10,8 @@ package com.astoev.cave.survey.activity.map;
 public class Point2D {
 
     private Float x, y;
-    private Float left=0f, right=0f;
-    private Float angle=0f;
+    private Float left = 0f, right = 0f;
+    private Float angle = 0f;
 
     public Point2D(Float x, Float y) {
         this.x = x;

@@ -1,7 +1,10 @@
 package com.astoev.cave.survey.model;
 
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
+
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -13,17 +16,12 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "sketches")
 public class Sketch {
 
-    public static final String COLUMN_POINT_ID = "point_id";
-    public static final String COLUMN_GALLERY_ID = "gallery_id";
-
     @DatabaseField(generatedId = true, columnName = "id")
     private Integer mId;
-    @DatabaseField(canBeNull = false, foreign = true, columnName = COLUMN_POINT_ID)
-    private Point mPoint;
-    @DatabaseField(canBeNull = false, columnName = COLUMN_GALLERY_ID)
-    private Integer mGalleryId;
     @DatabaseField(columnName = "path")
     private String mFSPath;
+    @ForeignCollectionField(eager = true, orderColumnName = SketchElement.COLUMN_ORDER)
+    private List<SketchElement> elements;
 
 
     public Integer getId() {
@@ -34,14 +32,6 @@ public class Sketch {
         mId = aId;
     }
 
-    public Point getPoint() {
-        return mPoint;
-    }
-
-    public void setPoint(Point aPoint) {
-        mPoint = aPoint;
-    }
-
     public String getFSPath() {
         return mFSPath;
     }
@@ -50,11 +40,11 @@ public class Sketch {
         mFSPath = aFSPath;
     }
 
-    public Integer getGalleryId() {
-        return mGalleryId;
+    public List<SketchElement> getElements() {
+        return elements;
     }
 
-    public void setGalleryId(Integer galleryId) {
-        mGalleryId = galleryId;
+    public void setElements(List<SketchElement> elements) {
+        this.elements = elements;
     }
 }

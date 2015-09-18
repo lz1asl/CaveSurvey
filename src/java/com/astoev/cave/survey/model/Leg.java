@@ -25,6 +25,7 @@ public class Leg implements Serializable {
     public static final String COLUMN_ID = "id";
     public static final String COLUMN_PROJECT_ID = "project_id";
     public static final String COLUMN_FROM_POINT = "from_point_id";
+    public static final String COLUMN_SKETCH = "sketch_id";
     public static final String COLUMN_TO_POINT = "to_point_id";
     public static final String COLUMN_GALLERY_ID = "gallery_id";
     public static final String COLUMN_MIDDLE_POINT_AT_DISTANCE = "middle_point_distance";
@@ -55,6 +56,9 @@ public class Leg implements Serializable {
     private Integer mGalleryId;
     @DatabaseField(columnName = COLUMN_MIDDLE_POINT_AT_DISTANCE)
     private Float mMiddlePointDistance;
+    @DatabaseField(foreign = true, columnName = COLUMN_SKETCH) // sketch for the leg only
+    private Sketch mSketch;
+
 
 
     public Leg() {
@@ -264,6 +268,14 @@ public class Leg implements Serializable {
 
     public void setMiddlePointDistance(Float aMiddlePointDistance) {
         mMiddlePointDistance = aMiddlePointDistance;
+    }
+
+    public Sketch getSketch() {
+        return mSketch;
+    }
+
+    public void setSketch(Sketch sketch) {
+        mSketch = sketch;
     }
 
     /**

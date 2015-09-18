@@ -1,6 +1,5 @@
 package com.astoev.cave.survey.model;
 
-import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.util.ConfigUtil;
 import com.astoev.cave.survey.util.StringUtils;
 import com.j256.ormlite.dao.ForeignCollection;
@@ -10,7 +9,6 @@ import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
@@ -25,6 +23,8 @@ import java.util.Locale;
 public class Project {
 
     public static final String COLUMN_NAME = "name";
+    public static final String COLUMN_SKETCH = "sketch_id";
+
 
     @DatabaseField(generatedId = true, canBeNull = false, columnName = "id")
     private Integer mId;
@@ -34,6 +34,8 @@ public class Project {
     private ForeignCollection<Leg> mLegs;
     @DatabaseField(columnName = "creation_date", dataType = DataType.DATE)
     private Date mCreationDate;
+    @DatabaseField(foreign = true, columnName = COLUMN_SKETCH) // sketch for whole project
+    private Sketch mSketch;
 
 
     public Project() {
@@ -71,6 +73,14 @@ public class Project {
 
     public void setCreationDate(Date aCreationDate) {
         mCreationDate = aCreationDate;
+    }
+
+    public Sketch getSketch() {
+        return mSketch;
+    }
+
+    public void setSketch(Sketch sketch) {
+        mSketch = sketch;
     }
 
     public String getCreationDateFormatted() {

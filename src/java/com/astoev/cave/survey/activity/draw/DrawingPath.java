@@ -14,10 +14,19 @@ import android.graphics.Path;
 public class DrawingPath {
 
     public Path path;
-    public Paint paint;
+    public DrawingOptions options;
+
+    public DrawingPath() {
+        path = new Path();
+    }
+
+    public DrawingPath(DrawingOptions options) {
+        this();
+        this.options = options;
+    }
 
     public void draw(Canvas canvas) {
-        canvas.drawPath(path, paint);
+        canvas.drawPath(path, DrawingOptions.optionsToPaint(options));
     }
 
 }

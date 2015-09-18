@@ -54,11 +54,9 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
     private Button undoBtn;
     private ImageButton saveBtn;
 
-    private int currentColor = Color.WHITE;
-    private int currentSize = 3;
-    private int currentStyle = 0;
+    private DrawingOptions mOptions = new DrawingOptions(Color.WHITE, DrawingOptions.SIZES.THREE, DrawingOptions.TYPES.THICK);
 
-    private PenBrush currentBrush;
+    private PenBrush currentBrush = new PenBrush();
     
     /** Helper flag that shows if this drawing is related with map.*/
     private boolean isMap;
@@ -68,13 +66,11 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
         setContentView(R.layout.drawing_activity);
 
         setCurrentPaint();
-        currentBrush = new PenBrush();
 
         drawingSurface = (DrawingSurface) findViewById(R.id.drawingSurface);
         drawingSurface.setOnTouchListener(this);
-        drawingSurface.previewPath = new DrawingPath();
-        drawingSurface.previewPath.path = new Path();
-        drawingSurface.previewPath.paint = currentPaint;
+
+        drawingSurface.previewPath = new DrawingPath(mOptions);
 
         redoBtn = (Button) findViewById(R.id.redoBtn);
         undoBtn = (Button) findViewById(R.id.undoBtn);
@@ -108,30 +104,12 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
     }
     
     private void setCurrentPaint() {
-        currentPaint = new Paint();
-        currentPaint.setDither(true);
-        currentPaint.setColor(currentColor);
-        currentPaint.setStrokeWidth(currentSize);
-        currentPaint.setAlpha(200);
-        if (0 == currentStyle) {
-            currentPaint.setStyle(Paint.Style.STROKE);
-            currentPaint.setStrokeJoin(Paint.Join.ROUND);
-            currentPaint.setStrokeCap(Paint.Cap.ROUND);
-        } else if (1 == currentStyle) {
-            currentPaint.setStyle(Paint.Style.FILL);
-            currentPaint.setStrokeJoin(Paint.Join.BEVEL);
-            currentPaint.setStrokeCap(Paint.Cap.SQUARE);
-        } else {
-            currentPaint.setStyle(Paint.Style.STROKE);
-            currentPaint.setPathEffect(new DashPathEffect(new float[]{2 * currentSize, 4 * currentSize}, 0));
-        }
+        currentPaint = DrawingOptions.optionsToPaint(mOptions);
     }
 
     public boolean onTouch(View view, MotionEvent motionEvent) {
         if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-            currentDrawingPath = new DrawingPath();
-            currentDrawingPath.paint = currentPaint;
-            currentDrawingPath.path = new Path();
+            currentDrawingPath = new DrawingPath(mOptions);
             currentBrush.mouseDown(currentDrawingPath.path, motionEvent.getX(), motionEvent.getY());
             currentBrush.mouseDown(drawingSurface.previewPath.path, motionEvent.getX(), motionEvent.getY());
             drawingSurface.invalidate();
@@ -140,7 +118,6 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
             currentBrush.mouseMove(drawingSurface.previewPath.path, motionEvent.getX(), motionEvent.getY());
             drawingSurface.invalidate();
         } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
-
             currentBrush.mouseUp(drawingSurface.previewPath.path, motionEvent.getX(), motionEvent.getY());
             drawingSurface.previewPath.path = new Path();
             drawingSurface.addDrawingPath(currentDrawingPath);
@@ -150,7 +127,7 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
             undoBtn.setEnabled(true);
             redoBtn.setEnabled(false);
             saveBtn.setEnabled(true);
-            drawingSurface.invalidate();
+//            drawingSurface.invalidate();
         }
 
         return true;
@@ -201,8 +178,8 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
 
             // create DB record
             Sketch drawing = new Sketch();
-            drawing.setPoint(activePoint);
-            drawing.setGalleryId(activeLeg.getGalleryId());
+//            drawing.setPoint(activePoint);
+//            drawing.setGalleryId(activeLeg.getGalleryId());
             drawing.setFSPath(path);
             getWorkspace().getDBHelper().getSketchDao().create(drawing);
 
@@ -221,24 +198,18 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
         ColorPickerDialog.OnColorChangedListener listener = new ColorPickerDialog.OnColorChangedListener() {
             @Override
             public void colorChanged(int color) {
-                currentColor = color;
+                mOptions.setColor(color);
                 setCurrentPaint();
             }
         };
-        Dialog dialog = new ColorPickerDialog(this, listener, currentColor);
+        Dialog dialog = new ColorPickerDialog(this, listener, mOptions.getColor());
         dialog.show();
     }
 
     public void pickSize(View aView) {
 
         final CharSequence[] items = new CharSequence[]{"1", "2", "3", "4", "5", "6", "7"};
-        int selectedIndex = -1;
-        for (int i=0; i< items.length; i++) {
-            if (currentSize == Integer.parseInt(items[i].toString())) {
-                selectedIndex = i+1;
-                break;
-            }
-        }
+        int selectedIndex = mOptions.getSize() - 1;
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.sketch_pick_size);
@@ -247,7 +218,7 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
             public void onClick(DialogInterface dialog, int item) {
 
                 Log.i(Constants.LOG_TAG_UI, "Selected size " + item);
-                currentSize = item;
+                mOptions.setSize(item);
                 setCurrentPaint();
                 dialog.dismiss();
             }

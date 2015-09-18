@@ -34,7 +34,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private static final int DATABASE_VERSION_1 = 1;
     private static final int DATABASE_VERSION_2 = 2;
-    private static final int DATABASE_VERSION_LATEST = 3;
+    private static final int DATABASE_VERSION_3 = 3;
+    private static final int DATABASE_VERSION_4 = 4;
+    private static final int DATABASE_VERSION_LATEST = DATABASE_VERSION_4;
     private static final String DATABASE_NAME = "CaveSurvey";
 
     private Dao<Leg, Integer> mLegDao;
@@ -106,7 +108,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                     Log.i(Constants.LOG_TAG_DB, "Upgrade success");
                 }
 
-                if (aOldVersion < DATABASE_VERSION_LATEST) {
+                if (aOldVersion < DATABASE_VERSION_3) {
                     Log.i(Constants.LOG_TAG_DB, "Upgrading DB to V3");
                     aSqLiteDatabase.execSQL("alter table vectors add column gallery_id decimal default null");
                     aSqLiteDatabase.execSQL("update vectors set gallery_id = " +
@@ -128,6 +130,38 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
                     Log.i(Constants.LOG_TAG_DB, "Upgrade success");
                 }
+
+                if (aOldVersion < DATABASE_VERSION_4) {
+                    Log.i(Constants.LOG_TAG_DB, "Upgrading DB to V3");
+
+                    // drop old relations
+                    aSqLiteDatabase.execSQL("ALTER TABLE sketches DROP COLUMN gallery_id");
+                    aSqLiteDatabase.execSQL("ALTER TABLE sketches DROP COLUMN point_id");
+
+                    // sketchch_points table
+                   aSqLiteDatabase.execSQL("create table sketch_element_points (" +
+                            "   ID decimal primary key not null," +
+                            "   order int," +
+                            "   x FLOAT," +
+                            "   y FLOAT," +
+                            "   element_id decimal" +
+                            ")");
+
+                    // sketch_elements table
+                    aSqLiteDatabase.execSQL("create table sketch_elements (" +
+                            "   ID decimal primary key not null," +
+                            "   sketch_id decimal not null," +
+                            "   order int," +
+                            "   size int," +
+                            "   type varchar," +
+                            "   color int" +
+                            ")");
+
+                    aSqLiteDatabase.setTransactionSuccessful();
+
+                    Log.i(Constants.LOG_TAG_DB, "Upgrade success");
+                }
+
 
             } finally {
                 aSqLiteDatabase.endTransaction();
