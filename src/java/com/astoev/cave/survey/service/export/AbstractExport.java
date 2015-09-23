@@ -111,7 +111,7 @@ public abstract class AbstractExport {
                     exportLocation(fromPoint);
 
                     // sketch
-                    exportSketches(l);
+                    exportSketch(l);
 
                     // picture
                     exportPhotos(l);
@@ -152,7 +152,7 @@ public abstract class AbstractExport {
                             // export extras skipped above
                             exportNote(l);
                             exportLocation(fromPoint);
-                            exportSketches(l);
+                            exportSketch(l);
                             exportPhotos(l);
                         } else {
                             exportAroundMeasures(prevMiddle);
@@ -202,6 +202,10 @@ public abstract class AbstractExport {
 
                 lastGalleryId = l.getGalleryId();
             }
+
+            // TODO export project sketch
+
+
             InputStream in = getContent();
             return FileStorageUtil.addProjectExport(aProject, in, getExtension());
         } catch (Exception t) {
@@ -266,10 +270,9 @@ public abstract class AbstractExport {
         }
     }
 
-    private void exportSketches(Leg l) throws SQLException {
-        Sketch sketch = DaoUtil.getScetchByLeg(l);
-        if (sketch != null) {
-            setDrawing(sketch);
+    private void exportSketch(Leg l) throws SQLException {
+        if (l.getSketch() != null) {
+            setDrawing(l.getSketch());
         }
     }
 

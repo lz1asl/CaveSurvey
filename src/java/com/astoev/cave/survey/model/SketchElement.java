@@ -14,7 +14,7 @@ import java.util.List;
 public class SketchElement {
 
     public static final String COLUMN_SKETCH_ID = "sketch_id";
-    public static final String COLUMN_ORDER = "order";
+    public static final String COLUMN_ORDER = "orderby";
 
 
     @DatabaseField(generatedId = true, columnName = "id")
@@ -22,7 +22,7 @@ public class SketchElement {
     @DatabaseField(canBeNull = false, foreign = true, columnName = COLUMN_SKETCH_ID)
     private Sketch mSketch;
     @DatabaseField(canBeNull = false, columnName = "order")
-    private Integer mOrder;
+    private Integer mOrderBy;
     @DatabaseField(canBeNull = false, columnName = "size")
     private Integer mSize;
     @DatabaseField(canBeNull = false, columnName = "type")
@@ -57,12 +57,12 @@ public class SketchElement {
         mId = id;
     }
 
-    public Integer getOrder() {
-        return mOrder;
+    public Integer getOrderBy() {
+        return mOrderBy;
     }
 
-    public void setOrder(Integer order) {
-        mOrder = order;
+    public void setOrderBy(Integer orderBy) {
+        mOrderBy = orderBy;
     }
 
     public List<SketchPoint> getPath() {

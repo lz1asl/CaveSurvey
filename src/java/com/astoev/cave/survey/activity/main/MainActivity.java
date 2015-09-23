@@ -34,7 +34,6 @@ import com.astoev.cave.survey.model.Note;
 import com.astoev.cave.survey.model.Photo;
 import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.model.Project;
-import com.astoev.cave.survey.model.Sketch;
 import com.astoev.cave.survey.service.Workspace;
 import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.util.StringUtils;
@@ -173,8 +172,7 @@ public class MainActivity extends MainMenuActivity implements AddNewSelectedHand
                 }
 
                 if (!l.isMiddle()) {
-                    Sketch sketch = DaoUtil.getScetchByLeg(l);
-                    if (sketch != null){
+                    if (l.getSketch() != null){
                         moreText.append(sketchPrefix);
                     }
                     Note note = DaoUtil.getActiveLegNote(l);

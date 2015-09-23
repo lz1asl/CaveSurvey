@@ -1,5 +1,5 @@
 #
-# generated on 2015/09/17 10:28:15
+# generated on 2015/09/23 10:14:28
 #
 # --table-start--
 dataClass=com.astoev.cave.survey.model.Location
@@ -99,6 +99,11 @@ canBeNull=false
 fieldName=mMiddlePointDistance
 columnName=middle_point_distance
 # --field-end--
+# --field-start--
+fieldName=mSketch
+columnName=sketch_id
+foreign=true
+# --field-end--
 # --table-fields-end--
 # --table-end--
 #################################
@@ -139,25 +144,8 @@ columnName=id
 generatedId=true
 # --field-end--
 # --field-start--
-fieldName=mPoint
-columnName=point_id
-canBeNull=false
-foreign=true
-# --field-end--
-# --field-start--
-fieldName=mGalleryId
-columnName=gallery_id
-canBeNull=false
-# --field-end--
-# --field-start--
 fieldName=mFSPath
 columnName=path
-# --field-end--
-# --field-start--
-fieldName=elements
-foreignCollection=true
-foreignCollectionEager=true
-foreignCollectionOrderColumnName=order
 # --field-end--
 # --table-fields-end--
 # --table-end--
@@ -277,6 +265,11 @@ fieldName=mCreationDate
 columnName=creation_date
 dataPersister=DATE
 # --field-end--
+# --field-start--
+fieldName=mSketch
+columnName=sketch_id
+foreign=true
+# --field-end--
 # --table-fields-end--
 # --table-end--
 #################################
@@ -319,27 +312,30 @@ canBeNull=false
 foreign=true
 # --field-end--
 # --field-start--
-fieldName=mOrder
+fieldName=mOrderBy
 columnName=order
 canBeNull=false
 # --field-end--
 # --field-start--
 fieldName=mSize
+columnName=size
 canBeNull=false
 # --field-end--
 # --field-start--
 fieldName=mType
+columnName=type
 canBeNull=false
 # --field-end--
 # --field-start--
 fieldName=mColor
+columnName=color
 canBeNull=false
 # --field-end--
 # --field-start--
 fieldName=mPath
 foreignCollection=true
 foreignCollectionEager=true
-foreignCollectionOrderColumnName=order
+foreignCollectionOrderColumnName=orderby
 # --field-end--
 # --table-fields-end--
 # --table-end--
@@ -371,16 +367,18 @@ columnName=id
 generatedId=true
 # --field-end--
 # --field-start--
-fieldName=mOrder
-columnName=order
+fieldName=mOrderBy
+columnName=orderby
 canBeNull=false
 # --field-end--
 # --field-start--
 fieldName=mX
+columnName=x
 canBeNull=false
 # --field-end--
 # --field-start--
 fieldName=mY
+columnName=y
 canBeNull=false
 # --field-end--
 # --field-start--

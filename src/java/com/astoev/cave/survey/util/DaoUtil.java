@@ -48,12 +48,6 @@ public class DaoUtil {
         return Workspace.getCurrentInstance().getDBHelper().getNoteDao().queryForFirst(query.prepare());
     }
 
-    public static Sketch getScetchByLeg(Leg legArg) throws SQLException {
-        QueryBuilder<Sketch, Integer> query = Workspace.getCurrentInstance().getDBHelper().getSketchDao().queryBuilder();
-        query.where().eq(Sketch.COLUMN_POINT_ID, legArg.getFromPoint().getId()).and().eq(Sketch.COLUMN_GALLERY_ID, legArg.getGalleryId());
-        return Workspace.getCurrentInstance().getDBHelper().getSketchDao().queryForFirst(query.prepare());
-    }
-
     public static Photo getPhotoByLeg(Leg aLeg) throws SQLException {
 
         QueryBuilder<Photo, Integer> query = Workspace.getCurrentInstance().getDBHelper().getPhotoDao().queryBuilder();
@@ -62,13 +56,6 @@ public class DaoUtil {
         return Workspace.getCurrentInstance().getDBHelper().getPhotoDao().queryForFirst(query.prepare());
 
     }
-
-    public static List<Sketch> getAllSketchesByPoint(Point pointArg) throws SQLException {
-        QueryBuilder<Sketch, Integer> query = Workspace.getCurrentInstance().getDBHelper().getSketchDao().queryBuilder();
-        query.where().eq(Sketch.COLUMN_POINT_ID, pointArg.getId());
-        return Workspace.getCurrentInstance().getDBHelper().getSketchDao().query(query.prepare());
-    }
-
 
     public static List<Photo> getAllPhotosByPoint(Point pointArg) throws SQLException {
         QueryBuilder<Photo, Integer> query = Workspace.getCurrentInstance().getDBHelper().getPhotoDao().queryBuilder();
@@ -282,9 +269,8 @@ public class DaoUtil {
                     }
 
                     // delete sketches
-                    List<Sketch> sketchList = getAllSketchesByPoint(toPoint);
-                    if (sketchList != null && !sketchList.isEmpty()) {
-                        int deleted = dbHelper.getSketchDao().delete(sketchList);
+                    if (aLegToDelete.getSketch() != null) {
+                        int deleted = dbHelper.getSketchDao().delete(aLegToDelete.getSketch());
                         Log.d(Constants.LOG_TAG_DB, "Deleted sketches:" + deleted);
                     }
 
@@ -354,9 +340,8 @@ public class DaoUtil {
             Point fromPoint = l.getFromPoint();
 
             // drawings
-            List<Sketch> sketchesList = DaoUtil.getAllSketchesByPoint(fromPoint);
-            if (sketchesList != null && !sketchesList.isEmpty()) {
-                numDrawings += sketchesList.size();
+            if (l.getSketch() != null) {
+                numDrawings ++;
             }
 
             // gps
@@ -461,13 +446,10 @@ public class DaoUtil {
                                 }
                             }
 
-                            // delete sketches
-                            List<Sketch> sketches = getAllSketchesByPoint(l.getFromPoint());
-                            if (sketches != null && sketches.size() > 0) {
-                                for (Sketch s : sketches) {
-                                    FileUtils.deleteQuietly(new File(s.getFSPath()));
-                                    Workspace.getCurrentInstance().getDBHelper().getSketchDao().delete(s);
-                                }
+                            // delete sketch
+                            if (l.getSketch() != null) {
+                                FileUtils.deleteQuietly(new File(l.getSketch().getFSPath()));
+                                Workspace.getCurrentInstance().getDBHelper().getSketchDao().delete(l.getSketch());
                             }
 
                             // delete vectors
@@ -506,10 +488,16 @@ public class DaoUtil {
                         DaoUtil.deleteGallery(g);
                     }
 
-                    // delete project
+                    // delete project sketch
                     Project p = getProject(aProjectId);
+                    if (p.getSketch() != null) {
+                        Workspace.getCurrentInstance().getDBHelper().getSketchDao().delete(p.getSketch());
+                    }
+
+                    // delete project
                     Workspace.getCurrentInstance().getDBHelper().getProjectDao().delete(p);
 
+                    // file storage
                     FileUtils.deleteQuietly(FileStorageUtil.getProjectHome(p.getName()));
 
                     Log.i(Constants.LOG_TAG_DB, "Deleted project " + aProjectId);

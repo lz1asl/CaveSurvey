@@ -54,7 +54,7 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
     private Button undoBtn;
     private ImageButton saveBtn;
 
-    private DrawingOptions mOptions = new DrawingOptions(Color.WHITE, DrawingOptions.SIZES.THREE, DrawingOptions.TYPES.THICK);
+    private DrawingOptions mOptions = new DrawingOptions(Color.WHITE, 3, DrawingOptions.TYPES.THICK);
 
     private PenBrush currentBrush = new PenBrush();
     
@@ -230,6 +230,7 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
 
     public void pickStyle(View aView) {
 
+       /* TODO
         final int[] items = new int[]{R.string.sketch_pick_style_thick, R.string.sketch_pick_style_fill, R.string.sketch_pick_style_dash};
         final CharSequence[] itemsLabels = new CharSequence[items.length];
         int selectedIndex = -1;
@@ -253,7 +254,7 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
             }
         });
         AlertDialog alert = builder.create();
-        alert.show();
+        alert.show();*/
 
     }
 

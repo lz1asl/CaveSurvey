@@ -134,14 +134,14 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 if (aOldVersion < DATABASE_VERSION_4) {
                     Log.i(Constants.LOG_TAG_DB, "Upgrading DB to V3");
 
-                    // drop old relations
-                    aSqLiteDatabase.execSQL("ALTER TABLE sketches DROP COLUMN gallery_id");
-                    aSqLiteDatabase.execSQL("ALTER TABLE sketches DROP COLUMN point_id");
+                    // can't drop columns in sql lite
+//                    aSqLiteDatabase.execSQL("ALTER TABLE sketches DROP COLUMN gallery_id");
+//                    aSqLiteDatabase.execSQL("ALTER TABLE sketches DROP COLUMN point_id");
 
                     // sketchch_points table
                    aSqLiteDatabase.execSQL("create table sketch_element_points (" +
                             "   ID decimal primary key not null," +
-                            "   order int," +
+                            "   orderby int," +
                             "   x FLOAT," +
                             "   y FLOAT," +
                             "   element_id decimal" +
@@ -151,11 +151,14 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                     aSqLiteDatabase.execSQL("create table sketch_elements (" +
                             "   ID decimal primary key not null," +
                             "   sketch_id decimal not null," +
-                            "   order int," +
+                            "   orderby int," +
                             "   size int," +
                             "   type varchar," +
                             "   color int" +
                             ")");
+
+                    // project sketch
+                    aSqLiteDatabase.execSQL("ALTER TABLE projects create COLUMN sketch_id int");
 
                     aSqLiteDatabase.setTransactionSuccessful();
 

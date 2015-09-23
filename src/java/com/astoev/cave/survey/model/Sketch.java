@@ -20,9 +20,6 @@ public class Sketch {
     private Integer mId;
     @DatabaseField(columnName = "path")
     private String mFSPath;
-    @ForeignCollectionField(eager = true, orderColumnName = SketchElement.COLUMN_ORDER)
-    private List<SketchElement> elements;
-
 
     public Integer getId() {
         return mId;
@@ -40,11 +37,4 @@ public class Sketch {
         mFSPath = aFSPath;
     }
 
-    public List<SketchElement> getElements() {
-        return elements;
-    }
-
-    public void setElements(List<SketchElement> elements) {
-        this.elements = elements;
-    }
 }
