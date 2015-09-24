@@ -16,6 +16,8 @@ import com.astoev.cave.survey.model.Photo;
 import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.model.Sketch;
+import com.astoev.cave.survey.model.SketchElement;
+import com.astoev.cave.survey.model.SketchPoint;
 import com.astoev.cave.survey.model.Vector;
 import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.service.Workspace;
@@ -430,7 +432,6 @@ public class DaoUtil {
 
         Log.i(Constants.LOG_TAG_DB, "Delete project " + aProjectId);
 
-
         try {
             TransactionManager.callInTransaction(Workspace.getCurrentInstance().getDBHelper().getConnectionSource(), new Callable<Object>() {
                 public Object call() throws Exception {
@@ -515,5 +516,43 @@ public class DaoUtil {
 
     private static void deleteGallery(Gallery aG) throws SQLException {
         Workspace.getCurrentInstance().getDBHelper().getGalleryDao().delete(aG);
+    }
+
+    public static List<SketchElement> getSketchElements(Integer aSketchId) throws SQLException  {
+        QueryBuilder<SketchElement, Integer> elementsQuery = Workspace.getCurrentInstance().getDBHelper().getSketchElementDao().queryBuilder();
+        elementsQuery.where().eq(SketchElement.COLUMN_SKETCH_ID, aSketchId);
+        elementsQuery.orderBy(SketchElement.COLUMN_ORDER, true);
+        return elementsQuery.query();
+    }
+
+    public static List<SketchPoint> getSketchElementPoints(Integer anElementId) throws SQLException {
+        QueryBuilder<SketchPoint, Integer> pointsQuery = Workspace.getCurrentInstance().getDBHelper().getSketchPointDao().queryBuilder();
+        pointsQuery.where().eq(SketchPoint.COLUMN_ELEMENT_ID, anElementId);
+        pointsQuery.orderBy(SketchPoint.COLUMN_ORDER, true);
+        return pointsQuery.query();
+    }
+
+    public static void deleteSketchElements(final Sketch aSketch) throws SQLException {
+
+        Log.i(Constants.LOG_TAG_DB, "Delete sketch elements for " + aSketch.getId());
+
+        TransactionManager.callInTransaction(Workspace.getCurrentInstance().getDBHelper().getConnectionSource(), new Callable<Object>() {
+            public Object call() throws Exception {
+
+                List<SketchElement> elements = getSketchElements(aSketch.getId());
+
+                for (SketchElement element : elements) {
+                    List<SketchPoint> points = getSketchElementPoints(element.getId());
+                    for (SketchPoint point : points) {
+                        Workspace.getCurrentInstance().getDBHelper().getSketchPointDao().delete(point);
+                    }
+                    Workspace.getCurrentInstance().getDBHelper().getSketchElementDao().delete(element);
+                }
+
+                Log.i(Constants.LOG_TAG_DB, "Deleted ");
+
+                return null;
+            }
+        });
     }
 }

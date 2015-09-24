@@ -1,8 +1,6 @@
 package com.astoev.cave.survey.activity.draw;
 
 import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Path;
 
 /**
  * Created by IntelliJ IDEA.
@@ -13,20 +11,35 @@ import android.graphics.Path;
  */
 public class DrawingPath {
 
-    public Path path;
-    public DrawingOptions options;
+    private LoggedPath mPath;
+    private DrawingOptions mOptions;
 
     public DrawingPath() {
-        path = new Path();
+        mPath = new LoggedPath();
     }
 
-    public DrawingPath(DrawingOptions options) {
+    public DrawingPath(DrawingOptions aOptions) {
         this();
-        this.options = options;
+        this.mOptions = DrawingOptions.copy(aOptions);
     }
 
-    public void draw(Canvas canvas) {
-        canvas.drawPath(path, DrawingOptions.optionsToPaint(options));
+    public void draw(Canvas aCanvas) {
+        aCanvas.drawPath(mPath, DrawingOptions.optionsToPaint(mOptions));
     }
 
+    public DrawingOptions getOptions() {
+        return mOptions;
+    }
+
+    public void setOptions(DrawingOptions options) {
+        mOptions = options;
+    }
+
+    public LoggedPath getPath() {
+        return mPath;
+    }
+
+    public void setPath(LoggedPath aPath) {
+        mPath = aPath;
+    }
 }

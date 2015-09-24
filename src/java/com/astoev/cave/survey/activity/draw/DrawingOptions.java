@@ -3,7 +3,7 @@ package com.astoev.cave.survey.activity.draw;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 
-import com.j256.ormlite.field.DatabaseField;
+import com.astoev.cave.survey.model.SketchElement;
 
 /**
  * Drawing options that can be saved for reuse.
@@ -51,7 +51,22 @@ public class DrawingOptions {
         return paint;
     }
 
+    public static DrawingOptions fromSketchElement(SketchElement aElement) {
+        DrawingOptions options = new DrawingOptions();
+        options.setColor(aElement.getColor());
+        options.setSize(aElement.getSize());
+        options.setType(aElement.getType());
 
+        return options;
+    }
+
+    public static DrawingOptions copy(DrawingOptions anOptions) {
+        DrawingOptions options = new DrawingOptions();
+        options.setType(anOptions.getType());
+        options.setSize(anOptions.getSize());
+        options.setColor(anOptions.getColor());
+        return options;
+    }
 
     public int getColor() {
         return mColor;

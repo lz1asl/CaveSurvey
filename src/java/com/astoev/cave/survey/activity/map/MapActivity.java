@@ -81,8 +81,8 @@ public class MapActivity extends MainMenuActivity implements View.OnTouchListene
 
     public void annotateMap(View aView) {
         Intent intent = new Intent(this, DrawingActivity.class);
-        intent.putExtra(DrawingActivity.SKETCH_BASE, map.getPngDump());
-        intent.putExtra(DrawingActivity.MAP_FLAG, true);
+        intent.putExtra(DrawingActivity.PARAM_SKETCH_BASE, map.getPngDump());
+        intent.putExtra(DrawingActivity.PARAM_MAP_FLAG, true);
         startActivity(intent);
     }
 }

@@ -331,6 +331,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 
     public void drawingButton() {
         Intent intent = new Intent(this, DrawingActivity.class);
+        intent.putExtra(DrawingActivity.PARAM_LEG, mCurrentLeg.getId());
         startActivity(intent);
     }
 

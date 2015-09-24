@@ -15,13 +15,13 @@ public class SketchPoint {
 
     @DatabaseField(generatedId = true, columnName = "id")
     private Integer mId;
-    @DatabaseField(canBeNull = false, columnName = COLUMN_ORDER)
+    @DatabaseField(canBeNull = false, columnName = COLUMN_ORDER, index = true)
     private Integer mOrderBy;
     @DatabaseField(canBeNull = false, columnName = "x")
     private float mX;
     @DatabaseField(canBeNull = false, columnName = "y")
     private float mY;
-    @DatabaseField(canBeNull = false, foreign = true, columnName = COLUMN_ELEMENT_ID)
+    @DatabaseField(canBeNull = false, foreign = true, columnName = COLUMN_ELEMENT_ID, index = true)
     private SketchElement mElement;
 
 

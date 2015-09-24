@@ -47,11 +47,8 @@ public class CommandManager {
     public void executeAll(Canvas canvas) {
         if (currentStack != null) {
             synchronized (currentStack) {
-                final Iterator<DrawingPath> i = currentStack.iterator();
-
-                while (i.hasNext()) {
-                    final DrawingPath drawingPath = i.next();
-                    drawingPath.draw(canvas);
+                for (DrawingPath path : currentStack) {
+                    path.draw(canvas);
                 }
             }
         }
@@ -72,5 +69,9 @@ public class CommandManager {
             redoStack.remove(length - 1);
             currentStack.add(redoCommand);
         }
+    }
+
+    public List<DrawingPath> getCurrentStack() {
+        return currentStack;
     }
 }

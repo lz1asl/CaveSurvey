@@ -15,6 +15,8 @@ import com.astoev.cave.survey.model.Photo;
 import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.model.Sketch;
+import com.astoev.cave.survey.model.SketchElement;
+import com.astoev.cave.survey.model.SketchPoint;
 import com.astoev.cave.survey.model.Vector;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
@@ -45,6 +47,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private Dao<Photo, Integer> mPhotoDao;
     private Dao<Point, Integer> mPointDao;
     private Dao<Project, Integer> mProjectDao;
+    private Dao<SketchElement, Integer> mSketchElementDao;
+    private Dao<SketchPoint, Integer> mSketchPointDao;
     private Dao<Sketch, Integer> mSketchDao;
     private Dao<Gallery, Integer> mGalleryDao;
     private Dao<Option, Integer> mOptionsDao;
@@ -61,6 +65,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             mPointDao = getDao(Point.class);
             mProjectDao = getDao(Project.class);
             mSketchDao = getDao(Sketch.class);
+            mSketchElementDao = getDao(SketchElement.class);
+            mSketchPointDao = getDao(SketchPoint.class);
             mGalleryDao = getDao(Gallery.class);
             mOptionsDao = getDao(Option.class);
             mVectorsDao = getDao(Vector.class);
@@ -80,6 +86,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTableIfNotExists(connectionSource, Photo.class);
             TableUtils.createTableIfNotExists(connectionSource, Location.class);
             TableUtils.createTableIfNotExists(connectionSource, Sketch.class);
+            TableUtils.createTableIfNotExists(connectionSource, SketchElement.class);
+            TableUtils.createTableIfNotExists(connectionSource, SketchPoint.class);
             TableUtils.createTableIfNotExists(connectionSource, Point.class);
             TableUtils.createTableIfNotExists(connectionSource, Leg.class);
             TableUtils.createTableIfNotExists(connectionSource, Gallery.class);
@@ -202,6 +210,14 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     public Dao<Sketch, Integer> getSketchDao() {
         return mSketchDao;
+    }
+
+    public Dao<SketchPoint, Integer> getSketchPointDao() {
+        return mSketchPointDao;
+    }
+
+    public Dao<SketchElement, Integer> getSketchElementDao() {
+        return mSketchElementDao;
     }
 
     public Dao<Gallery, Integer> getGalleryDao() {

@@ -12,6 +12,8 @@ import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.UIUtilities;
 
+import java.util.List;
+
 /**
  * Created by IntelliJ IDEA.
  * User: almondmendoza
@@ -21,15 +23,14 @@ import com.astoev.cave.survey.activity.UIUtilities;
  */
 public class DrawingSurface extends View {
 
-    public DrawingPath previewPath;
+    public DrawingPath mPreviewPath;
     private Bitmap mOldBitmap;
-    private CommandManager commandManager;
+    private CommandManager mCommandManager;
 
     public DrawingSurface(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        commandManager = new CommandManager();
-
+        mCommandManager = new CommandManager();
 
         // disable optimizations causing drawing path not visible
         setWillNotDraw(false);
@@ -61,30 +62,29 @@ public class DrawingSurface extends View {
         }
 
         // user notes above
-        commandManager.executeAll(aCanvas);
-        previewPath.draw(aCanvas);
+        mCommandManager.executeAll(aCanvas);
+        mPreviewPath.draw(aCanvas);
     }
 
 
     public void addDrawingPath(DrawingPath drawingPath) {
-        commandManager.addCommand(drawingPath);
+        mCommandManager.addCommand(drawingPath);
     }
 
     public boolean hasMoreRedo() {
-        return commandManager.hasMoreRedo();
+        return mCommandManager.hasMoreRedo();
     }
 
     public void redo() {
-        commandManager.redo();
+        mCommandManager.redo();
     }
 
-
     public void undo() {
-        commandManager.undo();
+        mCommandManager.undo();
     }
 
     public boolean hasMoreUndo() {
-        return commandManager.hasMoreUndo();
+        return mCommandManager.hasMoreUndo();
     }
 
     public Bitmap getBitmap() {
@@ -104,5 +104,11 @@ public class DrawingSurface extends View {
     public void setOldBitmap(Bitmap aOldBitmap) {
         mOldBitmap = aOldBitmap;
     }
+
+    public List<DrawingPath> getPathElements() {
+        return mCommandManager.getCurrentStack();
+    }
+
+
 
 }

@@ -1,6 +1,6 @@
 package com.astoev.cave.survey.activity.draw.brush;
 
-import android.graphics.Path;
+import com.astoev.cave.survey.activity.draw.LoggedPath;
 
 /**
  * Created by IntelliJ IDEA.
@@ -11,16 +11,16 @@ import android.graphics.Path;
  */
 public class PenBrush {
 
-    public void mouseDown(Path path, float x, float y) {
-        path.moveTo(x, y);
-        path.lineTo(x, y);
+    public void mouseDown(LoggedPath aPath, float aX, float aY) {
+        aPath.moveTo(aX, aY);
+        aPath.lineTo(aX, aY);
     }
 
-    public void mouseMove(Path path, float x, float y) {
-        path.lineTo(x, y);
+    public void mouseMove(LoggedPath aPath, float aX, float aY) {
+        aPath.lineTo(aX, aY);
     }
 
-    public void mouseUp(Path path, float x, float y) {
-        path.lineTo(x, y);
+    public void mouseUp(LoggedPath aPath, float aX, float aY) {
+        aPath.lineTo(aX, aY);
     }
 }

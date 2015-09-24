@@ -2,10 +2,7 @@ package com.astoev.cave.survey.model;
 
 import com.astoev.cave.survey.activity.draw.DrawingOptions;
 import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
-
-import java.util.List;
 
 /**
  * Created by astoev on 9/15/15.
@@ -19,9 +16,9 @@ public class SketchElement {
 
     @DatabaseField(generatedId = true, columnName = "id")
     private Integer mId;
-    @DatabaseField(canBeNull = false, foreign = true, columnName = COLUMN_SKETCH_ID)
+    @DatabaseField(canBeNull = false, foreign = true, columnName = COLUMN_SKETCH_ID, index = true)
     private Sketch mSketch;
-    @DatabaseField(canBeNull = false, columnName = "order")
+    @DatabaseField(canBeNull = false, columnName = COLUMN_ORDER, index = true)
     private Integer mOrderBy;
     @DatabaseField(canBeNull = false, columnName = "size")
     private Integer mSize;
@@ -29,9 +26,6 @@ public class SketchElement {
     private DrawingOptions.TYPES mType;
     @DatabaseField(canBeNull = false, columnName = "color")
     private int mColor;
-    @ForeignCollectionField(eager = true, orderColumnName = SketchPoint.COLUMN_ORDER)
-    private List<SketchPoint> mPath;
-
 
     public SketchElement() {
     }
@@ -63,14 +57,6 @@ public class SketchElement {
 
     public void setOrderBy(Integer orderBy) {
         mOrderBy = orderBy;
-    }
-
-    public List<SketchPoint> getPath() {
-        return mPath;
-    }
-
-    public void setPath(List<SketchPoint> path) {
-        mPath = path;
     }
 
     public Integer getSize() {
