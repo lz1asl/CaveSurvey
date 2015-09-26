@@ -81,11 +81,6 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
         undoBtn = (Button) findViewById(R.id.undoBtn);
         saveBtn = (ImageButton) findViewById(R.id.saveDrawingBtn);
 
-        redoBtn.setEnabled(false);
-        undoBtn.setEnabled(false);
-
-        // nothing to save yet
-        saveBtn.setEnabled(false);
 
         try {
 
@@ -122,6 +117,16 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
                     }
                 }
             }
+
+            redoBtn.setEnabled(false);
+            if (drawingSurface.hasMoreUndo()) {
+                undoBtn.setEnabled(true);
+            } else {
+                undoBtn.setEnabled(false);
+            }
+
+            // nothing to save yet
+            saveBtn.setEnabled(false);
 
             drawingSurface.invalidate();
 
