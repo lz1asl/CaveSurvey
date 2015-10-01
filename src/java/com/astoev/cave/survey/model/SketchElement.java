@@ -1,7 +1,9 @@
 package com.astoev.cave.survey.model;
 
 import com.astoev.cave.survey.activity.draw.DrawingOptions;
+import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
 /**
@@ -11,7 +13,9 @@ import com.j256.ormlite.table.DatabaseTable;
 public class SketchElement {
 
     public static final String COLUMN_SKETCH_ID = "sketch_id";
+    public static final String FIELD_SKETCH = "sketch";
     public static final String COLUMN_ORDER = "orderby";
+    public static final String FIELD_POINTS = "points";
 
 
     @DatabaseField(generatedId = true, columnName = "id")
@@ -26,6 +30,8 @@ public class SketchElement {
     private DrawingOptions.TYPES mType;
     @DatabaseField(canBeNull = false, columnName = "color")
     private int mColor;
+    @ForeignCollectionField(eager = true, orderColumnName = SketchPoint.COLUMN_ORDER)
+    private ForeignCollection<SketchPoint> points;
 
     public SketchElement() {
     }
@@ -81,5 +87,13 @@ public class SketchElement {
 
     public void setType(DrawingOptions.TYPES type) {
         mType = type;
+    }
+
+    public ForeignCollection<SketchPoint> getPoints() {
+        return points;
+    }
+
+    public void setPoints(ForeignCollection<SketchPoint> points) {
+        this.points = points;
     }
 }

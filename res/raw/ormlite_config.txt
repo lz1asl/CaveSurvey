@@ -1,5 +1,5 @@
 #
-# generated on 2015/09/25 12:41:17
+# generated on 2015/09/26 08:55:59
 #
 # --table-start--
 dataClass=com.astoev.cave.survey.model.Location
@@ -146,6 +146,12 @@ generatedId=true
 # --field-start--
 fieldName=mFSPath
 columnName=path
+# --field-end--
+# --field-start--
+fieldName=elements
+foreignCollection=true
+foreignCollectionEager=true
+foreignCollectionOrderColumnName=orderby
 # --field-end--
 # --table-fields-end--
 # --table-end--
@@ -332,6 +338,12 @@ canBeNull=false
 fieldName=mColor
 columnName=color
 canBeNull=false
+# --field-end--
+# --field-start--
+fieldName=points
+foreignCollection=true
+foreignCollectionEager=true
+foreignCollectionOrderColumnName=orderby
 # --field-end--
 # --table-fields-end--
 # --table-end--

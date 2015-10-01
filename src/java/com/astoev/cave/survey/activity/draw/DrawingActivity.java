@@ -32,6 +32,7 @@ import com.astoev.cave.survey.util.FileStorageUtil;
 import com.astoev.cave.survey.util.PointUtil;
 
 import java.io.ByteArrayOutputStream;
+import java.util.Collection;
 import java.util.List;
 
 
@@ -107,12 +108,12 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
             }
 
             if (existingSketch != null) {
-                List<SketchElement> elements = elements = DaoUtil.getSketchElements(existingSketch.getId());
+                Collection<SketchElement> elements = existingSketch.getElements();
                 if (elements != null) {
                     for (SketchElement e : elements) {
                         DrawingPath path = new DrawingPath();
                         path.setOptions(DrawingOptions.fromSketchElement(e));
-                        path.setPath(LoggedPath.fromSketchElement(e.getId()));
+                        path.setPath(LoggedPath.fromSketchElement(e));
                         drawingSurface.getPathElements().add(path);
                     }
                 }
@@ -226,8 +227,6 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
 
 
             if (drawing != null) {
-                // delete old sketch data, not yet clever enough to replace
-                DaoUtil.deleteSketchElements(drawing);
                 drawing.setFSPath(path);
                 getWorkspace().getDBHelper().getSketchDao().update(drawing);
             } else {
@@ -237,28 +236,38 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
                 getWorkspace().getDBHelper().getSketchDao().create(drawing);
             }
 
-            // persist elements
+            // delete old sketch data, not yet clever enough to replace
+            // TODO delete old records?
+            getWorkspace().getDBHelper().getSketchDao().assignEmptyForeignCollection(drawing, Sketch.FIELD_ELEMENTS);
+
             int elementsCount = 0;
             for (DrawingPath currPath : drawingSurface.getPathElements()) {
                 SketchElement element = new SketchElement(drawing);
 
-                element.setOrderBy(elementsCount);
-                elementsCount++;
-
+                element.setOrderBy(elementsCount++);
                 element.setColor(currPath.getOptions().getColor());
                 element.setSize(currPath.getOptions().getSize());
                 element.setType(currPath.getOptions().getType());
 
-                getWorkspace().getDBHelper().getSketchElementDao().create(element);
+                drawing.getElements().add(element);
 
+
+//                getWorkspace().getDBHelper().getSketchElementDao().create(element);
+
+                // points
+                getWorkspace().getDBHelper().getSketchElementDao().assignEmptyForeignCollection(element, SketchElement.FIELD_POINTS);
                 int pointsCount = 0;
                 for (SketchPoint p : currPath.getPath().getPoints()) {
                     p.setElement(element);
-                    p.setOrderBy(pointsCount);
-                    getWorkspace().getDBHelper().getSketchPointDao().create(p);
-                    pointsCount++;
+                    p.setOrderBy(pointsCount++);
+                    element.getPoints().add(p);
+//                    getWorkspace().getDBHelper().getSketchPointDao().create(p);
+
                 }
+
             }
+
+            getWorkspace().getDBHelper().getSketchDao().update(drawing);
 
             // apply to parent
             if (mCurrLeg != null) {

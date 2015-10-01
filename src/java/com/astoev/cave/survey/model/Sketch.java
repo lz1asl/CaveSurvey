@@ -1,5 +1,6 @@
 package com.astoev.cave.survey.model;
 
+import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -16,10 +17,16 @@ import java.util.List;
 @DatabaseTable(tableName = "sketches")
 public class Sketch {
 
+    public static final String FIELD_ELEMENTS = "elements";
+
+
     @DatabaseField(generatedId = true, columnName = "id")
     private Integer mId;
     @DatabaseField(columnName = "path")
     private String mFSPath;
+    @ForeignCollectionField(eager = false, orderColumnName = SketchElement.COLUMN_ORDER)
+    private ForeignCollection<SketchElement> elements;
+
 
     public Integer getId() {
         return mId;
@@ -37,4 +44,11 @@ public class Sketch {
         mFSPath = aFSPath;
     }
 
+    public ForeignCollection<SketchElement> getElements() {
+        return elements;
+    }
+
+    public void setElements(ForeignCollection<SketchElement> elements) {
+        this.elements = elements;
+    }
 }

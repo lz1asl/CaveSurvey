@@ -11,6 +11,7 @@ import com.j256.ormlite.table.DatabaseTable;
 public class SketchPoint {
 
     public static final String COLUMN_ELEMENT_ID = "element_id";
+    public static final String FIELD_ELEMENT = "element";
     public static final String COLUMN_ORDER = "orderby";
 
     @DatabaseField(generatedId = true, columnName = "id")
