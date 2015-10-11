@@ -3,6 +3,7 @@ package com.astoev.cave.survey.activity.home;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.audiofx.BassBoost;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,6 +17,7 @@ import android.widget.ListView;
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.MainMenuActivity;
+import com.astoev.cave.survey.activity.SettingsActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.activity.dialog.LanguageDialog;
 import com.astoev.cave.survey.activity.main.BTActivity;
@@ -132,12 +134,20 @@ public class HomeActivity extends MainMenuActivity {
             case R.id.main_action_help:
                 openHelp();
                 return true;
+            case R.id.main_action_settings:
+                openSettings();
+                return true;
             case R.id.action_language:
                 onLanguage();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void openSettings() {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
     }
 
     private void openHelp() {

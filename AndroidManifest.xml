@@ -59,11 +59,6 @@
 			<meta-data
 	            android:name="android.support.PARENT_ACTIVITY"
 	            android:value="com.astoev.cave.survey.activity.main.MainActivity" />
-
-<!--             
-        	<meta-data android:name="android.support.UI_OPTIONS"
-                   	   android:value="splitActionBarWhenNarrow" />
- -->                   	   
         </activity>
 
         <activity android:name="com.astoev.cave.survey.activity.main.BTActivity">
@@ -77,8 +72,9 @@
                 android:value="com.astoev.cave.survey.activity.home.HomeActivity" />
         </activity>
         <activity android:name="com.astoev.cave.survey.activity.main.GPSActivity"/>
+        <activity android:name="com.astoev.cave.survey.activity.SettingsActivity"/>
 	
-	<activity
+	    <activity
             android:name=".openstopo.WebViewActivity"
             android:configChanges="orientation"
             android:theme="@android:style/Theme.NoTitleBar" >
