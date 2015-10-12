@@ -3,7 +3,6 @@ package com.astoev.cave.survey.activity.home;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.media.audiofx.BassBoost;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -179,7 +178,7 @@ public class HomeActivity extends MainMenuActivity {
                 projectsArray = projectsList.toArray(projectsArray);
 
                 // populate the projects in the list using adapter
-                ArrayAdapter<Project> projectsAdapter = new ArrayAdapter<Project>(this, android.R.layout.simple_list_item_1, projectsArray);
+                ArrayAdapter<Project> projectsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, projectsArray);
                 projectsContainer.setAdapter(projectsAdapter);
 
                 // item clicked
@@ -242,7 +241,7 @@ public class HomeActivity extends MainMenuActivity {
             } else {
                 // no projects - show "No projects" label
                 String[] value = {getResources().getString(R.string.home_no_projects)};
-                ArrayAdapter<String> noprojectsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, value);
+                ArrayAdapter<String> noprojectsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, value);
                 projectsContainer.setAdapter(noprojectsAdapter);
 
                 projectsContainer.setAdapter(noprojectsAdapter);

@@ -23,6 +23,8 @@ import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.MainMenuActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
+import com.astoev.cave.survey.activity.dialog.DeleteVectorDialog;
+import com.astoev.cave.survey.activity.dialog.DeleteVectorHandler;
 import com.astoev.cave.survey.activity.dialog.VectorDialog;
 import com.astoev.cave.survey.activity.draw.DrawingActivity;
 import com.astoev.cave.survey.activity.map.MapUtilities;
@@ -58,7 +60,7 @@ import java.util.concurrent.Callable;
  * Time: 1:15 AM
  * To change this template use File | Settings | File Templates.
  */
-public class PointActivity extends MainMenuActivity implements AzimuthChangedListener, SlopeChangedListener, BTResultAware, View.OnTouchListener {
+public class PointActivity extends MainMenuActivity implements AzimuthChangedListener, SlopeChangedListener, BTResultAware, View.OnTouchListener,DeleteVectorHandler {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int REQIEST_EDIT_NOTE = 2;
@@ -370,7 +372,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         // picture http://www.tutorialforandroid.com/2010/10/take-picture-in-android-with.html
         // https://developer.android.com/training/camera/photobasics.html
 
-        File photoFile = null;
+        File photoFile;
         try {
             String projectName = getWorkspace().getActiveProject().getName();
             Leg workingLeg = getCurrentLeg();
@@ -589,7 +591,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                 Integer currGalleryId = getWorkspace().getActiveGalleryId();
 
                 // another leg, starting from the latest in the gallery
-                boolean newGalleryFlag = extras.getBoolean(Constants.GALLERY_NEW, false);
+                boolean newGalleryFlag = extras != null && extras.getBoolean(Constants.GALLERY_NEW, false);
                 Point newFrom, newTo;
                 if (newGalleryFlag) {
                     newFrom = getWorkspace().getActiveLeg().getFromPoint();
@@ -695,30 +697,16 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                     row.setOnLongClickListener(new View.OnLongClickListener() {
                         @Override
                         public boolean onLongClick(View v) {
-                            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(PointActivity.this);
-                            dialogBuilder.setMessage(getString(R.string.point_vectors_delete, finalIndex))
-                                    .setCancelable(false)
-                                    .setPositiveButton(R.string.button_yes, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            Log.i(Constants.LOG_TAG_UI, "Delete vector");
-                                            try {
-                                                DaoUtil.deleteVector(finalVector);
-                                                UIUtilities.showNotification(R.string.action_deleted);
-                                                loadLegVectors(getCurrentLeg());
-                                            } catch (Exception e) {
-                                                Log.e(Constants.LOG_TAG_UI, "Failed to delete vector", e);
-                                                UIUtilities.showNotification(R.string.error);
-                                            }
-                                            dialog.dismiss();
-                                        }
-                                    })
-                                    .setNegativeButton(R.string.button_no, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            dialog.dismiss();
-                                        }
-                                    });
-                            AlertDialog alert = dialogBuilder.create();
-                            alert.show();
+
+                            // instantiate delete dialog and pass the vector
+                            String message = getString(R.string.point_vectors_delete, finalIndex);
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable(DeleteVectorDialog.VECTOR, finalVector);
+                            bundle.putString(DeleteVectorDialog.MESSAGE, message);
+
+                            DeleteVectorDialog deleteVecotrDialog = new DeleteVectorDialog();
+                            deleteVecotrDialog.setArguments(bundle);
+                            deleteVecotrDialog.show(getSupportFragmentManager(), DeleteVectorDialog.DELETE_VECTOR_DIALOG);
                             return true;
                         }
                     });
@@ -884,4 +872,16 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         }
     }
 
+    @Override
+    public void deleteVector(Vector vectorArg) {
+        Log.i(Constants.LOG_TAG_UI, "Delete vector");
+        try {
+            DaoUtil.deleteVector(vectorArg);
+            UIUtilities.showNotification(R.string.action_deleted);
+            loadLegVectors(getCurrentLeg());
+        } catch (Exception e) {
+            Log.e(Constants.LOG_TAG_UI, "Failed to delete vector", e);
+            UIUtilities.showNotification(R.string.error);
+        }
+    }
 }
