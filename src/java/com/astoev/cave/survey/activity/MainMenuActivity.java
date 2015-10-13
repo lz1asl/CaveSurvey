@@ -1,7 +1,6 @@
 package com.astoev.cave.survey.activity;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -9,6 +8,9 @@ import android.view.MenuItem;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
+import com.astoev.cave.survey.activity.dialog.ConfirmationDialog;
+import com.astoev.cave.survey.activity.dialog.ConfirmationHandler;
+import com.astoev.cave.survey.activity.dialog.ConfirmationOperation;
 import com.astoev.cave.survey.service.bluetooth.BluetoothService;
 
 /**
@@ -16,9 +18,11 @@ import com.astoev.cave.survey.service.bluetooth.BluetoothService;
  * User: astoev
  * Date: 1/23/12
  * Time: 4:09 PM
- * To change this template use File | Settings | File Templates.
+ *
+ * @author Alexander Stoev
+ * @author Zhivko Mitrev
  */
-public class MainMenuActivity extends BaseActivity {
+public class MainMenuActivity extends BaseActivity implements ConfirmationHandler {
 
 	/** Constant that shows that there is no child menu item */
 	protected static int NO_CHILD_MENU_ITEMS = 0;
@@ -71,29 +75,44 @@ public class MainMenuActivity extends BaseActivity {
         Log.i(Constants.LOG_TAG_UI, "Main menu selected - " + item.toString());
         switch (item.getItemId()) {
             case R.id.menuExit:
-                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-                dialogBuilder.setMessage(R.string.menu_exit_confirmation_question)
-                        .setCancelable(false)
-                        .setPositiveButton(R.string.button_yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                Log.i(Constants.LOG_TAG_UI, "Exit app");
-                                getWorkspace().clean();
-                                BluetoothService.stop();
-                                UIUtilities.cleanStatusBarMessages(MainMenuActivity.this);
-                                MainMenuActivity.this.moveTaskToBack(true);
-                            }
-                        })
-                        .setNegativeButton(R.string.button_no, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
-                AlertDialog alert = dialogBuilder.create();
-                alert.show();
+                showExitConfirmationDialog();
                 return true;
             default:
             	return super.onOptionsItemSelected(item);
         }
     }
 
+    protected void showExitConfirmationDialog(){
+        String message = getString(R.string.menu_exit_confirmation_question);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(ConfirmationDialog.OPERATION, ConfirmationOperation.EXIT);
+        bundle.putString(ConfirmationDialog.MESSAGE, message);
+        ConfirmationDialog confirmationDialog = new ConfirmationDialog();
+        confirmationDialog.setArguments(bundle);
+        confirmationDialog.show(getSupportFragmentManager(), ConfirmationDialog.CONFIRM_DIALOG);
+    }
+
+    @Override
+    public boolean confirmOperation(ConfirmationOperation operationArg) {
+        if (operationArg == null){
+            return false;
+        }
+        if (ConfirmationOperation.EXIT.equals(operationArg)){
+            exit();
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Cleans resources. Stops services and exit
+     */
+    protected void exit(){
+        Log.i(Constants.LOG_TAG_UI, "Exit app");
+        getWorkspace().clean();
+        BluetoothService.stop();
+        UIUtilities.cleanStatusBarMessages(MainMenuActivity.this);
+        MainMenuActivity.this.moveTaskToBack(true);
+        System.exit(0);
+    }
 }

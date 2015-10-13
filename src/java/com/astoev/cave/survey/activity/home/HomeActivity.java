@@ -1,7 +1,5 @@
 package com.astoev.cave.survey.activity.home;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -274,24 +272,26 @@ public class HomeActivity extends MainMenuActivity implements DeleteHandler {
 
     @Override
     public void onBackPressed() {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-        dialogBuilder.setMessage(R.string.menu_exit_confirmation_question)
-                .setCancelable(false)
-                .setPositiveButton(R.string.button_yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        Log.i(Constants.LOG_TAG_UI, "Exit app");
-                        getWorkspace().clean();
-                        HomeActivity.this.moveTaskToBack(true);
-                        System.exit(0);
-                    }
-                })
-                .setNegativeButton(R.string.button_no, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
-        AlertDialog alert = dialogBuilder.create();
-        alert.show();
+        showExitConfirmationDialog();
+        //TODO synchronzie with Alexander operations on both exits
+//        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+//        dialogBuilder.setMessage(R.string.menu_exit_confirmation_question)
+//                .setCancelable(false)
+//                .setPositiveButton(R.string.button_yes, new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int id) {
+//                        Log.i(Constants.LOG_TAG_UI, "Exit app");
+//                        getWorkspace().clean();
+//                        HomeActivity.this.moveTaskToBack(true);
+//                        System.exit(0);
+//                    }
+//                })
+//                .setNegativeButton(R.string.button_no, new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int id) {
+//                        dialog.cancel();
+//                    }
+//                });
+//        AlertDialog alert = dialogBuilder.create();
+//        alert.show();
     }
 
     /**
@@ -317,6 +317,5 @@ public class HomeActivity extends MainMenuActivity implements DeleteHandler {
             Log.e(Constants.LOG_TAG_UI, "Failed to delete project", e);
             UIUtilities.showNotification(R.string.error);
         }
-
     }
 }

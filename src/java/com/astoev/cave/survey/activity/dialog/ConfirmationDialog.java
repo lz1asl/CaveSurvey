@@ -16,17 +16,16 @@ import com.astoev.cave.survey.activity.UIUtilities;
 import java.io.Serializable;
 
 /**
- * Dialog for delete confirmation of model element.
  *
  * @author Zhivko Mitrev
  */
-public class ConfirmDeleteDialog extends DialogFragment {
+public class ConfirmationDialog extends DialogFragment {
 
-    public static final String DELETE_VECTOR_DIALOG = "DELETE_VECTOR_DIALOG";
-    public static final String ELEMENT = "element";
+    public static final String CONFIRM_DIALOG = "CONFIRM_DIALOG";
+    public static final String OPERATION = "operation";
     public static final String MESSAGE = "message";
 
-    private DeleteHandler deleteHandler;
+    private ConfirmationHandler confirmationHandler;
 
     /**
      * @see android.support.v4.app.DialogFragment#onCreateDialog(android.os.Bundle)
@@ -36,15 +35,23 @@ public class ConfirmDeleteDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceStateArg) {
 
         Bundle bundle = getArguments();
-        final Serializable element = bundle != null ? bundle.getSerializable(ELEMENT) : null;
+        final Serializable operationFromBundle = bundle != null ? bundle.getSerializable(OPERATION) : null;
         final String message = bundle != null ? bundle.getString(MESSAGE) : null;
+
+        final ConfirmationOperation operation;
+        if (operationFromBundle != null && operationFromBundle instanceof ConfirmationOperation){
+            operation = (ConfirmationOperation)operationFromBundle;
+        } else {
+            operation = null;
+            Log.e(Constants.LOG_TAG_UI, "Operation not supported:" + operationFromBundle);
+        }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage(message);
         builder.setPositiveButton(R.string.button_yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // delete vector
-                deleteHandler.delete(element);
+                confirmationHandler.confirmOperation(operation);
             }
         });
 
@@ -52,7 +59,7 @@ public class ConfirmDeleteDialog extends DialogFragment {
             @Override
             public void onClick(DialogInterface dialogArg, int whichArg) {
                 // cancel
-                ConfirmDeleteDialog.this.getDialog().cancel();
+                ConfirmationDialog.this.getDialog().cancel();
             }
         });
 
@@ -63,11 +70,12 @@ public class ConfirmDeleteDialog extends DialogFragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            deleteHandler = (DeleteHandler)activity;
+            confirmationHandler = (ConfirmationHandler)activity;
         } catch (ClassCastException cce) {
-            Log.e(Constants.LOG_TAG_UI, "Failed to delete vector - Activity not an instance of DeleteVectorHandler", cce);
+            Log.e(Constants.LOG_TAG_UI, "Activity not an instance of ConfirmationHandler", cce);
             UIUtilities.showNotification(R.string.error);
             throw cce;
         }
     }
+
 }
