@@ -18,6 +18,8 @@ import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.MainMenuActivity;
 import com.astoev.cave.survey.activity.SettingsActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
+import com.astoev.cave.survey.activity.dialog.ConfirmDeleteDialog;
+import com.astoev.cave.survey.activity.dialog.DeleteHandler;
 import com.astoev.cave.survey.activity.dialog.LanguageDialog;
 import com.astoev.cave.survey.activity.main.BTActivity;
 import com.astoev.cave.survey.activity.main.MainActivity;
@@ -35,15 +37,16 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Home activity for managing projects and general settings.
  *
- * @author astoev
+ * @author Aleksander Stoev
  * @author Jivko Mitrev
  */
-public class HomeActivity extends MainMenuActivity {
+public class HomeActivity extends MainMenuActivity implements DeleteHandler {
 
     /**
      * Dialog name to enable Language dialog
@@ -203,38 +206,18 @@ public class HomeActivity extends MainMenuActivity {
                 projectsContainer.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                     @Override
                     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                        try {
-                            final Project p = (Project) parent.getAdapter().getItem(position);
-                            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(HomeActivity.this);
-                            dialogBuilder.setMessage(getString(R.string.home_delete_project, p.getName()))
-                                    .setCancelable(false)
-                                    .setPositiveButton(R.string.button_yes, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            Log.i(Constants.LOG_TAG_UI, "Delete project");
-                                            try {
-                                                DaoUtil.deleteProject(p.getId());
-                                                UIUtilities.showNotification(R.string.action_deleted);
-                                                loadProjects();
-                                            } catch (Exception e) {
-                                                Log.e(Constants.LOG_TAG_UI, "Failed to delete project", e);
-                                                UIUtilities.showNotification(R.string.error);
-                                            }
-                                            dialog.dismiss();
-                                        }
-                                    })
-                                    .setNegativeButton(R.string.button_no, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            dialog.dismiss();
-                                        }
-                                    });
-                            AlertDialog alert = dialogBuilder.create();
-                            alert.show();
-                            return true;
-                        } catch (Exception e) {
-                            Log.e(Constants.LOG_TAG_UI, "Failed to delete project", e);
-                            UIUtilities.showNotification(R.string.error);
-                            return false;
-                        }
+
+                        final Project p = (Project) parent.getAdapter().getItem(position);
+                        // instantiate dialog for confirming the delete and pass the selected project's id
+                        String message = getString(R.string.home_delete_project, p.getName());
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable(ConfirmDeleteDialog.ELEMENT, p.getId());
+                        bundle.putString(ConfirmDeleteDialog.MESSAGE, message);
+
+                        ConfirmDeleteDialog deleteVecotrDialog = new ConfirmDeleteDialog();
+                        deleteVecotrDialog.setArguments(bundle);
+                        deleteVecotrDialog.show(getSupportFragmentManager(), ConfirmDeleteDialog.DELETE_VECTOR_DIALOG);
+                        return true;
                     }
                 });
 
@@ -309,5 +292,31 @@ public class HomeActivity extends MainMenuActivity {
                 });
         AlertDialog alert = dialogBuilder.create();
         alert.show();
+    }
+
+    /**
+     * Receives the id of the project to be deleted from the confirmation dialog. Tries to delete
+     * the selected project
+     *
+     * @param projectIdArg - id of the project confirmed for deleting
+     */
+    @Override
+    public void delete(Serializable projectIdArg) {
+        Log.i(Constants.LOG_TAG_UI, "Delete project");
+        try {
+            if (projectIdArg != null && projectIdArg instanceof Integer) {
+                DaoUtil.deleteProject((Integer)projectIdArg);
+                UIUtilities.showNotification(R.string.action_deleted);
+                loadProjects();
+            } else {
+                String projectIdClass = projectIdArg != null ? projectIdArg.getClass().getName() : null;
+                Log.e(Constants.LOG_TAG_UI, "Failed to delete project. Expected project it but:" + projectIdClass);
+                UIUtilities.showNotification(R.string.error);
+            }
+        } catch (Exception e) {
+            Log.e(Constants.LOG_TAG_UI, "Failed to delete project", e);
+            UIUtilities.showNotification(R.string.error);
+        }
+
     }
 }

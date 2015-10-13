@@ -23,8 +23,8 @@ import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.MainMenuActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
-import com.astoev.cave.survey.activity.dialog.DeleteVectorDialog;
-import com.astoev.cave.survey.activity.dialog.DeleteVectorHandler;
+import com.astoev.cave.survey.activity.dialog.ConfirmDeleteDialog;
+import com.astoev.cave.survey.activity.dialog.DeleteHandler;
 import com.astoev.cave.survey.activity.dialog.VectorDialog;
 import com.astoev.cave.survey.activity.draw.DrawingActivity;
 import com.astoev.cave.survey.activity.map.MapUtilities;
@@ -32,11 +32,9 @@ import com.astoev.cave.survey.fragment.LocationFragment;
 import com.astoev.cave.survey.model.Gallery;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Note;
-import com.astoev.cave.survey.model.Option;
 import com.astoev.cave.survey.model.Photo;
 import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.model.Vector;
-import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.service.bluetooth.BTMeasureResultReceiver;
 import com.astoev.cave.survey.service.bluetooth.BTResultAware;
 import com.astoev.cave.survey.service.bluetooth.util.MeasurementsUtil;
@@ -49,6 +47,7 @@ import com.astoev.cave.survey.util.StringUtils;
 import com.j256.ormlite.misc.TransactionManager;
 
 import java.io.File;
+import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -60,7 +59,7 @@ import java.util.concurrent.Callable;
  * Time: 1:15 AM
  * To change this template use File | Settings | File Templates.
  */
-public class PointActivity extends MainMenuActivity implements AzimuthChangedListener, SlopeChangedListener, BTResultAware, View.OnTouchListener,DeleteVectorHandler {
+public class PointActivity extends MainMenuActivity implements AzimuthChangedListener, SlopeChangedListener, BTResultAware, View.OnTouchListener,DeleteHandler {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int REQIEST_EDIT_NOTE = 2;
@@ -701,12 +700,12 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                             // instantiate delete dialog and pass the vector
                             String message = getString(R.string.point_vectors_delete, finalIndex);
                             Bundle bundle = new Bundle();
-                            bundle.putSerializable(DeleteVectorDialog.VECTOR, finalVector);
-                            bundle.putString(DeleteVectorDialog.MESSAGE, message);
+                            bundle.putSerializable(ConfirmDeleteDialog.ELEMENT, finalVector);
+                            bundle.putString(ConfirmDeleteDialog.MESSAGE, message);
 
-                            DeleteVectorDialog deleteVecotrDialog = new DeleteVectorDialog();
+                            ConfirmDeleteDialog deleteVecotrDialog = new ConfirmDeleteDialog();
                             deleteVecotrDialog.setArguments(bundle);
-                            deleteVecotrDialog.show(getSupportFragmentManager(), DeleteVectorDialog.DELETE_VECTOR_DIALOG);
+                            deleteVecotrDialog.show(getSupportFragmentManager(), ConfirmDeleteDialog.DELETE_VECTOR_DIALOG);
                             return true;
                         }
                     });
@@ -873,12 +872,18 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
     }
 
     @Override
-    public void deleteVector(Vector vectorArg) {
+    public void delete(Serializable vectorArg) {
         Log.i(Constants.LOG_TAG_UI, "Delete vector");
         try {
-            DaoUtil.deleteVector(vectorArg);
-            UIUtilities.showNotification(R.string.action_deleted);
-            loadLegVectors(getCurrentLeg());
+            if (vectorArg != null && vectorArg instanceof Vector ) {
+                DaoUtil.deleteVector((Vector) vectorArg);
+                UIUtilities.showNotification(R.string.action_deleted);
+                loadLegVectors(getCurrentLeg());
+            } else {
+                String vectorClass = vectorArg != null ? vectorArg.getClass().getName() : null;
+                Log.e(Constants.LOG_TAG_UI, "Failed to delete vector. Passed instance not a Vector but:" + vectorClass);
+                UIUtilities.showNotification(R.string.error);
+            }
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to delete vector", e);
             UIUtilities.showNotification(R.string.error);

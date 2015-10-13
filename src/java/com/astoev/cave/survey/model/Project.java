@@ -1,6 +1,5 @@
 package com.astoev.cave.survey.model;
 
-import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.util.ConfigUtil;
 import com.astoev.cave.survey.util.StringUtils;
 import com.j256.ormlite.dao.ForeignCollection;
@@ -9,8 +8,8 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import java.io.Serializable;
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
@@ -22,7 +21,7 @@ import java.util.Locale;
  * To change this template use File | Settings | File Templates.
  */
 @DatabaseTable(tableName = "projects")
-public class Project {
+public class Project implements Serializable {
 
     public static final String COLUMN_NAME = "name";
 

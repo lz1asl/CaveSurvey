@@ -12,22 +12,21 @@ import android.util.Log;
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.UIUtilities;
-import com.astoev.cave.survey.model.Vector;
+
+import java.io.Serializable;
 
 /**
- * Dialog for vector delete confirmation.
+ * Dialog for delete confirmation of model element.
  *
  * @author Zhivko Mitrev
  */
-public class DeleteVectorDialog extends DialogFragment {
-
+public class ConfirmDeleteDialog extends DialogFragment {
 
     public static final String DELETE_VECTOR_DIALOG = "DELETE_VECTOR_DIALOG";
-    public static final String VECTOR = "vector";
+    public static final String ELEMENT = "element";
     public static final String MESSAGE = "message";
 
-
-    private DeleteVectorHandler deleteHandler;
+    private DeleteHandler deleteHandler;
 
     /**
      * @see android.support.v4.app.DialogFragment#onCreateDialog(android.os.Bundle)
@@ -37,7 +36,7 @@ public class DeleteVectorDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceStateArg) {
 
         Bundle bundle = getArguments();
-        final Vector vector = bundle != null ? (Vector)bundle.getSerializable(VECTOR) : null;
+        final Serializable vector = bundle != null ? bundle.getSerializable(ELEMENT) : null;
         final String message = bundle != null ? bundle.getString(MESSAGE) : null;
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -45,7 +44,7 @@ public class DeleteVectorDialog extends DialogFragment {
         builder.setPositiveButton(R.string.button_yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // delete vector
-                deleteHandler.deleteVector(vector);
+                deleteHandler.delete(vector);
             }
         });
 
@@ -53,7 +52,7 @@ public class DeleteVectorDialog extends DialogFragment {
             @Override
             public void onClick(DialogInterface dialogArg, int whichArg) {
                 // cancel
-                DeleteVectorDialog.this.getDialog().cancel();
+                ConfirmDeleteDialog.this.getDialog().cancel();
             }
         });
 
@@ -64,7 +63,7 @@ public class DeleteVectorDialog extends DialogFragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            deleteHandler = (DeleteVectorHandler)activity;
+            deleteHandler = (DeleteHandler)activity;
         } catch (ClassCastException cce) {
             Log.e(Constants.LOG_TAG_UI, "Failed to delete vector - Activity not an instance of DeleteVectorHandler", cce);
             UIUtilities.showNotification(R.string.error);
