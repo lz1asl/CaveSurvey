@@ -74,7 +74,7 @@
     <string name="main_add_gps">Координат</string>
     <string name="main_add_vector">Нов лъч</string>
     <string name="main_reverse">Обърни</string>
-    <string name="main_reverse_message">Внимание, обръщане посоката и наклона на отсечка %1$s!</string>
+    <string name="main_reverse_message">Обръщане посоката и наклона на отсечка %1$s!</string>
     <string name="table_sketch_prefix">S</string>
     <string name="table_note_prefix">N</string>
     <string name="table_photo_prefix">P</string>
@@ -324,6 +324,8 @@
     <string name="unit_meters">метри</string>
     <string name="unit_degrees">градуси</string>
     <string name="unit_grads">гради</string>
+
+    <string name="title_warning">Внимание</string>
 
     <string name="lang_title">Избери език</string>
     <string-array name="lang_array">

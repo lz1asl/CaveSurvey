@@ -24,6 +24,7 @@ public class ConfirmationDialog extends DialogFragment {
     public static final String CONFIRM_DIALOG = "CONFIRM_DIALOG";
     public static final String OPERATION = "operation";
     public static final String MESSAGE = "message";
+    public static final String TITLE = "title";
 
     private ConfirmationHandler confirmationHandler;
 
@@ -37,6 +38,7 @@ public class ConfirmationDialog extends DialogFragment {
         Bundle bundle = getArguments();
         final Serializable operationFromBundle = bundle != null ? bundle.getSerializable(OPERATION) : null;
         final String message = bundle != null ? bundle.getString(MESSAGE) : null;
+        final String title = bundle != null ? bundle.getString(TITLE) : null;
 
         final ConfirmationOperation operation;
         if (operationFromBundle != null && operationFromBundle instanceof ConfirmationOperation){
@@ -47,6 +49,7 @@ public class ConfirmationDialog extends DialogFragment {
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(title);
         builder.setMessage(message);
         builder.setPositiveButton(R.string.button_yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {

@@ -9,6 +9,7 @@ public enum ConfirmationOperation {
 
     /** App exit operation*/
     EXIT,
+    REVERSE_LEG,
 
     ;
 }

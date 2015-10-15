@@ -1,7 +1,5 @@
 package com.astoev.cave.survey.activity.main;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -24,6 +22,8 @@ import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.MainMenuActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.activity.dialog.ConfirmDeleteDialog;
+import com.astoev.cave.survey.activity.dialog.ConfirmationDialog;
+import com.astoev.cave.survey.activity.dialog.ConfirmationOperation;
 import com.astoev.cave.survey.activity.dialog.DeleteHandler;
 import com.astoev.cave.survey.activity.dialog.VectorDialog;
 import com.astoev.cave.survey.activity.draw.DrawingActivity;
@@ -59,7 +59,7 @@ import java.util.concurrent.Callable;
  * Time: 1:15 AM
  * To change this template use File | Settings | File Templates.
  */
-public class PointActivity extends MainMenuActivity implements AzimuthChangedListener, SlopeChangedListener, BTResultAware, View.OnTouchListener,DeleteHandler {
+public class PointActivity extends MainMenuActivity implements AzimuthChangedListener, SlopeChangedListener, BTResultAware, View.OnTouchListener,DeleteHandler{
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int REQIEST_EDIT_NOTE = 2;
@@ -344,8 +344,11 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 
     private void vectorButton() {
         VectorDialog dialog = new VectorDialog(getSupportFragmentManager());
-        dialog.setLeg(getCurrentLeg());
+        Bundle bundle = new Bundle();
+        Leg leg = getCurrentLeg();
+        bundle.putSerializable(VectorDialog.LEG, getCurrentLeg());
         dialog.setCancelable(true);
+        dialog.setArguments(bundle);
         dialog.show(getSupportFragmentManager(), VECTOR_DIALOG);
     }
 
@@ -503,7 +506,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                 deleteButton();
                 return true;
             case R.id.point_action_reverse:
-                reverseLeg();
+                confirmReverseLeg();
                 return true;
 
             default:
@@ -820,9 +823,11 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         }
     }
 
-
-    private void reverseLeg() {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(PointActivity.this);
+    /**
+     * Executed when menu button for reverse leg is selected. It shows confirmation dialog to
+     * confirm the operation of reversing.
+     */
+    private void confirmReverseLeg() {
         try {
 
             // validate
@@ -832,44 +837,62 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
             if (UIUtilities.validateNumber(azimuth, true) && UIUtilities.checkAzimuth(azimuth)
                     && UIUtilities.validateNumber(slope, false) && UIUtilities.checkSlope(slope) ) {
 
-                dialogBuilder.setMessage(getString(R.string.main_reverse_message, mCurrentLeg.buildLegDescription()))
-                        .setCancelable(false)
-                        .setPositiveButton(R.string.button_yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                Log.i(Constants.LOG_TAG_UI, "Reverse leg");
+                // build and show confirmation dialog
+                String message = getString(R.string.main_reverse_message, mCurrentLeg.buildLegDescription());
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(ConfirmationDialog.OPERATION, ConfirmationOperation.REVERSE_LEG);
+                bundle.putString(ConfirmationDialog.MESSAGE, message);
+                bundle.putString(ConfirmationDialog.TITLE, getString(R.string.title_warning));
 
+                ConfirmationDialog confirmationDialog = new ConfirmationDialog();
+                confirmationDialog.setArguments(bundle);
+                confirmationDialog.show(getSupportFragmentManager(), ConfirmationDialog.CONFIRM_DIALOG);
 
-                                // if values are present update them in the UI only, they will be persisted on "save"
-                                try {
-                                    Float currAzimuth = MapUtilities.getAzimuthInDegrees(StringUtils.getFromEditTextNotNull(azimuth));
-                                    if (currAzimuth != null) {
-                                        Float reversedAzimuth = MapUtilities.add90Degrees(MapUtilities.add90Degrees(currAzimuth));
-                                        populateMeasure(reversedAzimuth, R.id.point_azimuth);
-                                    }
-                                    Float currSlope = StringUtils.getFromEditTextNotNull(slope);
-                                    if (currSlope != null && currSlope != 0) {
-                                        populateMeasure(-currSlope, R.id.point_slope);
-                                    }
-                                } catch (Exception e) {
-                                    Log.e(Constants.LOG_TAG_UI, "Failed to reverse leg", e);
-                                    UIUtilities.showNotification(R.string.error);
-                                }
-                                dialog.dismiss();
-                            }
-                        })
-                        .setNegativeButton(R.string.button_no, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.dismiss();
-                            }
-                        });
-                AlertDialog alert = dialogBuilder.create();
-                alert.show();
+            } else {
+                // TODO Alexander, what if not valid? Never handled before
             }
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to build reverse dialog", e);
             UIUtilities.showNotification(R.string.error);
         }
     }
+
+    @Override
+    public boolean confirmOperation(ConfirmationOperation operationArg) {
+        if (ConfirmationOperation.REVERSE_LEG.equals(operationArg)){
+            reverseLeg();
+            return true;
+        } else {
+            return super.confirmOperation(operationArg);
+        }
+    }
+
+    /**
+     * Reverses the leg after confirmation from the confirmation dialog
+     */
+    private void reverseLeg() {
+        Log.i(Constants.LOG_TAG_UI, "Reverse leg");
+        // validate
+        final EditText azimuth = (EditText) findViewById(R.id.point_azimuth);
+        final EditText slope = (EditText) findViewById(R.id.point_slope);
+
+        // if values are present update them in the UI only, they will be persisted on "save"
+//        try {
+            Float currAzimuth = MapUtilities.getAzimuthInDegrees(StringUtils.getFromEditTextNotNull(azimuth));
+            if (currAzimuth != null) {
+                Float reversedAzimuth = MapUtilities.add90Degrees(MapUtilities.add90Degrees(currAzimuth));
+                populateMeasure(reversedAzimuth, R.id.point_azimuth);
+            }
+            Float currSlope = StringUtils.getFromEditTextNotNull(slope);
+            if (currSlope != null && currSlope != 0) {
+                populateMeasure(-currSlope, R.id.point_slope);
+            }
+//        } catch (Exception e) {
+//            Log.e(Constants.LOG_TAG_UI, "Failed to reverse leg", e);
+//            UIUtilities.showNotification(R.string.error);
+//        }
+    }
+
 
     @Override
     public void delete(Serializable vectorArg) {
