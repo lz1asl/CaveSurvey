@@ -113,6 +113,6 @@ public class MainMenuActivity extends BaseActivity implements ConfirmationHandle
         BluetoothService.stop();
         UIUtilities.cleanStatusBarMessages(MainMenuActivity.this);
         MainMenuActivity.this.moveTaskToBack(true);
-        System.exit(0);
+//        System.exit(0);
     }
 }

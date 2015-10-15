@@ -273,25 +273,6 @@ public class HomeActivity extends MainMenuActivity implements DeleteHandler {
     @Override
     public void onBackPressed() {
         showExitConfirmationDialog();
-        //TODO synchronzie with Alexander operations on both exits
-//        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-//        dialogBuilder.setMessage(R.string.menu_exit_confirmation_question)
-//                .setCancelable(false)
-//                .setPositiveButton(R.string.button_yes, new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int id) {
-//                        Log.i(Constants.LOG_TAG_UI, "Exit app");
-//                        getWorkspace().clean();
-//                        HomeActivity.this.moveTaskToBack(true);
-//                        System.exit(0);
-//                    }
-//                })
-//                .setNegativeButton(R.string.button_no, new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int id) {
-//                        dialog.cancel();
-//                    }
-//                });
-//        AlertDialog alert = dialogBuilder.create();
-//        alert.show();
     }
 
     /**
