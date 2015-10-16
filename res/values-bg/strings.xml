@@ -326,6 +326,7 @@
     <string name="unit_grads">гради</string>
 
     <string name="title_warning">Внимание</string>
+    <string name="error_list_legs">Грешка при създаване на списъка с отсечки</string>
 
     <string name="lang_title">Избери език</string>
     <string-array name="lang_array">

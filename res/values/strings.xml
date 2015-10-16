@@ -326,6 +326,7 @@
     <string name="unit_grads">grads</string>
 
     <string name="title_warning">Warning</string>
+    <string name="error_list_legs">Unable to create list of legs</string>
 
     <string name="lang_title">Select language</string>
     <string-array name="lang_array">
