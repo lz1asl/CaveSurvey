@@ -16,11 +16,12 @@ import android.view.View;
  */
 public class ColorPickerView extends View {
 
-    private static final int CENTER_X = 100;
-    private static final int CENTER_Y = 100;
-    private static final int CENTER_RADIUS = 32;
     private static final int[] COLORS = new int[]{ 0xFFFF0000, 0xFFFF00FF, 0xFF0000FF, 0xFF00FFFF, 0xFF00FF00, 0xFFFFFF00, 0xFFFF0000 };
     private static final float PI = 3.1415926f;
+
+    private int mCenterX;
+    private int mCenterY;
+    private int mCenterRadius;
 
     private Paint mPaint;
     private Paint mCenterPaint;
@@ -39,10 +40,10 @@ public class ColorPickerView extends View {
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setShader(s);
         mPaint.setStyle(Paint.Style.STROKE);
-        mPaint.setStrokeWidth(32);
 
         mCenterPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mCenterPaint.setStrokeWidth(5);
+
+        setWillNotDraw(false);
     }
 
     public void setInitialColor(int initialColor) {
@@ -56,13 +57,23 @@ public class ColorPickerView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        float r = CENTER_X - mPaint.getStrokeWidth() * 0.5f;
 
-        canvas.translate(CENTER_X, CENTER_X);
+        super.onDraw(canvas);
+
+        mCenterX = canvas.getWidth() / 2;
+        mCenterY = canvas.getHeight() / 2;
+        int baseScreenSize = Math.min(canvas.getWidth(), canvas.getHeight());
+        mCenterRadius = baseScreenSize / 6;
+        mPaint.setStrokeWidth(baseScreenSize / 5);
+        mCenterPaint.setStrokeWidth(baseScreenSize / 30);
+
+        float r = baseScreenSize / 3;
+
+        canvas.translate(mCenterX, mCenterY);
 
         mRectangle.set(-r, -r, r, r);
         canvas.drawOval(mRectangle, mPaint);
-        canvas.drawCircle(0, 0, CENTER_RADIUS, mCenterPaint);
+        canvas.drawCircle(0, 0, mCenterRadius, mCenterPaint);
 
         if (mTrackingCenter) {
             int c = mCenterPaint.getColor();
@@ -73,18 +84,11 @@ public class ColorPickerView extends View {
             } else {
                 mCenterPaint.setAlpha(0x80);
             }
-            canvas.drawCircle(0, 0,
-                    CENTER_RADIUS + mCenterPaint.getStrokeWidth(),
-                    mCenterPaint);
+            canvas.drawCircle(0, 0, mCenterRadius + mCenterPaint.getStrokeWidth(), mCenterPaint);
 
             mCenterPaint.setStyle(Paint.Style.FILL);
             mCenterPaint.setColor(c);
         }
-    }
-
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        setMeasuredDimension(CENTER_X * 2, CENTER_Y * 2);
     }
 
     private int ave(int s, int d, float p) {
@@ -116,9 +120,9 @@ public class ColorPickerView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        float x = event.getX() - CENTER_X;
-        float y = event.getY() - CENTER_Y;
-        boolean inCenter = java.lang.Math.sqrt(x * x + y * y) <= CENTER_RADIUS;
+        float x = event.getX() - mCenterX;
+        float y = event.getY() - mCenterY;
+        boolean inCenter = java.lang.Math.sqrt(x * x + y * y) <= mCenterRadius;
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
