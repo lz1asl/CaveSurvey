@@ -330,6 +330,11 @@
         <item>Български</item>
     </string-array>
 
+
+    <!-- errors -->
+    <string name="network_unavailable">Не е налична мрежова връзка</string>
+    <string name="network_error">Мрежова грешка</string>
+
     <!--opens topo -->
     <string name="export_openstopo_title">OpensTopo</string>
     <string name="enterFileName">Име на файл:</string>

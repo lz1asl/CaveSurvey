@@ -331,6 +331,10 @@
         <item>Bulgarian</item>
     </string-array>
 
+    <!-- errors -->
+    <string name="network_unavailable">Network connectivity unavailable</string>
+    <string name="network_error">Network error</string>
+
 
     <!--opens topo -->
     <string name="export_openstopo_title">OpensTopo</string>

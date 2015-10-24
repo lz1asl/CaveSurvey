@@ -17,23 +17,15 @@ import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.MainMenuActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
+import com.astoev.cave.survey.activity.dialog.AboutDialog;
 import com.astoev.cave.survey.activity.dialog.LanguageDialog;
 import com.astoev.cave.survey.activity.main.BTActivity;
 import com.astoev.cave.survey.activity.main.MainActivity;
 import com.astoev.cave.survey.activity.poc.SensorTestActivity;
-import com.astoev.cave.survey.activity.dialog.AboutDialog;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.util.DaoUtil;
-import com.astoev.cave.survey.util.FileStorageUtil;
 
-import org.apache.commons.io.IOUtils;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.util.List;
 
 /**
@@ -58,38 +50,6 @@ public class HomeActivity extends MainMenuActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home);
-
-        // to be enabled only for debug purposes
-        // runDumpLogThread();
-    }
-
-    // dump android logs to a file, see http://stackoverflow.com/questions/6175002/write-android-logcat-data-to-a-file
-    private void runDumpLogThread() {
-        new Thread() {
-            @Override
-            public void run() {
-                OutputStream out = null;
-                try {
-
-                    Process process = Runtime.getRuntime().exec("logcat -d");
-                    BufferedReader bufferedReader = new BufferedReader(
-                            new InputStreamReader(process.getInputStream()));
-                    File logFile = new File(FileStorageUtil.getStorageHome(), "CaveSurvey.log");
-                    out = new FileOutputStream(logFile);
-
-                    String line;
-                    while ((line = bufferedReader.readLine()) != null) {
-                        IOUtils.write(line, out);
-                        Thread.sleep(100);
-                    }
-
-                } catch (Exception e) {
-                    Log.e(Constants.LOG_TAG_SERVICE, "Failed to copy output", e);
-                } finally {
-                    IOUtils.closeQuietly(out);
-                }
-            }
-        }.start();
     }
 
     @Override
