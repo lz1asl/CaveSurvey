@@ -27,19 +27,32 @@ public abstract class BaseActivity extends ActionBarActivity {
         Log.i(Constants.LOG_TAG_UI, "Creating activity " + this.getClass().getName());
         super.onCreate(savedInstanceState);
 
+        overrideDefaultExceptionHandler();
+
+        updateLocale();
+    }
+
+    private void overrideDefaultExceptionHandler() {
+
+        // store current handler
         final Thread.UncaughtExceptionHandler initialExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
 
+        // override
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+
             @Override
             public void uncaughtException(Thread paramThread, Throwable paramThrowable) {
+
+                // log
                 Log.e(Constants.LOG_TAG_SERVICE, "General exception occurred");
                 if (paramThread != null) {
-                    Log.e(Constants.LOG_TAG_SERVICE, "In Thread " + paramThread.getName());
+                    Log.e(Constants.LOG_TAG_SERVICE, "In Thread: " + paramThread.getName());
                 }
-                Log.e(Constants.LOG_TAG_SERVICE, "Cause " + ExceptionUtils.getMessage(paramThrowable));
-                Log.e(Constants.LOG_TAG_SERVICE, "Trace " + ExceptionUtils.getStackTrace(paramThrowable));
+                Log.e(Constants.LOG_TAG_SERVICE, "Cause: " + ExceptionUtils.getMessage(paramThrowable));
+                Log.e(Constants.LOG_TAG_SERVICE, "Trace: " + ExceptionUtils.getStackTrace(paramThrowable));
 
                 if (initialExceptionHandler != null) {
+                    // if possible notify the default handler
                     Log.e(Constants.LOG_TAG_SERVICE, "Escalate");
                     initialExceptionHandler.uncaughtException(paramThread, paramThrowable);
                 } else {
@@ -48,8 +61,6 @@ public abstract class BaseActivity extends ActionBarActivity {
                 }
             }
         });
-
-        updateLocale();
     }
 
     /**
