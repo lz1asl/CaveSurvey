@@ -5,7 +5,10 @@ import android.util.Log;
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.UIUtilities;
+import com.astoev.cave.survey.openstopo.FileUtils;
 import com.astoev.cave.survey.util.NetworkUnil;
+
+import org.json.JSONObject;
 
 /**
  * Utility class to report application errors.
@@ -35,14 +38,16 @@ public class ErrorReporter {
     }
 
     private static void reportToServer(String aLogFile) {
+
+        // ensure can send the report
         if (!NetworkUnil.isNetworkAvailable()) {
             Log.e(Constants.LOG_TAG_SERVICE, "No network service available");
             UIUtilities.showNotification(R.string.network_unavailable);
             return;
         }
 
-        // TODO prepare body
-        String content = "TODO";
+        // collect data
+        String content = prepareReportBody(aLogFile);
 
         // post
         try {
@@ -52,5 +57,13 @@ public class ErrorReporter {
             UIUtilities.showNotification(R.string.network_error);
         }
 
+    }
+
+    private static String prepareReportBody(String aLogFile) {
+        JSONObject report = new JSONObject();
+
+        // TODO body
+
+        return report.toString();
     }
 }
