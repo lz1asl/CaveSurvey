@@ -30,16 +30,19 @@ public class LogCatDumpThread extends Thread {
     @Override
     public void run() {
 
+        Log.i(Constants.LOG_TAG_SERVICE, "Starting debug session");
+
         OutputStream out = null;
         BufferedReader in = null;
 
         try {
             // start logcat to monitor the logs
             process = Runtime.getRuntime().exec("logcat -d");
+            running = true;
 
             // store logcat output to a file
             in = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            File logFile = new File(FileStorageUtil.getStorageHome(), LOG_FILE_NAME);
+            logFile = new File(FileStorageUtil.getStorageHome(), LOG_FILE_NAME);
             // TODO rotate old file, don't override
             out = new FileOutputStream(logFile);
 
@@ -60,10 +63,12 @@ public class LogCatDumpThread extends Thread {
             IOUtils.closeQuietly(in);
         }
 
-
+        Log.i(Constants.LOG_TAG_SERVICE, "End debug session");
     }
 
     public String stopCollection() {
+
+        Log.i(Constants.LOG_TAG_SERVICE, "End debug session requested");
 
         // interrupt collectoion and thread
         running = false;
