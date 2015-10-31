@@ -22,7 +22,8 @@ import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.BaseActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.activity.draw.brush.PenBrush;
-import com.astoev.cave.survey.activity.map.MapUtilities;
+import com.astoev.cave.survey.activity.draw.colorpicker.ColorChangedListener;
+import com.astoev.cave.survey.activity.draw.colorpicker.ColorPickerDialog;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.model.Sketch;
@@ -218,7 +219,7 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
     }
 
     public void pickColor(View aView) {
-        ColorPickerDialog.OnColorChangedListener listener = new ColorPickerDialog.OnColorChangedListener() {
+        ColorChangedListener listener = new ColorChangedListener() {
             @Override
             public void colorChanged(int color) {
                 currentColor = color;

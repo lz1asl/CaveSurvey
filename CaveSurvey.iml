@@ -34,7 +34,7 @@
       <sourceFolder url="file://$MODULE_DIR$/build/generated/source/buildConfig/defaultFlavor/debug" isTestSource="false" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/build/generated/source/rs/defaultFlavor/debug" isTestSource="false" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/build/generated/res/rs/defaultFlavor/debug" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/generated/defaultFlavor/debug" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/resValues/defaultFlavor/debug" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/defaultFlavorDebug/res" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/defaultFlavorDebug/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/defaultFlavorDebug/assets" type="java-resource" />
@@ -47,7 +47,7 @@
       <sourceFolder url="file://$MODULE_DIR$/build/generated/source/buildConfig/androidTest/defaultFlavor/debug" isTestSource="true" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/build/generated/source/rs/androidTest/defaultFlavor/debug" isTestSource="true" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/build/generated/res/rs/androidTest/defaultFlavor/debug" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/generated/androidTest/defaultFlavor/debug" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/resValues/androidTest/defaultFlavor/debug" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/defaultFlavor/res" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/defaultFlavor/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/defaultFlavor/assets" type="java-resource" />
