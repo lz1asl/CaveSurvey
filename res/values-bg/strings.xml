@@ -334,8 +334,13 @@
         <item>Български</item>
     </string-array>
 
-
-    <!-- errors -->
+    <!-- error reporter -->
+    <string name="error_reporter_title">Докладване за грешка</string>
+    <string name="error_reporter_on">Активирай</string>
+    <string name="error_reporter_off">Деактивирай</string>
+    <string name="error_reporter_report">Изпрати</string>
+    <string name="error_reporter_info">Използвайте за да ни уведомите за проблем: активирайте, репродуцирайте проблема и деактивирайте. Събраните грешки и Вашето описание ще бъдат изпратени за анализ (може да отнеме време). Необходима е мрежова връзка.</string>
+    <string name="error_reporter_message">Опишете проблема</string>
     <string name="network_unavailable">Не е налична мрежова връзка</string>
     <string name="network_error">Мрежова грешка</string>
 

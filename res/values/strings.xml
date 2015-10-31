@@ -334,7 +334,13 @@
         <item>Bulgarian</item>
     </string-array>
 
-    <!-- errors -->
+    <!-- error reporter -->
+    <string name="error_reporter_title">Report an error</string>
+    <string name="error_reporter_on">Activate</string>
+    <string name="error_reporter_off">Deactivate</string>
+    <string name="error_reporter_report">Send</string>
+    <string name="error_reporter_info">Use to report crash or error: activate, replay the steps and deactivate. Errors collected and your description will be sent for analysis (could take time). Network connection is required.</string>
+    <string name="error_reporter_message">Describe the issue</string>
     <string name="network_unavailable">Network connectivity unavailable</string>
     <string name="network_error">Network error</string>
 
