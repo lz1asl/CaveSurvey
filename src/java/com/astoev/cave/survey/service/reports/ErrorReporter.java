@@ -50,6 +50,10 @@ public class ErrorReporter {
         reportToServer(logFile);
     }
 
+    public static boolean isDebugRunning() {
+        return logsDumpThread != null;
+    }
+
     private static void reportToServer(String aLogFile) {
 
         // ensure can send the report
