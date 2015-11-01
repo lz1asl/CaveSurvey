@@ -1,28 +1,42 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_height="fill_parent" 
               android:layout_width="fill_parent" 
               android:orientation="vertical">
 
-    <ScrollView android:layout_width="fill_parent" 
-        		android:layout_height="wrap_content"
-                android:scrollbars="vertical">
+        <!-- error reporter -->
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp">
 
-        <TextView android:text="@string/main_button_settings"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:textAppearance="?android:attr/textAppearanceLarge"
-                  android:layout_alignParentTop="true"/>
-    </ScrollView>
+            <TextView
+                android:id="@+id/settingsDebugText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:text="@string/error_reporter_title" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/settingsDebugText"
+                android:clickable="true"
+                android:layout_centerVertical="true"
+                android:layout_margin="5dp"
+                android:src="@drawable/ic_info_white"
+                android:contentDescription="@string/information"
+                android:onClick="onErrorReporterChooseInfo" />
 
-    <ToggleButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerInParent="true"
-        android:id="@+id/settingsDebugToggle"
-        android:textOff="Plan"
-        android:textOn="Section"/>
+            <ToggleButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/settingsDebugToggle"
+                android:layout_alignParentRight="true"
+                android:onClick="onErrorReporterToggle" />
 
-</LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
+</ScrollView>
