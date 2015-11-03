@@ -34,8 +34,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/settingsDebugToggle"
-                android:layout_alignParentRight="true"
-                android:onClick="onErrorReporterToggle" />
+                android:layout_alignParentRight="true" />
 
         </RelativeLayout>
     </LinearLayout>

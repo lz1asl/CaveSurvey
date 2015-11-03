@@ -7,6 +7,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.astoev.cave.survey.Constants;
+import com.astoev.cave.survey.R;
+import com.astoev.cave.survey.activity.UIUtilities;
 
 import org.apache.commons.io.IOUtils;
 
@@ -57,6 +59,7 @@ public class NetworkUnil {
                         }
 
                         // all OK
+                        Log.i(Constants.LOG_TAG_SERVICE, "Post completed");
                         return null;
 
                     } finally {
@@ -66,6 +69,7 @@ public class NetworkUnil {
                     }
                 } catch (Exception e) {
                     Log.e(Constants.LOG_TAG_SERVICE, "Task error", e);
+                    UIUtilities.showNotification(R.string.network_error);
                     return e;
                 }
             }

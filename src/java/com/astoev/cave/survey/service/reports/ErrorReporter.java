@@ -41,20 +41,19 @@ public class ErrorReporter {
         logsDumpThread.start();
     }
 
-    public static void reportAndCloseDebugSession() {
+    public static String closeDebugSession() {
         // stop dump thread
         String logFile = logsDumpThread.stopCollection();
         logsDumpThread = null;
 
-        // report
-        reportToServer(logFile);
+        return logFile;
     }
 
     public static boolean isDebugRunning() {
         return logsDumpThread != null;
     }
 
-    private static void reportToServer(String aLogFile) {
+    public static void reportToServer(String aMessage, String aLogFile) {
 
         // ensure can send the report
         if (!NetworkUnil.isNetworkAvailable()) {
@@ -68,7 +67,7 @@ public class ErrorReporter {
         // collect data
         String content = null;
         try {
-            content = prepareReportBody(aLogFile);
+            content = prepareReportBody(aMessage, aLogFile);
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_SERVICE, "Failed to generate report", e);
             UIUtilities.showNotification(R.string.error);
@@ -79,7 +78,7 @@ public class ErrorReporter {
         // post
         try {
             NetworkUnil.postJSON(REPORTS_SERVER_URL, content);
-            Log.i(Constants.LOG_TAG_SERVICE, "Reported");
+            Log.i(Constants.LOG_TAG_SERVICE, "Report scheduled");
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_SERVICE, "Failed to talk to server", e);
             UIUtilities.showNotification(R.string.network_error);
@@ -87,7 +86,7 @@ public class ErrorReporter {
 
     }
 
-    private static String prepareReportBody(String aLogFile) throws JSONException, PackageManager.NameNotFoundException, IOException {
+    private static String prepareReportBody(String aMessage, String aLogFile) throws JSONException, PackageManager.NameNotFoundException, IOException {
         JSONObject report = new JSONObject();
 
         Activity context = ConfigUtil.getContext();
@@ -101,7 +100,7 @@ public class ErrorReporter {
             version.put("firstInstall", info.firstInstallTime);
             version.put("lastUpdate", info.lastUpdateTime);
         }
-        version.put("installLocation", info.installLocation);
+//        version.put("installLocation", info.installLocation);
         report.put("cave_survey_app", version);
 
         // Android device details
@@ -114,6 +113,9 @@ public class ErrorReporter {
         device.put("VERSION.RELEASE", Build.VERSION.RELEASE);
         device.put("VERSION.SDK_INT", Build.VERSION.SDK_INT);
         report.put("android_device", device);
+
+        // the user message
+        report.put("message", aMessage);
 
         // The log file contents
         InputStream in = null;

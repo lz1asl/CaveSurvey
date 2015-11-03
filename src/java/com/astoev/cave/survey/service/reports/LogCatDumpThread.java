@@ -50,7 +50,7 @@ public class LogCatDumpThread extends Thread {
             while (running) {
                 line = in.readLine();
                 if (line != null) {
-                    IOUtils.write(line, out);
+                    IOUtils.write(line.getBytes(), out);
                 }
                 Thread.sleep(100);
             }

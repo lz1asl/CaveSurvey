@@ -2,6 +2,7 @@ package com.astoev.cave.survey.activity;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.ToggleButton;
 
 import com.astoev.cave.survey.R;
@@ -27,6 +28,21 @@ public class SettingsActivity extends MainMenuActivity {
     private void prepareErrorReporter() {
         ToggleButton errorReporterToggle = (ToggleButton) findViewById(R.id.settingsDebugToggle);
         errorReporterToggle.setChecked(ErrorReporter.isDebugRunning());
+
+        errorReporterToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    ErrorReporter.startDebugSession();
+                } else {
+                    String dumpFile = ErrorReporter.closeDebugSession();
+                    // TODO show dialog
+                    String message = "TODO";
+                    ErrorReporter.reportToServer(message, dumpFile);
+                }
+            }
+        });
     }
 
     @Override
@@ -48,11 +64,6 @@ public class SettingsActivity extends MainMenuActivity {
 
     protected String getScreenTitle() {
         return getString(R.string.main_button_settings);
-    }
-
-
-    public void onErrorReporterToggle(View viewArg) {
-        // TODO
     }
 
 }
