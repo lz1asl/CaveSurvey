@@ -50,7 +50,7 @@ public class NetworkUnil {
 
                         // post
                         out = new BufferedOutputStream(urlConnection.getOutputStream());
-                        IOUtils.write((String) params[1], out);
+                        IOUtils.write(((String) params[1]).getBytes(), out);
                         out.flush();
 
                         // verify
