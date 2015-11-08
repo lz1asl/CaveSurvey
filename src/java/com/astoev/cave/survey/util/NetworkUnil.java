@@ -60,6 +60,7 @@ public class NetworkUnil {
 
                         // all OK
                         Log.i(Constants.LOG_TAG_SERVICE, "Post completed");
+                        UIUtilities.showNotification(R.string.success);
                         return null;
 
                     } finally {

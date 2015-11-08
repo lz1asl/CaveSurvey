@@ -6,6 +6,7 @@ import android.widget.CompoundButton;
 import android.widget.ToggleButton;
 
 import com.astoev.cave.survey.R;
+import com.astoev.cave.survey.activity.dialog.ErrorReporterDialog;
 import com.astoev.cave.survey.fragment.InfoDialogFragment;
 import com.astoev.cave.survey.service.reports.ErrorReporter;
 
@@ -15,6 +16,8 @@ import com.astoev.cave.survey.service.reports.ErrorReporter;
 public class SettingsActivity extends MainMenuActivity {
 
     private static final String ERROR_REPORTER_TOOLTIP_DIALOG = "ERROR_REPORTER_TOOLTIP_DIALOG";
+
+    private static final String ERROR_REPORTER_MESSAGE_DIALOG = "ERROR_REPORTER_MESSAGE_DIALOG";
 
 
     @Override
@@ -36,10 +39,15 @@ public class SettingsActivity extends MainMenuActivity {
                 if (isChecked) {
                     ErrorReporter.startDebugSession();
                 } else {
+                    // stop session
                     String dumpFile = ErrorReporter.closeDebugSession();
-                    // TODO show dialog
-                    String message = "TODO";
-                    ErrorReporter.reportToServer(message, dumpFile);
+
+                    // show message dialog that sends the report
+                    ErrorReporterDialog aboutDialogFragment = new ErrorReporterDialog();
+                    Bundle arguments = new Bundle();
+                    arguments.putString("dumpFile", dumpFile);
+                    aboutDialogFragment.setArguments(arguments);
+                    aboutDialogFragment.show(getSupportFragmentManager(), ERROR_REPORTER_MESSAGE_DIALOG);
                 }
             }
         });

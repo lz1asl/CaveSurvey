@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content">
+
+    <EditText
+        android:id="@+id/error_reporter_message_box"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxLength="1024"
+        android:scrollbars="vertical"
+        android:inputType="textMultiLine"
+        android:hint="@string/error_reporter_message"
+        android:lines="5"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/error_reporter_report"
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/erro_reporter_submit_button"/>
+</LinearLayout>
