@@ -3,10 +3,12 @@ package com.astoev.cave.survey.activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.dialog.ErrorReporterDialog;
+import com.astoev.cave.survey.activity.dialog.LanguageDialog;
 import com.astoev.cave.survey.fragment.InfoDialogFragment;
 import com.astoev.cave.survey.service.reports.ErrorReporter;
 
@@ -15,8 +17,8 @@ import com.astoev.cave.survey.service.reports.ErrorReporter;
  */
 public class SettingsActivity extends MainMenuActivity {
 
+    private static final String LANGUAGE_DIALOG = "LANGUAGE_DIALOG";
     private static final String ERROR_REPORTER_TOOLTIP_DIALOG = "ERROR_REPORTER_TOOLTIP_DIALOG";
-
     private static final String ERROR_REPORTER_MESSAGE_DIALOG = "ERROR_REPORTER_MESSAGE_DIALOG";
 
 
@@ -25,7 +27,20 @@ public class SettingsActivity extends MainMenuActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings);
 
+        prepareLanguage();
         prepareErrorReporter();
+    }
+
+    private void prepareLanguage() {
+
+        TextView language = (TextView) findViewById(R.id.settingsLanguage);
+        language.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LanguageDialog languageDialog = new LanguageDialog();
+                languageDialog.show(getSupportFragmentManager(), LANGUAGE_DIALOG);
+            }
+        });
     }
 
     private void prepareErrorReporter() {

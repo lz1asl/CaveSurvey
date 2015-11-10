@@ -4,13 +4,19 @@
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_height="fill_parent" 
               android:layout_width="fill_parent" 
-              android:orientation="vertical">
+              android:orientation="vertical"
+              android:layout_margin="5dp">
+
+        <TextView
+            android:id="@+id/settingsLanguage"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/home_lang" />
 
         <!-- error reporter -->
         <RelativeLayout
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/settingsDebugText"

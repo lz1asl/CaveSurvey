@@ -9,6 +9,7 @@ import android.util.Log;
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.UIUtilities;
+import com.astoev.cave.survey.service.Workspace;
 
 import org.apache.commons.io.IOUtils;
 
@@ -76,6 +77,7 @@ public class NetworkUnil {
             }
         };
 
+        // todo don't seem to execute in background
         task.execute(aUrl, aContent);
         Exception error = (Exception) task.get();
         if (error != null) {

@@ -38,11 +38,6 @@ import java.util.List;
  */
 public class HomeActivity extends MainMenuActivity implements DeleteHandler {
 
-    /**
-     * Dialog name to enable Language dialog
-     */
-    private static final String LANGUAGE_DIALOG = "LANGUAGE_DIALOG";
-
     private static final String ABOUT_DIALOG = "ABOUT_DIALOG";
 
     /**
@@ -97,9 +92,6 @@ public class HomeActivity extends MainMenuActivity implements DeleteHandler {
             case R.id.main_action_settings:
                 openSettings();
                 return true;
-            case R.id.action_language:
-                onLanguage();
-                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -114,11 +106,6 @@ public class HomeActivity extends MainMenuActivity implements DeleteHandler {
         Uri uri = Uri.parse("https://github.com/lz1asl/CaveSurvey/wiki/User-Guide");
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(intent);
-    }
-
-    private void onLanguage() {
-        LanguageDialog languageDialog = new LanguageDialog();
-        languageDialog.show(getSupportFragmentManager(), LANGUAGE_DIALOG);
     }
 
     private void showAboutDialog() {
