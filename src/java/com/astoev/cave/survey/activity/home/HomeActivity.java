@@ -16,10 +16,8 @@ import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.MainMenuActivity;
 import com.astoev.cave.survey.activity.SettingsActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
-import com.astoev.cave.survey.activity.dialog.AboutDialog;
 import com.astoev.cave.survey.activity.dialog.ConfirmDeleteDialog;
 import com.astoev.cave.survey.activity.dialog.DeleteHandler;
-import com.astoev.cave.survey.activity.dialog.LanguageDialog;
 import com.astoev.cave.survey.activity.main.BTActivity;
 import com.astoev.cave.survey.activity.main.MainActivity;
 import com.astoev.cave.survey.activity.poc.SensorTestActivity;
@@ -37,8 +35,6 @@ import java.util.List;
  * @author Jivko Mitrev
  */
 public class HomeActivity extends MainMenuActivity implements DeleteHandler {
-
-    private static final String ABOUT_DIALOG = "ABOUT_DIALOG";
 
     /**
      * Called when the activity is first created.
@@ -83,9 +79,6 @@ public class HomeActivity extends MainMenuActivity implements DeleteHandler {
                 onAzimuthTest();
                 return true;
             }
-            case R.id.main_action_about:
-                showAboutDialog();
-                return true;
             case R.id.main_action_help:
                 openHelp();
                 return true;
@@ -106,12 +99,6 @@ public class HomeActivity extends MainMenuActivity implements DeleteHandler {
         Uri uri = Uri.parse("https://github.com/lz1asl/CaveSurvey/wiki/User-Guide");
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(intent);
-    }
-
-    private void showAboutDialog() {
-
-        AboutDialog aboutDialogFragment = new AboutDialog();
-        aboutDialogFragment.show(getSupportFragmentManager(), ABOUT_DIALOG);
     }
 
     private void loadProjects() {

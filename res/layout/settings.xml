@@ -43,5 +43,12 @@
                 android:layout_alignParentRight="true" />
 
         </RelativeLayout>
+
+        <TextView
+            android:id="@+id/settingsAbout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/main_button_about" />
+
     </LinearLayout>
 </ScrollView>
