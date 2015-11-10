@@ -11,7 +11,15 @@
             android:id="@+id/settingsLanguage"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/home_lang" />
+            android:text="@string/home_lang"
+            android:layout_marginBottom="10dp" />
+
+        <TextView
+            android:id="@+id/settingsBluetooth"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/ic_action_bluetooth_searching"
+            android:text="@string/sensor_test_title" />
 
         <!-- error reporter -->
         <RelativeLayout
@@ -35,13 +43,11 @@
                 android:src="@drawable/ic_info_white"
                 android:contentDescription="@string/information"
                 android:onClick="onErrorReporterChooseInfo" />
-
             <ToggleButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/settingsDebugToggle"
                 android:layout_alignParentRight="true" />
-
         </RelativeLayout>
 
         <TextView

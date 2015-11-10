@@ -20,7 +20,6 @@ import com.astoev.cave.survey.activity.dialog.ConfirmDeleteDialog;
 import com.astoev.cave.survey.activity.dialog.DeleteHandler;
 import com.astoev.cave.survey.activity.main.BTActivity;
 import com.astoev.cave.survey.activity.main.MainActivity;
-import com.astoev.cave.survey.activity.poc.SensorTestActivity;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.util.DaoUtil;
@@ -73,10 +72,6 @@ public class HomeActivity extends MainMenuActivity implements DeleteHandler {
             }
             case R.id.action_setup_bt: {
                 pairBtDevice();
-                return true;
-            }
-            case R.id.action_azimuth_test: {
-                onAzimuthTest();
                 return true;
             }
             case R.id.main_action_help:
@@ -195,12 +190,6 @@ public class HomeActivity extends MainMenuActivity implements DeleteHandler {
     private void newProjectOnClick() {
         Log.i(Constants.LOG_TAG_UI, "New project");
         Intent intent = new Intent(this, NewProjectActivity.class);
-        startActivity(intent);
-    }
-
-    private void onAzimuthTest() {
-        Log.i(Constants.LOG_TAG_UI, "Azimuth Test");
-        Intent intent = new Intent(this, SensorTestActivity.class);
         startActivity(intent);
     }
 

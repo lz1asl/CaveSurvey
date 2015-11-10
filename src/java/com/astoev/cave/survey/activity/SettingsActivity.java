@@ -1,15 +1,19 @@
 package com.astoev.cave.survey.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.dialog.AboutDialog;
 import com.astoev.cave.survey.activity.dialog.ErrorReporterDialog;
 import com.astoev.cave.survey.activity.dialog.LanguageDialog;
+import com.astoev.cave.survey.activity.poc.SensorTestActivity;
 import com.astoev.cave.survey.fragment.InfoDialogFragment;
 import com.astoev.cave.survey.service.reports.ErrorReporter;
 
@@ -30,8 +34,21 @@ public class SettingsActivity extends MainMenuActivity {
         setContentView(R.layout.settings);
 
         prepareLanguage();
+        prepareBluetooth();
         prepareErrorReporter();
         prepareAbout();
+    }
+
+    private void prepareBluetooth() {
+        TextView bt = (TextView) findViewById(R.id.settingsBluetooth);
+        bt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(Constants.LOG_TAG_UI, "Azimuth Test");
+                Intent intent = new Intent(SettingsActivity.this, SensorTestActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void prepareAbout() {
