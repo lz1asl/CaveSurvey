@@ -12,6 +12,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="@string/home_lang"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_marginBottom="10dp" />
 
         <TextView
@@ -19,7 +20,8 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:icon="@drawable/ic_action_bluetooth_searching"
-            android:text="@string/sensor_test_title" />
+            android:text="@string/sensor_test_title"
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
 
         <!-- error reporter -->
         <RelativeLayout
@@ -32,7 +34,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:text="@string/error_reporter_title" />
+                android:text="@string/error_reporter_title"
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -54,7 +57,8 @@
             android:id="@+id/settingsAbout"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/main_button_about" />
+            android:text="@string/main_button_about"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
     </LinearLayout>
 </ScrollView>
