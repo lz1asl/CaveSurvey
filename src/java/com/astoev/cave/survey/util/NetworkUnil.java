@@ -9,9 +9,6 @@ import android.util.Log;
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.UIUtilities;
-import com.astoev.cave.survey.service.Workspace;
-
-import org.apache.commons.io.IOUtils;
 
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -51,7 +48,7 @@ public class NetworkUnil {
 
                         // post
                         out = new BufferedOutputStream(urlConnection.getOutputStream());
-                        IOUtils.write(((String) params[1]).getBytes(), out);
+                        out.write(((String) params[1]).getBytes());
                         out.flush();
 
                         // verify
@@ -66,7 +63,7 @@ public class NetworkUnil {
 
                     } finally {
                         // clean up
-                        IOUtils.closeQuietly(out);
+                        StreamUtil.closeQuietly(out);
                         urlConnection.disconnect();
                     }
                 } catch (Exception e) {

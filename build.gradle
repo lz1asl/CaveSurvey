@@ -18,8 +18,6 @@ dependencies {
     compile 'com.j256.ormlite:ormlite-core:4.48'
     compile 'com.j256.ormlite:ormlite-android:4.48'
     compile 'org.apache.poi:poi:3.9'
-    compile 'commons-io:commons-io:2.4'
-    compile 'org.apache.commons:commons-lang3:3.4'
 
     androidTestCompile 'junit:junit:4.12'
 }

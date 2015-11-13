@@ -5,8 +5,7 @@ import android.util.Log;
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.util.FileStorageUtil;
-
-import org.apache.commons.io.IOUtils;
+import com.astoev.cave.survey.util.StreamUtil;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -50,7 +49,8 @@ public class LogCatDumpThread extends Thread {
             while (running) {
                 line = in.readLine();
                 if (line != null) {
-                    IOUtils.write(line.getBytes(), out);
+                    out.write(line.getBytes());
+                    out.flush();
                 }
                 Thread.sleep(100);
             }
@@ -59,8 +59,8 @@ public class LogCatDumpThread extends Thread {
             Log.e(Constants.LOG_TAG_SERVICE, "Failed to dump logs", e);
             UIUtilities.showNotification("Failed to dump logs");
         } finally {
-            IOUtils.closeQuietly(out);
-            IOUtils.closeQuietly(in);
+            StreamUtil.closeQuietly(out);
+            StreamUtil.closeQuietly(in);
         }
 
         Log.i(Constants.LOG_TAG_SERVICE, "End debug session");

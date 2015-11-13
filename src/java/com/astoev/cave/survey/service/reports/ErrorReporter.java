@@ -9,17 +9,14 @@ import android.util.Log;
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.UIUtilities;
-import com.astoev.cave.survey.openstopo.FileUtils;
-import com.astoev.cave.survey.service.Workspace;
 import com.astoev.cave.survey.util.ConfigUtil;
 import com.astoev.cave.survey.util.NetworkUnil;
+import com.astoev.cave.survey.util.StreamUtil;
 
-import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -122,7 +119,7 @@ public class ErrorReporter {
         try {
             // load
             in = new FileInputStream(aLogFile);
-            String errorContents = IOUtils.toString(in);
+            String errorContents = new String(StreamUtil.read(in));
 
             // need to adjust bad new lines
             errorContents = errorContents.replaceAll("D/", "\n");
@@ -132,7 +129,7 @@ public class ErrorReporter {
             // TODO it's good idea to zip the contents
             report.put("error", errorContents);
         } finally {
-            IOUtils.closeQuietly(in);
+            StreamUtil.closeQuietly(in);
         }
 
         return report.toString();

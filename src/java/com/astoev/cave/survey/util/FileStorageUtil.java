@@ -14,8 +14,6 @@ import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.model.Project;
 
-import org.apache.commons.io.IOUtils;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -73,14 +71,14 @@ public class FileStorageUtil {
             Log.i(Constants.LOG_TAG_SERVICE, "Store to " + exportFile.getAbsolutePath());
 
             out = new FileOutputStream(exportFile);
-            IOUtils.copy(aStream, out);
+            StreamUtil.copy(aStream, out);
             return exportFile.getAbsolutePath();
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to store export", e);
             return null;
         } finally {
-            IOUtils.closeQuietly(out);
-            IOUtils.closeQuietly(aStream);
+            StreamUtil.closeQuietly(out);
+            StreamUtil.closeQuietly(aStream);
         }
     }
 
@@ -117,7 +115,7 @@ public class FileStorageUtil {
             Log.e(Constants.LOG_TAG_SERVICE, "Unable to write file: " + pictureFile.getAbsolutePath(), e);
             throw e;
         } finally {
-            IOUtils.closeQuietly(os);
+            StreamUtil.closeQuietly(os);
         }
 
         Log.i(Constants.LOG_TAG_SERVICE, "Just wrote: " + pictureFile.getAbsolutePath());

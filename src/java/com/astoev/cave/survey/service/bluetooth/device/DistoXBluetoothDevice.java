@@ -7,8 +7,6 @@ import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.Measure;
 import com.astoev.cave.survey.service.bluetooth.util.DistoXProtocol;
 
-import org.apache.commons.io.IOUtils;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -71,7 +69,7 @@ public class DistoXBluetoothDevice extends AbstractBluetoothDevice {
     public void ack(OutputStream aStream, byte[] aBytesBffer) throws IOException {
         byte [] ack = DistoXProtocol.createAcknowledgementPacket(aBytesBffer);
         Log.i(Constants.LOG_TAG_BT, "Generate ack " + DistoXProtocol.describeAcknowledgementPacket(ack));
-        IOUtils.write(ack, aStream);
+        aStream.write(ack);
         aStream.flush();
     }
 }

@@ -9,8 +9,8 @@ import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.service.Workspace;
 import com.astoev.cave.survey.util.ConfigUtil;
 
-import org.apache.commons.lang3.exception.ExceptionUtils;
-
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Locale;
 
 /**
@@ -48,8 +48,12 @@ public abstract class BaseActivity extends ActionBarActivity {
                 if (paramThread != null) {
                     Log.e(Constants.LOG_TAG_SERVICE, "In Thread: " + paramThread.getName());
                 }
-                Log.e(Constants.LOG_TAG_SERVICE, "Cause: " + ExceptionUtils.getMessage(paramThrowable));
-                Log.e(Constants.LOG_TAG_SERVICE, "Trace: " + ExceptionUtils.getStackTrace(paramThrowable));
+                Log.e(Constants.LOG_TAG_SERVICE, "Cause: " + paramThrowable.getCause());
+
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw, true);
+                paramThrowable.printStackTrace(pw);
+                Log.e(Constants.LOG_TAG_SERVICE, "Trace: " + sw.getBuffer().toString());
 
                 if (initialExceptionHandler != null) {
                     // if possible notify the default handler

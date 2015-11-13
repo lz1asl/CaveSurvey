@@ -25,8 +25,7 @@ import android.widget.Toast;
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.UIUtilities;
-
-import org.apache.commons.io.IOUtils;
+import com.astoev.cave.survey.util.StreamUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -63,8 +62,8 @@ public class WebViewActivity extends Activity {
                 Log.i("SPLX", "Failed to copy asset file: " + filename);
                 Log.i("SPLX", e.toString());
             } finally {
-                IOUtils.closeQuietly(in);
-                IOUtils.closeQuietly(out);
+                StreamUtil.closeQuietly(in);
+                StreamUtil.closeQuietly(out);
             }
             return;
         }
@@ -73,14 +72,15 @@ public class WebViewActivity extends Activity {
             // + Base64.encodeToString( html.getBytes(), Base64.NO_WRAP )));
             try {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
-                    final byte[] Contents = Base64.decode(
+                    final byte[] contents = Base64.decode(
                             fileurl.split(";base64,")[1], Base64.DEFAULT);
                     FileOutputStream out = null;
                     try {
                         out = new FileOutputStream(strDestination);
-                        IOUtils.write(Contents, out);
+                        out.write(contents);
+                        out.flush();
                     } finally {
-                        IOUtils.closeQuietly(out);
+                        StreamUtil.closeQuietly(out);
                     }
                     UIUtilities.showNotification(this, strDestination, null);
                 } else {
@@ -301,11 +301,11 @@ public class WebViewActivity extends Activity {
             InputStream in = null;
             try {
                 in = new FileInputStream(caveSurveyFilePath);
-                return IOUtils.toString(in);
+                return new String(StreamUtil.read(in));
             } catch (Exception e) {
                 Log.e(Constants.LOG_TAG_UI, "Failed to load json", e);
             } finally {
-                IOUtils.closeQuietly(in);
+                StreamUtil.closeQuietly(in);
             }
             return null;
         }

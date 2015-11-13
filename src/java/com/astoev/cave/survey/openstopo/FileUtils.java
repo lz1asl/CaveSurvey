@@ -33,4 +33,14 @@ public class FileUtils {
 		String fileType = file.getName().substring(lastIndexOfPoint).toLowerCase();
 		return fileType.compareTo(filter) == 0;
 	}
+
+	public static void deleteQuietly(File aFile) {
+		if (aFile != null) {
+			try {
+				aFile.delete();
+			} catch (Exception e) {
+				// noop
+			}
+		}
+	}
 }

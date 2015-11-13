@@ -10,11 +10,11 @@ import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.model.Sketch;
 import com.astoev.cave.survey.service.export.AbstractExport;
 
-import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 /**
@@ -81,8 +81,7 @@ public class OpensTopoJsonExport extends AbstractExport {
 
     @Override
     protected InputStream getContent() {
-        String json = project.toString();
-        return IOUtils.toInputStream(json);
+        return new ByteArrayInputStream(project.toString().getBytes());
     }
 
     @Override

@@ -17,6 +17,7 @@ import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.model.Sketch;
 import com.astoev.cave.survey.model.Vector;
+import com.astoev.cave.survey.openstopo.FileUtils;
 import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.service.Workspace;
 import com.astoev.cave.survey.service.ormlite.DatabaseHelper;
@@ -25,8 +26,6 @@ import com.j256.ormlite.misc.TransactionManager;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.Where;
 import com.j256.ormlite.support.ConnectionSource;
-
-import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.sql.SQLException;
