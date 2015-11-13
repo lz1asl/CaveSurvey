@@ -17,7 +17,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.j256.ormlite:ormlite-core:4.48'
     compile 'com.j256.ormlite:ormlite-android:4.48'
-    compile 'org.apache.poi:poi:3.9'
+    compile 'org.apache.poi:poi:3.13'
 
     androidTestCompile 'junit:junit:4.12'
 }
