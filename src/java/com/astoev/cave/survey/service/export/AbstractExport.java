@@ -51,9 +51,9 @@ public abstract class AbstractExport {
     // public method for starting export
     public String runExport(Project aProject) throws Exception {
 
-        prepare(aProject);
-
         try {
+            prepare(aProject);
+
             // legs
             List<Leg> legs = DaoUtil.getCurrProjectLegs(false);
 

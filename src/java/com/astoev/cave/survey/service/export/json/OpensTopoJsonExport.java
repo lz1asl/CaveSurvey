@@ -4,11 +4,15 @@ import android.content.Context;
 import android.util.Log;
 
 import com.astoev.cave.survey.Constants;
+import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.model.Location;
+import com.astoev.cave.survey.model.Option;
 import com.astoev.cave.survey.model.Photo;
 import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.model.Sketch;
+import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.service.export.AbstractExport;
+import com.astoev.cave.survey.util.ConfigUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,10 +49,17 @@ public class OpensTopoJsonExport extends AbstractExport {
 
         rows = new JSONArray();
         JSONObject headerRow = new JSONObject();
-        // TODO fix units
+
         headerRow.put("from", null);
         headerRow.put("to", null);
-        headerRow.put("len", "m");
+        headerRow.put("len", "m"); // currently only meters supported
+        if (Option.UNIT_GRADS.equals(Options.getOptionValue(Option.CODE_AZIMUTH_UNITS))
+                || Option.UNIT_GRADS.equals(Options.getOptionValue(Option.CODE_SLOPE_UNITS))) {
+            // opens topo does not support grads, may implement conversion in the future
+            Log.i(Constants.LOG_TAG_SERVICE, "OpensTopo - conversion to grads not implemented");
+            UIUtilities.showRawMessage(ConfigUtil.getContext(), "Grads not supported in OpensTopo");
+            throw new RuntimeException("Unable to convert to grads");
+        }
         headerRow.put("compass", "deg");
         headerRow.put("clino", "deg");
         headerRow.put("top", "m");
