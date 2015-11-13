@@ -20,8 +20,6 @@ dependencies {
     compile 'org.apache.poi:poi:3.9'
     compile 'commons-io:commons-io:2.4'
     compile 'org.apache.commons:commons-lang3:3.4'
-    compile 'commons-codec:commons-codec:1.7'
-    compile 'com.google.code.gson:gson:2.3'
 
     androidTestCompile 'junit:junit:4.12'
 }

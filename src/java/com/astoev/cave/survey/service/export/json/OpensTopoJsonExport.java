@@ -9,34 +9,32 @@ import com.astoev.cave.survey.model.Photo;
 import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.model.Sketch;
 import com.astoev.cave.survey.service.export.AbstractExport;
-import com.google.gson.GsonBuilder;
 
 import org.apache.commons.io.IOUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by astoev on 8/28/14.
  */
 public class OpensTopoJsonExport extends AbstractExport {
 
-    private List<Map<String, Object>> rows;
-    private Map<String, Object> row;
-    private Map<String, Object> project;
+    private JSONArray rows;
+    private JSONObject project;
+    private JSONObject row;
 
     public OpensTopoJsonExport(Context aContext) {
         super(aContext);
     }
 
     @Override
-    protected void prepare(Project aProject) {
+    protected void prepare(Project aProject) throws JSONException {
         Log.i(Constants.LOG_TAG_SERVICE, "Start JSON export ");
 
-        project = new HashMap<String, Object>();
+        project = new JSONObject();
         project.put("name", aProject.getName());
         project.put("altitude", "0");
         project.put("longitude", "0.0");
@@ -45,8 +43,8 @@ public class OpensTopoJsonExport extends AbstractExport {
         project.put("geoPoint", "0");
         project.put("northdeclination", "0");
 
-        rows = new ArrayList<Map<String, Object>>();
-        Map<String, Object> headerRow = new HashMap<String, Object>();
+        rows = new JSONArray();
+        JSONObject headerRow = new JSONObject();
         // TODO fix units
         headerRow.put("from", null);
         headerRow.put("to", null);
@@ -59,14 +57,14 @@ public class OpensTopoJsonExport extends AbstractExport {
         headerRow.put("bottom", "m");
         headerRow.put("r", null);
 
-        rows.add(headerRow);
+        rows.put(headerRow);
         project.put("data", rows);
     }
 
     @Override
-    protected void prepareEntity(int rowCounter) {
-        row = new HashMap<String, Object>();
+    protected void prepareEntity(int rowCounter) throws JSONException {
 
+        row = new JSONObject();
         row.put("from", "");
         row.put("to", "");
         row.put("len", "");
@@ -78,14 +76,12 @@ public class OpensTopoJsonExport extends AbstractExport {
         row.put("bottom", "");
         row.put("r", "");
 
-        rows.add(row);
+        rows.put(row);
     }
 
     @Override
     protected InputStream getContent() {
-        String json = new GsonBuilder().serializeNulls()
-                //.setPrettyPrinting()
-                .create().toJson(project);
+        String json = project.toString();
         return IOUtils.toInputStream(json);
     }
 
@@ -95,16 +91,16 @@ public class OpensTopoJsonExport extends AbstractExport {
     }
 
     @Override
-    protected void setValue(Entities entityType, String aLabel) {
+    protected void setValue(Entities entityType, String aLabel) throws JSONException {
         populateValue(entityType, aLabel);
     }
 
     @Override
-    protected void setValue(Entities entityType, Float aValue) {
+    protected void setValue(Entities entityType, Float aValue) throws JSONException {
         populateValue(entityType, "" + aValue);
     }
 
-    private void populateValue(Entities entityType, Object aValue) {
+    private void populateValue(Entities entityType, Object aValue) throws JSONException {
         switch (entityType) {
             case FROM:
                 row.put("from", aValue);
