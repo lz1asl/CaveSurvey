@@ -14,11 +14,9 @@ import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
 import android.webkit.DownloadListener;
-import android.webkit.GeolocationPermissions;
 import android.webkit.JavascriptInterface;
 import android.webkit.URLUtil;
 import android.webkit.ValueCallback;
-import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.Toast;
 
@@ -41,7 +39,6 @@ public class WebViewActivity extends Activity {
 
     private WebView webView;
     private ValueCallback<Uri> mUploadMessage;
-    private final static int FILECHOOSER_RESULTCODE = 1;
 
     // ---------------------------Downloadmanager------------------------------------------>
     // https://groups.google.com/forum/?fromgroups#!topic/android-developers/DW-LVc97W8Y
@@ -127,83 +124,6 @@ public class WebViewActivity extends Activity {
         if (webView == null) {
             webView = (WebView) findViewById(R.id.webView1);
 
-            // ------------WebChromeClient--------------------------------->
-            webView.setWebChromeClient(new WebChromeClient() {
-                @Override
-                public void onGeolocationPermissionsShowPrompt(String origin,
-                                                               GeolocationPermissions.Callback callback) {
-                    Log.i("SPLX", " GeolocationPermissions");
-                    callback.invoke(origin, true, false);
-                }
-
-                public void onConsoleMessage(String message, int lineNumber, String sourceID) {
-                    Log.d("SPLX", message + " -- From line "
-                            + lineNumber + " of "
-                            + sourceID);
-                }
-
-                // serve per riottenere il focus dopo aver scelto il file da
-                // aprire
-                public void openFileChooser(ValueCallback<Uri> uploadMsg) {
-                    mUploadMessage = uploadMsg;
-                    // ---save file dialog--------------------->
-                    final String[] mFileFilter = {"*.*", ".jpeg", ".txt",
-                            ".png"};
-                    FileSelector s = new FileSelector(WebViewActivity.this,
-                            FileOperation.LOAD, mLoadFileListener, mFileFilter,
-                            "");
-                    s.show();
-                    // ---save file dialog---------------------<
-                }
-
-                // For Android 3.0+
-                public void openFileChooser(ValueCallback uploadMsg,
-                                            String acceptType) {
-                    mUploadMessage = uploadMsg;
-                    // ---save file dialog--------------------->
-                    final String[] mFileFilter = {"*.*", ".jpeg", ".txt",
-                            ".png"};
-                    FileSelector s = new FileSelector(WebViewActivity.this,
-                            FileOperation.LOAD, mLoadFileListener, mFileFilter,
-                            "");
-                    s.show();
-                    // ---save file dialog---------------------<
-                }
-
-                // For Android 4.1
-                public void openFileChooser(ValueCallback<Uri> uploadMsg,
-                                            String acceptType, String capture) {
-                    mUploadMessage = uploadMsg;
-                    // ---save file dialog--------------------->
-                    final String[] mFileFilter = {"*.*", ".jpeg", ".txt",
-                            ".png"};
-                    FileSelector s = new FileSelector(WebViewActivity.this,
-                            FileOperation.LOAD, mLoadFileListener, mFileFilter,
-                            "");
-                    s.show();
-                    // ---save file dialog---------------------<
-                }
-
-                // root
-                OnHandleFileListener mLoadFileListener = new OnHandleFileListener() {
-                    @Override
-                    public void handleFile(final String filePath) {
-                        Toast.makeText(WebViewActivity.this,
-                                "Load: " + filePath, Toast.LENGTH_SHORT).show();
-                        try {
-                            if (null == mUploadMessage)
-                                return;
-                            mUploadMessage.onReceiveValue(Uri.parse(filePath));
-                            mUploadMessage = null;
-                        } catch (Exception e) {
-                            Log.i("SPLX", "Error:" + e.toString());
-                        }
-                    }
-                };
-
-            });
-            // ------------WebChromeClient---------------------------------<
-
             // ------------DownloadListener-------------------------------->
             webView.setDownloadListener(new DownloadListener() {
                 String Url_da_scaricare = "";
@@ -226,6 +146,9 @@ public class WebViewActivity extends Activity {
                                             long contentLength) {
                     String fileName = URLUtil.guessFileName(url,
                             contentDisposition, mimetype);
+                    if (fileName.startsWith("octet-stream;base64")) {
+                        fileName = "OpensTopoExport";
+                    }
                     Log.i("SPLX", "Start download:" + url);
                     Log.i("SPLX", "contentDisposition:" + contentDisposition);
                     Log.i("SPLX", "userAgent:" + userAgent);
@@ -236,7 +159,7 @@ public class WebViewActivity extends Activity {
                             ".png"};
                     Url_da_scaricare = url;
                     FileSelector s = new FileSelector(WebViewActivity.this,
-                            FileOperation.SAVE, mSaveFileListener, mFileFilter,
+                            mSaveFileListener, mFileFilter,
                             fileName);
                     s.show();
                     // ---save file dialog---------------------<
@@ -285,11 +208,11 @@ public class WebViewActivity extends Activity {
     // json interface
     class CaveSurveyJSInterface {
 
+        private String caveSurveyFilePath;
+
         public CaveSurveyJSInterface(String aPath) {
             caveSurveyFilePath = aPath;
         }
-
-        String caveSurveyFilePath;
 
         @JavascriptInterface
         public String getProjectFile() {

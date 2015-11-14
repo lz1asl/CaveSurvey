@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.astoev.cave.survey.R;
+import com.astoev.cave.survey.util.FileStorageUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -65,21 +66,19 @@ public class FileSelector {
 	 * 
 	 * @param context
 	 *            The current context.
-	 * @param operation
-	 *            LOAD - to load file / SAVE - to save file
 	 * @param onHandleFileListener
 	 *            Notified after pressing the save or load button.
 	 * @param fileFilters
 	 *            Array with filters
 	 */
-	public FileSelector(final Context context, final FileOperation operation,
-			final OnHandleFileListener onHandleFileListener, final String[] fileFilters, final String defaultFilename) {
+	public FileSelector(final Context context, final OnHandleFileListener onHandleFileListener,
+						final String[] fileFilters, final String defaultFilename) {
 		mContext = context;
 		mOnHandleFileListener = onHandleFileListener;
 
 		final File sdCard = Environment.getExternalStorageDirectory();
 		if (sdCard.canRead()) {
-			mCurrentLocation = sdCard;
+			mCurrentLocation = FileStorageUtil.getStorageHome();
 		} else {
 			mCurrentLocation = Environment.getRootDirectory();
 		}
@@ -91,8 +90,8 @@ public class FileSelector {
 		prepareFilterSpinner(fileFilters);
 		prepareFilesList();
 
-		setSaveLoadButton(operation);
-		setNewFolderButton(operation);
+		setSaveLoadButton();
+		setNewFolderButton();
 		setCancelButton();
 		final EditText fileName = (EditText) mDialog.findViewById(R.id.fileName);
 		fileName.setText(defaultFilename);
@@ -233,29 +232,18 @@ public class FileSelector {
 	/**
 	 * Set button name and click handler for Save or Load button.
 	 * 
-	 * @param operation
-	 *            Performed file operation.
 	 */
-	private void setSaveLoadButton(final FileOperation operation) {
+	private void setSaveLoadButton() {
 		mSaveLoadButton = (Button) mDialog.findViewById(R.id.fileSaveLoad);
-		switch (operation) {
-		case SAVE:
-			mSaveLoadButton.setText(R.string.saveButtonText);
-			break;
-		case LOAD:
-			mSaveLoadButton.setText(R.string.loadButtonText);
-			break;
-		}
-		mSaveLoadButton.setOnClickListener(new SaveLoadClickListener(operation, this, mContext));
+		mSaveLoadButton.setText(R.string.saveButtonText);
+		mSaveLoadButton.setOnClickListener(new SaveLoadClickListener(this, mContext));
 	}
 
 	/**
 	 * Set button visibility and click handler for New folder button.
 	 * 
-	 * @param operation
-	 *            Performed file operation.
 	 */
-	private void setNewFolderButton(final FileOperation operation) {
+	private void setNewFolderButton() {
 		mNewFolderButton = (Button) mDialog.findViewById(R.id.newFolder);
 		OnClickListener newFolderListener = new OnClickListener() {
 			@Override
@@ -263,15 +251,8 @@ public class FileSelector {
 				openNewFolderDialog();
 			}
 		};
-		switch (operation) {
-		case SAVE:
-			mNewFolderButton.setVisibility(View.VISIBLE);
-			mNewFolderButton.setOnClickListener(newFolderListener);
-			break;
-		case LOAD:
-			mNewFolderButton.setVisibility(View.GONE);
-			break;
-		}
+		mNewFolderButton.setVisibility(View.VISIBLE);
+		mNewFolderButton.setOnClickListener(newFolderListener);
 	}
 
 	/** Opens a dialog for creating a new folder. */

@@ -17,7 +17,6 @@ import java.io.File;
 public class SaveLoadClickListener implements OnClickListener {
 
 	/** Performed operation. */
-	private final FileOperation mOperation;
 
 	/** FileSelector in which you used SaveLoadClickListener */
 	private final FileSelector mFileSelector;
@@ -25,15 +24,12 @@ public class SaveLoadClickListener implements OnClickListener {
 	private final Context mContext;
 
 	/**
-	 * @param operation
-	 *            Performed operation.
 	 * @param fileSelector
 	 *            The FileSeletor which used this Listener.
 	 * @param context
 	 *            context.
 	 */
-	public SaveLoadClickListener(final FileOperation operation, final FileSelector fileSelector, final Context context) {
-		mOperation = operation;
+	public SaveLoadClickListener(final FileSelector fileSelector, final Context context) {
 		mFileSelector = fileSelector;
 		mContext = context;
 	}
@@ -46,19 +42,8 @@ public class SaveLoadClickListener implements OnClickListener {
 			final File file = new File(filePath);
 			int messageText = 0;
 			// Check file access rights.
-			switch (mOperation) {
-				case SAVE:
-					if ((file.exists()) && (!file.canWrite())) {
-						messageText = R.string.cannotSaveFileMessage;
-					}
-					break;
-				case LOAD:
-					if (!file.exists()) {
-						messageText = R.string.missingFile;
-					} else if (!file.canRead()) {
-						messageText = R.string.accessDenied;
-					}
-					break;
+			if ((file.exists()) && (!file.canWrite())) {
+				messageText = R.string.cannotSaveFileMessage;
 			}
 			if (messageText != 0) {
 				// Access denied.
