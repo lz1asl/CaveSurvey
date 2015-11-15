@@ -1,6 +1,5 @@
 /**
  * @author Alessandro Vernassa
- *
  */
 package com.astoev.cave.survey.openstopo;
 
@@ -15,7 +14,6 @@ import android.util.Base64;
 import android.util.Log;
 import android.webkit.DownloadListener;
 import android.webkit.JavascriptInterface;
-import android.webkit.URLUtil;
 import android.webkit.ValueCallback;
 import android.webkit.WebView;
 import android.widget.Toast;
