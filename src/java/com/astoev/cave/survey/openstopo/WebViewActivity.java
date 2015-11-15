@@ -173,7 +173,6 @@ public class WebViewActivity extends Activity {
                     .setJavaScriptCanOpenWindowsAutomatically(true);
             webView.getSettings().setSupportMultipleWindows(true);
             webView.getSettings().setLoadWithOverviewMode(true);
-            // TODO check if this is ok with older devices
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                 webView.getSettings().setAllowContentAccess(true);
             }

@@ -3,8 +3,10 @@ package com.astoev.cave.survey.activity.main;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -193,6 +195,22 @@ public class InfoActivity extends MainMenuActivity {
     @Override
     protected int getChildsOptionsMenu() {
         return R.menu.infomenu;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        boolean flag = super.onCreateOptionsMenu(menu);
+
+        // disable openstopo for older devices that will not render the data properly
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            MenuItem opensTopoItem = menu.findItem(R.id.info_action_openstopo);
+            if (opensTopoItem != null) {
+                opensTopoItem.setVisible(true);
+            }
+        }
+
+        return flag;
     }
 
     /**
