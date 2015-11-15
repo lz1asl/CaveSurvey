@@ -221,6 +221,7 @@ public class InfoActivity extends MainMenuActivity {
                         Log.i(Constants.LOG_TAG_SERVICE, "exported to " + exportPath);
                         Intent intent = new Intent(InfoActivity.this, WebViewActivity.class);
                         intent.putExtra("path", exportPath);
+                        intent.putExtra("projectName", getWorkspace().getActiveProject().getName());
                         startActivity(intent);
                     }
 

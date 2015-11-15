@@ -2018,6 +2018,10 @@ var Download = {
         return a;
     },
     save: function(data, name) {
+
+        // instruct the backend about the file name, base64 stream is not properly decodec
+        CaveSurveyJSInterface.setCaveSurveyDownloadFileName(name);
+
         this.click(
                 this.link(
                         this.encode(data),

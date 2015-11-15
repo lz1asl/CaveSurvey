@@ -124,6 +124,10 @@ public class WebViewActivity extends Activity {
         if (webView == null) {
             webView = (WebView) findViewById(R.id.webView1);
 
+
+            final CaveSurveyJSInterface jsInterface = new CaveSurveyJSInterface(getIntent().getStringExtra("path"));
+            final String projectName = getIntent().getStringExtra("projectName");
+
             // ------------DownloadListener-------------------------------->
             webView.setDownloadListener(new DownloadListener() {
                 String Url_da_scaricare = "";
@@ -133,8 +137,8 @@ public class WebViewActivity extends Activity {
                     public void handleFile(final String filePath) {
                         String dirName = new File(filePath).getPath();
                         String fileName = new File(filePath).getName();
-                        Toast.makeText(WebViewActivity.this,
-                                "Load: " + filePath, Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(WebViewActivity.this,
+//                                "Load: " + filePath, Toast.LENGTH_SHORT).show();
                         Log.i("SPLX", "Scarico" + Url_da_scaricare + " in "
                                 + dirName);
                         downloadfileto(Url_da_scaricare, filePath);
@@ -144,11 +148,7 @@ public class WebViewActivity extends Activity {
                 public void onDownloadStart(String url, String userAgent,
                                             String contentDisposition, String mimetype,
                                             long contentLength) {
-                    String fileName = URLUtil.guessFileName(url,
-                            contentDisposition, mimetype);
-                    if (fileName.startsWith("octet-stream;base64")) {
-                        fileName = "OpensTopoExport";
-                    }
+                    String fileName = jsInterface.getCaveSurveyDownloadFileName();
                     Log.i("SPLX", "Start download:" + url);
                     Log.i("SPLX", "contentDisposition:" + contentDisposition);
                     Log.i("SPLX", "userAgent:" + userAgent);
@@ -196,7 +196,7 @@ public class WebViewActivity extends Activity {
                     "/data/data/" + this.getPackageName());
 
             // pass json to the web view
-            webView.addJavascriptInterface(new CaveSurveyJSInterface(getIntent().getStringExtra("path")), "CaveSurveyJSInterface");
+            webView.addJavascriptInterface(jsInterface, "CaveSurveyJSInterface");
 
             // --------------webview settings------------------------------<
             Log.i("SPLX", "Start app");
@@ -209,6 +209,7 @@ public class WebViewActivity extends Activity {
     class CaveSurveyJSInterface {
 
         private String caveSurveyFilePath;
+        private String caveSurveyDownloadFileName;
 
         public CaveSurveyJSInterface(String aPath) {
             caveSurveyFilePath = aPath;
@@ -231,6 +232,15 @@ public class WebViewActivity extends Activity {
                 StreamUtil.closeQuietly(in);
             }
             return null;
+        }
+
+        @JavascriptInterface
+        public void setCaveSurveyDownloadFileName(String caveSurveyDownloadFileName) {
+            this.caveSurveyDownloadFileName = caveSurveyDownloadFileName;
+        }
+
+        public String getCaveSurveyDownloadFileName() {
+            return caveSurveyDownloadFileName;
         }
     }
 
