@@ -1644,9 +1644,7 @@ $(document).ready(function() {
             north__resizable: false,
             north__spacing_open: 0,
             north__size: 37,
-            west__size: 680,
-            west__closable: true,
-            west__resizable: true,
+            west__initHidden: true,
             east__closable: true,
             east__resizable: true
         });
@@ -2019,7 +2017,7 @@ var Download = {
     },
     save: function(data, name) {
 
-        // instruct the backend about the file name, base64 stream is not properly decodec
+        // instruct the backend about the file name, base64 stream is not properly decoded
         CaveSurveyJSInterface.setCaveSurveyDownloadFileName(name);
 
         this.click(
