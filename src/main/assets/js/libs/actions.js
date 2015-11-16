@@ -88,6 +88,10 @@ $(".actionnewproject").click(function() {
     return false;
 });
 
+$(".actionexit").click(function() {
+    CaveSurveyJSInterface.goBack();
+});
+
 $(".zoom_original").click(function() {
 
     $(this).parent().children('input.zoom').val(1);

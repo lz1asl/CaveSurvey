@@ -236,6 +236,12 @@ public class WebViewActivity extends Activity {
             this.caveSurveyDownloadFileName = caveSurveyDownloadFileName;
         }
 
+        @JavascriptInterface
+        public void goBack() {
+            Log.i(Constants.LOG_TAG_UI, "Back from OpensTopo");
+            finish();
+        }
+
         public String getCaveSurveyDownloadFileName() {
             return caveSurveyDownloadFileName;
         }
