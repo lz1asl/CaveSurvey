@@ -63,8 +63,6 @@ public class WebViewActivity extends Activity {
             return;
         }
         if (fileurl.startsWith("data:")) {
-            // intent.setData( Uri.parse( "data:text/html;charset=utf-8;base64,"
-            // + Base64.encodeToString( html.getBytes(), Base64.NO_WRAP )));
             try {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
                     final byte[] contents = Base64.decode(
