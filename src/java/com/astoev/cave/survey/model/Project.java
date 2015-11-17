@@ -8,6 +8,7 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -20,7 +21,7 @@ import java.util.Locale;
  * To change this template use File | Settings | File Templates.
  */
 @DatabaseTable(tableName = "projects")
-public class Project {
+public class Project implements Serializable {
 
     public static final String COLUMN_NAME = "name";
     public static final String COLUMN_SKETCH = "sketch_id";

@@ -3,8 +3,10 @@ package com.astoev.cave.survey.activity.main;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -195,6 +197,25 @@ public class InfoActivity extends MainMenuActivity {
         return R.menu.infomenu;
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        boolean flag = super.onCreateOptionsMenu(menu);
+
+        // disable openstopo for older devices that will not render the data properly
+        // JELLY_BEAN_MR1 is required for the JavaScriptInterface, FROYO for base64 decoding
+        // and HONEYCOMB for the content access property ...
+        // in short, before 4.2 this will not work unless we remove the java script interface
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            MenuItem opensTopoItem = menu.findItem(R.id.info_action_openstopo);
+            if (opensTopoItem != null) {
+                opensTopoItem.setVisible(true);
+            }
+        }
+
+        return flag;
+    }
+
     /**
      * @see com.astoev.cave.survey.activity.MainMenuActivity#onOptionsItemSelected(android.view.MenuItem)
      */
@@ -221,6 +242,7 @@ public class InfoActivity extends MainMenuActivity {
                         Log.i(Constants.LOG_TAG_SERVICE, "exported to " + exportPath);
                         Intent intent = new Intent(InfoActivity.this, WebViewActivity.class);
                         intent.putExtra("path", exportPath);
+                        intent.putExtra("projectName", getWorkspace().getActiveProject().getName());
                         startActivity(intent);
                     }
 

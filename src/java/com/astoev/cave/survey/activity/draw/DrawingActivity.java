@@ -20,6 +20,8 @@ import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.BaseActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.activity.draw.brush.PenBrush;
+import com.astoev.cave.survey.activity.draw.colorpicker.ColorChangedListener;
+import com.astoev.cave.survey.activity.draw.colorpicker.ColorPickerDialog;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.model.Project;
@@ -45,10 +47,10 @@ import java.util.List;
  */
 public class DrawingActivity extends BaseActivity implements View.OnTouchListener {
 
-	public final static String PARAM_MAP_FLAG = "com.astoev.cave.survey.PARAM_MAP_FLAG";
-	public final static String PARAM_SKETCH_BASE = "com.astoev.cave.survey.SKETCH_BASE";
+    public final static String PARAM_MAP_FLAG = "com.astoev.cave.survey.PARAM_MAP_FLAG";
+    public final static String PARAM_SKETCH_BASE = "com.astoev.cave.survey.SKETCH_BASE";
     public final static String PARAM_LEG = "com.astoev.cave.survey.LEG";
-	
+
 
     private DrawingSurface drawingSurface;
     private DrawingPath currentDrawingPath;
@@ -140,7 +142,7 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
             UIUtilities.showNotification(R.string.error);
         }
     }
-    
+
     private void setCurrentPaint() {
         currentPaint = DrawingOptions.optionsToPaint(mOptions);
     }
@@ -206,13 +208,13 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
             drawingSurface.getBitmap().compress(Bitmap.CompressFormat.PNG, 50, buff);
 
             String filePrefix;
-            if (isMap){
-            	filePrefix = FileStorageUtil.MAP_PREFIX;
+            if (isMap) {
+                filePrefix = FileStorageUtil.MAP_PREFIX;
             } else {
                 String galleryName = PointUtil.getGalleryNameForFromPoint(activePoint, activeLeg.getGalleryId());
-            	filePrefix = FileStorageUtil.getFilePrefixForPicture(activePoint, galleryName);
+                filePrefix = FileStorageUtil.getFilePrefixForPicture(activePoint, galleryName);
             }
-			String path = FileStorageUtil.addProjectMedia(this, getWorkspace().getActiveProject(), filePrefix, buff.toByteArray());
+            String path = FileStorageUtil.addProjectMedia(this, getWorkspace().getActiveProject(), filePrefix, buff.toByteArray());
 
             // find existing drawing
             Sketch drawing = null;
@@ -285,13 +287,13 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
             Log.e(Constants.LOG_TAG_UI, "Failed drawing save", e);
             UIUtilities.showNotification(R.string.error);
         }
-        
+
         // go back to parent
         finish();
     }
 
     public void pickColor(View aView) {
-        ColorPickerDialog.OnColorChangedListener listener = new ColorPickerDialog.OnColorChangedListener() {
+        ColorChangedListener listener = new ColorChangedListener() {
             @Override
             public void colorChanged(int color) {
                 mOptions.setColor(color);

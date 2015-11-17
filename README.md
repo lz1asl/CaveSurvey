@@ -36,7 +36,7 @@ Features
   - input measurements:
    - manually
    - from the built-in sensors
-   - from Bluetooth
+   - from [Bluetooth](https://github.com/lz1asl/CaveSurvey/wiki/Measurement-Devices)
   - preview a 2D plan/section map of the current survey
   - export to Excel
 

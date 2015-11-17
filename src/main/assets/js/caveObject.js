@@ -161,17 +161,7 @@ function ops_compile()
         }
     }, 1);
 }
-/**
- * 
- * @returns {undefined}
- */
-function ops_autocompile()
-{
-    if ($("#autocompile").is(':checked'))
-    {
-        ops_compile();
-    }
-}
+
 /**
  * 
  * @param {type} arrayVectors

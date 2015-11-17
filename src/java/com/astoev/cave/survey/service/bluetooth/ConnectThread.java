@@ -21,8 +21,7 @@ import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.device.AbstractBluetoothDevice;
 import com.astoev.cave.survey.util.ByteUtils;
 import com.astoev.cave.survey.util.ConfigUtil;
-
-import org.apache.commons.io.IOUtils;
+import com.astoev.cave.survey.util.StreamUtil;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -317,8 +316,8 @@ public class ConnectThread extends Thread {
         try {
             Log.i(Constants.LOG_TAG_BT, "Cancel client");
             running = false;
-            IOUtils.closeQuietly(mIn);
-            IOUtils.closeQuietly(mOut);
+            StreamUtil.closeQuietly(mIn);
+            StreamUtil.closeQuietly(mOut);
             if (mSocket != null) {
                 mSocket.close();
             }

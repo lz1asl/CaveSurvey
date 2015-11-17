@@ -32,4 +32,6 @@ public class InfoDialogFragment extends DialogFragment {
         return builder.create();
     }
 
+
+
 }

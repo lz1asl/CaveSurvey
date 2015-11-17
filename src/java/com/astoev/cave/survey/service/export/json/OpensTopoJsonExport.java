@@ -4,39 +4,41 @@ import android.content.Context;
 import android.util.Log;
 
 import com.astoev.cave.survey.Constants;
+import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.model.Location;
+import com.astoev.cave.survey.model.Option;
 import com.astoev.cave.survey.model.Photo;
 import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.model.Sketch;
+import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.service.export.AbstractExport;
-import com.google.gson.GsonBuilder;
+import com.astoev.cave.survey.util.ConfigUtil;
 
-import org.apache.commons.io.IOUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by astoev on 8/28/14.
  */
 public class OpensTopoJsonExport extends AbstractExport {
 
-    private List<Map<String, Object>> rows;
-    private Map<String, Object> row;
-    private Map<String, Object> project;
+    private JSONArray rows;
+    private JSONObject project;
+    private JSONObject row;
 
     public OpensTopoJsonExport(Context aContext) {
         super(aContext);
     }
 
     @Override
-    protected void prepare(Project aProject) {
+    protected void prepare(Project aProject) throws JSONException {
         Log.i(Constants.LOG_TAG_SERVICE, "Start JSON export ");
 
-        project = new HashMap<String, Object>();
+        project = new JSONObject();
         project.put("name", aProject.getName());
         project.put("altitude", "0");
         project.put("longitude", "0.0");
@@ -45,12 +47,19 @@ public class OpensTopoJsonExport extends AbstractExport {
         project.put("geoPoint", "0");
         project.put("northdeclination", "0");
 
-        rows = new ArrayList<Map<String, Object>>();
-        Map<String, Object> headerRow = new HashMap<String, Object>();
-        // TODO fix units
+        rows = new JSONArray();
+        JSONObject headerRow = new JSONObject();
+
         headerRow.put("from", null);
         headerRow.put("to", null);
-        headerRow.put("len", "m");
+        headerRow.put("len", "m"); // currently only meters supported
+        if (Option.UNIT_GRADS.equals(Options.getOptionValue(Option.CODE_AZIMUTH_UNITS))
+                || Option.UNIT_GRADS.equals(Options.getOptionValue(Option.CODE_SLOPE_UNITS))) {
+            // opens topo does not support grads, may implement conversion in the future
+            Log.i(Constants.LOG_TAG_SERVICE, "OpensTopo - conversion to grads not implemented");
+            UIUtilities.showRawMessage(ConfigUtil.getContext(), "Grads not supported in OpensTopo");
+            throw new RuntimeException("Unable to convert to grads");
+        }
         headerRow.put("compass", "deg");
         headerRow.put("clino", "deg");
         headerRow.put("top", "m");
@@ -59,14 +68,14 @@ public class OpensTopoJsonExport extends AbstractExport {
         headerRow.put("bottom", "m");
         headerRow.put("r", null);
 
-        rows.add(headerRow);
+        rows.put(headerRow);
         project.put("data", rows);
     }
 
     @Override
-    protected void prepareEntity(int rowCounter) {
-        row = new HashMap<String, Object>();
+    protected void prepareEntity(int rowCounter) throws JSONException {
 
+        row = new JSONObject();
         row.put("from", "");
         row.put("to", "");
         row.put("len", "");
@@ -78,15 +87,12 @@ public class OpensTopoJsonExport extends AbstractExport {
         row.put("bottom", "");
         row.put("r", "");
 
-        rows.add(row);
+        rows.put(row);
     }
 
     @Override
     protected InputStream getContent() {
-        String json = new GsonBuilder().serializeNulls()
-                //.setPrettyPrinting()
-                .create().toJson(project);
-        return IOUtils.toInputStream(json);
+        return new ByteArrayInputStream(project.toString().getBytes());
     }
 
     @Override
@@ -95,16 +101,16 @@ public class OpensTopoJsonExport extends AbstractExport {
     }
 
     @Override
-    protected void setValue(Entities entityType, String aLabel) {
+    protected void setValue(Entities entityType, String aLabel) throws JSONException {
         populateValue(entityType, aLabel);
     }
 
     @Override
-    protected void setValue(Entities entityType, Float aValue) {
+    protected void setValue(Entities entityType, Float aValue) throws JSONException {
         populateValue(entityType, "" + aValue);
     }
 
-    private void populateValue(Entities entityType, Object aValue) {
+    private void populateValue(Entities entityType, Object aValue) throws JSONException {
         switch (entityType) {
             case FROM:
                 row.put("from", aValue);

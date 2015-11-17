@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
@@ -29,9 +30,13 @@ import com.astoev.cave.survey.util.StringUtils;
 import java.sql.SQLException;
 
 /**
- * Created by astoev on 3/3/14.
+ *
+ * @author Alexander Stoev
+ * @author Zhivko Mitrev
  */
 public class VectorDialog extends DialogFragment implements BTResultAware, AzimuthChangedListener {
+
+    public static final String LEG = "leg";
 
     private BTMeasureResultReceiver mReceiver;
     private Leg mLeg;
@@ -47,12 +52,15 @@ public class VectorDialog extends DialogFragment implements BTResultAware, Azimu
         mSupportFragmentManager = aSupportFragmentManager;
     }
 
-
     /**
      * @see android.support.v4.app.DialogFragment#onCreateDialog(android.os.Bundle)
      */
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceStateArg) {
+
+        mLeg = getArguments() != null ? (Leg)getArguments().getSerializable(LEG) : null;
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(getString(R.string.main_add_vector));
 
@@ -94,7 +102,6 @@ public class VectorDialog extends DialogFragment implements BTResultAware, Azimu
                     return;
                 }
 
-
                 try {
                     Vector vector = new Vector();
                     vector.setDistance(StringUtils.getFromEditTextNotNull(distanceEdit));
@@ -118,14 +125,6 @@ public class VectorDialog extends DialogFragment implements BTResultAware, Azimu
         });
 
         return dialog;
-    }
-
-    public Leg getLeg() {
-        return mLeg;
-    }
-
-    public void setLeg(Leg aLeg) {
-        mLeg = aLeg;
     }
 
     @Override

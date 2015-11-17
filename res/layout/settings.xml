@@ -1,0 +1,64 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_height="fill_parent" 
+              android:layout_width="fill_parent" 
+              android:orientation="vertical"
+              android:layout_margin="5dp">
+
+        <TextView
+            android:id="@+id/settingsLanguage"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/home_lang"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_marginBottom="10dp" />
+
+        <TextView
+            android:id="@+id/settingsBluetooth"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/ic_action_bluetooth_searching"
+            android:text="@string/sensor_test_title"
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+        <!-- error reporter -->
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/settingsDebugText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:text="@string/error_reporter_title"
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/settingsDebugText"
+                android:clickable="true"
+                android:layout_centerVertical="true"
+                android:layout_margin="5dp"
+                android:src="@drawable/ic_info_white"
+                android:contentDescription="@string/information"
+                android:onClick="onErrorReporterChooseInfo" />
+            <ToggleButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/settingsDebugToggle"
+                android:layout_alignParentRight="true" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/settingsAbout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/main_button_about"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    </LinearLayout>
+</ScrollView>

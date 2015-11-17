@@ -1,6 +1,5 @@
 /**
  * @author Alessandro Vernassa
- *
  */
 package com.astoev.cave.survey.openstopo;
 
@@ -14,19 +13,15 @@ import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
 import android.webkit.DownloadListener;
-import android.webkit.GeolocationPermissions;
 import android.webkit.JavascriptInterface;
-import android.webkit.URLUtil;
 import android.webkit.ValueCallback;
-import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.Toast;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.UIUtilities;
-
-import org.apache.commons.io.IOUtils;
+import com.astoev.cave.survey.util.StreamUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -42,7 +37,6 @@ public class WebViewActivity extends Activity {
 
     private WebView webView;
     private ValueCallback<Uri> mUploadMessage;
-    private final static int FILECHOOSER_RESULTCODE = 1;
 
     // ---------------------------Downloadmanager------------------------------------------>
     // https://groups.google.com/forum/?fromgroups#!topic/android-developers/DW-LVc97W8Y
@@ -63,24 +57,23 @@ public class WebViewActivity extends Activity {
                 Log.i("SPLX", "Failed to copy asset file: " + filename);
                 Log.i("SPLX", e.toString());
             } finally {
-                IOUtils.closeQuietly(in);
-                IOUtils.closeQuietly(out);
+                StreamUtil.closeQuietly(in);
+                StreamUtil.closeQuietly(out);
             }
             return;
         }
         if (fileurl.startsWith("data:")) {
-            // intent.setData( Uri.parse( "data:text/html;charset=utf-8;base64,"
-            // + Base64.encodeToString( html.getBytes(), Base64.NO_WRAP )));
             try {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
-                    final byte[] Contents = Base64.decode(
+                    final byte[] contents = Base64.decode(
                             fileurl.split(";base64,")[1], Base64.DEFAULT);
                     FileOutputStream out = null;
                     try {
                         out = new FileOutputStream(strDestination);
-                        IOUtils.write(Contents, out);
+                        out.write(contents);
+                        out.flush();
                     } finally {
-                        IOUtils.closeQuietly(out);
+                        StreamUtil.closeQuietly(out);
                     }
                     UIUtilities.showNotification(this, strDestination, null);
                 } else {
@@ -124,85 +117,23 @@ public class WebViewActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.webview);
 
+        initializeView(savedInstanceState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        initializeView(savedInstanceState);
+    }
+
+    private void initializeView(Bundle savedInstanceState) {
         if (webView == null) {
             webView = (WebView) findViewById(R.id.webView1);
 
-            // ------------WebChromeClient--------------------------------->
-            webView.setWebChromeClient(new WebChromeClient() {
-                @Override
-                public void onGeolocationPermissionsShowPrompt(String origin,
-                                                               GeolocationPermissions.Callback callback) {
-                    Log.i("SPLX", " GeolocationPermissions");
-                    callback.invoke(origin, true, false);
-                }
 
-                public void onConsoleMessage(String message, int lineNumber, String sourceID) {
-                    Log.d("SPLX", message + " -- From line "
-                            + lineNumber + " of "
-                            + sourceID);
-                }
-
-                // serve per riottenere il focus dopo aver scelto il file da
-                // aprire
-                public void openFileChooser(ValueCallback<Uri> uploadMsg) {
-                    mUploadMessage = uploadMsg;
-                    // ---save file dialog--------------------->
-                    final String[] mFileFilter = {"*.*", ".jpeg", ".txt",
-                            ".png"};
-                    FileSelector s = new FileSelector(WebViewActivity.this,
-                            FileOperation.LOAD, mLoadFileListener, mFileFilter,
-                            "");
-                    s.show();
-                    // ---save file dialog---------------------<
-                }
-
-                // For Android 3.0+
-                public void openFileChooser(ValueCallback uploadMsg,
-                                            String acceptType) {
-                    mUploadMessage = uploadMsg;
-                    // ---save file dialog--------------------->
-                    final String[] mFileFilter = {"*.*", ".jpeg", ".txt",
-                            ".png"};
-                    FileSelector s = new FileSelector(WebViewActivity.this,
-                            FileOperation.LOAD, mLoadFileListener, mFileFilter,
-                            "");
-                    s.show();
-                    // ---save file dialog---------------------<
-                }
-
-                // For Android 4.1
-                public void openFileChooser(ValueCallback<Uri> uploadMsg,
-                                            String acceptType, String capture) {
-                    mUploadMessage = uploadMsg;
-                    // ---save file dialog--------------------->
-                    final String[] mFileFilter = {"*.*", ".jpeg", ".txt",
-                            ".png"};
-                    FileSelector s = new FileSelector(WebViewActivity.this,
-                            FileOperation.LOAD, mLoadFileListener, mFileFilter,
-                            "");
-                    s.show();
-                    // ---save file dialog---------------------<
-                }
-
-                // root
-                OnHandleFileListener mLoadFileListener = new OnHandleFileListener() {
-                    @Override
-                    public void handleFile(final String filePath) {
-                        Toast.makeText(WebViewActivity.this,
-                                "Load: " + filePath, Toast.LENGTH_SHORT).show();
-                        try {
-                            if (null == mUploadMessage)
-                                return;
-                            mUploadMessage.onReceiveValue(Uri.parse(filePath));
-                            mUploadMessage = null;
-                        } catch (Exception e) {
-                            Log.i("SPLX", "Error:" + e.toString());
-                        }
-                    }
-                };
-
-            });
-            // ------------WebChromeClient---------------------------------<
+            final CaveSurveyJSInterface jsInterface = new CaveSurveyJSInterface(getIntent().getStringExtra("path"));
+            final String projectName = getIntent().getStringExtra("projectName");
 
             // ------------DownloadListener-------------------------------->
             webView.setDownloadListener(new DownloadListener() {
@@ -213,8 +144,8 @@ public class WebViewActivity extends Activity {
                     public void handleFile(final String filePath) {
                         String dirName = new File(filePath).getPath();
                         String fileName = new File(filePath).getName();
-                        Toast.makeText(WebViewActivity.this,
-                                "Load: " + filePath, Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(WebViewActivity.this,
+//                                "Load: " + filePath, Toast.LENGTH_SHORT).show();
                         Log.i("SPLX", "Scarico" + Url_da_scaricare + " in "
                                 + dirName);
                         downloadfileto(Url_da_scaricare, filePath);
@@ -224,8 +155,7 @@ public class WebViewActivity extends Activity {
                 public void onDownloadStart(String url, String userAgent,
                                             String contentDisposition, String mimetype,
                                             long contentLength) {
-                    String fileName = URLUtil.guessFileName(url,
-                            contentDisposition, mimetype);
+                    String fileName = jsInterface.getCaveSurveyDownloadFileName();
                     Log.i("SPLX", "Start download:" + url);
                     Log.i("SPLX", "contentDisposition:" + contentDisposition);
                     Log.i("SPLX", "userAgent:" + userAgent);
@@ -236,7 +166,7 @@ public class WebViewActivity extends Activity {
                             ".png"};
                     Url_da_scaricare = url;
                     FileSelector s = new FileSelector(WebViewActivity.this,
-                            FileOperation.SAVE, mSaveFileListener, mFileFilter,
+                            mSaveFileListener, mFileFilter,
                             fileName);
                     s.show();
                     // ---save file dialog---------------------<
@@ -252,7 +182,6 @@ public class WebViewActivity extends Activity {
                     .setJavaScriptCanOpenWindowsAutomatically(true);
             webView.getSettings().setSupportMultipleWindows(true);
             webView.getSettings().setLoadWithOverviewMode(true);
-            // TODO check if this is ok with older devices
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                 webView.getSettings().setAllowContentAccess(true);
             }
@@ -273,23 +202,25 @@ public class WebViewActivity extends Activity {
                     "/data/data/" + this.getPackageName());
 
             // pass json to the web view
-            webView.addJavascriptInterface(new CaveSurveyJSInterface(getIntent().getStringExtra("path")), "CaveSurveyJSInterface");
+            webView.addJavascriptInterface(jsInterface, "CaveSurveyJSInterface");
 
             // --------------webview settings------------------------------<
             Log.i("SPLX", "Start app");
         }
-        if (savedInstanceState != null)
+        if (savedInstanceState != null) {
             ((WebView) findViewById(R.id.webView1)).restoreState(savedInstanceState);
+        }
     }
 
     // json interface
     class CaveSurveyJSInterface {
 
+        private String caveSurveyFilePath;
+        private String caveSurveyDownloadFileName;
+
         public CaveSurveyJSInterface(String aPath) {
             caveSurveyFilePath = aPath;
         }
-
-        String caveSurveyFilePath;
 
         @JavascriptInterface
         public String getProjectFile() {
@@ -301,13 +232,28 @@ public class WebViewActivity extends Activity {
             InputStream in = null;
             try {
                 in = new FileInputStream(caveSurveyFilePath);
-                return IOUtils.toString(in);
+                return new String(StreamUtil.read(in));
             } catch (Exception e) {
                 Log.e(Constants.LOG_TAG_UI, "Failed to load json", e);
             } finally {
-                IOUtils.closeQuietly(in);
+                StreamUtil.closeQuietly(in);
             }
             return null;
+        }
+
+        @JavascriptInterface
+        public void setCaveSurveyDownloadFileName(String caveSurveyDownloadFileName) {
+            this.caveSurveyDownloadFileName = caveSurveyDownloadFileName;
+        }
+
+        @JavascriptInterface
+        public void goBack() {
+            Log.i(Constants.LOG_TAG_UI, "Back from OpensTopo");
+            finish();
+        }
+
+        public String getCaveSurveyDownloadFileName() {
+            return caveSurveyDownloadFileName;
         }
     }
 

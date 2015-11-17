@@ -7,28 +7,20 @@
 	      android:title="@string/home_new_project"
 	      android:visible="true"
 	      myapp:showAsAction="ifRoom|withText" />
-	
+
 	<item android:id="@+id/action_setup_bt"
 	      android:icon="@drawable/ic_action_bluetooth_searching"
 	      android:title="@string/bt_devices"
 	      android:visible="true"
 	      myapp:showAsAction="ifRoom|withText"/>
-	
-    <item android:id="@+id/action_azimuth_test"
-          android:title="@string/sensor_test_title"
-          android:visible="true"
-          myapp:showAsAction="never"/>
 
-    <item android:id="@+id/main_action_about"
-          android:title="@string/main_button_about"
+    <item android:id="@+id/main_action_settings"
+          android:title="@string/main_button_settings"
           android:visible="true"
           myapp:showAsAction="ifRoom|withText"/>
+
     <item android:id="@+id/main_action_help"
           android:title="@string/main_button_help"
-          android:visible="true"
-          myapp:showAsAction="ifRoom|withText"/>
-    <item android:id="@+id/action_language"
-          android:title="@string/home_lang"
           android:visible="true"
           myapp:showAsAction="ifRoom|withText"/>
 

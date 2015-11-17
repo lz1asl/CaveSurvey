@@ -1,7 +1,5 @@
 package com.astoev.cave.survey.activity.main;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -23,6 +21,10 @@ import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.MainMenuActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
+import com.astoev.cave.survey.activity.dialog.ConfirmDeleteDialog;
+import com.astoev.cave.survey.activity.dialog.ConfirmationDialog;
+import com.astoev.cave.survey.activity.dialog.ConfirmationOperation;
+import com.astoev.cave.survey.activity.dialog.DeleteHandler;
 import com.astoev.cave.survey.activity.dialog.VectorDialog;
 import com.astoev.cave.survey.activity.draw.DrawingActivity;
 import com.astoev.cave.survey.activity.map.MapUtilities;
@@ -30,11 +32,9 @@ import com.astoev.cave.survey.fragment.LocationFragment;
 import com.astoev.cave.survey.model.Gallery;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Note;
-import com.astoev.cave.survey.model.Option;
 import com.astoev.cave.survey.model.Photo;
 import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.model.Vector;
-import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.service.bluetooth.BTMeasureResultReceiver;
 import com.astoev.cave.survey.service.bluetooth.BTResultAware;
 import com.astoev.cave.survey.service.bluetooth.util.MeasurementsUtil;
@@ -47,6 +47,7 @@ import com.astoev.cave.survey.util.StringUtils;
 import com.j256.ormlite.misc.TransactionManager;
 
 import java.io.File;
+import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -58,7 +59,7 @@ import java.util.concurrent.Callable;
  * Time: 1:15 AM
  * To change this template use File | Settings | File Templates.
  */
-public class PointActivity extends MainMenuActivity implements AzimuthChangedListener, SlopeChangedListener, BTResultAware, View.OnTouchListener {
+public class PointActivity extends MainMenuActivity implements AzimuthChangedListener, SlopeChangedListener, BTResultAware, View.OnTouchListener, DeleteHandler {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int REQIEST_EDIT_NOTE = 2;
@@ -344,8 +345,11 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 
     private void vectorButton() {
         VectorDialog dialog = new VectorDialog(getSupportFragmentManager());
-        dialog.setLeg(getCurrentLeg());
+        Bundle bundle = new Bundle();
+        Leg leg = getCurrentLeg();
+        bundle.putSerializable(VectorDialog.LEG, getCurrentLeg());
         dialog.setCancelable(true);
+        dialog.setArguments(bundle);
         dialog.show(getSupportFragmentManager(), VECTOR_DIALOG);
     }
 
@@ -371,7 +375,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         // picture http://www.tutorialforandroid.com/2010/10/take-picture-in-android-with.html
         // https://developer.android.com/training/camera/photobasics.html
 
-        File photoFile = null;
+        File photoFile;
         try {
             String projectName = getWorkspace().getActiveProject().getName();
             Leg workingLeg = getCurrentLeg();
@@ -503,7 +507,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                 deleteButton();
                 return true;
             case R.id.point_action_reverse:
-                reverseLeg();
+                confirmReverseLeg();
                 return true;
 
             default:
@@ -590,7 +594,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                 Integer currGalleryId = getWorkspace().getActiveGalleryId();
 
                 // another leg, starting from the latest in the gallery
-                boolean newGalleryFlag = extras.getBoolean(Constants.GALLERY_NEW, false);
+                boolean newGalleryFlag = extras != null && extras.getBoolean(Constants.GALLERY_NEW, false);
                 Point newFrom, newTo;
                 if (newGalleryFlag) {
                     newFrom = getWorkspace().getActiveLeg().getFromPoint();
@@ -696,30 +700,16 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                     row.setOnLongClickListener(new View.OnLongClickListener() {
                         @Override
                         public boolean onLongClick(View v) {
-                            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(PointActivity.this);
-                            dialogBuilder.setMessage(getString(R.string.point_vectors_delete, finalIndex))
-                                    .setCancelable(false)
-                                    .setPositiveButton(R.string.button_yes, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            Log.i(Constants.LOG_TAG_UI, "Delete vector");
-                                            try {
-                                                DaoUtil.deleteVector(finalVector);
-                                                UIUtilities.showNotification(R.string.action_deleted);
-                                                loadLegVectors(getCurrentLeg());
-                                            } catch (Exception e) {
-                                                Log.e(Constants.LOG_TAG_UI, "Failed to delete vector", e);
-                                                UIUtilities.showNotification(R.string.error);
-                                            }
-                                            dialog.dismiss();
-                                        }
-                                    })
-                                    .setNegativeButton(R.string.button_no, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            dialog.dismiss();
-                                        }
-                                    });
-                            AlertDialog alert = dialogBuilder.create();
-                            alert.show();
+
+                            // instantiate delete dialog and pass the vector
+                            String message = getString(R.string.point_vectors_delete, finalIndex);
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable(ConfirmDeleteDialog.ELEMENT, finalVector);
+                            bundle.putString(ConfirmDeleteDialog.MESSAGE, message);
+
+                            ConfirmDeleteDialog deleteVecotrDialog = new ConfirmDeleteDialog();
+                            deleteVecotrDialog.setArguments(bundle);
+                            deleteVecotrDialog.show(getSupportFragmentManager(), ConfirmDeleteDialog.DELETE_VECTOR_DIALOG);
                             return true;
                         }
                     });
@@ -834,9 +824,11 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         }
     }
 
-
-    private void reverseLeg() {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(PointActivity.this);
+    /**
+     * Executed when menu button for reverse leg is selected. It shows confirmation dialog to
+     * confirm the operation of reversing.
+     */
+    private void confirmReverseLeg() {
         try {
 
             // validate
@@ -846,38 +838,19 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
             if (UIUtilities.validateNumber(azimuth, true) && UIUtilities.checkAzimuth(azimuth)
                     && UIUtilities.validateNumber(slope, false) && UIUtilities.checkSlope(slope) ) {
 
-                dialogBuilder.setMessage(getString(R.string.main_reverse_message, mCurrentLeg.buildLegDescription()))
-                        .setCancelable(false)
-                        .setPositiveButton(R.string.button_yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                Log.i(Constants.LOG_TAG_UI, "Reverse leg");
+                // build and show confirmation dialog
+                String message = getString(R.string.main_reverse_message, mCurrentLeg.buildLegDescription());
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(ConfirmationDialog.OPERATION, ConfirmationOperation.REVERSE_LEG);
+                bundle.putString(ConfirmationDialog.MESSAGE, message);
+                bundle.putString(ConfirmationDialog.TITLE, getString(R.string.title_warning));
 
+                ConfirmationDialog confirmationDialog = new ConfirmationDialog();
+                confirmationDialog.setArguments(bundle);
+                confirmationDialog.show(getSupportFragmentManager(), ConfirmationDialog.CONFIRM_DIALOG);
 
-                                // if values are present update them in the UI only, they will be persisted on "save"
-                                try {
-                                    Float currAzimuth = MapUtilities.getAzimuthInDegrees(StringUtils.getFromEditTextNotNull(azimuth));
-                                    if (currAzimuth != null) {
-                                        Float reversedAzimuth = MapUtilities.add90Degrees(MapUtilities.add90Degrees(currAzimuth));
-                                        populateMeasure(reversedAzimuth, R.id.point_azimuth);
-                                    }
-                                    Float currSlope = StringUtils.getFromEditTextNotNull(slope);
-                                    if (currSlope != null && currSlope != 0) {
-                                        populateMeasure(-currSlope, R.id.point_slope);
-                                    }
-                                } catch (Exception e) {
-                                    Log.e(Constants.LOG_TAG_UI, "Failed to reverse leg", e);
-                                    UIUtilities.showNotification(R.string.error);
-                                }
-                                dialog.dismiss();
-                            }
-                        })
-                        .setNegativeButton(R.string.button_no, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.dismiss();
-                            }
-                        });
-                AlertDialog alert = dialogBuilder.create();
-                alert.show();
+            } else {
+                // TODO Alexander, what if not valid? Never handled before
             }
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to build reverse dialog", e);
@@ -885,4 +858,59 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         }
     }
 
+    @Override
+    public boolean confirmOperation(ConfirmationOperation operationArg) {
+        if (ConfirmationOperation.REVERSE_LEG.equals(operationArg)){
+            reverseLeg();
+            return true;
+        } else {
+            return super.confirmOperation(operationArg);
+        }
+    }
+
+    /**
+     * Reverses the leg after confirmation from the confirmation dialog
+     */
+    private void reverseLeg() {
+        Log.i(Constants.LOG_TAG_UI, "Reverse leg");
+        // validate
+        final EditText azimuth = (EditText) findViewById(R.id.point_azimuth);
+        final EditText slope = (EditText) findViewById(R.id.point_slope);
+
+        // if values are present update them in the UI only, they will be persisted on "save"
+//        try {
+            Float currAzimuth = MapUtilities.getAzimuthInDegrees(StringUtils.getFromEditTextNotNull(azimuth));
+            if (currAzimuth != null) {
+                Float reversedAzimuth = MapUtilities.add90Degrees(MapUtilities.add90Degrees(currAzimuth));
+                populateMeasure(reversedAzimuth, R.id.point_azimuth);
+            }
+            Float currSlope = StringUtils.getFromEditTextNotNull(slope);
+            if (currSlope != null && currSlope != 0) {
+                populateMeasure(-currSlope, R.id.point_slope);
+            }
+//        } catch (Exception e) {
+//            Log.e(Constants.LOG_TAG_UI, "Failed to reverse leg", e);
+//            UIUtilities.showNotification(R.string.error);
+//        }
+    }
+
+
+    @Override
+    public void delete(Serializable vectorArg) {
+        Log.i(Constants.LOG_TAG_UI, "Delete vector");
+        try {
+            if (vectorArg != null && vectorArg instanceof Vector ) {
+                DaoUtil.deleteVector((Vector) vectorArg);
+                UIUtilities.showNotification(R.string.action_deleted);
+                loadLegVectors(getCurrentLeg());
+            } else {
+                String vectorClass = vectorArg != null ? vectorArg.getClass().getName() : null;
+                Log.e(Constants.LOG_TAG_UI, "Failed to delete vector. Passed instance not a Vector but:" + vectorClass);
+                UIUtilities.showNotification(R.string.error);
+            }
+        } catch (Exception e) {
+            Log.e(Constants.LOG_TAG_UI, "Failed to delete vector", e);
+            UIUtilities.showNotification(R.string.error);
+        }
+    }
 }

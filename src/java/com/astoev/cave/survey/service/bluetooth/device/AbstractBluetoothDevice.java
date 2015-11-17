@@ -8,8 +8,6 @@ import com.astoev.cave.survey.service.bluetooth.Measure;
 import com.astoev.cave.survey.util.ByteUtils;
 import com.astoev.cave.survey.util.StringUtils;
 
-import org.apache.commons.io.IOUtils;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -122,10 +120,11 @@ public abstract class AbstractBluetoothDevice implements Comparable {
     protected void sendLogged(String aMessage, OutputStream aStream, boolean aHexString) throws IOException {
         Log.d(Constants.LOG_TAG_BT, "Send to device " + aMessage + " : " + aHexString);
         if (aHexString) {
-            IOUtils.write(ByteUtils.hexStringToByte("D5F0E00D"), aStream);
+            aStream.write(ByteUtils.hexStringToByte("D5F0E00D"));
         } else {
-            IOUtils.write(aMessage, aStream);
+            aStream.write(aMessage.getBytes());
         }
+        aStream.flush();
     }
 
     @Override

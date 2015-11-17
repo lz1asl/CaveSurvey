@@ -6,8 +6,6 @@ import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.Measure;
 
-import org.apache.commons.io.IOUtils;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -141,6 +139,7 @@ public class CEMILDMBluetoothDevice extends AbstractBluetoothDevice {
          bout[2]  = (byte) 225;
          bout[3]  = (byte) 130;
 
-        IOUtils.write(bout, aStreamOut);
+        aStreamOut.write(bout);
+        aStreamOut.flush();
     }
 }

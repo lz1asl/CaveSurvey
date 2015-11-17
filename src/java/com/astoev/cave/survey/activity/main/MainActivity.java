@@ -1,7 +1,5 @@
 package com.astoev.cave.survey.activity.main;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -24,6 +22,7 @@ import com.astoev.cave.survey.activity.MainMenuActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.activity.dialog.AddNewDialog;
 import com.astoev.cave.survey.activity.dialog.AddNewSelectedHandler;
+import com.astoev.cave.survey.activity.dialog.ChangeLegDialog;
 import com.astoev.cave.survey.activity.dialog.MiddlePointDialog;
 import com.astoev.cave.survey.activity.map.MapActivity;
 import com.astoev.cave.survey.activity.map.MapUtilities;
@@ -39,20 +38,20 @@ import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.util.StringUtils;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by IntelliJ IDEA.
  * User: astoev
  * Date: 1/23/12
  * Time: 3:04 PM
- * To change this template use File | Settings | File Templates.
+ *
+ * @author Alexander Stoev
+ * @author Zhivko Mitrev
  */
 public class MainActivity extends MainMenuActivity implements AddNewSelectedHandler{
 
     private SparseIntArray mGalleryColors = new SparseIntArray();
-    private SparseArray<String> mGalleryNames = new SparseArray<String>();
+    private SparseArray<String> mGalleryNames = new SparseArray<>();
     
     private static boolean isDebug = false;
     
@@ -311,52 +310,12 @@ public class MainActivity extends MainMenuActivity implements AddNewSelectedHand
     }
 
     public void changeButton() {
+
         Log.i(Constants.LOG_TAG_UI, "Change active leg");
-        try {
 
-            final List<Leg> legs = DaoUtil.getCurrProjectLegs(false);
-            List<String> itemsList = new ArrayList<String>();
-            int selectedItem = -1;
-            int counter = 0;
-            Integer activeLegId = getWorkspace().getActiveLegId();
-            for (Leg l : legs) {
-
-                if (l.isMiddle()) {
-                    continue;
-                }
-
-                itemsList.add(l.buildLegDescription());
-                if (l.getId().equals(activeLegId)) {
-                    selectedItem = counter;
-                } else {
-                    counter++;
-                }
-            }
-            final CharSequence[] items = itemsList.toArray(new CharSequence[itemsList.size()]);
-
-            Log.d(Constants.LOG_TAG_UI, "Display " + items.length + " legs");
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle(R.string.main_button_change_title);
-
-            builder.setSingleChoiceItems(items, selectedItem, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int item) {
-
-                    Log.i(Constants.LOG_TAG_UI, "Selected leg " + legs.get(item));
-                    getWorkspace().setActiveLeg(legs.get(item));
-
-                    Intent intent = new Intent(MainActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    dialog.dismiss();
-                    finish();
-                }
-            });
-            AlertDialog alert = builder.create();
-            alert.show();
-        } catch (Exception e) {
-            Log.e(Constants.LOG_TAG_DB, "Failed to select leg", e);
-            UIUtilities.showNotification(R.string.error);
-        }
-
+        // show choose leg dialog where to choose the active leg
+        ChangeLegDialog changeLedDialog = new ChangeLegDialog();
+        changeLedDialog.show(getSupportFragmentManager(), ChangeLegDialog.CHANGE_LEG);
     }
 
     @Override

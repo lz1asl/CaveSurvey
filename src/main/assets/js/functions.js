@@ -675,7 +675,7 @@ function ops_import(filename, str, append)
         });
     }
 
-    ops_autocompile();
+     ops_compile();
 }
 function ops_IsEmptyNonZero(v)
 {
@@ -1644,9 +1644,7 @@ $(document).ready(function() {
             north__resizable: false,
             north__spacing_open: 0,
             north__size: 37,
-            west__size: 680,
-            west__closable: true,
-            west__resizable: true,
+            west__initHidden: true,
             east__closable: true,
             east__resizable: true
         });
@@ -1848,7 +1846,7 @@ $(document).ready(function() {
             }
             documentChanged = true;
             // console.log("compile on change");
-            ops_autocompile();
+             ops_compile();
         },
         afterSelectionByProp: function(r, p, r2, p2) {
             if (p === "from" || p === "to")
@@ -1857,7 +1855,7 @@ $(document).ready(function() {
                 {
                     PointSelected = caveObj.data[r][p];
                     //  console.log("compile on select");
-                    ops_autocompile();
+                     ops_compile();
                 }
             }
             else
@@ -1979,22 +1977,14 @@ $(document).ready(function() {
     ops_validateform();
     setTimeout("onAppResize('init');", 1000);
 
-    //var jsonFile = Android.getCaveSurveyFilePath();
-    // alert('read ' + jsonFile);
-    //jQuery.get(jsonFile, function(caveSurveyData) {
-    //        // alert('loaded bytes ' + caveSurveyData);
-    //        //caveObj.data = jQuery.parseJSON(caveSurveyData);
-    //        ops_import(escape(jsonFile), caveSurveyData, false);
-    //});
-
     var jsonFile = CaveSurveyJSInterface.getProjectFile();
     //alert('got file ' + jsonFile);
     var caveSurveyData = CaveSurveyJSInterface.getProjectData();
     //alert('got data ' + caveSurveyData);
 
-    ops_import(jsonFile, caveSurveyData, false);
     caveObj.data = jQuery.parseJSON(caveSurveyData);
-
+    $("#filenameopened").val(caveObj.data.name);
+    ops_import(jsonFile, caveSurveyData, false);
 });
 
 //------------------------------ON READY---------------------------------------<
@@ -2022,10 +2012,14 @@ var Download = {
     link: function(data, name) {
         var a = document.createElement('a');
         a.download = name || self.location.pathname.slice(self.location.pathname.lastIndexOf('/') + 1);
-        a.href = data || self.location.href;
+        a.href =  data || self.location.href;
         return a;
     },
     save: function(data, name) {
+
+        // instruct the backend about the file name, base64 stream is not properly decoded
+        CaveSurveyJSInterface.setCaveSurveyDownloadFileName(name);
+
         this.click(
                 this.link(
                         this.encode(data),

@@ -64,19 +64,14 @@
             <div class="menubar">
                 <ul id="menu">
                     <li><a class="fNiv" id="mainmenu" ><span data-i18n="Aa">menu</span></a><ul>
-                            <li>
-                                <a data-i18n="auto">Export</a>
-                                <ul>
-                                    <li><a class="actionexportDXFPlan" href="#" data-i18n="auto"  >Export plan to dxf</a></li>
-                                    <li><a class="actionexportDXF" href="#" data-i18n="auto" >Export 3d to dxf</a></li>
-                                    <li><a class="actionSaveToDXFSection" href="#" data-i18n="auto" >Export section to dxf</a></li>
-                                    <li><a class="actionSaveToDXFAll" href="#" data-i18n="auto" >Export all to dxf</a></li>
-                                    <li><a class="actionSaveToKML" href="#" data-i18n="auto" >Export to kml</a></li>
-                                    <li><a class="actionSaveToSVGAll" href="#" data-i18n="auto" >Export to svg</a></li>
-                                    <li><a class="actionSaveToCSV" href="#" data-i18n="auto" >Export to csv</a></li>
-                                    <li><a class="actionSaveToTherion" href="#" data-i18n="auto" >Export to Therion</a></li>
-                                </ul>
-                            </li>
+                            <li><a class="actionexportDXFPlan" href="#" data-i18n="auto"  >Export plan to dxf</a></li>
+                            <li><a class="actionexportDXF" href="#" data-i18n="auto" >Export 3d to dxf</a></li>
+                            <li><a class="actionSaveToDXFSection" href="#" data-i18n="auto" >Export section to dxf</a></li>
+                            <li><a class="actionSaveToDXFAll" href="#" data-i18n="auto" >Export all to dxf</a></li>
+                            <li><a class="actionSaveToKML" href="#" data-i18n="auto" >Export to kml</a></li>
+                            <li><a class="actionSaveToSVGAll" href="#" data-i18n="auto" >Export to svg</a></li>
+                            <li><a class="actionSaveToCSV" href="#" data-i18n="auto" >Export to csv</a></li>
+                            <li><a class="actionSaveToTherion" href="#" data-i18n="auto" >Export to Therion</a></li>
                             <li><a class="actionexit" href="#" data-i18n="Aa"  >Back to CaveSurvey</a></li>
                         </ul>
                     </li>
@@ -84,10 +79,6 @@
             </div>
             <div class="toolbar">
                 <div id="processing" style="text-align:center;z-index:90;display:none;width:100%;height: 20px;background-color: #000000;color:#ffffff;position:absolute;top:30px;left:0px;" data-i18n-title="processing in progress" data-i18n="Aa" >processing in progress</div>
-                <span data-i18n-title="automatic processing" data-i18n="Aa">automatic processing:</span>
-                <input id="autocompile" type="checkbox" name="autocompile" value="" checked="checked" />
-                <img class="actioncompile" alt="" src="res/apply.png" data-i18n-title="Process data" />
-                <span data-i18n-title="Export" data-i18n="Aa">export</span>: 
                 <img class="actionSaveToKML" alt="" src="res/kml.png" data-i18n-title="Export to kml" />
                 <img class="actionexportDXF" alt="" src="res/dxf.png" data-i18n-title="Export 3d to dxf" />
                 <img class="actionSaveToDXFAll" alt="" src="res/dxf_all.png" data-i18n-title="Export all to dxf" />
@@ -101,7 +92,7 @@
             <div id="cells" style="overflow:auto;height:100%;width:100%"></div>
         </section>
         <section id="cavecontainer" class="ui-layout-center" style="overflow:auto;" >
-            <div id="caveform">
+            <div id="caveform" style="display: none;">
                 <label data-i18n="Aa">name</label><input size="30" id="cave_name" value="" /><br />
                 <label ><span data-i18n="Aa">longitude</span>/<span data-i18n="Aa">latitude</span></label><span class="xy">E:</span><input  class="coords" size="10" id="cave_longitude" value="" /><span class="xy">N:</span><input  class="coords" size="10" id="cave_latitude" value="" /><br />
                 <label ><span data-i18n="Aa">UTM wgs84</span></label><span class="xy">X:</span><input   class="coords" size="10" id="cave_utm_x" value="" /><span class="xy">Y:</span><input   class="coords" size="10" id="cave_utm_y" value="" />Zone:<input  id="cave_utm_zone" size="2" value="" /><br />

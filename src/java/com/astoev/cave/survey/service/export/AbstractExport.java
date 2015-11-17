@@ -18,6 +18,8 @@ import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.util.FileStorageUtil;
 import com.astoev.cave.survey.util.StringUtils;
 
+import org.json.JSONException;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
@@ -36,10 +38,10 @@ public abstract class AbstractExport {
     }
 
     // implementation details, methods called in the same order
-    protected abstract void prepare(Project aProject);
-    protected abstract void prepareEntity(int rowCounter);
-    protected abstract void setValue(Entities entityType, String aLabel);
-    protected abstract void setValue(Entities entityType, Float aValue);
+    protected abstract void prepare(Project aProject) throws JSONException;
+    protected abstract void prepareEntity(int rowCounter) throws JSONException;
+    protected abstract void setValue(Entities entityType, String aLabel) throws JSONException;
+    protected abstract void setValue(Entities entityType, Float aValue) throws JSONException;
     protected abstract void setPhoto(Photo aPhoto);
     protected abstract void setLocation(Location aLocation);
     protected abstract void setDrawing(Sketch aSketch);
@@ -49,9 +51,9 @@ public abstract class AbstractExport {
     // public method for starting export
     public String runExport(Project aProject) throws Exception {
 
-        prepare(aProject);
-
         try {
+            prepare(aProject);
+
             // legs
             List<Leg> legs = DaoUtil.getCurrProjectLegs(false);
 
@@ -214,38 +216,38 @@ public abstract class AbstractExport {
         }
     }
 
-    private void exportLegMeasures(Leg l) throws SQLException {
+    private void exportLegMeasures(Leg l) throws SQLException, JSONException {
         exportLegDistance(l);
         exportLegCompass(l);
         exportLegSlope(l);
     }
 
-    private void exportNote(Leg l) throws SQLException {
+    private void exportNote(Leg l) throws SQLException, JSONException {
         Note n = DaoUtil.getActiveLegNote(l);
         if (n != null) {
             setValue(Entities.NOTE, n.getText());
         }
     }
 
-    private void exportLegSlope(Leg l) throws SQLException {
+    private void exportLegSlope(Leg l) throws SQLException, JSONException {
         if (l.getSlope() != null) {
             setValue(Entities.INCLINATION, l.getSlope());
         }
     }
 
-    private void exportLegDistance(Leg l) throws SQLException {
+    private void exportLegDistance(Leg l) throws SQLException, JSONException {
         if (l.getDistance() != null) {
             setValue(Entities.DISTANCE, l.getDistance());
         }
     }
 
-    private void exportLegCompass(Leg l) throws SQLException {
+    private void exportLegCompass(Leg l) throws SQLException, JSONException {
         if (l.getAzimuth() != null) {
             setValue(Entities.COMPASS, l.getAzimuth());
         }
     }
 
-    private void exportAroundMeasures(Leg l) throws SQLException {
+    private void exportAroundMeasures(Leg l) throws SQLException, JSONException {
         if (l.getLeft() != null) {
             setValue(Entities.LEFT, l.getLeft());
         }
