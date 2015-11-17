@@ -119,6 +119,17 @@ public class WebViewActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.webview);
 
+        initializeView(savedInstanceState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        initializeView(savedInstanceState);
+    }
+
+    private void initializeView(Bundle savedInstanceState) {
         if (webView == null) {
             webView = (WebView) findViewById(R.id.webView1);
 
@@ -198,8 +209,9 @@ public class WebViewActivity extends Activity {
             // --------------webview settings------------------------------<
             Log.i("SPLX", "Start app");
         }
-        if (savedInstanceState != null)
+        if (savedInstanceState != null) {
             ((WebView) findViewById(R.id.webView1)).restoreState(savedInstanceState);
+        }
     }
 
     // json interface
