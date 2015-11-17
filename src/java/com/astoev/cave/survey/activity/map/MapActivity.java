@@ -31,6 +31,8 @@ public class MapActivity extends MainMenuActivity implements View.OnTouchListene
         map = (MapView) findViewById(R.id.mapSurface);
         map.setOnTouchListener(this);
 
+        getSupportActionBar().hide();
+
         final ZoomControls zoom = (ZoomControls) findViewById(R.id.mapZoom);
         zoom.setOnZoomInClickListener(new View.OnClickListener() {
             @Override

@@ -50,7 +50,7 @@
 	            android:value="com.astoev.cave.survey.activity.main.MainActivity" />
         </activity>
         <activity android:name=".activity.main.NoteActivity"/>
-        <activity android:name=".activity.map.MapActivity" android:theme="@style/NoActionBar"/>
+        <activity android:name=".activity.map.MapActivity"/>
         <activity android:name=".activity.home.NewProjectActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
