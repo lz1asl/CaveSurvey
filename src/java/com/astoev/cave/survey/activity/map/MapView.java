@@ -45,6 +45,7 @@ public class MapView extends View {
     private final static int LABEL_DEVIATION_X = 10;
     private final static int LABEL_DEVIATION_Y = 15;
     private static final int [] GRID_STEPS = new int[] {20,10, 5, 5, 2, 2, 2, 2, 1, 1, 1};
+    public static final int INITIAL_SCALE = 10;
     private final int SPACING = 5;
     private final Paint polygonPaint = new Paint();
     private final Paint polygonWidthPaint = new Paint();
@@ -53,7 +54,7 @@ public class MapView extends View {
     private final Paint gridPaint = new Paint();
     private final Paint vectorsPaint = new Paint();
     private final Paint vectorPointPaint = new Paint();
-    private int scale = 10;
+    private int scale = INITIAL_SCALE;
     private int mapCenterMoveX = 0;
     private int mapCenterMoveY = 0;
     private float initialMoveX = 0;
@@ -497,6 +498,18 @@ public class MapView extends View {
             aCanvas.drawCircle(mapCenterMoveX + aFirst.getX() + aDeltaX, mapCenterMoveY + aFirst.getY() + aDeltaY, MEASURE_POINT_RADIUS, polygonWidthPaint);
         }
 
+    }
+
+    public int getScale() {
+        return scale;
+    }
+
+    public int getMoveX() {
+        return mapCenterMoveX;
+    }
+
+    public int getMoveY() {
+        return mapCenterMoveY;
     }
 
 }

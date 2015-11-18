@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -22,20 +21,15 @@ import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.activity.draw.brush.PenBrush;
 import com.astoev.cave.survey.activity.draw.colorpicker.ColorChangedListener;
 import com.astoev.cave.survey.activity.draw.colorpicker.ColorPickerDialog;
+import com.astoev.cave.survey.activity.map.MapView;
 import com.astoev.cave.survey.model.Leg;
-import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.model.Sketch;
 import com.astoev.cave.survey.model.SketchElement;
 import com.astoev.cave.survey.model.SketchPoint;
 import com.astoev.cave.survey.service.Workspace;
-import com.astoev.cave.survey.util.DaoUtil;
-import com.astoev.cave.survey.util.FileStorageUtil;
-import com.astoev.cave.survey.util.PointUtil;
 
-import java.io.ByteArrayOutputStream;
 import java.util.Collection;
-import java.util.List;
 
 
 /**
@@ -48,6 +42,9 @@ import java.util.List;
 public class DrawingActivity extends BaseActivity implements View.OnTouchListener {
 
     public final static String PARAM_MAP_FLAG = "com.astoev.cave.survey.PARAM_MAP_FLAG";
+    public final static String PARAM_MAP_MOVEX = "com.astoev.cave.survey.PARAM_MAP_MOVEX";
+    public final static String PARAM_MAP_MOVEY = "com.astoev.cave.survey.PARAM_MAP_MOVEY";
+    public final static String PARAM_MAP_SCALE = "com.astoev.cave.survey.PARAM_MAP_SCALE";
     public final static String PARAM_SKETCH_BASE = "com.astoev.cave.survey.SKETCH_BASE";
     public final static String PARAM_LEG = "com.astoev.cave.survey.LEG";
 
@@ -68,6 +65,9 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
     private boolean isMap;
 
     private Leg mCurrLeg;
+    private Integer mMoveX;
+    private Integer mMoveY;
+    private Integer mScale;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -139,6 +139,11 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
             // read the flag if this drawing is related with a map or a point(default)
             Intent intent = getIntent();
             isMap = intent.getBooleanExtra(PARAM_MAP_FLAG, false);
+
+            // map drawing options
+            mMoveX = intent.getIntExtra(PARAM_MAP_MOVEX, 0);
+            mMoveY = intent.getIntExtra(PARAM_MAP_MOVEY, 0);
+            mScale = intent.getIntExtra(PARAM_MAP_SCALE, MapView.INITIAL_SCALE);
 
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to load drawing", e);
@@ -260,6 +265,9 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
                 element.setColor(currPath.getOptions().getColor());
                 element.setSize(currPath.getOptions().getSize());
                 element.setType(currPath.getOptions().getType());
+                element.setX(mMoveX);
+                element.setY(mMoveY);
+                element.setScale(mScale);
                 getWorkspace().getDBHelper().getSketchElementDao().create(element);
 
                 // points

@@ -29,6 +29,12 @@ public class SketchElement {
     private DrawingOptions.TYPES mType;
     @DatabaseField(canBeNull = false, columnName = "color")
     private int mColor;
+    @DatabaseField(columnName = "x")
+    private float mX;
+    @DatabaseField(columnName = "y")
+    private float mY;
+    @DatabaseField(columnName = "scale")
+    private float mScale;
     @ForeignCollectionField(eager = true, orderColumnName = SketchPoint.COLUMN_ORDER)
     private ForeignCollection<SketchPoint> points;
 
@@ -94,5 +100,29 @@ public class SketchElement {
 
     public void setPoints(ForeignCollection<SketchPoint> points) {
         this.points = points;
+    }
+
+    public float getScale() {
+        return mScale;
+    }
+
+    public void setScale(float scale) {
+        mScale = scale;
+    }
+
+    public float getX() {
+        return mX;
+    }
+
+    public void setX(float x) {
+        mX = x;
+    }
+
+    public float getY() {
+        return mY;
+    }
+
+    public void setY(float y) {
+        mY = y;
     }
 }
