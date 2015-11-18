@@ -99,6 +99,7 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
             Sketch existingSketch = null;
 
             Integer legId = getIntent().getIntExtra(PARAM_LEG, -1);
+            Log.i(Constants.LOG_TAG_UI, "Start drawing activity for leg " + legId);
             if (legId != -1) {
                 // sketch attached to leg
                 mCurrLeg = Workspace.getCurrentInstance().getDBHelper().getLegDao().queryForId(legId);
@@ -110,8 +111,10 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
             }
 
             if (existingSketch != null) {
-                Collection<SketchElement> elements = existingSketch.getElements();
+
+                Collection<SketchElement> elements = getWorkspace().getDBHelper().getSketchElementDao().queryForEq(SketchElement.COLUMN_SKETCH_ID, existingSketch.getId());
                 if (elements != null) {
+                    Log.i(Constants.LOG_TAG_UI, "Existing sketch found with " + elements.size() + " elements");
                     for (SketchElement e : elements) {
                         DrawingPath path = new DrawingPath();
                         path.setOptions(DrawingOptions.fromSketchElement(e));
@@ -198,23 +201,24 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
     public void saveDrawing(View aView) {
 
         try {
-            Leg activeLeg = getWorkspace().getActiveOrFirstLeg();
-            Point activePoint = activeLeg.getFromPoint();
-            DaoUtil.refreshPoint(activePoint);
 
             // store to SD
-            ByteArrayOutputStream buff = new ByteArrayOutputStream();
+           /* ByteArrayOutputStream buff = new ByteArrayOutputStream();
 
             drawingSurface.getBitmap().compress(Bitmap.CompressFormat.PNG, 50, buff);
 
             String filePrefix;
-            if (isMap) {
+            if (mCurrLeg == null) {
                 filePrefix = FileStorageUtil.MAP_PREFIX;
             } else {
-                String galleryName = PointUtil.getGalleryNameForFromPoint(activePoint, activeLeg.getGalleryId());
+                Point activePoint = mCurrLeg.getFromPoint();
+//                DaoUtil.refreshPoint(activePoint);
+                String galleryName = PointUtil.getGalleryNameForFromPoint(activePoint, mCurrLeg.getGalleryId());
                 filePrefix = FileStorageUtil.getFilePrefixForPicture(activePoint, galleryName);
             }
-            String path = FileStorageUtil.addProjectMedia(this, getWorkspace().getActiveProject(), filePrefix, buff.toByteArray());
+            String path = FileStorageUtil.addProjectMedia(this, getWorkspace().getActiveProject(), filePrefix, buff.toByteArray());*/
+            // TODO
+            String path = "todo";
 
             // find existing drawing
             Sketch drawing = null;
@@ -236,11 +240,12 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
                 drawing = new Sketch();
                 drawing.setFSPath(path);
                 getWorkspace().getDBHelper().getSketchDao().create(drawing);
+
             }
 
             // delete old sketch data, not yet clever enough to replace
             // TODO delete old records?
-            getWorkspace().getDBHelper().getSketchDao().assignEmptyForeignCollection(drawing, Sketch.FIELD_ELEMENTS);
+//            getWorkspace().getDBHelper().getSketchDao().assignEmptyForeignCollection(drawing, Sketch.FIELD_ELEMENTS);
 
             int elementsCount = 0;
             for (DrawingPath currPath : drawingSurface.getPathElements()) {
@@ -250,26 +255,22 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
                 element.setColor(currPath.getOptions().getColor());
                 element.setSize(currPath.getOptions().getSize());
                 element.setType(currPath.getOptions().getType());
-
-                drawing.getElements().add(element);
-
-
-//                getWorkspace().getDBHelper().getSketchElementDao().create(element);
+                element.setSketch(drawing);
+                getWorkspace().getDBHelper().getSketchElementDao().create(element);
 
                 // points
-                getWorkspace().getDBHelper().getSketchElementDao().assignEmptyForeignCollection(element, SketchElement.FIELD_POINTS);
+//                getWorkspace().getDBHelper().getSketchElementDao().assignEmptyForeignCollection(element, SketchElement.FIELD_POINTS);
                 int pointsCount = 0;
                 for (SketchPoint p : currPath.getPath().getPoints()) {
                     p.setElement(element);
                     p.setOrderBy(pointsCount++);
-                    element.getPoints().add(p);
-//                    getWorkspace().getDBHelper().getSketchPointDao().create(p);
-
+                    p.setElement(element);
+                    getWorkspace().getDBHelper().getSketchPointDao().create(p);
                 }
 
             }
 
-            getWorkspace().getDBHelper().getSketchDao().update(drawing);
+//            getWorkspace().getDBHelper().getSketchDao().update(drawing);
 
             // apply to parent
             if (mCurrLeg != null) {

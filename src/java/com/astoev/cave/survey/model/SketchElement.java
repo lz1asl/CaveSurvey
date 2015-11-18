@@ -13,14 +13,13 @@ import com.j256.ormlite.table.DatabaseTable;
 public class SketchElement {
 
     public static final String COLUMN_SKETCH_ID = "sketch_id";
-    public static final String FIELD_SKETCH = "sketch";
     public static final String COLUMN_ORDER = "orderby";
     public static final String FIELD_POINTS = "points";
 
 
     @DatabaseField(generatedId = true, columnName = "id")
     private Integer mId;
-    @DatabaseField(canBeNull = false, foreign = true, columnName = COLUMN_SKETCH_ID, index = true)
+    @DatabaseField(canBeNull = false, foreign = true, foreignAutoRefresh = true, columnName = COLUMN_SKETCH_ID, index = true)
     private Sketch mSketch;
     @DatabaseField(canBeNull = false, columnName = COLUMN_ORDER, index = true)
     private Integer mOrderBy;

@@ -22,7 +22,7 @@ public class SketchPoint {
     private float mX;
     @DatabaseField(canBeNull = false, columnName = "y")
     private float mY;
-    @DatabaseField(canBeNull = false, foreign = true, columnName = COLUMN_ELEMENT_ID, index = true)
+    @DatabaseField(canBeNull = false, foreign = true, foreignAutoRefresh = true, columnName = COLUMN_ELEMENT_ID, index = true)
     private SketchElement mElement;
 
 
