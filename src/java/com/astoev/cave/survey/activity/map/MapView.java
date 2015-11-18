@@ -504,11 +504,11 @@ public class MapView extends View {
         return scale;
     }
 
-    public int getMoveX() {
+    public float getMoveX() {
         return mapCenterMoveX;
     }
 
-    public int getMoveY() {
+    public float getMoveY() {
         return mapCenterMoveY;
     }
 

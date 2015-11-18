@@ -70,8 +70,8 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
     private boolean isMap;
 
     private Leg mCurrLeg;
-    private Integer mMoveX;
-    private Integer mMoveY;
+    private float mMoveX;
+    private float mMoveY;
     private Integer mScale;
 
     public void onCreate(Bundle savedInstanceState) {
@@ -91,6 +91,16 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
 
 
         try {
+
+            // read the flag if this drawing is related with a map or a point(default)
+            Intent intent = getIntent();
+            isMap = intent.getBooleanExtra(PARAM_MAP_FLAG, false);
+
+            // map drawing options
+            mMoveX = intent.getFloatExtra(PARAM_MAP_MOVEX, 0);
+            mMoveY = intent.getFloatExtra(PARAM_MAP_MOVEY, 0);
+            mScale = intent.getIntExtra(PARAM_MAP_SCALE, MapView.INITIAL_SCALE);
+
 
             drawingSurface.setOldBitmap(null);
 
@@ -123,7 +133,7 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
                     for (SketchElement e : elements) {
                         DrawingPath path = new DrawingPath();
                         path.setOptions(DrawingOptions.fromSketchElement(e));
-                        path.setPath(LoggedPath.fromSketchElement(e));
+                        path.setPath(LoggedPath.fromSketchElement(e, mMoveX, mMoveY, mScale));
                         drawingSurface.getPathElements().add(path);
                     }
                 }
@@ -140,15 +150,6 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
             saveBtn.setEnabled(false);
 
             drawingSurface.invalidate();
-
-            // read the flag if this drawing is related with a map or a point(default)
-            Intent intent = getIntent();
-            isMap = intent.getBooleanExtra(PARAM_MAP_FLAG, false);
-
-            // map drawing options
-            mMoveX = intent.getIntExtra(PARAM_MAP_MOVEX, 0);
-            mMoveY = intent.getIntExtra(PARAM_MAP_MOVEY, 0);
-            mScale = intent.getIntExtra(PARAM_MAP_SCALE, MapView.INITIAL_SCALE);
 
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to load drawing", e);

@@ -4,7 +4,6 @@ import android.graphics.Path;
 
 import com.astoev.cave.survey.model.SketchElement;
 import com.astoev.cave.survey.model.SketchPoint;
-import com.astoev.cave.survey.util.DaoUtil;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -28,17 +27,18 @@ public class LoggedPath extends Path {
         return mPoints;
     }
 
-    public static LoggedPath fromSketchElement(SketchElement anElement) throws SQLException {
+    public static LoggedPath fromSketchElement(SketchElement anElement, float moveX, float moveY, Integer scale) throws SQLException {
         LoggedPath path = new LoggedPath();
 
         Collection<SketchPoint> points = anElement.getPoints();
         boolean first = true;
+        float realScale = 1;// TODO scale / MapView.INITIAL_SCALE;
         for (SketchPoint point : points) {
             if (first) {
-                path.moveTo(point.getX(), point.getY());
+                path.moveTo(moveX + point.getX() * realScale, moveY + point.getY() * realScale);
                 first = false;
             } else {
-                path.lineTo(point.getX(), point.getY());
+                path.lineTo(moveX + point.getX(), moveY + point.getY());
             }
         }
 
