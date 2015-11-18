@@ -184,6 +184,7 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
                     undoBtn.setEnabled(false);
                 }
                 redoBtn.setEnabled(true);
+                saveBtn.setEnabled(true);
                 break;
 
             case R.id.redoBtn:
@@ -193,6 +194,7 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
                 }
 
                 undoBtn.setEnabled(true);
+                saveBtn.setEnabled(true);
                 break;
         }
         drawingSurface.invalidate();
