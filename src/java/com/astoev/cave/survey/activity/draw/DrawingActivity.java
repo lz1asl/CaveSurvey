@@ -244,22 +244,23 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
             }
 
             // delete old sketch data, not yet clever enough to replace
-            // TODO delete old records?
-//            getWorkspace().getDBHelper().getSketchDao().assignEmptyForeignCollection(drawing, Sketch.FIELD_ELEMENTS);
+            Collection<SketchElement> elements = getWorkspace().getDBHelper().getSketchElementDao().queryForEq(SketchElement.COLUMN_SKETCH_ID, drawing.getId());
+            for (SketchElement element : elements) {
+                element.getPoints().clear();
+                getWorkspace().getDBHelper().getSketchElementDao().delete(element);
+            }
 
+            // insert the current data
             int elementsCount = 0;
             for (DrawingPath currPath : drawingSurface.getPathElements()) {
                 SketchElement element = new SketchElement(drawing);
-
                 element.setOrderBy(elementsCount++);
                 element.setColor(currPath.getOptions().getColor());
                 element.setSize(currPath.getOptions().getSize());
                 element.setType(currPath.getOptions().getType());
-                element.setSketch(drawing);
                 getWorkspace().getDBHelper().getSketchElementDao().create(element);
 
                 // points
-//                getWorkspace().getDBHelper().getSketchElementDao().assignEmptyForeignCollection(element, SketchElement.FIELD_POINTS);
                 int pointsCount = 0;
                 for (SketchPoint p : currPath.getPath().getPoints()) {
                     p.setElement(element);
@@ -267,10 +268,7 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
                     p.setElement(element);
                     getWorkspace().getDBHelper().getSketchPointDao().create(p);
                 }
-
             }
-
-//            getWorkspace().getDBHelper().getSketchDao().update(drawing);
 
             // apply to parent
             if (mCurrLeg != null) {
