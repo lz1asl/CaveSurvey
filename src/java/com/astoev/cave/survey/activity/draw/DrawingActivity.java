@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -23,12 +24,16 @@ import com.astoev.cave.survey.activity.draw.colorpicker.ColorChangedListener;
 import com.astoev.cave.survey.activity.draw.colorpicker.ColorPickerDialog;
 import com.astoev.cave.survey.activity.map.MapView;
 import com.astoev.cave.survey.model.Leg;
+import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.model.Sketch;
 import com.astoev.cave.survey.model.SketchElement;
 import com.astoev.cave.survey.model.SketchPoint;
 import com.astoev.cave.survey.service.Workspace;
+import com.astoev.cave.survey.util.FileStorageUtil;
+import com.astoev.cave.survey.util.PointUtil;
 
+import java.io.ByteArrayOutputStream;
 import java.util.Collection;
 
 
@@ -210,7 +215,7 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
         try {
 
             // store to SD
-           /* ByteArrayOutputStream buff = new ByteArrayOutputStream();
+           ByteArrayOutputStream buff = new ByteArrayOutputStream();
 
             drawingSurface.getBitmap().compress(Bitmap.CompressFormat.PNG, 50, buff);
 
@@ -219,13 +224,10 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
                 filePrefix = FileStorageUtil.MAP_PREFIX;
             } else {
                 Point activePoint = mCurrLeg.getFromPoint();
-//                DaoUtil.refreshPoint(activePoint);
                 String galleryName = PointUtil.getGalleryNameForFromPoint(activePoint, mCurrLeg.getGalleryId());
                 filePrefix = FileStorageUtil.getFilePrefixForPicture(activePoint, galleryName);
             }
-            String path = FileStorageUtil.addProjectMedia(this, getWorkspace().getActiveProject(), filePrefix, buff.toByteArray());*/
-            // TODO
-            String path = "todo";
+            String path = FileStorageUtil.addProjectMedia(this, getWorkspace().getActiveProject(), filePrefix, buff.toByteArray());
 
             // find existing drawing
             Sketch drawing = null;
