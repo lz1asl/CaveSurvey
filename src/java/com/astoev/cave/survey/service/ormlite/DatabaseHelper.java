@@ -1,6 +1,7 @@
 package com.astoev.cave.survey.service.ormlite;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
@@ -142,11 +143,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 if (aOldVersion < DATABASE_VERSION_4) {
                     Log.i(Constants.LOG_TAG_DB, "Upgrading DB to V4");
 
-                    // can't drop columns in sql lite
-                    // TODO need to copy the data to fresh table, then drop the old one
-//                    aSqLiteDatabase.execSQL("ALTER TABLE sketches DROP COLUMN gallery_id");
-//                    aSqLiteDatabase.execSQL("ALTER TABLE sketches DROP COLUMN point_id");
-
                     // sketchch_points table
                    aSqLiteDatabase.execSQL("create table sketch_element_points (" +
                             "   ID decimal primary key not null," +
@@ -171,6 +167,36 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
                     // per leg sketch
                     aSqLiteDatabase.execSQL("ALTER TABLE legs add COLUMN sketch_id int");
+
+                    // can't drop columns in sql lite, migrate data for sketches table
+
+                    // rename the current
+                    aSqLiteDatabase.execSQL("ALTER TABLE sketches RENAME TO sketches_old");
+
+                    // create the new one
+                    aSqLiteDatabase.execSQL("CREATE TABLE sketches (id INTEGER PRIMARY KEY AUTOINCREMENT, path VARCHAR)");
+
+                    // migrate existing data
+                    Cursor currSketches = aSqLiteDatabase.rawQuery("select * from sketches_old", null);
+                    while (currSketches.isAfterLast()) {
+                        boolean flag = currSketches.moveToNext();
+                        if (!flag) {
+                            Log.i(Constants.LOG_TAG_DB, "End of cursor");
+                            break;
+                        }
+                        Integer id = currSketches.getInt(0);
+                        Integer pointId = currSketches.getInt(1);
+                        Integer galleryId = currSketches.getInt(2);
+                        String path = currSketches.getString(3);
+
+                        Log.i(Constants.LOG_TAG_DB, "Migrate sketch " + id);
+
+                        aSqLiteDatabase.execSQL("INSERT INTO SKETCHES (id, path) values(" + id + ",'" + path + "')");
+                        aSqLiteDatabase.execSQL("UPDATE LEGS SET sketch_id=" + id + " WHERE from_point_id=" + pointId + " AND gallery_id=" + galleryId);
+                    }
+
+                    // drop the old one
+                    aSqLiteDatabase.execSQL("DROP TABLE sketches_old");
 
                     aSqLiteDatabase.setTransactionSuccessful();
 
