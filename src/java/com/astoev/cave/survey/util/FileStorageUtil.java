@@ -2,6 +2,7 @@ package com.astoev.cave.survey.util;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -93,19 +94,8 @@ public class FileStorageUtil {
         return new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), projectName);
     }
 
-    /**
-     * Helper method that adds project's media content to public external storage
-     *
-     * @param contextArg    - context
-     * @param aProject      - project owner
-     * @param filePrefixArg - file prefix
-     * @param byteArrayArg  - media content as a byte array
-     * @return String for the file name created
-     * @throws Exception
-     */
-    public static String addProjectMedia(Context contextArg, Project aProject, String filePrefixArg, byte[] byteArrayArg) throws Exception {
-
-        File pictureFile = createPictureFile(contextArg, aProject.getName(), filePrefixArg, PNG_FILE_EXTENSION);
+    public static File addProjectFile(Activity contextArg, Project aProject, String filePrefixArg, String fileSuffixArg, byte[] byteArrayArg) throws Exception {
+        File pictureFile = createPictureFile(contextArg, aProject.getName(), filePrefixArg, fileSuffixArg);
 
         OutputStream os = null;
         try {
@@ -120,8 +110,25 @@ public class FileStorageUtil {
 
         Log.i(Constants.LOG_TAG_SERVICE, "Just wrote: " + pictureFile.getAbsolutePath());
 
+        return pictureFile;
+    }
+
+    /**
+     * Helper method that adds project's media content to public external storage
+     *
+     * @param contextArg    - context
+     * @param aProject      - project owner
+     * @param filePrefixArg - file prefix
+     * @param byteArrayArg  - media content as a byte array
+     * @return String for the file name created
+     * @throws Exception
+     */
+    public static String addProjectMedia(Activity contextArg, Project aProject, String filePrefixArg, byte[] byteArrayArg) throws Exception {
+        File pictureFile = addProjectFile(contextArg, aProject, filePrefixArg, PNG_FILE_EXTENSION, byteArrayArg);
+
         // broadcast that picture was added to the project
         notifyPictureAddedToGalery(contextArg, pictureFile);
+
         return pictureFile.getAbsolutePath();
     }
 

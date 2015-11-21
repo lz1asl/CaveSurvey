@@ -202,15 +202,14 @@ public class InfoActivity extends MainMenuActivity {
         boolean flag = super.onCreateOptionsMenu(menu);
 
         // disable openstopo for older devices that will not render the data properly
-        // JELLY_BEAN_MR1 is required for the JavaScriptInterface, FROYO for base64 decoding
         // and HONEYCOMB for the content access property ...
         // in short, before 4.2 this will not work unless we remove the java script interface
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
             MenuItem opensTopoItem = menu.findItem(R.id.info_action_openstopo);
             if (opensTopoItem != null) {
                 opensTopoItem.setVisible(true);
-//            }
-        }
+            }
+//        }
 
         return flag;
     }
