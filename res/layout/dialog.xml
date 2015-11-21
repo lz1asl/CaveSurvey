@@ -14,7 +14,8 @@
         android:layout_width="fill_parent"
         android:layout_height="259dp" >
 
-	    <LinearLayout
+
+	    <LinearLayout
 	        android:id="@+id/fileLinearLayout2"
 	        android:layout_width="fill_parent"
 	        android:layout_height="match_parent"
@@ -46,6 +47,7 @@
 	                android:layout_height="wrap_content"
 	                android:layout_weight="1"
 	                android:padding="10dp"
+					android:layout_gravity="center_vertical"
 	                android:text="@string/saveButtonText" />
 	            <Button
 	                android:id="@+id/fileCancel"
@@ -53,6 +55,7 @@
 	                android:layout_height="wrap_content"
 	                android:layout_weight="1"
 	                android:padding="10dp"
+					android:layout_gravity="center_vertical"
 	                android:text="@string/cancelButtonText" />
 
 	            <Button
@@ -60,6 +63,8 @@
 	                android:layout_width="fill_parent"
 	                android:layout_height="wrap_content"
 	                android:layout_weight="1"
+					android:padding="10dp"
+					android:layout_gravity="center_vertical"
 	                android:text="@string/newFolderButtonText" />
             
 	        </LinearLayout>
