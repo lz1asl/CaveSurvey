@@ -12,7 +12,6 @@
         <!-- fogli di stile -->
         <link rel="stylesheet" href="js/libs/jquery/jquery-ui/css/base/jquery-ui.css" />
         <link rel="stylesheet" href="js/libs/jquery/jquery-ui/css/base/jquery.ui.theme.css" />
-        <link rel="stylesheet" href="js/libs/jquery/jquery.layout/layout-default-latest.css" />
         <link rel="stylesheet" href="js/libs/jquery/jquery.alerts/jquery.alerts.css" />
         <link rel="stylesheet" media="screen" href="js/libs/jquery/jquery.handsontable.full.css">
         <link rel="stylesheet" media="screen" href="res/style.css" />
@@ -39,7 +38,6 @@
 
 
         <script defer="defer" src="js/libs/jquery/jquery-ui/jquery-ui.js"></script>
-        <script defer="defer" src="js/libs/jquery/jquery.layout/jquery.layout.js"></script>
         <script defer="defer" src="js/libs/jquery/jMenu/jMenu.jquery.js"></script>
         <script defer="defer" src="js/libs/jquery/jquery.alerts/jquery.alerts.js"></script>
 
@@ -62,7 +60,7 @@
             <input type="file" id="files" name="files[]" accept="text/*" style="display:none" />
             <input type="file" id="filesadd" name="files[]" accept="text/*" style="display:none" />
             <div class="menubar">
-                <ul id="menu">
+                <ul id="menu" style="overflow: visible; z-index: 999;position:relative;">
                     <li><a class="fNiv" id="mainmenu" ><span data-i18n="Aa">menu</span></a><ul>
                             <li><a class="actionexportDXFPlan" href="#" data-i18n="auto"  >Export plan to dxf</a></li>
                             <li><a class="actionexportDXF" href="#" data-i18n="auto" >Export 3d to dxf</a></li>
@@ -88,7 +86,7 @@
 
             </div>
         </header>
-        <section id="cellscontent" class="ui-layout-west" style="overflow:auto;width:600px" >
+        <section id="cellscontent" class="ui-layout-west" style="overflow:auto;width:600px;display: none;" >
             <div id="cells" style="overflow:auto;height:100%;width:100%"></div>
         </section>
         <section id="cavecontainer" class="ui-layout-center" style="overflow:auto;" >

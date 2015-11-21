@@ -1638,22 +1638,9 @@ $(document).ready(function() {
     $("#animation .xrotation").val(90);
 
     //----------------- page layout ------------------------------------------->
-    try {
-        mainLayout = $('body').layout({
-            north__closable: false,
-            north__resizable: false,
-            north__spacing_open: 0,
-            north__size: 37,
-            west__initHidden: true,
-            east__closable: true,
-            east__resizable: true
-        });
-        $('.ui-layout-resizer').attr("onmouseup", 'setTimeout(\'onAppResize("resizer");\', 20);');
-        mainLayout.allowOverflow('north');
-    } catch (e) {
-        console.log("splx:" + e);
-        LayoutOK = false;
-    }
+
+    $("#loading").attr("style", "display:none");
+
     //----------------- page layout -------------------------------------------<
     //----------------- grid layout ------------------------------------------->
     container = $("#cells");
