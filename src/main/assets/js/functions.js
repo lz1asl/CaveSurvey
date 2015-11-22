@@ -1436,9 +1436,12 @@ function onAppResize(mode)
     // $("#cells").height($("#cellscontent").height()-1);
     // $("#cells").width($("#cellscontent").width()-1);
     //massimizza i canvas ----<
-    $("#loading").attr("style", "display:none");
-    if (mode !== "window")
-        $("#cells").resize();
+    setTimeout(function (){
+        $("#loading").attr("style", "display:none");
+        if (mode !== "window")
+            $("#cells").resize();
+    }, 2000);
+
 
 //    console.log("resize " + mode);
 }
@@ -1639,7 +1642,7 @@ $(document).ready(function() {
 
     //----------------- page layout ------------------------------------------->
 
-    $("#loading").attr("style", "display:none");
+  //  $("#loading").attr("style", "display:none");
 
     //----------------- page layout -------------------------------------------<
     //----------------- grid layout ------------------------------------------->
