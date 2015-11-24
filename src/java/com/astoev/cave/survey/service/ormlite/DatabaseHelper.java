@@ -159,7 +159,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                             "   orderby int," +
                             "   size int," +
                             "   type varchar," +
-                            "   color int" +
+                            "   color int," +
+                            "   x FLOAT," +
+                            "   y FLOAT," +
+                            "   scale int" +
                             ")");
 
                     // project sketch
