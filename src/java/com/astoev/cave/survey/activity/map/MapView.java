@@ -1,13 +1,11 @@
 package com.astoev.cave.survey.activity.map;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.Point;
-import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.SparseArray;
@@ -25,7 +23,6 @@ import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.service.Workspace;
 import com.astoev.cave.survey.util.DaoUtil;
 
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +43,8 @@ public class MapView extends View {
     private final static int LABEL_DEVIATION_Y = 15;
     private static final int [] GRID_STEPS = new int[] {20,10, 5, 5, 2, 2, 2, 2, 1, 1, 1};
     public static final int INITIAL_SCALE = 10;
-    private final int SPACING = 5;
+    private static final int SPACING = 5;
+
     private final Paint polygonPaint = new Paint();
     private final Paint polygonWidthPaint = new Paint();
     private final Paint overlayPaint = new Paint();
@@ -68,6 +66,8 @@ public class MapView extends View {
     private SparseArray<String> galleryNames = new SparseArray<String>();
 
     private boolean horizontalPlan = true;
+
+    private boolean annotateMap = true;
 
     public MapView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -340,38 +340,41 @@ public class MapView extends View {
             }
 
 
-            // borders
-            //top
-            canvas.drawLine(SPACING, SPACING, maxX - SPACING, SPACING, overlayPaint);
-            //right
-            canvas.drawLine(maxX - SPACING, SPACING, maxX - SPACING, maxY - SPACING, overlayPaint);
-            // bottom
-            canvas.drawLine(SPACING, maxY - SPACING, maxX - SPACING, maxY - SPACING, overlayPaint);
-            //left
-            canvas.drawLine(SPACING, maxY - SPACING, SPACING, SPACING, overlayPaint);
+            if (annotateMap) {
 
-            if (horizontalPlan) {
-                // north arrow
-                northCenter.set(maxX - 20, 30);
-                canvas.drawLine(northCenter.x, northCenter.y, northCenter.x + 10, northCenter.y + 10, overlayPaint);
-                canvas.drawLine(northCenter.x + 10, northCenter.y + 10, northCenter.x, northCenter.y - 20, overlayPaint);
-                canvas.drawLine(northCenter.x, northCenter.y - 20, northCenter.x - 10, northCenter.y + 10, overlayPaint);
-                canvas.drawLine(northCenter.x - 10, northCenter.y + 10, northCenter.x, northCenter.y, overlayPaint);
-                canvas.drawText("N", northCenter.x + 5, northCenter.y - 10, overlayPaint);
-            } else {
-                //  up wrrow
-                northCenter.set(maxX - 15, 10);
-                canvas.drawLine(northCenter.x + 1, northCenter.y, northCenter.x + 6, northCenter.y + 10, overlayPaint);
-                canvas.drawLine(northCenter.x - 5, northCenter.y + 10, northCenter.x, northCenter.y, overlayPaint);
-                canvas.drawLine(northCenter.x, northCenter.y -1, northCenter.x, northCenter.y + 20, overlayPaint);
+                // borders
+                //top
+                canvas.drawLine(SPACING, SPACING, maxX - SPACING, SPACING, overlayPaint);
+                //right
+                canvas.drawLine(maxX - SPACING, SPACING, maxX - SPACING, maxY - SPACING, overlayPaint);
+                // bottom
+                canvas.drawLine(SPACING, maxY - SPACING, maxX - SPACING, maxY - SPACING, overlayPaint);
+                //left
+                canvas.drawLine(SPACING, maxY - SPACING, SPACING, SPACING, overlayPaint);
+
+                if (horizontalPlan) {
+                    // north arrow
+                    northCenter.set(maxX - 20, 30);
+                    canvas.drawLine(northCenter.x, northCenter.y, northCenter.x + 10, northCenter.y + 10, overlayPaint);
+                    canvas.drawLine(northCenter.x + 10, northCenter.y + 10, northCenter.x, northCenter.y - 20, overlayPaint);
+                    canvas.drawLine(northCenter.x, northCenter.y - 20, northCenter.x - 10, northCenter.y + 10, overlayPaint);
+                    canvas.drawLine(northCenter.x - 10, northCenter.y + 10, northCenter.x, northCenter.y, overlayPaint);
+                    canvas.drawText("N", northCenter.x + 5, northCenter.y - 10, overlayPaint);
+                } else {
+                    //  up wrrow
+                    northCenter.set(maxX - 15, 10);
+                    canvas.drawLine(northCenter.x + 1, northCenter.y, northCenter.x + 6, northCenter.y + 10, overlayPaint);
+                    canvas.drawLine(northCenter.x - 5, northCenter.y + 10, northCenter.x, northCenter.y, overlayPaint);
+                    canvas.drawLine(northCenter.x, northCenter.y - 1, northCenter.x, northCenter.y + 20, overlayPaint);
+                }
+
+                // scale
+                canvas.drawText("x" + scale, 25 + gridStep / 2, 45, overlayPaint);
+                canvas.drawLine(30, 25, 30, 35, overlayPaint);
+                canvas.drawLine(30, 30, 30 + gridStep, 30, overlayPaint);
+                canvas.drawLine(30 + gridStep, 25, 30 + gridStep, 35, overlayPaint);
+                canvas.drawText(GRID_STEPS[gridStepIndex] + "m", 25 + gridStep / 2, 25, overlayPaint);
             }
-
-            // scale
-            canvas.drawText("x" + scale, 25 + gridStep/2, 45, overlayPaint);
-            canvas.drawLine(30, 25, 30, 35, overlayPaint);
-            canvas.drawLine(30, 30, 30 + gridStep, 30, overlayPaint);
-            canvas.drawLine(30 + gridStep, 25, 30 + gridStep, 35, overlayPaint);
-            canvas.drawText(GRID_STEPS[gridStepIndex]  + "m" , 25 + gridStep/2, 25, overlayPaint);
 
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to draw map activity", e);
@@ -404,7 +407,7 @@ public class MapView extends View {
 
     public void setHorizontalPlan(boolean horizontalPlan) {
         this.horizontalPlan = horizontalPlan;
-        scale = 10;
+        scale = INITIAL_SCALE;
         mapCenterMoveX = 0;
         mapCenterMoveY = 0;
         invalidate();
@@ -423,7 +426,11 @@ public class MapView extends View {
         invalidate();
     }
 
-    public byte[] getPngDump() {
+    public void scale(int aScale) {
+        scale = aScale;
+    }
+
+   /* public byte[] getPngDump() {
 
         // render
         Bitmap returnedBitmap = Bitmap.createBitmap(this.getWidth(), this.getHeight(),Bitmap.Config.ARGB_8888);
@@ -440,8 +447,9 @@ public class MapView extends View {
         // return
         ByteArrayOutputStream buff = new ByteArrayOutputStream();
         returnedBitmap.compress(Bitmap.CompressFormat.PNG, 50, buff);
+        returnedBitmap.recycle();
         return buff.toByteArray();
-    }
+    }*/
 
     private void calculateAndDrawSide(Canvas canvas, Leg l, Point2D first, Point2D second, Leg prevLeg, Float aMeasure, String azimuthUnits, boolean left) {
         double galleryWidthAngle;
@@ -512,4 +520,11 @@ public class MapView extends View {
         return mapCenterMoveY;
     }
 
+    public boolean isAnnotateMap() {
+        return annotateMap;
+    }
+
+    public void setAnnotateMap(boolean annotateMap) {
+        this.annotateMap = annotateMap;
+    }
 }

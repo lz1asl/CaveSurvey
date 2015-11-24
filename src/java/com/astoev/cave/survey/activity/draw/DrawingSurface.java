@@ -11,6 +11,7 @@ import android.view.View;
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.UIUtilities;
+import com.astoev.cave.survey.activity.map.MapView;
 
 import java.util.List;
 
@@ -24,7 +25,7 @@ import java.util.List;
 public class DrawingSurface extends View {
 
     public DrawingPath mPreviewPath;
-    private Bitmap mOldBitmap;
+    private MapView mMap;
     private CommandManager mCommandManager;
 
     public DrawingSurface(Context context, AttributeSet attrs) {
@@ -55,10 +56,8 @@ public class DrawingSurface extends View {
         aCanvas.drawColor(0, PorterDuff.Mode.CLEAR);
 
         // old bitmap, e.g. map below the drawing
-        if (mOldBitmap != null) {
-            int left = (aCanvas.getWidth() - mOldBitmap.getWidth()) / 2;
-            int top = (aCanvas.getHeight() - mOldBitmap.getHeight()) / 2;
-            aCanvas.drawBitmap(mOldBitmap, left, top, null);
+        if (mMap != null) {
+            mMap.draw(aCanvas);
         }
 
         // user notes above
@@ -96,13 +95,9 @@ public class DrawingSurface extends View {
         return bitmap;
     }
 
-    public Bitmap getOldBitmap() {
-        return mOldBitmap;
-    }
 
-
-    public void setOldBitmap(Bitmap aOldBitmap) {
-        mOldBitmap = aOldBitmap;
+    public void setMap(MapView aMap) {
+        mMap = aMap;
     }
 
     public List<DrawingPath> getPathElements() {

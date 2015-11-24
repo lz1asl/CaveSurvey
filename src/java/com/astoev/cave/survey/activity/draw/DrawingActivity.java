@@ -5,9 +5,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -56,7 +54,6 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
 
     private DrawingSurface drawingSurface;
     private DrawingPath currentDrawingPath;
-    private Paint currentPaint;
 
     private Button redoBtn;
     private Button undoBtn;
@@ -66,9 +63,6 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
 
     private PenBrush currentBrush = new PenBrush();
 
-    /** Helper flag that shows if this drawing is related with map.*/
-    private boolean isMap;
-
     private Leg mCurrLeg;
     private float mMoveX;
     private float mMoveY;
@@ -77,8 +71,6 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.drawing_activity);
-
-        setCurrentPaint();
 
         drawingSurface = (DrawingSurface) findViewById(R.id.drawingSurface);
         drawingSurface.setOnTouchListener(this);
@@ -92,22 +84,20 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
 
         try {
 
-            // read the flag if this drawing is related with a map or a point(default)
             Intent intent = getIntent();
-            isMap = intent.getBooleanExtra(PARAM_MAP_FLAG, false);
 
             // map drawing options
             mMoveX = intent.getFloatExtra(PARAM_MAP_MOVEX, 0);
             mMoveY = intent.getFloatExtra(PARAM_MAP_MOVEY, 0);
             mScale = intent.getIntExtra(PARAM_MAP_SCALE, MapView.INITIAL_SCALE);
 
-
-            drawingSurface.setOldBitmap(null);
-
-            // preload with image
-            byte [] backgroundBytes = getIntent().getByteArrayExtra(PARAM_SKETCH_BASE);
-            if (null != backgroundBytes) {
-                drawingSurface.setOldBitmap(BitmapFactory.decodeByteArray(backgroundBytes, 0, backgroundBytes.length, null));
+            if (intent.getBooleanExtra(PARAM_MAP_FLAG, false)) {
+                // draw the same map as a base
+                MapView currMap = new MapView(this, null);
+                currMap.move(mMoveX, mMoveY);
+                currMap.scale(mScale);
+                currMap.setAnnotateMap(false);
+                drawingSurface.setMap(currMap);
             }
 
             // existing sketch data
@@ -157,8 +147,9 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
         }
     }
 
-    private void setCurrentPaint() {
-        currentPaint = DrawingOptions.optionsToPaint(mOptions);
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -216,7 +207,7 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
         try {
 
             // store to SD
-           ByteArrayOutputStream buff = new ByteArrayOutputStream();
+            ByteArrayOutputStream buff = new ByteArrayOutputStream();
 
             drawingSurface.getBitmap().compress(Bitmap.CompressFormat.PNG, 50, buff);
 
@@ -257,6 +248,7 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
             Collection<SketchElement> elements = getWorkspace().getDBHelper().getSketchElementDao().queryForEq(SketchElement.COLUMN_SKETCH_ID, drawing.getId());
             for (SketchElement element : elements) {
                 element.getPoints().clear();
+                getWorkspace().getDBHelper().getSketchElementDao().update(element);
                 getWorkspace().getDBHelper().getSketchElementDao().delete(element);
             }
 
@@ -309,7 +301,6 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
             @Override
             public void colorChanged(int color) {
                 mOptions.setColor(color);
-                setCurrentPaint();
             }
         };
         Dialog dialog = new ColorPickerDialog(this, listener, mOptions.getColor());
@@ -329,7 +320,6 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
 
                 Log.i(Constants.LOG_TAG_UI, "Selected size " + item);
                 mOptions.setSize(item + 1);
-                setCurrentPaint();
                 dialog.dismiss();
             }
         });
@@ -358,7 +348,6 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
 
                 Log.i(Constants.LOG_TAG_UI, "Selected style " + item);
                 mOptions.setType(DrawingOptions.TYPES.values()[item]);
-                setCurrentPaint();
                 dialog.dismiss();
             }
         });
