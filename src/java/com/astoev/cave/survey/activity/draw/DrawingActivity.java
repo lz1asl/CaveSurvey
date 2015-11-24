@@ -209,7 +209,8 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
             // store to SD
             ByteArrayOutputStream buff = new ByteArrayOutputStream();
 
-            drawingSurface.getBitmap().compress(Bitmap.CompressFormat.PNG, 50, buff);
+            Bitmap currDrawing = drawingSurface.getBitmap();
+            currDrawing.compress(Bitmap.CompressFormat.PNG, 50, buff);
 
             String filePrefix;
             if (mCurrLeg == null) {
@@ -220,6 +221,10 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
                 filePrefix = FileStorageUtil.getFilePrefixForPicture(activePoint, galleryName);
             }
             String path = FileStorageUtil.addProjectMedia(this, getWorkspace().getActiveProject(), filePrefix, buff.toByteArray());
+
+            // can already clean
+            buff = null;
+            currDrawing.recycle();
 
             // find existing drawing
             Sketch drawing = null;
