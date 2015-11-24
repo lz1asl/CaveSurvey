@@ -345,6 +345,7 @@
  Събраните грешки и Вашето описание ще бъдат изпратени за анализ (може да отнеме време).\n\n
  Необходима е мрежова връзка.</string>
     <string name="error_reporter_message">Опишете проблема</string>
+    <string name="error_reporter_message_empty">Моля опишете проблема</string>
     <string name="network_unavailable">Не е налична мрежова връзка</string>
     <string name="network_error">Мрежова грешка</string>
 

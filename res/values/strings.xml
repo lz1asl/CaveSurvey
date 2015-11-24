@@ -345,6 +345,7 @@
 Errors collected and your description will be sent for analysis (could take time).\n\n
 Network connection is required.</string>
     <string name="error_reporter_message">Describe the issue</string>
+    <string name="error_reporter_message_empty">Please describe the issue</string>
     <string name="network_unavailable">Network connectivity unavailable</string>
     <string name="network_error">Network error</string>
 
