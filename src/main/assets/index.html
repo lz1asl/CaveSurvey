@@ -12,7 +12,6 @@
         <!-- fogli di stile -->
         <link rel="stylesheet" href="js/libs/jquery/jquery-ui/css/base/jquery-ui.css" />
         <link rel="stylesheet" href="js/libs/jquery/jquery-ui/css/base/jquery.ui.theme.css" />
-        <link rel="stylesheet" href="js/libs/jquery/jquery.layout/layout-default-latest.css" />
         <link rel="stylesheet" href="js/libs/jquery/jquery.alerts/jquery.alerts.css" />
         <link rel="stylesheet" media="screen" href="js/libs/jquery/jquery.handsontable.full.css">
         <link rel="stylesheet" media="screen" href="res/style.css" />
@@ -39,7 +38,6 @@
 
 
         <script defer="defer" src="js/libs/jquery/jquery-ui/jquery-ui.js"></script>
-        <script defer="defer" src="js/libs/jquery/jquery.layout/jquery.layout.js"></script>
         <script defer="defer" src="js/libs/jquery/jMenu/jMenu.jquery.js"></script>
         <script defer="defer" src="js/libs/jquery/jquery.alerts/jquery.alerts.js"></script>
 
@@ -62,13 +60,13 @@
             <input type="file" id="files" name="files[]" accept="text/*" style="display:none" />
             <input type="file" id="filesadd" name="files[]" accept="text/*" style="display:none" />
             <div class="menubar">
-                <ul id="menu">
+                <ul id="menu" style="overflow: visible; position:relative;">
                     <li><a class="fNiv" id="mainmenu" ><span data-i18n="Aa">menu</span></a><ul>
                             <li><a class="actionexportDXFPlan" href="#" data-i18n="auto"  >Export plan to dxf</a></li>
                             <li><a class="actionexportDXF" href="#" data-i18n="auto" >Export 3d to dxf</a></li>
                             <li><a class="actionSaveToDXFSection" href="#" data-i18n="auto" >Export section to dxf</a></li>
                             <li><a class="actionSaveToDXFAll" href="#" data-i18n="auto" >Export all to dxf</a></li>
-                            <li><a class="actionSaveToKML" href="#" data-i18n="auto" >Export to kml</a></li>
+                            <!--<li><a class="actionSaveToKML" href="#" data-i18n="auto" >Export to kml</a></li>-->
                             <li><a class="actionSaveToSVGAll" href="#" data-i18n="auto" >Export to svg</a></li>
                             <li><a class="actionSaveToCSV" href="#" data-i18n="auto" >Export to csv</a></li>
                             <li><a class="actionSaveToTherion" href="#" data-i18n="auto" >Export to Therion</a></li>
@@ -79,16 +77,16 @@
             </div>
             <div class="toolbar">
                 <div id="processing" style="text-align:center;z-index:90;display:none;width:100%;height: 20px;background-color: #000000;color:#ffffff;position:absolute;top:30px;left:0px;" data-i18n-title="processing in progress" data-i18n="Aa" >processing in progress</div>
-                <img class="actionSaveToKML" alt="" src="res/kml.png" data-i18n-title="Export to kml" />
+                <!--<img class="actionSaveToKML" alt="" src="res/kml.png" data-i18n-title="Export to kml" />-->
                 <img class="actionexportDXF" alt="" src="res/dxf.png" data-i18n-title="Export 3d to dxf" />
                 <img class="actionSaveToDXFAll" alt="" src="res/dxf_all.png" data-i18n-title="Export all to dxf" />
                 <img class="actionSaveToSVGAll" alt="" src="res/svg.png" data-i18n-title="Export all to svg" />
                 <img class="actionSaveToTherion" alt="" src="res/therion.png" data-i18n-title="Export to Therion" />
-                <input id="filenameopened" type="text" name="filename" value="no_name" />
+                <input id="filenameopened" type="text" name="filename" value="no_name" disabled="disabled" />
 
             </div>
         </header>
-        <section id="cellscontent" class="ui-layout-west" style="overflow:auto;width:600px" >
+        <section id="cellscontent" class="ui-layout-west" style="overflow:auto;width:600px;display: none;" >
             <div id="cells" style="overflow:auto;height:100%;width:100%"></div>
         </section>
         <section id="cavecontainer" class="ui-layout-center" style="overflow:auto;" >

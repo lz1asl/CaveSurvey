@@ -350,20 +350,7 @@
 
     <!--opens topo -->
     <string name="export_openstopo_title">OpensTopo</string>
-    <string name="enterFileName">Име на файл:</string>
-    <string name="saveButtonText">Запази</string>
-    <string name="cancelButtonText">Откажи</string>
-    <string name="cannotSaveFileMessage">Не мога да запазя</string>
-    <string name="fileNameFirstMessage">Моля въведи първо име</string>
-    <string name="okButtonText">OK</string>
-    <string name="loadButtonText">Зареди</string>
-    <string name="accessDenied">Отказан достъп</string>
-    <string name="missingFile">Липсващ файл</string>
-    <string name="newFolderButtonText">Нова папка</string>
-    <string name="newFolderDialogMessage">Създай нова папка</string>
-    <string name="createButtonText">Създай</string>
-    <string name="folderCreationOk">Папката създадена успешно</string>
-    <string name="folderCreationError">Грешка при създаването на папка</string>
+
     <string name="information">Информация</string>
 
 </resources>
