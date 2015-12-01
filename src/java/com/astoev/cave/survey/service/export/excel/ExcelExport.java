@@ -189,7 +189,13 @@ public class ExcelExport extends AbstractExport {
     }
 
     private Sheet createHeader(String aProjectName, Workbook wb) {
-        Sheet sheet = wb.createSheet(aProjectName);
+        Sheet sheet;
+        try {
+            sheet = wb.createSheet(aProjectName);
+        } catch (IllegalArgumentException iae) {
+            Log.i(Constants.LOG_TAG_SERVICE, "Failed to create sheet with the project name, creating default: " + iae.getMessage());
+            sheet = wb.createSheet();
+        }
         Row headerRow = sheet.createRow(0);
         // header cells
         Cell headerFrom = headerRow.createCell(CELL_FROM);
