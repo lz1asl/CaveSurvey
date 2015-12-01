@@ -384,7 +384,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
             // create file where to capture the image
             String galleryName = PointUtil.getGalleryNameForFromPoint(pointFrom, workingLeg.getGalleryId());
             String filePrefix = FileStorageUtil.getFilePrefixForPicture(pointFrom, galleryName);
-            photoFile = FileStorageUtil.createPictureFile(this, projectName, filePrefix, FileStorageUtil.JPG_FILE_EXTENSION);
+            photoFile = FileStorageUtil.createPictureFile(this, projectName, filePrefix, FileStorageUtil.JPG_FILE_EXTENSION, true);
 
         } catch (SQLException e) {
             UIUtilities.showNotification(R.string.error);

@@ -32,6 +32,7 @@ public class FileStorageUtil {
 
     private static final String PNG_FILE_EXTENSION = ".png";
     private static final String NAME_DELIMITER = "_";
+    private static final Character NAME_DELIMITER_CHAR = '_';
 
     public static final String JPG_FILE_EXTENSION = ".jpg";
     public static final String POINT_PREFIX = "Point";
@@ -94,8 +95,9 @@ public class FileStorageUtil {
         return new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), getNormalizedProjectName(projectName));
     }
 
-    public static File addProjectFile(Activity contextArg, Project aProject, String filePrefixArg, String fileSuffixArg, byte[] byteArrayArg) throws Exception {
-        File pictureFile = createPictureFile(contextArg, getNormalizedProjectName(aProject.getName()), filePrefixArg, fileSuffixArg);
+    public static File addProjectFile(Activity contextArg, Project aProject, String filePrefixArg, String fileSuffixArg, byte[] byteArrayArg, boolean unique) throws Exception {
+
+        File pictureFile = createPictureFile(contextArg, getNormalizedProjectName(aProject.getName()), filePrefixArg, fileSuffixArg, unique);
 
         OutputStream os = null;
         try {
@@ -124,7 +126,7 @@ public class FileStorageUtil {
      * @throws Exception
      */
     public static String addProjectMedia(Activity contextArg, Project aProject, String filePrefixArg, byte[] byteArrayArg) throws Exception {
-        File pictureFile = addProjectFile(contextArg, aProject, filePrefixArg, PNG_FILE_EXTENSION, byteArrayArg);
+        File pictureFile = addProjectFile(contextArg, aProject, filePrefixArg, PNG_FILE_EXTENSION, byteArrayArg, true);
 
         // broadcast that picture was added to the project
         notifyPictureAddedToGalery(contextArg, pictureFile);
@@ -160,11 +162,12 @@ public class FileStorageUtil {
      * @param projectName      - project's name
      * @param filePrefix       - file prefix
      * @param fileExtensionArg - extension for the file.
+     * @param unique
      * @return
      * @throws Exception
      */
     @SuppressLint("SimpleDateFormat")
-    public static File createPictureFile(Context contextArg, String projectName, String filePrefix, String fileExtensionArg)
+    public static File createPictureFile(Context contextArg, String projectName, String filePrefix, String fileExtensionArg, boolean unique)
             throws Exception {
 
         // Store in file system
@@ -177,12 +180,17 @@ public class FileStorageUtil {
         Log.i(Constants.LOG_TAG_SERVICE, "Will write at: " + destinationDir.getAbsolutePath());
 
         // build filename
-        Date date = new Date();
-        SimpleDateFormat df = new SimpleDateFormat(Constants.DATE_FORMAT);
 
-        StringBuilder fileName = new StringBuilder(filePrefix);
-        fileName.append(NAME_DELIMITER);
-        fileName.append(df.format(date));
+        StringBuilder fileName = new StringBuilder();
+        if (filePrefix != null) {
+            fileName.append(filePrefix);
+        }
+        if (unique) {
+            Date date = new Date();
+            SimpleDateFormat df = new SimpleDateFormat(Constants.DATE_FORMAT);
+            fileName.append(NAME_DELIMITER);
+            fileName.append(df.format(date));
+        }
         fileName.append(fileExtensionArg);
 
         return new File(destinationDir, fileName.toString());
@@ -206,7 +214,9 @@ public class FileStorageUtil {
     }
 
     private static String getNormalizedProjectName(String projectName) {
-        return projectName.replace(' ', '_');
+        return projectName.replace(' ', NAME_DELIMITER_CHAR)
+                .replace(':', NAME_DELIMITER_CHAR);
+            // and probably others to go
     }
 
     @SuppressWarnings("deprecation")
