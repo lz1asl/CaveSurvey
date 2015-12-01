@@ -25,6 +25,7 @@
     <string name="project_header">Име на проучване</string>
     <string name="project_name">Име</string>
     <string name="project_name_required">Въведи име</string>
+    <string name="project_name_characters">Съдържа непозволени символи</string>
 
     <!-- main screen -->
     <string name="main_leg">Текуща отсечка</string>

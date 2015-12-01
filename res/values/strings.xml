@@ -25,6 +25,7 @@
     <string name="project_header">Survey Name</string>
     <string name="project_name">Name</string>
     <string name="project_name_required">Enter name</string>
+    <string name="project_name_characters">Contains bad characters</string>
 
     <!-- main screen -->
     <string name="main_leg">Current leg</string>
