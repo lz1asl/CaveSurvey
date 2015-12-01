@@ -60,7 +60,7 @@ public class FileStorageUtil {
 
             // ensure unique name
             while (true) {
-                exportName = aProject.getName() + NAME_DELIMITER + dateFormat.format(new Date()) + NAME_DELIMITER + index;
+                exportName = getNormalizedProjectName(aProject.getName()) + NAME_DELIMITER + dateFormat.format(new Date()) + NAME_DELIMITER + index;
                 exportFile = new File(projectHome, exportName + anExtension);
                 if (exportFile.exists()) {
                     index++;
@@ -91,11 +91,11 @@ public class FileStorageUtil {
      */
     @TargetApi(Build.VERSION_CODES.FROYO)
     private static File getDirectoryPicture(String projectName) {
-        return new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), projectName);
+        return new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), getNormalizedProjectName(projectName));
     }
 
     public static File addProjectFile(Activity contextArg, Project aProject, String filePrefixArg, String fileSuffixArg, byte[] byteArrayArg) throws Exception {
-        File pictureFile = createPictureFile(contextArg, aProject.getName(), filePrefixArg, fileSuffixArg);
+        File pictureFile = createPictureFile(contextArg, getNormalizedProjectName(aProject.getName()), filePrefixArg, fileSuffixArg);
 
         OutputStream os = null;
         try {
@@ -186,7 +186,7 @@ public class FileStorageUtil {
         fileName.append(fileExtensionArg);
 
         return new File(destinationDir, fileName.toString());
-    }// end of createPictureFile
+    }
 
     public static File getProjectHome(String projectName) {
         File storageHome = getStorageHome();
@@ -194,9 +194,7 @@ public class FileStorageUtil {
             return null;
         }
 
-        //TODO if there is a problem with spaces in project's name substitute spaces with "_"
-
-        File projectHome = new File(storageHome, projectName);
+        File projectHome = new File(storageHome, getNormalizedProjectName(projectName));
         if (!projectHome.exists()) {
             if (!projectHome.mkdirs()) {
                 Log.e(Constants.LOG_TAG_UI, "Failed to create folder " + projectHome.getAbsolutePath());
@@ -205,6 +203,10 @@ public class FileStorageUtil {
             Log.i(Constants.LOG_TAG_SERVICE, "Project home created");
         }
         return projectHome;
+    }
+
+    private static String getNormalizedProjectName(String projectName) {
+        return projectName.replace(' ', '_');
     }
 
     @SuppressWarnings("deprecation")
