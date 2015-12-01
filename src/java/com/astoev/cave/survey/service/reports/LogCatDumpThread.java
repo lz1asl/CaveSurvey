@@ -42,7 +42,6 @@ public class LogCatDumpThread extends Thread {
             // store logcat output to a file
             in = new BufferedReader(new InputStreamReader(process.getInputStream()));
             logFile = new File(FileStorageUtil.getStorageHome(), LOG_FILE_NAME);
-            // TODO rotate old file, don't override
             out = new FileOutputStream(logFile);
 
             String line;

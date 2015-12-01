@@ -101,6 +101,8 @@ public abstract class BaseActivity extends ActionBarActivity {
         if (getScreenTitle() != null) {
             setTitle(screenTitle);
         }
+
+        Log.i(Constants.LOG_TAG_UI, "Resumed activity " + this.getClass().getName());
     }
 
     protected Workspace getWorkspace() {
