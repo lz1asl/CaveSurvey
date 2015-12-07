@@ -43,7 +43,7 @@ public abstract class AbstractExport {
     protected abstract void setValue(Entities entityType, String aLabel) throws JSONException;
     protected abstract void setValue(Entities entityType, Float aValue) throws JSONException;
     protected abstract void setPhoto(Photo aPhoto);
-    protected abstract void setLocation(Location aLocation);
+    protected abstract void setLocation(Location aLocation) throws JSONException;
     protected abstract void setDrawing(Sketch aSketch);
     protected abstract InputStream getContent() throws IOException;
     protected abstract String getExtension();
@@ -275,7 +275,7 @@ public abstract class AbstractExport {
         }
     }
 
-    private void exportLocation(Point fromPoint) throws SQLException {
+    private void exportLocation(Point fromPoint) throws SQLException, JSONException {
         Location location = DaoUtil.getLocationByPoint(fromPoint);
         if (location != null) {
             setLocation(location);

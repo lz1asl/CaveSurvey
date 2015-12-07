@@ -1440,7 +1440,7 @@ function onAppResize(mode)
         $("#loading").attr("style", "display:none");
         if (mode !== "window")
             $("#cells").resize();
-    }, 2000);
+    }, 1000);
 
 
 //    console.log("resize " + mode);
@@ -1974,7 +1974,9 @@ $(document).ready(function() {
 
     caveObj.data = jQuery.parseJSON(caveSurveyData);
     $("#filenameopened").val(caveObj.data.name);
+
     ops_import(jsonFile, caveSurveyData, false);
+
 });
 
 //------------------------------ON READY---------------------------------------<

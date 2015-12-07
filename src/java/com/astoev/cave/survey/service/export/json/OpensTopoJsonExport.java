@@ -40,11 +40,11 @@ public class OpensTopoJsonExport extends AbstractExport {
 
         project = new JSONObject();
         project.put("name", aProject.getName());
-        project.put("altitude", "0");
-        project.put("longitude", "0.0");
-        project.put("latitude", "0.0");
-        project.put("startPoint", "0");
-        project.put("geoPoint", "0");
+//        project.put("altitude", "0");
+//        project.put("longitude", "0.0");
+//        project.put("latitude", "0.0");
+//        project.put("startPoint", "0");
+//        project.put("geoPoint", "0");
         project.put("northdeclination", "0");
 
         rows = new JSONArray();
@@ -151,8 +151,12 @@ public class OpensTopoJsonExport extends AbstractExport {
     }
 
     @Override
-    protected void setLocation(Location aLocation) {
-        // not needed
+    protected void setLocation(Location aLocation) throws JSONException {
+
+        project.putOpt("geoPoint", row.get("from"));
+        project.putOpt("altitude", String.valueOf(aLocation.getAltitude()));
+        project.putOpt("latitude", String.valueOf(aLocation.getLatitude()));
+        project.putOpt("longitude", String.valueOf(aLocation.getLongitude()));
     }
 
     @Override
