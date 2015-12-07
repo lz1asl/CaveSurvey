@@ -213,7 +213,7 @@ public class FileStorageUtil {
         return projectHome;
     }
 
-    private static String getNormalizedProjectName(String projectName) {
+    public static String getNormalizedProjectName(String projectName) {
         return projectName.replace(' ', NAME_DELIMITER_CHAR)
                 .replace(':', NAME_DELIMITER_CHAR);
             // and probably others to go

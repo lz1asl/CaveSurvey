@@ -13,6 +13,7 @@ import com.astoev.cave.survey.model.Sketch;
 import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.service.export.AbstractExport;
 import com.astoev.cave.survey.util.ConfigUtil;
+import com.astoev.cave.survey.util.FileStorageUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,12 +40,7 @@ public class OpensTopoJsonExport extends AbstractExport {
         Log.i(Constants.LOG_TAG_SERVICE, "Start JSON export ");
 
         project = new JSONObject();
-        project.put("name", aProject.getName());
-//        project.put("altitude", "0");
-//        project.put("longitude", "0.0");
-//        project.put("latitude", "0.0");
-//        project.put("startPoint", "0");
-//        project.put("geoPoint", "0");
+        project.put("name", FileStorageUtil.getNormalizedProjectName(aProject.getName()));
         project.put("northdeclination", "0");
 
         rows = new JSONArray();
