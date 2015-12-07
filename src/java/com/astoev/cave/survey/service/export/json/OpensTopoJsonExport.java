@@ -93,7 +93,12 @@ public class OpensTopoJsonExport extends AbstractExport {
 
     @Override
     protected String getExtension() {
-        return ".json";
+        return "_openstopo.json";
+    }
+
+    @Override
+    protected boolean useUniqueName() {
+        return false;
     }
 
     @Override

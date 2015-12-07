@@ -44,7 +44,7 @@ public class FileStorageUtil {
 
 
     @SuppressLint("SimpleDateFormat")
-    public static String addProjectExport(Project aProject, InputStream aStream, String anExtension) {
+    public static String addProjectExport(Project aProject, InputStream aStream, String anExtension, boolean unique) {
 
         File projectHome = getProjectHome(aProject.getName());
         if (projectHome == null) {
@@ -59,15 +59,22 @@ public class FileStorageUtil {
             File exportFile;
             SimpleDateFormat dateFormat = new SimpleDateFormat(TIME_PATTERN);
 
-            // ensure unique name
-            while (true) {
-                exportName = getNormalizedProjectName(aProject.getName()) + NAME_DELIMITER + dateFormat.format(new Date()) + NAME_DELIMITER + index;
-                exportFile = new File(projectHome, exportName + anExtension);
-                if (exportFile.exists()) {
-                    index++;
-                } else {
-                    break;
+            if (unique) {
+
+                // ensure unique name
+                while (true) {
+                    exportName = getNormalizedProjectName(aProject.getName()) + NAME_DELIMITER + dateFormat.format(new Date()) + NAME_DELIMITER + index;
+                    exportFile = new File(projectHome, exportName + anExtension);
+                    if (exportFile.exists()) {
+                        index++;
+                    } else {
+                        break;
+                    }
                 }
+            } else {
+                // export file might get overriden
+                exportName = getNormalizedProjectName(aProject.getName());
+                exportFile = new File(projectHome, exportName + anExtension);
             }
 
             Log.i(Constants.LOG_TAG_SERVICE, "Store to " + exportFile.getAbsolutePath());

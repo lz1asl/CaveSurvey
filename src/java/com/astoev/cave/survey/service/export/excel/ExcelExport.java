@@ -96,6 +96,11 @@ public class ExcelExport extends AbstractExport {
     }
 
     @Override
+    protected boolean useUniqueName() {
+        return true;
+    }
+
+    @Override
     protected void setValue(Entities entityType, String aLabel) {
         switch (entityType) {
             case FROM:

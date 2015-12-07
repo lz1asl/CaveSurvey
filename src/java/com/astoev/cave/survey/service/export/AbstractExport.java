@@ -47,6 +47,7 @@ public abstract class AbstractExport {
     protected abstract void setDrawing(Sketch aSketch);
     protected abstract InputStream getContent() throws IOException;
     protected abstract String getExtension();
+    protected abstract boolean useUniqueName();
 
     // public method for starting export
     public String runExport(Project aProject) throws Exception {
@@ -205,7 +206,7 @@ public abstract class AbstractExport {
                 lastGalleryId = l.getGalleryId();
             }
             InputStream in = getContent();
-            return FileStorageUtil.addProjectExport(aProject, in, getExtension());
+            return FileStorageUtil.addProjectExport(aProject, in, getExtension(), useUniqueName());
         } catch (Exception t) {
             Log.e(Constants.LOG_TAG_SERVICE, "Failed with export", t);
             throw t;
