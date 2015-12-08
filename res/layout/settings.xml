@@ -23,6 +23,36 @@
             android:text="@string/sensor_test_title"
             android:textAppearance="?android:attr/textAppearanceMedium"/>
 
+        <!-- auto backup -->
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/settingsBackupText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:text="@string/settings_auto_backup"
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/settingsBackupText"
+                android:clickable="true"
+                android:layout_centerVertical="true"
+                android:layout_margin="5dp"
+                android:src="@drawable/ic_info_white"
+                android:contentDescription="@string/information"
+                android:onClick="onAutoBackupChooseInfo" />
+            <ToggleButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/settingsBackupToggle"
+                android:layout_alignParentRight="true" />
+        </RelativeLayout>
+
         <!-- error reporter -->
         <RelativeLayout
             android:layout_width="fill_parent"

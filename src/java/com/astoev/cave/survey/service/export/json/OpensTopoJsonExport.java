@@ -33,6 +33,8 @@ public class OpensTopoJsonExport extends AbstractExport {
 
     public OpensTopoJsonExport(Context aContext) {
         super(aContext);
+        mExtension = "_openstopo.json";
+        mUseUniqueName = false;
     }
 
     @Override
@@ -89,16 +91,6 @@ public class OpensTopoJsonExport extends AbstractExport {
     @Override
     protected InputStream getContent() {
         return new ByteArrayInputStream(project.toString().getBytes());
-    }
-
-    @Override
-    protected String getExtension() {
-        return "_openstopo.json";
-    }
-
-    @Override
-    protected boolean useUniqueName() {
-        return false;
     }
 
     @Override

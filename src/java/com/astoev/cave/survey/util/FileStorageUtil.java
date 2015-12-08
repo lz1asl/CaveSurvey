@@ -31,7 +31,7 @@ import java.util.Date;
 public class FileStorageUtil {
 
     private static final String PNG_FILE_EXTENSION = ".png";
-    private static final String NAME_DELIMITER = "_";
+    public static final String NAME_DELIMITER = "_";
     private static final Character NAME_DELIMITER_CHAR = '_';
 
     public static final String JPG_FILE_EXTENSION = ".jpg";

@@ -350,6 +350,9 @@ Network connection is required.</string>
     <string name="network_unavailable">Network connectivity unavailable</string>
     <string name="network_error">Network error</string>
 
+    <!-- auto backup -->
+    <string name="settings_auto_backup">Auto backup</string>
+    <string name="settings_auto_backup_info">Exports your active project to the SD card every 5 minutes</string>
 
     <!--opens topo -->
     <string name="export_openstopo_title">OpensTopo</string>

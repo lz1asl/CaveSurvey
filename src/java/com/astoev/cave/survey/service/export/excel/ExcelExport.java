@@ -68,6 +68,8 @@ public class ExcelExport extends AbstractExport {
 
     public ExcelExport(Context aContext) {
         super(aContext);
+        mUseUniqueName = true;
+        mExtension = ".xls";
     }
 
     @Override
@@ -88,16 +90,6 @@ public class ExcelExport extends AbstractExport {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         wb.write(out);
         return new ByteArrayInputStream(out.toByteArray());
-    }
-
-    @Override
-    protected String getExtension() {
-        return ".xls";
-    }
-
-    @Override
-    protected boolean useUniqueName() {
-        return true;
     }
 
     @Override

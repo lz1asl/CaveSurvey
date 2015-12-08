@@ -350,9 +350,12 @@
     <string name="network_unavailable">Не е налична мрежова връзка</string>
     <string name="network_error">Мрежова грешка</string>
 
+    <!-- auto backup -->
+    <string name="settings_auto_backup">Автоматичен експорт</string>
+    <string name="settings_auto_backup_info">Създава автоматично резервно копие на активния проект всеки 5 минути</string>
+
     <!--opens topo -->
     <string name="export_openstopo_title">OpensTopo</string>
-
     <string name="information">Информация</string>
 
 </resources>
