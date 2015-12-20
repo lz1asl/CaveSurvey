@@ -37,6 +37,8 @@ public class SettingsActivity extends MainMenuActivity {
         prepareBluetooth();
         prepareErrorReporter();
         prepareAbout();
+
+        // TODO prepare reverse measurement settings
     }
 
     private void prepareBluetooth() {

@@ -104,6 +104,7 @@ public class BTMeasureResultReceiver extends ResultReceiver {
             Log.d(Constants.LOG_TAG_UI, "Register field " + aMeasure + "?");
             switch (aMeasure) {
                 case distance:
+                case revDistance:
                 case up:
                 case down:
                 case left:
@@ -119,6 +120,7 @@ public class BTMeasureResultReceiver extends ResultReceiver {
                     break;
 
                 case angle:
+                case revAngle:
                     if (!Option.CODE_SENSOR_BLUETOOTH.equals(Options.getOptionValue(Option.CODE_AZIMUTH_SENSOR))) {
                         return;
                     }
@@ -130,6 +132,7 @@ public class BTMeasureResultReceiver extends ResultReceiver {
                     break;
 
                 case slope:
+                case revSlope:
                     if (!Option.CODE_SENSOR_BLUETOOTH.equals(Options.getOptionValue(Option.CODE_SLOPE_SENSOR))) {
                         return;
                     }

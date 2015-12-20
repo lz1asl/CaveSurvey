@@ -18,7 +18,6 @@ import com.astoev.cave.survey.service.bluetooth.device.AbstractBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.CEMILDMBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.DistoXBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.LaserAceBluetoothDevice;
-import com.astoev.cave.survey.service.bluetooth.device.LeicaDistoBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.TruPulse360BBluetoothDevice;
 import com.astoev.cave.survey.util.ConfigUtil;
 
@@ -102,6 +101,7 @@ public class BluetoothService {
     public static Constants.MeasureTypes getMeasureTypeFromTarget(Constants.Measures aMeasure) {
         switch (aMeasure) {
             case distance:
+            case revDistance:
             case up:
             case down:
             case left:
@@ -109,9 +109,11 @@ public class BluetoothService {
                 return Constants.MeasureTypes.distance;
 
             case angle:
+            case revAngle:
                 return Constants.MeasureTypes.angle;
 
             case slope:
+            case revSlope:
                 return Constants.MeasureTypes.slope;
 
             default:

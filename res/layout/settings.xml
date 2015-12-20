@@ -53,6 +53,8 @@
                 android:layout_alignParentRight="true" />
         </RelativeLayout>
 
+        <!-- reverse measurements  TODO -->
+
         <TextView
             android:id="@+id/settingsAbout"
             android:layout_width="fill_parent"

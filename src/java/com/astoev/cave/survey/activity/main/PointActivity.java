@@ -40,6 +40,7 @@ import com.astoev.cave.survey.service.bluetooth.BTResultAware;
 import com.astoev.cave.survey.service.bluetooth.util.MeasurementsUtil;
 import com.astoev.cave.survey.service.orientation.AzimuthChangedListener;
 import com.astoev.cave.survey.service.orientation.SlopeChangedListener;
+import com.astoev.cave.survey.util.ConfigUtil;
 import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.util.FileStorageUtil;
 import com.astoev.cave.survey.util.PointUtil;
@@ -206,6 +207,34 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
             mReceiver.bindBTMeasures(slope, Constants.Measures.slope, false, new Constants.Measures[]{Constants.Measures.angle, Constants.Measures.distance});
             disableIfMiddle(legEdited, slope);
 
+            // reverse measurements
+            EditText reverseDistance = (EditText) findViewById(R.id.point_reverse_distance);
+            EditText reverseAzimuth = (EditText) findViewById(R.id.point_reverse_azimuth);
+            EditText reverseSlope = (EditText) findViewById(R.id.point_reverse_slope);
+
+            if (!legEdited.isMiddle() && ConfigUtil.isBackMeasurementsEnabled()) {
+                // reverse distance
+                reverseDistance.setVisibility(View.VISIBLE);
+                StringUtils.setNotNull(reverseDistance, legEdited.getReverseDistance());
+                mReceiver.bindBTMeasures(reverseDistance, Constants.Measures.revDistance, false, new Constants.Measures[]{Constants.Measures.revAngle, Constants.Measures.revSlope});
+
+                // azimuth
+                reverseAzimuth.setVisibility(View.VISIBLE);
+                StringUtils.setNotNull(reverseAzimuth, legEdited.getReverseAzimuth());
+                mReceiver.bindBTMeasures(reverseAzimuth, Constants.Measures.revAngle, false, new Constants.Measures[]{Constants.Measures.revDistance, Constants.Measures.revSlope});
+
+                // slope
+                reverseSlope.setVisibility(View.VISIBLE);
+                reverseSlope.setText("0");
+                StringUtils.setNotNull(reverseSlope, legEdited.getReverseSlope());
+                mReceiver.bindBTMeasures(slope, Constants.Measures.revSlope, false, new Constants.Measures[]{Constants.Measures.revAngle, Constants.Measures.revDistance});
+            } else {
+                // hide if not needed
+                reverseDistance.setVisibility(View.GONE);
+                reverseAzimuth.setVisibility(View.GONE);
+                reverseSlope.setVisibility(View.GONE);
+            }
+
             if (!legEdited.isMiddle()) {
                 // fill note_text with its value
                 Note note = DaoUtil.getActiveLegNote(legEdited);
@@ -254,6 +283,8 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 
             final EditText right = (EditText) findViewById(R.id.point_right);
             valid = valid && UIUtilities.validateNumber(right, false);
+
+            // TODO validate reverse measurements
 
             if (!valid) {
                 return false;
@@ -735,14 +766,29 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                 populateMeasure(aMeasureValue, R.id.point_distance);
                 break;
 
+            case revDistance:
+                Log.i(Constants.LOG_TAG_UI, "Got reverse distance " + aMeasureValue);
+                populateMeasure(aMeasureValue, R.id.point_reverse_distance);
+                break;
+
             case angle:
                 Log.i(Constants.LOG_TAG_UI, "Got angle " + aMeasureValue);
                 populateMeasure(aMeasureValue, R.id.point_azimuth);
                 break;
 
+            case revAngle:
+                Log.i(Constants.LOG_TAG_UI, "Got reverse angle " + aMeasureValue);
+                populateMeasure(aMeasureValue, R.id.point_reverse_azimuth);
+                break;
+
             case slope:
                 Log.i(Constants.LOG_TAG_UI, "Got slope " + aMeasureValue);
                 populateMeasure(aMeasureValue, R.id.point_slope);
+                break;
+
+            case revSlope:
+                Log.i(Constants.LOG_TAG_UI, "Got reverse slope " + aMeasureValue);
+                populateMeasure(aMeasureValue, R.id.point_reverse_slope);
                 break;
 
             case up:

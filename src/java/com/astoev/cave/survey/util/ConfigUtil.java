@@ -19,6 +19,10 @@ public class ConfigUtil {
     public static final String PROP_CURR_BT_DEVICE_NAME = "curr_bt_device_name";
     public static final String PREF_LOCALE = "language_pref";
     public static final String PREF_SENSOR = "sensor_pref";
+    public static final String PREF_REVERSE_MEASUREMENTS = "reverse_measurements";
+    public static final String PREF_REVERSE_MAX_DISTANCE_DIFF = "reverse_distance_diff";
+    public static final String PREF_REVERSE_AZIMUTH_DIFF = "reverse_azimuth_diff";
+    public static final String PREF_REVERSE_CLINO_DIFF = "reverse_clino_diff";
 
     private static Activity mAppContext;
 
@@ -31,34 +35,53 @@ public class ConfigUtil {
     }
 
     public static Integer getIntProperty(String aName) {
-        return getPrefs(Context.MODE_PRIVATE).getInt(aName, 0);
+        return getPrefs().getInt(aName, 0);
     }
 
-    public static boolean setIntProperty(String aName, Integer aValue) {
-        SharedPreferences.Editor editor = getPrefs(Context.MODE_PRIVATE).edit();
-        editor.putInt(aName, aValue);
-        return editor.commit();
+    public static boolean setIntProperty(String aName, int aValue) {
+        return getEditor().putInt(aName, aValue).commit();
     }
 
     public static String getStringProperty(String aName) {
-        return getPrefs(Context.MODE_PRIVATE).getString(aName, null);
+        return getPrefs().getString(aName, null);
     }
 
     public static boolean setStringProperty(String aName, String aValue) {
-        SharedPreferences.Editor editor = getPrefs(Context.MODE_PRIVATE).edit();
-        editor.putString(aName, aValue);
-        return editor.commit();
+        return getEditor().putString(aName, aValue).commit();
+    }
+
+    public static boolean setFloatProperty(String aName, float aValue) {
+        return getEditor().putFloat(aName, aValue).commit();
+    }
+
+    public static boolean setBooleanProperty(String aName, boolean aValue) {
+        return getEditor().putBoolean(aName, aValue).commit();
+    }
+
+    public static Float getFloatProperty(String aName, float aDefaultValue) {
+        return getPrefs().getFloat(aName, aDefaultValue);
+    }
+
+    public static Boolean getBooleanProperty(String aName, boolean aDefaultValue) {
+        return getPrefs().getBoolean(aName, aDefaultValue);
     }
 
     public static boolean removeProperty(String aName) {
-        SharedPreferences.Editor editor = getPrefs(Context.MODE_PRIVATE).edit();
-        editor.remove(aName);
-        return editor.commit();
+        return getEditor().remove(aName).commit();
     }
 
 
-    private static SharedPreferences getPrefs(int aMode) {
-        return mAppContext.getSharedPreferences(SHARED_PREFS_KEY, aMode);
+    private static SharedPreferences.Editor getEditor() {
+        return getPrefs().edit();
     }
+
+    private static SharedPreferences getPrefs() {
+        return mAppContext.getSharedPreferences(SHARED_PREFS_KEY, Context.MODE_PRIVATE);
+    }
+
+    public static boolean isBackMeasurementsEnabled() {
+        return getBooleanProperty(PREF_REVERSE_MEASUREMENTS, false);
+    }
+
 
 }

@@ -30,7 +30,7 @@ public class Constants {
     public static final int NOT_FOUND = -1;
     public static final String STRING_NOT_FOUND = "NOT_FOUND";
 
-    public static enum Measures {distance, slope, angle, up, down, left, right}
+    public static enum Measures {distance, slope, angle, up, down, left, right, revDistance, revSlope, revAngle}
     public static enum MeasureTypes {distance, slope, angle}
     public static enum MeasureUnits {meters, degrees, grads}
 

@@ -108,6 +108,36 @@
 			          android:maxLength="5"
 			          android:ems="5"/>
 	    </LinearLayout>
+		<LinearLayout android:id="@+id/point_reverse_dimensions_fields"
+					  android:layout_width="fill_parent"
+					  android:layout_height="wrap_content"
+					  android:layout_below="@id/point_dimensions_text">
+			<EditText android:id="@+id/point_reverse_distance"
+					  android:inputType="numberDecimal"
+					  android:layout_width="0dp"
+					  android:layout_height="wrap_content"
+					  android:layout_weight="1"
+					  android:gravity="center"
+					  android:maxLength="5"
+					  android:ems="5">
+			</EditText>
+			<EditText android:id="@+id/point_reverse_azimuth"
+					  android:inputType="numberDecimal"
+					  android:layout_width="0dp"
+					  android:layout_height="wrap_content"
+					  android:layout_weight="1"
+					  android:gravity="center"
+					  android:maxLength="5"
+					  android:ems="5"/>
+			<EditText android:id="@+id/point_reverse_slope"
+					  android:inputType="numberDecimal|numberSigned"
+					  android:layout_width="0dp"
+					  android:layout_height="wrap_content"
+					  android:layout_weight="1"
+					  android:gravity="center"
+					  android:maxLength="5"
+					  android:ems="5"/>
+		</LinearLayout>
 	    <TextView android:id="@+id/point_note_text"
 	        	  android:layout_width="fill_parent"
 	        	  android:layout_height="wrap_content"

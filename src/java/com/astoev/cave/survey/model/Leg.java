@@ -43,6 +43,14 @@ public class Leg implements Serializable {
     private Float mAzimuth;
     @DatabaseField(columnName = "slope")
     private Float mSlope;
+
+    @DatabaseField(columnName = "reverse_distance")
+    private Float mReverseDistance;
+    @DatabaseField(columnName = "reverse_azimuth")
+    private Float mReverseAzimuth;
+    @DatabaseField(columnName = "reverse_slope")
+    private Float mReverseSlope;
+
     @DatabaseField(columnName = "left")
     private Float mLeft;
     @DatabaseField(columnName = "right")
@@ -264,6 +272,30 @@ public class Leg implements Serializable {
 
     public void setMiddlePointDistance(Float aMiddlePointDistance) {
         mMiddlePointDistance = aMiddlePointDistance;
+    }
+
+    public Float getReverseAzimuth() {
+        return mReverseAzimuth;
+    }
+
+    public void setReverseAzimuth(Float reverseAzimuth) {
+        mReverseAzimuth = reverseAzimuth;
+    }
+
+    public Float getReverseDistance() {
+        return mReverseDistance;
+    }
+
+    public void setReverseDistance(Float reverseDistance) {
+        mReverseDistance = reverseDistance;
+    }
+
+    public Float getReverseSlope() {
+        return mReverseSlope;
+    }
+
+    public void setReverseSlope(Float reverseSlope) {
+        mReverseSlope = reverseSlope;
     }
 
     /**
