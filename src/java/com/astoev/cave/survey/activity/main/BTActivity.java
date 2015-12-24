@@ -70,6 +70,12 @@ public class BTActivity extends MainMenuActivity {
 
             displaySupportedDevices();
 
+            if (BluetoothService.isBluetoothLESupported()) {
+               BluetoothService.discoverBluetoothLEDevices();
+            } else {
+                Log.i(Constants.LOG_TAG_BT, "No Bluetooth LE available");
+            }
+
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed during create", e);
             UIUtilities.showNotification(R.string.error);
@@ -80,7 +86,7 @@ public class BTActivity extends MainMenuActivity {
         LinearLayout devicesList = (LinearLayout) findViewById(R.id.bt_container);
 
         if (devicesList.getChildCount() <= 2) { // don't duplicate
-            for (AbstractBluetoothDevice device : BluetoothService.getSupportedDevices()) {
+            for (AbstractBluetoothDevice device : BluetoothService.getSupportedCommDevices()) {
                 TextView deviceLabel = new TextView(getApplicationContext());
                 deviceLabel.setText("\t\u2022 " + device.getDescription());
                 devicesList.addView(deviceLabel);

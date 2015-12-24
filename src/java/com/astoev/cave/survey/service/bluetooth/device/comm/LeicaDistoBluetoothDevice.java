@@ -1,8 +1,9 @@
-package com.astoev.cave.survey.service.bluetooth.device;
+package com.astoev.cave.survey.service.bluetooth.device.comm;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.Measure;
+import com.astoev.cave.survey.service.bluetooth.device.AbstractBluetoothRFCOMMDevice;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,11 +15,10 @@ import java.util.List;
  *
  * Created by astoev on 9/12/15.
  */
-public class LeicaDistoBluetoothDevice extends AbstractBluetoothDevice {
+public class LeicaDistoBluetoothDevice extends AbstractBluetoothRFCOMMDevice {
 
     @Override
     public boolean isNameSupported(String aName) {
-        // TODO
         return aName.toLowerCase().contains("disto");
     }
 

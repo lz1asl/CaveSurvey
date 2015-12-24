@@ -1,10 +1,11 @@
-package com.astoev.cave.survey.service.bluetooth.device;
+package com.astoev.cave.survey.service.bluetooth.device.comm;
 
 import android.util.Log;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.Measure;
+import com.astoev.cave.survey.service.bluetooth.device.AbstractBluetoothRFCOMMDevice;
 import com.astoev.cave.survey.service.bluetooth.util.NMEAUtil;
 
 import java.io.IOException;
@@ -16,7 +17,7 @@ import java.util.List;
  * TruPulse 360B handler.
  * Created by astoev on 9/9/14.
  */
-public class TruPulse360BBluetoothDevice extends AbstractBluetoothDevice {
+public class TruPulse360BBluetoothDevice extends AbstractBluetoothRFCOMMDevice {
 
     @Override
     public boolean isNameSupported(String aName) {
