@@ -3,7 +3,7 @@ package com.astoev.cave.survey.test.service.bluetooth.util;
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.Measure;
-import com.astoev.cave.survey.service.bluetooth.device.AbstractBluetoothDevice;
+import com.astoev.cave.survey.service.bluetooth.device.AbstractBluetoothRFCOMMDevice;
 
 import junit.framework.TestCase;
 
@@ -18,12 +18,18 @@ import java.util.Set;
  */
 public abstract class AbstractDeviceProtocolTest extends TestCase {
 
-    protected void ensureSucces(byte[] aMessage, Float aDistance, Float anAzimuth, Float anAngle, AbstractBluetoothDevice aDeviceSpec)  {
+    protected abstract AbstractBluetoothRFCOMMDevice getDeviceSpec();
+
+    protected void ensureSucces(String aMessage, Float aDistance, Float anAzimuth, Float anAngle)  {
+        ensureSucces(aMessage.getBytes(), aDistance, anAzimuth, anAngle);
+    }
+
+    protected void ensureSucces(byte[] aMessage, Float aDistance, Float anAzimuth, Float anAngle)  {
         try {
             List<Constants.MeasureTypes> types = Arrays.asList(Constants.MeasureTypes.distance,
                     Constants.MeasureTypes.angle, Constants.MeasureTypes.slope);
 
-            List<Measure> measures = aDeviceSpec.decodeMeasure(aMessage, types);
+            List<Measure> measures = getDeviceSpec().decodeMeasure(aMessage, types);
             assertNotNull("Measurements expected", measures);
             // 3 minus the nulls passed results expected
             int numMeasuresExpected = 3 - Collections.frequency(Arrays.asList(aDistance, anAzimuth, anAngle), null);

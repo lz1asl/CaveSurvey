@@ -1,7 +1,7 @@
 package com.astoev.cave.survey.test.service.bluetooth.util;
 
-import com.astoev.cave.survey.service.bluetooth.device.DistoXBluetoothDevice;
-import com.astoev.cave.survey.service.bluetooth.device.TruPulse360BBluetoothDevice;
+import com.astoev.cave.survey.service.bluetooth.device.AbstractBluetoothRFCOMMDevice;
+import com.astoev.cave.survey.service.bluetooth.device.comm.DistoXBluetoothDevice;
 
 import org.junit.Test;
 
@@ -16,12 +16,11 @@ public class DistoXProtocolTest extends AbstractDeviceProtocolTest {
     public void testDataPacket() throws IOException {
 
         byte[] message = new byte[] {1, -5, 93, -5, 113, 51, -52, 105};
-        ensureDistoXSucces(message, 24.059f, 160.285f, -72.845f);
+        ensureSucces(message, 24.059f, 160.285f, -72.845f);
     }
 
-
-    private void ensureDistoXSucces(byte[] aMessage, Float aDistance, Float anAzimuth, Float anAngle) throws IOException {
-        ensureSucces(aMessage, aDistance, anAzimuth, anAngle, new DistoXBluetoothDevice());
+    @Override
+    protected AbstractBluetoothRFCOMMDevice getDeviceSpec() {
+        return new DistoXBluetoothDevice();
     }
-
 }
