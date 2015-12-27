@@ -31,7 +31,7 @@ import java.util.List;
  * Time: 10:31 AM
  * To change this template use File | Settings | File Templates.
  */
-public class BTActivity extends MainMenuActivity {
+public class BTActivity extends MainMenuActivity implements Refresheable {
 
     List<Pair<String, String>> devices = new ArrayList<Pair<String, String>>();
 
@@ -39,8 +39,8 @@ public class BTActivity extends MainMenuActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.bluetooth);
 
-        prepareUI();
         BluetoothService.registerListeners(this);
+        prepareUI();
     }
 
     private void prepareUI() {
@@ -70,12 +70,6 @@ public class BTActivity extends MainMenuActivity {
 
             displaySupportedDevices();
 
-            if (BluetoothService.isBluetoothLESupported()) {
-               BluetoothService.discoverBluetoothLEDevices();
-            } else {
-                Log.i(Constants.LOG_TAG_BT, "No Bluetooth LE available");
-            }
-
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed during create", e);
             UIUtilities.showNotification(R.string.error);
@@ -86,7 +80,7 @@ public class BTActivity extends MainMenuActivity {
         LinearLayout devicesList = (LinearLayout) findViewById(R.id.bt_container);
 
         if (devicesList.getChildCount() <= 2) { // don't duplicate
-            for (AbstractBluetoothDevice device : BluetoothService.getSupportedCommDevices()) {
+            for (AbstractBluetoothDevice device : BluetoothService.getSupportedDevices()) {
                 TextView deviceLabel = new TextView(getApplicationContext());
                 deviceLabel.setText("\t\u2022 " + device.getDescription());
                 devicesList.addView(deviceLabel);
@@ -98,8 +92,8 @@ public class BTActivity extends MainMenuActivity {
     protected void onResume() {
         super.onResume();
 
-        prepareUI();
         BluetoothService.registerListeners(this);
+        prepareUI();
     }
 
     @Override
@@ -151,7 +145,6 @@ public class BTActivity extends MainMenuActivity {
         }
 
         updateDeviceStatus();
-
     }
 
     private void updateDeviceStatus() {
@@ -211,7 +204,15 @@ public class BTActivity extends MainMenuActivity {
     protected void onPause() {
         // Unregister since the activity is not visible
         BluetoothService.unregisterListeners(this);
+        if (BluetoothService.isBluetoothLESupported()) {
+            BluetoothService.stopDiscoverBluetoothLEDevices();
+        }
         super.onPause();
     }
 
+    @Override
+    public void refresh() {
+        BluetoothService.registerListeners(this);
+        prepareUI();
+    }
 }

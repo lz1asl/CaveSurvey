@@ -83,7 +83,7 @@ public class CommDeviceCommunicationThread extends Thread {
                 Log.i(Constants.LOG_TAG_BT, "Paired with " + device.getName());
                 mPaired = true;
                 mDevice = device;
-                mDeviceSpec = BluetoothService.getSupportedDevice(device.getName());
+                mDeviceSpec = (AbstractBluetoothRFCOMMDevice) BluetoothService.getSupportedDevice(device.getName());
 
                 TextView status = (TextView) ConfigUtil.getContext().findViewById(R.id.bt_status);
                 status.setText(BluetoothService.getCurrDeviceStatusLabel(ConfigUtil.getContext()));
