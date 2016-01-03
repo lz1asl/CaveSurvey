@@ -30,7 +30,7 @@
     <!-- main screen -->
     <string name="main_leg">Current leg</string>
     <string name="main_button_change">Select</string>
-    <string name="main_button_change_title">Change leg</string>
+    <string name="main_button_change_title">Select leg</string>
     <string name="main_button_add">Add</string>
     <string name="main_button_data">Data</string>
     <string name="main_button_about">About</string>
