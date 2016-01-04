@@ -14,6 +14,7 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.ResultReceiver;
 import android.util.Log;
 import android.util.Pair;
@@ -26,6 +27,7 @@ import com.astoev.cave.survey.service.bluetooth.device.AbstractBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.AbstractBluetoothLEDevice;
 import com.astoev.cave.survey.service.bluetooth.device.AbstractBluetoothRFCOMMDevice;
 import com.astoev.cave.survey.service.bluetooth.device.ble.BoschPLR40CBluetoothLEDevice;
+import com.astoev.cave.survey.service.bluetooth.device.ble.LeicaDistoBluetoothLEDevice;
 import com.astoev.cave.survey.service.bluetooth.device.comm.CEMILDMBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.comm.DistoXBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.comm.LaserAceBluetoothDevice;
@@ -33,6 +35,8 @@ import com.astoev.cave.survey.service.bluetooth.device.comm.TruPulse360BBluetoot
 import com.astoev.cave.survey.util.ConfigUtil;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -60,10 +64,10 @@ public class BluetoothService {
         SUPPORTED_BLUETOOTH_COM_DEVICES.add(new LaserAceBluetoothDevice());
         SUPPORTED_BLUETOOTH_COM_DEVICES.add(new TruPulse360BBluetoothDevice());
         SUPPORTED_BLUETOOTH_COM_DEVICES.add(new DistoXBluetoothDevice());
-//        SUPPORTED_DEVICES.add(new LeicaDistoBluetoothDevice());
 
         // LE devices
-        SUPPORTED_BLUETOOTH_LE_DEVICES.add(new BoschPLR40CBluetoothLEDevice());
+//        SUPPORTED_BLUETOOTH_LE_DEVICES.add(new BoschPLR40CBluetoothLEDevice());
+        SUPPORTED_BLUETOOTH_LE_DEVICES.add(new LeicaDistoBluetoothLEDevice());
     }
 
     // generic
@@ -300,7 +304,7 @@ public class BluetoothService {
 
     // for the current device
     public static boolean isMeasureSupported(Constants.MeasureTypes aMeasureType) {
-        return mSelectedDeviceSpec != null && mSelectedDeviceSpec.isMeasureSupported(mSelectedDevice.getName(), aMeasureType);
+        return mSelectedDeviceSpec != null && mSelectedDeviceSpec.isMeasureSupported(aMeasureType);
     }
 
     public static void registerListeners(BTActivity btActivity) {
@@ -383,23 +387,32 @@ public class BluetoothService {
             mMeasureTypes = aMeasureTypes;
             mReceiver = aReceiver;
 
-            // TODO all UUIDs below hardcoded, get from the device spec based on the requested measurements
-            BluetoothGattService service = mBluetoothGatt.getService(UUID.fromString(BoschPLR40CBluetoothLEDevice.SERVICE3));
+            AbstractBluetoothLEDevice currDeviceSpec = (AbstractBluetoothLEDevice) mSelectedDeviceSpec;
 
-            if (service == null) {
-                Log.i(Constants.LOG_TAG_BT, "No service");
+            for (Constants.MeasureTypes type : aMeasureTypes) {
+                if (currDeviceSpec.isMeasureSupported(type)) {
+                    String serviceName = currDeviceSpec.getService(type);
+                    if (serviceName == null) {
+                        continue;
+                    }
+                    BluetoothGattService service = mBluetoothGatt.getService(UUID.fromString(serviceName));
 
-                return;
+                    if (service == null) {
+                        Log.i(Constants.LOG_TAG_BT, "Not able to invoke service");
+                        return;
+                    }
+
+                    String characteristicName = currDeviceSpec.getMeasurementCharacteristics(type);
+                    BluetoothGattCharacteristic characteristic = service.getCharacteristic(UUID.fromString(characteristicName));
+
+//                    BluetoothGattDescriptor descriptor = characteristic.getDescriptor(UUID.fromString(BoschPLR40CBluetoothLEDevice.SERVICE3_CHARACTERISTIC1_DESCRIPTOR));
+//                    boolean status = mBluetoothGatt.readDescriptor(descriptor);
+//                    Log.i(Constants.LOG_TAG_BT, "requested desc " + status);
+
+                    boolean status = mBluetoothGatt.readCharacteristic(characteristic);
+                    Log.i(Constants.LOG_TAG_BT, "Requested characteristic for " + type + " : " + status);
+                }
             }
-
-            BluetoothGattCharacteristic characteristic = service.getCharacteristic(UUID.fromString(BoschPLR40CBluetoothLEDevice.SERVICE3_CHARACTERISTIC1));
-            BluetoothGattDescriptor descriptor = characteristic.getDescriptor(UUID.fromString(BoschPLR40CBluetoothLEDevice.SERVICE3_CHARACTERISTIC1_DESCRIPTOR));
-            boolean status = mBluetoothGatt.readDescriptor(descriptor);
-            Log.i(Constants.LOG_TAG_BT, "requested desc " + status);
-
-            status = mBluetoothGatt.readCharacteristic(characteristic);
-            Log.i(Constants.LOG_TAG_BT, "requested char " + status);
-
         }
 
         @Override
@@ -429,14 +442,21 @@ public class BluetoothService {
                 for (BluetoothGattService service : services) {
                     Log.i(Constants.LOG_TAG_BT, "Service " + service.getUuid().toString() + " " + service.getType() + " " + service.toString());
                     List<BluetoothGattCharacteristic> chars = service.getCharacteristics();
-                    if (!service.getUuid().equals(UUID.fromString(BoschPLR40CBluetoothLEDevice.SERVICE3))) {
-                        continue;
-                    }
+//                    if (!service.getUuid().equals(UUID.fromString(BoschPLR40CBluetoothLEDevice.SERVICE3))) {
+//                        continue;
+//                    }
 
                     for (BluetoothGattCharacteristic c : chars) {
                         Log.i(Constants.LOG_TAG_BT, "Characteristic " + c.getUuid().toString() + " " + c.getValue());
 
-                        if (c.getUuid().toString().equals(BoschPLR40CBluetoothLEDevice.SERVICE3_CHARACTERISTIC1)) {
+                        List<BluetoothGattDescriptor> descriptors = c.getDescriptors();
+                        if (descriptors != null) {
+                            for (BluetoothGattDescriptor descriptor : descriptors) {
+                                Log.i(Constants.LOG_TAG_BT, "Descriptor " + descriptor.getUuid());
+                            }
+                        }
+
+//                        if (c.getUuid().toString().equals(BoschPLR40CBluetoothLEDevice.SERVICE3_CHARACTERISTIC1)) {
                             Log.i(Constants.LOG_TAG_BT, "Enable notifications ");
 
                             Log.i(Constants.LOG_TAG_BT, "Enable notifications " + gatt.setCharacteristicNotification(c, true));
@@ -451,7 +471,7 @@ public class BluetoothService {
                             break;
 
                         }
-                    }
+//                    }
                 }
             } else {
                 Log.i(Constants.LOG_TAG_BT, "Got services error");
@@ -472,50 +492,18 @@ public class BluetoothService {
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 // and it success, so we can get the value
                 Log.i(Constants.LOG_TAG_BT, "Got characteristic " + characteristic.getUuid() + " for " + characteristic.getService().getUuid().toString() );
-                for (BluetoothGattDescriptor desc : characteristic.getDescriptors()) {
-                    Log.i(Constants.LOG_TAG_BT, "Descriptor " + desc.getUuid().toString() + " " + desc.toString());
-                }
-                Log.i(Constants.LOG_TAG_BT, "Got Value " + String.valueOf(characteristic.getValue()));
 
-                Log.i(Constants.LOG_TAG_BT, "Got Value string " + characteristic.getStringValue(0));
-
-                // try as int
-                int index = ((characteristic.getValue()[0] & 0x01) == 1) ? 2 : 1;
-                // also we need to define format
-                int format = (index == 1) ? BluetoothGattCharacteristic.FORMAT_UINT8 : BluetoothGattCharacteristic.FORMAT_UINT16;
-                // now we have everything, get the value
-                int intValue = characteristic.getIntValue(format, index);
-
-                Log.i(Constants.LOG_TAG_BT, "Got Value as int" + intValue);
-
-
-                /*// TODO process and send back
-                List<Measure> measures = mDeviceSpec.decodeMeasure(message.toByteArray(), mMeasureTypes);
                 // populate the result
                 Bundle b = new Bundle();
-                float[] valuesArray = new float[measures.size()];
-                String[] typesArray = new String[measures.size()];
-                String[] unitsArray = new String[measures.size()];
-                String[] targetsArray = new String[measures.size()];
-                int actualMeasuresCount = 0;
 
-                for (int i = 0; i < measures.size(); i++) {
-                    Measure m = measures.get(i);
-                    if (!mMeasureTypes.contains(m.getMeasureType())) {
-                        continue;
-                    }
+                Measure measure = ((AbstractBluetoothLEDevice) mSelectedDeviceSpec).characteristicToMeasure(characteristic, mMeasureTypes);
 
-                    valuesArray[actualMeasuresCount] = m.getValue();
-                    typesArray[actualMeasuresCount] = m.getMeasureType().toString();
-                    unitsArray[actualMeasuresCount] = m.getMeasureUnit().toString();
-                    targetsArray[actualMeasuresCount] = mTargets.get(mMeasureTypes.indexOf(m.getMeasureType())).toString();
-                    actualMeasuresCount++;
-                }
-                b.putFloatArray(Constants.MEASURE_VALUE_KEY, ByteUtils.copyBytes(valuesArray, actualMeasuresCount));
-                b.putStringArray(Constants.MEASURE_TYPE_KEY, ByteUtils.copyBytes(typesArray, actualMeasuresCount));
-                b.putStringArray(Constants.MEASURE_UNIT_KEY, ByteUtils.copyBytes(unitsArray, actualMeasuresCount));
-                b.putStringArray(Constants.MEASURE_TARGET_KEY, ByteUtils.copyBytes(targetsArray, actualMeasuresCount));
-                mReceiver.send(Activity.RESULT_OK, b);*/
+                b.putFloatArray(Constants.MEASURE_VALUE_KEY,  new float[] {measure.getValue()});
+                b.putStringArray(Constants.MEASURE_TYPE_KEY, new String[] {measure.getMeasureType().toString()});
+                b.putStringArray(Constants.MEASURE_UNIT_KEY, new String[] {measure.getMeasureUnit().toString()});
+                // TODO debug me
+                b.putStringArray(Constants.MEASURE_TARGET_KEY, new String[] {mTargets.get(mMeasureTypes.indexOf(measure.getMeasureType())).toString()});
+                mReceiver.send(Activity.RESULT_OK, b);
 
             }
         }
@@ -528,7 +516,18 @@ public class BluetoothService {
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt,
                                             BluetoothGattCharacteristic characteristic) {
-            Log.i(Constants.LOG_TAG_BT, "----------------------------onCharacteristicChanged");
+            Log.i(Constants.LOG_TAG_BT, "----------------------------onCharacteristicChanged " + characteristic.getUuid());
+
+            float f = ByteBuffer.wrap(characteristic.getValue()).order(ByteOrder.LITTLE_ENDIAN).getFloat();
+            Log.i(Constants.LOG_TAG_BT, "-----DISTANCE: " + f);
+
+            Log.i(Constants.LOG_TAG_BT, "-----DISTANCE UNIT:" + characteristic.getIntValue(18, 0).intValue());
+
+
+            float f1 = ByteBuffer.wrap(characteristic.getValue()).order(ByteOrder.LITTLE_ENDIAN).getFloat();
+            Log.i(Constants.LOG_TAG_BT, "--ANGLE: " + String.valueOf(f1));
+            Log.i(Constants.LOG_TAG_BT, "--ANGLE UNIT: " + characteristic.getIntValue(18, 0).intValue());
+
         }
 
         @Override
