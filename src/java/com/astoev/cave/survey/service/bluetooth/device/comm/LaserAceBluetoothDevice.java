@@ -43,7 +43,7 @@ public class LaserAceBluetoothDevice extends AbstractBluetoothRFCOMMDevice {
     }
 
     @Override
-    public boolean isMeasureSupported(String aName, MeasureTypes aMeasureType) {
+    public boolean isMeasureSupported(MeasureTypes aMeasureType) {
         // single device supported, name ignored
         // all current distance, angle and inclination are returned on each measure
         return true;

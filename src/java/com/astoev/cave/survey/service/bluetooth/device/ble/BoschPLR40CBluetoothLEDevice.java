@@ -7,7 +7,7 @@ import com.astoev.cave.survey.service.bluetooth.device.AbstractBluetoothLEDevice
  * Bosch PLR 40C with Bluetooth 4.0
  * Created by astoev on 12/24/15.
  */
-public class BoschPLR40CBluetoothLEDevice extends AbstractBluetoothLEDevice {
+public abstract class BoschPLR40CBluetoothLEDevice extends AbstractBluetoothLEDevice {
 
     public static final String DEVICE_INFO_SERVICE = "00001800-0000-1000-8000-00805f9b34fb";
     public static final String SERVICE2 = "0000180a-0000-1000-8000-00805f9b34fb";
@@ -30,7 +30,7 @@ public class BoschPLR40CBluetoothLEDevice extends AbstractBluetoothLEDevice {
 
 
     @Override
-    public String getService() {
+    public String getService(Constants.MeasureTypes aMeasureType) {
         return null;
     }
 
@@ -50,7 +50,7 @@ public class BoschPLR40CBluetoothLEDevice extends AbstractBluetoothLEDevice {
     }
 
     @Override
-    public boolean isMeasureSupported(String aName, Constants.MeasureTypes aMeasureType) {
+    public boolean isMeasureSupported(Constants.MeasureTypes aMeasureType) {
         // only distance
         return Constants.MeasureTypes.distance.equals(aMeasureType);
     }

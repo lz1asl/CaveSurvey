@@ -28,7 +28,7 @@ public abstract class AbstractBluetoothDevice implements Comparable {
      * @param aMeasureType
      * @return
      */
-    public abstract boolean isMeasureSupported(String aName, Constants.MeasureTypes aMeasureType);
+    public abstract boolean isMeasureSupported(Constants.MeasureTypes aMeasureType);
 
 
     protected boolean deviceNameStartsWith(String aDeviceName, String aStart) {

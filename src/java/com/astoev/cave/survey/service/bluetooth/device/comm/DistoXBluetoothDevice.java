@@ -53,7 +53,7 @@ public class DistoXBluetoothDevice extends AbstractBluetoothRFCOMMDevice {
     }
 
     @Override
-    public boolean isMeasureSupported(String aName, Constants.MeasureTypes aMeasureType) {
+    public boolean isMeasureSupported(Constants.MeasureTypes aMeasureType) {
         // v1 and v2 with same measure types
         // all measures available on each shot
         return true;

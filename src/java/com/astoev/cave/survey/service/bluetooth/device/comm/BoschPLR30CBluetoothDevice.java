@@ -47,7 +47,7 @@ public class BoschPLR30CBluetoothDevice extends AbstractBluetoothRFCOMMDevice {
     }
 
     @Override
-    public boolean isMeasureSupported(String aName, Constants.MeasureTypes aMeasureType) {
+    public boolean isMeasureSupported(Constants.MeasureTypes aMeasureType) {
         // only distance
         return Constants.MeasureTypes.distance.equals(aMeasureType);
     }
