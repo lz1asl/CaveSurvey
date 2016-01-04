@@ -65,7 +65,7 @@
     <string name="point_vectors_delete">Delete vector %1$s?</string>
     <string name="point_swipe_not_possible">Gallery border reached</string>
 
-    <string name="slope_slope">Clinometer:</string>
+    <string name="slope_column">Clinometer:</string>
     
     <string name="sensor">Sensor</string>
     <string name="accuracy">Accuracy</string>
@@ -266,9 +266,9 @@
     <string name="action_saved">Saved</string>
     <string name="action_deleted">Deleted</string>
     
-    <string name="azimuth_azimuth">Azimuth:</string>
-    <string name="azimuth_accuracy">Accuracy:</string>
-    <string name="azimuth_no_value">No value</string>
+    <string name="azimuth_column">Azimuth:</string>
+    <string name="accuracy_column">Accuracy:</string>
+    <string name="no_value_label">No value</string>
     <string name="azimuth_accuracy_no_value">-1</string>
     <string name="azimuth_orination">Orientation:</string>
     <string name="azimuth_magnetic">Magnetic:</string>
