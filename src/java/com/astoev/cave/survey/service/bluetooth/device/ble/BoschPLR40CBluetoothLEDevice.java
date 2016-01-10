@@ -30,16 +30,6 @@ public abstract class BoschPLR40CBluetoothLEDevice extends AbstractBluetoothLEDe
 
 
     @Override
-    public String getService(Constants.MeasureTypes aMeasureType) {
-        return null;
-    }
-
-    @Override
-    public String getMeasurementCharacteristics(Constants.MeasureTypes aMeasureType) {
-        return null;
-    }
-
-    @Override
     public boolean isNameSupported(String aName) {
         return deviceNameStartsWith(aName, "Bosch PLR40C");
     }

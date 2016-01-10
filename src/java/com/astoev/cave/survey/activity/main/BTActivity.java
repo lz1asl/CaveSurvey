@@ -1,6 +1,7 @@
 package com.astoev.cave.survey.activity.main;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
@@ -93,6 +94,11 @@ public class BTActivity extends MainMenuActivity implements Refresheable {
         super.onResume();
 
         BluetoothService.registerListeners(this);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            BluetoothService.discoverBluetoothLEDevices();
+        }
+
         prepareUI();
     }
 
