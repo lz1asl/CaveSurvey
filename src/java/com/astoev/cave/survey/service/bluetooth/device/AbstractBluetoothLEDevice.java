@@ -28,7 +28,6 @@ public abstract class AbstractBluetoothLEDevice extends AbstractBluetoothDevice 
     public abstract UUID getService(Constants.MeasureTypes aMeasureType);
     public abstract UUID getCharacteristic(Constants.MeasureTypes aMeasureType);
     public abstract Measure characteristicToMeasure(BluetoothGattCharacteristic aCharacteristic, List<Constants.MeasureTypes> aMeasureTypes) throws DataException;
-    public abstract Measure descriptorToMeasure(BluetoothGattDescriptor descriptor, List<Constants.MeasureTypes> measureTypes) throws DataException;
 
 
     // helper methods to reuse between the LE devices

@@ -2,7 +2,6 @@ package com.astoev.cave.survey.service.bluetooth.device.ble;
 
 import android.annotation.TargetApi;
 import android.bluetooth.BluetoothGattCharacteristic;
-import android.bluetooth.BluetoothGattDescriptor;
 import android.os.Build;
 import android.util.Log;
 
@@ -141,15 +140,6 @@ public class LeicaDistoBluetoothLEDevice extends AbstractBluetoothLEDevice {
         }
 
         return null;
-    }
-
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
-    @Override
-    public Measure descriptorToMeasure(BluetoothGattDescriptor descriptor, List<Constants.MeasureTypes> measureTypes) throws DataException {
-        // TODO
-        Float distance = asFloat(descriptor, ByteOrder.LITTLE_ENDIAN);
-        Log.i(Constants.LOG_TAG_BT, "Descriptorrrrrrrrrrr " + descriptor.getUuid().toString() + " : " + distance);
-        return  null;
     }
 
 }

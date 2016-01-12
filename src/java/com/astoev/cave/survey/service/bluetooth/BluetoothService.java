@@ -483,24 +483,6 @@ public class BluetoothService {
             }
         }
 
-        @Override
-        public void onDescriptorRead(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
-            Log.i(Constants.LOG_TAG_BT, "onDescriptorRead " + descriptor.getUuid());
-            if (BluetoothGatt.GATT_SUCCESS == status) {
-                try {
-                    Log.i(Constants.LOG_TAG_BT, "processing " + descriptor.getUuid());
-                    // decode
-                    Measure measure = ((AbstractBluetoothLEDevice) mSelectedDeviceSpec).descriptorToMeasure(descriptor, mMeasureTypes);
-
-                    // consume
-                    sendMeasureToUI(measure);
-                } catch (DataException e) {
-                    Log.e(Constants.LOG_TAG_BT, "Fail to read data: ", e);
-                    UIUtilities.showNotification(e.getMessage());
-                }
-            }
-        }
-
         private void sendMeasureToUI(Measure aMeasure) {
             if (aMeasure != null) {
                 // consume
