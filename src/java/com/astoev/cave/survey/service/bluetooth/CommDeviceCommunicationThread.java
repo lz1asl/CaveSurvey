@@ -18,7 +18,7 @@ import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.exception.DataException;
-import com.astoev.cave.survey.service.bluetooth.device.AbstractBluetoothDevice;
+import com.astoev.cave.survey.service.bluetooth.device.AbstractBluetoothRFCOMMDevice;
 import com.astoev.cave.survey.util.ByteUtils;
 import com.astoev.cave.survey.util.ConfigUtil;
 import com.astoev.cave.survey.util.StreamUtil;
@@ -37,26 +37,26 @@ import java.util.List;
  * Time: 11:56 PM
  * To change this template use File | Settings | File Templates.
  */
-public class ConnectThread extends Thread {
+public class CommDeviceCommunicationThread extends Thread {
 
     private static final int KEEP_ALIVE_INTERVAL = 1000 * 60; // 1 minute
 
-    private BluetoothSocket mSocket;
     private BluetoothDevice mDevice;
-    private AbstractBluetoothDevice mDeviceSpec;
-    private InputStream mIn;
-    private OutputStream mOut = null;
-    private boolean running = true;
-    private Long lastActiveTimestamp = null;
-    private ResultReceiver mReceiver = null;
+    private AbstractBluetoothRFCOMMDevice mDeviceSpec;
     private List<Constants.MeasureTypes> mMeasureTypes = null;
     private List<Constants.Measures> mTargets = null;
-    private boolean mPaired = false;
+    private ResultReceiver mReceiver = null;
     private static List<BroadcastReceiver> mRegisteredReceivers = new ArrayList<BroadcastReceiver>();
+    private boolean running = true;
+    private Long lastActiveTimestamp = null;
+    private BluetoothSocket mSocket;
+    private InputStream mIn;
+    private OutputStream mOut = null;
+    private boolean mPaired = false;
 
 
-
-    public ConnectThread(BluetoothDevice aDevice, AbstractBluetoothDevice aDeviceSpec) {
+    // used to talk to comm devices
+    public CommDeviceCommunicationThread(BluetoothDevice aDevice, AbstractBluetoothRFCOMMDevice aDeviceSpec) {
         mDevice = aDevice;
         mDeviceSpec = aDeviceSpec;
 
@@ -83,7 +83,7 @@ public class ConnectThread extends Thread {
                 Log.i(Constants.LOG_TAG_BT, "Paired with " + device.getName());
                 mPaired = true;
                 mDevice = device;
-                mDeviceSpec = BluetoothService.getSupportedDevice(device.getName());
+                mDeviceSpec = (AbstractBluetoothRFCOMMDevice) BluetoothService.getSupportedDevice(device.getName());
 
                 TextView status = (TextView) ConfigUtil.getContext().findViewById(R.id.bt_status);
                 status.setText(BluetoothService.getCurrDeviceStatusLabel(ConfigUtil.getContext()));

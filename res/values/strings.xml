@@ -257,6 +257,8 @@
     <string name="bt_state_bonded">Bonded state</string>
     <string name="bt_state_bonding">Bonding state</string>
     <string name="bt_state_none">Unknown state</string>
+    <string name="bt_state_connecting">Connecting</string>
+    <string name="bt_state_connected">Connected</string>
     <string name="bt_not_on">Bluetooth not turned on</string>
     <string name="bt_not_selected">Device not selected</string>
     <string name="bt_supported_devices">Expecting:</string>

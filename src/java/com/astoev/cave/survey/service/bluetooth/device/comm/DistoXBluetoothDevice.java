@@ -1,10 +1,11 @@
-package com.astoev.cave.survey.service.bluetooth.device;
+package com.astoev.cave.survey.service.bluetooth.device.comm;
 
 import android.util.Log;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.Measure;
+import com.astoev.cave.survey.service.bluetooth.device.AbstractBluetoothRFCOMMDevice;
 import com.astoev.cave.survey.service.bluetooth.util.DistoXProtocol;
 
 import java.io.IOException;
@@ -17,7 +18,7 @@ import java.util.List;
  *
  * Created by astoev on 3/26/15.
  */
-public class DistoXBluetoothDevice extends AbstractBluetoothDevice {
+public class DistoXBluetoothDevice extends AbstractBluetoothRFCOMMDevice {
 
 
     @Override
@@ -52,7 +53,7 @@ public class DistoXBluetoothDevice extends AbstractBluetoothDevice {
     }
 
     @Override
-    public boolean isMeasureSupported(String aName, Constants.MeasureTypes aMeasureType) {
+    public boolean isMeasureSupported(Constants.MeasureTypes aMeasureType) {
         // v1 and v2 with same measure types
         // all measures available on each shot
         return true;

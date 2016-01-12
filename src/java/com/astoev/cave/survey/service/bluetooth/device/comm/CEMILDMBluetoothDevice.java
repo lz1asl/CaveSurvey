@@ -1,10 +1,11 @@
-package com.astoev.cave.survey.service.bluetooth.device;
+package com.astoev.cave.survey.service.bluetooth.device.comm;
 
 import android.util.Log;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.Measure;
+import com.astoev.cave.survey.service.bluetooth.device.AbstractBluetoothRFCOMMDevice;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,7 +19,7 @@ import static com.astoev.cave.survey.Constants.MeasureTypes;
  * CEM iLDM Laser distance meters
  * Created by astoev on 2/21/14.
  */
-public class CEMILDMBluetoothDevice extends AbstractBluetoothDevice {
+public class CEMILDMBluetoothDevice extends AbstractBluetoothRFCOMMDevice {
 
 
     @Override
@@ -102,7 +103,7 @@ public class CEMILDMBluetoothDevice extends AbstractBluetoothDevice {
     }
 
     @Override
-    public boolean isMeasureSupported(String aName, Constants.MeasureTypes aMeasureType) {
+    public boolean isMeasureSupported(Constants.MeasureTypes aMeasureType) {
         // single CEM device supported, name ignored
         return MeasureTypes.distance.equals(aMeasureType) || MeasureTypes.slope.equals(aMeasureType);
     }
