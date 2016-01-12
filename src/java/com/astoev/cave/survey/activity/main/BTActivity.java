@@ -218,7 +218,6 @@ public class BTActivity extends MainMenuActivity implements Refresheable {
 
     @Override
     public void refresh() {
-        BluetoothService.registerListeners(this);
-        prepareUI();
+        updateDeviceStatus();
     }
 }

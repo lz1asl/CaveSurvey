@@ -257,6 +257,8 @@
     <string name="bt_state_bonded">Сдвоен</string>
     <string name="bt_state_bonding">Сдвояване</string>
     <string name="bt_state_none">Неразпознато състояние</string>
+    <string name="bt_state_connecting">Свързване</string>
+    <string name="bt_state_connected">Свързан</string>
     <string name="bt_not_on">Bluetooth не е включен</string>
     <string name="bt_not_selected">Не е избрано устройство</string>
     <string name="bt_supported_devices">Очаква:</string>

@@ -81,6 +81,7 @@ public class BluetoothService {
     private static BluetoothGatt mBluetoothGatt = null;
     private static BluetoothDevice mLastLEDevice = null;
     private static MyBluetoothGattCallback leDataCallback = null;
+    private static int mLeDeviceState = R.string.bt_state_none;
 
 
     public static boolean isBluetoothSupported() {
@@ -194,11 +195,12 @@ public class BluetoothService {
                 if (mBluetoothGatt != null) {
                     Log.i(Constants.LOG_TAG_BT, "Connecting LE");
                     // just reconnect
-                    if (!mBluetoothGatt.connect()) {
+                    if (mBluetoothGatt.connect()) {
+                        updateLeDeviceState(R.string.bt_state_connecting);
+                    } else {
                         Log.e(Constants.LOG_TAG_BT, "Failed to connect");
                         UIUtilities.showDeviceDisconnectedNotification(ConfigUtil.getContext(), mSelectedDeviceSpec.getDescription());
                     }
-                    ;
                 } else {
                     Log.i(Constants.LOG_TAG_BT, "Re-connecting LE");
                     // connect with remote device
@@ -210,10 +212,8 @@ public class BluetoothService {
                         }
                     }
                     mBluetoothGatt = mSelectedDevice.connectGatt(mCurrContext, false, leDataCallback);
+                    updateLeDeviceState(R.string.bt_state_connecting);
                 }
-
-//                TODO ping periodically to detect device gone
-
             } else {
                 Log.i(Constants.LOG_TAG_BT, "Unsupported version ");
             }
@@ -277,24 +277,27 @@ public class BluetoothService {
 
     public static String getCurrDeviceStatus() {
         if (mSelectedDevice == null) {
-            return ConfigUtil.getContext().getString(R.string.bt_state_unknown);
+            return mCurrContext.getString(R.string.bt_state_unknown);
         }
 
-        switch (mSelectedDevice.getBondState()) {
-            case BluetoothDevice.BOND_BONDED:
-                return mCurrContext.getString(R.string.bt_state_bonded);
+        if (mSelectedDeviceSpec instanceof AbstractBluetoothRFCOMMDevice) {
+            switch (mSelectedDevice.getBondState()) {
+                case BluetoothDevice.BOND_BONDED:
+                    return mCurrContext.getString(R.string.bt_state_bonded);
 
-            case BluetoothDevice.BOND_BONDING:
-                return mCurrContext.getString(R.string.bt_state_bonding);
+                case BluetoothDevice.BOND_BONDING:
+                    return mCurrContext.getString(R.string.bt_state_bonding);
 
-            case BluetoothDevice.BOND_NONE:
-                return mCurrContext.getString(R.string.bt_state_none);
+                case BluetoothDevice.BOND_NONE:
+                    return mCurrContext.getString(R.string.bt_state_none);
 
-            default:
-                return mCurrContext.getString(R.string.bt_state_unknown);
+                default:
+                    return mCurrContext.getString(R.string.bt_state_unknown);
+            }
+        } else {
+            return mCurrContext.getString(mLeDeviceState);
         }
 
-        // TODO check for mBluetoothGatt
     }
 
     public static String getCurrDeviceStatusLabel(Context aContext) {
@@ -303,6 +306,11 @@ public class BluetoothService {
         statusText.append(" : ");
         statusText.append(BluetoothService.isPaired() ? aContext.getString(R.string.bt_paired) : aContext.getString(R.string.bt_not_paired));
         return statusText.toString();
+    }
+
+    public static void updateLeDeviceState(int aStateLabel) {
+        mLeDeviceState = aStateLabel;
+        ((Refresheable) mCurrContext).refresh();
     }
 
     // for the current device
@@ -362,7 +370,6 @@ public class BluetoothService {
                 AbstractBluetoothLEDevice deviceSpec = (AbstractBluetoothLEDevice) BluetoothService.getSupportedDevice(device.getName());
                 if (deviceSpec != null) {
                     Log.i(Constants.LOG_TAG_BT, "Discovered LE device " + rssi + " : " + device.getName());
-                    stopDiscoverBluetoothLEDevices();
 
                     mLastLEDevice = device;
                     ((Refresheable) mCurrContext).refresh();
@@ -394,13 +401,16 @@ public class BluetoothService {
                 Log.i(Constants.LOG_TAG_BT, "Connected with " + gatt.getDevice().getName());
 
 
-//                mBluetoothGatt.readRemoteRssi();
+                mBluetoothGatt.readRemoteRssi();
 
                 mBluetoothGatt.discoverServices();
 
+                updateLeDeviceState(R.string.bt_state_connecting);
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 Log.i(Constants.LOG_TAG_BT, "LE device disconnected");
                 UIUtilities.showDeviceDisconnectedNotification(ConfigUtil.getContext(), mSelectedDeviceSpec.getDescription());
+
+                updateLeDeviceState(R.string.bt_state_none);
             }
         }
 
@@ -442,6 +452,9 @@ public class BluetoothService {
 
                     }
                 }
+
+                stopDiscoverBluetoothLEDevices();
+                updateLeDeviceState(R.string.bt_state_connected);
             } else {
                 Log.i(Constants.LOG_TAG_BT, "Got services error, retry in a while");
                 try {
