@@ -196,6 +196,7 @@ public class BluetoothService {
                     // just reconnect
                     if (!mBluetoothGatt.connect()) {
                         Log.e(Constants.LOG_TAG_BT, "Failed to connect");
+                        UIUtilities.showDeviceDisconnectedNotification(ConfigUtil.getContext(), mSelectedDeviceSpec.getDescription());
                     }
                     ;
                 } else {
@@ -203,7 +204,10 @@ public class BluetoothService {
                     // connect with remote device
                     leDataCallback = new MyBluetoothGattCallback();
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                        mSelectedDevice.createBond();
+                        if (!mSelectedDevice.createBond()) {
+                            Log.e(Constants.LOG_TAG_BT, "Failed to create bond");
+                            UIUtilities.showDeviceDisconnectedNotification(ConfigUtil.getContext(), mSelectedDeviceSpec.getDescription());
+                        }
                     }
                     mBluetoothGatt = mSelectedDevice.connectGatt(mCurrContext, false, leDataCallback);
                 }
@@ -263,7 +267,10 @@ public class BluetoothService {
             }
         }
         if (mLastLEDevice != null) {
-            result.add(new Pair<String, String>(mLastLEDevice.getName(), mLastLEDevice.getAddress()));
+            Pair<String, String> lastLeDevice = new Pair<String, String>(mLastLEDevice.getName(), mLastLEDevice.getAddress());
+            if (!devices.contains(lastLeDevice)) {
+                result.add(lastLeDevice);
+            }
         }
         return result;
     }
@@ -379,37 +386,6 @@ public class BluetoothService {
             mMeasureTypes = aMeasureTypes;
             mReceiver = aReceiver;
 
-           /* // instruct characteristics to notify on change
-            AbstractBluetoothLEDevice currLeDeviceSpec = (AbstractBluetoothLEDevice) mSelectedDeviceSpec;
-            for (Constants.MeasureTypes type : aMeasureTypes) {
-                if (currLeDeviceSpec.isMeasureSupported(type)) {
-                    UUID serviceUUID = currLeDeviceSpec.getService(type);
-                    if (serviceUUID == null) {
-                        continue;
-                    }
-
-                    BluetoothGattService service = mBluetoothGatt.getService(serviceUUID);
-                    if (service == null) {
-                        Log.i(Constants.LOG_TAG_BT, "Not able to get service " + serviceUUID.toString());
-                        continue;
-                    }
-
-                    UUID characteristicUUID = currLeDeviceSpec.getCharacteristic(type);
-                    BluetoothGattCharacteristic characteristic = service.getCharacteristic(characteristicUUID);
-                    if (characteristic == null) {
-                        Log.i(Constants.LOG_TAG_BT, "Not able to get characteristic " + characteristicUUID.toString());
-                        continue;
-                    }
-
-//                    boolean status = mBluetoothGatt.readCharacteristic(characteristic);
-//                    Log.i(Constants.LOG_TAG_BT, "Requested characteristic for " + type + " : " + status);
-
-                    List<BluetoothGattDescriptor> descriptors = characteristic.getDescriptors();
-                    for (BluetoothGattDescriptor descriptor : descriptors) {
-                        mBluetoothGatt.readDescriptor(descriptor);
-                    }
-                }
-            }*/
         }
 
         @Override
@@ -452,7 +428,7 @@ public class BluetoothService {
                         boolean flag = gatt.setCharacteristicNotification(c, true);
                         Log.i(Constants.LOG_TAG_BT, "Notification success: " + flag);
 
-/*
+
                         for (BluetoothGattDescriptor descriptor : c.getDescriptors()) {
                             if (!leDevice.getDescriptors().contains(descriptor.getUuid())) {
                                 continue;
@@ -463,7 +439,7 @@ public class BluetoothService {
                             flag = gatt.writeDescriptor(descriptor);
                             Log.i(Constants.LOG_TAG_BT, "Indication success " + flag);
                         }
-*/
+
                     }
                 }
             } else {
@@ -482,7 +458,7 @@ public class BluetoothService {
             Log.i(Constants.LOG_TAG_BT, "onCharacteristicChanged " + characteristic.getUuid());
 
             try {
-                Log.i(Constants.LOG_TAG_BT, "processing " + characteristic.getUuid());
+                Log.d(Constants.LOG_TAG_BT, "processing " + characteristic.getUuid());
                 // decode
                 Measure measure = ((AbstractBluetoothLEDevice) mSelectedDeviceSpec).characteristicToMeasure(characteristic, mMeasureTypes);
 
