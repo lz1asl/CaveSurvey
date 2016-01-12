@@ -103,18 +103,20 @@ public class LeicaDistoBluetoothLEDevice extends AbstractBluetoothLEDevice {
             measure.setMeasureUnit(Constants.MeasureUnits.meters);
             measure.setMeasureType(Constants.MeasureTypes.distance);
             measure.setValue(distance);
-
             return measure;
         } else if (CHARACTERISTIC_ANGLE_UUID.equals(aCharacteristic.getUuid())) {
 
-            Float slope = asFloat(aCharacteristic, ByteOrder.LITTLE_ENDIAN);
-            Log.i(Constants.LOG_TAG_BT, "SLOPE: " + slope);
+            Float slopeInRadians = asFloat(aCharacteristic, ByteOrder.LITTLE_ENDIAN);
+            if (slopeInRadians != null) {
+                Float slope = (float) Math.toDegrees(slopeInRadians);
+                Log.i(Constants.LOG_TAG_BT, "SLOPE: " + slope);
 
-            Measure measure = new Measure();
-            measure.setMeasureUnit(Constants.MeasureUnits.degrees);
-            measure.setMeasureType(Constants.MeasureTypes.slope);
-            measure.setValue(slope);
-
+                Measure measure = new Measure();
+                measure.setMeasureUnit(Constants.MeasureUnits.degrees);
+                measure.setMeasureType(Constants.MeasureTypes.slope);
+                measure.setValue(slope);
+                return measure;
+            }
         } else if (CHARACTERISTIC_DISTANCE_UNIT_UUID.equals(aCharacteristic.getUuid())) {
             // only check the unit
             Integer unit = asInt(aCharacteristic);
