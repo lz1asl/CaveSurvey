@@ -192,7 +192,7 @@ public class BluetoothService {
             // require newer android to work with LE devices
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
                 // check if we need to connect from scratch or just reconnect to previous device
-                if (mBluetoothGatt != null) {
+                if (mBluetoothGatt != null) {// && aDeviceAddress.equals(mBluetoothGatt.getDevice().getAddress())) {
                     Log.i(Constants.LOG_TAG_BT, "Connecting LE");
                     // just reconnect
                     if (mBluetoothGatt.connect()) {
@@ -202,15 +202,18 @@ public class BluetoothService {
                         UIUtilities.showDeviceDisconnectedNotification(ConfigUtil.getContext(), mSelectedDeviceSpec.getDescription());
                     }
                 } else {
+                //    if (mBluetoothGatt != null) {
+//                        mBluetoothGatt.close();
+//                    }
                     Log.i(Constants.LOG_TAG_BT, "Re-connecting LE");
                     // connect with remote device
                     leDataCallback = new MyBluetoothGattCallback();
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                        if (!mSelectedDevice.createBond()) {
-                            Log.e(Constants.LOG_TAG_BT, "Failed to create bond");
-                            UIUtilities.showDeviceDisconnectedNotification(ConfigUtil.getContext(), mSelectedDeviceSpec.getDescription());
-                        }
-                    }
+//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//                        if (!mSelectedDevice.createBond()) {
+//                            Log.e(Constants.LOG_TAG_BT, "Failed to create bond");
+//                            UIUtilities.showDeviceDisconnectedNotification(ConfigUtil.getContext(), mSelectedDeviceSpec.getDescription());
+//                        }
+//                    }
                     mBluetoothGatt = mSelectedDevice.connectGatt(mCurrContext, false, leDataCallback);
                     updateLeDeviceState(R.string.bt_state_connecting);
                 }
@@ -411,6 +414,9 @@ public class BluetoothService {
                 UIUtilities.showDeviceDisconnectedNotification(ConfigUtil.getContext(), mSelectedDeviceSpec.getDescription());
 
                 updateLeDeviceState(R.string.bt_state_none);
+//                if (mBluetoothGatt != null) {
+//                    mBluetoothGatt.close();
+//                }
             }
         }
 
@@ -434,8 +440,12 @@ public class BluetoothService {
                             continue;
                         }
 
+
+                        boolean flag = gatt.readCharacteristic(c);
+                        Log.d(Constants.LOG_TAG_BT, "Requested initial value: " + c.getUuid().toString() + " : " + flag);
+
                         Log.d(Constants.LOG_TAG_BT, "Enable notification for: " + c.getUuid().toString());
-                        boolean flag = gatt.setCharacteristicNotification(c, true);
+                        flag = gatt.setCharacteristicNotification(c, true);
                         Log.i(Constants.LOG_TAG_BT, "Notification success: " + flag);
 
 
