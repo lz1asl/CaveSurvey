@@ -10,7 +10,6 @@ import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.Measure;
 import com.astoev.cave.survey.service.bluetooth.device.AbstractBluetoothDevice;
-import com.astoev.cave.survey.service.bluetooth.util.DistoXProtocol;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -46,7 +45,16 @@ public abstract class AbstractBluetoothLEDevice extends AbstractBluetoothDevice 
     }
 
     private Float asFloat(byte[] buff, ByteOrder anOrder) {
-        Log.d(Constants.LOG_TAG_BT, DistoXProtocol.describeDataPacket(buff));
+        // log the bytes
+        if (buff != null) {
+            String description = "[";
+            for (int i = 0; i < buff.length; i++) {
+                description += ", " + buff[i];
+            }
+            description += "]";
+            Log.d(Constants.LOG_TAG_BT, description);
+        }
+
 
         ByteBuffer buffer = ByteBuffer.wrap(buff);
         if (anOrder != null) {
@@ -56,8 +64,8 @@ public abstract class AbstractBluetoothLEDevice extends AbstractBluetoothDevice 
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
-    protected Integer asInt(BluetoothGattCharacteristic aCharacteristic) {
-        return aCharacteristic.getIntValue(18, 0).intValue();
+    protected Integer asInt(BluetoothGattCharacteristic aCharacteristic, int dataFormat) {
+        return aCharacteristic.getIntValue(dataFormat, 0).intValue();
     }
 
 }

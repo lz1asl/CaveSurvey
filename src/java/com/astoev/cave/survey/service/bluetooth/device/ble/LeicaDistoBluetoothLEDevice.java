@@ -117,7 +117,7 @@ public class LeicaDistoBluetoothLEDevice extends AbstractBluetoothLEDevice {
             }
         } else if (CHARACTERISTIC_DISTANCE_UNIT_UUID.equals(aCharacteristic.getUuid())) {
             // only check the unit
-            Integer unit = asInt(aCharacteristic);
+            Integer unit = asInt(aCharacteristic, BluetoothGattCharacteristic.FORMAT_UINT16);
             Log.i(Constants.LOG_TAG_BT, "DISTANCE UNIT: " + unit);
 
             // 4 different decimal meter formats
@@ -130,7 +130,7 @@ public class LeicaDistoBluetoothLEDevice extends AbstractBluetoothLEDevice {
         } else if (CHARACTERISTIC_ANGLE_UNIT_UUID.equals(aCharacteristic.getUuid())) {
             // only check the unit
 
-            Integer unit = asInt(aCharacteristic);
+            Integer unit = asInt(aCharacteristic, BluetoothGattCharacteristic.FORMAT_UINT16);
             Log.i(Constants.LOG_TAG_BT, "SLOPE UNIT: " + unit);
 
             if (0 != unit) {
