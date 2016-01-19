@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
 import android.os.Build;
-import android.util.Log;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.exception.DataException;
@@ -45,7 +44,7 @@ public abstract class AbstractBluetoothLEDevice extends AbstractBluetoothDevice 
     }
 
     private Float asFloat(byte[] buff, ByteOrder anOrder) {
-        // log the bytes
+      /*  // log the bytes
         if (buff != null) {
             String description = "[";
             for (int i = 0; i < buff.length; i++) {
@@ -53,7 +52,7 @@ public abstract class AbstractBluetoothLEDevice extends AbstractBluetoothDevice 
             }
             description += "]";
             Log.d(Constants.LOG_TAG_BT, description);
-        }
+        }*/
 
 
         ByteBuffer buffer = ByteBuffer.wrap(buff);

@@ -33,14 +33,22 @@ import com.astoev.cave.survey.service.bluetooth.device.comm.CEMILDMBluetoothDevi
 import com.astoev.cave.survey.service.bluetooth.device.comm.DistoXBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.comm.LaserAceBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.comm.TruPulse360BBluetoothDevice;
+import com.astoev.cave.survey.service.bluetooth.lecommands.AbstractBluetoothCommand;
+import com.astoev.cave.survey.service.bluetooth.lecommands.EnableNotificationCommand;
+import com.astoev.cave.survey.service.bluetooth.lecommands.WriteDescriptorCommand;
 import com.astoev.cave.survey.util.ConfigUtil;
+import com.astoev.cave.survey.util.StringUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Semaphore;
 
 /**
  * Created with IntelliJ IDEA.
@@ -82,6 +90,13 @@ public class BluetoothService {
     private static BluetoothDevice mLastLEDevice = null;
     private static MyBluetoothGattCallback leDataCallback = null;
     private static int mLeDeviceState = R.string.bt_state_none;
+
+    // needed by le command queueing, details and credit http://www.brendanwhelan.net/2015/bluetooth-command-queuing-for-android
+    private static LinkedList<AbstractBluetoothCommand> mCommandQueue = new LinkedList<AbstractBluetoothCommand>();
+    private static Executor mCommandExecutor = Executors.newSingleThreadExecutor();
+    private static Semaphore mCommandLock = new Semaphore(1,true);
+
+
 
 
     public static boolean isBluetoothSupported() {
@@ -171,8 +186,16 @@ public class BluetoothService {
     }
 
     public static synchronized void selectDevice(final String aDeviceAddress) {
+        if (StringUtils.isEmpty(aDeviceAddress)) {
+            Log.i(Constants.LOG_TAG_BT, "No device selected");
+            return;
+        }
         mSelectedDevice = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(aDeviceAddress);
         mSelectedDeviceSpec = getSupportedDevice(mSelectedDevice.getName());
+        if (mSelectedDeviceSpec == null) {
+            Log.i(Constants.LOG_TAG_BT, "No spec found");
+            return;
+        }
 
         Log.i(Constants.LOG_TAG_BT, "Selected " + aDeviceAddress + " : " + mSelectedDevice + " of type " + mSelectedDeviceSpec.getDescription());
 
@@ -182,7 +205,7 @@ public class BluetoothService {
                 try {
                     mCommunicationThread.join();
                 } catch (InterruptedException e) {
-                    Log.e(Constants.LOG_TAG_BT, "Interrupted waiting old thread to complete, e");
+                    Log.e(Constants.LOG_TAG_BT, "Interrupted waiting old thread to complete", e);
                 }
             }
 
@@ -191,6 +214,12 @@ public class BluetoothService {
         } else {
             // require newer android to work with LE devices
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+
+                // clean up the queue
+                mCommandQueue.clear();
+                mCommandExecutor = Executors.newSingleThreadExecutor();
+                mCommandLock.release();
+
                 // check if we need to connect from scratch or just reconnect to previous device
                 if (mBluetoothGatt != null) {// && aDeviceAddress.equals(mBluetoothGatt.getDevice().getAddress())) {
                     Log.i(Constants.LOG_TAG_BT, "Connecting LE");
@@ -383,6 +412,38 @@ public class BluetoothService {
         };
     }
 
+    public static void enqueueCommand(final AbstractBluetoothCommand aCommand){
+
+        Log.i(Constants.LOG_TAG_BT, "Enqueue command");
+        synchronized (mCommandQueue) {
+            mCommandQueue.add(aCommand);  //Add to end of stack
+            //Schedule a new runnable to process that command (one command at a time executed only)
+            mCommandExecutor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    Log.i(Constants.LOG_TAG_BT, "Execute command");
+                    //Acquire semaphore lock to ensure no other operations can run until this one completed
+                    mCommandLock.acquireUninterruptibly();
+                    //Tell the command to start itself.
+                    aCommand.execute(mBluetoothGatt);
+
+                    if (aCommand.canProceedWithoutAnswer()) {
+                        dequeueCommand();
+                    }
+                }
+            });
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
+    public static void dequeueCommand(){
+        Log.i(Constants.LOG_TAG_BT, "Dequeue command");
+        if (!mCommandQueue.isEmpty()) {
+            mCommandQueue.pop();
+        }
+        mCommandLock.release();
+    }
+
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     static class MyBluetoothGattCallback extends BluetoothGattCallback {
 
@@ -403,8 +464,6 @@ public class BluetoothService {
             if (newState == BluetoothProfile.STATE_CONNECTED) {
                 Log.i(Constants.LOG_TAG_BT, "Connected with " + gatt.getDevice().getName());
 
-
-                mBluetoothGatt.readRemoteRssi();
 
                 mBluetoothGatt.discoverServices();
 
@@ -440,24 +499,14 @@ public class BluetoothService {
                             continue;
                         }
 
-
-//                        boolean flag = gatt.readCharacteristic(c);
-//                        Log.d(Constants.LOG_TAG_BT, "Requested initial value: " + c.getUuid().toString() + " : " + flag);
-
-                        Log.d(Constants.LOG_TAG_BT, "Enable notification for: " + c.getUuid().toString());
-                        boolean flag = gatt.setCharacteristicNotification(c, true);
-                        Log.i(Constants.LOG_TAG_BT, "Notification success: " + flag);
-
+                        enqueueCommand(new EnableNotificationCommand(c));
 
                         for (BluetoothGattDescriptor descriptor : c.getDescriptors()) {
                             if (!leDevice.getDescriptors().contains(descriptor.getUuid())) {
                                 continue;
                             }
 
-                            Log.d(Constants.LOG_TAG_BT, "Enable indication for: " + descriptor.getUuid().toString());
-                            descriptor.setValue(BluetoothGattDescriptor.ENABLE_INDICATION_VALUE);
-                            flag = gatt.writeDescriptor(descriptor);
-                            Log.i(Constants.LOG_TAG_BT, "Indication success " + flag);
+                            enqueueCommand(new WriteDescriptorCommand(descriptor));
                         }
 
                     }
@@ -478,6 +527,7 @@ public class BluetoothService {
 
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
+            super.onCharacteristicChanged(gatt, characteristic);
             Log.i(Constants.LOG_TAG_BT, "onCharacteristicChanged " + characteristic.getUuid());
 
             try {
@@ -493,6 +543,14 @@ public class BluetoothService {
             }
         }
 
+        @Override
+        public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
+            super.onDescriptorWrite(gatt, descriptor, status);
+
+            Log.i(Constants.LOG_TAG_BT, "Got descriptor back");
+            dequeueCommand();
+        }
+
         private void sendMeasureToUI(Measure aMeasure) {
             if (aMeasure != null) {
                 // consume
@@ -502,13 +560,6 @@ public class BluetoothService {
                 b.putStringArray(Constants.MEASURE_UNIT_KEY, new String[]{aMeasure.getMeasureUnit().toString()});
                 b.putStringArray(Constants.MEASURE_TARGET_KEY, new String[] {mTargets.get(mMeasureTypes.indexOf(aMeasure.getMeasureType())).toString()});
                 mReceiver.send(Activity.RESULT_OK, b);
-            }
-        }
-
-        @Override
-        public void onReadRemoteRssi(BluetoothGatt gatt, int rssi, int status) {
-            if (status == BluetoothGatt.GATT_SUCCESS) {
-                Log.i(Constants.LOG_TAG_BT, "RemoteRssi " + rssi);
             }
         }
 
