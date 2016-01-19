@@ -441,11 +441,11 @@ public class BluetoothService {
                         }
 
 
-                        boolean flag = gatt.readCharacteristic(c);
-                        Log.d(Constants.LOG_TAG_BT, "Requested initial value: " + c.getUuid().toString() + " : " + flag);
+//                        boolean flag = gatt.readCharacteristic(c);
+//                        Log.d(Constants.LOG_TAG_BT, "Requested initial value: " + c.getUuid().toString() + " : " + flag);
 
                         Log.d(Constants.LOG_TAG_BT, "Enable notification for: " + c.getUuid().toString());
-                        flag = gatt.setCharacteristicNotification(c, true);
+                        boolean flag = gatt.setCharacteristicNotification(c, true);
                         Log.i(Constants.LOG_TAG_BT, "Notification success: " + flag);
 
 

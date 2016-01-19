@@ -24,10 +24,10 @@ public class LeicaDistoBluetoothLEDevice extends AbstractBluetoothLEDevice {
 
     private static final UUID SERVICE_UUID = UUID.fromString("3ab10100-f831-4395-b29d-570977d5bf94");
 
-    private static final UUID CHARACTERISTIC_DISTANCE_UUID = UUID.fromString("3ab10101-f831-4395-b29d-570977d5bf94");
-    private static final UUID CHARACTERISTIC_DISTANCE_UNIT_UUID = UUID.fromString("3ab10102-f831-4395-b29d-570977d5bf94");
-    private static final UUID CHARACTERISTIC_ANGLE_UUID = UUID.fromString("3ab10103-f831-4395-b29d-570977d5bf94");
-    private static final UUID CHARACTERISTIC_ANGLE_UNIT_UUID = UUID.fromString("3ab10104-f831-4395-b29d-570977d5bf94");
+    public static final UUID CHARACTERISTIC_DISTANCE_UUID = UUID.fromString("3ab10101-f831-4395-b29d-570977d5bf94");
+    public static final UUID CHARACTERISTIC_DISTANCE_UNIT_UUID = UUID.fromString("3ab10102-f831-4395-b29d-570977d5bf94");
+    public static final UUID CHARACTERISTIC_ANGLE_UUID = UUID.fromString("3ab10103-f831-4395-b29d-570977d5bf94");
+    public static final UUID CHARACTERISTIC_ANGLE_UNIT_UUID = UUID.fromString("3ab10104-f831-4395-b29d-570977d5bf94");
 
     @Override
     public List<UUID> getServices() {

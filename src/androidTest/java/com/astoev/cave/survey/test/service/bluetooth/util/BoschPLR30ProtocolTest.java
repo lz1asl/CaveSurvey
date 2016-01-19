@@ -1,7 +1,9 @@
 package com.astoev.cave.survey.test.service.bluetooth.util;
 
-import com.astoev.cave.survey.service.bluetooth.device.AbstractBluetoothRFCOMMDevice;
+import com.astoev.cave.survey.service.bluetooth.device.AbstractBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.comm.BoschPLR30CBluetoothDevice;
+
+import org.junit.Test;
 
 import java.io.IOException;
 
@@ -10,7 +12,7 @@ import java.io.IOException;
  */
 public abstract class BoschPLR30ProtocolTest extends AbstractDeviceProtocolTest {
 
-    //@Test
+    @Test
     public void testDataPacket() throws IOException {
 
         // TODO fix me
@@ -19,7 +21,7 @@ public abstract class BoschPLR30ProtocolTest extends AbstractDeviceProtocolTest 
     }
 
     @Override
-    protected AbstractBluetoothRFCOMMDevice getDeviceSpec() {
+    protected AbstractBluetoothDevice getDeviceSpec() {
         return new BoschPLR30CBluetoothDevice();
     }
 }

@@ -4,10 +4,12 @@ import android.annotation.TargetApi;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
 import android.os.Build;
+import android.util.Log;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.Measure;
+import com.astoev.cave.survey.service.bluetooth.util.DistoXProtocol;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -43,6 +45,8 @@ public abstract class AbstractBluetoothLEDevice extends AbstractBluetoothDevice 
     }
 
     private Float asFloat(byte[] buff, ByteOrder anOrder) {
+        Log.d(Constants.LOG_TAG_BT, DistoXProtocol.describeDataPacket(buff));
+
         ByteBuffer buffer = ByteBuffer.wrap(buff);
         if (anOrder != null) {
             buffer.order(anOrder);
