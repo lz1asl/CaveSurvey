@@ -1,6 +1,6 @@
 package com.astoev.cave.survey.test.service.bluetooth.util;
 
-import com.astoev.cave.survey.service.bluetooth.device.AbstractBluetoothRFCOMMDevice;
+import com.astoev.cave.survey.service.bluetooth.device.comm.AbstractBluetoothRFCOMMDevice;
 import com.astoev.cave.survey.service.bluetooth.device.comm.CEMILDMBluetoothDevice;
 
 import org.junit.Test;

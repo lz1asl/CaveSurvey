@@ -1,7 +1,6 @@
 package com.astoev.cave.survey.service.bluetooth.device.ble;
 
 import com.astoev.cave.survey.Constants;
-import com.astoev.cave.survey.service.bluetooth.device.AbstractBluetoothLEDevice;
 
 /**
  * Bosch PLR 40C with Bluetooth 4.0

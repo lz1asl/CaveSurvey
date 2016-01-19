@@ -3,7 +3,6 @@ package com.astoev.cave.survey.service.bluetooth.device.comm;
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.Measure;
-import com.astoev.cave.survey.service.bluetooth.device.AbstractBluetoothRFCOMMDevice;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -6,8 +6,8 @@ import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.Measure;
 import com.astoev.cave.survey.service.bluetooth.device.AbstractBluetoothDevice;
-import com.astoev.cave.survey.service.bluetooth.device.AbstractBluetoothLEDevice;
-import com.astoev.cave.survey.service.bluetooth.device.AbstractBluetoothRFCOMMDevice;
+import com.astoev.cave.survey.service.bluetooth.device.ble.AbstractBluetoothLEDevice;
+import com.astoev.cave.survey.service.bluetooth.device.comm.AbstractBluetoothRFCOMMDevice;
 
 import junit.framework.TestCase;
 
