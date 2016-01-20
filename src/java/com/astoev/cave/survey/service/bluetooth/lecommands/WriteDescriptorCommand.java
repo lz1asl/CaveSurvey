@@ -7,6 +7,7 @@ import android.os.Build;
 import android.util.Log;
 
 import com.astoev.cave.survey.Constants;
+import com.astoev.cave.survey.activity.UIUtilities;
 
 /**
  * Created by astoev on 1/19/16.
@@ -26,5 +27,9 @@ public class WriteDescriptorCommand extends AbstractBluetoothCommand {
         mDescriptor.setValue(BluetoothGattDescriptor.ENABLE_INDICATION_VALUE);
         boolean flag = aBluetoothGatt.writeDescriptor(mDescriptor);
         Log.i(Constants.LOG_TAG_BT, "Indication success " + flag);
+
+        if (!flag) {
+            UIUtilities.showNotification("Device communication error");
+        }
     }
 }

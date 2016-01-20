@@ -222,30 +222,14 @@ public class BluetoothService {
 
                 // check if we need to connect from scratch or just reconnect to previous device
                 if (mBluetoothGatt != null) {// && aDeviceAddress.equals(mBluetoothGatt.getDevice().getAddress())) {
-                    Log.i(Constants.LOG_TAG_BT, "Connecting LE");
-                    // just reconnect
-                    if (mBluetoothGatt.connect()) {
-                        updateLeDeviceState(R.string.bt_state_connecting);
-                    } else {
-                        Log.e(Constants.LOG_TAG_BT, "Failed to connect");
-                        UIUtilities.showDeviceDisconnectedNotification(ConfigUtil.getContext(), mSelectedDeviceSpec.getDescription());
-                    }
-                } else {
-                //    if (mBluetoothGatt != null) {
-//                        mBluetoothGatt.close();
-//                    }
-                    Log.i(Constants.LOG_TAG_BT, "Re-connecting LE");
-                    // connect with remote device
-                    leDataCallback = new MyBluetoothGattCallback();
-//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-//                        if (!mSelectedDevice.createBond()) {
-//                            Log.e(Constants.LOG_TAG_BT, "Failed to create bond");
-//                            UIUtilities.showDeviceDisconnectedNotification(ConfigUtil.getContext(), mSelectedDeviceSpec.getDescription());
-//                        }
-//                    }
-                    mBluetoothGatt = mSelectedDevice.connectGatt(mCurrContext, false, leDataCallback);
-                    updateLeDeviceState(R.string.bt_state_connecting);
+                    Log.i(Constants.LOG_TAG_BT, "Reset LE");
+                    mBluetoothGatt.close();
                 }
+                Log.i(Constants.LOG_TAG_BT, "Connecting LE");
+                // connect with remote device
+                leDataCallback = new MyBluetoothGattCallback();
+                mBluetoothGatt = mSelectedDevice.connectGatt(mCurrContext, false, leDataCallback);
+                updateLeDeviceState(R.string.bt_state_connecting);
             } else {
                 Log.i(Constants.LOG_TAG_BT, "Unsupported version ");
             }
@@ -416,15 +400,19 @@ public class BluetoothService {
 
         Log.i(Constants.LOG_TAG_BT, "Enqueue command");
         synchronized (mCommandQueue) {
-            mCommandQueue.add(aCommand);  //Add to end of stack
-            //Schedule a new runnable to process that command (one command at a time executed only)
+            mCommandQueue.add(aCommand);
             mCommandExecutor.execute(new Runnable() {
                 @Override
                 public void run() {
                     Log.i(Constants.LOG_TAG_BT, "Execute command");
-                    //Acquire semaphore lock to ensure no other operations can run until this one completed
                     mCommandLock.acquireUninterruptibly();
-                    //Tell the command to start itself.
+
+                    try {
+                        Thread.currentThread().sleep(200);
+                    } catch (InterruptedException e) {
+                        Log.e(Constants.LOG_TAG_BT, "interrupted");
+                    }
+
                     aCommand.execute(mBluetoothGatt);
 
                     if (aCommand.canProceedWithoutAnswer()) {
@@ -465,7 +453,17 @@ public class BluetoothService {
                 Log.i(Constants.LOG_TAG_BT, "Connected with " + gatt.getDevice().getName());
 
 
-                mBluetoothGatt.discoverServices();
+                boolean flag = mBluetoothGatt.discoverServices();
+                if (!flag) {
+                    Log.i(Constants.LOG_TAG_BT, "Retry get services ");
+                    try {
+                        Thread.currentThread().sleep(300);
+                    } catch (InterruptedException e) {
+                        Log.e(Constants.LOG_TAG_BT, "interrupted");
+                    }
+                    flag = mBluetoothGatt.discoverServices();
+                    Log.i(Constants.LOG_TAG_BT, "Services " + flag);
+                }
 
                 updateLeDeviceState(R.string.bt_state_connecting);
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
