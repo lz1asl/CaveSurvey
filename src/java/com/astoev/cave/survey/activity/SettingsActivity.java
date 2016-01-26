@@ -16,6 +16,7 @@ import com.astoev.cave.survey.activity.dialog.LanguageDialog;
 import com.astoev.cave.survey.activity.poc.SensorTestActivity;
 import com.astoev.cave.survey.fragment.InfoDialogFragment;
 import com.astoev.cave.survey.service.reports.ErrorReporter;
+import com.astoev.cave.survey.util.ConfigUtil;
 
 /**
  * Created by astoev on 10/11/15.
@@ -26,7 +27,7 @@ public class SettingsActivity extends MainMenuActivity {
     private static final String ABOUT_DIALOG = "ABOUT_DIALOG";
     private static final String ERROR_REPORTER_TOOLTIP_DIALOG = "ERROR_REPORTER_TOOLTIP_DIALOG";
     private static final String ERROR_REPORTER_MESSAGE_DIALOG = "ERROR_REPORTER_MESSAGE_DIALOG";
-
+    private static final String AUTO_BACKUP_TOOLTIP_DIALOG = "AUTO_BACKUP_TOOLTIP_DIALOG";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -35,6 +36,7 @@ public class SettingsActivity extends MainMenuActivity {
 
         prepareLanguage();
         prepareBluetooth();
+        prepareAutoBackup();
         prepareErrorReporter();
         prepareAbout();
     }
@@ -100,6 +102,26 @@ public class SettingsActivity extends MainMenuActivity {
         });
     }
 
+    private void prepareAutoBackup() {
+        ToggleButton autoBackupToggle = (ToggleButton) findViewById(R.id.settingsBackupToggle);
+        boolean enabled = ConfigUtil.getBooleanProperty(ConfigUtil.PREF_BACKUP);
+        autoBackupToggle.setChecked(enabled);
+
+        autoBackupToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    Log.i(Constants.LOG_TAG_UI, "Auto backup on");
+                    ConfigUtil.setBooleanProperty(ConfigUtil.PREF_BACKUP, true);
+                } else {
+                    Log.i(Constants.LOG_TAG_UI, "Auto backup off");
+                    ConfigUtil.setBooleanProperty(ConfigUtil.PREF_BACKUP, false);
+                }
+            }
+        });
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -115,6 +137,17 @@ public class SettingsActivity extends MainMenuActivity {
         infoDialog.setArguments(bundle);
 
         infoDialog.show(getSupportFragmentManager(), ERROR_REPORTER_TOOLTIP_DIALOG);
+    }
+
+    public void onAutoBackupChooseInfo(View viewArg) {
+        InfoDialogFragment infoDialog = new InfoDialogFragment();
+
+        Bundle bundle = new Bundle();
+        String message = getString(R.string.settings_auto_backup_info);
+        bundle.putString(InfoDialogFragment.MESSAGE, message);
+        infoDialog.setArguments(bundle);
+
+        infoDialog.show(getSupportFragmentManager(), AUTO_BACKUP_TOOLTIP_DIALOG);
     }
 
     protected String getScreenTitle() {

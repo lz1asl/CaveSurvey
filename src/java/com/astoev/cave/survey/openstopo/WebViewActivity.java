@@ -110,11 +110,13 @@ public class WebViewActivity extends Activity {
 
         @JavascriptInterface
         public String getProjectFile() {
+            Log.i(Constants.LOG_TAG_UI, "Loading in OpensTopo : " + caveSurveyFilePath);
             return caveSurveyFilePath;
         }
 
         @JavascriptInterface
         public String getProjectData() {
+            Log.i(Constants.LOG_TAG_UI, "Loading data");
             InputStream in = null;
             try {
                 in = new FileInputStream(caveSurveyFilePath);
@@ -129,8 +131,8 @@ public class WebViewActivity extends Activity {
 
         @JavascriptInterface
         public void downloadFile(String fileName, String content) throws Exception {
-            Log.e(Constants.LOG_TAG_SERVICE, "Downloading " + fileName);
-            File exportFile = FileStorageUtil.addProjectFile(WebViewActivity.this, Workspace.getCurrentInstance().getActiveProject(), projectName, fileName, content.getBytes());
+            Log.i(Constants.LOG_TAG_SERVICE, "Downloading " + fileName);
+            File exportFile = FileStorageUtil.addProjectFile(WebViewActivity.this, Workspace.getCurrentInstance().getActiveProject(), null, fileName, content.getBytes(), false);
             UIUtilities.showNotification(WebViewActivity.this, R.string.export_done, exportFile.getAbsolutePath());
         }
 

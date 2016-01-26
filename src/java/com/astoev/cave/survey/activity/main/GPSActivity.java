@@ -63,34 +63,6 @@ public class GPSActivity extends MainMenuActivity {
 		gpsProcessor = getGPSProcessor();
 		
 		initSavedLocationContainer(parentPoint, this, savedInstanceState);
-//		if (parentPoint != null){
-//		    try {
-//                currentLocation = DaoUtil.getLocationByPoint(parentPoint);
-//            } catch (SQLException sqle) {
-//                Log.e(Constants.LOG_TAG_UI, "Unable to load location", sqle);
-//            }
-//		}
-//        if (/*findViewById(R.id.current_location_container) != null &&*/ currentLocation != null) {
-//
-//            // However, if we're being restored from a previous state,
-//            // then we don't need to do anything and should return or else
-//            // we could end up with overlapping fragments.
-//            if (savedInstanceState != null) {
-//                return;
-//            }
-//            
-//            LocationFragment locationFragment = new LocationFragment();
-//            
-//            Bundle bundle = new Bundle();
-//            bundle.putSerializable(LocationFragment.LOCATION_KEY, currentLocation);
-//            locationFragment.setArguments(bundle);
-//            
-//            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-//            transaction.replace(R.id.saved_location_container, locationFragment);
-//            
-//            transaction.commit();
-//            
-//        }
 	}
 
 	/**
@@ -102,7 +74,7 @@ public class GPSActivity extends MainMenuActivity {
 		
 		GPSProcessor gpsProcessor = getGPSProcessor();
 
-		if (!getGPSProcessor().canRead()){
+		if (!getGPSProcessor().canRead()) {
 		    
 		    if (!gpsRequested){
 		        // one request to turn on gps if disabled on settings page
@@ -170,7 +142,7 @@ public class GPSActivity extends MainMenuActivity {
         
         UpdatebleLocationFragment fragment = (UpdatebleLocationFragment)getSupportFragmentManager().findFragmentById(R.id.current_location_container);
         Location lastLocation = fragment.getLastLocation();
-        
+
         if (lastLocation != null){
             try {
                 DaoUtil.saveLocationToPoint(parentPoint, lastLocation);

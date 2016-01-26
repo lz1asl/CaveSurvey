@@ -1,4 +1,4 @@
-package com.astoev.cave.survey.service.bluetooth.device;
+package com.astoev.cave.survey.service.bluetooth.device.comm;
 
 import com.astoev.cave.survey.Constants.MeasureTypes;
 import com.astoev.cave.survey.exception.DataException;
@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Created by astoev on 2/21/14.
  */
-public class LaserAceBluetoothDevice extends AbstractBluetoothDevice {
+public class LaserAceBluetoothDevice extends AbstractBluetoothRFCOMMDevice {
 
 
     @Override
@@ -42,7 +42,7 @@ public class LaserAceBluetoothDevice extends AbstractBluetoothDevice {
     }
 
     @Override
-    public boolean isMeasureSupported(String aName, MeasureTypes aMeasureType) {
+    public boolean isMeasureSupported(MeasureTypes aMeasureType) {
         // single device supported, name ignored
         // all current distance, angle and inclination are returned on each measure
         return true;

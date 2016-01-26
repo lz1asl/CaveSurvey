@@ -25,6 +25,7 @@
     <string name="project_header">Име на проучване</string>
     <string name="project_name">Име</string>
     <string name="project_name_required">Въведи име</string>
+    <string name="project_name_characters">Съдържа непозволени символи</string>
 
     <!-- main screen -->
     <string name="main_leg">Текуща отсечка</string>
@@ -59,7 +60,7 @@
     <string name="azimuth">Азимут</string>
     <string name="slope">Наклон</string>
     
-    <string name="slope_slope">Наклон:</string>
+    <string name="slope_column">Наклон:</string>
     
     <string name="sensor">Сензор</string>
     <string name="accuracy">Точност</string>
@@ -256,6 +257,8 @@
     <string name="bt_state_bonded">Сдвоен</string>
     <string name="bt_state_bonding">Сдвояване</string>
     <string name="bt_state_none">Неразпознато състояние</string>
+    <string name="bt_state_connecting">Свързване</string>
+    <string name="bt_state_connected">Свързан</string>
     <string name="bt_not_on">Bluetooth не е включен</string>
     <string name="bt_not_selected">Не е избрано устройство</string>
     <string name="bt_supported_devices">Очаква:</string>
@@ -265,9 +268,9 @@
     <string name="action_saved">Запазено</string>
     <string name="action_deleted">Изтрито</string>
     
-    <string name="azimuth_azimuth">Азимут:</string>
-    <string name="azimuth_accuracy">Точност:</string>
-    <string name="azimuth_no_value">Липсва стойност</string>
+    <string name="azimuth_column">Азимут:</string>
+    <string name="accuracy_column">Точност:</string>
+    <string name="no_value_label">Липсва стойност</string>
     <string name="azimuth_accuracy_no_value">-1</string>
     <string name="azimuth_orination">Ориентация:</string>
     <string name="azimuth_magnetic">Магнитен:</string>
@@ -345,12 +348,16 @@
  Събраните грешки и Вашето описание ще бъдат изпратени за анализ (може да отнеме време).\n\n
  Необходима е мрежова връзка.</string>
     <string name="error_reporter_message">Опишете проблема</string>
+    <string name="error_reporter_message_empty">Моля опишете проблема</string>
     <string name="network_unavailable">Не е налична мрежова връзка</string>
     <string name="network_error">Мрежова грешка</string>
 
+    <!-- auto backup -->
+    <string name="settings_auto_backup">Автоматичен експорт</string>
+    <string name="settings_auto_backup_info">Създава автоматично резервно копие на активния проект всеки 5 минути</string>
+
     <!--opens topo -->
     <string name="export_openstopo_title">OpensTopo</string>
-
     <string name="information">Информация</string>
 
 </resources>

@@ -15,8 +15,10 @@ import com.astoev.cave.survey.dto.ProjectConfig;
 import com.astoev.cave.survey.fragment.ProjectFragment;
 import com.astoev.cave.survey.manager.ProjectManager;
 import com.astoev.cave.survey.model.Project;
+import com.astoev.cave.survey.util.FileStorageUtil;
 import com.astoev.cave.survey.util.StringUtils;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -54,8 +56,17 @@ public class NewProjectActivity extends MainMenuActivity {
 
             EditText projectNameField = (EditText) findViewById(R.id.new_projectname);
             final String newProjectName = projectNameField.getText().toString();
+
+            // name is required
             if (StringUtils.isEmpty(newProjectName)) {
                 projectNameField.setError(getString(R.string.project_name_required));
+                return;
+            }
+
+            // name should be simple enough to be presented on the FS
+            File projectHome = FileStorageUtil.getProjectHome(newProjectName);
+            if (projectHome == null) {
+                projectNameField.setError(getString(R.string.project_name_characters));
                 return;
             }
 

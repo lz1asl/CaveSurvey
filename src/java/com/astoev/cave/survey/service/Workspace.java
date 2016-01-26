@@ -77,10 +77,6 @@ public class Workspace {
         ConfigUtil.removeProperty(ConfigUtil.PROP_CURR_LEG);
     }
 
-//    private void setActiveGallery(Gallery aGallery) {
-//        ConfigUtil.setIntProperty(ConfigUtil.PROP_CURR_GALLERY, aGallery.getId());
-//    }
-
     private void setActiveGalleryId(Integer aGalleryId) {
         ConfigUtil.setIntProperty(ConfigUtil.PROP_CURR_GALLERY, aGalleryId);
     }
@@ -123,12 +119,7 @@ public class Workspace {
         if (currLeg != null) {
             return DaoUtil.getLeg(currLeg);
         } else {
-            Integer currProject = getActiveProjectId();
-            Log.i(Constants.LOG_TAG_SERVICE, "Search first leg for project " + currProject);
-            QueryBuilder<Leg, Integer> firstLegQuery = mDBHelper.getLegDao().queryBuilder();
-            firstLegQuery.where().eq(Leg.COLUMN_PROJECT_ID, currProject);
-            firstLegQuery.orderBy(Leg.COLUMN_FROM_POINT, true);
-            return mDBHelper.getLegDao().queryForFirst(firstLegQuery.prepare());
+            return getFirstLeg();
         }
     }
 
@@ -200,4 +191,12 @@ public class Workspace {
         return mDBHelper;
     }
 
+    public Leg getFirstLeg() throws SQLException {
+        Integer currProject = getActiveProjectId();
+        Log.i(Constants.LOG_TAG_SERVICE, "Search first leg for project " + currProject);
+        QueryBuilder<Leg, Integer> firstLegQuery = mDBHelper.getLegDao().queryBuilder();
+        firstLegQuery.where().eq(Leg.COLUMN_PROJECT_ID, currProject);
+        firstLegQuery.orderBy(Leg.COLUMN_FROM_POINT, true);
+        return mDBHelper.getLegDao().queryForFirst(firstLegQuery.prepare());
+    }
 }

@@ -126,7 +126,7 @@ public class ErrorReporter {
             errorContents = errorContents.replaceAll("I/", "\n");
             errorContents = errorContents.replaceAll("W/", "\n");
 
-            // TODO it's good idea to zip the contents
+            // it's good idea to zip the contents once the report get big
             report.put("error", errorContents);
         } finally {
             StreamUtil.closeQuietly(in);

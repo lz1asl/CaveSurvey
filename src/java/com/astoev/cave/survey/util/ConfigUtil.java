@@ -19,6 +19,8 @@ public class ConfigUtil {
     public static final String PROP_CURR_BT_DEVICE_NAME = "curr_bt_device_name";
     public static final String PREF_LOCALE = "language_pref";
     public static final String PREF_SENSOR = "sensor_pref";
+    public static final String PREF_BACKUP = "backup_pref";
+
 
     private static Activity mAppContext;
 
@@ -47,6 +49,16 @@ public class ConfigUtil {
     public static boolean setStringProperty(String aName, String aValue) {
         SharedPreferences.Editor editor = getPrefs(Context.MODE_PRIVATE).edit();
         editor.putString(aName, aValue);
+        return editor.commit();
+    }
+
+    public static Boolean getBooleanProperty(String aName) {
+        return getPrefs(Context.MODE_PRIVATE).getBoolean(aName, false);
+    }
+
+    public static boolean setBooleanProperty(String aName, boolean aValue) {
+        SharedPreferences.Editor editor = getPrefs(Context.MODE_PRIVATE).edit();
+        editor.putBoolean(aName, aValue);
         return editor.commit();
     }
 

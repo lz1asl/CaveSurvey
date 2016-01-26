@@ -1,21 +1,17 @@
 package com.astoev.cave.survey.activity.dialog;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.support.v4.app.DialogFragment;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.text.util.Linkify;
-import android.view.Gravity;
+import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.service.reports.ErrorReporter;
+import com.astoev.cave.survey.util.StringUtils;
 
 /**
  * Dialog that allows the user to enter some message before submitting the error report.
@@ -48,9 +44,15 @@ public class ErrorReporterDialog extends DialogFragment {
                 // get the message
                 EditText messageBox = (EditText) view.findViewById(R.id.error_reporter_message_box);
 
-                // report
-                ErrorReporter.reportToServer(messageBox.getText().toString(), dumpFile);
-                dismiss();
+                if (StringUtils.isEmpty(messageBox)) {
+                    // validate user description is required
+                    messageBox.setError(getString(R.string.error_reporter_message_empty));
+                } else {
+                    // report
+                    ErrorReporter.reportToServer(messageBox.getText().toString(), dumpFile);
+                    dismiss();
+                }
+
             }
         });
 

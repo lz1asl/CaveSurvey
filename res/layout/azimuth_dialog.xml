@@ -10,13 +10,13 @@
         <TextView android:layout_height="wrap_content"
                   android:layout_width="0dp"
                   android:layout_weight="1" 
-                  android:text="@string/azimuth_azimuth"/>
+                  android:text="@string/azimuth_column"/>
         
 	    <TextView android:id="@+id/azimuth_value"
 	              android:layout_height="wrap_content"
 	              android:layout_width="0dp"
 	              android:layout_weight="1"
-	              android:text="@string/azimuth_no_value"
+	              android:text="@string/no_value_label"
 	              android:textAppearance="?android:attr/textAppearanceLarge"/>
     </LinearLayout>
 
@@ -26,12 +26,12 @@
         <TextView android:layout_height="wrap_content"
                   android:layout_width="0dp"
                   android:layout_weight="1" 
-                  android:text="@string/azimuth_accuracy"/>
+                  android:text="@string/accuracy_column"/>
         <TextView android:id="@+id/azimuth_accuracy"
                   android:layout_height="wrap_content"
                   android:layout_width="0dp"
                   android:layout_weight="1"
-                  android:text="@string/azimuth_no_value"
+                  android:text="@string/no_value_label"
                   android:textAppearance="?android:attr/textAppearanceLarge"/>
     </LinearLayout>
 

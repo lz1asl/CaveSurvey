@@ -1,6 +1,7 @@
 package com.astoev.cave.survey.activity.main;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
@@ -31,7 +32,7 @@ import java.util.List;
  * Time: 10:31 AM
  * To change this template use File | Settings | File Templates.
  */
-public class BTActivity extends MainMenuActivity {
+public class BTActivity extends MainMenuActivity implements Refresheable {
 
     List<Pair<String, String>> devices = new ArrayList<Pair<String, String>>();
 
@@ -39,8 +40,8 @@ public class BTActivity extends MainMenuActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.bluetooth);
 
-        prepareUI();
         BluetoothService.registerListeners(this);
+        prepareUI();
     }
 
     private void prepareUI() {
@@ -92,8 +93,13 @@ public class BTActivity extends MainMenuActivity {
     protected void onResume() {
         super.onResume();
 
-        prepareUI();
         BluetoothService.registerListeners(this);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            BluetoothService.discoverBluetoothLEDevices();
+        }
+
+        prepareUI();
     }
 
     @Override
@@ -145,7 +151,6 @@ public class BTActivity extends MainMenuActivity {
         }
 
         updateDeviceStatus();
-
     }
 
     private void updateDeviceStatus() {
@@ -205,7 +210,14 @@ public class BTActivity extends MainMenuActivity {
     protected void onPause() {
         // Unregister since the activity is not visible
         BluetoothService.unregisterListeners(this);
+        if (BluetoothService.isBluetoothLESupported()) {
+            BluetoothService.stopDiscoverBluetoothLEDevices();
+        }
         super.onPause();
     }
 
+    @Override
+    public void refresh() {
+        updateDeviceStatus();
+    }
 }
