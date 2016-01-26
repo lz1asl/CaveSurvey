@@ -16,10 +16,35 @@ import com.astoev.cave.survey.util.StringUtils;
  */
 public class AutoExport {
 
-    public static void processAutoExport() {
+
+    private static Long lastRunTimestamp = null;
+
+    private static final long FIVE_MINUTES_MILLIS = 1000 * 60 * 5;
 
 
-        // TODO if enabled
+    public static void notifyUIActivity() {
+
+        if (!ConfigUtil.getBooleanProperty(ConfigUtil.PREF_BACKUP)) {
+            // auto backup disabled
+            return;
+        }
+
+        if (Workspace.getCurrentInstance().getActiveProject() == null) {
+            // not inside a project
+            return;
+        }
+
+        long now = System.currentTimeMillis();
+
+        if (lastRunTimestamp == null || lastRunTimestamp + FIVE_MINUTES_MILLIS < now) {
+            // time to run export
+            processAutoExport();
+            lastRunTimestamp = now;
+        }
+
+    }
+
+    private static void processAutoExport() {
 
         try {
             if (ConfigUtil.getBooleanProperty(ConfigUtil.PREF_BACKUP)) {
@@ -31,11 +56,11 @@ public class AutoExport {
                 if (StringUtils.isEmpty(exportPath)) {
                     UIUtilities.showNotification(ConfigUtil.getContext(), R.string.export_io_error, exportPath);
                 }
+                Log.i(Constants.LOG_TAG_SERVICE, "Export completed");
             }
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_SERVICE, "Auto export failed", e);
         }
-
     }
 
 }

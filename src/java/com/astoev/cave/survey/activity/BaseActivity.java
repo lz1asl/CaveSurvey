@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.service.Workspace;
+import com.astoev.cave.survey.service.export.AutoExport;
 import com.astoev.cave.survey.util.ConfigUtil;
 
 import java.io.PrintWriter;
@@ -101,6 +102,9 @@ public abstract class BaseActivity extends ActionBarActivity {
         if (getScreenTitle() != null) {
             setTitle(screenTitle);
         }
+
+        // auto backup tick
+        AutoExport.notifyUIActivity();
 
         Log.i(Constants.LOG_TAG_UI, "Resumed activity " + this.getClass().getName());
     }
