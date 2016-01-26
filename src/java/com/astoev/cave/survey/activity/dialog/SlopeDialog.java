@@ -6,6 +6,7 @@ package com.astoev.cave.survey.activity.dialog;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -26,12 +27,14 @@ public class SlopeDialog extends BaseBuildInMeasureDialog {
     
     /** Slope value view*/
     private TextView slopeView;
+    private TextView accuracyView;
     
 
     /**
      * @see android.support.v4.app.DialogFragment#onCreateDialog(android.os.Bundle)
      */
     @Override
+    @NonNull
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         // parent initialization
@@ -51,6 +54,7 @@ public class SlopeDialog extends BaseBuildInMeasureDialog {
         progressBar = (ProgressBar)view.findViewById(R.id.slope_progress);
         
         slopeView = (TextView)view.findViewById(R.id.slope_value);
+        accuracyView = (TextView) view.findViewById(R.id.slope_accuracy);
         
         // create the Dialog
         AlertDialog alertDialg = builder.create();
@@ -72,6 +76,14 @@ public class SlopeDialog extends BaseBuildInMeasureDialog {
                 }
                 
                 slopeView.setText(formater.format(lastValue) + unitsString);
+            }
+
+            /**
+             * @see com.astoev.cave.survey.service.orientation.AzimuthChangedListener#onAzimuthChanged(float)
+             */
+            @Override
+            public void onAccuracyChanged(int accuracyArg) {
+                accuracyView.setText(orientationProcessor.getAccuracyAsString(accuracyArg));
             }
         });
 

@@ -30,7 +30,7 @@
     <!-- main screen -->
     <string name="main_leg">Current leg</string>
     <string name="main_button_change">Select</string>
-    <string name="main_button_change_title">Change leg</string>
+    <string name="main_button_change_title">Select leg</string>
     <string name="main_button_add">Add</string>
     <string name="main_button_data">Data</string>
     <string name="main_button_about">About</string>
@@ -65,7 +65,7 @@
     <string name="point_vectors_delete">Delete vector %1$s?</string>
     <string name="point_swipe_not_possible">Gallery border reached</string>
 
-    <string name="slope_slope">Clinometer:</string>
+    <string name="slope_column">Clinometer:</string>
     
     <string name="sensor">Sensor</string>
     <string name="accuracy">Accuracy</string>
@@ -257,6 +257,8 @@
     <string name="bt_state_bonded">Bonded state</string>
     <string name="bt_state_bonding">Bonding state</string>
     <string name="bt_state_none">Unknown state</string>
+    <string name="bt_state_connecting">Connecting</string>
+    <string name="bt_state_connected">Connected</string>
     <string name="bt_not_on">Bluetooth not turned on</string>
     <string name="bt_not_selected">Device not selected</string>
     <string name="bt_supported_devices">Expecting:</string>
@@ -266,9 +268,9 @@
     <string name="action_saved">Saved</string>
     <string name="action_deleted">Deleted</string>
     
-    <string name="azimuth_azimuth">Azimuth:</string>
-    <string name="azimuth_accuracy">Accuracy:</string>
-    <string name="azimuth_no_value">No value</string>
+    <string name="azimuth_column">Azimuth:</string>
+    <string name="accuracy_column">Accuracy:</string>
+    <string name="no_value_label">No value</string>
     <string name="azimuth_accuracy_no_value">-1</string>
     <string name="azimuth_orination">Orientation:</string>
     <string name="azimuth_magnetic">Magnetic:</string>

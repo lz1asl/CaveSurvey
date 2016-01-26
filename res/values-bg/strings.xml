@@ -60,7 +60,7 @@
     <string name="azimuth">Азимут</string>
     <string name="slope">Наклон</string>
     
-    <string name="slope_slope">Наклон:</string>
+    <string name="slope_column">Наклон:</string>
     
     <string name="sensor">Сензор</string>
     <string name="accuracy">Точност</string>
@@ -257,6 +257,8 @@
     <string name="bt_state_bonded">Сдвоен</string>
     <string name="bt_state_bonding">Сдвояване</string>
     <string name="bt_state_none">Неразпознато състояние</string>
+    <string name="bt_state_connecting">Свързване</string>
+    <string name="bt_state_connected">Свързан</string>
     <string name="bt_not_on">Bluetooth не е включен</string>
     <string name="bt_not_selected">Не е избрано устройство</string>
     <string name="bt_supported_devices">Очаква:</string>
@@ -266,9 +268,9 @@
     <string name="action_saved">Запазено</string>
     <string name="action_deleted">Изтрито</string>
     
-    <string name="azimuth_azimuth">Азимут:</string>
-    <string name="azimuth_accuracy">Точност:</string>
-    <string name="azimuth_no_value">Липсва стойност</string>
+    <string name="azimuth_column">Азимут:</string>
+    <string name="accuracy_column">Точност:</string>
+    <string name="no_value_label">Липсва стойност</string>
     <string name="azimuth_accuracy_no_value">-1</string>
     <string name="azimuth_orination">Ориентация:</string>
     <string name="azimuth_magnetic">Магнитен:</string>

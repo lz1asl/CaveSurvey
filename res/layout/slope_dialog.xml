@@ -10,13 +10,28 @@
         <TextView android:layout_height="wrap_content"
                   android:layout_width="0dp"
                   android:layout_weight="1" 
-                  android:text="@string/slope_slope"/>
+                  android:text="@string/slope_column"/>
         
         <TextView android:id="@+id/slope_value"
                   android:layout_height="wrap_content"
                   android:layout_width="0dp"
                   android:layout_weight="1"
-                  android:text="@string/azimuth_no_value"
+                  android:text="@string/no_value_label"
+                  android:textAppearance="?android:attr/textAppearanceLarge"/>
+    </LinearLayout>
+
+    <LinearLayout android:layout_height="wrap_content"
+                  android:layout_width="fill_parent"
+                  android:layout_margin="10dp">
+        <TextView android:layout_height="wrap_content"
+                  android:layout_width="0dp"
+                  android:layout_weight="1"
+                  android:text="@string/accuracy_column"/>
+        <TextView android:id="@+id/slope_accuracy"
+                  android:layout_height="wrap_content"
+                  android:layout_width="0dp"
+                  android:layout_weight="1"
+                  android:text="@string/no_value_label"
                   android:textAppearance="?android:attr/textAppearanceLarge"/>
     </LinearLayout>
     

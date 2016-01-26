@@ -6,6 +6,7 @@ package com.astoev.cave.survey.activity.dialog;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -14,7 +15,6 @@ import android.widget.TextView;
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.service.orientation.AzimuthChangedAdapter;
-import com.astoev.cave.survey.service.orientation.AzimuthChangedListener;
 import com.astoev.cave.survey.service.orientation.OrientationProcessorFactory;
 
 /**
@@ -28,11 +28,10 @@ public class AzimuthDialog extends BaseBuildInMeasureDialog {
     private TextView azimuthView;
     private TextView accuracyView;
 
-    protected AzimuthChangedListener targetView;
-
     /**
      * @see android.support.v4.app.DialogFragment#onCreateDialog(android.os.Bundle)
      */
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // parent initialization
