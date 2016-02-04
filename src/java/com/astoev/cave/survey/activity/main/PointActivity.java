@@ -331,26 +331,31 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
     }
 
     public void drawingButton() {
-        Intent intent = new Intent(this, DrawingActivity.class);
-        intent.putExtra(DrawingActivity.PARAM_LEG, mCurrentLeg.getId());
-        startActivity(intent);
+        if (saveLeg()) {
+            Intent intent = new Intent(this, DrawingActivity.class);
+            intent.putExtra(DrawingActivity.PARAM_LEG, mCurrentLeg.getId());
+            startActivity(intent);
+        }
     }
 
     public void gpsButton() {
-        Point parentPoint = getCurrentLeg().getFromPoint();
-        Intent intent = new Intent(this, GPSActivity.class);
-        intent.putExtra(GPSActivity.POINT, parentPoint);
-        startActivity(intent);
+        if (saveLeg()) {
+            Point parentPoint = getCurrentLeg().getFromPoint();
+            Intent intent = new Intent(this, GPSActivity.class);
+            intent.putExtra(GPSActivity.POINT, parentPoint);
+            startActivity(intent);
+        }
     }
 
     private void vectorButton() {
-        VectorDialog dialog = new VectorDialog(getSupportFragmentManager());
-        Bundle bundle = new Bundle();
-        Leg leg = getCurrentLeg();
-        bundle.putSerializable(VectorDialog.LEG, getCurrentLeg());
-        dialog.setCancelable(true);
-        dialog.setArguments(bundle);
-        dialog.show(getSupportFragmentManager(), VECTOR_DIALOG);
+        if (saveLeg()) {
+            VectorDialog dialog = new VectorDialog(getSupportFragmentManager());
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(VectorDialog.LEG, getCurrentLeg());
+            dialog.setCancelable(true);
+            dialog.setArguments(bundle);
+            dialog.show(getSupportFragmentManager(), VECTOR_DIALOG);
+        }
     }
 
     public void deleteButton() {
@@ -375,35 +380,37 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         // picture http://www.tutorialforandroid.com/2010/10/take-picture-in-android-with.html
         // https://developer.android.com/training/camera/photobasics.html
 
-        File photoFile;
-        try {
-            String projectName = getWorkspace().getActiveProject().getName();
-            Leg workingLeg = getCurrentLeg();
-            Point pointFrom = workingLeg.getFromPoint();
-            DaoUtil.refreshPoint(pointFrom);
+        if (saveLeg()) {
+            File photoFile;
+            try {
+                String projectName = getWorkspace().getActiveProject().getName();
+                Leg workingLeg = getCurrentLeg();
+                Point pointFrom = workingLeg.getFromPoint();
+                DaoUtil.refreshPoint(pointFrom);
 
-            // create file where to capture the image
-            String galleryName = PointUtil.getGalleryNameForFromPoint(pointFrom, workingLeg.getGalleryId());
-            String filePrefix = FileStorageUtil.getFilePrefixForPicture(pointFrom, galleryName);
-            photoFile = FileStorageUtil.createPictureFile(this, projectName, filePrefix, FileStorageUtil.JPG_FILE_EXTENSION, true);
+                // create file where to capture the image
+                String galleryName = PointUtil.getGalleryNameForFromPoint(pointFrom, workingLeg.getGalleryId());
+                String filePrefix = FileStorageUtil.getFilePrefixForPicture(pointFrom, galleryName);
+                photoFile = FileStorageUtil.createPictureFile(this, projectName, filePrefix, FileStorageUtil.JPG_FILE_EXTENSION, true);
 
-        } catch (SQLException e) {
-            UIUtilities.showNotification(R.string.error);
-            return;
-        } catch (Exception e) {
-            UIUtilities.showNotification(R.string.export_io_error);
-            return;
-        }
+            } catch (SQLException e) {
+                UIUtilities.showNotification(R.string.error);
+                return;
+            } catch (Exception e) {
+                UIUtilities.showNotification(R.string.export_io_error);
+                return;
+            }
 
-        // call capture image
-        if (photoFile != null) {
+            // call capture image
+            if (photoFile != null) {
 
-            mCurrentPhotoPath = photoFile.getAbsolutePath();
+                mCurrentPhotoPath = photoFile.getAbsolutePath();
 
-            Log.i(Constants.LOG_TAG_SERVICE, "Going to capture image in: " + photoFile.getAbsolutePath());
-            final Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
-            startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+                Log.i(Constants.LOG_TAG_SERVICE, "Going to capture image in: " + photoFile.getAbsolutePath());
+                final Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+                startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+            }
         }
     }
 
