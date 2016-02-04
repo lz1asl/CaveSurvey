@@ -83,3 +83,6 @@ Related Projects
 ================
 
 [CaveSurveyBTEmulator](https://github.com/lz1asl/CaveSurveyBTEmulator) is utility project that helps us to emulate the communication with Bluetooth measurement devices that we don't currently have while developing.
+
+[CaveSurveyReports](https://github.com/lz1asl/CaveSurveyReports) allows you to report an issue and attach the logs from within CaveSurvey.
+
