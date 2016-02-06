@@ -12,6 +12,7 @@ import android.os.StatFs;
 import android.util.Log;
 
 import com.astoev.cave.survey.Constants;
+import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.model.Project;
 
@@ -230,6 +231,7 @@ public class FileStorageUtil {
     public static File getStorageHome() {
         if (!isExternalStorageWritable()) {
             Log.e(Constants.LOG_TAG_UI, "Storage unavailable");
+            UIUtilities.showNotification("Storage unavailable");
             return null;
         }
         File extdir = Environment.getExternalStorageDirectory();
@@ -238,6 +240,7 @@ public class FileStorageUtil {
         long availableBytes = stats.getAvailableBlocks() * (long) stats.getBlockSize();
         if (availableBytes < MIN_REQUIRED_STORAGE) {
             Log.e(Constants.LOG_TAG_UI, "No space left");
+            UIUtilities.showNotification("No space left");
             return null;
         }
 
@@ -245,6 +248,7 @@ public class FileStorageUtil {
         if (!storageHome.exists()) {
             if (!storageHome.mkdirs()) {
                 Log.e(Constants.LOG_TAG_UI, "Failed to create folder " + storageHome.getAbsolutePath());
+                UIUtilities.showNotification("Failed to create folder " + storageHome.getAbsolutePath());
                 return null;
             }
             Log.i(Constants.LOG_TAG_SERVICE, "Export folder created");
