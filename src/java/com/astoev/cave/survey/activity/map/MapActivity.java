@@ -57,6 +57,9 @@ public class MapActivity extends MainMenuActivity implements View.OnTouchListene
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 map.setHorizontalPlan(!isChecked);
+                // explicitly reset the zoom when switching plan/scale
+                zoom.setIsZoomOutEnabled(map.canZoomOut());
+                zoom.setIsZoomInEnabled(map.canZoomIn());
             }
         });
     }
