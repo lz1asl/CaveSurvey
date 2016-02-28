@@ -60,8 +60,14 @@ public class DrawingSurface extends View {
             mMap.draw(aCanvas);
         }
 
-        // user notes above
-        mCommandManager.executeAll(aCanvas);
+        aCanvas.translate(mMap.getMoveX(), mMap.getMoveY());
+
+        // user sketches below
+        mCommandManager.executeAll(aCanvas, mMap);
+
+        aCanvas.translate(-mMap.getMoveX(), -mMap.getMoveY());
+
+        // current unsaved sketches asdf
         mPreviewPath.draw(aCanvas);
     }
 

@@ -2,7 +2,6 @@ package com.astoev.cave.survey.activity.draw;
 
 import android.graphics.Path;
 
-import com.astoev.cave.survey.activity.map.MapView;
 import com.astoev.cave.survey.model.SketchElement;
 import com.astoev.cave.survey.model.SketchPoint;
 
@@ -19,20 +18,20 @@ public class LoggedPath extends Path {
     private List<SketchPoint> mPoints = new ArrayList<SketchPoint>();
     private float mMoveX;
     private float mMoveY;
-    private Integer mScale;
+    private float mScale;
 
     @Override
     public void lineTo(float aX, float aY) {
-        // display the line scaled
-        super.lineTo(moveAndScale(mMoveX, aX), moveAndScale(mMoveY, aY));
-        // persist the original line
+        // display the line
+        super.lineTo(aX, aY);
+        // persist the original line to be saved
         mPoints.add(new SketchPoint(null, aX, aY));
     }
 
     @Override
     public void moveTo(float aX, float aY) {
-        // display the line scaled
-        super.moveTo(moveAndScale(mMoveX, aX), moveAndScale(mMoveY, aY));
+        // display the line
+        super.moveTo(aX, aY);
         // persist the original line
         mPoints.add(new SketchPoint(null, aX, aY));
     }
@@ -41,11 +40,11 @@ public class LoggedPath extends Path {
         return mPoints;
     }
 
-    public static LoggedPath fromSketchElement(SketchElement anElement, float moveX, float moveY, Integer scale) throws SQLException {
+    public static LoggedPath fromSketchElement(SketchElement anElement) throws SQLException {
         LoggedPath path = new LoggedPath();
-        path.mMoveX = moveX;
-        path.mMoveY = moveY;
-        path.mScale = scale;
+        path.mMoveX = anElement.getX();
+        path.mMoveY = anElement.getY();
+        path.mScale = anElement.getScale();
 
         Collection<SketchPoint> points = anElement.getPoints();
         boolean first = true;
@@ -61,11 +60,27 @@ public class LoggedPath extends Path {
         return path;
     }
 
-    private float moveAndScale(float aMove, float aCoordinate) {
-        float scale = 1;
-        if (mScale != null) {
-            scale = (mScale/ MapView.INITIAL_SCALE);
-        }
-        return aMove + aCoordinate * scale;
+    public float getMoveX() {
+        return mMoveX;
+    }
+
+    public void setMoveX(float moveX) {
+        mMoveX = moveX;
+    }
+
+    public float getMoveY() {
+        return mMoveY;
+    }
+
+    public void setMoveY(float moveY) {
+        mMoveY = moveY;
+    }
+
+    public float getScale() {
+        return mScale;
+    }
+
+    public void setScale(float scale) {
+        mScale = scale;
     }
 }

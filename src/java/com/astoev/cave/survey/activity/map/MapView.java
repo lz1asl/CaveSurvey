@@ -92,6 +92,7 @@ public class MapView extends View {
         // need to instruct that changes to the canvas will be made, otherwise the screen might become blank
         // see http://stackoverflow.com/questions/12261435/canvas-does-not-draw-in-custom-view
         setWillNotDraw(false);
+
     }
 
     @Override
@@ -518,10 +519,6 @@ public class MapView extends View {
 
     public float getMoveY() {
         return mapCenterMoveY;
-    }
-
-    public boolean isAnnotateMap() {
-        return annotateMap;
     }
 
     public void setAnnotateMap(boolean annotateMap) {

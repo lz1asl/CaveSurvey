@@ -123,7 +123,7 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
                     for (SketchElement e : elements) {
                         DrawingPath path = new DrawingPath();
                         path.setOptions(DrawingOptions.fromSketchElement(e));
-                        path.setPath(LoggedPath.fromSketchElement(e, mMoveX, mMoveY, mScale));
+                        path.setPath(LoggedPath.fromSketchElement(e));
                         drawingSurface.getPathElements().add(path);
                     }
                 }
@@ -155,6 +155,9 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
     public boolean onTouch(View view, MotionEvent motionEvent) {
         if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
             currentDrawingPath = new DrawingPath(mOptions);
+            currentDrawingPath.getPath().setMoveX(mMoveX);
+            currentDrawingPath.getPath().setMoveY(mMoveY);
+            currentDrawingPath.getPath().setScale(mScale);
             currentBrush.mouseDown(currentDrawingPath.getPath(), motionEvent.getX(), motionEvent.getY());
             currentBrush.mouseDown(drawingSurface.mPreviewPath.getPath(), motionEvent.getX(), motionEvent.getY());
             drawingSurface.invalidate();
@@ -164,11 +167,9 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
             drawingSurface.invalidate();
         } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
             currentBrush.mouseUp(drawingSurface.mPreviewPath.getPath(), motionEvent.getX(), motionEvent.getY());
+            currentBrush.mouseUp(currentDrawingPath.getPath(), motionEvent.getX(), motionEvent.getY());
             drawingSurface.mPreviewPath.setPath(new LoggedPath());
             drawingSurface.addDrawingPath(currentDrawingPath);
-
-            currentBrush.mouseUp(currentDrawingPath.getPath(), motionEvent.getX(), motionEvent.getY());
-
             undoBtn.setEnabled(true);
             redoBtn.setEnabled(false);
             saveBtn.setEnabled(true);
@@ -265,9 +266,10 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
                 element.setColor(currPath.getOptions().getColor());
                 element.setSize(currPath.getOptions().getSize());
                 element.setType(currPath.getOptions().getType());
-                element.setX(mMoveX);
-                element.setY(mMoveY);
-                element.setScale(mScale);
+                LoggedPath currPathPath = currPath.getPath();
+                element.setX(currPathPath.getMoveX());
+                element.setY(currPathPath.getMoveY());
+                element.setScale(currPathPath.getScale());
                 getWorkspace().getDBHelper().getSketchElementDao().create(element);
 
                 // points

@@ -1,10 +1,13 @@
 package com.astoev.cave.survey.activity.draw;
 
 import android.graphics.Canvas;
+import android.graphics.Path;
+
+import com.astoev.cave.survey.activity.map.MapView;
+import com.astoev.cave.survey.model.SketchPoint;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -44,14 +47,53 @@ public class CommandManager {
     }
 
 
-    public void executeAll(Canvas canvas) {
+    public void executeAll(Canvas aCanvas, MapView aMapView) {
         if (currentStack != null) {
             synchronized (currentStack) {
+
                 for (DrawingPath path : currentStack) {
-                    path.draw(canvas);
+
+                    // transform
+                    Path scaledPath = toMovedAndScaledBasicPath(path, aMapView, aCanvas);
+
+                    // display
+                    aCanvas.translate(-path.getPath().getMoveX(), -path.getPath().getMoveY());
+
+                    aCanvas.drawPath(scaledPath, DrawingOptions.optionsToPaint(path.getOptions()));
+                    aCanvas.translate(path.getPath().getMoveX(), path.getPath().getMoveY());
                 }
+
+
             }
         }
+    }
+
+    private Path toMovedAndScaledBasicPath(DrawingPath aPath, MapView aMapView, Canvas aCanvas) {
+        Path scaledBasicPath = new Path();
+        LoggedPath sourcePath = aPath.getPath();
+
+        boolean first = true;
+
+        float scale = aMapView.getScale() / sourcePath.getScale();
+
+        float adjX = aCanvas.getWidth() / 2 - aCanvas.getWidth() / 2 *scale;
+        float adjY = aCanvas.getHeight() / 2 - aCanvas.getHeight() / 2*scale;
+
+        for (SketchPoint point : sourcePath.getPoints()) {
+
+            float x = point.getX() * scale + adjX;
+            float y = point.getY() * scale + adjY;
+
+            if (first) {
+                scaledBasicPath.moveTo(x, y);
+                first = false;
+            } else {
+                scaledBasicPath.lineTo(x, y);
+            }
+
+        }
+
+        return scaledBasicPath;
     }
 
     public boolean hasMoreRedo() {
