@@ -15,9 +15,6 @@ import com.astoev.cave.survey.model.Option;
 import com.astoev.cave.survey.model.Photo;
 import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.model.Project;
-import com.astoev.cave.survey.model.Sketch;
-import com.astoev.cave.survey.model.SketchElement;
-import com.astoev.cave.survey.model.SketchPoint;
 import com.astoev.cave.survey.model.Vector;
 import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.service.Workspace;
@@ -489,8 +486,11 @@ public class DaoUtil {
 
                     // delete project sketch
                     Project p = getProject(aProjectId);
-                    if (p.getSketch() != null) {
-                        Workspace.getCurrentInstance().getDBHelper().getSketchDao().delete(p.getSketch());
+                    if (p.getSketchPlan() != null) {
+                        Workspace.getCurrentInstance().getDBHelper().getSketchDao().delete(p.getSketchPlan());
+                    }
+                    if (p.getSketchSection() != null) {
+                        Workspace.getCurrentInstance().getDBHelper().getSketchDao().delete(p.getSketchSection());
                     }
 
                     // delete project

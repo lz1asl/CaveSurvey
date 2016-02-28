@@ -27,6 +27,7 @@ public class DrawingSurface extends View {
     public DrawingPath mPreviewPath;
     private MapView mMap;
     private CommandManager mCommandManager;
+    private Boolean mHorizontal;
 
     public DrawingSurface(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -58,14 +59,16 @@ public class DrawingSurface extends View {
         // old bitmap, e.g. map below the drawing
         if (mMap != null) {
             mMap.draw(aCanvas);
+            aCanvas.translate(mMap.getMoveX(), mMap.getMoveY());
         }
 
-        aCanvas.translate(mMap.getMoveX(), mMap.getMoveY());
-
         // user sketches below
-        mCommandManager.executeAll(aCanvas, mMap);
+        mCommandManager.executeAll(aCanvas, mMap, mHorizontal);
 
-        aCanvas.translate(-mMap.getMoveX(), -mMap.getMoveY());
+        // return the initial position
+        if (mMap != null) {
+            aCanvas.translate(-mMap.getMoveX(), -mMap.getMoveY());
+        }
 
         // current unsaved sketches asdf
         mPreviewPath.draw(aCanvas);
@@ -111,5 +114,11 @@ public class DrawingSurface extends View {
     }
 
 
+    public void setHorizontal(Boolean horizontal) {
+        mHorizontal = horizontal;
+    }
 
+    public Boolean getHorizontal() {
+        return mHorizontal;
+    }
 }

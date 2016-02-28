@@ -1,5 +1,5 @@
 #
-# generated on 2015/11/19 12:40:51
+# generated on 2016/02/28 10:55:12
 #
 # --table-start--
 dataClass=com.astoev.cave.survey.model.Location
@@ -271,8 +271,13 @@ columnName=creation_date
 dataPersister=DATE
 # --field-end--
 # --field-start--
-fieldName=mSketch
-columnName=sketch_id
+fieldName=mSketchPlan
+columnName=sketch_plan_id
+foreign=true
+# --field-end--
+# --field-start--
+fieldName=mSketchSection
+columnName=sketch_section_id
 foreign=true
 # --field-end--
 # --table-fields-end--

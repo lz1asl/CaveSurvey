@@ -24,7 +24,8 @@ import java.util.Locale;
 public class Project implements Serializable {
 
     public static final String COLUMN_NAME = "name";
-    public static final String COLUMN_SKETCH = "sketch_id";
+    public static final String COLUMN_SKETCH_PLAN = "sketch_plan_id";
+    public static final String COLUMN_SKETCH_SECTION = "sketch_section_id";
 
 
     @DatabaseField(generatedId = true, canBeNull = false, columnName = "id")
@@ -35,8 +36,10 @@ public class Project implements Serializable {
     private ForeignCollection<Leg> mLegs;
     @DatabaseField(columnName = "creation_date", dataType = DataType.DATE)
     private Date mCreationDate;
-    @DatabaseField(foreign = true, columnName = COLUMN_SKETCH) // sketch for whole project
-    private Sketch mSketch;
+    @DatabaseField(foreign = true, columnName = COLUMN_SKETCH_PLAN) // plan sketch for whole project
+    private Sketch mSketchPlan;
+    @DatabaseField(foreign = true, columnName = COLUMN_SKETCH_SECTION) // section sketch for whole project
+    private Sketch mSketchSection;
 
 
     public Project() {
@@ -76,12 +79,20 @@ public class Project implements Serializable {
         mCreationDate = aCreationDate;
     }
 
-    public Sketch getSketch() {
-        return mSketch;
+    public Sketch getSketchPlan() {
+        return mSketchPlan;
     }
 
-    public void setSketch(Sketch sketch) {
-        mSketch = sketch;
+    public void setSketchPlan(Sketch sketchPlan) {
+        mSketchPlan = sketchPlan;
+    }
+
+    public Sketch getSketchSection() {
+        return mSketchSection;
+    }
+
+    public void setSketchSection(Sketch sketchSection) {
+        mSketchSection = sketchSection;
     }
 
     public String getCreationDateFormatted() {

@@ -48,25 +48,31 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
     public final static String PARAM_MAP_MOVEX = "com.astoev.cave.survey.PARAM_MAP_MOVEX";
     public final static String PARAM_MAP_MOVEY = "com.astoev.cave.survey.PARAM_MAP_MOVEY";
     public final static String PARAM_MAP_SCALE = "com.astoev.cave.survey.PARAM_MAP_SCALE";
-    public final static String PARAM_SKETCH_BASE = "com.astoev.cave.survey.SKETCH_BASE";
+    public final static String PARAM_MAP_HORIZONTAL = "com.astoev.cave.survey.PARAM_MAP_HORIZONTAL";
     public final static String PARAM_LEG = "com.astoev.cave.survey.LEG";
 
-
+    // view
     private DrawingSurface drawingSurface;
     private DrawingPath currentDrawingPath;
 
+    // view buttons
     private Button redoBtn;
     private Button undoBtn;
     private ImageButton saveBtn;
 
+    // drawing options
     private DrawingOptions mOptions = new DrawingOptions(Color.WHITE, 3, DrawingOptions.TYPES.THICK);
-
     private PenBrush currentBrush = new PenBrush();
 
+    // drawing parameters
     private Leg mCurrLeg;
     private float mMoveX;
     private float mMoveY;
     private Integer mScale;
+    private Boolean mHorizontal;
+
+    // existing sketch data
+    private Sketch mExistingSketch;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,34 +96,40 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
             mMoveX = intent.getFloatExtra(PARAM_MAP_MOVEX, 0);
             mMoveY = intent.getFloatExtra(PARAM_MAP_MOVEY, 0);
             mScale = intent.getIntExtra(PARAM_MAP_SCALE, MapView.INITIAL_SCALE);
+            mHorizontal = intent.getBooleanExtra(PARAM_MAP_HORIZONTAL, true);
+            drawingSurface.setHorizontal(mHorizontal);
 
             if (intent.getBooleanExtra(PARAM_MAP_FLAG, false)) {
                 // draw the same map as a base
                 MapView currMap = new MapView(this, null);
+                currMap.setHorizontalPlan(mHorizontal);
                 currMap.move(mMoveX, mMoveY);
                 currMap.scale(mScale);
                 currMap.setAnnotateMap(false);
                 drawingSurface.setMap(currMap);
             }
 
-            // existing sketch data
-            Sketch existingSketch = null;
+
 
             Integer legId = getIntent().getIntExtra(PARAM_LEG, -1);
             Log.i(Constants.LOG_TAG_UI, "Start drawing activity for leg " + legId);
             if (legId != -1) {
                 // sketch attached to leg
                 mCurrLeg = Workspace.getCurrentInstance().getDBHelper().getLegDao().queryForId(legId);
-                existingSketch = mCurrLeg.getSketch();
+                mExistingSketch = mCurrLeg.getSketch();
             } else {
                 // sketch attached to project
                 Project currProject = Workspace.getCurrentInstance().getActiveProject();
-                existingSketch = currProject.getSketch();
+                if (mHorizontal) {
+                    mExistingSketch = currProject.getSketchPlan();
+                } else {
+                    mExistingSketch = currProject.getSketchSection();
+                }
             }
 
-            if (existingSketch != null) {
+            if (mExistingSketch != null) {
 
-                Collection<SketchElement> elements = getWorkspace().getDBHelper().getSketchElementDao().queryForEq(SketchElement.COLUMN_SKETCH_ID, existingSketch.getId());
+                Collection<SketchElement> elements = getWorkspace().getDBHelper().getSketchElementDao().queryForEq(SketchElement.COLUMN_SKETCH_ID, mExistingSketch.getId());
                 if (elements != null) {
                     Log.i(Constants.LOG_TAG_UI, "Existing sketch found with " + elements.size() + " elements");
                     for (SketchElement e : elements) {
@@ -127,6 +139,8 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
                         drawingSurface.getPathElements().add(path);
                     }
                 }
+            } else {
+                mExistingSketch = new Sketch();
             }
 
             redoBtn.setEnabled(false);
@@ -227,41 +241,24 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
             buff = null;
             currDrawing.recycle();
 
-            // find existing drawing
-            Sketch drawing = null;
-            if (mCurrLeg != null) {
-                if (mCurrLeg.getSketch() != null) {
-                    drawing = mCurrLeg.getSketch();
-                }
-            } else {
-                Project project = getWorkspace().getActiveProject();
-                drawing = project.getSketch();
-            }
-
-
-            if (drawing != null) {
-                drawing.setFSPath(path);
-                getWorkspace().getDBHelper().getSketchDao().update(drawing);
-            } else {
-                // initialize sketch
-                drawing = new Sketch();
-                drawing.setFSPath(path);
-                getWorkspace().getDBHelper().getSketchDao().create(drawing);
-
-            }
+            // persist the sketch path
+            mExistingSketch.setFSPath(path);
+            getWorkspace().getDBHelper().getSketchDao().createOrUpdate(mExistingSketch);
 
             // delete old sketch data, not yet clever enough to replace
-            Collection<SketchElement> elements = getWorkspace().getDBHelper().getSketchElementDao().queryForEq(SketchElement.COLUMN_SKETCH_ID, drawing.getId());
-            for (SketchElement element : elements) {
-                element.getPoints().clear();
-                getWorkspace().getDBHelper().getSketchElementDao().update(element);
-                getWorkspace().getDBHelper().getSketchElementDao().delete(element);
+            if (mExistingSketch.getId() != null) {
+                Collection<SketchElement> elements = getWorkspace().getDBHelper().getSketchElementDao().queryForEq(SketchElement.COLUMN_SKETCH_ID, mExistingSketch.getId());
+                for (SketchElement element : elements) {
+                    element.getPoints().clear();
+                    getWorkspace().getDBHelper().getSketchElementDao().update(element);
+                    getWorkspace().getDBHelper().getSketchElementDao().delete(element);
+                }
             }
 
-            // insert the current data
+            // insert the current vector elements
             int elementsCount = 0;
             for (DrawingPath currPath : drawingSurface.getPathElements()) {
-                SketchElement element = new SketchElement(drawing);
+                SketchElement element = new SketchElement(mExistingSketch);
                 element.setOrderBy(elementsCount++);
                 element.setColor(currPath.getOptions().getColor());
                 element.setSize(currPath.getOptions().getSize());
@@ -282,16 +279,21 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
                 }
             }
 
-            // apply to parent
+            // attach to parent
             if (mCurrLeg != null) {
-                mCurrLeg.setSketch(drawing);
+                mCurrLeg.setSketch(mExistingSketch);
                 getWorkspace().getDBHelper().getLegDao().update(mCurrLeg);
             } else {
                 Project project = getWorkspace().getActiveProject();
-                project.setSketch(drawing);
+                if (mHorizontal) {
+                    project.setSketchPlan(mExistingSketch);
+                } else {
+                    project.setSketchSection(mExistingSketch);
+                }
                 getWorkspace().getDBHelper().getProjectDao().update(project);
             }
 
+            // success
             UIUtilities.showNotification(R.string.sketch_saved);
 
         } catch (Exception e) {

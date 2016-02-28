@@ -47,32 +47,39 @@ public class CommandManager {
     }
 
 
-    public void executeAll(Canvas aCanvas, MapView aMapView) {
+    public void executeAll(Canvas aCanvas, MapView aMapView, Boolean horizontal) {
         if (currentStack != null) {
             synchronized (currentStack) {
+
+                int mapScale = MapView.INITIAL_SCALE;
+                if (aMapView != null) {
+                    mapScale = aMapView.getScale();
+                }
 
                 for (DrawingPath path : currentStack) {
 
                     // transform
-                    Path scaledPath = toMovedAndScaledBasicPath(path, aMapView, aCanvas);
+                    Path scaledPath = toMovedAndScaledBasicPath(path, mapScale, aCanvas, horizontal);
 
                     // display
                     aCanvas.drawPath(scaledPath, DrawingOptions.optionsToPaint(path.getOptions()));
                 }
-
-
             }
         }
     }
 
-    private Path toMovedAndScaledBasicPath(DrawingPath aPath, MapView aMapView, Canvas aCanvas) {
+    private Path toMovedAndScaledBasicPath(DrawingPath aPath, float aMapScale, Canvas aCanvas, Boolean aHorizontal) {
         final Path scaledBasicPath = new Path();
         final LoggedPath sourcePath = aPath.getPath();
 
-        final float scale = aMapView.getScale() / sourcePath.getScale();
+        final float scale = aMapScale / sourcePath.getScale();
+        final float drawingHalfWidth, drawingHalfHeight = aCanvas.getHeight() / 2;;
 
-        final float drawingHalfWidth = aCanvas.getWidth() /2 ;
-        final float drawingHalfHeight = aCanvas.getHeight() /2;
+        if (aHorizontal) {
+            drawingHalfWidth = aCanvas.getWidth() / 2 ;
+        } else {
+            drawingHalfWidth = aCanvas.getWidth() / 4 ;
+        }
 
         final float adjX = drawingHalfWidth - (drawingHalfWidth + sourcePath.getMoveX()) * scale;
         final float adjY = drawingHalfHeight - (drawingHalfHeight + sourcePath.getMoveY()) * scale;
