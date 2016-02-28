@@ -57,10 +57,7 @@ public class CommandManager {
                     Path scaledPath = toMovedAndScaledBasicPath(path, aMapView, aCanvas);
 
                     // display
-                    aCanvas.translate(-path.getPath().getMoveX(), -path.getPath().getMoveY());
-
                     aCanvas.drawPath(scaledPath, DrawingOptions.optionsToPaint(path.getOptions()));
-                    aCanvas.translate(path.getPath().getMoveX(), path.getPath().getMoveY());
                 }
 
 
@@ -69,20 +66,24 @@ public class CommandManager {
     }
 
     private Path toMovedAndScaledBasicPath(DrawingPath aPath, MapView aMapView, Canvas aCanvas) {
-        Path scaledBasicPath = new Path();
-        LoggedPath sourcePath = aPath.getPath();
+        final Path scaledBasicPath = new Path();
+        final LoggedPath sourcePath = aPath.getPath();
+
+        final float scale = aMapView.getScale() / sourcePath.getScale();
+
+        final float drawingHalfWidth = aCanvas.getWidth() /2 ;
+        final float drawingHalfHeight = aCanvas.getHeight() /2;
+
+        final float adjX = drawingHalfWidth - (drawingHalfWidth + sourcePath.getMoveX()) * scale;
+        final float adjY = drawingHalfHeight - (drawingHalfHeight + sourcePath.getMoveY()) * scale;
 
         boolean first = true;
-
-        float scale = aMapView.getScale() / sourcePath.getScale();
-
-        float adjX = aCanvas.getWidth() / 2 - aCanvas.getWidth() / 2 *scale;
-        float adjY = aCanvas.getHeight() / 2 - aCanvas.getHeight() / 2*scale;
+        float x, y;
 
         for (SketchPoint point : sourcePath.getPoints()) {
 
-            float x = point.getX() * scale + adjX;
-            float y = point.getY() * scale + adjY;
+            x = point.getX() * scale + adjX;
+            y = point.getY() * scale + adjY;
 
             if (first) {
                 scaledBasicPath.moveTo(x, y);
