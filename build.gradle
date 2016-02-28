@@ -51,6 +51,7 @@ android {
     buildTypes {
         release {
             apply plugin: 'idea'
+            minifyEnabled true
             proguardFile getDefaultProguardFile('proguard-android.txt')
             signingConfig signingConfigs.release
         }
