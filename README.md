@@ -23,7 +23,7 @@ There are several approaches for digital surveying and most of them rely on the 
 Where are we now
 ================
 
-We have started with an old Android 2.1 phone (cheap and small) up to 5.0 (better hardware and protection) and cheap chinese laser distance meter. Smartphones are recommended to have water protection (to survive), a compass (to read from) and a SPP Bluetooth profile (to connect instruments). The APK should also work on BlackBerry Q5 and probably others.
+We have started with an old Android 2.1 phone (cheap and small) up tested to 5.0 (better hardware and protection). Smartphones are recommended to have water protection (to survive), a compass (to read from) and a SPP Bluetooth profile (to connect instruments). The APK should also work on BlackBerry Q5 and probably others.
 
 Currently with CaveSurvey you can:
   - make multiple cave surveys
@@ -37,13 +37,13 @@ Currently with CaveSurvey you can:
   - preview a 2D plan/section map of the current survey
   - export to Excel, AutoCad, Therion, KML and more
 
- See the current [issues](https://github.com/lz1asl/CaveSurvey/issues) to see what we are working on. Feel free to join our team and help adding other devices/functionalities
+See the current list of [issues](https://github.com/lz1asl/CaveSurvey/issues) we are working on. Feel free to join our team and help adding other devices/functionalities.
 
 
 About
 =====
 
-Developed by members of caving club [Paldin](http://sk-paldin.eu/) Plovdiv, Bulgaria.
+Developed by members of caving club [Paldin](http://sk-paldin.eu/) Plovdiv, Bulgaria with cavers help around the world.
 
 ![Picture](res/drawable-mdpi/paldin.jpg)
 
