@@ -57,7 +57,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION_LATEST, R.raw.ormlite_config);
-        Log.i(Constants.LOG_TAG_DB, "Initialize DatabaseHelper");
+        Log.i(Constants.LOG_TAG_DB, "Initialize DatabaseHelper DB v" + DATABASE_VERSION_LATEST);
         try {
             mLegDao = getDao(Leg.class);
             mLocationDao = getDao(Location.class);
@@ -81,7 +81,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase, ConnectionSource connectionSource) {
         try {
-            Log.i(Constants.LOG_TAG_DB, "Create DB tables");
+            Log.i(Constants.LOG_TAG_DB, "Create DB tables v" + DATABASE_VERSION_LATEST);
             TableUtils.createTableIfNotExists(connectionSource, Project.class);
             TableUtils.createTableIfNotExists(connectionSource, Note.class);
             TableUtils.createTableIfNotExists(connectionSource, Photo.class);
@@ -103,6 +103,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase aSqLiteDatabase, ConnectionSource aConnectionSource, int aOldVersion, int aNewVersion) {
+
+        Log.i(Constants.LOG_TAG_DB, "Check DB update from v" + aOldVersion + " to v" + aNewVersion);
 
         if (aOldVersion < DATABASE_VERSION_LATEST) {
 
@@ -165,8 +167,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                             "   scale int" +
                             ")");
 
-                    // project sketch
-                    aSqLiteDatabase.execSQL("ALTER TABLE projects add COLUMN sketch_id int");
+                    // project sketches
+                    aSqLiteDatabase.execSQL("ALTER TABLE projects add COLUMN sketch_plan_id int");
+                    aSqLiteDatabase.execSQL("ALTER TABLE projects add COLUMN sketch_section_id int");
 
                     // per leg sketch
                     aSqLiteDatabase.execSQL("ALTER TABLE legs add COLUMN sketch_id int");
