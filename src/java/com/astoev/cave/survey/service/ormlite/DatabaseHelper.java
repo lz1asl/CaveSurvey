@@ -146,26 +146,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                     Log.i(Constants.LOG_TAG_DB, "Upgrading DB to V4");
 
                     // sketchch_points table
-                   aSqLiteDatabase.execSQL("create table sketch_element_points (" +
-                            "   ID decimal primary key not null," +
-                            "   orderby int," +
-                            "   x FLOAT," +
-                            "   y FLOAT," +
-                            "   element_id decimal" +
-                            ")");
+                    TableUtils.createTable(aConnectionSource, SketchPoint.class);
 
                     // sketch_elements table
-                    aSqLiteDatabase.execSQL("create table sketch_elements (" +
-                            "   ID decimal primary key not null," +
-                            "   sketch_id decimal not null," +
-                            "   orderby int," +
-                            "   size int," +
-                            "   type varchar," +
-                            "   color int," +
-                            "   x FLOAT," +
-                            "   y FLOAT," +
-                            "   scale int" +
-                            ")");
+                    TableUtils.createTable(aConnectionSource, SketchElement.class);
 
                     // project sketches
                     aSqLiteDatabase.execSQL("ALTER TABLE projects add COLUMN sketch_plan_id int");
@@ -180,11 +164,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                     aSqLiteDatabase.execSQL("ALTER TABLE sketches RENAME TO sketches_old");
 
                     // create the new one
-                    aSqLiteDatabase.execSQL("CREATE TABLE sketches (id INTEGER PRIMARY KEY AUTOINCREMENT, path VARCHAR)");
+                    TableUtils.createTable(aConnectionSource, Sketch.class);
 
                     // migrate existing data
                     Cursor currSketches = aSqLiteDatabase.rawQuery("select * from sketches_old order by id asc", null);
-                    Log.i(Constants.LOG_TAG_DB, "Migrate " + currSketches.getCount() + " + sketches");
+                    Log.i(Constants.LOG_TAG_DB, "Migrate " + currSketches.getCount() + " sketches");
                     while (currSketches.getPosition() < currSketches.getCount()) {
                         boolean flag = currSketches.moveToNext();
                         if (!flag) {
@@ -212,9 +196,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
                     Log.i(Constants.LOG_TAG_DB, "Upgrade success");
                 }
-
-
-            } finally {
+            } catch (Exception e) {
+                Log.e(Constants.LOG_TAG_DB, "Failed to update db", e);
+                throw new RuntimeException(e);
+                } finally {
                 aSqLiteDatabase.endTransaction();
             }
 
