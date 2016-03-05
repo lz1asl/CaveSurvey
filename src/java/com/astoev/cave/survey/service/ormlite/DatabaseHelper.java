@@ -183,8 +183,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                     aSqLiteDatabase.execSQL("CREATE TABLE sketches (id INTEGER PRIMARY KEY AUTOINCREMENT, path VARCHAR)");
 
                     // migrate existing data
-                    Cursor currSketches = aSqLiteDatabase.rawQuery("select * from sketches_old", null);
-                    while (currSketches.isAfterLast()) {
+                    Cursor currSketches = aSqLiteDatabase.rawQuery("select * from sketches_old order by id asc", null);
+                    Log.i(Constants.LOG_TAG_DB, "Migrate " + currSketches.getCount() + " + sketches");
+                    while (currSketches.getPosition() < currSketches.getCount()) {
                         boolean flag = currSketches.moveToNext();
                         if (!flag) {
                             Log.i(Constants.LOG_TAG_DB, "End of cursor");
@@ -203,6 +204,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
                     // drop the old one
                     aSqLiteDatabase.execSQL("DROP TABLE sketches_old");
+
+                    // forward the sketches sequence
+                    aSqLiteDatabase.execSQL("UPDATE sqlite_sequence SET seq = (SELECT MAX(id) FROM sketches) WHERE name=\"sketches\"\n");
 
                     aSqLiteDatabase.setTransactionSuccessful();
 
