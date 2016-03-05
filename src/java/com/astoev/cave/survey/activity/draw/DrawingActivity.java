@@ -28,6 +28,7 @@ import com.astoev.cave.survey.model.Sketch;
 import com.astoev.cave.survey.model.SketchElement;
 import com.astoev.cave.survey.model.SketchPoint;
 import com.astoev.cave.survey.service.Workspace;
+import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.util.FileStorageUtil;
 import com.astoev.cave.survey.util.PointUtil;
 
@@ -231,7 +232,7 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
             if (mCurrLeg == null) {
                 filePrefix = FileStorageUtil.MAP_PREFIX;
             } else {
-                Point activePoint = mCurrLeg.getFromPoint();
+                Point activePoint = DaoUtil.getPoint(mCurrLeg.getFromPoint().getId());
                 String galleryName = PointUtil.getGalleryNameForFromPoint(activePoint, mCurrLeg.getGalleryId());
                 filePrefix = FileStorageUtil.getFilePrefixForPicture(activePoint, galleryName);
             }
