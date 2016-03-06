@@ -57,7 +57,12 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.astoev.cave.survey.activity.home.HomeActivity" />
         </activity>    
-        <activity android:name=".activity.draw.DrawingActivity"/>
+        <activity android:name=".activity.draw.PointDrawingActivity" />
+        <activity android:name=".activity.draw.MapDrawingActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.astoev.cave.survey.activity.map.MapActivity" />
+        </activity>
         <activity android:name=".activity.main.PointActivity" android:windowSoftInputMode="stateHidden">
 			<meta-data
 	            android:name="android.support.PARENT_ACTIVITY"

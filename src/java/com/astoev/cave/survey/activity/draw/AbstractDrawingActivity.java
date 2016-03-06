@@ -43,7 +43,7 @@ import java.util.Collection;
  * Time: 2:14 AM
  * Link: http://www.tutorialforandroid.com/
  */
-public class DrawingActivity extends BaseActivity implements View.OnTouchListener {
+public abstract class AbstractDrawingActivity extends BaseActivity implements View.OnTouchListener {
 
     public final static String PARAM_MAP_FLAG = "com.astoev.cave.survey.PARAM_MAP_FLAG";
     public final static String PARAM_MAP_MOVEX = "com.astoev.cave.survey.PARAM_MAP_MOVEX";
@@ -75,9 +75,17 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
     // existing sketch data
     private Sketch mExistingSketch;
 
+    protected abstract boolean showToolbar();
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.drawing_activity);
+
+        if (showToolbar()) {
+            getSupportActionBar().show();
+        } else {
+            getSupportActionBar().hide();
+        }
 
         drawingSurface = (DrawingSurface) findViewById(R.id.drawingSurface);
         drawingSurface.setOnTouchListener(this);

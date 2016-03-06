@@ -11,7 +11,8 @@ import android.widget.ZoomControls;
 
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.MainMenuActivity;
-import com.astoev.cave.survey.activity.draw.DrawingActivity;
+import com.astoev.cave.survey.activity.draw.AbstractDrawingActivity;
+import com.astoev.cave.survey.activity.draw.MapDrawingActivity;
 
 /**
  * Created by IntelliJ IDEA.
@@ -98,12 +99,12 @@ public class MapActivity extends MainMenuActivity implements View.OnTouchListene
     }
 
     public void annotateMap(View aView) {
-        Intent intent = new Intent(this, DrawingActivity.class);
-        intent.putExtra(DrawingActivity.PARAM_MAP_FLAG, true);
-        intent.putExtra(DrawingActivity.PARAM_MAP_HORIZONTAL, map.isHorizontalPlan());
-        intent.putExtra(DrawingActivity.PARAM_MAP_MOVEX, map.getMoveX());
-        intent.putExtra(DrawingActivity.PARAM_MAP_MOVEY, map.getMoveY());
-        intent.putExtra(DrawingActivity.PARAM_MAP_SCALE, map.getScale());
+        Intent intent = new Intent(this, MapDrawingActivity.class);
+        intent.putExtra(AbstractDrawingActivity.PARAM_MAP_FLAG, true);
+        intent.putExtra(AbstractDrawingActivity.PARAM_MAP_HORIZONTAL, map.isHorizontalPlan());
+        intent.putExtra(AbstractDrawingActivity.PARAM_MAP_MOVEX, map.getMoveX());
+        intent.putExtra(AbstractDrawingActivity.PARAM_MAP_MOVEY, map.getMoveY());
+        intent.putExtra(AbstractDrawingActivity.PARAM_MAP_SCALE, map.getScale());
         startActivity(intent);
     }
 

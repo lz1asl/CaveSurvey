@@ -26,7 +26,8 @@ import com.astoev.cave.survey.activity.dialog.ConfirmationDialog;
 import com.astoev.cave.survey.activity.dialog.ConfirmationOperation;
 import com.astoev.cave.survey.activity.dialog.DeleteHandler;
 import com.astoev.cave.survey.activity.dialog.VectorDialog;
-import com.astoev.cave.survey.activity.draw.DrawingActivity;
+import com.astoev.cave.survey.activity.draw.AbstractDrawingActivity;
+import com.astoev.cave.survey.activity.draw.PointDrawingActivity;
 import com.astoev.cave.survey.activity.map.MapUtilities;
 import com.astoev.cave.survey.fragment.LocationFragment;
 import com.astoev.cave.survey.model.Gallery;
@@ -332,8 +333,8 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 
     public void drawingButton() {
         if (saveLeg()) {
-            Intent intent = new Intent(this, DrawingActivity.class);
-            intent.putExtra(DrawingActivity.PARAM_LEG, mCurrentLeg.getId());
+            Intent intent = new Intent(this, PointDrawingActivity.class);
+            intent.putExtra(AbstractDrawingActivity.PARAM_LEG, mCurrentLeg.getId());
             startActivity(intent);
         }
     }
