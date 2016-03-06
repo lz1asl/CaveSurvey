@@ -59,7 +59,7 @@ public class CommandManager {
                 for (DrawingPath path : currentStack) {
 
                     // transform
-                    Path scaledPath = toMovedAndScaledBasicPath(path, mapScale, aCanvas, horizontal);
+                    Path scaledPath = toMovedAndScaledBasicPath(path, mapScale, aCanvas.getWidth(), aCanvas.getHeight(), horizontal);
 
                     // display
                     aCanvas.drawPath(scaledPath, DrawingOptions.optionsToPaint(path.getOptions()));
@@ -68,17 +68,17 @@ public class CommandManager {
         }
     }
 
-    private Path toMovedAndScaledBasicPath(DrawingPath aPath, float aMapScale, Canvas aCanvas, Boolean aHorizontal) {
+    public static Path toMovedAndScaledBasicPath(DrawingPath aPath, float aMapScale, float aWidth, float aHeight, Boolean aHorizontal) {
         final Path scaledBasicPath = new Path();
         final LoggedPath sourcePath = aPath.getPath();
 
         final float scale = aMapScale / sourcePath.getScale();
-        final float drawingHalfWidth, drawingHalfHeight = aCanvas.getHeight() / 2;;
+        final float drawingHalfWidth, drawingHalfHeight = aHeight / 2;;
 
         if (aHorizontal) {
-            drawingHalfWidth = aCanvas.getWidth() / 2 ;
+            drawingHalfWidth = aWidth / 2 ;
         } else {
-            drawingHalfWidth = aCanvas.getWidth() / 4 ;
+            drawingHalfWidth = aWidth / 4 ;
         }
 
         final float adjX = drawingHalfWidth - (drawingHalfWidth + sourcePath.getMoveX()) * scale;

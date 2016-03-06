@@ -31,8 +31,10 @@ public class MapActivity extends MainMenuActivity implements View.OnTouchListene
         map = (MapView) findViewById(R.id.mapSurface);
         map.setOnTouchListener(this);
 
+        // no top bar
         getSupportActionBar().hide();
 
+        // zoom controls
         final ZoomControls zoom = (ZoomControls) findViewById(R.id.mapZoom);
         zoom.setOnZoomInClickListener(new View.OnClickListener() {
             @Override
@@ -51,8 +53,9 @@ public class MapActivity extends MainMenuActivity implements View.OnTouchListene
             }
         });
 
-        final ToggleButton viewSelector = (ToggleButton) findViewById(R.id.mapHorizonatalToggle);
-        viewSelector.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        // plan/section toggle
+        final ToggleButton viewToggle = (ToggleButton) findViewById(R.id.mapHorizonatalToggle);
+        viewToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -60,6 +63,16 @@ public class MapActivity extends MainMenuActivity implements View.OnTouchListene
                 // explicitly reset the zoom when switching plan/scale
                 zoom.setIsZoomOutEnabled(map.canZoomOut());
                 zoom.setIsZoomInEnabled(map.canZoomIn());
+            }
+        });
+
+        // drawings toggle
+        final ToggleButton drawingsToggle = (ToggleButton) findViewById(R.id.mapDrawingToggle);
+        drawingsToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                map.setDrawingsVisible(isChecked);
             }
         });
     }

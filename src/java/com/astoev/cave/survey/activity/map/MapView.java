@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Point;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -15,15 +16,23 @@ import android.view.View;
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.UIUtilities;
+import com.astoev.cave.survey.activity.draw.CommandManager;
+import com.astoev.cave.survey.activity.draw.DrawingOptions;
+import com.astoev.cave.survey.activity.draw.DrawingPath;
+import com.astoev.cave.survey.activity.draw.LoggedPath;
 import com.astoev.cave.survey.model.Gallery;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Option;
+import com.astoev.cave.survey.model.Project;
+import com.astoev.cave.survey.model.Sketch;
+import com.astoev.cave.survey.model.SketchElement;
 import com.astoev.cave.survey.model.Vector;
 import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.service.Workspace;
 import com.astoev.cave.survey.util.DaoUtil;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -68,6 +77,7 @@ public class MapView extends View {
     private boolean horizontalPlan = true;
 
     private boolean annotateMap = true;
+    private boolean mDrawingsVisible = false;
 
     public MapView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -340,6 +350,43 @@ public class MapView extends View {
                 }
             }
 
+            // drawings
+            if (mDrawingsVisible) {
+
+                Sketch sketch;
+                Project currProject = Workspace.getCurrentInstance().getActiveProject();
+                if (horizontalPlan) { // plan section
+                    sketch = currProject.getSketchPlan();
+                } else {
+                    sketch = currProject.getSketchSection();
+                }
+
+                if (sketch != null) {
+                    Collection<SketchElement> elements = Workspace.getCurrentInstance().getDBHelper().getSketchElementDao().queryForEq(SketchElement.COLUMN_SKETCH_ID, sketch.getId());
+                    if (elements != null) {
+
+                        // follow the map move
+
+                        canvas.translate(mapCenterMoveX, mapCenterMoveY);
+
+                        for (SketchElement e : elements) {
+
+                            // transform
+                            DrawingPath path = new DrawingPath();
+                            path.setOptions(DrawingOptions.fromSketchElement(e));
+                            path.setPath(LoggedPath.fromSketchElement(e));
+                            Path scaledPath = CommandManager.toMovedAndScaledBasicPath(path, scale, maxX, maxY, horizontalPlan);
+
+                            // display
+                            canvas.drawPath(scaledPath, DrawingOptions.optionsToPaint(path.getOptions()));
+                        }
+
+                        // reset map position
+                        canvas.translate(-mapCenterMoveX, -mapCenterMoveY);
+                    }
+                }
+            }
+
 
             if (annotateMap) {
 
@@ -523,5 +570,14 @@ public class MapView extends View {
 
     public void setAnnotateMap(boolean annotateMap) {
         this.annotateMap = annotateMap;
+    }
+
+    public void setDrawingsVisible(boolean drawingsVisible) {
+        mDrawingsVisible = drawingsVisible;
+        invalidate();
+    }
+
+    public boolean isDrawingsVisible() {
+        return mDrawingsVisible;
     }
 }
