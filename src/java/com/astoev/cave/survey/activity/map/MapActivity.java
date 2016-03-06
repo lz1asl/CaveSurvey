@@ -106,4 +106,10 @@ public class MapActivity extends MainMenuActivity implements View.OnTouchListene
         intent.putExtra(DrawingActivity.PARAM_MAP_SCALE, map.getScale());
         startActivity(intent);
     }
+
+    @Override
+    protected void onPause() {
+        map.preserveView();
+        super.onPause();
+    }
 }

@@ -79,6 +79,9 @@ public class MapView extends View {
     private boolean annotateMap = true;
     private boolean mDrawingsVisible = false;
 
+    // stored view positions
+    private static MapViewPosition mPlanView, mSectionView;
+
     public MapView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
@@ -98,6 +101,9 @@ public class MapView extends View {
         vectorsPaint.setAlpha(50);
         vectorPointPaint.setStrokeWidth(1);
         vectorPointPaint.setAlpha(50);
+
+        // reuse the view if available
+        applyStoredView();
 
         // need to instruct that changes to the canvas will be made, otherwise the screen might become blank
         // see http://stackoverflow.com/questions/12261435/canvas-does-not-draw-in-custom-view
@@ -367,7 +373,7 @@ public class MapView extends View {
 
                         // follow the map move
 
-                        canvas.translate(mapCenterMoveX, mapCenterMoveY);
+                        canvas.translate(initialMoveX, mapCenterMoveY);
 
                         for (SketchElement e : elements) {
 
@@ -454,10 +460,17 @@ public class MapView extends View {
     }
 
     public void setHorizontalPlan(boolean horizontalPlan) {
+
+        preserveView();
+
         this.horizontalPlan = horizontalPlan;
-        scale = INITIAL_SCALE;
-        mapCenterMoveX = 0;
-        mapCenterMoveY = 0;
+
+        if (!applyStoredView()) {
+            scale = INITIAL_SCALE;
+            mapCenterMoveX = 0;
+            mapCenterMoveY = 0;
+        }
+
         invalidate();
     }
 
@@ -577,7 +590,38 @@ public class MapView extends View {
         invalidate();
     }
 
-    public boolean isDrawingsVisible() {
-        return mDrawingsVisible;
+    /**
+     * Currently in plain static field.
+     */
+    public void preserveView() {
+        if (horizontalPlan) {
+            mPlanView = new MapViewPosition(mapCenterMoveX, mapCenterMoveY, scale);
+        } else {
+            mSectionView = new MapViewPosition(mapCenterMoveX, mapCenterMoveY, scale);
+        }
+    }
+
+    /**
+     * View reset when changing the active project or restarting the app.
+     */
+    public static void resetView() {
+        mPlanView = null;
+        mSectionView = null;
+    }
+
+    private boolean applyStoredView() {
+        if (horizontalPlan && mPlanView != null) {
+            mapCenterMoveX = mPlanView.moveX;
+            mapCenterMoveY = mPlanView.moveY;
+            scale = mPlanView.scale;
+            return true;
+        } else if (!horizontalPlan && mSectionView != null) {
+            mapCenterMoveX = mSectionView.moveX;
+            mapCenterMoveY = mSectionView.moveY;
+            scale = mSectionView.scale;
+            return true;
+        }
+
+        return false;
     }
 }

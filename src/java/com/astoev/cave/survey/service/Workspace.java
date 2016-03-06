@@ -3,6 +3,7 @@ package com.astoev.cave.survey.service;
 import android.util.Log;
 
 import com.astoev.cave.survey.Constants;
+import com.astoev.cave.survey.activity.map.MapView;
 import com.astoev.cave.survey.model.Gallery;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Point;
@@ -62,6 +63,7 @@ public class Workspace {
 
     public void setActiveProject(Project aProject) {
         ConfigUtil.setIntProperty(ConfigUtil.PROP_CURR_PROJECT, aProject.getId());
+        MapView.resetView();
     }
 
     public void setActiveLeg(Leg aLeg) {
