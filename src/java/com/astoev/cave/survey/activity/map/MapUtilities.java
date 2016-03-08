@@ -1,9 +1,6 @@
 package com.astoev.cave.survey.activity.map;
 
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Matrix;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.model.Option;
@@ -158,5 +155,9 @@ public class MapUtilities {
 
     public static boolean isSlopeInGradsValid(Float aSlope) {
         return aSlope != null && aSlope >= Option.MIN_VALUE_SLOPE_GRADS && aSlope <= Option.MAX_VALUE_SLOPE_GRADS;
+    }
+
+    public static String intToColor(int aColor) {
+        return  String.format("#%06X", (0xFFFFFF & aColor));
     }
 }

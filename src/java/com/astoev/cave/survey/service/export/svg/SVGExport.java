@@ -4,10 +4,13 @@ import android.util.Log;
 import android.util.Xml;
 
 import com.astoev.cave.survey.Constants;
+import com.astoev.cave.survey.activity.map.MapUtilities;
+import com.astoev.cave.survey.activity.map.MapView;
 import com.astoev.cave.survey.model.Sketch;
 import com.astoev.cave.survey.model.SketchElement;
 import com.astoev.cave.survey.model.SketchPoint;
 import com.astoev.cave.survey.service.Workspace;
+import com.astoev.cave.survey.util.ConfigUtil;
 
 import org.xmlpull.v1.XmlSerializer;
 
@@ -23,7 +26,7 @@ import java.util.Collection;
  */
 public class SVGExport {
 
-    public static InputStream drawingToSVG(Sketch aSketch) throws SQLException, IOException {
+    public static InputStream mapDrawingToSVG(Sketch aSketch, boolean isHorizontal) throws SQLException, IOException {
 
         Log.i(Constants.LOG_TAG_SERVICE, "Exporting sketch: " + aSketch.getId());
 
@@ -57,6 +60,8 @@ public class SVGExport {
             svg.attribute("", "height", String.valueOf(Math.ceil(maxY)));
 
             // actual elements
+            svg.startTag("", "g");
+            svg.attribute("", "id", "drawings");
             for (SketchElement e : elements) {
 
                 StringBuilder points = new StringBuilder();
@@ -76,7 +81,7 @@ public class SVGExport {
 
                         svg.startTag("", "polyline");
                         svg.attribute("", "points", points.toString());
-                        style.append("fill:none;stroke:").append(intToColor(e.getColor()))
+                        style.append("fill:none;stroke:").append(MapUtilities.intToColor(e.getColor()))
                                 .append(";stroke-width:").append(e.getSize())
                                 .append(";stroke-linejoin:round")
                                 .append(";stroke-linecap:round");
@@ -88,7 +93,7 @@ public class SVGExport {
 
                         svg.startTag("", "polygon");
                         svg.attribute("", "points", points.toString());
-                        style.append("fill:").append(intToColor(e.getColor()))
+                        style.append("fill:").append(MapUtilities.intToColor(e.getColor()))
                                 .append(";stroke-linejoin:bevel");
                         svg.attribute("", "style", style.toString());
                         svg.endTag("", "polygon");
@@ -99,7 +104,7 @@ public class SVGExport {
 
                         svg.startTag("", "polyline");
                         svg.attribute("", "points", points.toString());
-                        style.append("fill:none;stroke:").append(intToColor(e.getColor()))
+                        style.append("fill:none;stroke:").append(MapUtilities.intToColor(e.getColor()))
                                 .append(";stroke-width:").append(e.getSize())
                                 .append(";stroke-dasharray:").append(2 * e.getSize()).append(",").append( 4 * e.getSize());
                         svg.attribute("", "style", style.toString());
@@ -110,15 +115,24 @@ public class SVGExport {
                 }
 
             }
+            svg.endTag("", "g");
+
+            // the actual line - will use the same code for drawing but will intercept the actual content into svg
+            svg.startTag("", "g");
+            svg.attribute("", "id", "line");
+            MapView map = new MapView(ConfigUtil.getContext(), null);
+            map.setHorizontalPlan(isHorizontal);
+            map.setAnnotateMap(false);
+            map.scale(20);
+            map.move(200, 200);
+            SVGCanvas svgCanvas = new SVGCanvas(svg);
+            map.onDraw(svgCanvas);
+            svg.endTag("", "g");
         }
 
         svg.endTag("", "svg");
         svg.endDocument();
 
         return new ByteArrayInputStream(buff.toString().getBytes());
-    }
-
-    private static String intToColor(int aColor) {
-        return  String.format("#%06X", (0xFFFFFF & aColor));
     }
 }

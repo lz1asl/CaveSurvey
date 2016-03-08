@@ -201,13 +201,13 @@ public class ExcelExport extends AbstractExport {
             // TODO links to the drawings
             Sketch planDrawing = aProject.getSketchPlan();
             if (planDrawing != null) {
-                InputStream svgIn = SVGExport.drawingToSVG(planDrawing);
+                InputStream svgIn = SVGExport.mapDrawingToSVG(planDrawing, true);
                 String svgPath = FileStorageUtil.addProjectExport(aProject, svgIn, "_plan.svg", isUseUniqueName());
                 // TODO add to the skeet
             }
             Sketch sectionDrawing = aProject.getSketchSection();
             if (sectionDrawing != null) {
-                InputStream svgIn = SVGExport.drawingToSVG(sectionDrawing);
+                InputStream svgIn = SVGExport.mapDrawingToSVG(sectionDrawing, false);
                 String svgPath = FileStorageUtil.addProjectExport(aProject, svgIn, "_section.svg", isUseUniqueName());
                 // TODO add to the skeet
             }

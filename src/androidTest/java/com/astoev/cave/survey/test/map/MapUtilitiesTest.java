@@ -1,10 +1,10 @@
 package com.astoev.cave.survey.test.map;
 
+import android.graphics.Color;
+
 import com.astoev.cave.survey.activity.map.MapUtilities;
 
 import junit.framework.TestCase;
-
-import org.junit.Test;
 
 /**
  * Created by astoev on 1/20/14.
@@ -100,6 +100,11 @@ public class MapUtilitiesTest extends TestCase {
         assertEquals(10f, MapUtilities.minus90Degrees(100f));
         assertEquals(220f, MapUtilities.minus90Degrees(310f));
         assertEquals(330f, MapUtilities.minus90Degrees(60f));
+    }
+
+    public void testIntToColor() {
+        assertEquals("#FFFFFF", MapUtilities.intToColor(Color.WHITE));
+        assertEquals("#000000", MapUtilities.intToColor(Color.BLACK));
     }
 
 }
