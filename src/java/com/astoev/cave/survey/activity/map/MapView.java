@@ -372,7 +372,7 @@ public class MapView extends View {
                     if (elements != null) {
 
                         // follow the map move
-                        canvas.translate(initialMoveX, mapCenterMoveY);
+                        canvas.translate(mapCenterMoveX, mapCenterMoveY);
 
                         for (SketchElement e : elements) {
 
@@ -610,11 +610,13 @@ public class MapView extends View {
 
     private boolean applyStoredView() {
         if (horizontalPlan && mPlanView != null) {
-            move(mPlanView.moveX, mPlanView.moveY);
+            mapCenterMoveX = mPlanView.moveX;
+            mapCenterMoveY = mPlanView.moveY;
             scale = mPlanView.scale;
             return true;
         } else if (!horizontalPlan && mSectionView != null) {
-            move(mSectionView.moveX, mSectionView.moveY);
+            mapCenterMoveX = mSectionView.moveX;
+            mapCenterMoveY = mSectionView.moveY;
             scale = mSectionView.scale;
             return true;
         }
