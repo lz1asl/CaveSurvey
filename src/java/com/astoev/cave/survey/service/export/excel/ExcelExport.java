@@ -12,6 +12,8 @@ import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.model.Sketch;
 import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.service.export.AbstractExport;
+import com.astoev.cave.survey.service.export.svg.SVGExport;
+import com.astoev.cave.survey.util.FileStorageUtil;
 import com.astoev.cave.survey.util.LocationUtil;
 import com.astoev.cave.survey.util.StringUtils;
 
@@ -76,7 +78,7 @@ public class ExcelExport extends AbstractExport {
     protected void prepare(Project aProject) {
         Log.i(Constants.LOG_TAG_SERVICE, "Start excel export ");
         wb = new HSSFWorkbook();
-        sheet = createHeader(aProject.getName(), wb);
+        sheet = createHeader(aProject, wb);
         helper = wb.getCreationHelper();
     }
 
@@ -185,15 +187,34 @@ public class ExcelExport extends AbstractExport {
         sketchCell.setHyperlink(fileLink);
     }
 
-    private Sheet createHeader(String aProjectName, Workbook wb) {
+    private Sheet createHeader(Project aProject, Workbook wb) {
         Sheet sheet;
         try {
-            sheet = wb.createSheet(aProjectName);
+            sheet = wb.createSheet(aProject.getName());
         } catch (IllegalArgumentException iae) {
             Log.i(Constants.LOG_TAG_SERVICE, "Failed to create sheet with the project name, creating default: " + iae.getMessage());
             sheet = wb.createSheet();
         }
         Row headerRow = sheet.createRow(0);
+
+        try {
+            // TODO links to the drawings
+            Sketch planDrawing = aProject.getSketchPlan();
+            if (planDrawing != null) {
+                InputStream svgIn = SVGExport.drawingToSVG(planDrawing);
+                String svgPath = FileStorageUtil.addProjectExport(aProject, svgIn, "_plan.svg", isUseUniqueName());
+                // TODO add to the skeet
+            }
+            Sketch sectionDrawing = aProject.getSketchSection();
+            if (sectionDrawing != null) {
+                InputStream svgIn = SVGExport.drawingToSVG(sectionDrawing);
+                String svgPath = FileStorageUtil.addProjectExport(aProject, svgIn, "_section.svg", isUseUniqueName());
+                // TODO add to the skeet
+            }
+        } catch (Exception e) {
+            Log.e(Constants.LOG_TAG_SERVICE, "SVG export failed", e);
+        }
+
         // header cells
         Cell headerFrom = headerRow.createCell(CELL_FROM);
         headerFrom.setCellValue(mContext.getString(R.string.main_table_header_from));
