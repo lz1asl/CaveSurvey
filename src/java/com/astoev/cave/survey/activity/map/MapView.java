@@ -304,9 +304,9 @@ public class MapView extends View {
                                 calculateAndDrawSide(canvas, l, first, second, prevLeg, first.getRight(), azimuthUnits, false);
                             } else {
                                 // top
-//                            calculateAndDrawSide(canvas, l, first, second, prevLeg, first.getLeft(), azimuthUnits, true);
+                                calculateAndDrawSide(canvas, l, first, second, prevLeg, first.getLeft(), slopeUnits, true);
                                 // down
-//                            calculateAndDrawSide(canvas, l, first, second, prevLeg, first.getRight(), azimuthUnits, false);
+                                calculateAndDrawSide(canvas, l, first, second, prevLeg, first.getRight(), slopeUnits, false);
                             }
                         }
 
@@ -442,7 +442,7 @@ public class MapView extends View {
         return buff.toByteArray();
     }
 
-    private void calculateAndDrawSide(Canvas canvas, Leg l, Point2D first, Point2D second, Leg prevLeg, Float aMeasure, String azimuthUnits, boolean left) {
+    private void calculateAndDrawSide(Canvas canvas, Leg l, Point2D first, Point2D second, Leg prevLeg, Float aMeasure, String anUnits, boolean left) {
         double galleryWidthAngle;
         if (aMeasure != null && aMeasure > 0) {
 
@@ -462,13 +462,18 @@ public class MapView extends View {
                 // each next in the gallery by the bisector
                 if (l.getGalleryId().equals(prevLeg.getGalleryId())) {
 
-                    angle = MapUtilities.getMiddleAngle(MapUtilities.getAzimuthInDegrees(prevLeg.getAzimuth(), azimuthUnits), angle);
-
                     if (horizontalPlan) {
+                        angle = MapUtilities.getMiddleAngle(MapUtilities.getAzimuthInDegrees(prevLeg.getAzimuth(), anUnits), angle);
                         if (left) {
                             angle = MapUtilities.minus90Degrees(angle);
                         } else {
                             angle = MapUtilities.add90Degrees(angle);
+                        }
+                    } else {
+                        if (left) {
+                            angle = Option.MIN_VALUE_AZIMUTH;
+                        } else {
+                            angle = Option.MAX_VALUE_AZIMUTH_DEGREES / 2;
                         }
                     }
                 } else { // new galleries again by 90'
@@ -477,6 +482,12 @@ public class MapView extends View {
                             angle = MapUtilities.minus90Degrees(angle);
                         } else {
                             angle = MapUtilities.add90Degrees(angle);
+                        }
+                    } else {
+                        if (left) {
+                            angle = Option.MIN_VALUE_AZIMUTH;
+                        } else {
+                            angle = Option.MAX_VALUE_AZIMUTH_DEGREES / 2;
                         }
                     }
                 }
