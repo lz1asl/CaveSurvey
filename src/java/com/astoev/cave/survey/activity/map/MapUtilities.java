@@ -1,9 +1,6 @@
 package com.astoev.cave.survey.activity.map;
 
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Matrix;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.model.Option;
@@ -44,6 +41,10 @@ public class MapUtilities {
             // convert from grads to degrees
             return anAzimuth * Constants.GRAD_TO_DEC;
         }
+    }
+
+    public static Float degreesToGrads(Float aDegrees) {
+        return aDegrees * Constants.DEC_TO_GRAD;
     }
 
     public static Float getAzimuthInDegrees(Float anAzimuth, String currUnits) {

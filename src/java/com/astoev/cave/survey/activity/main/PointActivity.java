@@ -32,9 +32,11 @@ import com.astoev.cave.survey.fragment.LocationFragment;
 import com.astoev.cave.survey.model.Gallery;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Note;
+import com.astoev.cave.survey.model.Option;
 import com.astoev.cave.survey.model.Photo;
 import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.model.Vector;
+import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.service.bluetooth.BTMeasureResultReceiver;
 import com.astoev.cave.survey.service.bluetooth.BTResultAware;
 import com.astoev.cave.survey.service.bluetooth.util.MeasurementsUtil;
@@ -877,20 +879,27 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         final EditText slope = (EditText) findViewById(R.id.point_slope);
 
         // if values are present update them in the UI only, they will be persisted on "save"
-//        try {
+        try {
+            // calculate in degrees
             Float currAzimuth = MapUtilities.getAzimuthInDegrees(StringUtils.getFromEditTextNotNull(azimuth));
             if (currAzimuth != null) {
                 Float reversedAzimuth = MapUtilities.add90Degrees(MapUtilities.add90Degrees(currAzimuth));
+
+                // back to grads if needed
+                String currAzimuthMeasure = Options.getOptionValue(Option.CODE_AZIMUTH_UNITS);
+                if (Option.UNIT_GRADS.equals(currAzimuthMeasure)) {
+                    reversedAzimuth = MapUtilities.degreesToGrads(reversedAzimuth);
+                }
                 populateMeasure(reversedAzimuth, R.id.point_azimuth);
             }
             Float currSlope = StringUtils.getFromEditTextNotNull(slope);
             if (currSlope != null && currSlope != 0) {
                 populateMeasure(-currSlope, R.id.point_slope);
             }
-//        } catch (Exception e) {
-//            Log.e(Constants.LOG_TAG_UI, "Failed to reverse leg", e);
-//            UIUtilities.showNotification(R.string.error);
-//        }
+        } catch (Exception e) {
+            Log.e(Constants.LOG_TAG_UI, "Failed to reverse leg", e);
+            UIUtilities.showNotification(R.string.error);
+        }
     }
 
 
