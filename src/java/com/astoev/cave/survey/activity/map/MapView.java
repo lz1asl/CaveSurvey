@@ -455,6 +455,12 @@ public class MapView extends View {
                     } else {
                         angle = MapUtilities.add90Degrees(angle);
                     }
+                } else {
+                    if (left) {
+                        angle = Option.MIN_VALUE_AZIMUTH;
+                    } else {
+                        angle = Option.MAX_VALUE_AZIMUTH_DEGREES / 2;
+                    }
                 }
                 galleryWidthAngle = Math.toRadians(angle);
             } else {
