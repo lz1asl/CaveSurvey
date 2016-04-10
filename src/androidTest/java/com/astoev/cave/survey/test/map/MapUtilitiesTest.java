@@ -102,10 +102,10 @@ public class MapUtilitiesTest extends TestCase {
 
     public void testDegreeToGrads() {
         assertEquals(0f, MapUtilities.degreesToGrads(0f));
-        assertEquals(45f, MapUtilities.degreesToGrads(50f));
-        assertEquals(90f, MapUtilities.degreesToGrads(100f));
-        assertEquals(180f, MapUtilities.degreesToGrads(200f));
-        assertEquals(360f, MapUtilities.degreesToGrads(400f));
+        assertEquals(50f, MapUtilities.degreesToGrads(45f), 0.001);
+        assertEquals(100f, MapUtilities.degreesToGrads(90f), 0.001);
+        assertEquals(200f, MapUtilities.degreesToGrads(180f), 0.001);
+        assertEquals(400f, MapUtilities.degreesToGrads(360f), 0.001);
     }
 
 }
