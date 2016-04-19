@@ -106,10 +106,10 @@ public class OpensTopoJsonExport extends AbstractExport {
     private void populateValue(Entities entityType, Object aValue) throws JSONException {
         switch (entityType) {
             case FROM:
-                row.put("from", aValue);
+                row.put("from", escapeName((String) aValue));
                 break;
             case TO:
-                row.put("to", aValue);
+                row.put("to", escapeName((String) aValue));
                 break;
             case DISTANCE:
                 row.put("len", aValue);
@@ -136,6 +136,10 @@ public class OpensTopoJsonExport extends AbstractExport {
                 row.put("note", aValue);
                 break;
         }
+    }
+
+    private String escapeName(String aName) {
+        return aName.replaceAll(Constants.MIDDLE_POINT_DELIMITER, Constants.MIDDLE_POINT_DELIMITER_EXPORT);
     }
 
     @Override

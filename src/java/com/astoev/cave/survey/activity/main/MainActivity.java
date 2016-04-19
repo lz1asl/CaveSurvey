@@ -155,7 +155,7 @@ public class MainActivity extends MainMenuActivity implements AddNewSelectedHand
                 if (l.isMiddle()) {
                     row.addView(createTextView("", currentLeg, false, mGalleryColors.get(prevGalleryId)));
                     row.addView(createTextView("", currentLeg, false, mGalleryColors.get(l.getGalleryId())));
-                    row.addView(createTextView("@" + StringUtils.floatToLabel(l.getMiddlePointDistance()), currentLeg, true));
+                    row.addView(createTextView(Constants.MIDDLE_POINT_DELIMITER + StringUtils.floatToLabel(l.getMiddlePointDistance()), currentLeg, true));
                 } else {
                     row.addView(createTextView(fromPointString, currentLeg, false, mGalleryColors.get(prevGalleryId)));
                     row.addView(createTextView(toPointString, currentLeg, false, mGalleryColors.get(l.getGalleryId())));

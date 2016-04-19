@@ -1,5 +1,6 @@
 package com.astoev.cave.survey.model;
 
+import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.service.Workspace;
 import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.util.PointUtil;
@@ -139,7 +140,7 @@ public class Leg implements Serializable {
         builder.append(endPoint.getName());
 
         if (isMiddle()) {
-            builder.append("@").append(StringUtils.floatToLabel(mMiddlePointDistance));
+            builder.append(Constants.MIDDLE_POINT_DELIMITER).append(StringUtils.floatToLabel(mMiddlePointDistance));
         }
         return builder.toString();
     }
