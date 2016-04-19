@@ -197,7 +197,9 @@ public abstract class AbstractExport {
                         setValue(Entities.TO, fromPointName + "-" + galleryNames.get(l.getGalleryId()) + toPoint.getName() + "-v" + vectorCounter);
                         setValue(Entities.DISTANCE, v.getDistance());
                         setValue(Entities.COMPASS, v.getAzimuth());
-                        setValue(Entities.INCLINATION, v.getSlope());
+                        if (v.getSlope() != null) {
+                            setValue(Entities.INCLINATION, v.getSlope());
+                        }
 
                         vectorCounter++;
                     }
