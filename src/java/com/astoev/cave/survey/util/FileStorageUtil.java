@@ -228,12 +228,22 @@ public class FileStorageUtil {
 
     @SuppressWarnings("deprecation")
     public static File getStorageHome() {
-        if (!isExternalStorageWritable()) {
+
+        File extDir = null;
+
+        if (isExternalStorageWritable()) {
+            extDir = Environment.getExternalStorageDirectory();
+        } else {
+            Log.e(Constants.LOG_TAG_UI, "External storage unavailable");
+            extDir = ConfigUtil.getContext().getFilesDir();
+        }
+
+        if (extDir == null) {
             Log.e(Constants.LOG_TAG_UI, "Storage unavailable");
             return null;
         }
-        File extdir = Environment.getExternalStorageDirectory();
-        StatFs stats = new StatFs(extdir.getAbsolutePath());
+
+        StatFs stats = new StatFs(extDir.getAbsolutePath());
 
         long availableBytes = stats.getAvailableBlocks() * (long) stats.getBlockSize();
         if (availableBytes < MIN_REQUIRED_STORAGE) {
@@ -241,7 +251,7 @@ public class FileStorageUtil {
             return null;
         }
 
-        File storageHome = new File(Environment.getExternalStorageDirectory() + File.separator + CAVE_SURVEY_FOLDER);
+        File storageHome = new File(extDir, CAVE_SURVEY_FOLDER);
         if (!storageHome.exists()) {
             if (!storageHome.mkdirs()) {
                 Log.e(Constants.LOG_TAG_UI, "Failed to create folder " + storageHome.getAbsolutePath());
