@@ -24,6 +24,7 @@
         android:id="@+id/vector_azimuth"
         android:inputType="numberDecimal"
         android:ellipsize="end"
+        android:gravity="center"
         android:layout_gravity="center"
         android:maxLength="5"
         android:hint="@string/azimuth"/>
@@ -34,6 +35,7 @@
         android:id="@+id/vector_slope"
         android:inputType="numberDecimal|numberSigned"
         android:maxLength="5"
+        android:gravity="center"
         android:layout_gravity="center"
         android:ellipsize="end"
         android:hint="@string/slope"/>
