@@ -85,44 +85,9 @@ public class VectorDialog extends DialogFragment implements BTResultAware, Azimu
         final Dialog dialog = builder.create();
 
         Button addButton = (Button) view.findViewById(R.id.vector_add);
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                EditText distanceEdit = (EditText) view.findViewById(R.id.vector_distance);
-                EditText azimuthEdit = (EditText) view.findViewById(R.id.vector_azimuth);
-                EditText slopeEdit = (EditText) view.findViewById(R.id.vector_slope);
-
-                boolean valid = true;
-                valid = valid && UIUtilities.validateNumber(distanceEdit, true);
-                valid = valid && UIUtilities.validateNumber(azimuthEdit, true) && UIUtilities.checkAzimuth(azimuthEdit);
-                valid = valid && UIUtilities.validateNumber(slopeEdit, false) && UIUtilities.checkSlope(slopeEdit);
-
-                if (!valid) {
-                    return;
-                }
-
-                try {
-                    Vector vector = new Vector();
-                    vector.setDistance(StringUtils.getFromEditTextNotNull(distanceEdit));
-                    vector.setAzimuth(StringUtils.getFromEditTextNotNull(azimuthEdit));
-                    vector.setSlope(StringUtils.getFromEditTextNotNull(slopeEdit));
-                    vector.setPoint(mLeg.getFromPoint());
-                    vector.setGalleryId(mLeg.getGalleryId());
-
-                    DaoUtil.saveVector(vector);
-                } catch (SQLException e) {
-                    Log.e(Constants.LOG_TAG_UI, "Failed to add vector", e);
-                    UIUtilities.showNotification(R.string.error);
-                }
-
-                Activity parent = getActivity();
-                if (parent instanceof PointActivity) {
-                    ((PointActivity) parent).loadLegVectors(mLeg);
-                }
-                dialog.dismiss();
-            }
-        });
+        addButton.setOnClickListener(new AddVectorListener(mView, dialog, false));
+        Button addAgainButton = (Button) view.findViewById(R.id.vector_add_again);
+        addAgainButton.setOnClickListener(new AddVectorListener(mView, dialog, true));
 
         return dialog;
     }
@@ -164,4 +129,71 @@ public class VectorDialog extends DialogFragment implements BTResultAware, Azimu
         StringUtils.setNotNull(field, aMeasure);
     }
 
+    private class AddVectorListener implements View.OnClickListener {
+
+        private View mView;
+        private Dialog mDialog;
+        private boolean mPrepareNewVector;
+
+        public AddVectorListener(View aView, Dialog aDialog, boolean aPrepareNewVector) {
+            mView = aView;
+            mDialog = aDialog;
+            mPrepareNewVector = aPrepareNewVector;
+        }
+
+            @Override
+            public void onClick(View v) {
+
+                // get values
+                EditText distanceEdit = (EditText) mView.findViewById(R.id.vector_distance);
+                EditText azimuthEdit = (EditText) mView.findViewById(R.id.vector_azimuth);
+                EditText slopeEdit = (EditText) mView.findViewById(R.id.vector_slope);
+
+                // validate
+                boolean valid = true;
+                valid = valid && UIUtilities.validateNumber(distanceEdit, true);
+                valid = valid && UIUtilities.validateNumber(azimuthEdit, true) && UIUtilities.checkAzimuth(azimuthEdit);
+                valid = valid && UIUtilities.validateNumber(slopeEdit, false) && UIUtilities.checkSlope(slopeEdit);
+
+                if (!valid) {
+                    return;
+                }
+
+                // persist
+                try {
+                    Vector vector = new Vector();
+                    vector.setDistance(StringUtils.getFromEditTextNotNull(distanceEdit));
+                    vector.setAzimuth(StringUtils.getFromEditTextNotNull(azimuthEdit));
+                    vector.setSlope(StringUtils.getFromEditTextNotNull(slopeEdit));
+                    vector.setPoint(mLeg.getFromPoint());
+                    vector.setGalleryId(mLeg.getGalleryId());
+
+                    DaoUtil.saveVector(vector);
+                } catch (SQLException e) {
+                    Log.e(Constants.LOG_TAG_UI, "Failed to add vector", e);
+                    UIUtilities.showNotification(R.string.error);
+                }
+
+                // refresh parent
+                Activity parent = getActivity();
+                if (parent instanceof PointActivity) {
+                    ((PointActivity) parent).loadLegVectors(mLeg);
+                }
+
+                if (mPrepareNewVector) {
+                    // notify saved
+                    Log.i(Constants.LOG_TAG_UI, "Vector saved, cleaning");
+                    UIUtilities.showNotification(R.string.action_saved);
+
+                    // reset values and stay here
+                    distanceEdit.setText(null);
+                    azimuthEdit.setText(null);
+                    slopeEdit.setText(null);
+                } else {
+                    // go back
+                    Log.i(Constants.LOG_TAG_UI, "Vector saved, going back");
+                    mDialog.dismiss();
+                }
+            }
+    }
 }

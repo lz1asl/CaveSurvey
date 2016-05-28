@@ -110,7 +110,9 @@
     <string name="note_save">Запази</string>
     <string name="note_saved">Запазено</string>
 
-    
+    <!--vector screen -->
+    <string name="vector_button_add_again">Save + New</string>
+
 
     <string name="sketch_pick_color">Избери цвят</string>
     <string name="sketch_pick_size">Избери размер</string>

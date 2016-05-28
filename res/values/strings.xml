@@ -110,6 +110,9 @@
     <string name="note_save">Save</string>
     <string name="note_saved">Saved</string>
 
+    <!--vector screen -->
+    <string name="vector_button_add_again">Save + New</string>
+
     
 
     <string name="sketch_pick_color">Pick a Color</string>
