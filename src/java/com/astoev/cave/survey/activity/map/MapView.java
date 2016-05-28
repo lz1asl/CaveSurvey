@@ -448,12 +448,12 @@ public class MapView extends View {
 
             // first or middle by 90'
             if (prevLeg == null || l.isMiddle()) {
-                float angle = first.getAngle();
+                float angle;
                 if (horizontalPlan) {
                     if (left) {
-                        angle = MapUtilities.minus90Degrees(angle);
+                        angle = MapUtilities.minus90Degrees(first.getAngle());
                     } else {
-                        angle = MapUtilities.add90Degrees(angle);
+                        angle = MapUtilities.add90Degrees(first.getAngle());
                     }
                 } else {
                     if (left) {
@@ -464,7 +464,7 @@ public class MapView extends View {
                 }
                 galleryWidthAngle = Math.toRadians(angle);
             } else {
-                float angle = first.getAngle();
+                float angle = first.getAngle() == null ? 0 : first.getAngle();
                 // each next in the gallery by the bisector
                 if (l.getGalleryId().equals(prevLeg.getGalleryId())) {
 
