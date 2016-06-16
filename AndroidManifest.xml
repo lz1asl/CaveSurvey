@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.astoev.cave.survey"
+          android:installLocation="auto"
           android:versionCode="27"
           android:versionName="1.26">
           
@@ -86,7 +87,7 @@
             android:configChanges="orientation"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
-        
+
     </application>
     
 
