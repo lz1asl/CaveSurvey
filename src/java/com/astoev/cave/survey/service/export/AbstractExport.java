@@ -194,12 +194,13 @@ public abstract class AbstractExport {
                             fromPointName = galleryNames.get(prevGalleryId) + fromPoint.getName();
                         }
                         setValue(Entities.FROM, fromPointName);
-                        setValue(Entities.TO, fromPointName + "-" + galleryNames.get(l.getGalleryId()) + toPoint.getName() + "-v" + vectorCounter);
+//                        setValue(Entities.TO, fromPointName + "-" + galleryNames.get(l.getGalleryId()) + toPoint.getName() + "-v" + vectorCounter);
                         setValue(Entities.DISTANCE, v.getDistance());
                         setValue(Entities.COMPASS, v.getAzimuth());
                         if (v.getSlope() != null) {
                             setValue(Entities.INCLINATION, v.getSlope());
                         }
+                        setValue(Entities.NOTE, "v" + vectorCounter);
 
                         vectorCounter++;
                     }
