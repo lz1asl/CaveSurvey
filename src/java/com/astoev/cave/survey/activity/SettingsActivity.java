@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -13,10 +14,20 @@ import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.dialog.AboutDialog;
 import com.astoev.cave.survey.activity.dialog.ErrorReporterDialog;
 import com.astoev.cave.survey.activity.dialog.LanguageDialog;
+import com.astoev.cave.survey.activity.main.MainActivity;
 import com.astoev.cave.survey.activity.poc.SensorTestActivity;
 import com.astoev.cave.survey.fragment.InfoDialogFragment;
+import com.astoev.cave.survey.model.Leg;
+import com.astoev.cave.survey.model.Project;
+import com.astoev.cave.survey.service.export.excel.ExcelExport;
+import com.astoev.cave.survey.service.imp.ExcelImport;
 import com.astoev.cave.survey.service.reports.ErrorReporter;
 import com.astoev.cave.survey.util.ConfigUtil;
+import com.astoev.cave.survey.util.FileStorageUtil;
+
+import java.io.File;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by astoev on 10/11/15.
@@ -117,6 +128,44 @@ public class SettingsActivity extends MainMenuActivity {
                 } else {
                     Log.i(Constants.LOG_TAG_UI, "Auto backup off");
                     ConfigUtil.setBooleanProperty(ConfigUtil.PREF_BACKUP, false);
+                }
+            }
+        });
+
+        Button importButton = (Button) findViewById(R.id.settingsBackupImport);
+        importButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                // locate excel files
+                List<File> excelExportFiles = FileStorageUtil.listProjectFiles(null, ExcelExport.EXCEL_FILE_EXTENSION);
+                if (excelExportFiles == null || excelExportFiles.isEmpty()) {
+                    UIUtilities.showNotification(R.string.todo);
+                    Log.i(Constants.LOG_TAG_UI, "no files to import");
+                    return;
+                }
+
+                // give choice to the user
+//                TODO
+                File file = excelExportFiles.get(0);
+
+                // import
+                try {
+                    Project p = ExcelImport.importExcelFile(file, UUID.randomUUID().toString());
+                    if (p != null) {
+                        // open
+                        UIUtilities.showNotification(R.string.success);
+                        Log.i(Constants.LOG_TAG_UI, "Opening imported project " + p.getId());
+                        getWorkspace().setActiveProject(p);
+                        Leg lastProjectLeg = getWorkspace().getLastLeg();
+                        getWorkspace().setActiveLeg(lastProjectLeg);
+                        Intent intent = new Intent(SettingsActivity.this, MainActivity.class);
+                        startActivity(intent);
+                    }
+
+                } catch (Exception e) {
+                    Log.e(Constants.LOG_TAG_UI, "Failed at new project import", e);
+                    UIUtilities.showNotification(R.string.error);
                 }
             }
         });

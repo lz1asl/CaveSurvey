@@ -357,6 +357,8 @@
     <!-- auto backup -->
     <string name="settings_auto_backup">Автоматичен експорт</string>
     <string name="settings_auto_backup_info">Създава автоматично резервно копие на активния проект всеки 5 минути</string>
+    <string name="settings_import">Импорт</string>
+
 
     <!--opens topo -->
     <string name="export_openstopo_title">OpensTopo</string>

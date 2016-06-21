@@ -21,6 +21,8 @@ public class Gallery implements Serializable {
 	
     public static final String COLUMN_PROJECT_ID = "project_id";
     public static final String COLUMN_ID = "id";
+    public static final String COLUMN_NAME = "name";
+
 
     private static final char GALLERY_LETTERS[] = new char[26];
     private static final char GALLERY_LAST_LETTER = 'Z';
@@ -40,7 +42,7 @@ public class Gallery implements Serializable {
     @DatabaseField(foreign = true, canBeNull = false, foreignAutoRefresh = true, columnName = COLUMN_PROJECT_ID)
     private Project mProject;
 
-    @DatabaseField(columnName = "name")
+    @DatabaseField(columnName = COLUMN_NAME)
     private String mName;
 
     public Integer getId() {

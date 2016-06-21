@@ -123,4 +123,47 @@ public class PointUtil {
             return Gallery.generateNextGalleryName(Workspace.getCurrentInstance().getActiveProjectId());
         }
     }
+
+    public static String getPointGalleryName(String pointName) {
+        if (StringUtils.isNotEmpty(pointName)) {
+            StringBuilder gallery = new StringBuilder();
+            for (int i=0; i< pointName.length(); i++) {
+                char c = pointName.charAt(i);
+                if (Character.isLetter(c)) {
+                    gallery.append(c);
+                } else {
+                    break;
+                }
+            }
+            return gallery.toString();
+        }
+        return null;
+    }
+
+    public static String getPointName(String pointName) {
+        if (StringUtils.isNotEmpty(pointName)) {
+            StringBuilder point = new StringBuilder();
+            for (int i=0; i< pointName.length(); i++) {
+                char c = pointName.charAt(i);
+                if (Character.isLetter(c)) {
+                    continue;
+//                } else if (Constants.FROM_TO_POINT_DELIMITER.equals(c)) {
+//                    continue;
+                } else {
+                    point.append(c);
+                }
+            }
+            return point.toString();
+        }
+        return null;
+    }
+
+    public static boolean isMiddlePoint(String fromPointName, String toPointName) {
+        return !isVector(toPointName)
+                && (fromPointName.indexOf(Constants.MIDDLE_POINT_DELIMITER_EXPORT) > 0 || toPointName.indexOf(Constants.MIDDLE_POINT_DELIMITER_EXPORT) > 0);
+    }
+
+    public static boolean isVector(String toPointName) {
+        return StringUtils.isEmpty(toPointName);
+    }
 }

@@ -142,7 +142,7 @@ public abstract class AbstractExport {
                         prepareEntity(rowCounter);
 
                         setValue(Entities.FROM, lastMiddleName == null ? fromPointName : lastMiddleName);
-                        lastMiddleName = fromPointName + "-" + toPointName + Constants.MIDDLE_POINT_DELIMITER + StringUtils.floatToLabel(middle.getMiddlePointDistance());
+                        lastMiddleName = fromPointName + Constants.FROM_TO_POINT_DELIMITER + toPointName + Constants.MIDDLE_POINT_DELIMITER + StringUtils.floatToLabel(middle.getMiddlePointDistance());
                         setValue(Entities.TO, lastMiddleName);
                         setValue(Entities.DISTANCE, middle.getMiddlePointDistance() - prevLength);
                         exportLegCompass(l);

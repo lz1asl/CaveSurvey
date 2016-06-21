@@ -17,10 +17,14 @@ import com.astoev.cave.survey.model.Project;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by astoev on 12/25/13.
@@ -314,5 +318,38 @@ public class FileStorageUtil {
 
         File file = new File(fileNameArg);
         return file.exists();
+    }
+
+    public static List<File> listProjectFiles(Project aProject, String anExtension) {
+        if (aProject != null) {
+            return getFolderFiles(getProjectHome(aProject.getName()), anExtension);
+        } else {
+            File root = getStorageHome();
+            if (root == null) {
+                return null;
+            }
+            List<File> files = new ArrayList<>();
+            for (File projectHome : root.listFiles()) {
+                files.addAll(getFolderFiles(projectHome, anExtension));
+            }
+            return files;
+        }
+    }
+
+    private static List<File> getFolderFiles(File aFolder, final String anExtension) {
+        if (aFolder == null || !aFolder.isDirectory()) {
+            return new ArrayList();
+        } else {
+            if (StringUtils.isNotEmpty(anExtension)) {
+                return Arrays.asList(aFolder.listFiles(new FilenameFilter() {
+                    @Override
+                    public boolean accept(File dir, String filename) {
+                        return filename.endsWith(anExtension);
+                    }
+                }));
+            } else {
+                return Arrays.asList(aFolder.listFiles());
+            }
+        }
     }
 }

@@ -358,6 +358,7 @@ Network connection is required.</string>
     <!-- auto backup -->
     <string name="settings_auto_backup">Auto backup</string>
     <string name="settings_auto_backup_info">Exports your active project to the SD card every 5 minutes</string>
+    <string name="settings_import">Import</string>
 
     <!--opens topo -->
     <string name="export_openstopo_title">OpensTopo</string>

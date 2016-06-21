@@ -21,6 +21,7 @@ import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.service.Workspace;
 import com.astoev.cave.survey.service.ormlite.DatabaseHelper;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.GenericRawResults;
 import com.j256.ormlite.misc.TransactionManager;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.Where;
@@ -94,8 +95,36 @@ public class DaoUtil {
         return Workspace.getCurrentInstance().getDBHelper().getPointDao().queryForId(aId);
     }
 
+    public static Point getPoint(Integer aProjectId, Gallery aGallery, String aPointName) throws SQLException {
+
+       /* return Workspace.getCurrentInstance().getDBHelper().getPointDao().queryBuilder()
+            .where().eq(Point.COLUMN_POINT_NAME, aPointName)queryForId(aId);
+*/
+
+        String getPointByProjectGalleryAndNameQuery = "select max(id) from points where id in(" +
+                "select from_point_id from legs where gallery_id = " + aGalleryId + " and middle_point_distance is null"
+                + " union select to_point_id from legs where gallery_id = " + aGalleryId + " and middle_point_distance is null)";
+        GenericRawResults<String[]> pointResults = Workspace.getCurrentInstance().getDBHelper()
+                .getPointDao().queryRaw(getPointByProjectGalleryAndNameQuery);
+        try {
+            List<String[]> results = pointResults.getResults();
+            if (results != null && results.size() > 0) {
+                String[] pointIdString = results.get(0);
+                return DaoUtil.getPoint(Integer.parseInt(pointIdString[0]));
+            }
+        } finally {
+            pointResults.close();
+        }
+        return null;
+    }
+
     public static Gallery getGallery(Integer aId) throws SQLException {
         return Workspace.getCurrentInstance().getDBHelper().getGalleryDao().queryForId(aId);
+    }
+
+    public static Gallery getGallery(Integer aProjectId, String aGalleryName) throws SQLException {
+        return Workspace.getCurrentInstance().getDBHelper().getGalleryDao().queryBuilder()
+                .where().eq(Gallery.COLUMN_PROJECT_ID, aProjectId).and().eq(Gallery.COLUMN_NAME, aGalleryName).queryForFirst();
     }
 
     public static List<Leg> getCurrProjectLegs(boolean includeMiddles) throws SQLException {
@@ -125,14 +154,20 @@ public class DaoUtil {
     }
 
     public static Gallery createGallery(boolean isFirst) throws SQLException {
-        Gallery gallery = new Gallery();
         Project currProject = Workspace.getCurrentInstance().getActiveProject();
+        String name;
         if (isFirst) {
-            gallery.setName(Gallery.getFirstGalleryName());
+            name = Gallery.getFirstGalleryName();
         } else {
-            gallery.setName(Gallery.generateNextGalleryName(currProject.getId()));
+            name = Gallery.generateNextGalleryName(currProject.getId());
         }
-        gallery.setProject(currProject);
+        return createGallery(currProject, name);
+    }
+
+    public static Gallery createGallery(Project aProject, String aName) throws SQLException {
+        Gallery gallery = new Gallery();
+        gallery.setName(aName);
+        gallery.setProject(aProject);
         Workspace.getCurrentInstance().getDBHelper().getGalleryDao().create(gallery);
         return gallery;
     }

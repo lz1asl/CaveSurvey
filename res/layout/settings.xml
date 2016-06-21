@@ -51,6 +51,12 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/settingsBackupToggle"
                 android:layout_alignParentRight="true" />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/settingsBackupImport"
+                android:text="@string/settings_import"
+                android:layout_toLeftOf="@id/settingsBackupToggle"/>
         </RelativeLayout>
 
         <!-- error reporter -->

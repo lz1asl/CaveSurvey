@@ -43,16 +43,18 @@ import java.io.InputStream;
  */
 public class ExcelExport extends AbstractExport {
 
-    private static int CELL_FROM = 0;
-    private static int CELL_TO = 1;
-    private static int CELL_LENGHT = 2;
-    private static int CELL_AZIMUTH = 3;
-    private static int CELL_SLOPE = 4;
-    private static int CELL_LEFT = 5;
-    private static int CELL_RIGHT = 6;
-    private static int CELL_UP = 7;
-    private static int CELL_DOWN = 8;
-    private static int CELL_NOTE = 9;
+    public static final String MEASUREMENT_UNIT_DELIMITER = " - ";
+    public static final String EXCEL_FILE_EXTENSION = ".xls";
+    public static int CELL_FROM = 0;
+    public static int CELL_TO = 1;
+    public static int CELL_LENGHT = 2;
+    public static int CELL_AZIMUTH = 3;
+    public static int CELL_SLOPE = 4;
+    public static int CELL_LEFT = 5;
+    public static int CELL_RIGHT = 6;
+    public static int CELL_UP = 7;
+    public static int CELL_DOWN = 8;
+    public static int CELL_NOTE = 9;
     private static int CELL_LATITUDE = 10;
     private static int CELL_LONGITUDE = 11;
     private static int CELL_ALTTITUDE = 12;
@@ -69,7 +71,7 @@ public class ExcelExport extends AbstractExport {
     public ExcelExport(Context aContext) {
         super(aContext);
         mUseUniqueName = true;
-        mExtension = ".xls";
+        mExtension = EXCEL_FILE_EXTENSION;
     }
 
     @Override
@@ -200,13 +202,13 @@ public class ExcelExport extends AbstractExport {
         Cell headerTo = headerRow.createCell(CELL_TO);
         headerTo.setCellValue(mContext.getString(R.string.main_table_header_to));
         Cell headerLength = headerRow.createCell(CELL_LENGHT);
-        String distanceTitle = mContext.getString(R.string.distance) + " - " + Options.getOptionValue(Option.CODE_DISTANCE_UNITS);
+        String distanceTitle = mContext.getString(R.string.distance) + MEASUREMENT_UNIT_DELIMITER + Options.getOptionValue(Option.CODE_DISTANCE_UNITS);
         headerLength.setCellValue(distanceTitle);
         Cell headerCompass = headerRow.createCell(CELL_AZIMUTH);
-        String azimuthTitle = mContext.getString(R.string.azimuth) + " - " + Options.getOptionValue(Option.CODE_AZIMUTH_UNITS);
+        String azimuthTitle = mContext.getString(R.string.azimuth) + MEASUREMENT_UNIT_DELIMITER + Options.getOptionValue(Option.CODE_AZIMUTH_UNITS);
         headerCompass.setCellValue(azimuthTitle);
         Cell headerClinometer = headerRow.createCell(CELL_SLOPE);
-        String clinometerTitle = mContext.getString(R.string.slope) + " - " + Options.getOptionValue(Option.CODE_SLOPE_UNITS);
+        String clinometerTitle = mContext.getString(R.string.slope) + MEASUREMENT_UNIT_DELIMITER + Options.getOptionValue(Option.CODE_SLOPE_UNITS);
         headerClinometer.setCellValue(clinometerTitle);
         Cell headerLeft = headerRow.createCell(CELL_LEFT);
         headerLeft.setCellValue(mContext.getString(R.string.left));
