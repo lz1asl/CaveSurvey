@@ -106,4 +106,12 @@ public class Gallery implements Serializable {
         }
     }
 
+    @Override
+    public String toString() {
+        return "Gallery{" +
+                "mId=" + mId +
+                ", mProject=" + mProject +
+                ", mName='" + mName + '\'' +
+                '}';
+    }
 }

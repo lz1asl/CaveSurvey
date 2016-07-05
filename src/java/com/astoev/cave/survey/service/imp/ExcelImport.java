@@ -8,6 +8,7 @@ import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.dto.ProjectConfig;
 import com.astoev.cave.survey.manager.ProjectManager;
 import com.astoev.cave.survey.model.Gallery;
+import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Option;
 import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.model.Project;
@@ -88,15 +89,15 @@ public class ExcelImport {
                 leg.up = getNotNullFloatCellValue(row, ExcelExport.CELL_UP);
                 leg.down = getNotNullFloatCellValue(row, ExcelExport.CELL_DOWN);
                 leg.left = getNotNullFloatCellValue(row, ExcelExport.CELL_LEFT);
-                leg.ritht = getNotNullFloatCellValue(row, ExcelExport.CELL_RIGHT);
+                leg.right = getNotNullFloatCellValue(row, ExcelExport.CELL_RIGHT);
 
                 legs.add(leg);
             }
 
             Log.i(Constants.LOG_TAG_SERVICE, legs.size() + " records found");
 
-            TODO normalize legs by concatenating middle points
-
+//            TODO normalize legs by concatenating middle points
+            Log.i(Constants.LOG_TAG_SERVICE, "TODO process middles ");
 
             // no errors reading, start creating as single operation
             return TransactionManager.callInTransaction(Workspace.getCurrentInstance().getDBHelper().getConnectionSource(), new Callable<Project>() {
@@ -105,37 +106,69 @@ public class ExcelImport {
                     final Project project = ProjectManager.instance().createProject(config);
                     Log.i(Constants.LOG_TAG_SERVICE, "Project created");
 
-
-
-                    Log.i(Constants.LOG_TAG_SERVICE, " TODO create " + aName);
                     for (LegData leg : legs) {
-                        Log.i(Constants.LOG_TAG_SERVICE, leg.fromGallery + leg.fromPoint + " -> " + leg.toGallery + leg.toPoint + ":" + leg.length);
+                        Log.i(Constants.LOG_TAG_SERVICE, leg.fromGallery + " " + leg.fromPoint + " -> " + leg.toGallery + " " + leg.toPoint + ":" + leg.length);
 
                         // ensure gallery exists
                         Gallery fromGallery = DaoUtil.getGallery(project.getId(), leg.fromGallery);
+                        Log.i(Constants.LOG_TAG_SERVICE, "Got from gallery " + fromGallery);
                         if (fromGallery == null) {
+                            Log.i(Constants.LOG_TAG_SERVICE, "Creating gallery " + leg.fromGallery);
                             fromGallery = DaoUtil.createGallery(project, leg.fromGallery);
+                        }
+
+                        // plain legs
+                        Point from = DaoUtil.getPoint(project.getId(), fromGallery, leg.fromPoint);
+                        Log.i(Constants.LOG_TAG_SERVICE, "Got from point " + from);
+                        if (from == null) {
+                            Log.i(Constants.LOG_TAG_SERVICE, "Initialize from point " + leg.fromPoint);
+                            from = new Point();
+                            from.setName(leg.fromPoint);
+                            Workspace.getCurrentInstance().getDBHelper().getPointDao().create(from);
                         }
 
                         if (!leg.vector) {
                             Gallery toGallery = DaoUtil.getGallery(project.getId(), leg.toGallery);
+                            Log.i(Constants.LOG_TAG_SERVICE, "Got to gallery " + toGallery);
                             if (toGallery == null) {
+                                Log.i(Constants.LOG_TAG_SERVICE, "Creating gallery " + leg.toGallery);
                                 toGallery = DaoUtil.createGallery(project, leg.toGallery);
                             }
+
+                            Point to = DaoUtil.getPoint(project.getId(), toGallery, leg.toPoint);
+                            Log.i(Constants.LOG_TAG_SERVICE, "Got to point " + to);
+                            if (to == null) {
+                                Log.i(Constants.LOG_TAG_SERVICE, "Initialize to point " + leg.toPoint);
+                                to = new Point();
+                                to.setName(leg.toPoint);
+                                Workspace.getCurrentInstance().getDBHelper().getPointDao().create(to);
+                            }
+
+                            Log.i(Constants.LOG_TAG_SERVICE, "Creating leg");
+                            Leg legCreated = new Leg(from, to, project, toGallery.getId());
+                            // update model
+                            if (leg.middlePoint) {
+                                legCreated.setMiddlePointDistance(leg.length);
+                            } else {
+                                legCreated.setDistance(leg.length);
+                            }
+                            legCreated.setAzimuth(leg.azimuth);
+                            legCreated.setSlope(leg.slope);
+                            legCreated.setTop(leg.up);
+                            legCreated.setDown(leg.down);
+                            legCreated.setLeft(leg.left);
+                            legCreated.setRight(leg.right);
+
+                            Workspace.getCurrentInstance().getDBHelper().getLegDao().create(legCreated);
+                        } else {
+                            Log.i(Constants.LOG_TAG_SERVICE, "TODO vector ");
                         }
 
-                        // plain legs
-                        if (!leg.vector && !leg.middlePoint) {
-                            Point from = DaoUtil.getPoint(project.getId(), leg.fromPoint);
 
-
-                        }
                     }
                     return  project;
                 }
             });
-
-
 
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_SERVICE, "Failed with import", e);
@@ -192,6 +225,6 @@ public class ExcelImport {
         boolean vector, middlePoint;
 
         Float length, azimuth, slope;
-        Float up, down, left, ritht;
+        Float up, down, left, right;
     }
 }

@@ -21,7 +21,6 @@ import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.service.Workspace;
 import com.astoev.cave.survey.service.ormlite.DatabaseHelper;
 import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.dao.GenericRawResults;
 import com.j256.ormlite.misc.TransactionManager;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.Where;
@@ -97,25 +96,11 @@ public class DaoUtil {
 
     public static Point getPoint(Integer aProjectId, Gallery aGallery, String aPointName) throws SQLException {
 
-       /* return Workspace.getCurrentInstance().getDBHelper().getPointDao().queryBuilder()
-            .where().eq(Point.COLUMN_POINT_NAME, aPointName)queryForId(aId);
-*/
-
-        String getPointByProjectGalleryAndNameQuery = "select max(id) from points where id in(" +
-                "select from_point_id from legs where gallery_id = " + aGalleryId + " and middle_point_distance is null"
-                + " union select to_point_id from legs where gallery_id = " + aGalleryId + " and middle_point_distance is null)";
-        GenericRawResults<String[]> pointResults = Workspace.getCurrentInstance().getDBHelper()
-                .getPointDao().queryRaw(getPointByProjectGalleryAndNameQuery);
-        try {
-            List<String[]> results = pointResults.getResults();
-            if (results != null && results.size() > 0) {
-                String[] pointIdString = results.get(0);
-                return DaoUtil.getPoint(Integer.parseInt(pointIdString[0]));
-            }
-        } finally {
-            pointResults.close();
-        }
-        return null;
+        QueryBuilder<Leg, Integer> galleryLegs = Workspace.getCurrentInstance().getDBHelper().getLegDao().queryBuilder();
+        galleryLegs.where().eq(Leg.COLUMN_GALLERY_ID, aGallery.getId()).and().eq(Leg.COLUMN_PROJECT_ID, aProjectId);
+        QueryBuilder<Point, Integer> points = Workspace.getCurrentInstance().getDBHelper().getPointDao().queryBuilder();
+        // TODO joined only by from point
+        return points.join(galleryLegs).where().eq(Point.COLUMN_POINT_NAME, aPointName).queryForFirst();
     }
 
     public static Gallery getGallery(Integer aId) throws SQLException {
