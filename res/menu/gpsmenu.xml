@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:myapp="http://schemas.android.com/apk/res-auto">
       
-	<item android:id="@+id/note_action_save"
+	<item android:id="@+id/gps_action_save"
 	      android:icon="@drawable/ic_action_save"
 	      android:title="@string/gps_save"
 	      android:visible="true"

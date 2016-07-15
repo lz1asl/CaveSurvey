@@ -247,7 +247,7 @@ public class MainActivity extends MainMenuActivity implements AddNewSelectedHand
      */
     public void addNewSelected(int itemArg){
 
-        // dissmiss the dialog
+        // dismiss the dialog
         Fragment prev = getSupportFragmentManager().findFragmentByTag(AddNewDialog.ADD_NEW_DIALOG);
         if (prev != null) {
             DialogFragment df = (DialogFragment) prev;

@@ -127,7 +127,7 @@ public class GPSActivity extends MainMenuActivity {
         Log.i(Constants.LOG_TAG_UI, "GPS activity's menu selected - " + itemArg.toString());
 
         switch (itemArg.getItemId()) {
-            case R.id.note_action_save: {
+            case R.id.gps_action_save: {
                 saveLocation();
             }
             default:

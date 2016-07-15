@@ -76,6 +76,7 @@
                 android:value="com.astoev.cave.survey.activity.SettingsActivity" />
         </activity>
         <activity android:name="com.astoev.cave.survey.activity.main.GPSActivity"/>
+        <activity android:name="com.astoev.cave.survey.activity.main.GPSManualActivity"/>
         <activity android:name="com.astoev.cave.survey.activity.SettingsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

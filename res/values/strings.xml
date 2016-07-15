@@ -211,6 +211,15 @@
         <item>Built-in sensor</item>
     </string-array>
 
+    <string-array name="latitude_types">
+        <item>N</item>
+        <item>S</item>
+    </string-array>
+    <string-array name="longitude_types">
+        <item>E</item>
+        <item>W</item>
+    </string-array>
+
 
     <!-- about screen -->
     <string name="about_title">About CaveSurvey</string>
@@ -327,6 +336,10 @@
     <string name="gps_db_error">Unable to save location!</string>
     
     <string name="gps_enable_question">GPS is disabled! Would you like to enable it from Settings page?</string>
+
+    <string name="gps_type_title">Choose GPS type</string>
+    <string name="gps_type_auto">GPS Auto</string>
+    <string name="gps_type_manual">GPS Manual</string>
 
     <string name="unit_meters">meters</string>
     <string name="unit_degrees">degrees</string>

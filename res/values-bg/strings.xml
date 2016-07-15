@@ -327,6 +327,10 @@
     
     <string name="gps_enable_question">GPS е забранен! Искате ли да го разрешите?</string>
 
+    <string name="gps_type_title">Изберете GPS метод</string>
+    <string name="gps_type_auto">Автоматично вкарване</string>
+    <string name="gps_type_manual">Ръчно вкарване</string>
+
     <string name="unit_meters">метри</string>
     <string name="unit_degrees">градуси</string>
     <string name="unit_grads">гради</string>

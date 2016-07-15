@@ -11,6 +11,8 @@ public class LocationUtil {
 
     /** Template for formatting latitude and longitude */
     private static  String latLonTemplate = "%f\u00B0%s";
+
+    private static  String latLonNumberTemplate = "%f";
     
     private static final String N = "N";
     private static final String S = "S";
