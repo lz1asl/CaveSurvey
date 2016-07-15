@@ -21,7 +21,7 @@
                   android:layout_height="wrap_content"
                   android:layout_marginTop="10dp">
             <EditText android:id="@+id/gps_manual_latitude"
-                      android:hint="@string/gps_no_value"
+                      android:hint="@string/gps_no_value_format"
                       android:inputType="numberDecimal"
                       android:layout_width="0dp"
                       android:layout_weight="7"
@@ -38,7 +38,7 @@
                      />
 
             <EditText android:id="@+id/gps_manual_longitude"
-                      android:hint="@string/gps_no_value"
+                      android:hint="@string/gps_no_value_format"
                       android:inputType="numberDecimal"
                       android:layout_width="0dp"
                       android:layout_weight="7"
