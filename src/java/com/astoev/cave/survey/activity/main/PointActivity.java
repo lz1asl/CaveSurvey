@@ -70,6 +70,8 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 
     private static final String VECTOR_DIALOG = "vector_dialog";
 
+    private static final String STATE_PHOTO_PATH = "STATE_PHOTO_PATH";
+
     private String mNewNote = null;
 
     private String mCurrentPhotoPath;
@@ -114,6 +116,21 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         // make swipe work
         View view = findViewById(R.id.point_main_view);
         view.setOnTouchListener(this);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (mCurrentPhotoPath != null) {
+            outState.putString(STATE_PHOTO_PATH, mCurrentPhotoPath);
+            // save photo path if available
+        }
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mCurrentPhotoPath = savedInstanceState.getString(STATE_PHOTO_PATH);
     }
 
     @Override
@@ -393,6 +410,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
             return;
         } catch (Exception e) {
             UIUtilities.showNotification(R.string.export_io_error);
+            Log.e(Constants.LOG_TAG_UI, "Failed to write to SD card", e);
             return;
         }
 
@@ -402,9 +420,11 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
             mCurrentPhotoPath = photoFile.getAbsolutePath();
 
             Log.i(Constants.LOG_TAG_SERVICE, "Going to capture image in: " + photoFile.getAbsolutePath());
-            final Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
-            startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+            final Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            }
         }
     }
 
@@ -418,9 +438,17 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                     Log.i(Constants.LOG_TAG_SERVICE, "Got image");
                     try {
 
+                        // check if the photo path is available
+                        if (mCurrentPhotoPath == null) {
+                            UIUtilities.showNotification(R.string.export_io_error);
+                            Log.e(Constants.LOG_TAG_UI, "Photo file url is not available:" + mCurrentPhotoPath);
+                            break;
+                        }
+
                         // check if the file really exists
                         if (!FileStorageUtil.isFileExists(mCurrentPhotoPath)) {
                             UIUtilities.showNotification(R.string.export_io_error);
+                            Log.e(Constants.LOG_TAG_UI, "Photo file not available:" + mCurrentPhotoPath);
                             break;
                         }
 
