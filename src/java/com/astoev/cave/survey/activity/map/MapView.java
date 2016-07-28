@@ -68,14 +68,20 @@ public class MapView extends View {
 
     private boolean horizontalPlan = true;
 
+    private static float screenScale;
+
+
     public MapView(Context context, AttributeSet attrs) {
         super(context, attrs);
+
+        screenScale = getResources().getDisplayMetrics().density;
 
         polygonPaint.setColor(Color.RED);
         polygonPaint.setStrokeWidth(2);
         polygonWidthPaint.setColor(Color.RED);
         polygonWidthPaint.setStrokeWidth(1);
         overlayPaint.setColor(Color.WHITE);
+        overlayPaint.setTextSize(overlayPaint.getTextSize() * screenScale);
         youAreHerePaint.setColor(Color.WHITE);
         youAreHerePaint.setAlpha(50);
         // semi transparent white
@@ -91,6 +97,7 @@ public class MapView extends View {
         // need to instruct that changes to the canvas will be made, otherwise the screen might become blank
         // see http://stackoverflow.com/questions/12261435/canvas-does-not-draw-in-custom-view
         setWillNotDraw(false);
+
     }
 
     @Override
@@ -349,28 +356,32 @@ public class MapView extends View {
             //left
             canvas.drawLine(SPACING, maxY - SPACING, SPACING, SPACING, overlayPaint);
 
+            float scaled30 = 30 * screenScale;
+            float scaled20 = 20 * screenScale;
+            float scaled10 = 10 * screenScale;
+
             if (horizontalPlan) {
                 // north arrow
-                northCenter.set(maxX - 20, 30);
-                canvas.drawLine(northCenter.x, northCenter.y, northCenter.x + 10, northCenter.y + 10, overlayPaint);
-                canvas.drawLine(northCenter.x + 10, northCenter.y + 10, northCenter.x, northCenter.y - 20, overlayPaint);
-                canvas.drawLine(northCenter.x, northCenter.y - 20, northCenter.x - 10, northCenter.y + 10, overlayPaint);
-                canvas.drawLine(northCenter.x - 10, northCenter.y + 10, northCenter.x, northCenter.y, overlayPaint);
-                canvas.drawText("N", northCenter.x + 5, northCenter.y - 10, overlayPaint);
+                northCenter.set((int) (maxX - scaled20), (int) (scaled30));
+                canvas.drawLine(northCenter.x, northCenter.y, northCenter.x + scaled10, northCenter.y + scaled10, overlayPaint);
+                canvas.drawLine(northCenter.x + scaled10, northCenter.y + scaled10, northCenter.x, northCenter.y - scaled20, overlayPaint);
+                canvas.drawLine(northCenter.x, northCenter.y - scaled20, northCenter.x - scaled10, northCenter.y + scaled10, overlayPaint);
+                canvas.drawLine(northCenter.x - scaled10, northCenter.y + scaled10, northCenter.x, northCenter.y, overlayPaint);
+                canvas.drawText("N", northCenter.x + 5 * screenScale, northCenter.y - scaled10, overlayPaint);
             } else {
-                //  up wrrow
-                northCenter.set(maxX - 15, 10);
-                canvas.drawLine(northCenter.x + 1, northCenter.y, northCenter.x + 6, northCenter.y + 10, overlayPaint);
-                canvas.drawLine(northCenter.x - 5, northCenter.y + 10, northCenter.x, northCenter.y, overlayPaint);
-                canvas.drawLine(northCenter.x, northCenter.y -1, northCenter.x, northCenter.y + 20, overlayPaint);
+                //  up awrrow
+                northCenter.set((int) (maxX - 15 * screenScale), (int) scaled10);
+                canvas.drawLine(northCenter.x + 1 * screenScale, northCenter.y, northCenter.x + 6 * screenScale, northCenter.y + scaled10, overlayPaint);
+                canvas.drawLine(northCenter.x - 5 * screenScale, northCenter.y + scaled10, northCenter.x, northCenter.y, overlayPaint);
+                canvas.drawLine(northCenter.x, northCenter.y - 1 * screenScale, northCenter.x, northCenter.y + scaled20, overlayPaint);
             }
 
             // scale
-            canvas.drawText("x" + scale, 25 + gridStep/2, 45, overlayPaint);
-            canvas.drawLine(30, 25, 30, 35, overlayPaint);
-            canvas.drawLine(30, 30, 30 + gridStep, 30, overlayPaint);
-            canvas.drawLine(30 + gridStep, 25, 30 + gridStep, 35, overlayPaint);
-            canvas.drawText(GRID_STEPS[gridStepIndex]  + "m" , 25 + gridStep/2, 25, overlayPaint);
+            canvas.drawText("x" + scale, (25 + gridStep/2) * screenScale, 45 * screenScale, overlayPaint);
+            canvas.drawLine(scaled30, 25 * screenScale, scaled30, 35 * screenScale, overlayPaint);
+            canvas.drawLine(scaled30, scaled30, (30 + gridStep) * screenScale, 30 * screenScale, overlayPaint);
+            canvas.drawLine((30 + gridStep) * screenScale, 25 * screenScale, (30 + gridStep)  * screenScale, 35 * screenScale, overlayPaint);
+            canvas.drawText(GRID_STEPS[gridStepIndex]  + "m" , (25 + gridStep/2) * screenScale, 25 * screenScale, overlayPaint);
 
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to draw map activity", e);

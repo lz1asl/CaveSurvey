@@ -11,8 +11,8 @@
     <ImageButton
         android:src="@drawable/ic_action_edit"
         android:onClick="annotateMap"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
         android:scaleType="fitCenter"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
