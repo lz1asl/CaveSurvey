@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -16,9 +17,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
+import com.astoev.cave.survey.BuildConfig;
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
+import com.astoev.cave.survey.util.ConfigUtil;
 import com.astoev.cave.survey.util.StringUtils;
+
+import java.io.IOException;
+import java.util.Date;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 /**
  * Fragment that shows about dialog
@@ -37,19 +45,10 @@ public class AboutDialog extends DialogFragment {
         Activity activity = getActivity();
         Context context = getActivity().getApplicationContext();
 
-        // create the title
-        String title = getString(R.string.about_title);
-
-        try {
-            title = title + StringUtils.SPACE + context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
-        } catch (PackageManager.NameNotFoundException e) {
-            Log.e(Constants.LOG_TAG_UI, "Failed get version for about dialog", e);
-        }
-
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 
         TextView titleView = new TextView(context);
-        titleView.setText(title);
+        titleView.setText(R.string.about_title);
         titleView.setGravity(Gravity.CENTER);
         titleView.setPadding(10, 10, 10, 10);
         titleView.setTextSize(22);
@@ -65,8 +64,49 @@ public class AboutDialog extends DialogFragment {
         TextView url2 = (TextView) view.findViewById(R.id.aboutUrl2);
         Linkify.addLinks(url2, Linkify.WEB_URLS);
 
-        return  builder.create();
+        StringBuilder versionText = new StringBuilder("v");
+        try {
+            versionText.append(context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName);
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.e(Constants.LOG_TAG_UI, "Failed get version for about dialog", e);
+        }
 
+        String buildDate = getBuildDate();
+        versionText.append(buildDate);
+
+        if (BuildConfig.DEBUG) {
+            versionText.append(" (Debug)");
+        }
+
+        TextView version = (TextView) view.findViewById(R.id.aboutVersion);
+        version.setText(versionText.toString());
+
+        return  builder.create();
+    }
+
+    // kind of ugly build date looking at the time the dex files were last updated
+    private String getBuildDate() {
+        Activity context = ConfigUtil.getContext();
+        ZipFile zf = null;
+        try {
+            ApplicationInfo ai = context.getPackageManager().getApplicationInfo(context.getPackageName(), 0);
+            zf = new ZipFile(ai.sourceDir);
+            ZipEntry ze = zf.getEntry("classes.dex");
+            long time = ze.getTime();
+            return " / " + StringUtils.dateToString(new Date(time));
+
+        } catch(Exception e) {
+            Log.e(Constants.LOG_TAG_UI, "Failed get build date", e);
+            return "";
+        } finally {
+            if (zf != null) {
+                try {
+                    zf.close();
+                } catch (IOException e) {
+                    Log.e(Constants.LOG_TAG_UI, "Failed close file", e);
+                }
+            }
+        }
     }
 
 }
