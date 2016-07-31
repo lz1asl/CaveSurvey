@@ -82,7 +82,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.astoev.cave.survey.activity.home.HomeActivity" />
         </activity>
-	
+        <activity android:name="com.astoev.cave.survey.activity.main.ImportActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.astoev.cave.survey.activity.SettingsActivity" />
+        </activity>
 	    <activity
             android:name=".openstopo.WebViewActivity"
             android:configChanges="orientation"
