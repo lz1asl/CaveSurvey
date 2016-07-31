@@ -369,7 +369,7 @@ public class DaoUtil {
         List<Leg> legs = DaoUtil.getCurrProjectLegs(false);
         Project project = Workspace.getCurrentInstance().getActiveProject();
         String name = project.getName();
-        String creationDate = project.getCreationDateFormatted();
+        String creationDate = StringUtils.dateToDateTimeString(project.getCreationDate());
 
         float totalLength = 0, totalDepth = 0;
         int numNotes = 0, numDrawings = 0, numCoordinates = 0, numPhotos = 0, numVectors = 0;

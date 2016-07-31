@@ -3,8 +3,10 @@ package com.astoev.cave.survey.util;
 import android.content.res.Resources;
 import android.widget.EditText;
 
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.Date;
 import java.util.Locale;
 
 /**
@@ -90,6 +92,30 @@ public class StringUtils {
     // because of comma instead of dot for Bulgarian input
     private static String fixComasInNumber(String aString) {
         return aString.replace(',', '.');
+    }
+
+    public static String dateToDateTimeString(Date aDate) {
+        Locale locale = getCurrLocale();
+
+        DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, locale);
+        return df.format(aDate);
+    }
+
+    public static String dateToString(Date aDate) {
+        Locale locale = getCurrLocale();
+        DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, locale);
+        return df.format(aDate);
+    }
+
+    private static Locale getCurrLocale() {
+        String savedLanguage = ConfigUtil.getStringProperty(ConfigUtil.PREF_LOCALE);
+        if (StringUtils.isEmpty(savedLanguage)){
+            // use any default formatting
+            return Locale.getDefault();
+        } else {
+            // format depending on the locale
+            return new Locale(savedLanguage);
+        }
     }
 
 }
