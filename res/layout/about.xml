@@ -29,4 +29,10 @@
         android:contentDescription="@string/sk_paldin"
         android:src="@drawable/paldin" />
 
+    <TextView
+        android:id="@+id/aboutVersion"
+        android:layout_gravity="right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
 </LinearLayout>

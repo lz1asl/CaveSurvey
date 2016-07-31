@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.astoev.cave.survey"
           android:installLocation="auto"
-          android:versionCode="27"
-          android:versionName="1.26">
+          android:versionCode="28"
+          android:versionName="1.27">
           
     <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="23"/>
     <!--<uses-permission android:name="android.permission.INTERNET" />-->
@@ -76,6 +76,7 @@
                 android:value="com.astoev.cave.survey.activity.SettingsActivity" />
         </activity>
         <activity android:name="com.astoev.cave.survey.activity.main.GPSActivity"/>
+        <activity android:name="com.astoev.cave.survey.activity.main.GPSManualActivity"/>
         <activity android:name="com.astoev.cave.survey.activity.SettingsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

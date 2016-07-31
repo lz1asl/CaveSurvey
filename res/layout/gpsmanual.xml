@@ -1,0 +1,102 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+    <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                 android:layout_width="fill_parent"
+                 android:layout_height="wrap_content">
+
+        <TableRow android:layout_width="fill_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_marginTop="10dp">
+            <TextView android:id="@+id/gps_manual_title"
+                      android:text="@string/gps_saved_location"
+                      android:layout_height="wrap_content"
+                      android:layout_width="0dp"
+                      android:layout_weight="1"
+                      android:gravity="center"
+                      android:textAppearance="?android:attr/textAppearanceLarge"/>
+        </TableRow>
+        <TableRow android:layout_width="fill_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_marginTop="10dp">
+            <EditText android:id="@+id/gps_manual_latitude"
+                      android:hint="@string/gps_no_value_format"
+                      android:inputType="numberDecimal"
+                      android:layout_width="0dp"
+                      android:layout_weight="7"
+                      android:gravity="center"
+                      android:maxLength="10"
+                      android:textAppearance="?android:attr/textAppearanceLarge"/>
+            <Spinner android:id="@+id/gps_manual_latitude_type"
+                     android:layout_width="0dp"
+                     android:layout_weight="5"
+                     android:layout_height="wrap_content"
+                     android:gravity="center"
+                     android:textAppearance="?android:attr/textAppearanceLarge"
+                     android:entries="@array/latitude_types"
+                     />
+
+            <EditText android:id="@+id/gps_manual_longitude"
+                      android:hint="@string/gps_no_value_format"
+                      android:inputType="numberDecimal"
+                      android:layout_width="0dp"
+                      android:layout_weight="7"
+                      android:gravity="center"
+                      android:maxLength="10"
+                      android:textAppearance="?android:attr/textAppearanceLarge"/>
+            <Spinner android:id="@+id/gps_manual_longitude_type"
+                     android:layout_width="0dp"
+                     android:layout_weight="5"
+                     android:layout_height="wrap_content"
+                     android:gravity="center"
+                     android:textAppearance="?android:attr/textAppearanceLarge"
+                     android:entries="@array/longitude_types" />
+        </TableRow>
+        <TableRow android:layout_width="fill_parent"
+                  android:layout_height="wrap_content" >
+            <TextView android:layout_height="wrap_content"
+                      android:layout_width="0dp"
+                      android:layout_weight="1"
+                      android:text="@string/gps_latitude"
+                      android:gravity="center"/>
+            <TextView android:layout_height="wrap_content"
+                      android:layout_width="0dp"
+                      android:layout_weight="1"
+                      android:text="@string/gps_longitude"
+                      android:gravity="center"/>
+        </TableRow>
+        <TableRow android:layout_width="fill_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_marginTop="10dp">
+            <EditText android:id="@+id/gps_manual_altitude"
+                      android:hint="@string/gps_no_value"
+                      android:inputType="number"
+                      android:layout_width="0dp"
+                      android:layout_weight="1"
+                      android:gravity="center"
+                      android:textAppearance="?android:attr/textAppearanceLarge"/>
+            <EditText android:id="@+id/gps_manual_accuracy"
+                      android:hint="@string/gps_no_value"
+                      android:inputType="number"
+                      android:layout_width="0dp"
+                      android:layout_weight="1"
+                      android:gravity="center"
+                      android:textAppearance="?android:attr/textAppearanceLarge"/>
+        </TableRow>
+        <TableRow android:layout_width="fill_parent"
+                  android:layout_height="wrap_content">
+            <TextView android:layout_height="wrap_content"
+                      android:layout_width="0dp"
+                      android:layout_weight="1"
+                      android:text="@string/gps_altitude"
+                      android:gravity="center"/>
+            <TextView android:layout_height="wrap_content"
+                      android:layout_width="0dp"
+                      android:layout_weight="1"
+                      android:text="@string/gps_accuracy"
+                      android:gravity="center"/>
+        </TableRow>
+
+    </TableLayout>
+</ScrollView>

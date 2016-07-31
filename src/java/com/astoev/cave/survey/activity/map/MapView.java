@@ -38,14 +38,16 @@ import java.util.List;
  */
 public class MapView extends View {
 
-    public static final int POINT_RADIUS = 3;
-    public static final int MIDDLE_POINT_RADIUS = 2;
-    public static final int MEASURE_POINT_RADIUS = 2;
-    public static final int CURR_POINT_RADIUS = 8;
-    private final static int LABEL_DEVIATION_X = 10;
-    private final static int LABEL_DEVIATION_Y = 15;
-    private static final int [] GRID_STEPS = new int[] {20,10, 5, 5, 2, 2, 2, 2, 1, 1, 1};
-    private final int SPACING = 5;
+    public static float pointRadius;
+    public static float middlePointRadius;
+    public static float measurePointRadius;
+    public static float currPointRadius;
+    public static float sidePointRadius;
+    private float labelDeviationX;
+    private float labelDeviationY;
+    private float spacing;
+    private static float [] GRID_STEPS;
+
     private final Paint polygonPaint = new Paint();
     private final Paint polygonWidthPaint = new Paint();
     private final Paint overlayPaint = new Paint();
@@ -68,16 +70,45 @@ public class MapView extends View {
 
     private boolean horizontalPlan = true;
 
+    private static float screenScale;
+
+
     public MapView(Context context, AttributeSet attrs) {
         super(context, attrs);
+
+        screenScale = getResources().getDisplayMetrics().density;
+        pointRadius = 3 * screenScale;
+        middlePointRadius = 2 * screenScale;
+        measurePointRadius = 2 * screenScale;
+        currPointRadius = 8 * screenScale;
+        sidePointRadius = 1 * screenScale;
+        labelDeviationX = 10 * screenScale;
+        labelDeviationY = 15 * screenScale;
+        spacing = 5 * screenScale;
+
+        GRID_STEPS = new float[] {20 * screenScale,
+                10 * screenScale,
+                5 * screenScale,
+                5 * screenScale,
+                2 * screenScale,
+                2 * screenScale,
+                2 * screenScale,
+                2 * screenScale,
+                1 * screenScale,
+                1 * screenScale,
+                1 * screenScale};
 
         polygonPaint.setColor(Color.RED);
         polygonPaint.setStrokeWidth(2);
         polygonWidthPaint.setColor(Color.RED);
         polygonWidthPaint.setStrokeWidth(1);
+        polygonWidthPaint.setAlpha(50);
+        polygonPaint.setTextSize(polygonPaint.getTextSize() * screenScale);
         overlayPaint.setColor(Color.WHITE);
+        overlayPaint.setTextSize(overlayPaint.getTextSize() * screenScale);
         youAreHerePaint.setColor(Color.WHITE);
         youAreHerePaint.setAlpha(50);
+
         // semi transparent white
         gridPaint.setColor(Color.parseColor("#11FFFFFF"));
         gridPaint.setStrokeWidth(1);
@@ -91,6 +122,7 @@ public class MapView extends View {
         // need to instruct that changes to the canvas will be made, otherwise the screen might become blank
         // see http://stackoverflow.com/questions/12261435/canvas-does-not-draw-in-custom-view
         setWillNotDraw(false);
+
     }
 
     @Override
@@ -128,19 +160,19 @@ public class MapView extends View {
             int gridStepIndex = scale/5;
 
             // grid scale
-            int gridStep = GRID_STEPS[gridStepIndex] * scale;
+            int gridStep = (int) (GRID_STEPS[gridStepIndex] * scale);
 
             // grid start
-            int gridStartX = mapCenterMoveX % gridStep - SPACING + centerX - (centerX / gridStep) * gridStep;
-            int gridStartY = mapCenterMoveY % gridStep - SPACING + centerY - (centerY / gridStep) * gridStep;
+            int gridStartX = mapCenterMoveX % gridStep - (int) spacing + centerX - (centerX / gridStep) * gridStep;
+            int gridStartY = mapCenterMoveY % gridStep - (int) spacing + centerY - (centerY / gridStep) * gridStep;
 
             // grid horizontal lines
             for (int x=0; x<maxX/gridStep; x++) {
-                canvas.drawLine(x*gridStep + SPACING + gridStartX, SPACING, x*gridStep + SPACING + gridStartX, maxY - SPACING, gridPaint);
+                canvas.drawLine(x*gridStep + spacing + gridStartX, spacing, x*gridStep + spacing + gridStartX, maxY - spacing, gridPaint);
             }
             // grid vertical lines
             for (int y=0; y<maxY/gridStep; y++) {
-                canvas.drawLine(SPACING, y*gridStep + SPACING + gridStartY, maxX - SPACING, y*gridStep + SPACING + gridStartY, gridPaint);
+                canvas.drawLine(spacing, y*gridStep + spacing + gridStartY, maxX - spacing, y*gridStep + spacing + gridStartY, gridPaint);
             }
 
             // load the points
@@ -208,9 +240,9 @@ public class MapView extends View {
 
                                 pointLabel = galleryNames.get(l.getGalleryId()) + l.getFromPoint().getName();
                                 if (scale >= 3) {
-                                    canvas.drawText(pointLabel, mapCenterMoveX + first.getX() + LABEL_DEVIATION_X, mapCenterMoveY + first.getY() + LABEL_DEVIATION_Y, polygonPaint);
+                                    canvas.drawText(pointLabel, mapCenterMoveX + first.getX() + labelDeviationX, mapCenterMoveY + first.getY() + labelDeviationY, polygonPaint);
                                 }
-                                canvas.drawCircle(mapCenterMoveX + first.getX(), mapCenterMoveY + first.getY(), POINT_RADIUS, polygonPaint);
+                                canvas.drawCircle(mapCenterMoveX + first.getX(), mapCenterMoveY + first.getY(), pointRadius, polygonPaint);
                             }
                         }
 
@@ -269,22 +301,22 @@ public class MapView extends View {
                             if (Workspace.getCurrentInstance().getActiveLegId().equals(l.getId())) {
                                 // you are here
                                 if (l.isMiddle()) {
-                                    canvas.drawCircle(mapCenterMoveX + second.getX(), mapCenterMoveY + second.getY(), CURR_POINT_RADIUS, youAreHerePaint);
+                                    canvas.drawCircle(mapCenterMoveX + second.getX(), mapCenterMoveY + second.getY(), currPointRadius, youAreHerePaint);
                                 } else {
-                                    canvas.drawCircle(mapCenterMoveX + first.getX(), mapCenterMoveY + first.getY(), CURR_POINT_RADIUS, youAreHerePaint);
+                                    canvas.drawCircle(mapCenterMoveX + first.getX(), mapCenterMoveY + first.getY(), currPointRadius, youAreHerePaint);
                                 }
 
                             }
 
                             DaoUtil.refreshPoint(l.getToPoint());
                             if (l.isMiddle()) {
-                                canvas.drawCircle(mapCenterMoveX + second.getX(), mapCenterMoveY + second.getY(), MIDDLE_POINT_RADIUS, polygonPaint);
+                                canvas.drawCircle(mapCenterMoveX + second.getX(), mapCenterMoveY + second.getY(), middlePointRadius, polygonPaint);
                             } else {
                                 pointLabel = galleryNames.get(l.getGalleryId()) + l.getToPoint().getName();
                                 if (scale >= 3) {
-                                    canvas.drawText(pointLabel, mapCenterMoveX + second.getX() + LABEL_DEVIATION_X, mapCenterMoveY + second.getY() + LABEL_DEVIATION_Y, polygonPaint);
+                                    canvas.drawText(pointLabel, mapCenterMoveX + second.getX() + labelDeviationX, mapCenterMoveY + second.getY() + labelDeviationY, polygonPaint);
                                 }
-                                canvas.drawCircle(mapCenterMoveX + second.getX(), mapCenterMoveY + second.getY(), POINT_RADIUS, polygonPaint);
+                                canvas.drawCircle(mapCenterMoveX + second.getX(), mapCenterMoveY + second.getY(), pointRadius, polygonPaint);
                             }
 
                         }
@@ -327,7 +359,7 @@ public class MapView extends View {
                                                 MapUtilities.getSlopeInDegrees(MapUtilities.getSlopeOrHorizontallyIfMissing(v.getSlope()), slopeUnits))))) * scale;
                                     }
                                     canvas.drawLine(mapCenterMoveX + first.getX(), mapCenterMoveY + first.getY(), mapCenterMoveX + first.getX() + deltaX, mapCenterMoveY + first.getY() + deltaY, vectorsPaint);
-                                    canvas.drawCircle(mapCenterMoveX + first.getX() + deltaX, mapCenterMoveY + first.getY() + deltaY, 2, vectorPointPaint);
+                                    canvas.drawCircle(mapCenterMoveX + first.getX() + deltaX, mapCenterMoveY + first.getY() + deltaY, sidePointRadius, vectorPointPaint);
                                 }
                             }
                         }
@@ -341,36 +373,40 @@ public class MapView extends View {
 
             // borders
             //top
-            canvas.drawLine(SPACING, SPACING, maxX - SPACING, SPACING, overlayPaint);
+            canvas.drawLine(spacing, spacing, maxX - spacing, spacing, overlayPaint);
             //right
-            canvas.drawLine(maxX - SPACING, SPACING, maxX - SPACING, maxY - SPACING, overlayPaint);
+            canvas.drawLine(maxX - spacing, spacing, maxX - spacing, maxY - spacing, overlayPaint);
             // bottom
-            canvas.drawLine(SPACING, maxY - SPACING, maxX - SPACING, maxY - SPACING, overlayPaint);
+            canvas.drawLine(spacing, maxY - spacing, maxX - spacing, maxY - spacing, overlayPaint);
             //left
-            canvas.drawLine(SPACING, maxY - SPACING, SPACING, SPACING, overlayPaint);
+            canvas.drawLine(spacing, maxY - spacing, spacing, spacing, overlayPaint);
+
+            float scaled30 = 30 * screenScale;
+            float scaled20 = 20 * screenScale;
+            float scaled10 = 10 * screenScale;
 
             if (horizontalPlan) {
                 // north arrow
-                northCenter.set(maxX - 20, 30);
-                canvas.drawLine(northCenter.x, northCenter.y, northCenter.x + 10, northCenter.y + 10, overlayPaint);
-                canvas.drawLine(northCenter.x + 10, northCenter.y + 10, northCenter.x, northCenter.y - 20, overlayPaint);
-                canvas.drawLine(northCenter.x, northCenter.y - 20, northCenter.x - 10, northCenter.y + 10, overlayPaint);
-                canvas.drawLine(northCenter.x - 10, northCenter.y + 10, northCenter.x, northCenter.y, overlayPaint);
-                canvas.drawText("N", northCenter.x + 5, northCenter.y - 10, overlayPaint);
+                northCenter.set((int) (maxX - scaled20), (int) (scaled30));
+                canvas.drawLine(northCenter.x, northCenter.y, northCenter.x + scaled10, northCenter.y + scaled10, overlayPaint);
+                canvas.drawLine(northCenter.x + scaled10, northCenter.y + scaled10, northCenter.x, northCenter.y - scaled20, overlayPaint);
+                canvas.drawLine(northCenter.x, northCenter.y - scaled20, northCenter.x - scaled10, northCenter.y + scaled10, overlayPaint);
+                canvas.drawLine(northCenter.x - scaled10, northCenter.y + scaled10, northCenter.x, northCenter.y, overlayPaint);
+                canvas.drawText("N", northCenter.x + 5 * screenScale, northCenter.y - scaled10, overlayPaint);
             } else {
-                //  up wrrow
-                northCenter.set(maxX - 15, 10);
-                canvas.drawLine(northCenter.x + 1, northCenter.y, northCenter.x + 6, northCenter.y + 10, overlayPaint);
-                canvas.drawLine(northCenter.x - 5, northCenter.y + 10, northCenter.x, northCenter.y, overlayPaint);
-                canvas.drawLine(northCenter.x, northCenter.y -1, northCenter.x, northCenter.y + 20, overlayPaint);
+                //  up awrrow
+                northCenter.set((int) (maxX - 15 * screenScale), (int) scaled10);
+                canvas.drawLine(northCenter.x + 1 * screenScale, northCenter.y, northCenter.x + 6 * screenScale, northCenter.y + scaled10, overlayPaint);
+                canvas.drawLine(northCenter.x - 5 * screenScale, northCenter.y + scaled10, northCenter.x, northCenter.y, overlayPaint);
+                canvas.drawLine(northCenter.x, northCenter.y - 1 * screenScale, northCenter.x, northCenter.y + scaled20, overlayPaint);
             }
 
             // scale
-            canvas.drawText("x" + scale, 25 + gridStep/2, 45, overlayPaint);
-            canvas.drawLine(30, 25, 30, 35, overlayPaint);
-            canvas.drawLine(30, 30, 30 + gridStep, 30, overlayPaint);
-            canvas.drawLine(30 + gridStep, 25, 30 + gridStep, 35, overlayPaint);
-            canvas.drawText(GRID_STEPS[gridStepIndex]  + "m" , 25 + gridStep/2, 25, overlayPaint);
+            canvas.drawText("x" + scale, (25 * screenScale + gridStep/2), 45 * screenScale, overlayPaint);
+            canvas.drawLine(scaled30, 25 * screenScale, scaled30, 35 * screenScale, overlayPaint);
+            canvas.drawLine(scaled30, scaled30, scaled30 + gridStep, scaled30, overlayPaint);
+            canvas.drawLine(scaled30 + gridStep, 25 * screenScale, scaled30 + gridStep, 35 * screenScale, overlayPaint);
+            canvas.drawText(GRID_STEPS[gridStepIndex]  + "m" , 25 * screenScale + gridStep/2, 25 * screenScale, overlayPaint);
 
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to draw map activity", e);
@@ -509,9 +545,9 @@ public class MapView extends View {
 
     private void drawSideMeasurePoint(Canvas aCanvas, boolean isMiddle, Point2D aFirst, Point2D aSecond, float aDeltaX, float aDeltaY) {
         if (isMiddle) {
-            aCanvas.drawCircle(mapCenterMoveX + aSecond.getX() + aDeltaX, mapCenterMoveY + aSecond.getY() + aDeltaY, MEASURE_POINT_RADIUS, polygonWidthPaint);
+            aCanvas.drawCircle(mapCenterMoveX + aSecond.getX() + aDeltaX, mapCenterMoveY + aSecond.getY() + aDeltaY, sidePointRadius, polygonWidthPaint);
         } else {
-            aCanvas.drawCircle(mapCenterMoveX + aFirst.getX() + aDeltaX, mapCenterMoveY + aFirst.getY() + aDeltaY, MEASURE_POINT_RADIUS, polygonWidthPaint);
+            aCanvas.drawCircle(mapCenterMoveX + aFirst.getX() + aDeltaX, mapCenterMoveY + aFirst.getY() + aDeltaY, sidePointRadius, polygonWidthPaint);
         }
 
     }

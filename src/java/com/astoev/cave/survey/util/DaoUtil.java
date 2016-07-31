@@ -249,6 +249,42 @@ public class DaoUtil {
     }
 
     /**
+     * DAO method that saves or update the location of Point based on manual Location
+     *
+     * @param parentPointArg - parent Point
+     * @param gpsLocationArg - GPS Location
+     * @throws SQLException if there is a problem working with the DB
+     */
+    public static void saveLocationToPoint(final Point parentPointArg, final Location gpsLocationArg)
+            throws SQLException {
+
+        ConnectionSource connetionSource = Workspace.getCurrentInstance().getDBHelper().getConnectionSource();
+        TransactionManager.callInTransaction(connetionSource, new Callable<Integer>() {
+
+            @Override
+            public Integer call() throws Exception {
+                Location oldLocation = getLocationByPoint(parentPointArg);
+                if (oldLocation != null) {
+                    oldLocation.setLatitude(gpsLocationArg.getLatitude());
+                    oldLocation.setLongitude(gpsLocationArg.getLongitude());
+                    oldLocation.setAltitude((int) gpsLocationArg.getAltitude());
+                    oldLocation.setAccuracy((int) gpsLocationArg.getAccuracy());
+                    Workspace.getCurrentInstance().getDBHelper().getLocationDao().update(oldLocation);
+
+                    Log.i(Constants.LOG_TAG_DB, "Update location with id:" + oldLocation.getId() + " for point:" + parentPointArg.getId());
+                    return oldLocation.getId();
+                } else {
+                    gpsLocationArg.setPoint(parentPointArg);
+                    Workspace.getCurrentInstance().getDBHelper().getLocationDao().create(gpsLocationArg);
+
+                    Log.i(Constants.LOG_TAG_DB, "Creted location with id:" + gpsLocationArg.getId() + " for point:" + parentPointArg.getId());
+                    return gpsLocationArg.getId();
+                }
+            }
+        });
+    }
+
+    /**
      * Deletes a leg its toPoint and all the data that is related to toPoint
      *
      * @param aLegToDelete - leg to delete
@@ -353,7 +389,7 @@ public class DaoUtil {
         List<Leg> legs = DaoUtil.getCurrProjectLegs(false);
         Project project = Workspace.getCurrentInstance().getActiveProject();
         String name = project.getName();
-        String creationDate = project.getCreationDateFormatted();
+        String creationDate = StringUtils.dateToDateTimeString(project.getCreationDate());
 
         float totalLength = 0, totalDepth = 0;
         int numNotes = 0, numDrawings = 0, numCoordinates = 0, numPhotos = 0, numVectors = 0;
