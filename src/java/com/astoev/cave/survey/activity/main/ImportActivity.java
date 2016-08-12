@@ -152,6 +152,7 @@ public class ImportActivity extends MainMenuActivity {
                 getWorkspace().setActiveLeg(lastProjectLeg);
                 Intent intent = new Intent(ImportActivity.this, MainActivity.class);
                 startActivity(intent);
+                finish();
             }
 
         } catch (Exception e) {

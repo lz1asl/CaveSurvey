@@ -9,14 +9,17 @@ import com.astoev.cave.survey.dto.ProjectConfig;
 import com.astoev.cave.survey.manager.ProjectManager;
 import com.astoev.cave.survey.model.Gallery;
 import com.astoev.cave.survey.model.Leg;
+import com.astoev.cave.survey.model.Note;
 import com.astoev.cave.survey.model.Option;
 import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.model.Project;
+import com.astoev.cave.survey.model.Vector;
 import com.astoev.cave.survey.service.Workspace;
 import com.astoev.cave.survey.service.export.excel.ExcelExport;
 import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.util.PointUtil;
 import com.astoev.cave.survey.util.StreamUtil;
+import com.astoev.cave.survey.util.StringUtils;
 import com.j256.ormlite.misc.TransactionManager;
 
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -91,6 +94,13 @@ public class ExcelImport {
                 leg.left = getNotNullFloatCellValue(row, ExcelExport.CELL_LEFT);
                 leg.right = getNotNullFloatCellValue(row, ExcelExport.CELL_RIGHT);
 
+                Cell noteCell = row.getCell(ExcelExport.CELL_NOTE);
+                if (noteCell != null) {
+                    leg.note = noteCell.getStringCellValue();
+                }
+
+                // TODO GPS location
+
                 legs.add(leg);
             }
 
@@ -99,15 +109,16 @@ public class ExcelImport {
 //            TODO normalize legs by concatenating middle points
             Log.i(Constants.LOG_TAG_SERVICE, "TODO process middles ");
 
-            // no errors reading, start creating as single operation
+            // no errors while reading, start creating as atomic operation
             return TransactionManager.callInTransaction(Workspace.getCurrentInstance().getDBHelper().getConnectionSource(), new Callable<Project>() {
                 @Override
                 public Project call() throws Exception {
                     final Project project = ProjectManager.instance().createProject(config);
                     Log.i(Constants.LOG_TAG_SERVICE, "Project created");
 
+                    int rowCounter = 1;
                     for (LegData leg : legs) {
-                        Log.i(Constants.LOG_TAG_SERVICE, leg.fromGallery + " " + leg.fromPoint + " -> " + leg.toGallery + " " + leg.toPoint + ":" + leg.length);
+                        Log.i(Constants.LOG_TAG_SERVICE, "Processing record " + rowCounter ++);
 
                         // ensure gallery exists
                         Gallery fromGallery = DaoUtil.getGallery(project.getId(), leg.fromGallery);
@@ -128,6 +139,9 @@ public class ExcelImport {
                         }
 
                         if (!leg.vector) {
+
+                            Log.i(Constants.LOG_TAG_SERVICE, "Leg " +  leg.fromGallery + leg.fromPoint + " -> " + leg.toGallery + leg.toPoint + " : " + leg.length);
+
                             Gallery toGallery = DaoUtil.getGallery(project.getId(), leg.toGallery);
                             Log.i(Constants.LOG_TAG_SERVICE, "Got to gallery " + toGallery);
                             if (toGallery == null) {
@@ -160,11 +174,25 @@ public class ExcelImport {
                             legCreated.setRight(leg.right);
 
                             Workspace.getCurrentInstance().getDBHelper().getLegDao().create(legCreated);
+
+                            if (StringUtils.isNotEmpty(leg.note)) {
+                                Note n = new Note(leg.note);
+                                n.setPoint(from);
+                                n.setGalleryId(fromGallery.getId());
+                                Workspace.getCurrentInstance().getDBHelper().getNoteDao().create(n);
+                            }
+
+                            // TODO GPS location
                         } else {
-                            Log.i(Constants.LOG_TAG_SERVICE, "TODO vector ");
+                            Log.i(Constants.LOG_TAG_SERVICE, "Vector " + leg.fromGallery + leg.fromPoint + " -> " + leg.note);
+                            Vector vector = new Vector();
+                            vector.setDistance(leg.length);
+                            vector.setAzimuth(leg.azimuth);
+                            vector.setSlope(leg.slope);
+                            vector.setPoint(from);
+                            vector.setGalleryId(fromGallery.getId());
+                            DaoUtil.saveVector(vector);
                         }
-
-
                     }
                     return  project;
                 }
@@ -226,5 +254,7 @@ public class ExcelImport {
 
         Float length, azimuth, slope;
         Float up, down, left, right;
+
+        String note;
     }
 }
