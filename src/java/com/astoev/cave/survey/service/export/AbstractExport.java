@@ -84,44 +84,41 @@ public abstract class AbstractExport {
                 if (l.getGalleryId().equals(lastGalleryId)) {
                     prevGalleryId = l.getGalleryId();
                 } else {
-                    prevGalleryId = DaoUtil.getLegByToPointId(l.getFromPoint().getId()).getGalleryId();
+                    prevGalleryId = DaoUtil.getLegByToPoint(l.getFromPoint()).getGalleryId();
                 }
 
                 List<Leg> middles = DaoUtil.getLegsMiddles(l);
 
-                // postpone display logic if will be handled inside middles
-                if (middles == null || middles.size() == 0) {
 
-                    rowCounter++;
+                rowCounter++;
 
-                    prepareEntity(rowCounter);
+                prepareEntity(rowCounter);
 
-                    if (l.getGalleryId().equals(lastGalleryId)) {
-                        setValue(Entities.FROM, galleryNames.get(l.getGalleryId()) + fromPoint.getName());
-                    } else {
-                        setValue(Entities.FROM, galleryNames.get(prevGalleryId) + fromPoint.getName());
-                    }
-
-                    setValue(Entities.TO, galleryNames.get(l.getGalleryId()) + toPoint.getName());
-
-                    // distance, azimuth, inclination
-                    exportLegMeasures(l);
-
-                    //up/down/left/right
-                    exportAroundMeasures(l);
-
-                    // note
-                    exportNote(l);
-
-                    // location
-                    exportLocation(fromPoint);
-
-                    // sketch
-                    exportSketches(l);
-
-                    // picture
-                    exportPhotos(l);
+                if (l.getGalleryId().equals(lastGalleryId)) {
+                    setValue(Entities.FROM, galleryNames.get(l.getGalleryId()) + fromPoint.getName());
+                } else {
+                    setValue(Entities.FROM, galleryNames.get(prevGalleryId) + fromPoint.getName());
                 }
+
+                setValue(Entities.TO, galleryNames.get(l.getGalleryId()) + toPoint.getName());
+
+                // distance, azimuth, inclination
+                exportLegMeasures(l);
+
+                //up/down/left/right
+                exportAroundMeasures(l);
+
+                // note
+                exportNote(l);
+
+                // location
+                exportLocation(fromPoint);
+
+                // sketch
+                exportSketches(l);
+
+                // picture
+                exportPhotos(l);
 
                 // middles
                 if (middles != null && middles.size() > 0) {
@@ -154,12 +151,6 @@ public abstract class AbstractExport {
 
                         if (index == 1) {
                             exportAroundMeasures(l);
-
-                            // export extras skipped above
-                            exportNote(l);
-                            exportLocation(fromPoint);
-                            exportSketches(l);
-                            exportPhotos(l);
                         } else {
                             exportAroundMeasures(prevMiddle);
                         }

@@ -94,7 +94,7 @@ public class PointUtil {
      * @throws SQLException
      */
     public static String getGalleryNameForFromPoint(Point pointArg, Integer galleryId) throws SQLException{
-        Leg prevLeg = DaoUtil.getLegByToPointId(pointArg.getId());
+        Leg prevLeg = DaoUtil.getLegByToPoint(pointArg);
         
         if (galleryId != null) {
             if (prevLeg != null &&  !prevLeg.getGalleryId().equals(galleryId)) {
@@ -127,7 +127,11 @@ public class PointUtil {
     public static String getPointGalleryName(String pointName) {
         if (StringUtils.isNotEmpty(pointName)) {
             StringBuilder gallery = new StringBuilder();
-            for (int i=0; i< pointName.length(); i++) {
+            int startIndex = 0;
+            if (pointName.contains(Constants.FROM_TO_POINT_DELIMITER)) {
+                startIndex = pointName.indexOf(Constants.FROM_TO_POINT_DELIMITER) + 1;
+            }
+            for (int i=startIndex; i< pointName.length(); i++) {
                 char c = pointName.charAt(i);
                 if (Character.isLetter(c)) {
                     gallery.append(c);
@@ -160,10 +164,39 @@ public class PointUtil {
 
     public static boolean isMiddlePoint(String fromPointName, String toPointName) {
         return !isVector(toPointName)
-                && (fromPointName.indexOf(Constants.MIDDLE_POINT_DELIMITER_EXPORT) > 0 || toPointName.indexOf(Constants.MIDDLE_POINT_DELIMITER_EXPORT) > 0);
+                && (fromPointName.indexOf(Constants.MIDDLE_POINT_DELIMITER_EXPORT) > 0 || toPointName.indexOf(Constants.MIDDLE_POINT_DELIMITER_EXPORT) > 0
+                    || fromPointName.indexOf(Constants.FROM_TO_POINT_DELIMITER) > 0 || toPointName.indexOf(Constants.FROM_TO_POINT_DELIMITER) > 0);
     }
 
     public static boolean isVector(String toPointName) {
         return StringUtils.isEmpty(toPointName);
+    }
+
+    public static String getMiddleFromName(String aMiddlePointName) {
+        if (aMiddlePointName.contains(Constants.FROM_TO_POINT_DELIMITER)) {
+            return aMiddlePointName.substring(0, aMiddlePointName.indexOf(Constants.FROM_TO_POINT_DELIMITER));
+        } else {
+            return aMiddlePointName;
+        }
+    }
+
+    public static String getMiddleToName(String aToPointName) {
+       if (aToPointName.contains(Constants.FROM_TO_POINT_DELIMITER)) {
+           return aToPointName.substring(aToPointName.indexOf(Constants.FROM_TO_POINT_DELIMITER) + 1,
+                   Math.max(aToPointName.indexOf(Constants.MIDDLE_POINT_DELIMITER_EXPORT),
+                           aToPointName.indexOf(Constants.MIDDLE_POINT_DELIMITER)));
+       } else {
+           return aToPointName;
+       }
+    }
+
+    public static float getMiddleLength(String aPointName) {
+        int lengthDelimiterIndex = Math.max(aPointName.indexOf(Constants.MIDDLE_POINT_DELIMITER_EXPORT), aPointName.indexOf(Constants.MIDDLE_POINT_DELIMITER));
+        if (lengthDelimiterIndex > 0) {
+            String length = aPointName.substring(lengthDelimiterIndex + 1);
+            return Float.parseFloat(length);
+        } else {
+            return 0;
+        }
     }
 }

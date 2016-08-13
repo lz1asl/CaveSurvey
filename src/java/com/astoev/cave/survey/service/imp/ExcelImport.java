@@ -32,8 +32,10 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Callable;
 
 /**
@@ -106,9 +108,6 @@ public class ExcelImport {
 
             Log.i(Constants.LOG_TAG_SERVICE, legs.size() + " records found");
 
-//            TODO normalize legs by concatenating middle points
-            Log.i(Constants.LOG_TAG_SERVICE, "TODO process middles ");
-
             // no errors while reading, start creating as atomic operation
             return TransactionManager.callInTransaction(Workspace.getCurrentInstance().getDBHelper().getConnectionSource(), new Callable<Project>() {
                 @Override
@@ -116,64 +115,117 @@ public class ExcelImport {
                     final Project project = ProjectManager.instance().createProject(config);
                     Log.i(Constants.LOG_TAG_SERVICE, "Project created");
 
+                    Set<Leg> lastMiddleLegs = new HashSet<>();
                     int rowCounter = 1;
                     for (LegData leg : legs) {
                         Log.i(Constants.LOG_TAG_SERVICE, "Processing record " + rowCounter ++);
 
                         // ensure gallery exists
-                        Gallery fromGallery = DaoUtil.getGallery(project.getId(), leg.fromGallery);
-                        Log.i(Constants.LOG_TAG_SERVICE, "Got from gallery " + fromGallery);
-                        if (fromGallery == null) {
-                            Log.i(Constants.LOG_TAG_SERVICE, "Creating gallery " + leg.fromGallery);
-                            fromGallery = DaoUtil.createGallery(project, leg.fromGallery);
-                        }
+                        Gallery fromGallery = getOrInitializeGallery(project, leg.fromGallery);
+                        Gallery toGallery = getOrInitializeGallery(project, leg.toGallery);
 
-                        // plain legs
-                        Point from = DaoUtil.getPoint(project.getId(), fromGallery, leg.fromPoint);
-                        Log.i(Constants.LOG_TAG_SERVICE, "Got from point " + from);
-                        if (from == null) {
-                            Log.i(Constants.LOG_TAG_SERVICE, "Initialize from point " + leg.fromPoint);
-                            from = new Point();
-                            from.setName(leg.fromPoint);
-                            Workspace.getCurrentInstance().getDBHelper().getPointDao().create(from);
-                        }
+                        if (leg.middlePoint) {
 
-                        if (!leg.vector) {
+                            String fromRealName = PointUtil.getMiddleFromName(leg.fromPoint);
+                            String toRealName = PointUtil.getMiddleToName(leg.toPoint);
+
+                            if (fromRealName.equals(leg.fromPoint)) {
+
+                                lastMiddleLegs.clear();
+                                // actual leg
+                                Log.i(Constants.LOG_TAG_SERVICE, "Creating leg for middle " + leg.fromGallery + leg.fromPoint + " -> " + leg.toGallery + leg.toPoint);
+
+
+                                Point from = getOrInitializePoint(project, fromGallery, fromRealName);
+                                Point to = getOrInitializePoint(project, toGallery, toRealName);
+
+                                Leg fullLeg = DaoUtil.getLegByFromToPointId(toGallery, from, to);
+                                if (fullLeg == null) {
+                                    Log.i(Constants.LOG_TAG_SERVICE, "Creating the full leg ");
+                                    fullLeg = new Leg(from, to, project, toGallery.getId());
+                                    fullLeg.setDistance(leg.length); // leg will be updated later
+                                    fullLeg.setAzimuth(leg.azimuth);
+                                    fullLeg.setSlope(leg.slope);
+                                    fullLeg.setTop(leg.up);
+                                    fullLeg.setDown(leg.down);
+                                    fullLeg.setLeft(leg.left);
+                                    fullLeg.setRight(leg.right);
+
+                                    Workspace.getCurrentInstance().getDBHelper().getLegDao().create(fullLeg);
+                                }
+                            } else {
+                                // regular middle point
+                                Log.i(Constants.LOG_TAG_SERVICE, "Middle " + leg.fromGallery + leg.fromPoint + " -> " + leg.toGallery + leg.toPoint);
+
+                                Point from = getOrInitializePoint(project, fromGallery, fromRealName);
+                                Point to = getOrInitializePoint(project, toGallery, toRealName);
+
+                                // create the leg, real length will be updated later
+                                Leg middleLeg = new Leg(from, to, fromGallery.getProject(), toGallery.getId());
+                                middleLeg.setMiddlePointDistance(PointUtil.getMiddleLength(leg.fromPoint));
+                                middleLeg.setAzimuth(leg.azimuth);
+                                middleLeg.setSlope(leg.slope);
+                                middleLeg.setTop(leg.up);
+                                middleLeg.setDown(leg.down);
+                                middleLeg.setLeft(leg.left);
+                                middleLeg.setRight(leg.right);
+                                Workspace.getCurrentInstance().getDBHelper().getLegDao().create(middleLeg);
+                                lastMiddleLegs.add(middleLeg);
+
+                                if (toRealName.equals(leg.toPoint)) {
+
+                                    Log.i(Constants.LOG_TAG_SERVICE, "Last middle, adjusting lengths");
+
+                                    // apply actual leg distance
+                                    Leg fullLeg = DaoUtil.getLegByFromToPointId(toGallery, from, to);
+                                    Float actualLegDistance = leg.length + PointUtil.getMiddleLength(leg.fromPoint);
+                                    fullLeg.setDistance(actualLegDistance);
+                                    Workspace.getCurrentInstance().getDBHelper().getLegDao().update(fullLeg);
+
+                                    // all middle points have no proper distance
+                                    for (Leg l : lastMiddleLegs) {
+                                        l.setDistance(actualLegDistance);
+                                        Workspace.getCurrentInstance().getDBHelper().getLegDao().update(l);
+                                    }
+                                }
+                            }
+
+                        } else if (leg.vector) {
+                            Log.i(Constants.LOG_TAG_SERVICE, "Vector " + leg.fromGallery + leg.fromPoint + " -> " + leg.note);
+
+                            // plain legs
+                            Point from = getOrInitializePoint(project, fromGallery, leg.fromPoint);
+
+                            Vector vector = new Vector();
+                            vector.setDistance(leg.length);
+                            vector.setAzimuth(leg.azimuth);
+                            vector.setSlope(leg.slope);
+                            vector.setPoint(from);
+                            vector.setGalleryId(fromGallery.getId());
+                            DaoUtil.saveVector(vector);
+                        } else {
 
                             Log.i(Constants.LOG_TAG_SERVICE, "Leg " +  leg.fromGallery + leg.fromPoint + " -> " + leg.toGallery + leg.toPoint + " : " + leg.length);
 
-                            Gallery toGallery = DaoUtil.getGallery(project.getId(), leg.toGallery);
-                            Log.i(Constants.LOG_TAG_SERVICE, "Got to gallery " + toGallery);
-                            if (toGallery == null) {
-                                Log.i(Constants.LOG_TAG_SERVICE, "Creating gallery " + leg.toGallery);
-                                toGallery = DaoUtil.createGallery(project, leg.toGallery);
-                            }
+                            // plain legs
+                            Point from = getOrInitializePoint(project, fromGallery, leg.fromPoint);
+                            Point to = getOrInitializePoint(project, toGallery, leg.toPoint);
 
-                            Point to = DaoUtil.getPoint(project.getId(), toGallery, leg.toPoint);
-                            Log.i(Constants.LOG_TAG_SERVICE, "Got to point " + to);
-                            if (to == null) {
-                                Log.i(Constants.LOG_TAG_SERVICE, "Initialize to point " + leg.toPoint);
-                                to = new Point();
-                                to.setName(leg.toPoint);
-                                Workspace.getCurrentInstance().getDBHelper().getPointDao().create(to);
+                            Leg dbLeg = DaoUtil.getLegByFromToPointId(toGallery, from, to);
+                            if (dbLeg == null) {
+                                // not the first leg already created with the project
+                                Log.i(Constants.LOG_TAG_SERVICE, "Creating leg");
+                                dbLeg = new Leg(from, to, project, toGallery.getId());
                             }
+                            dbLeg.setDistance(leg.length);
+                            dbLeg.setAzimuth(leg.azimuth);
+                            dbLeg.setSlope(leg.slope);
+                            dbLeg.setTop(leg.up);
+                            dbLeg.setDown(leg.down);
+                            dbLeg.setLeft(leg.left);
+                            dbLeg.setRight(leg.right);
 
-                            Log.i(Constants.LOG_TAG_SERVICE, "Creating leg");
-                            Leg legCreated = new Leg(from, to, project, toGallery.getId());
-                            // update model
-                            if (leg.middlePoint) {
-                                legCreated.setMiddlePointDistance(leg.length);
-                            } else {
-                                legCreated.setDistance(leg.length);
-                            }
-                            legCreated.setAzimuth(leg.azimuth);
-                            legCreated.setSlope(leg.slope);
-                            legCreated.setTop(leg.up);
-                            legCreated.setDown(leg.down);
-                            legCreated.setLeft(leg.left);
-                            legCreated.setRight(leg.right);
-
-                            Workspace.getCurrentInstance().getDBHelper().getLegDao().create(legCreated);
+                            Workspace.getCurrentInstance().getDBHelper().getLegDao().createOrUpdate(dbLeg);
 
                             if (StringUtils.isNotEmpty(leg.note)) {
                                 Note n = new Note(leg.note);
@@ -183,18 +235,40 @@ public class ExcelImport {
                             }
 
                             // TODO GPS location
-                        } else {
-                            Log.i(Constants.LOG_TAG_SERVICE, "Vector " + leg.fromGallery + leg.fromPoint + " -> " + leg.note);
-                            Vector vector = new Vector();
-                            vector.setDistance(leg.length);
-                            vector.setAzimuth(leg.azimuth);
-                            vector.setSlope(leg.slope);
-                            vector.setPoint(from);
-                            vector.setGalleryId(fromGallery.getId());
-                            DaoUtil.saveVector(vector);
                         }
+
                     }
                     return  project;
+                }
+
+                private Point getOrInitializePoint(Project aProject, Gallery aGallery, String aName) throws SQLException {
+
+                    // point can be already created
+                    Long pointId = DaoUtil.getFromPointId(aProject.getId(), aGallery, aName);
+                    if (pointId == null) {
+                        pointId = DaoUtil.getToPointId(aProject.getId(), aGallery, aName);
+                        if (pointId == null) {
+                            Log.i(Constants.LOG_TAG_SERVICE, "Creating to point for " + aGallery.getName() + aName);
+                            Point point = new Point();
+                            point.setName(aName);
+                            Workspace.getCurrentInstance().getDBHelper().getPointDao().create(point);
+                            return  point;
+                        }
+                    }
+                    return DaoUtil.getPoint(pointId.intValue());
+                }
+
+                private Gallery getOrInitializeGallery(Project aProject, String aGalleryName) throws SQLException {
+                    Gallery gallery = null;
+                    if (StringUtils.isNotEmpty(aGalleryName)) {
+                        gallery = DaoUtil.getGallery(aProject.getId(), aGalleryName);
+                                Log.i(Constants.LOG_TAG_SERVICE, "Got gallery " + gallery);
+                        if (gallery == null) {
+                            Log.i(Constants.LOG_TAG_SERVICE, "Creating gallery " + aGalleryName);
+                            gallery = DaoUtil.createGallery(aProject, aGalleryName);
+                        }
+                    }
+                    return gallery;
                 }
             });
 

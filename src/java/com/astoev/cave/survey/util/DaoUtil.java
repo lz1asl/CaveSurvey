@@ -94,13 +94,36 @@ public class DaoUtil {
         return Workspace.getCurrentInstance().getDBHelper().getPointDao().queryForId(aId);
     }
 
-    public static Point getPoint(Integer aProjectId, Gallery aGallery, String aPointName) throws SQLException {
+    public static Point getFromPoint(Integer aProjectId, Gallery aGallery, String aPointName) throws SQLException {
 
         QueryBuilder<Leg, Integer> galleryLegs = Workspace.getCurrentInstance().getDBHelper().getLegDao().queryBuilder();
         galleryLegs.where().eq(Leg.COLUMN_GALLERY_ID, aGallery.getId()).and().eq(Leg.COLUMN_PROJECT_ID, aProjectId);
         QueryBuilder<Point, Integer> points = Workspace.getCurrentInstance().getDBHelper().getPointDao().queryBuilder();
         // TODO joined only by from point
         return points.join(galleryLegs).where().eq(Point.COLUMN_POINT_NAME, aPointName).queryForFirst();
+    }
+
+
+    public static Long getToPointId(Integer aProjectId, Gallery aGallery, String aPointName) throws SQLException {
+
+        try {
+            return Workspace.getCurrentInstance().getDBHelper().getPointDao().queryRawValue(
+                    "select p.id from points p join legs l on p.id = l.to_point_id where l.project_id = ? and l.gallery_id = ? and p.name = ? ", String.valueOf(aProjectId), String.valueOf(aGallery.getId()), String.valueOf(aPointName));
+        } catch (SQLException sqle) {
+            // will fail if not found
+            return null;
+        }
+    }
+
+    public static Long getFromPointId(Integer aProjectId, Gallery aGallery, String aPointName) throws SQLException {
+
+        try {
+            return Workspace.getCurrentInstance().getDBHelper().getPointDao().queryRawValue(
+                    "select p.id from points p join legs l on p.id = l.from_point_id where l.project_id = ? and l.gallery_id = ? and p.name = ? ", String.valueOf(aProjectId), String.valueOf(aGallery.getId()), String.valueOf(aPointName));
+        } catch (SQLException sqle) {
+            // will fail if not found
+            return null;
+        }
     }
 
     public static Gallery getGallery(Integer aId) throws SQLException {
@@ -164,10 +187,19 @@ public class DaoUtil {
         return query.queryForFirst();
     }
 
-    public static Leg getLegByToPointId(long aToPointId) throws SQLException {
+    public static Leg getLegByToPoint(Point aToPoint) throws SQLException {
         // TODO this will work as soon as we keep a tree of legs. Once we start closing circles will break and will have to change the logic
         QueryBuilder<Leg, Integer> query = Workspace.getCurrentInstance().getDBHelper().getLegDao().queryBuilder();
-        query.where().eq(Leg.COLUMN_TO_POINT, aToPointId).and().isNull(Leg.COLUMN_MIDDLE_POINT_AT_DISTANCE);
+        query.where().eq(Leg.COLUMN_TO_POINT, aToPoint).and().isNull(Leg.COLUMN_MIDDLE_POINT_AT_DISTANCE);
+        return query.queryForFirst();
+    }
+
+    public static Leg getLegByFromToPointId(Gallery aGallery, Point aFromPoint, Point aToPoint) throws SQLException {
+        QueryBuilder<Leg, Integer> query = Workspace.getCurrentInstance().getDBHelper().getLegDao().queryBuilder();
+        query.where().eq(Leg.COLUMN_FROM_POINT, aFromPoint)
+                .and().eq(Leg.COLUMN_TO_POINT, aToPoint)
+                .and().eq(Leg.COLUMN_GALLERY_ID, aGallery.getId())
+                .and().isNull(Leg.COLUMN_MIDDLE_POINT_AT_DISTANCE);
         return query.queryForFirst();
     }
 
@@ -309,7 +341,7 @@ public class DaoUtil {
                     int deletedLeg = dbHelper.getLegDao().delete(aLegToDelete);
                     Log.d(Constants.LOG_TAG_DB, "Deleted middle leg:" + deletedLeg);
 
-                    workspace.setActiveLeg(getLegByToPointId(aLegToDelete.getToPoint().getId()));
+                    workspace.setActiveLeg(getLegByToPoint(aLegToDelete.getToPoint()));
                 } else {
 
                     Point toPoint = aLegToDelete.getToPoint();

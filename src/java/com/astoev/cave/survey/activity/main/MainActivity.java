@@ -136,7 +136,7 @@ public class MainActivity extends MainMenuActivity implements AddNewSelectedHand
                     fromPointString =  mGalleryNames.get(l.getGalleryId()) + fromPointString;
                     prevGalleryId = l.getGalleryId();
                 } else {
-                    prevGalleryId = DaoUtil.getLegByToPointId(l.getFromPoint().getId()).getGalleryId();
+                    prevGalleryId = DaoUtil.getLegByToPoint(fromPoint).getGalleryId();
                     fromPointString =  mGalleryNames.get(prevGalleryId) + fromPointString;
                 }
 
@@ -259,7 +259,7 @@ public class MainActivity extends MainMenuActivity implements AddNewSelectedHand
                 // next leg
                 addLeg(false);
             } else if (1 == itemArg) {
-                Leg prevLeg = DaoUtil.getLegByToPointId(Workspace.getCurrentInstance().getActiveLeg().getFromPoint().getId());
+                Leg prevLeg = DaoUtil.getLegByToPoint(Workspace.getCurrentInstance().getActiveLeg().getFromPoint());
                 if (prevLeg == null) {
                     // not supported
                     UIUtilities.showNotification(R.string.gallery_after_first_point);

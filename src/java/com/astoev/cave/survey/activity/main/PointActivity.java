@@ -315,7 +315,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                             }
 
                             if (legEdited.isMiddle()) {
-                                getWorkspace().setActiveLeg(DaoUtil.getLegByToPointId(legEdited.getToPoint().getId()));
+                                getWorkspace().setActiveLeg(DaoUtil.getLegByToPoint(legEdited.getToPoint()));
                             } else {
                                 getWorkspace().setActiveLeg(legEdited);
                             }
@@ -489,7 +489,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         Leg currLeg = getCurrentLeg();
         if (!currLeg.isNew() && currLeg.isMiddle()) {
             try {
-                getWorkspace().setActiveLeg(DaoUtil.getLegByToPointId(currLeg.getToPoint().getId()));
+                getWorkspace().setActiveLeg(DaoUtil.getLegByToPoint(currLeg.getToPoint()));
             } catch (SQLException e) {
                 Log.e(Constants.LOG_TAG_UI, "Failed to locate parent leg", e);
                 UIUtilities.showNotification(R.string.error);
