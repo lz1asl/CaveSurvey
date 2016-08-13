@@ -55,10 +55,10 @@ public class ExcelExport extends AbstractExport {
     public static int CELL_UP = 7;
     public static int CELL_DOWN = 8;
     public static int CELL_NOTE = 9;
-    private static int CELL_LATITUDE = 10;
-    private static int CELL_LONGITUDE = 11;
-    private static int CELL_ALTTITUDE = 12;
-    private static int CELL_ACCURACY = 13;
+    public static int CELL_LATITUDE = 10;
+    public static int CELL_LONGITUDE = 11;
+    public static int CELL_ALTTITUDE = 12;
+    public static int CELL_ACCURACY = 13;
     private static int CELL_DRAWING = 14;
     private static int CELL_PHOTO = 15;
 

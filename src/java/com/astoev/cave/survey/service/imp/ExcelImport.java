@@ -9,6 +9,7 @@ import com.astoev.cave.survey.dto.ProjectConfig;
 import com.astoev.cave.survey.manager.ProjectManager;
 import com.astoev.cave.survey.model.Gallery;
 import com.astoev.cave.survey.model.Leg;
+import com.astoev.cave.survey.model.Location;
 import com.astoev.cave.survey.model.Note;
 import com.astoev.cave.survey.model.Option;
 import com.astoev.cave.survey.model.Point;
@@ -17,6 +18,7 @@ import com.astoev.cave.survey.model.Vector;
 import com.astoev.cave.survey.service.Workspace;
 import com.astoev.cave.survey.service.export.excel.ExcelExport;
 import com.astoev.cave.survey.util.DaoUtil;
+import com.astoev.cave.survey.util.LocationUtil;
 import com.astoev.cave.survey.util.PointUtil;
 import com.astoev.cave.survey.util.StreamUtil;
 import com.astoev.cave.survey.util.StringUtils;
@@ -101,8 +103,22 @@ public class ExcelImport {
                     leg.note = noteCell.getStringCellValue();
                 }
 
-                // TODO GPS location
-
+                Cell latCell = row.getCell(ExcelExport.CELL_LATITUDE);
+                if (latCell != null) {
+                    leg.lat = LocationUtil.descriptionToValue(latCell.getStringCellValue());
+                }
+                Cell lonCell = row.getCell(ExcelExport.CELL_LONGITUDE);
+                if (lonCell != null) {
+                    leg.lon = LocationUtil.descriptionToValue(lonCell.getStringCellValue());
+                }
+                Cell altCell = row.getCell(ExcelExport.CELL_ALTTITUDE);
+                if (altCell != null) {
+                    leg.alt = (float) altCell.getNumericCellValue();
+                }
+                Cell accuracyCell = row.getCell(ExcelExport.CELL_ACCURACY);
+                if (accuracyCell != null) {
+                    leg.accuracy = (float) accuracyCell.getNumericCellValue();
+                }
                 legs.add(leg);
             }
 
@@ -234,7 +250,19 @@ public class ExcelImport {
                                 Workspace.getCurrentInstance().getDBHelper().getNoteDao().create(n);
                             }
 
-                            // TODO GPS location
+                            if (leg.lat != null && leg.lon != null) {
+                                Log.i(Constants.LOG_TAG_SERVICE, "Import location");
+                                Location location = new Location();
+                                location.setLatitude(leg.lat);
+                                location.setLongitude(leg.lon);
+                                if (leg.alt != null) {
+                                    location.setAltitude(leg.alt.intValue());
+                                }
+                                if (leg.accuracy != null) {
+                                    location.setAccuracy(leg.accuracy.intValue());
+                                }
+                                DaoUtil.saveLocationToPoint(from, location);
+                            }
                         }
 
                     }
@@ -328,6 +356,8 @@ public class ExcelImport {
 
         Float length, azimuth, slope;
         Float up, down, left, right;
+
+        Float lat, lon, alt, accuracy;
 
         String note;
     }

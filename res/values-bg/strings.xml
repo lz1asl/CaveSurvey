@@ -366,7 +366,7 @@
     <string name="settings_import_source">Импорт от:</string>
     <string name="settings_import_target_name">Създай като:</string>
     <string name="settings_import_no_files">Не е намерен експортен файл</string>
-    <string name="settings_import_info">Създава ново проучване от съществуващ файл.\nМоля използвайте файлове генерирани след версия v1.27.</string>
+    <string name="settings_import_info">Създава ново проучване от съществуващ файл.\nМоля използвайте файлове генерирани след версия v1.27.\nСнимки и скици ще бъдат игнорирани.</string>
 
     <!--opens topo -->
     <string name="export_openstopo_title">OpensTopo</string>

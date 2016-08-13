@@ -377,7 +377,7 @@ Network connection is required.</string>
     <string name="settings_import_source">Import from:</string>
     <string name="settings_import_target_name">Create as:</string>
     <string name="settings_import_no_files">Exported survey not found</string>
-    <string name="settings_import_info">Creates survey from existing file.\nPlease use export files created after v1.27.</string>
+    <string name="settings_import_info">Creates survey from existing file.\nPlease use export files created after v1.27.\nPhotos or drawings will be ignored.</string>
 
     <!--opens topo -->
     <string name="export_openstopo_title">OpensTopo</string>
