@@ -35,10 +35,21 @@ public class PointUtilTest extends TestCase {
         name = "A0";
         assertEquals("A", PointUtil.getPointGalleryName(name));
         assertEquals("0", PointUtil.getPointName(name));
+    }
 
-        name = "A2-A3_at_8.6";
-        assertEquals("A", PointUtil.getPointGalleryName(name));
-        assertEquals("3", PointUtil.getPointName(name));
+    @Test
+    public void testGetMiddlePointFromString() {
+        String name = "C3-C4@1.5";
+        assertEquals("C3", PointUtil.getMiddleFromName(name));
+        assertEquals("C4", PointUtil.getMiddleToName(name));
+        assertEquals(1.5f, PointUtil.getMiddleLength(name));
+    }
 
+    @Test
+    public void testIsMiddlePoint() {
+        assertFalse(PointUtil.isMiddlePoint("A1", "A2"));
+        assertFalse(PointUtil.isMiddlePoint("B1", ""));
+        assertTrue(PointUtil.isMiddlePoint("C3-C4@1.5", "C4"));
+        assertTrue(PointUtil.isMiddlePoint("C3", "C3-C4@1.5"));
     }
 }
