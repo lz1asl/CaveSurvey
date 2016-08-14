@@ -116,9 +116,8 @@ public abstract class AbstractExport {
                     // sketch
                     exportSketch(l);
 
-                    // picture
-                    exportPhotos(l);
-                }
+                // picture
+                exportPhotos(l);
 
                 // middles
                 if (middles != null && middles.size() > 0) {
@@ -142,7 +141,7 @@ public abstract class AbstractExport {
                         prepareEntity(rowCounter);
 
                         setValue(Entities.FROM, lastMiddleName == null ? fromPointName : lastMiddleName);
-                        lastMiddleName = fromPointName + "-" + toPointName + "@" + StringUtils.floatToLabel(middle.getMiddlePointDistance());
+                        lastMiddleName = fromPointName + Constants.FROM_TO_POINT_DELIMITER + toPointName + Constants.MIDDLE_POINT_DELIMITER + StringUtils.floatToLabel(middle.getMiddlePointDistance());
                         setValue(Entities.TO, lastMiddleName);
                         setValue(Entities.DISTANCE, middle.getMiddlePointDistance() - prevLength);
                         exportLegCompass(l);
@@ -151,12 +150,6 @@ public abstract class AbstractExport {
 
                         if (index == 1) {
                             exportAroundMeasures(l);
-
-                            // export extras skipped above
-                            exportNote(l);
-                            exportLocation(fromPoint);
-                            exportSketch(l);
-                            exportPhotos(l);
                         } else {
                             exportAroundMeasures(prevMiddle);
                         }
@@ -194,10 +187,13 @@ public abstract class AbstractExport {
                             fromPointName = galleryNames.get(prevGalleryId) + fromPoint.getName();
                         }
                         setValue(Entities.FROM, fromPointName);
-                        setValue(Entities.TO, fromPointName + "-" + galleryNames.get(l.getGalleryId()) + toPoint.getName() + "-v" + vectorCounter);
+//                        setValue(Entities.TO, fromPointName + "-" + galleryNames.get(l.getGalleryId()) + toPoint.getName() + "-v" + vectorCounter);
                         setValue(Entities.DISTANCE, v.getDistance());
                         setValue(Entities.COMPASS, v.getAzimuth());
-                        setValue(Entities.INCLINATION, v.getSlope());
+                        if (v.getSlope() != null) {
+                            setValue(Entities.INCLINATION, v.getSlope());
+                        }
+                        setValue(Entities.NOTE, "v" + vectorCounter);
 
                         vectorCounter++;
                     }
@@ -273,9 +269,10 @@ public abstract class AbstractExport {
         }
     }
 
-    private void exportSketch(Leg l) throws SQLException {
-        if (l.getSketch() != null) {
-            setDrawing(l.getSketch());
+    private void exportSketches(Leg l) throws SQLException {
+        Sketch sketch = DaoUtil.getScetchByLeg(l);
+        if (sketch != null) {
+            setDrawing(sketch);
         }
     }
 

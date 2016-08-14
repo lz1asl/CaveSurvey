@@ -8,5 +8,5 @@ package com.astoev.cave.survey.activity.dialog;
  */
 public interface AddNewSelectedHandler {
 
-    public void addNewSelected(int itemArg);
+    void addNewSelected(int itemArg);
 }

@@ -6,6 +6,8 @@ import com.astoev.cave.survey.activity.map.MapUtilities;
 
 import junit.framework.TestCase;
 
+import org.junit.Test;
+
 /**
  * Created by astoev on 1/20/14.
  */
@@ -100,6 +102,14 @@ public class MapUtilitiesTest extends TestCase {
         assertEquals(10f, MapUtilities.minus90Degrees(100f));
         assertEquals(220f, MapUtilities.minus90Degrees(310f));
         assertEquals(330f, MapUtilities.minus90Degrees(60f));
+    }
+
+    public void testDegreeToGrads() {
+        assertEquals(0f, MapUtilities.degreesToGrads(0f));
+        assertEquals(50f, MapUtilities.degreesToGrads(45f), 0.001);
+        assertEquals(100f, MapUtilities.degreesToGrads(90f), 0.001);
+        assertEquals(200f, MapUtilities.degreesToGrads(180f), 0.001);
+        assertEquals(400f, MapUtilities.degreesToGrads(360f), 0.001);
     }
 
     public void testIntToColor() {

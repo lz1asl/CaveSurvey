@@ -18,10 +18,14 @@ import com.astoev.cave.survey.model.Project;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by astoev on 12/25/13.
@@ -229,13 +233,23 @@ public class FileStorageUtil {
 
     @SuppressWarnings("deprecation")
     public static File getStorageHome() {
-        if (!isExternalStorageWritable()) {
+
+        File extDir = null;
+
+        if (isExternalStorageWritable()) {
+            extDir = Environment.getExternalStorageDirectory();
+        } else {
+            Log.e(Constants.LOG_TAG_UI, "External storage unavailable");
+            extDir = ConfigUtil.getContext().getFilesDir();
+        }
+
+        if (extDir == null) {
             Log.e(Constants.LOG_TAG_UI, "Storage unavailable");
             UIUtilities.showNotification("Storage unavailable");
             return null;
         }
-        File extdir = Environment.getExternalStorageDirectory();
-        StatFs stats = new StatFs(extdir.getAbsolutePath());
+
+        StatFs stats = new StatFs(extDir.getAbsolutePath());
 
         long availableBytes = stats.getAvailableBlocks() * (long) stats.getBlockSize();
         if (availableBytes < MIN_REQUIRED_STORAGE) {
@@ -244,7 +258,7 @@ public class FileStorageUtil {
             return null;
         }
 
-        File storageHome = new File(Environment.getExternalStorageDirectory() + File.separator + CAVE_SURVEY_FOLDER);
+        File storageHome = new File(extDir, CAVE_SURVEY_FOLDER);
         if (!storageHome.exists()) {
             if (!storageHome.mkdirs()) {
                 Log.e(Constants.LOG_TAG_UI, "Failed to create folder " + storageHome.getAbsolutePath());
@@ -308,5 +322,38 @@ public class FileStorageUtil {
 
         File file = new File(fileNameArg);
         return file.exists();
+    }
+
+    public static List<File> listProjectFiles(Project aProject, String anExtension) {
+        if (aProject != null) {
+            return getFolderFiles(getProjectHome(aProject.getName()), anExtension);
+        } else {
+            File root = getStorageHome();
+            if (root == null) {
+                return null;
+            }
+            List<File> files = new ArrayList<>();
+            for (File projectHome : root.listFiles()) {
+                files.addAll(getFolderFiles(projectHome, anExtension));
+            }
+            return files;
+        }
+    }
+
+    private static List<File> getFolderFiles(File aFolder, final String anExtension) {
+        if (aFolder == null || !aFolder.isDirectory()) {
+            return new ArrayList();
+        } else {
+            if (StringUtils.isNotEmpty(anExtension)) {
+                return Arrays.asList(aFolder.listFiles(new FilenameFilter() {
+                    @Override
+                    public boolean accept(File dir, String filename) {
+                        return filename.endsWith(anExtension);
+                    }
+                }));
+            } else {
+                return Arrays.asList(aFolder.listFiles());
+            }
+        }
     }
 }

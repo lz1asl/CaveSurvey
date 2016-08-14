@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent">
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/import_name_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_import_target_name"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/import_name_label"
+            android:clickable="true"
+            android:layout_margin="5dp"
+            android:src="@drawable/ic_info_white"
+            android:contentDescription="@string/information"
+            android:onClick="onChooseInfo" />
+    </RelativeLayout>
+    
+    <EditText
+        android:id="@+id/import_name"
+        android:maxLength="30"
+        android:inputType="text"
+        android:lines="1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/settings_import_source"
+        android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+    <android.support.v7.widget.AppCompatSpinner
+        android:id="@+id/import_files"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>

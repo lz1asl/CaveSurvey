@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.Gravity;
@@ -25,17 +26,19 @@ import com.astoev.cave.survey.activity.dialog.ConfirmDeleteDialog;
 import com.astoev.cave.survey.activity.dialog.ConfirmationDialog;
 import com.astoev.cave.survey.activity.dialog.ConfirmationOperation;
 import com.astoev.cave.survey.activity.dialog.DeleteHandler;
+import com.astoev.cave.survey.activity.dialog.GpsTypeDialog;
+import com.astoev.cave.survey.activity.dialog.GpsTypeHandler;
 import com.astoev.cave.survey.activity.dialog.VectorDialog;
-import com.astoev.cave.survey.activity.draw.AbstractDrawingActivity;
-import com.astoev.cave.survey.activity.draw.PointDrawingActivity;
+import com.astoev.cave.survey.activity.draw.DrawingActivity;
 import com.astoev.cave.survey.activity.map.MapUtilities;
-import com.astoev.cave.survey.fragment.LocationFragment;
 import com.astoev.cave.survey.model.Gallery;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Note;
+import com.astoev.cave.survey.model.Option;
 import com.astoev.cave.survey.model.Photo;
 import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.model.Vector;
+import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.service.bluetooth.BTMeasureResultReceiver;
 import com.astoev.cave.survey.service.bluetooth.BTResultAware;
 import com.astoev.cave.survey.service.bluetooth.util.MeasurementsUtil;
@@ -60,12 +63,14 @@ import java.util.concurrent.Callable;
  * Time: 1:15 AM
  * To change this template use File | Settings | File Templates.
  */
-public class PointActivity extends MainMenuActivity implements AzimuthChangedListener, SlopeChangedListener, BTResultAware, View.OnTouchListener, DeleteHandler {
+public class PointActivity extends MainMenuActivity implements AzimuthChangedListener, SlopeChangedListener, BTResultAware, View.OnTouchListener, DeleteHandler, GpsTypeHandler {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int REQIEST_EDIT_NOTE = 2;
 
     private static final String VECTOR_DIALOG = "vector_dialog";
+
+    private static final String STATE_PHOTO_PATH = "STATE_PHOTO_PATH";
 
     private String mNewNote = null;
 
@@ -114,6 +119,21 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (mCurrentPhotoPath != null) {
+            outState.putString(STATE_PHOTO_PATH, mCurrentPhotoPath);
+            // save photo path if available
+        }
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mCurrentPhotoPath = savedInstanceState.getString(STATE_PHOTO_PATH);
+    }
+
+    @Override
     protected void onRestart() {
         super.onRestart();
     }
@@ -124,12 +144,9 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 
         mReceiver.resetMeasureExpectations();
 
-        //check if location is added and returned back to this activity
-        Fragment fragment = this.getSupportFragmentManager().findFragmentById(R.id.saved_location_container);
-        if (!(fragment instanceof LocationFragment)) {
-            Leg legEdited = getCurrentLeg();
-            GPSActivity.initSavedLocationContainer(legEdited.getFromPoint(), this, null);
-        }
+        // we need to reload the location if edited
+        Leg legEdited = getCurrentLeg();
+        GPSActivity.initSavedLocationContainer(legEdited.getFromPoint(), this, null);
 
         loadLegVectors(getCurrentLeg());
     }
@@ -234,9 +251,8 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         try {
 
             // start validation
-            boolean valid = true;
             final EditText distance = (EditText) findViewById(R.id.point_distance);
-            valid = valid && UIUtilities.validateNumber(distance, true);
+            boolean valid =  UIUtilities.validateNumber(distance, true);
 
             final EditText azimuth = (EditText) findViewById(R.id.point_azimuth);
             valid = valid && UIUtilities.validateNumber(azimuth, true) && UIUtilities.checkAzimuth(azimuth);
@@ -299,7 +315,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                             }
 
                             if (legEdited.isMiddle()) {
-                                getWorkspace().setActiveLeg(DaoUtil.getLegByToPointId(legEdited.getToPoint().getId()));
+                                getWorkspace().setActiveLeg(DaoUtil.getLegByToPoint(legEdited.getToPoint()));
                             } else {
                                 getWorkspace().setActiveLeg(legEdited);
                             }
@@ -339,24 +355,23 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         }
     }
 
+    /**
+     * Called once the GPS buton is selected from the menu. Will show the dialog for manual/auto GPS
+     */
     public void gpsButton() {
-        if (saveLeg()) {
-            Point parentPoint = getCurrentLeg().getFromPoint();
-            Intent intent = new Intent(this, GPSActivity.class);
-            intent.putExtra(GPSActivity.POINT, parentPoint);
-            startActivity(intent);
-        }
+        Log.i(Constants.LOG_TAG_UI, "Adding GPS Type dialog");
+        GpsTypeDialog gpsTypeDialog = new GpsTypeDialog();
+        gpsTypeDialog.show(getSupportFragmentManager(), GpsTypeDialog.GPS_TYPE_DIALOG);
     }
 
     private void vectorButton() {
-        if (saveLeg()) {
-            VectorDialog dialog = new VectorDialog(getSupportFragmentManager());
-            Bundle bundle = new Bundle();
-            bundle.putSerializable(VectorDialog.LEG, getCurrentLeg());
-            dialog.setCancelable(true);
-            dialog.setArguments(bundle);
-            dialog.show(getSupportFragmentManager(), VECTOR_DIALOG);
-        }
+        VectorDialog dialog = new VectorDialog(getSupportFragmentManager());
+        Bundle bundle = new Bundle();
+        Leg leg = getCurrentLeg();
+        bundle.putSerializable(VectorDialog.LEG, leg);
+        dialog.setCancelable(true);
+        dialog.setArguments(bundle);
+        dialog.show(getSupportFragmentManager(), VECTOR_DIALOG);
     }
 
     public void deleteButton() {
@@ -394,23 +409,25 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                 String filePrefix = FileStorageUtil.getFilePrefixForPicture(pointFrom, galleryName);
                 photoFile = FileStorageUtil.createPictureFile(this, projectName, filePrefix, FileStorageUtil.JPG_FILE_EXTENSION, true);
 
-            } catch (SQLException e) {
-                UIUtilities.showNotification(R.string.error);
-                return;
-            } catch (Exception e) {
-                UIUtilities.showNotification(R.string.export_io_error);
-                return;
-            }
+        } catch (SQLException e) {
+            UIUtilities.showNotification(R.string.error);
+            return;
+        } catch (Exception e) {
+            UIUtilities.showNotification(R.string.export_io_error);
+            Log.e(Constants.LOG_TAG_UI, "Failed to write to SD card", e);
+            return;
+        }
 
-            // call capture image
-            if (photoFile != null) {
+        // call capture image
+        if (photoFile != null) {
 
-                mCurrentPhotoPath = photoFile.getAbsolutePath();
+            mCurrentPhotoPath = photoFile.getAbsolutePath();
 
-                Log.i(Constants.LOG_TAG_SERVICE, "Going to capture image in: " + photoFile.getAbsolutePath());
-                final Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
-                startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+            Log.i(Constants.LOG_TAG_SERVICE, "Going to capture image in: " + photoFile.getAbsolutePath());
+            final Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
         }
     }
@@ -425,9 +442,17 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                     Log.i(Constants.LOG_TAG_SERVICE, "Got image");
                     try {
 
+                        // check if the photo path is available
+                        if (mCurrentPhotoPath == null) {
+                            UIUtilities.showNotification(R.string.export_io_error);
+                            Log.e(Constants.LOG_TAG_UI, "Photo file url is not available:" + mCurrentPhotoPath);
+                            break;
+                        }
+
                         // check if the file really exists
                         if (!FileStorageUtil.isFileExists(mCurrentPhotoPath)) {
                             UIUtilities.showNotification(R.string.export_io_error);
+                            Log.e(Constants.LOG_TAG_UI, "Photo file not available:" + mCurrentPhotoPath);
                             break;
                         }
 
@@ -468,7 +493,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         Leg currLeg = getCurrentLeg();
         if (!currLeg.isNew() && currLeg.isMiddle()) {
             try {
-                getWorkspace().setActiveLeg(DaoUtil.getLegByToPointId(currLeg.getToPoint().getId()));
+                getWorkspace().setActiveLeg(DaoUtil.getLegByToPoint(currLeg.getToPoint()));
             } catch (SQLException e) {
                 Log.e(Constants.LOG_TAG_UI, "Failed to locate parent leg", e);
                 UIUtilities.showNotification(R.string.error);
@@ -886,20 +911,27 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         final EditText slope = (EditText) findViewById(R.id.point_slope);
 
         // if values are present update them in the UI only, they will be persisted on "save"
-//        try {
+        try {
+            // calculate in degrees
             Float currAzimuth = MapUtilities.getAzimuthInDegrees(StringUtils.getFromEditTextNotNull(azimuth));
             if (currAzimuth != null) {
                 Float reversedAzimuth = MapUtilities.add90Degrees(MapUtilities.add90Degrees(currAzimuth));
+
+                // back to grads if needed
+                String currAzimuthMeasure = Options.getOptionValue(Option.CODE_AZIMUTH_UNITS);
+                if (Option.UNIT_GRADS.equals(currAzimuthMeasure)) {
+                    reversedAzimuth = MapUtilities.degreesToGrads(reversedAzimuth);
+                }
                 populateMeasure(reversedAzimuth, R.id.point_azimuth);
             }
             Float currSlope = StringUtils.getFromEditTextNotNull(slope);
             if (currSlope != null && currSlope != 0) {
                 populateMeasure(-currSlope, R.id.point_slope);
             }
-//        } catch (Exception e) {
-//            Log.e(Constants.LOG_TAG_UI, "Failed to reverse leg", e);
-//            UIUtilities.showNotification(R.string.error);
-//        }
+        } catch (Exception e) {
+            Log.e(Constants.LOG_TAG_UI, "Failed to reverse leg", e);
+            UIUtilities.showNotification(R.string.error);
+        }
     }
 
 
@@ -919,6 +951,33 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to delete vector", e);
             UIUtilities.showNotification(R.string.error);
+        }
+    }
+
+    /**
+     * Called back once the auto/manual option for GPS is selected.
+     *
+     * @param gpsTypeArg - type of option manual GPS entry, or automatic using GPS service
+     */
+    @Override
+    public void gpsTypeSelected(GpsTypeDialog.GPSType gpsTypeArg) {
+
+        // dismiss the dialog
+        Fragment prev = getSupportFragmentManager().findFragmentByTag(GpsTypeDialog.GPS_TYPE_DIALOG);
+        if (prev != null) {
+            DialogFragment df = (DialogFragment) prev;
+            df.dismiss();
+        }
+
+        Point parentPoint = getCurrentLeg().getFromPoint();
+        if (GpsTypeDialog.GPSType.AUTO.equals(gpsTypeArg)) {
+            Intent intent = new Intent(this, GPSActivity.class);
+            intent.putExtra(GPSActivity.POINT, parentPoint);
+            startActivity(intent);
+        } else {
+            Intent intent = new Intent(this, GPSManualActivity.class);
+            intent.putExtra(GPSActivity.POINT, parentPoint);
+            startActivity(intent);
         }
     }
 }

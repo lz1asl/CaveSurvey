@@ -135,7 +135,7 @@ public class MainActivity extends MainMenuActivity implements AddNewSelectedHand
                     fromPointString =  mGalleryNames.get(l.getGalleryId()) + fromPointString;
                     prevGalleryId = l.getGalleryId();
                 } else {
-                    prevGalleryId = DaoUtil.getLegByToPointId(l.getFromPoint().getId()).getGalleryId();
+                    prevGalleryId = DaoUtil.getLegByToPoint(fromPoint).getGalleryId();
                     fromPointString =  mGalleryNames.get(prevGalleryId) + fromPointString;
                 }
 
@@ -154,7 +154,7 @@ public class MainActivity extends MainMenuActivity implements AddNewSelectedHand
                 if (l.isMiddle()) {
                     row.addView(createTextView("", currentLeg, false, mGalleryColors.get(prevGalleryId)));
                     row.addView(createTextView("", currentLeg, false, mGalleryColors.get(l.getGalleryId())));
-                    row.addView(createTextView("@" + StringUtils.floatToLabel(l.getMiddlePointDistance()), currentLeg, true));
+                    row.addView(createTextView(Constants.MIDDLE_POINT_DELIMITER + StringUtils.floatToLabel(l.getMiddlePointDistance()), currentLeg, true));
                 } else {
                     row.addView(createTextView(fromPointString, currentLeg, false, mGalleryColors.get(prevGalleryId)));
                     row.addView(createTextView(toPointString, currentLeg, false, mGalleryColors.get(l.getGalleryId())));
@@ -245,7 +245,7 @@ public class MainActivity extends MainMenuActivity implements AddNewSelectedHand
      */
     public void addNewSelected(int itemArg){
 
-        // dissmiss the dialog
+        // dismiss the dialog
         Fragment prev = getSupportFragmentManager().findFragmentByTag(AddNewDialog.ADD_NEW_DIALOG);
         if (prev != null) {
             DialogFragment df = (DialogFragment) prev;
@@ -257,7 +257,7 @@ public class MainActivity extends MainMenuActivity implements AddNewSelectedHand
                 // next leg
                 addLeg(false);
             } else if (1 == itemArg) {
-                Leg prevLeg = DaoUtil.getLegByToPointId(Workspace.getCurrentInstance().getActiveLeg().getFromPoint().getId());
+                Leg prevLeg = DaoUtil.getLegByToPoint(Workspace.getCurrentInstance().getActiveLeg().getFromPoint());
                 if (prevLeg == null) {
                     // not supported
                     UIUtilities.showNotification(R.string.gallery_after_first_point);

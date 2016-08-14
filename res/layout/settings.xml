@@ -53,6 +53,31 @@
                 android:layout_alignParentRight="true" />
         </RelativeLayout>
 
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:text="@string/settings_import"
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/settingsBackupImport"
+                android:text="@string/settings_import"
+                android:layout_alignParentRight="true" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="50dp">
+        </View>
+
         <!-- error reporter -->
         <RelativeLayout
             android:layout_width="fill_parent"

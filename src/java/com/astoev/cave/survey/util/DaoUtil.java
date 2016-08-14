@@ -80,8 +80,45 @@ public class DaoUtil {
         return Workspace.getCurrentInstance().getDBHelper().getPointDao().queryForId(aId);
     }
 
+    public static Point getFromPoint(Integer aProjectId, Gallery aGallery, String aPointName) throws SQLException {
+
+        QueryBuilder<Leg, Integer> galleryLegs = Workspace.getCurrentInstance().getDBHelper().getLegDao().queryBuilder();
+        galleryLegs.where().eq(Leg.COLUMN_GALLERY_ID, aGallery.getId()).and().eq(Leg.COLUMN_PROJECT_ID, aProjectId);
+        QueryBuilder<Point, Integer> points = Workspace.getCurrentInstance().getDBHelper().getPointDao().queryBuilder();
+        // TODO joined only by from point
+        return points.join(galleryLegs).where().eq(Point.COLUMN_POINT_NAME, aPointName).queryForFirst();
+    }
+
+
+    public static Long getToPointId(Integer aProjectId, Gallery aGallery, String aPointName) throws SQLException {
+
+        try {
+            return Workspace.getCurrentInstance().getDBHelper().getPointDao().queryRawValue(
+                    "select p.id from points p join legs l on p.id = l.to_point_id where l.project_id = ? and l.gallery_id = ? and p.name = ? ", String.valueOf(aProjectId), String.valueOf(aGallery.getId()), String.valueOf(aPointName));
+        } catch (SQLException sqle) {
+            // will fail if not found
+            return null;
+        }
+    }
+
+    public static Long getFromPointId(Integer aProjectId, Gallery aGallery, String aPointName) throws SQLException {
+
+        try {
+            return Workspace.getCurrentInstance().getDBHelper().getPointDao().queryRawValue(
+                    "select p.id from points p join legs l on p.id = l.from_point_id where l.project_id = ? and l.gallery_id = ? and p.name = ? ", String.valueOf(aProjectId), String.valueOf(aGallery.getId()), String.valueOf(aPointName));
+        } catch (SQLException sqle) {
+            // will fail if not found
+            return null;
+        }
+    }
+
     public static Gallery getGallery(Integer aId) throws SQLException {
         return Workspace.getCurrentInstance().getDBHelper().getGalleryDao().queryForId(aId);
+    }
+
+    public static Gallery getGallery(Integer aProjectId, String aGalleryName) throws SQLException {
+        return Workspace.getCurrentInstance().getDBHelper().getGalleryDao().queryBuilder()
+                .where().eq(Gallery.COLUMN_PROJECT_ID, aProjectId).and().eq(Gallery.COLUMN_NAME, aGalleryName).queryForFirst();
     }
 
     public static List<Leg> getCurrProjectLegs(boolean includeMiddles) throws SQLException {
@@ -111,14 +148,20 @@ public class DaoUtil {
     }
 
     public static Gallery createGallery(boolean isFirst) throws SQLException {
-        Gallery gallery = new Gallery();
         Project currProject = Workspace.getCurrentInstance().getActiveProject();
+        String name;
         if (isFirst) {
-            gallery.setName(Gallery.getFirstGalleryName());
+            name = Gallery.getFirstGalleryName();
         } else {
-            gallery.setName(Gallery.generateNextGalleryName(currProject.getId()));
+            name = Gallery.generateNextGalleryName(currProject.getId());
         }
-        gallery.setProject(currProject);
+        return createGallery(currProject, name);
+    }
+
+    public static Gallery createGallery(Project aProject, String aName) throws SQLException {
+        Gallery gallery = new Gallery();
+        gallery.setName(aName);
+        gallery.setProject(aProject);
         Workspace.getCurrentInstance().getDBHelper().getGalleryDao().create(gallery);
         return gallery;
     }
@@ -130,10 +173,19 @@ public class DaoUtil {
         return query.queryForFirst();
     }
 
-    public static Leg getLegByToPointId(long aToPointId) throws SQLException {
+    public static Leg getLegByToPoint(Point aToPoint) throws SQLException {
         // TODO this will work as soon as we keep a tree of legs. Once we start closing circles will break and will have to change the logic
         QueryBuilder<Leg, Integer> query = Workspace.getCurrentInstance().getDBHelper().getLegDao().queryBuilder();
-        query.where().eq(Leg.COLUMN_TO_POINT, aToPointId).and().isNull(Leg.COLUMN_MIDDLE_POINT_AT_DISTANCE);
+        query.where().eq(Leg.COLUMN_TO_POINT, aToPoint).and().isNull(Leg.COLUMN_MIDDLE_POINT_AT_DISTANCE);
+        return query.queryForFirst();
+    }
+
+    public static Leg getLegByFromToPointId(Gallery aGallery, Point aFromPoint, Point aToPoint) throws SQLException {
+        QueryBuilder<Leg, Integer> query = Workspace.getCurrentInstance().getDBHelper().getLegDao().queryBuilder();
+        query.where().eq(Leg.COLUMN_FROM_POINT, aFromPoint)
+                .and().eq(Leg.COLUMN_TO_POINT, aToPoint)
+                .and().eq(Leg.COLUMN_GALLERY_ID, aGallery.getId())
+                .and().isNull(Leg.COLUMN_MIDDLE_POINT_AT_DISTANCE);
         return query.queryForFirst();
     }
 
@@ -215,6 +267,42 @@ public class DaoUtil {
     }
 
     /**
+     * DAO method that saves or update the location of Point based on manual Location
+     *
+     * @param parentPointArg - parent Point
+     * @param gpsLocationArg - GPS Location
+     * @throws SQLException if there is a problem working with the DB
+     */
+    public static void saveLocationToPoint(final Point parentPointArg, final Location gpsLocationArg)
+            throws SQLException {
+
+        ConnectionSource connetionSource = Workspace.getCurrentInstance().getDBHelper().getConnectionSource();
+        TransactionManager.callInTransaction(connetionSource, new Callable<Integer>() {
+
+            @Override
+            public Integer call() throws Exception {
+                Location oldLocation = getLocationByPoint(parentPointArg);
+                if (oldLocation != null) {
+                    oldLocation.setLatitude(gpsLocationArg.getLatitude());
+                    oldLocation.setLongitude(gpsLocationArg.getLongitude());
+                    oldLocation.setAltitude((int) gpsLocationArg.getAltitude());
+                    oldLocation.setAccuracy((int) gpsLocationArg.getAccuracy());
+                    Workspace.getCurrentInstance().getDBHelper().getLocationDao().update(oldLocation);
+
+                    Log.i(Constants.LOG_TAG_DB, "Update location with id:" + oldLocation.getId() + " for point:" + parentPointArg.getId());
+                    return oldLocation.getId();
+                } else {
+                    gpsLocationArg.setPoint(parentPointArg);
+                    Workspace.getCurrentInstance().getDBHelper().getLocationDao().create(gpsLocationArg);
+
+                    Log.i(Constants.LOG_TAG_DB, "Creted location with id:" + gpsLocationArg.getId() + " for point:" + parentPointArg.getId());
+                    return gpsLocationArg.getId();
+                }
+            }
+        });
+    }
+
+    /**
      * Deletes a leg its toPoint and all the data that is related to toPoint
      *
      * @param aLegToDelete - leg to delete
@@ -239,7 +327,7 @@ public class DaoUtil {
                     int deletedLeg = dbHelper.getLegDao().delete(aLegToDelete);
                     Log.d(Constants.LOG_TAG_DB, "Deleted middle leg:" + deletedLeg);
 
-                    workspace.setActiveLeg(getLegByToPointId(aLegToDelete.getToPoint().getId()));
+                    workspace.setActiveLeg(getLegByToPoint(aLegToDelete.getToPoint()));
                 } else {
 
                     Point toPoint = aLegToDelete.getToPoint();
@@ -318,7 +406,7 @@ public class DaoUtil {
         List<Leg> legs = DaoUtil.getCurrProjectLegs(false);
         Project project = Workspace.getCurrentInstance().getActiveProject();
         String name = project.getName();
-        String creationDate = project.getCreationDateFormatted();
+        String creationDate = StringUtils.dateToDateTimeString(project.getCreationDate());
 
         float totalLength = 0, totalDepth = 0;
         int numNotes = 0, numDrawings = 0, numCoordinates = 0, numPhotos = 0, numVectors = 0;

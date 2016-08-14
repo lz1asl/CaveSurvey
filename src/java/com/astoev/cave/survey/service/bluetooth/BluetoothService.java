@@ -100,7 +100,8 @@ public class BluetoothService {
 
 
     public static boolean isBluetoothSupported() {
-        return mCurrContext != null && mCurrContext.getSystemService(Context.BLUETOOTH_SERVICE) != null && BluetoothAdapter.getDefaultAdapter() != null;
+        return mCurrContext != null
+                && (mCurrContext.getSystemService(Context.BLUETOOTH_SERVICE) != null || BluetoothAdapter.getDefaultAdapter() != null);
     }
 
     public static boolean isBluetoothLESupported() {

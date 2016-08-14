@@ -110,7 +110,9 @@
     <string name="note_save">Запази</string>
     <string name="note_saved">Запазено</string>
 
-    
+    <!--vector screen -->
+    <string name="vector_button_add_again">Save + New</string>
+
 
     <string name="sketch_pick_color">Избери цвят</string>
     <string name="sketch_pick_size">Избери размер</string>
@@ -325,6 +327,10 @@
     
     <string name="gps_enable_question">GPS е забранен! Искате ли да го разрешите?</string>
 
+    <string name="gps_type_title">Изберете GPS метод</string>
+    <string name="gps_type_auto">Автоматично въвеждане</string>
+    <string name="gps_type_manual">Ръчно въвеждане</string>
+
     <string name="unit_meters">метри</string>
     <string name="unit_degrees">градуси</string>
     <string name="unit_grads">гради</string>
@@ -355,6 +361,12 @@
     <!-- auto backup -->
     <string name="settings_auto_backup">Автоматичен експорт</string>
     <string name="settings_auto_backup_info">Създава автоматично резервно копие на активния проект всеки 5 минути</string>
+    <string name="settings_import">Импорт</string>
+    <string name="settings_import_title">Импорт (Експериментален)</string>
+    <string name="settings_import_source">Импорт от:</string>
+    <string name="settings_import_target_name">Създай като:</string>
+    <string name="settings_import_no_files">Не е намерен експортен файл</string>
+    <string name="settings_import_info">Създава ново проучване от съществуващ файл.\nМоля използвайте файлове генерирани след версия v1.27.\nСнимки и скици ще бъдат игнорирани.</string>
 
     <!--opens topo -->
     <string name="export_openstopo_title">OpensTopo</string>

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.astoev.cave.survey"
-          android:versionCode="25"
-          android:versionName="1.24">
+          android:installLocation="auto"
+          android:versionCode="29"
+          android:versionName="1.28">
           
     <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="23"/>
     <!--<uses-permission android:name="android.permission.INTERNET" />-->
@@ -80,18 +81,23 @@
                 android:value="com.astoev.cave.survey.activity.SettingsActivity" />
         </activity>
         <activity android:name="com.astoev.cave.survey.activity.main.GPSActivity"/>
+        <activity android:name="com.astoev.cave.survey.activity.main.GPSManualActivity"/>
         <activity android:name="com.astoev.cave.survey.activity.SettingsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.astoev.cave.survey.activity.home.HomeActivity" />
         </activity>
-	
+        <activity android:name="com.astoev.cave.survey.activity.main.ImportActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.astoev.cave.survey.activity.SettingsActivity" />
+        </activity>
 	    <activity
             android:name=".openstopo.WebViewActivity"
             android:configChanges="orientation"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
-        
+
     </application>
     
 

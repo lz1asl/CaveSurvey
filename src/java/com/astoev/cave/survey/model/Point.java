@@ -19,8 +19,9 @@ public class Point implements Serializable {
 	private static final long serialVersionUID = 201312130309L;
 
 	public static final String COLUMN_POINT_NAME = "name";
+	public static final String COLUMN_ID = "id";
 
-    @DatabaseField(generatedId = true, columnName = "id")
+    @DatabaseField(generatedId = true, columnName = COLUMN_ID)
     private Integer mId;
     @DatabaseField(canBeNull = false, columnName = COLUMN_POINT_NAME)
     private String mName;
