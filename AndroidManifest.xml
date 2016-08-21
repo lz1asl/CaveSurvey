@@ -43,62 +43,59 @@
         <activity android:name=".activity.main.MainActivity">
 			<meta-data
 	            android:name="android.support.PARENT_ACTIVITY"
-	            android:value="com.astoev.cave.survey.activity.home.HomeActivity" />
+	            android:value=".activity.home.HomeActivity" />
         </activity>
         <activity android:name=".activity.main.OptionsActivity"/>
         <activity android:name=".activity.main.InfoActivity">
 			<meta-data
 	            android:name="android.support.PARENT_ACTIVITY"
-	            android:value="com.astoev.cave.survey.activity.main.MainActivity" />
+	            android:value=".activity.main.MainActivity" />
         </activity>
         <activity android:name=".activity.main.NoteActivity"/>
         <activity android:name=".activity.map.MapActivity"/>
         <activity android:name=".activity.home.NewProjectActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.astoev.cave.survey.activity.home.HomeActivity" />
+                android:value=".activity.home.HomeActivity" />
         </activity>    
         <activity android:name=".activity.draw.PointDrawingActivity" />
         <activity android:name=".activity.draw.MapDrawingActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.astoev.cave.survey.activity.map.MapActivity" />
+                android:value=".activity.map.MapActivity" />
         </activity>
         <activity android:name=".activity.main.PointActivity" android:windowSoftInputMode="stateHidden">
 			<meta-data
 	            android:name="android.support.PARENT_ACTIVITY"
-	            android:value="com.astoev.cave.survey.activity.main.MainActivity" />
+	            android:value=".activity.main.MainActivity" />
         </activity>
 
-        <activity android:name="com.astoev.cave.survey.activity.main.BTActivity">
+        <activity android:name=".activity.main.BTActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.astoev.cave.survey.activity.home.HomeActivity" />
+                android:value=".activity.home.HomeActivity" />
         </activity>
-        <activity android:name="com.astoev.cave.survey.activity.poc.SensorTestActivity">
+        <activity android:name=".activity.poc.SensorTestActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.astoev.cave.survey.activity.SettingsActivity" />
+                android:value=".activity.SettingsActivity" />
         </activity>
-        <activity android:name="com.astoev.cave.survey.activity.main.GPSActivity"/>
-        <activity android:name="com.astoev.cave.survey.activity.main.GPSManualActivity"/>
-        <activity android:name="com.astoev.cave.survey.activity.SettingsActivity">
+        <activity android:name=".activity.main.GPSActivity"/>
+        <activity android:name=".activity.main.GPSManualActivity"/>
+        <activity android:name=".activity.SettingsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.astoev.cave.survey.activity.home.HomeActivity" />
+                android:value=".activity.home.HomeActivity" />
         </activity>
-        <activity android:name="com.astoev.cave.survey.activity.main.ImportActivity">
+        <activity android:name=".activity.main.ImportActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.astoev.cave.survey.activity.SettingsActivity" />
+                android:value=".activity.home.NewProjectActivity" />
         </activity>
 	    <activity
             android:name=".openstopo.WebViewActivity"
             android:configChanges="orientation"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
-
     </application>
-    
-
 </manifest>

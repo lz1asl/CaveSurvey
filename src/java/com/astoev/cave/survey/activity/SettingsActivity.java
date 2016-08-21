@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -14,7 +13,6 @@ import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.dialog.AboutDialog;
 import com.astoev.cave.survey.activity.dialog.ErrorReporterDialog;
 import com.astoev.cave.survey.activity.dialog.LanguageDialog;
-import com.astoev.cave.survey.activity.main.ImportActivity;
 import com.astoev.cave.survey.activity.poc.SensorTestActivity;
 import com.astoev.cave.survey.fragment.InfoDialogFragment;
 import com.astoev.cave.survey.service.reports.ErrorReporter;
@@ -38,7 +36,6 @@ public class SettingsActivity extends MainMenuActivity {
 
         prepareLanguage();
         prepareBluetooth();
-        prepareImport();
         prepareAutoBackup();
         prepareErrorReporter();
         prepareAbout();
@@ -121,17 +118,6 @@ public class SettingsActivity extends MainMenuActivity {
                     Log.i(Constants.LOG_TAG_UI, "Auto backup off");
                     ConfigUtil.setBooleanProperty(ConfigUtil.PREF_BACKUP, false);
                 }
-            }
-        });
-    }
-
-    private void prepareImport() {
-        Button importButton = (Button) findViewById(R.id.settingsBackupImport);
-        importButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(SettingsActivity.this, ImportActivity.class);
-                startActivity(intent);
             }
         });
     }
