@@ -7,7 +7,6 @@ import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
-import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.SparseArray;
@@ -32,8 +31,8 @@ import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.service.Workspace;
 import com.astoev.cave.survey.util.DaoUtil;
 
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -425,42 +424,44 @@ public class MapView extends View {
 
             if (annotateMap) {
 
-            // borders
-            //top
-            canvas.drawLine(spacing, spacing, maxX - spacing, spacing, overlayPaint);
-            //right
-            canvas.drawLine(maxX - spacing, spacing, maxX - spacing, maxY - spacing, overlayPaint);
-            // bottom
-            canvas.drawLine(spacing, maxY - spacing, maxX - spacing, maxY - spacing, overlayPaint);
-            //left
-            canvas.drawLine(spacing, maxY - spacing, spacing, spacing, overlayPaint);
+                // borders
+                //top
+                canvas.drawLine(spacing, spacing, maxX - spacing, spacing, overlayPaint);
+                //right
+                canvas.drawLine(maxX - spacing, spacing, maxX - spacing, maxY - spacing, overlayPaint);
+                // bottom
+                canvas.drawLine(spacing, maxY - spacing, maxX - spacing, maxY - spacing, overlayPaint);
+                //left
+                canvas.drawLine(spacing, maxY - spacing, spacing, spacing, overlayPaint);
 
-            float scaled30 = 30 * screenScale;
-            float scaled20 = 20 * screenScale;
-            float scaled10 = 10 * screenScale;
+                float scaled30 = 30 * screenScale;
+                float scaled20 = 20 * screenScale;
+                float scaled10 = 10 * screenScale;
 
-            if (horizontalPlan) {
-                // north arrow
-                northCenter.set((int) (maxX - scaled20), (int) (scaled30));
-                canvas.drawLine(northCenter.x, northCenter.y, northCenter.x + scaled10, northCenter.y + scaled10, overlayPaint);
-                canvas.drawLine(northCenter.x + scaled10, northCenter.y + scaled10, northCenter.x, northCenter.y - scaled20, overlayPaint);
-                canvas.drawLine(northCenter.x, northCenter.y - scaled20, northCenter.x - scaled10, northCenter.y + scaled10, overlayPaint);
-                canvas.drawLine(northCenter.x - scaled10, northCenter.y + scaled10, northCenter.x, northCenter.y, overlayPaint);
-                canvas.drawText("N", northCenter.x + 5 * screenScale, northCenter.y - scaled10, overlayPaint);
-            } else {
-                //  up awrrow
-                northCenter.set((int) (maxX - 15 * screenScale), (int) scaled10);
-                canvas.drawLine(northCenter.x + 1 * screenScale, northCenter.y, northCenter.x + 6 * screenScale, northCenter.y + scaled10, overlayPaint);
-                canvas.drawLine(northCenter.x - 5 * screenScale, northCenter.y + scaled10, northCenter.x, northCenter.y, overlayPaint);
-                canvas.drawLine(northCenter.x, northCenter.y - 1 * screenScale, northCenter.x, northCenter.y + scaled20, overlayPaint);
+                if (horizontalPlan) {
+                    // north arrow
+                    northCenter.set((int) (maxX - scaled20), (int) (scaled30));
+                    canvas.drawLine(northCenter.x, northCenter.y, northCenter.x + scaled10, northCenter.y + scaled10, overlayPaint);
+                    canvas.drawLine(northCenter.x + scaled10, northCenter.y + scaled10, northCenter.x, northCenter.y - scaled20, overlayPaint);
+                    canvas.drawLine(northCenter.x, northCenter.y - scaled20, northCenter.x - scaled10, northCenter.y + scaled10, overlayPaint);
+                    canvas.drawLine(northCenter.x - scaled10, northCenter.y + scaled10, northCenter.x, northCenter.y, overlayPaint);
+                    canvas.drawText("N", northCenter.x + 5 * screenScale, northCenter.y - scaled10, overlayPaint);
+                } else {
+                    //  up awrrow
+                    northCenter.set((int) (maxX - 15 * screenScale), (int) scaled10);
+                    canvas.drawLine(northCenter.x + 1 * screenScale, northCenter.y, northCenter.x + 6 * screenScale, northCenter.y + scaled10, overlayPaint);
+                    canvas.drawLine(northCenter.x - 5 * screenScale, northCenter.y + scaled10, northCenter.x, northCenter.y, overlayPaint);
+                    canvas.drawLine(northCenter.x, northCenter.y - 1 * screenScale, northCenter.x, northCenter.y + scaled20, overlayPaint);
+                }
+
+                // scale
+                canvas.drawText("x" + scale, (25 * screenScale + gridStep / 2), 45 * screenScale, overlayPaint);
+                canvas.drawLine(scaled30, 25 * screenScale, scaled30, 35 * screenScale, overlayPaint);
+                canvas.drawLine(scaled30, scaled30, scaled30 + gridStep, scaled30, overlayPaint);
+                canvas.drawLine(scaled30 + gridStep, 25 * screenScale, scaled30 + gridStep, 35 * screenScale, overlayPaint);
+                canvas.drawText(GRID_STEPS[gridStepIndex] + "m", 25 * screenScale + gridStep / 2, 25 * screenScale, overlayPaint);
+
             }
-
-            // scale
-            canvas.drawText("x" + scale, (25 * screenScale + gridStep/2), 45 * screenScale, overlayPaint);
-            canvas.drawLine(scaled30, 25 * screenScale, scaled30, 35 * screenScale, overlayPaint);
-            canvas.drawLine(scaled30, scaled30, scaled30 + gridStep, scaled30, overlayPaint);
-            canvas.drawLine(scaled30 + gridStep, 25 * screenScale, scaled30 + gridStep, 35 * screenScale, overlayPaint);
-            canvas.drawText(GRID_STEPS[gridStepIndex]  + "m" , 25 * screenScale + gridStep/2, 25 * screenScale, overlayPaint);
 
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to draw map activity", e);

@@ -29,7 +29,8 @@ import com.astoev.cave.survey.activity.dialog.DeleteHandler;
 import com.astoev.cave.survey.activity.dialog.GpsTypeDialog;
 import com.astoev.cave.survey.activity.dialog.GpsTypeHandler;
 import com.astoev.cave.survey.activity.dialog.VectorDialog;
-import com.astoev.cave.survey.activity.draw.DrawingActivity;
+import com.astoev.cave.survey.activity.draw.AbstractDrawingActivity;
+import com.astoev.cave.survey.activity.draw.PointDrawingActivity;
 import com.astoev.cave.survey.activity.map.MapUtilities;
 import com.astoev.cave.survey.model.Gallery;
 import com.astoev.cave.survey.model.Leg;
@@ -409,25 +410,26 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                 String filePrefix = FileStorageUtil.getFilePrefixForPicture(pointFrom, galleryName);
                 photoFile = FileStorageUtil.createPictureFile(this, projectName, filePrefix, FileStorageUtil.JPG_FILE_EXTENSION, true);
 
-        } catch (SQLException e) {
-            UIUtilities.showNotification(R.string.error);
-            return;
-        } catch (Exception e) {
-            UIUtilities.showNotification(R.string.export_io_error);
-            Log.e(Constants.LOG_TAG_UI, "Failed to write to SD card", e);
-            return;
-        }
+            } catch (SQLException e) {
+                UIUtilities.showNotification(R.string.error);
+                return;
+            } catch (Exception e) {
+                UIUtilities.showNotification(R.string.export_io_error);
+                Log.e(Constants.LOG_TAG_UI, "Failed to write to SD card", e);
+                return;
+            }
 
-        // call capture image
-        if (photoFile != null) {
+            // call capture image
+            if (photoFile != null) {
 
-            mCurrentPhotoPath = photoFile.getAbsolutePath();
+                mCurrentPhotoPath = photoFile.getAbsolutePath();
 
-            Log.i(Constants.LOG_TAG_SERVICE, "Going to capture image in: " + photoFile.getAbsolutePath());
-            final Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
-            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                Log.i(Constants.LOG_TAG_SERVICE, "Going to capture image in: " + photoFile.getAbsolutePath());
+                final Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+                if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                }
             }
         }
     }

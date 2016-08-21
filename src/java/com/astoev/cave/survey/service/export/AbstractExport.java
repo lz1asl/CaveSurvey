@@ -81,7 +81,7 @@ public abstract class AbstractExport {
                 if (l.getGalleryId().equals(lastGalleryId)) {
                     prevGalleryId = l.getGalleryId();
                 } else {
-                    prevGalleryId = DaoUtil.getLegByToPointId(l.getFromPoint().getId()).getGalleryId();
+                    prevGalleryId = DaoUtil.getLegByToPoint(l.getFromPoint()).getGalleryId();
                 }
 
                 List<Leg> middles = DaoUtil.getLegsMiddles(l);
@@ -114,92 +114,93 @@ public abstract class AbstractExport {
                     exportLocation(fromPoint);
 
                     // sketch
-                    exportSketch(l);
+                    exportSketches(l);
 
-                // picture
-                exportPhotos(l);
-
-                // middles
-                if (middles != null && middles.size() > 0) {
-
-                    int index = 0;
-                    float prevLength = 0;
-                    String fromPointName;
-                    if (l.getGalleryId().equals(prevGalleryId)) {
-                        fromPointName = galleryNames.get(l.getGalleryId()) + fromPoint.getName();
-                    } else {
-                        fromPointName = galleryNames.get(prevGalleryId) + fromPoint.getName();
-                    }
-                    String toPointName = galleryNames.get(l.getGalleryId()) + toPoint.getName();
-                    String lastMiddleName = null;
+                    // picture
+                    exportPhotos(l);
 
                     // middles
-                    Leg prevMiddle = null;
-                    for (Leg middle : middles) {
-                        rowCounter++;
-                        index ++;
-                        prepareEntity(rowCounter);
+                    if (middles != null && middles.size() > 0) {
 
-                        setValue(Entities.FROM, lastMiddleName == null ? fromPointName : lastMiddleName);
-                        lastMiddleName = fromPointName + Constants.FROM_TO_POINT_DELIMITER + toPointName + Constants.MIDDLE_POINT_DELIMITER + StringUtils.floatToLabel(middle.getMiddlePointDistance());
-                        setValue(Entities.TO, lastMiddleName);
-                        setValue(Entities.DISTANCE, middle.getMiddlePointDistance() - prevLength);
-                        exportLegCompass(l);
-                        exportLegSlope(l);
-
-
-                        if (index == 1) {
-                            exportAroundMeasures(l);
-                        } else {
-                            exportAroundMeasures(prevMiddle);
-                        }
-
-                        prevLength = middle.getMiddlePointDistance();
-                        prevMiddle = middle;
-                    }
-
-                    // last explicit leg
-                    rowCounter++;
-                    prepareEntity(rowCounter);
-
-                    setValue(Entities.FROM, lastMiddleName);
-                    setValue(Entities.TO, toPointName);
-                    setValue(Entities.DISTANCE, l.getDistance() - prevLength);
-                    exportLegCompass(l);
-                    exportLegSlope(l);
-
-                    exportAroundMeasures(middles.get(middles.size() - 1));
-                }
-
-                // vectors
-                List<Vector> vectors = DaoUtil.getLegVectors(l);
-                if (vectors != null) {
-                    int vectorCounter = 1;
-                    for (Vector v : vectors) {
-                        rowCounter++;
-
-                        prepareEntity(rowCounter);
-
+                        int index = 0;
+                        float prevLength = 0;
                         String fromPointName;
                         if (l.getGalleryId().equals(prevGalleryId)) {
                             fromPointName = galleryNames.get(l.getGalleryId()) + fromPoint.getName();
                         } else {
                             fromPointName = galleryNames.get(prevGalleryId) + fromPoint.getName();
                         }
-                        setValue(Entities.FROM, fromPointName);
-//                        setValue(Entities.TO, fromPointName + "-" + galleryNames.get(l.getGalleryId()) + toPoint.getName() + "-v" + vectorCounter);
-                        setValue(Entities.DISTANCE, v.getDistance());
-                        setValue(Entities.COMPASS, v.getAzimuth());
-                        if (v.getSlope() != null) {
-                            setValue(Entities.INCLINATION, v.getSlope());
+                        String toPointName = galleryNames.get(l.getGalleryId()) + toPoint.getName();
+                        String lastMiddleName = null;
+
+                        // middles
+                        Leg prevMiddle = null;
+                        for (Leg middle : middles) {
+                            rowCounter++;
+                            index++;
+                            prepareEntity(rowCounter);
+
+                            setValue(Entities.FROM, lastMiddleName == null ? fromPointName : lastMiddleName);
+                            lastMiddleName = fromPointName + Constants.FROM_TO_POINT_DELIMITER + toPointName + Constants.MIDDLE_POINT_DELIMITER + StringUtils.floatToLabel(middle.getMiddlePointDistance());
+                            setValue(Entities.TO, lastMiddleName);
+                            setValue(Entities.DISTANCE, middle.getMiddlePointDistance() - prevLength);
+                            exportLegCompass(l);
+                            exportLegSlope(l);
+
+
+                            if (index == 1) {
+                                exportAroundMeasures(l);
+                            } else {
+                                exportAroundMeasures(prevMiddle);
+                            }
+
+                            prevLength = middle.getMiddlePointDistance();
+                            prevMiddle = middle;
                         }
-                        setValue(Entities.NOTE, "v" + vectorCounter);
 
-                        vectorCounter++;
+                        // last explicit leg
+                        rowCounter++;
+                        prepareEntity(rowCounter);
+
+                        setValue(Entities.FROM, lastMiddleName);
+                        setValue(Entities.TO, toPointName);
+                        setValue(Entities.DISTANCE, l.getDistance() - prevLength);
+                        exportLegCompass(l);
+                        exportLegSlope(l);
+
+                        exportAroundMeasures(middles.get(middles.size() - 1));
                     }
-                }
 
-                lastGalleryId = l.getGalleryId();
+                    // vectors
+                    List<Vector> vectors = DaoUtil.getLegVectors(l);
+                    if (vectors != null) {
+                        int vectorCounter = 1;
+                        for (Vector v : vectors) {
+                            rowCounter++;
+
+                            prepareEntity(rowCounter);
+
+                            String fromPointName;
+                            if (l.getGalleryId().equals(prevGalleryId)) {
+                                fromPointName = galleryNames.get(l.getGalleryId()) + fromPoint.getName();
+                            } else {
+                                fromPointName = galleryNames.get(prevGalleryId) + fromPoint.getName();
+                            }
+                            setValue(Entities.FROM, fromPointName);
+//                        setValue(Entities.TO, fromPointName + "-" + galleryNames.get(l.getGalleryId()) + toPoint.getName() + "-v" + vectorCounter);
+                            setValue(Entities.DISTANCE, v.getDistance());
+                            setValue(Entities.COMPASS, v.getAzimuth());
+                            if (v.getSlope() != null) {
+                                setValue(Entities.INCLINATION, v.getSlope());
+                            }
+                            setValue(Entities.NOTE, "v" + vectorCounter);
+
+                            vectorCounter++;
+                        }
+                    }
+
+                    lastGalleryId = l.getGalleryId();
+                }
             }
 
             // TODO export project sketch
@@ -270,7 +271,8 @@ public abstract class AbstractExport {
     }
 
     private void exportSketches(Leg l) throws SQLException {
-        Sketch sketch = DaoUtil.getScetchByLeg(l);
+        Sketch sketch = null; // TODO FIXME DaoUtil.getScetchByLeg(l);
+        Log.e(Constants.LOG_TAG_SERVICE, "Implement me");
         if (sketch != null) {
             setDrawing(sketch);
         }
