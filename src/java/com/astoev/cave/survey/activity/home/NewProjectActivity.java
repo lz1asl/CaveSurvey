@@ -10,6 +10,7 @@ import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.MainMenuActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
+import com.astoev.cave.survey.activity.main.ImportActivity;
 import com.astoev.cave.survey.activity.main.PointActivity;
 import com.astoev.cave.survey.dto.ProjectConfig;
 import com.astoev.cave.survey.fragment.ProjectFragment;
@@ -124,10 +125,15 @@ public class NewProjectActivity extends MainMenuActivity {
 		Log.i(Constants.LOG_TAG_UI, "NewProject activity's menu selected - " + item.toString());
 		
 		switch (item.getItemId()) {
-			case R.id.new_action_create : {
+			case R.id.new_action_create :
 				createNewProject();
 				return true;
-			}
+
+            case R.id.new_action_import :
+                Intent intent = new Intent(NewProjectActivity.this, ImportActivity.class);
+                startActivity(intent);
+                return true;
+
 			default:
 				return super.onOptionsItemSelected(item);
 		}

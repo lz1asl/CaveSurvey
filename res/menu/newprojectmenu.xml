@@ -7,5 +7,11 @@
 	      android:title="@string/new_button_create"
 	      android:visible="true"
 	      myapp:showAsAction="ifRoom|withText"/>
-      
+
+	<item android:id="@+id/new_action_import"
+		  android:icon="@drawable/ic_action_import_export"
+		  android:title="@string/settings_import"
+		  android:visible="true"
+		  myapp:showAsAction="ifRoom|withText"/>
+
 </menu>
