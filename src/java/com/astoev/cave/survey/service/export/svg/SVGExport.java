@@ -126,7 +126,7 @@ public class SVGExport {
             map.scale(20);
             map.move(200, 200);
             SVGCanvas svgCanvas = new SVGCanvas(svg);
-            map.onDraw(svgCanvas);
+            map.draw(svgCanvas);
             svg.endTag("", "g");
         }
 
