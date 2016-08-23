@@ -39,7 +39,7 @@ public class Gallery implements Serializable {
     @DatabaseField(generatedId = true, columnName = COLUMN_ID)
     private Integer mId;
 
-    @DatabaseField(foreign = true, canBeNull = false, foreignAutoRefresh = true, columnName = COLUMN_PROJECT_ID)
+    @DatabaseField(foreign = true, canBeNull = false, foreignAutoRefresh = true, columnName = COLUMN_PROJECT_ID, index = true)
     private Project mProject;
 
     @DatabaseField(columnName = COLUMN_NAME)

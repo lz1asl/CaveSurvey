@@ -18,7 +18,7 @@ public class Photo {
 
     @DatabaseField(generatedId = true, columnName = "id")
     private Integer mId;
-    @DatabaseField(foreign = true, columnName = COLUMN_POINT_ID)
+    @DatabaseField(foreign = true, columnName = COLUMN_POINT_ID, index = true)
     private Point mPoint;
     @DatabaseField(canBeNull = false, columnName = COLUMN_GALLERY_ID)
     private Integer mGalleryId;

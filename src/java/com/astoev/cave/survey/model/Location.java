@@ -17,7 +17,7 @@ public class Location implements Serializable{
 
     private static final long serialVersionUID = 201401131334L;
 
-    public static final String COLUMN_POINT_ID =               "point_id";
+    public static final String COLUMN_POINT_ID = "point_id";
 
     @DatabaseField(generatedId = true, columnName = "id")
     private Integer mId;

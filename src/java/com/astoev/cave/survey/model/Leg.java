@@ -37,7 +37,7 @@ public class Leg implements Serializable {
     private Point mFromPoint;
     @DatabaseField(foreign = true, canBeNull = false, columnName = COLUMN_TO_POINT)
     private Point mToPoint;
-    @DatabaseField(foreign = true, canBeNull = false, foreignAutoRefresh = true, columnName = COLUMN_PROJECT_ID)
+    @DatabaseField(foreign = true, canBeNull = false, foreignAutoRefresh = true, columnName = COLUMN_PROJECT_ID, index = true)
     private Project mProject;
     @DatabaseField(columnName = "distance")
     private Float mDistance;
@@ -53,7 +53,7 @@ public class Leg implements Serializable {
     private Float mTop;
     @DatabaseField(columnName = "down")
     private Float mDown;
-    @DatabaseField(canBeNull = false, columnName = COLUMN_GALLERY_ID)
+    @DatabaseField(canBeNull = false, columnName = COLUMN_GALLERY_ID, index = true)
     private Integer mGalleryId;
     @DatabaseField(columnName = COLUMN_MIDDLE_POINT_AT_DISTANCE)
     private Float mMiddlePointDistance;

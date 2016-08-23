@@ -1,5 +1,5 @@
 #
-# generated on 2016/02/28 10:55:12
+# generated on 2016/08/23 10:49:10
 #
 # --table-start--
 dataClass=com.astoev.cave.survey.model.Location
@@ -60,6 +60,7 @@ fieldName=mProject
 columnName=project_id
 canBeNull=false
 foreign=true
+indexName=legs_project_id_idx
 foreignAutoRefresh=true
 # --field-end--
 # --field-start--
@@ -94,6 +95,7 @@ columnName=down
 fieldName=mGalleryId
 columnName=gallery_id
 canBeNull=false
+indexName=legs_gallery_id_idx
 # --field-end--
 # --field-start--
 fieldName=mMiddlePointDistance
@@ -169,6 +171,7 @@ fieldName=mProject
 columnName=project_id
 canBeNull=false
 foreign=true
+indexName=options_project_id_idx
 foreignAutoRefresh=true
 # --field-end--
 # --field-start--
@@ -200,6 +203,7 @@ fieldName=mPoint
 columnName=point_id
 canBeNull=false
 foreign=true
+indexName=vectors_point_id_idx
 # --field-end--
 # --field-start--
 fieldName=mGalleryId
@@ -234,6 +238,7 @@ generatedId=true
 fieldName=mPoint
 columnName=point_id
 foreign=true
+indexName=photos_point_id_idx
 # --field-end--
 # --field-start--
 fieldName=mGalleryId
@@ -297,6 +302,7 @@ fieldName=mProject
 columnName=project_id
 canBeNull=false
 foreign=true
+indexName=galleries_project_id_idx
 foreignAutoRefresh=true
 # --field-end--
 # --field-start--

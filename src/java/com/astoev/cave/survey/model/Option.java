@@ -46,7 +46,7 @@ public class Option implements Serializable {
 
     @DatabaseField(generatedId = true, columnName = "id")
     private Integer mId;
-    @DatabaseField(foreign = true, canBeNull = false, foreignAutoRefresh = true, columnName = COLUMN_PROJECT_ID)
+    @DatabaseField(foreign = true, canBeNull = false, foreignAutoRefresh = true, columnName = COLUMN_PROJECT_ID, index = true)
     private Project mProject;
     @DatabaseField(columnName = COLUMN_CODE)
     private String mCode;

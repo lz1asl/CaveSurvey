@@ -23,7 +23,7 @@ public class Vector implements Serializable {
 
     @DatabaseField(generatedId = true, columnName = COLUMN_ID)
     private Integer mId;
-    @DatabaseField(canBeNull = false, foreign = true, columnName = COLUMN_POINT)
+    @DatabaseField(canBeNull = false, foreign = true, columnName = COLUMN_POINT, index = true)
     private Point mPoint;
     @DatabaseField(canBeNull = false, columnName = COLUMN_GALLERY_ID)
     private Integer mGalleryId;
