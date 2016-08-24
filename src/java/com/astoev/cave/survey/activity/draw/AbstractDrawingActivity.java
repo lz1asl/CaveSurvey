@@ -125,6 +125,7 @@ public abstract class AbstractDrawingActivity extends BaseActivity implements Vi
             if (legId != -1) {
                 // sketch attached to leg
                 mCurrLeg = Workspace.getCurrentInstance().getDBHelper().getLegDao().queryForId(legId);
+                Workspace.getCurrentInstance().getDBHelper().getLegDao().refresh(mCurrLeg);
                 mExistingSketch = mCurrLeg.getSketch();
             } else {
                 // sketch attached to project
@@ -255,13 +256,11 @@ public abstract class AbstractDrawingActivity extends BaseActivity implements Vi
             getWorkspace().getDBHelper().getSketchDao().createOrUpdate(mExistingSketch);
 
             // delete old sketch data, not yet clever enough to replace
-            if (mExistingSketch.getId() != null) {
-                Collection<SketchElement> elements = getWorkspace().getDBHelper().getSketchElementDao().queryForEq(SketchElement.COLUMN_SKETCH_ID, mExistingSketch.getId());
-                for (SketchElement element : elements) {
-                    element.getPoints().clear();
-                    getWorkspace().getDBHelper().getSketchElementDao().update(element);
-                    getWorkspace().getDBHelper().getSketchElementDao().delete(element);
-                }
+            Collection<SketchElement> elements = getWorkspace().getDBHelper().getSketchElementDao().queryForEq(SketchElement.COLUMN_SKETCH_ID, mExistingSketch.getId());
+            for (SketchElement element : elements) {
+                element.getPoints().clear();
+                getWorkspace().getDBHelper().getSketchElementDao().update(element);
+                getWorkspace().getDBHelper().getSketchElementDao().delete(element);
             }
 
             // insert the current vector elements
