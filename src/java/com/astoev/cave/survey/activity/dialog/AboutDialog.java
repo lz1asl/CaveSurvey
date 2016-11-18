@@ -10,6 +10,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
 import android.util.Log;
 import android.view.Gravity;
@@ -64,7 +66,9 @@ public class AboutDialog extends DialogFragment {
         TextView url2 = (TextView) view.findViewById(R.id.aboutUrl2);
         Linkify.addLinks(url2, Linkify.WEB_URLS);
 
-        StringBuilder versionText = new StringBuilder("v");
+        StringBuilder versionText = new StringBuilder("<a href=\"");
+        versionText.append(getString(R.string.about_version));
+        versionText.append("\">v");
         try {
             versionText.append(context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName);
         } catch (PackageManager.NameNotFoundException e) {
@@ -78,8 +82,10 @@ public class AboutDialog extends DialogFragment {
             versionText.append(" (Debug)");
         }
 
+        versionText.append("</a>");
         TextView version = (TextView) view.findViewById(R.id.aboutVersion);
-        version.setText(versionText.toString());
+        version.setText(Html.fromHtml(versionText.toString()));
+        version.setMovementMethod(LinkMovementMethod.getInstance());
 
         return  builder.create();
     }
