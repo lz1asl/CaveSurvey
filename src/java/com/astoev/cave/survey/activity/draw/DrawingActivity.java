@@ -87,6 +87,8 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
         // nothing to save yet
         saveBtn.setEnabled(false);
 
+        getSupportActionBar().hide();
+
         try {
 
             drawingSurface.setOldBitmap(null);
