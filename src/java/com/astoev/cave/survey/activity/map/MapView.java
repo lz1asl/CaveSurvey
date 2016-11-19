@@ -402,11 +402,11 @@ public class MapView extends View {
             }
 
             // scale
-            canvas.drawText("x" + scale, (25 * screenScale + gridStep/2), 45 * screenScale, overlayPaint);
+            canvas.drawText("x" + scale, (20 * screenScale + gridStep/2), 45 * screenScale, overlayPaint);
             canvas.drawLine(scaled30, 25 * screenScale, scaled30, 35 * screenScale, overlayPaint);
             canvas.drawLine(scaled30, scaled30, scaled30 + gridStep, scaled30, overlayPaint);
             canvas.drawLine(scaled30 + gridStep, 25 * screenScale, scaled30 + gridStep, 35 * screenScale, overlayPaint);
-            canvas.drawText(GRID_STEPS[gridStepIndex]  + "m" , 25 * screenScale + gridStep/2, 25 * screenScale, overlayPaint);
+            canvas.drawText(GRID_STEPS[gridStepIndex]  + "m" , 15 * screenScale + gridStep/2, 25 * screenScale, overlayPaint);
 
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to draw map activity", e);
