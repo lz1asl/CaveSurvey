@@ -8,7 +8,7 @@
 	      android:visible="true"
 	      myapp:showAsAction="ifRoom|withText"/>
     <item android:id="@+id/info_action_openstopo"
-          android:icon="@drawable/ic_action_import_export"
+          android:icon="@drawable/speleotux"
           android:title="@string/export_openstopo_title"
           android:visible="false"
           myapp:showAsAction="ifRoom|withText"/>
