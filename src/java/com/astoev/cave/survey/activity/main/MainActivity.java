@@ -12,6 +12,7 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout.LayoutParams;
+import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -95,8 +96,9 @@ public class MainActivity extends MainMenuActivity implements AddNewSelectedHand
 
             List<Leg> legs = DaoUtil.getCurrProjectLegs(true);
 
-            boolean currentLeg;
+            boolean currLegFlag;
             Integer lastGalleryId = null, prevGalleryId;
+            TableRow activeRow = null;
 
             for (final Leg l : legs) {
                 TableRow row = new TableRow(this);
@@ -112,9 +114,10 @@ public class MainActivity extends MainMenuActivity implements AddNewSelectedHand
                     }
                 });
 
-                currentLeg = getWorkspace().getActiveLegId().equals(l.getId());
-                if (currentLeg) {
+                currLegFlag = activeLeg.getId().equals(l.getId());
+                if (currLegFlag) {
                     row.setBackgroundColor(Color.parseColor("#202020"));
+                    activeRow = row;
                 }
 
                 if (mGalleryColors.get(l.getGalleryId(), Constants.NOT_FOUND) == Constants.NOT_FOUND) {
@@ -152,20 +155,19 @@ public class MainActivity extends MainMenuActivity implements AddNewSelectedHand
                 }
 
                 if (l.isMiddle()) {
-                    row.addView(createTextView("", currentLeg, false, mGalleryColors.get(prevGalleryId)));
-                    row.addView(createTextView("", currentLeg, false, mGalleryColors.get(l.getGalleryId())));
-                    row.addView(createTextView(Constants.MIDDLE_POINT_DELIMITER + StringUtils.floatToLabel(l.getMiddlePointDistance()), currentLeg, true));
+                    row.addView(createTextView("", currLegFlag, false, mGalleryColors.get(prevGalleryId)));
+                    row.addView(createTextView("", currLegFlag, false, mGalleryColors.get(l.getGalleryId())));
+                    row.addView(createTextView(Constants.MIDDLE_POINT_DELIMITER + StringUtils.floatToLabel(l.getMiddlePointDistance()), currLegFlag, true));
                 } else {
-                    row.addView(createTextView(fromPointString, currentLeg, false, mGalleryColors.get(prevGalleryId)));
-                    row.addView(createTextView(toPointString, currentLeg, false, mGalleryColors.get(l.getGalleryId())));
-                    row.addView(createTextView(l.getDistance(), currentLeg, true));
-                    row.addView(createTextView(l.getAzimuth(), currentLeg, true));
-                    row.addView(createTextView(l.getSlope(), currentLeg, true));
+                    row.addView(createTextView(fromPointString, currLegFlag, false, mGalleryColors.get(prevGalleryId)));
+                    row.addView(createTextView(toPointString, currLegFlag, false, mGalleryColors.get(l.getGalleryId())));
+                    row.addView(createTextView(l.getDistance(), currLegFlag, true));
+                    row.addView(createTextView(l.getAzimuth(), currLegFlag, true));
+                    row.addView(createTextView(l.getSlope(), currLegFlag, true));
                 }
 
                 StringBuilder moreText = new StringBuilder();
                 
-                //TODO Debug
                 if (isDebug){
                 	moreText.append(l.getGalleryId()).append(" ");
                 }
@@ -192,12 +194,24 @@ public class MainActivity extends MainMenuActivity implements AddNewSelectedHand
                 }
 
                 // reset the text appearance to small
-                TextView view = createTextView(moreText.toString(), currentLeg, true);
+                TextView view = createTextView(moreText.toString(), currLegFlag, true);
                 view.setTextAppearance(this, android.R.style.TextAppearance_Small);
                 row.addView(view);
                 table.addView(row, params);
             }
+
             table.invalidate();
+
+            // scroll to the active leg
+            final ScrollView sv = (ScrollView) findViewById(R.id.mainTableScroll);
+            final TableRow activeRowFinal = activeRow;
+            sv.post(new Runnable() {
+                @Override
+                public void run() {
+                    sv.scrollTo(0, activeRowFinal.getTop());
+                }
+            });
+
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to render main activity", e);
             UIUtilities.showNotification(R.string.error);

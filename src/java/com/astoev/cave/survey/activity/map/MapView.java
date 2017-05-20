@@ -455,11 +455,11 @@ public class MapView extends View {
                 }
 
                 // scale
-                canvas.drawText("x" + scale, (25 * screenScale + gridStep / 2), 45 * screenScale, overlayPaint);
+                canvas.drawText("x" + scale, (20 * screenScale + gridStep/2), 45 * screenScale, overlayPaint);
                 canvas.drawLine(scaled30, 25 * screenScale, scaled30, 35 * screenScale, overlayPaint);
                 canvas.drawLine(scaled30, scaled30, scaled30 + gridStep, scaled30, overlayPaint);
                 canvas.drawLine(scaled30 + gridStep, 25 * screenScale, scaled30 + gridStep, 35 * screenScale, overlayPaint);
-                canvas.drawText(GRID_STEPS[gridStepIndex] + "m", 25 * screenScale + gridStep / 2, 25 * screenScale, overlayPaint);
+                canvas.drawText(GRID_STEPS[gridStepIndex]  + "m" , 15 * screenScale + gridStep/2, 25 * screenScale, overlayPaint);
 
             }
 
@@ -536,7 +536,8 @@ public class MapView extends View {
         draw(canvas);
 
         // crop borders etc
-        returnedBitmap = Bitmap.createBitmap(returnedBitmap, 6, 6, this.getWidth() - 50, this.getHeight() - 70);
+        int crop = (int) (1.5 * spacing); // remove the border
+        returnedBitmap = Bitmap.createBitmap(returnedBitmap, crop, crop, this.getWidth() - crop * 2, this.getHeight() - crop * 2);
 
         // return
         ByteArrayOutputStream buff = new ByteArrayOutputStream();
