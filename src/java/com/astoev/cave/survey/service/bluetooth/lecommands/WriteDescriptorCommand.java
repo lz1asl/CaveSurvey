@@ -31,5 +31,14 @@ public class WriteDescriptorCommand extends AbstractBluetoothCommand {
         if (!flag) {
             UIUtilities.showNotification("Device communication error");
         }
+
+        Log.d(Constants.LOG_TAG_BT, "Enable notification for: " + mDescriptor.getUuid().toString());
+        mDescriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+        flag = aBluetoothGatt.writeDescriptor(mDescriptor);
+        Log.i(Constants.LOG_TAG_BT, "Notification success " + flag);
+
+        if (!flag) {
+            UIUtilities.showNotification("Device communication error");
+        }
     }
 }
