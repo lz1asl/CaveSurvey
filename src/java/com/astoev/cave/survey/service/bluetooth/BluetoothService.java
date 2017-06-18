@@ -28,6 +28,7 @@ import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.device.AbstractBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.ble.AbstractBluetoothLEDevice;
 import com.astoev.cave.survey.service.bluetooth.device.ble.LeicaDistoBluetoothLEDevice;
+import com.astoev.cave.survey.service.bluetooth.device.ble.Mileseeyd5tBluetoothLeDevice;
 import com.astoev.cave.survey.service.bluetooth.device.comm.AbstractBluetoothRFCOMMDevice;
 import com.astoev.cave.survey.service.bluetooth.device.comm.CEMILDMBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.comm.DistoXBluetoothDevice;
@@ -74,6 +75,7 @@ public class BluetoothService {
         // LE devices
 //        SUPPORTED_BLUETOOTH_LE_DEVICES.add(new BoschPLR40CBluetoothLEDevice());
         SUPPORTED_BLUETOOTH_LE_DEVICES.add(new LeicaDistoBluetoothLEDevice());
+        SUPPORTED_BLUETOOTH_LE_DEVICES.add(new Mileseeyd5tBluetoothLeDevice());
     }
 
     // generic
@@ -247,6 +249,7 @@ public class BluetoothService {
     }
 
     public static AbstractBluetoothDevice getSupportedDevice(String aDeviceName) {
+        Log.d(Constants.LOG_TAG_BT, "Search supported device for " + aDeviceName);
         for (AbstractBluetoothRFCOMMDevice device : SUPPORTED_BLUETOOTH_COM_DEVICES) {
             if (device.isNameSupported(aDeviceName)) {
                 return device;
@@ -489,6 +492,9 @@ public class BluetoothService {
                 AbstractBluetoothLEDevice leDevice = (AbstractBluetoothLEDevice) mSelectedDeviceSpec;
                 for (BluetoothGattService service : mBluetoothGatt.getServices()) {
                     Log.d(Constants.LOG_TAG_BT, "Service " + service.getUuid().toString() + " " + service.getType());
+
+                    // note, disable the checks for services, characteristics and descriptors to easily debug and add new devices
+
                     if (!leDevice.getServices().contains(service.getUuid())) {
                         continue;
                     }
