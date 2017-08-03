@@ -24,7 +24,7 @@ public class Mileseeyd5tBluetoothLeDevice extends AbstractBluetoothLEDevice {
     private static final UUID DESCRIPTOR_UUID = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
 
 //    private static final UUID CHAR_CMD_UUID = UUID.fromString("0000FFB1-0000-1000-8000-00805f9b34fb");
-    private static final UUID CHAR_DATA_UUID = UUID.fromString("0000FFB2-0000-1000-8000-00805f9b34fb");
+    public static final UUID CHAR_DATA_UUID = UUID.fromString("0000FFB2-0000-1000-8000-00805f9b34fb");
 
     @Override
     public boolean isNameSupported(String aName) {
