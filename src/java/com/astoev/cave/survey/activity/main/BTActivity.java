@@ -23,7 +23,9 @@ import com.astoev.cave.survey.util.ConfigUtil;
 import com.astoev.cave.survey.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -34,7 +36,7 @@ import java.util.List;
  */
 public class BTActivity extends MainMenuActivity implements Refresheable {
 
-    List<Pair<String, String>> devices = new ArrayList<Pair<String, String>>();
+    Set<Pair<String, String>> devices = new HashSet<Pair<String, String>>();
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -172,7 +174,7 @@ public class BTActivity extends MainMenuActivity implements Refresheable {
     public void selectDevice() {
         // get selected
         Spinner devicesChooser = (Spinner) findViewById(R.id.bt_devices);
-        Pair<String, String> device = devices.get(devicesChooser.getSelectedItemPosition());
+        Pair<String, String> device = new ArrayList<Pair<String, String>>(devices).get(devicesChooser.getSelectedItemPosition());
         Log.i(Constants.LOG_TAG_UI, "Try to use " + device.first + ":" + device.second);
 
         // store & propagate
