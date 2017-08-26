@@ -5,7 +5,7 @@ import android.bluetooth.BluetoothGattCharacteristic;
 import android.os.Build;
 
 import com.astoev.cave.survey.service.bluetooth.device.AbstractBluetoothDevice;
-import com.astoev.cave.survey.service.bluetooth.device.ble.Mileseeyd5tBluetoothLeDevice;
+import com.astoev.cave.survey.service.bluetooth.device.ble.mileseey.Mileseeyd5tBluetoothLeDevice;
 
 import org.junit.Test;
 

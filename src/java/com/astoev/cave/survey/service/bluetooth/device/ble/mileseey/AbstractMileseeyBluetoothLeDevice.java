@@ -1,4 +1,4 @@
-package com.astoev.cave.survey.service.bluetooth.device.ble;
+package com.astoev.cave.survey.service.bluetooth.device.ble.mileseey;
 
 import android.annotation.TargetApi;
 import android.bluetooth.BluetoothGattCharacteristic;
@@ -8,33 +8,23 @@ import android.util.Log;
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.Measure;
+import com.astoev.cave.survey.service.bluetooth.device.ble.AbstractBluetoothLEDevice;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
 /**
- * Created by astoev on 6/9/17.
+ * Created by astoev on 8/26/17.
  */
 
-public class Mileseeyd5tBluetoothLeDevice extends AbstractBluetoothLEDevice {
+public abstract class AbstractMileseeyBluetoothLeDevice extends AbstractBluetoothLEDevice {
 
+    protected static final UUID SERVICE_UUID = UUID.fromString("0000FFB0-0000-1000-8000-00805f9b34fb");
+    protected static final UUID DESCRIPTOR_UUID = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
 
-    private static final UUID SERVICE_UUID = UUID.fromString("0000FFB0-0000-1000-8000-00805f9b34fb");
-    private static final UUID DESCRIPTOR_UUID = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
-
-//    private static final UUID CHAR_CMD_UUID = UUID.fromString("0000FFB1-0000-1000-8000-00805f9b34fb");
+    //    private static final UUID CHAR_CMD_UUID = UUID.fromString("0000FFB1-0000-1000-8000-00805f9b34fb");
     public static final UUID CHAR_DATA_UUID = UUID.fromString("0000FFB2-0000-1000-8000-00805f9b34fb");
-
-    @Override
-    public boolean isNameSupported(String aName) {
-        return deviceNameStartsWith(aName, "Mileseey D5T");
-    }
-
-    @Override
-    public String getDescription() {
-        return "Mileseey dTAPE 5t";
-    }
 
     @Override
     public boolean isMeasureSupported(Constants.MeasureTypes aMeasureType) {
