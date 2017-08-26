@@ -29,7 +29,7 @@ public class WriteDescriptorCommand extends AbstractBluetoothCommand {
         Log.i(Constants.LOG_TAG_BT, "Indication success " + flag);
 
         if (!flag) {
-            UIUtilities.showNotification("Device communication error");
+            UIUtilities.showNotification("Device communication error enabling indication");
         }
 
         Log.d(Constants.LOG_TAG_BT, "Enable notification for: " + mDescriptor.getUuid().toString());
@@ -38,7 +38,7 @@ public class WriteDescriptorCommand extends AbstractBluetoothCommand {
         Log.i(Constants.LOG_TAG_BT, "Notification success " + flag);
 
         if (!flag) {
-            UIUtilities.showNotification("Device communication error");
+            UIUtilities.showNotification("Device communication error enabling notification");
         }
     }
 }

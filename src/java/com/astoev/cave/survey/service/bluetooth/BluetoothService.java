@@ -28,7 +28,8 @@ import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.device.AbstractBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.ble.AbstractBluetoothLEDevice;
 import com.astoev.cave.survey.service.bluetooth.device.ble.LeicaDistoBluetoothLEDevice;
-import com.astoev.cave.survey.service.bluetooth.device.ble.Mileseeyd5tBluetoothLeDevice;
+import com.astoev.cave.survey.service.bluetooth.device.ble.mileseey.MileseeyT7BluetoothLeDevice;
+import com.astoev.cave.survey.service.bluetooth.device.ble.mileseey.Mileseeyd5tBluetoothLeDevice;
 import com.astoev.cave.survey.service.bluetooth.device.comm.AbstractBluetoothRFCOMMDevice;
 import com.astoev.cave.survey.service.bluetooth.device.comm.CEMILDMBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.comm.DistoXBluetoothDevice;
@@ -76,6 +77,7 @@ public class BluetoothService {
 //        SUPPORTED_BLUETOOTH_LE_DEVICES.add(new BoschPLR40CBluetoothLEDevice());
         SUPPORTED_BLUETOOTH_LE_DEVICES.add(new LeicaDistoBluetoothLEDevice());
         SUPPORTED_BLUETOOTH_LE_DEVICES.add(new Mileseeyd5tBluetoothLeDevice());
+        SUPPORTED_BLUETOOTH_LE_DEVICES.add(new MileseeyT7BluetoothLeDevice());
     }
 
     // generic
@@ -235,6 +237,7 @@ public class BluetoothService {
                 updateLeDeviceState(R.string.bt_state_connecting);
             } else {
                 Log.i(Constants.LOG_TAG_BT, "Unsupported version ");
+                UIUtilities.showNotification("Unsupported Android version for BLE");
             }
         }
     }
@@ -278,8 +281,8 @@ public class BluetoothService {
         return aDevice != null && isSupported(aDevice.getName());
     }
 
-    public static List<Pair<String, String>> getPairedCompatibleDevices() {
-        List<Pair<String, String>> result = new ArrayList<Pair<String, String>>();
+    public static Set<Pair<String, String>> getPairedCompatibleDevices() {
+        Set<Pair<String, String>> result = new HashSet<>();
         Set<BluetoothDevice> devices = BluetoothAdapter.getDefaultAdapter().getBondedDevices();
         for (BluetoothDevice d : devices) {
             if (isSupported(d.getName())) {
@@ -296,8 +299,12 @@ public class BluetoothService {
     }
 
     public static String getCurrDeviceStatus() {
-        if (mSelectedDevice == null) {
+        if (mSelectedDevice == null && mLastLEDevice == null) {
             return mCurrContext.getString(R.string.bt_state_unknown);
+        }
+
+        if (mLeDeviceState != R.string.bt_state_none) {
+            return mCurrContext.getString(mLeDeviceState);
         }
 
         if (mSelectedDeviceSpec instanceof AbstractBluetoothRFCOMMDevice) {
@@ -321,10 +328,13 @@ public class BluetoothService {
     }
 
     public static String getCurrDeviceStatusLabel(Context aContext) {
+
         StringBuilder statusText = new StringBuilder();
         statusText.append(getCurrDeviceStatus());
-        statusText.append(" : ");
-        statusText.append(BluetoothService.isPaired() ? aContext.getString(R.string.bt_paired) : aContext.getString(R.string.bt_not_paired));
+        if (mLeDeviceState == R.string.bt_state_none) {
+            statusText.append(" : ");
+            statusText.append(BluetoothService.isPaired() ? aContext.getString(R.string.bt_paired) : aContext.getString(R.string.bt_not_paired));
+        }
         return statusText.toString();
     }
 

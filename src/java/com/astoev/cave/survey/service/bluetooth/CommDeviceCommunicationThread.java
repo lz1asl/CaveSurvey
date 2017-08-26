@@ -79,6 +79,12 @@ public class CommDeviceCommunicationThread extends Thread {
                     return;
                 }
 
+                if (!device.getClass().isAssignableFrom(AbstractBluetoothRFCOMMDevice.class)) {
+                    // ignore LE devices
+                    Log.i(Constants.LOG_TAG_BT, "Ignore LE device in the COM connect logic");
+                    return;
+                }
+
                 UIUtilities.showNotification(R.string.bt_paired);
                 Log.i(Constants.LOG_TAG_BT, "Paired with " + device.getName());
                 mPaired = true;
@@ -108,6 +114,12 @@ public class CommDeviceCommunicationThread extends Thread {
                 if (!BluetoothService.isSupported(device)) {
                     // ignore other devices
                     Log.i(Constants.LOG_TAG_BT, "Ignore disconnect, device not supported");
+                    return;
+                }
+
+                if (!device.getClass().isAssignableFrom(AbstractBluetoothRFCOMMDevice.class)) {
+                    // ignore LE devices
+                    Log.i(Constants.LOG_TAG_BT, "Ignore LE device in the COM disconnect logic");
                     return;
                 }
 
