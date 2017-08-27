@@ -29,7 +29,7 @@ public abstract class AbstractMileseeyBluetoothLeDevice extends AbstractBluetoot
     @Override
     public boolean isMeasureSupported(Constants.MeasureTypes aMeasureType) {
         // distance and inclination supported
-        return Constants.MeasureTypes.distance.equals(aMeasureType) || Constants.MeasureTypes.slope.equals(aMeasureType);
+        return Constants.MeasureTypes.distance.equals(aMeasureType);
     }
 
     @Override
@@ -51,7 +51,6 @@ public abstract class AbstractMileseeyBluetoothLeDevice extends AbstractBluetoot
     public UUID getService(Constants.MeasureTypes aMeasureType) {
         switch (aMeasureType) {
             case distance:
-            case slope:
                 return SERVICE_UUID;
 
             default:
@@ -63,7 +62,6 @@ public abstract class AbstractMileseeyBluetoothLeDevice extends AbstractBluetoot
     public UUID getCharacteristic(Constants.MeasureTypes aMeasureType) {
         switch (aMeasureType) {
             case distance:
-            case slope:
                 return CHAR_DATA_UUID;
 
             default:
