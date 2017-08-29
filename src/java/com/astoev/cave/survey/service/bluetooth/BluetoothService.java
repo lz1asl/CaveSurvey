@@ -521,7 +521,7 @@ public class BluetoothService {
                                 continue;
                             }
 
-                            enqueueCommand(new WriteDescriptorCommand(descriptor));
+                            enqueueCommand(new WriteDescriptorCommand(descriptor, leDevice));
                         }
 
                     }

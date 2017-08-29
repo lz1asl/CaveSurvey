@@ -100,4 +100,9 @@ public abstract class AbstractMileseeyBluetoothLeDevice extends AbstractBluetoot
 
         return null;
     }
+
+    @Override
+    public boolean needCharacteristicNotification() {
+        return true;
+    }
 }

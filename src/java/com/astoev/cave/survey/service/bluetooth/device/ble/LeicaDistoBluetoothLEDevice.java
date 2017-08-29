@@ -141,4 +141,8 @@ public class LeicaDistoBluetoothLEDevice extends AbstractBluetoothLEDevice {
         return null;
     }
 
+    @Override
+    public boolean needCharacteristicIndication() {
+        return true;
+    }
 }

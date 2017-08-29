@@ -30,6 +30,14 @@ public abstract class AbstractBluetoothLEDevice extends AbstractBluetoothDevice 
     public abstract UUID getCharacteristic(Constants.MeasureTypes aMeasureType);
     public abstract Measure characteristicToMeasure(BluetoothGattCharacteristic aCharacteristic, List<Constants.MeasureTypes> aMeasureTypes) throws DataException;
 
+    // not sure why, some devices use notifications (e.g. Mileseey) and others indication (e.g. Leica)
+    public boolean needCharacteristicNotification() {
+        return false;
+    }
+    public boolean needCharacteristicIndication() {
+        return false;
+    }
+
 
     // helper methods to reuse between the LE devices
 
