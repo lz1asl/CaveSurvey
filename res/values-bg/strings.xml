@@ -372,5 +372,6 @@
     <!--opens topo -->
     <string name="export_openstopo_title">OpensTopo</string>
     <string name="information">Информация</string>
+    <string name="info_project_home">Проектни файлове</string>
 
 </resources>

@@ -113,6 +113,10 @@ public class InfoActivity extends MainMenuActivity {
                 }
             }
 
+            TextView projectHome = (TextView) findViewById(R.id.info_project_home);
+            String projectHomeFolder = FileStorageUtil.getProjectHome(projectInfo.getName()).getAbsolutePath();
+            projectHome.setText(projectHomeFolder);
+
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to render info activity", e);
             UIUtilities.showNotification(R.string.error);

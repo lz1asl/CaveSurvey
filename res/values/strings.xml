@@ -390,6 +390,7 @@ Network connection is required.</string>
     <!--opens topo -->
     <string name="export_openstopo_title">OpensTopo</string>
     <string name="information">Information</string>
+    <string name="info_project_home">Project folder</string>
 
 
 </resources>
