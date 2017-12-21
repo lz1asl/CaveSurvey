@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Tested with Leica Disto D810 but will probably work with the rest of the LE distos.
+ * Tested with Leica Disto D110 and D810 Touch but will probably work with the rest of the LE distos.
  *
  * Created by astoev on 1/4/16.
  */
@@ -80,7 +80,7 @@ public class LeicaDistoBluetoothLEDevice extends AbstractBluetoothLEDevice {
 
     @Override
     public String getDescription() {
-        return "Leica DISTO LE";
+        return "Leica DISTO: D110, D810";
     }
 
     @Override
@@ -145,4 +145,5 @@ public class LeicaDistoBluetoothLEDevice extends AbstractBluetoothLEDevice {
     public boolean needCharacteristicIndication() {
         return true;
     }
+
 }

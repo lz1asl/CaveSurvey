@@ -27,7 +27,7 @@ public class DistoXBluetoothDevice extends AbstractBluetoothRFCOMMDevice {
 
     @Override
     public String getDescription() {
-        return "DistoX";
+        return "DistoX and DistoX2";
     }
 
     @Override
