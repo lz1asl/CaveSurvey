@@ -96,4 +96,31 @@ public abstract class AbstractBluetoothRFCOMMDevice extends AbstractBluetoothDev
         aStream.flush();
     }
 
+    /**
+     * Own logic to read bytes from the streams.
+     *
+     * @return
+     */
+    public boolean useOwnRead() {
+        return false;
+    }
+
+    /**
+     * Own logic need reinitialization flag.
+     *
+     * @return
+     */
+    public boolean getOwnReadError() {
+        return false;
+    }
+
+    /**
+     * Used with combination with useOwnRead() to clean the reader state.
+     *
+     * @return
+     */
+    public void onError() {
+
+    }
+
 }

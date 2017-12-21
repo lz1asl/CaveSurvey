@@ -35,6 +35,11 @@ import com.astoev.cave.survey.service.bluetooth.device.comm.CEMILDMBluetoothDevi
 import com.astoev.cave.survey.service.bluetooth.device.comm.DistoXBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.comm.LaserAceBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.comm.TruPulse360BBluetoothDevice;
+import com.astoev.cave.survey.service.bluetooth.device.comm.bosch.glm.BoschGLM100CBluetoothDevice;
+import com.astoev.cave.survey.service.bluetooth.device.comm.bosch.glm.BoschGLM50CBluetoothDevice;
+import com.astoev.cave.survey.service.bluetooth.device.comm.bosch.glm.BoschPLR30CBluetoothDevice;
+import com.astoev.cave.survey.service.bluetooth.device.comm.bosch.glm.BoschPLR40CBluetoothDevice;
+import com.astoev.cave.survey.service.bluetooth.device.comm.bosch.glm.BoschPLR50CBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.lecommands.AbstractBluetoothCommand;
 import com.astoev.cave.survey.service.bluetooth.lecommands.EnableNotificationCommand;
 import com.astoev.cave.survey.service.bluetooth.lecommands.WriteDescriptorCommand;
@@ -72,9 +77,13 @@ public class BluetoothService {
         SUPPORTED_BLUETOOTH_COM_DEVICES.add(new LaserAceBluetoothDevice());
         SUPPORTED_BLUETOOTH_COM_DEVICES.add(new TruPulse360BBluetoothDevice());
         SUPPORTED_BLUETOOTH_COM_DEVICES.add(new DistoXBluetoothDevice());
+        SUPPORTED_BLUETOOTH_COM_DEVICES.add(new BoschGLM50CBluetoothDevice());
+        SUPPORTED_BLUETOOTH_COM_DEVICES.add(new BoschGLM100CBluetoothDevice());
+        SUPPORTED_BLUETOOTH_COM_DEVICES.add(new BoschPLR30CBluetoothDevice());
+        SUPPORTED_BLUETOOTH_COM_DEVICES.add(new BoschPLR40CBluetoothDevice());
+        SUPPORTED_BLUETOOTH_COM_DEVICES.add(new BoschPLR50CBluetoothDevice());
 
         // LE devices
-//        SUPPORTED_BLUETOOTH_LE_DEVICES.add(new BoschPLR40CBluetoothLEDevice());
         SUPPORTED_BLUETOOTH_LE_DEVICES.add(new LeicaDistoBluetoothLEDevice());
         SUPPORTED_BLUETOOTH_LE_DEVICES.add(new Mileseeyd5tBluetoothLeDevice());
         SUPPORTED_BLUETOOTH_LE_DEVICES.add(new MileseeyT7BluetoothLeDevice());
@@ -370,7 +379,7 @@ public class BluetoothService {
         leCallback = getLEScanCallback();
         BluetoothAdapter.getDefaultAdapter().startLeScan(leCallback);
 
-/* todo replace for newer versions with
+/* TODO replace for newer versions with
         final BluetoothManager btManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
         btManager.getAdapter().getBluetoothLeScanner().startScan(new ScanCallback(){
             @Override
@@ -397,8 +406,11 @@ public class BluetoothService {
             @Override
             public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) {
 
-                AbstractBluetoothLEDevice deviceSpec = (AbstractBluetoothLEDevice) BluetoothService.getSupportedDevice(device.getName());
-                if (deviceSpec != null) {
+                AbstractBluetoothDevice deviceParent = BluetoothService.getSupportedDevice(device.getName());
+
+                if (deviceParent != null && deviceParent instanceof AbstractBluetoothLEDevice) {
+                    AbstractBluetoothLEDevice deviceSpec = (AbstractBluetoothLEDevice) deviceParent;
+
                     Log.i(Constants.LOG_TAG_BT, "Discovered LE device " + rssi + " : " + device.getName());
 
                     mLastLEDevice = device;
@@ -412,7 +424,7 @@ public class BluetoothService {
 
     public static void enqueueCommand(final AbstractBluetoothCommand aCommand){
 
-        Log.i(Constants.LOG_TAG_BT, "Enqueue command");
+        Log.d(Constants.LOG_TAG_BT, "Enqueue command");
         synchronized (mCommandQueue) {
             mCommandQueue.add(aCommand);
             mCommandExecutor.execute(new Runnable() {
@@ -439,7 +451,7 @@ public class BluetoothService {
 
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     public static void dequeueCommand(){
-        Log.i(Constants.LOG_TAG_BT, "Dequeue command");
+        Log.d(Constants.LOG_TAG_BT, "Dequeue command");
         if (!mCommandQueue.isEmpty()) {
             mCommandQueue.pop();
         }
@@ -478,7 +490,6 @@ public class BluetoothService {
                     flag = mBluetoothGatt.discoverServices();
                     Log.i(Constants.LOG_TAG_BT, "Services " + flag);
                 }
-
                 updateLeDeviceState(R.string.bt_state_connecting);
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 Log.i(Constants.LOG_TAG_BT, "LE device disconnected");

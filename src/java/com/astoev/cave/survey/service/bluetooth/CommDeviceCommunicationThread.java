@@ -193,6 +193,8 @@ public class CommDeviceCommunicationThread extends Thread {
             mIn = mSocket.getInputStream();
             mOut = mSocket.getOutputStream();
 
+            boolean ownReadLogic = mDeviceSpec.useOwnRead();
+
             mDeviceSpec.configure(mIn, mOut);
 
             Log.i(Constants.LOG_TAG_BT, "Device found!");
@@ -209,31 +211,62 @@ public class CommDeviceCommunicationThread extends Thread {
                     if (mReceiver != null) {
                         // start send/receive cycle
 
-                        Log.i(Constants.LOG_TAG_BT, "Trigger measures");
-                        try {
-                            mDeviceSpec.triggerMeasures(mOut, mMeasureTypes);
-                        } catch (IOException e) {
-                            Log.e(Constants.LOG_TAG_BT, "Error triggering measure", e);
-                            Bundle b = new Bundle();
-                            b.putString("error", "Failed to talk to device");
-                            mReceiver.send(Activity.RESULT_CANCELED, b);
-                            cancel();
+                        int numBytes = 0;
+                        if (!ownReadLogic) {
+                            Log.i(Constants.LOG_TAG_BT, "Trigger measures");
+                            try {
+                                mDeviceSpec.triggerMeasures(mOut, mMeasureTypes);
+                            } catch (IOException e) {
+                                Log.e(Constants.LOG_TAG_BT, "Error triggering measure", e);
+                                Bundle b = new Bundle();
+                                b.putString("error", "Failed to talk to device");
+                                mReceiver.send(Activity.RESULT_CANCELED, b);
+                                cancel();
+                            }
+
+                            Log.i(Constants.LOG_TAG_BT, "Start reading ");
+                            numBytes = mIn.read(buffer);
+                        } else {
+                            if (mDeviceSpec.getOwnReadError()) {
+                                throw new RuntimeException("Need own logic reset");
+                            }
                         }
 
-                        Log.i(Constants.LOG_TAG_BT, "Start reading ");
-                        int numBytes = mIn.read(buffer);
+                        if (ownReadLogic || numBytes > 0 || message.size() > 0) {
 
-                        if (numBytes > 0 || message.size() > 0) {
-
-                            Log.d(Constants.LOG_TAG_BT, "Got bytes " + new String(ByteUtils.copyBytes(buffer, numBytes)));
-                            message.write(buffer, 0, numBytes);
-                            lastActiveTimestamp = System.currentTimeMillis();
+                            if (!ownReadLogic) {
+                                // accumulate bytes read to the current message
+                                Log.d(Constants.LOG_TAG_BT, "Got bytes " + new String(ByteUtils.copyBytes(buffer, numBytes)));
+                                message.write(buffer, 0, numBytes);
+                                lastActiveTimestamp = System.currentTimeMillis();
+                            }
 
                             if (!mDeviceSpec.isFullPacketAvailable(message.toByteArray())) {
                                 // expect more data
-                                Log.d(Constants.LOG_TAG_BT, "Expect more chars " + mIn.available() + " current " + message.size());
-                                continue;
+                                if (ownReadLogic) {
+                                    // await own implementation to complete
+                                    Log.d(Constants.LOG_TAG_BT, "Await own logic");
+                                    for (int i=0; i< 100; i++) {
+                                        if (mDeviceSpec.isFullPacketAvailable(message.toByteArray())) {
+                                            Log.d(Constants.LOG_TAG_BT, "Last packet ready");
+                                            break;
+                                        }
+                                        sleep(100);
+                                    }
+
+                                    if (!mDeviceSpec.isFullPacketAvailable(message.toByteArray())) {
+                                        // still not complete
+                                        continue;
+                                    }
+                                } else {
+                                    Log.d(Constants.LOG_TAG_BT, "Expect more chars " + mIn.available() + " current " + message.size());
+                                    continue;
+                                }
                             } else {
+
+                                if (mDeviceSpec.getOwnReadError()) {
+                                    throw new RuntimeException("Need own logic reset");
+                                }
 
                                 // acknowledge received
                                 mDeviceSpec.ack(mOut, message.toByteArray());
@@ -280,7 +313,7 @@ public class CommDeviceCommunicationThread extends Thread {
                         sleep(20);
 
                     } else {
-                        if (lastActiveTimestamp + KEEP_ALIVE_INTERVAL < System.currentTimeMillis()) {
+                        if (!ownReadLogic && lastActiveTimestamp + KEEP_ALIVE_INTERVAL < System.currentTimeMillis()) {
                             // no active task and more than a minute passive - wake up the device if supported
                             Log.i(Constants.LOG_TAG_BT, "Send keep alive if supported");
                             mDeviceSpec.keepAlive(mOut, mIn);
@@ -311,6 +344,8 @@ public class CommDeviceCommunicationThread extends Thread {
             }
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_BT, "Error client connect", e);
+            String device = mDeviceSpec != null ? mDeviceSpec.getDescription() : "unknown";
+            UIUtilities.showNotification(R.string.bt_device_lost, device);
             cancel();
         }
 
@@ -323,6 +358,7 @@ public class CommDeviceCommunicationThread extends Thread {
         if (mDeviceSpec != null && lastActiveTimestamp != null) {
             // show notification if device expected and only if the device was active
             UIUtilities.showDeviceDisconnectedNotification(ConfigUtil.getContext(), mDeviceSpec.getDescription());
+            mDeviceSpec.onError();
         }
 
         try {
