@@ -1,6 +1,7 @@
 package com.astoev.cave.survey.service.bluetooth.device.comm.bosch.glm;
 
 import com.astoev.cave.survey.Constants;
+import com.bosch.mtprotocol.MtMessage;
 import com.bosch.mtprotocol.glm100C.message.sync.SyncInputMessage;
 import com.bosch.mtprotocol.glm100C.message.sync.SyncOutputMessage;
 
@@ -30,15 +31,11 @@ public class BoschGLM100CBluetoothDevice extends AbstractBoschGLMBluetoothDevice
     }
 
     @Override
-    protected void turnAutoSyncOn() {
-        SyncOutputMessage requestDoSync = new SyncOutputMessage();
-        requestDoSync.setSyncControl(SyncOutputMessage.MODE_AUTOSYNC_CONTROL_ON);
-        protocol.sendMessage(requestDoSync);
-    }
-
-    @Override
-    protected void configureGLMMode() {
-        // TODO set mode
+    protected MtMessage createGLMConfigMessage() {
+        SyncOutputMessage configMessage = new SyncOutputMessage();
+        configMessage.setSyncControl(SyncOutputMessage.MODE_AUTOSYNC_CONTROL_ON);
+        configMessage.setMode(getGLMMode());
+        return configMessage;
     }
 
     @Override

@@ -89,22 +89,15 @@ public abstract class AbstractBoschGLMBluetoothDevice extends AbstractBluetoothR
 
         // instruct device to send events automatically
         initSyncRequest = true;
-        turnAutoSyncOn();
-
-        // switch device in the desired mode
-        configureGLMMode();
+        MtMessage configMessage = createGLMConfigMessage();
+        protocol.sendMessage(configMessage);
     }
 
-    // send auto sync package in order to receive events
-    // glm 100 and glm 50/plr devices have different flags
-    protected abstract void turnAutoSyncOn();
-
-    // set measurement mode, e.g. SINGLE for GLM 100 and ANGLE for PLR 50
-    protected abstract void configureGLMMode();
+    // turn sync on and enter desired mode
+    protected abstract MtMessage createGLMConfigMessage();
 
     // used check measurement mode is valid, e.g. not changed meanwhile
     protected abstract int getGLMMode();
-
 
     @Override
     public void onEvent(MtProtocol.MTProtocolEvent event) {

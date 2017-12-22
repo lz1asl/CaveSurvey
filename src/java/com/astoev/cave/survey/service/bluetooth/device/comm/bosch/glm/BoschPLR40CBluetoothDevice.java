@@ -1,6 +1,7 @@
 package com.astoev.cave.survey.service.bluetooth.device.comm.bosch.glm;
 
 import com.astoev.cave.survey.Constants;
+import com.bosch.mtprotocol.MtMessage;
 import com.bosch.mtprotocol.glm100C.message.edc.EDCOutputMessage;
 import com.bosch.mtprotocol.glm100C.message.sync.SyncInputMessage;
 
@@ -27,17 +28,13 @@ public class BoschPLR40CBluetoothDevice extends AbstractBoschGLMBluetoothDevice 
         return Constants.MeasureTypes.distance.equals(aMeasureType);
     }
 
-    @Override
-    protected void turnAutoSyncOn() {
-        EDCOutputMessage requestEDCSync = new EDCOutputMessage();
-        requestEDCSync.setSyncControl(EDCOutputMessage.MODE_AUTOSYNC_CONTROL_ON);
-        requestEDCSync.setDevMode(EDCOutputMessage.READ_ONLY_MODE);
-        protocol.sendMessage(requestEDCSync);
-    }
 
     @Override
-    protected void configureGLMMode() {
-        // TODO set mode
+    protected MtMessage createGLMConfigMessage() {
+        EDCOutputMessage configMessage = new EDCOutputMessage();
+        configMessage.setSyncControl(EDCOutputMessage.MODE_AUTOSYNC_CONTROL_ON);
+        configMessage.setDevMode(EDCOutputMessage.READ_ONLY_MODE);
+        return configMessage;
     }
 
     @Override

@@ -34,6 +34,10 @@ public class UIUtilities {
         showNotification(ConfigUtil.getContext(), aResourceId, null);
     }
 
+    public static void showNotification(int aResourceId, String aParams) {
+        showNotification(ConfigUtil.getContext(), aResourceId, aParams);
+    }
+
     public static void showNotification(String aMessage) {
         showNotification(ConfigUtil.getContext(), aMessage, null);
     }
