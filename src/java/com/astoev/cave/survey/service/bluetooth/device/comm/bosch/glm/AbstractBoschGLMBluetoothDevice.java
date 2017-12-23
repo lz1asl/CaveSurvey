@@ -61,9 +61,17 @@ public abstract class AbstractBoschGLMBluetoothDevice extends AbstractBluetoothR
             Log.d(Constants.LOG_TAG_BT, "Decoding edc message: " + message.toString());
 
             measures = new ArrayList<>();
-            measures.add(new Measure(Constants.MeasureTypes.distance, Constants.MeasureUnits.meters, message.getResult()));
-            if (isMeasureSupported(Constants.MeasureTypes.angle)) {
-                new Measure(Constants.MeasureTypes.slope, Constants.MeasureUnits.degrees, message.getComp2()); // TODO check
+            if (SyncInputMessage.MEAS_MODE_SINGLE == message.getDevMode()) {
+                // PLR 30 C and PLR 40 C - only distance available
+                measures.add(new Measure(Constants.MeasureTypes.distance, Constants.MeasureUnits.meters, message.getResult()));
+            } else if (SyncInputMessage.MEAS_MODE_INDIRECT_LENGTH == message.getDevMode()) {
+                // PLR 50 C, GLM 50 C - distance and clino in indirect length mode
+                measures.add(new Measure(Constants.MeasureTypes.distance, Constants.MeasureUnits.meters, message.getComp1()));
+                if (isMeasureSupported(Constants.MeasureTypes.angle)) { // just in case
+                    measures.add(new Measure(Constants.MeasureTypes.slope, Constants.MeasureUnits.degrees, message.getComp2()));
+                }
+            } else {
+                UIUtilities.showNotification("Bad measurement mode!");
             }
         }
 
