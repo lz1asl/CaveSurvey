@@ -33,6 +33,7 @@ public class BoschPLR50CBluetoothDevice extends AbstractBoschGLMBluetoothDevice 
         EDCOutputMessage configMessage = new EDCOutputMessage();
         configMessage.setSyncControl(EDCOutputMessage.MODE_AUTOSYNC_CONTROL_ON);
         configMessage.setDevMode(EDCOutputMessage.READ_ONLY_MODE);
+        // TODO auto enter indirect length mode
         return configMessage;
     }
 
