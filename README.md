@@ -52,13 +52,18 @@ You can use the official version at [Google Play](https://play.google.com/store/
 ![CloudBees](http://www.cloudbees.com/sites/default/files/Button-Built-on-CB-1.png)
 
 
-This software is free to use and modify. We provide no guarantee in any kind but are open for ideas and collaborations. Contact us at cave.survey.project@gmail.com.
+This software is free to use and modify.
+We do not provide warranty of any kind.
+
+Contact us at cave.survey.project@gmail.com.
 
 
 Related Projects
 ================
 
-[CaveSurveyBTEmulator](https://github.com/lz1asl/CaveSurveyBTEmulator) is utility project that helps us to emulate the communication with Bluetooth measurement devices that we don't currently have while developing.
+[CaveSurveyBTEmulator](https://github.com/lz1asl/CaveSurveyBTEmulator) can emulate Bluetooth measurement devices.
 
-[CaveSurveyReports](https://github.com/lz1asl/CaveSurveyReports) allows you to report an issue and attach the logs from within CaveSurvey.
+[CaveSurveyReports](https://github.com/lz1asl/CaveSurveyReports) collects error reports for CaveSurvey.
+
+[OpensTopo](http://www.openspeleo.org/openspeleo/openstopo.en.html) export is used. 
 
