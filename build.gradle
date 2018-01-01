@@ -21,6 +21,9 @@ dependencies {
     compile 'com.j256.ormlite:ormlite-android:4.48'
     compile 'org.apache.poi:poi:3.13'
 
+    // Bosch internal protocol
+    compile files('../CaveSurveyBoschGLM/binary/CaveSurveyBoschGLM.jar')
+
     androidTestCompile 'junit:junit:4.12'
 }
 
