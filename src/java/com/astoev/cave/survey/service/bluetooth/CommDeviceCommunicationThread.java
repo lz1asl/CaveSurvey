@@ -179,180 +179,182 @@ public class CommDeviceCommunicationThread extends Thread {
     @Override
     public void run() {
 
-        // prepare to read/write
-        Log.i(Constants.LOG_TAG_BT, "Start communication thread for " + mDeviceSpec.getDescription());
+        synchronized (CommDeviceCommunicationThread.this) {
+            // prepare to read/write
+            Log.i(Constants.LOG_TAG_BT, "Start communication thread for " + mDeviceSpec.getDescription());
 
-        try {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD_MR1) {
-                mSocket = mDevice.createRfcommSocketToServiceRecord(mDeviceSpec.getSPPUUID());
-            } else {
-                mSocket = createSocketApi10Plus();
-            }
+            try {
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD_MR1) {
+                    mSocket = mDevice.createRfcommSocketToServiceRecord(mDeviceSpec.getSPPUUID());
+                } else {
+                    mSocket = createSocketApi10Plus();
+                }
 
-            mSocket.connect();
-            mIn = mSocket.getInputStream();
-            mOut = mSocket.getOutputStream();
+                mSocket.connect();
+                mIn = mSocket.getInputStream();
+                mOut = mSocket.getOutputStream();
 
-            boolean ownReadLogic = mDeviceSpec.useOwnRead();
+                boolean ownReadLogic = mDeviceSpec.useOwnRead();
 
-            mDeviceSpec.configure(mIn, mOut);
+                mDeviceSpec.configure(mIn, mOut);
 
-            Log.i(Constants.LOG_TAG_BT, "Device found!");
-            UIUtilities.showNotification(R.string.bt_connected);
-            UIUtilities.showDeviceConnectedNotification(ConfigUtil.getContext(), mDeviceSpec.getDescription());
-            lastActiveTimestamp = System.currentTimeMillis();
+                Log.i(Constants.LOG_TAG_BT, "Device found!");
+                UIUtilities.showNotification(R.string.bt_connected);
+                UIUtilities.showDeviceConnectedNotification(ConfigUtil.getContext(), mDeviceSpec.getDescription());
+                lastActiveTimestamp = System.currentTimeMillis();
 
-            ByteArrayOutputStream message = new ByteArrayOutputStream();
-            byte[] buffer = new byte[1024];
+                ByteArrayOutputStream message = new ByteArrayOutputStream();
+                byte[] buffer = new byte[1024];
 
-            while (running) {
+                while (running) {
 
-                try {
-                    if (mReceiver != null) {
-                        // start send/receive cycle
+                    try {
+                        if (mReceiver != null) {
+                            // start send/receive cycle
 
-                        int numBytes = 0;
-                        if (!ownReadLogic) {
-                            Log.i(Constants.LOG_TAG_BT, "Trigger measures");
-                            try {
-                                mDeviceSpec.triggerMeasures(mOut, mMeasureTypes);
-                            } catch (IOException e) {
-                                Log.e(Constants.LOG_TAG_BT, "Error triggering measure", e);
-                                Bundle b = new Bundle();
-                                b.putString("error", "Failed to talk to device");
-                                mReceiver.send(Activity.RESULT_CANCELED, b);
-                                cancel();
-                            }
-
-                            Log.i(Constants.LOG_TAG_BT, "Start reading ");
-                            numBytes = mIn.read(buffer);
-                        } else {
-                            if (mDeviceSpec.getOwnReadError()) {
-                                throw new RuntimeException("Need own logic reset");
-                            }
-                        }
-
-                        if (ownReadLogic || numBytes > 0 || message.size() > 0) {
-
+                            int numBytes = 0;
                             if (!ownReadLogic) {
-                                // accumulate bytes read to the current message
-                                Log.d(Constants.LOG_TAG_BT, "Got bytes " + new String(ByteUtils.copyBytes(buffer, numBytes)));
-                                message.write(buffer, 0, numBytes);
-                                lastActiveTimestamp = System.currentTimeMillis();
-                            }
-
-                            if (!mDeviceSpec.isFullPacketAvailable(message.toByteArray())) {
-                                // expect more data
-                                if (ownReadLogic) {
-                                    // await own implementation to complete
-                                    Log.d(Constants.LOG_TAG_BT, "Await own logic");
-                                    for (int i=0; i< 100; i++) {
-                                        if (mDeviceSpec.isFullPacketAvailable(message.toByteArray())) {
-                                            Log.d(Constants.LOG_TAG_BT, "Last packet ready");
-                                            break;
-                                        }
-                                        sleep(100);
-                                    }
-
-                                    if (!mDeviceSpec.isFullPacketAvailable(message.toByteArray())) {
-                                        // still not complete
-                                        continue;
-                                    }
-                                } else {
-                                    Log.d(Constants.LOG_TAG_BT, "Expect more chars " + mIn.available() + " current " + message.size());
-                                    continue;
+                                Log.i(Constants.LOG_TAG_BT, "Trigger measures");
+                                try {
+                                    mDeviceSpec.triggerMeasures(mOut, mMeasureTypes);
+                                } catch (IOException e) {
+                                    Log.e(Constants.LOG_TAG_BT, "Error triggering measure", e);
+                                    Bundle b = new Bundle();
+                                    b.putString("error", "Failed to talk to device");
+                                    mReceiver.send(Activity.RESULT_CANCELED, b);
+                                    cancel();
                                 }
-                            } else {
 
+                                Log.i(Constants.LOG_TAG_BT, "Start reading ");
+                                numBytes = mIn.read(buffer);
+                            } else {
                                 if (mDeviceSpec.getOwnReadError()) {
                                     throw new RuntimeException("Need own logic reset");
                                 }
+                            }
 
-                                // acknowledge received
-                                mDeviceSpec.ack(mOut, message.toByteArray());
+                            if (ownReadLogic || numBytes > 0 || message.size() > 0) {
 
-                                // process the data
-                                Log.i(Constants.LOG_TAG_BT, "Decoding message");
-                                List<Measure> measures = mDeviceSpec.decodeMeasure(message.toByteArray(), mMeasureTypes);
+                                if (!ownReadLogic) {
+                                    // accumulate bytes read to the current message
+                                    Log.d(Constants.LOG_TAG_BT, "Got bytes " + new String(ByteUtils.copyBytes(buffer, numBytes)));
+                                    message.write(buffer, 0, numBytes);
+                                    lastActiveTimestamp = System.currentTimeMillis();
+                                }
 
-                                // reset the buffers for the next message
-                                message = new ByteArrayOutputStream();
-                                buffer = new byte[1024];
-
-                                if (measures != null && measures.size() > 0) {
-
-                                    // populate the result
-                                    Bundle b = new Bundle();
-                                    float[] valuesArray = new float[measures.size()];
-                                    String[] typesArray = new String[measures.size()];
-                                    String[] unitsArray = new String[measures.size()];
-                                    String[] targetsArray = new String[measures.size()];
-                                    int actualMeasuresCount = 0;
-
-                                    for (int i = 0; i < measures.size(); i++) {
-                                        Measure m = measures.get(i);
-                                        if (!mMeasureTypes.contains(m.getMeasureType())) {
-                                            continue;
+                                if (!mDeviceSpec.isFullPacketAvailable(message.toByteArray())) {
+                                    // expect more data
+                                    if (ownReadLogic) {
+                                        // await own implementation to complete
+                                        Log.d(Constants.LOG_TAG_BT, "Await own logic");
+                                        for (int i = 0; i < 100; i++) {
+                                            if (mDeviceSpec.isFullPacketAvailable(message.toByteArray())) {
+                                                Log.d(Constants.LOG_TAG_BT, "Last packet ready");
+                                                break;
+                                            }
+                                            sleep(100);
                                         }
 
-                                        valuesArray[actualMeasuresCount] = m.getValue();
-                                        typesArray[actualMeasuresCount] = m.getMeasureType().toString();
-                                        unitsArray[actualMeasuresCount] = m.getMeasureUnit().toString();
-                                        targetsArray[actualMeasuresCount] = mTargets.get(mMeasureTypes.indexOf(m.getMeasureType())).toString();
-                                        actualMeasuresCount++;
+                                        if (!mDeviceSpec.isFullPacketAvailable(message.toByteArray())) {
+                                            // still not complete
+                                            continue;
+                                        }
+                                    } else {
+                                        Log.d(Constants.LOG_TAG_BT, "Expect more chars " + mIn.available() + " current " + message.size());
+                                        continue;
                                     }
-                                    b.putFloatArray(Constants.MEASURE_VALUE_KEY, ByteUtils.copyBytes(valuesArray, actualMeasuresCount));
-                                    b.putStringArray(Constants.MEASURE_TYPE_KEY, ByteUtils.copyBytes(typesArray, actualMeasuresCount));
-                                    b.putStringArray(Constants.MEASURE_UNIT_KEY, ByteUtils.copyBytes(unitsArray, actualMeasuresCount));
-                                    b.putStringArray(Constants.MEASURE_TARGET_KEY, ByteUtils.copyBytes(targetsArray, actualMeasuresCount));
-                                    mReceiver.send(Activity.RESULT_OK, b);
+                                } else {
+
+                                    if (mDeviceSpec.getOwnReadError()) {
+                                        throw new RuntimeException("Need own logic reset");
+                                    }
+
+                                    // acknowledge received
+                                    mDeviceSpec.ack(mOut, message.toByteArray());
+
+                                    // process the data
+                                    Log.i(Constants.LOG_TAG_BT, "Decoding message");
+                                    List<Measure> measures = mDeviceSpec.decodeMeasure(message.toByteArray(), mMeasureTypes);
+
+                                    // reset the buffers for the next message
+                                    message = new ByteArrayOutputStream();
+                                    buffer = new byte[1024];
+
+                                    if (measures != null && measures.size() > 0) {
+
+                                        // populate the result
+                                        Bundle b = new Bundle();
+                                        float[] valuesArray = new float[measures.size()];
+                                        String[] typesArray = new String[measures.size()];
+                                        String[] unitsArray = new String[measures.size()];
+                                        String[] targetsArray = new String[measures.size()];
+                                        int actualMeasuresCount = 0;
+
+                                        for (int i = 0; i < measures.size(); i++) {
+                                            Measure m = measures.get(i);
+                                            if (!mMeasureTypes.contains(m.getMeasureType())) {
+                                                continue;
+                                            }
+
+                                            valuesArray[actualMeasuresCount] = m.getValue();
+                                            typesArray[actualMeasuresCount] = m.getMeasureType().toString();
+                                            unitsArray[actualMeasuresCount] = m.getMeasureUnit().toString();
+                                            targetsArray[actualMeasuresCount] = mTargets.get(mMeasureTypes.indexOf(m.getMeasureType())).toString();
+                                            actualMeasuresCount++;
+                                        }
+                                        b.putFloatArray(Constants.MEASURE_VALUE_KEY, ByteUtils.copyBytes(valuesArray, actualMeasuresCount));
+                                        b.putStringArray(Constants.MEASURE_TYPE_KEY, ByteUtils.copyBytes(typesArray, actualMeasuresCount));
+                                        b.putStringArray(Constants.MEASURE_UNIT_KEY, ByteUtils.copyBytes(unitsArray, actualMeasuresCount));
+                                        b.putStringArray(Constants.MEASURE_TARGET_KEY, ByteUtils.copyBytes(targetsArray, actualMeasuresCount));
+                                        mReceiver.send(Activity.RESULT_OK, b);
+                                    }
                                 }
+                            }
+
+                            sleep(20);
+
+                        } else {
+                            if (!ownReadLogic && lastActiveTimestamp + KEEP_ALIVE_INTERVAL < System.currentTimeMillis()) {
+                                // no active task and more than a minute passive - wake up the device if supported
+                                Log.i(Constants.LOG_TAG_BT, "Send keep alive if supported");
+                                mDeviceSpec.keepAlive(mOut, mIn);
+                                lastActiveTimestamp = System.currentTimeMillis();
                             }
                         }
 
-                        sleep(20);
-
-                    } else {
-                        if (!ownReadLogic && lastActiveTimestamp + KEEP_ALIVE_INTERVAL < System.currentTimeMillis()) {
-                            // no active task and more than a minute passive - wake up the device if supported
-                            Log.i(Constants.LOG_TAG_BT, "Send keep alive if supported");
-                            mDeviceSpec.keepAlive(mOut, mIn);
-                            lastActiveTimestamp = System.currentTimeMillis();
+                        try {
+                            sleep(100);
+                        } catch (InterruptedException e) {
+                            Log.e(Constants.LOG_TAG_BT, "Error client sleep", e);
                         }
+
+                    } catch (DataException de) {
+                        Log.e(Constants.LOG_TAG_BT, "Data exception: " + de.getMessage(), de);
+                        // reset messasge in case of error
+                        message = new ByteArrayOutputStream();
+                        buffer = new byte[1024];
+
+                        Bundle b = new Bundle();
+                        b.putString("error", de.getMessage());
+                        mReceiver.send(Activity.RESULT_CANCELED, b);
+                        mReceiver = null;
+
+                        continue;
                     }
 
-                    try {
-                        sleep(100);
-                    } catch (InterruptedException e) {
-                        Log.e(Constants.LOG_TAG_BT, "Error client sleep", e);
-                    }
-
-                } catch (DataException de) {
-                    Log.e(Constants.LOG_TAG_BT, "Data exception: " + de.getMessage(), de);
-                    // reset messasge in case of error
-                    message = new ByteArrayOutputStream();
-                    buffer = new byte[1024];
-
-                    Bundle b = new Bundle();
-                    b.putString("error", de.getMessage());
-                    mReceiver.send(Activity.RESULT_CANCELED, b);
-                    mReceiver = null;
-
-                    continue;
                 }
-
+            } catch (Exception e) {
+                Log.e(Constants.LOG_TAG_BT, "Error client connect", e);
+                String device = mDeviceSpec != null ? mDeviceSpec.getDescription() : "unknown";
+                UIUtilities.showNotification(R.string.bt_device_lost, device);
+                cancel();
             }
-        } catch (Exception e) {
-            Log.e(Constants.LOG_TAG_BT, "Error client connect", e);
-            String device = mDeviceSpec != null ? mDeviceSpec.getDescription() : "unknown";
-            UIUtilities.showNotification(R.string.bt_device_lost, device);
-            cancel();
-        }
 
-        Log.i(Constants.LOG_TAG_BT, "End client");
+            Log.i(Constants.LOG_TAG_BT, "End client");
+        }
     }
 
-    public void cancel() {
+    public synchronized void cancel() {
 
 
         if (mDeviceSpec != null && lastActiveTimestamp != null) {
