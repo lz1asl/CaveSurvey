@@ -250,7 +250,8 @@
 
 
     <!-- bluetooth -->
-    <string name="bt_devices">Сдвоено устройство</string>
+    <string name="bt_devices">Устройства</string>
+    <string name="bt_devices_info">Сдвоени съвместими устройства:</string>
     <string name="bt_new_device">Добави устройство</string>
     <string name="bt_paired">Сдвоен</string>
     <string name="bt_connected">Установена връзка</string>
@@ -260,12 +261,12 @@
     <string name="bt_state_bonded">Сдвоен</string>
     <string name="bt_state_bonding">Сдвояване</string>
     <string name="bt_state_none">Неразпознато състояние</string>
-    <string name="bt_state_connecting">Свързване</string>
+    <string name="bt_state_connecting">Свързване...</string>
     <string name="bt_state_connected">Свързан</string>
     <string name="bt_not_on">Bluetooth не е включен</string>
     <string name="bt_not_selected">Не е избрано устройство</string>
     <string name="bt_device_connecting">Свързване с: %1$s</string>
-    <string name="bt_supported_devices">Очаква:</string>
+    <string name="bt_supported_devices">Съвместими устройства:</string>
     <string name="bt_device_connected">Свързан с: %1$s</string>
     <string name="bt_device_lost">Загубена връзка: %1$s</string>
 
