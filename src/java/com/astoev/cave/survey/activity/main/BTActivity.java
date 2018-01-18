@@ -177,6 +177,8 @@ public class BTActivity extends MainMenuActivity implements Refresheable {
         Pair<String, String> device = new ArrayList<Pair<String, String>>(devices).get(devicesChooser.getSelectedItemPosition());
         Log.i(Constants.LOG_TAG_UI, "Try to use " + device.first + ":" + device.second);
 
+        UIUtilities.showNotification(R.string.bt_device_connecting, device.first);
+
         // store & propagate
         ConfigUtil.setStringProperty(ConfigUtil.PROP_CURR_BT_DEVICE_NAME, device.first);
         ConfigUtil.setStringProperty(ConfigUtil.PROP_CURR_BT_DEVICE_ADDRESS, device.second);
