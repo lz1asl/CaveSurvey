@@ -2,8 +2,8 @@ package com.astoev.cave.survey.service.bluetooth.device.comm.bosch.glm;
 
 import com.astoev.cave.survey.Constants;
 import com.bosch.mtprotocol.MtMessage;
+import com.bosch.mtprotocol.glm100C.message.edc.EDCInputMessage;
 import com.bosch.mtprotocol.glm100C.message.edc.EDCOutputMessage;
-import com.bosch.mtprotocol.glm100C.message.sync.SyncInputMessage;
 
 /**
  * Bosch PLR 50 C over comm.
@@ -39,6 +39,6 @@ public class BoschPLR50CBluetoothDevice extends AbstractBoschGLMBluetoothDevice 
 
     @Override
     protected int getGLMMode() {
-        return SyncInputMessage.MEAS_MODE_INDIRECT_LENGTH;
+        return EDCInputMessage.MODE_INDIRECT_LENGTH;
     }
 }
