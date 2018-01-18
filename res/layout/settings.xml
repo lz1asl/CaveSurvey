@@ -5,7 +5,7 @@
               android:layout_height="fill_parent" 
               android:layout_width="fill_parent" 
               android:orientation="vertical"
-              android:layout_margin="5dp">
+              android:layout_margin="10dp">
 
         <TextView
             android:id="@+id/settingsLanguage"

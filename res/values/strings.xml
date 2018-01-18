@@ -363,7 +363,7 @@
     <string name="error_reporter_report">Send</string>
     <string name="error_reporter_info">Use to report crash or error:\n
  * activate\n
- * replay the steps\n
+ * repeat the steps\n
  * deactivate\n\n
 Errors collected and your description will be sent for analysis (could take time).\n\n
 Network connection is required.</string>
