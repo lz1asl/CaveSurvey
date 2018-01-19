@@ -33,7 +33,7 @@ Currently with CaveSurvey you can:
   - input measurements:
    - manually
    - from the built-in sensors
-   - from several [Bluetooth devices](https://github.com/lz1asl/CaveSurvey/wiki/Measurement-Devices)
+   - from several Bluetooth enabled [devices](https://github.com/lz1asl/CaveSurvey/wiki/Measurement-Devices)
   - preview a 2D plan/section map of the current survey
   - export to Excel, AutoCad, Therion, KML and more
 
