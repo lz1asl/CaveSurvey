@@ -11,7 +11,6 @@ import android.widget.ToggleButton;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
-import com.astoev.cave.survey.activity.dialog.AboutDialog;
 import com.astoev.cave.survey.activity.dialog.ErrorReporterDialog;
 import com.astoev.cave.survey.activity.dialog.LanguageDialog;
 import com.astoev.cave.survey.activity.main.ImportActivity;
@@ -26,7 +25,6 @@ import com.astoev.cave.survey.util.ConfigUtil;
 public class SettingsActivity extends MainMenuActivity {
 
     private static final String LANGUAGE_DIALOG = "LANGUAGE_DIALOG";
-    private static final String ABOUT_DIALOG = "ABOUT_DIALOG";
     private static final String ERROR_REPORTER_TOOLTIP_DIALOG = "ERROR_REPORTER_TOOLTIP_DIALOG";
     private static final String ERROR_REPORTER_MESSAGE_DIALOG = "ERROR_REPORTER_MESSAGE_DIALOG";
     private static final String AUTO_BACKUP_TOOLTIP_DIALOG = "AUTO_BACKUP_TOOLTIP_DIALOG";
@@ -41,7 +39,6 @@ public class SettingsActivity extends MainMenuActivity {
         prepareImport();
         prepareAutoBackup();
         prepareErrorReporter();
-        prepareAbout();
     }
 
     private void prepareBluetooth() {
@@ -52,18 +49,6 @@ public class SettingsActivity extends MainMenuActivity {
                 Log.i(Constants.LOG_TAG_UI, "Azimuth Test");
                 Intent intent = new Intent(SettingsActivity.this, SensorTestActivity.class);
                 startActivity(intent);
-            }
-        });
-    }
-
-    private void prepareAbout() {
-
-        TextView about = (TextView) findViewById(R.id.settingsAbout);
-        about.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AboutDialog aboutDialogFragment = new AboutDialog();
-                aboutDialogFragment.show(getSupportFragmentManager(), ABOUT_DIALOG);
             }
         });
     }

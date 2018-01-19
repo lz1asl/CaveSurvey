@@ -19,8 +19,8 @@
           android:visible="true"
           myapp:showAsAction="ifRoom|withText"/>
 
-    <item android:id="@+id/main_action_help"
-          android:title="@string/main_button_help"
+    <item android:id="@+id/main_action_about"
+          android:title="@string/main_button_about"
           android:visible="true"
           myapp:showAsAction="ifRoom|withText"/>
 

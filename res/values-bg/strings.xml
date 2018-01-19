@@ -34,7 +34,6 @@
     <string name="main_button_add">Добави</string>
     <string name="main_button_data">Данни</string>
     <string name="main_button_about">Относно</string>
-    <string name="main_button_help">Помощ</string>
     <string name="main_button_settings">Настройки</string>
     <string name="main_button_map">Карта</string>
 
@@ -91,9 +90,6 @@
     <string name="gallery_after_first_point">Недостъпно за първата отсечка</string>
 
     <!-- main menu -->
-<!--     
-    <string name="menu_help">Help</string>
- -->    
     <string name="menu_exit">Изход</string>
 
     <string name="menu_exit_confirmation_question">Край на проучването?</string>
@@ -212,14 +208,9 @@
     </string-array>
     
     <!-- about screen -->
-    <string name="about_title">Относно CaveSurvey</string>
+    <string name="about_title">За CaveSurvey</string>
+    <string name="about_user_guide">Помощ &amp; ръководство</string>
     <string name="about_paldin">http://sk-paldin.eu</string>
-    <string name="about_paldin2">https://github.com/lz1asl/CaveSurvey</string>
-    <string name="about_version">https://github.com/lz1asl/CaveSurvey/wiki/Releases</string>
-    <!--<string name="about_info">Station names convention :\nA1 -> A2 -> A3 : legs in gallery A\nA2 -> B1 : new gallery\nA2
-        -> A2.1 -> A2.2 : middle points
-    </string>-->
-
 
     <!-- info -->
     <string name="info_distance_in">Разстояние в</string>

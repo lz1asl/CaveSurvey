@@ -35,7 +35,7 @@ import java.util.zip.ZipFile;
  *
  * @author Zhivko Mitrev
  */
-public class AboutDialog extends DialogFragment {
+public class AboutDialog extends DialogFragment  {
 
     /**
      * @see DialogFragment#onCreateDialog(Bundle)
@@ -63,12 +63,8 @@ public class AboutDialog extends DialogFragment {
 
         TextView url = (TextView) view.findViewById(R.id.aboutUrl);
         Linkify.addLinks(url, Linkify.WEB_URLS);
-        TextView url2 = (TextView) view.findViewById(R.id.aboutUrl2);
-        Linkify.addLinks(url2, Linkify.WEB_URLS);
 
-        StringBuilder versionText = new StringBuilder("<a href=\"");
-        versionText.append(getString(R.string.about_version));
-        versionText.append("\">v");
+        StringBuilder versionText = new StringBuilder("v");
         try {
             versionText.append(context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName);
         } catch (PackageManager.NameNotFoundException e) {
@@ -82,10 +78,17 @@ public class AboutDialog extends DialogFragment {
             versionText.append(" (Debug)");
         }
 
-        versionText.append("</a>");
         TextView version = (TextView) view.findViewById(R.id.aboutVersion);
-        version.setText(Html.fromHtml(versionText.toString()));
-        version.setMovementMethod(LinkMovementMethod.getInstance());
+        version.setText(versionText.toString());
+
+        StringBuilder userGuideText = new StringBuilder("<a href=\"");
+        userGuideText.append(getString(R.string.about_help));
+        userGuideText.append("\">");
+        userGuideText.append(getString(R.string.about_user_guide));
+        userGuideText.append("</a>");
+        TextView userGuide = (TextView) view.findViewById(R.id.aboutUserGuide);
+        userGuide.setText(Html.fromHtml(userGuideText.toString()));
+        userGuide.setMovementMethod(LinkMovementMethod.getInstance());
 
         return  builder.create();
     }
