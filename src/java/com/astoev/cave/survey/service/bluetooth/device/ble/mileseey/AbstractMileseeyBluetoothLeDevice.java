@@ -27,9 +27,9 @@ public abstract class AbstractMileseeyBluetoothLeDevice extends AbstractBluetoot
     public static final UUID CHAR_DATA_UUID = UUID.fromString("0000FFB2-0000-1000-8000-00805f9b34fb");
 
     @Override
-    public boolean isMeasureSupported(Constants.MeasureTypes aMeasureType) {
+    protected List<Constants.MeasureTypes> getSupportedMeasureTypes() {
         // distance and inclination supported
-        return Constants.MeasureTypes.distance.equals(aMeasureType);
+        return Arrays.asList(Constants.MeasureTypes.distance);
     }
 
     @Override

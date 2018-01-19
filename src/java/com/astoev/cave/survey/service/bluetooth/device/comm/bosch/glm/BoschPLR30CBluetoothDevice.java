@@ -9,6 +9,8 @@ import com.bosch.mtprotocol.glm100C.message.edc.EDCOutputMessage;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.astoev.cave.survey.Constants.MeasureTypes.distance;
+
 /**
  * Bosch PLR 30 C over comm.
  * Created by astoev on 12/24/15.
@@ -27,9 +29,9 @@ public class BoschPLR30CBluetoothDevice extends AbstractBoschGLMBluetoothDevice 
     }
 
     @Override
-    public boolean isMeasureSupported(Constants.MeasureTypes aMeasureType) {
+    protected List<Constants.MeasureTypes> getSupportedMeasureTypes() {
         // only distance
-        return Constants.MeasureTypes.distance.equals(aMeasureType);
+        return Arrays.asList(distance);
     }
 
     @Override

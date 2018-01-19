@@ -10,9 +10,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import static com.astoev.cave.survey.Constants.MeasureTypes;
+import static com.astoev.cave.survey.Constants.MeasureTypes.distance;
+import static com.astoev.cave.survey.Constants.MeasureTypes.slope;
 
 /**
  * CEM iLDM Laser distance meters
@@ -80,18 +82,18 @@ public class CEMILDMBluetoothDevice extends AbstractBluetoothRFCOMMDevice {
                 m.setValue(measure / 10);
                 m.setMeasureUnit(Constants.MeasureUnits.degrees);
                 m.setMeasure(Constants.Measures.slope);
-                m.setMeasureType(MeasureTypes.slope);
+                m.setMeasureType(slope);
                 return singleMeasureToResult(m);
             }
 
             if (j == 2 && measure > -26843545) {
                 Log.i(Constants.LOG_TAG_BT, "Read distance " + measure / 1000);
-                if (isMeasureRequested(aMeasures, Constants.MeasureTypes.distance)) {
+                if (isMeasureRequested(aMeasures, distance)) {
                     Measure m = new Measure();
 
                     m.setValue(measure / 1000);
                     m.setMeasureUnit(Constants.MeasureUnits.meters);
-                    m.setMeasureType(Constants.MeasureTypes.distance);
+                    m.setMeasureType(distance);
                     return singleMeasureToResult(m);
                 }
             }
@@ -102,9 +104,9 @@ public class CEMILDMBluetoothDevice extends AbstractBluetoothRFCOMMDevice {
     }
 
     @Override
-    public boolean isMeasureSupported(Constants.MeasureTypes aMeasureType) {
+    protected List<Constants.MeasureTypes> getSupportedMeasureTypes() {
         // single CEM device supported, name ignored
-        return MeasureTypes.distance.equals(aMeasureType) || MeasureTypes.slope.equals(aMeasureType);
+        return Arrays.asList(distance, slope);
     }
 
     @Override

@@ -14,6 +14,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import static com.astoev.cave.survey.Constants.MeasureTypes.distance;
+import static com.astoev.cave.survey.Constants.MeasureTypes.slope;
+
 /**
  * Tested with Leica Disto D110 and D810 Touch but will probably work with the rest of the LE distos.
  *
@@ -84,9 +87,9 @@ public class LeicaDistoBluetoothLEDevice extends AbstractBluetoothLEDevice {
     }
 
     @Override
-    public boolean isMeasureSupported(Constants.MeasureTypes aMeasureType) {
+    protected List<Constants.MeasureTypes> getSupportedMeasureTypes() {
         // distance and inclination supported
-        return Constants.MeasureTypes.distance.equals(aMeasureType) || Constants.MeasureTypes.slope.equals(aMeasureType);
+        return Arrays.asList(distance, slope);
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
@@ -94,25 +97,25 @@ public class LeicaDistoBluetoothLEDevice extends AbstractBluetoothLEDevice {
     public Measure characteristicToMeasure(BluetoothGattCharacteristic aCharacteristic, List<Constants.MeasureTypes> aMeasureTypes) throws DataException {
 
         if (CHARACTERISTIC_DISTANCE_UUID.equals(aCharacteristic.getUuid())) {
-            Float distance = asFloat(aCharacteristic, ByteOrder.LITTLE_ENDIAN);
+            Float distanceValue = asFloat(aCharacteristic, ByteOrder.LITTLE_ENDIAN);
             Log.i(Constants.LOG_TAG_BT, "DISTANCE: " + distance);
 
             Measure measure = new Measure();
             measure.setMeasureUnit(Constants.MeasureUnits.meters);
-            measure.setMeasureType(Constants.MeasureTypes.distance);
-            measure.setValue(distance);
+            measure.setMeasureType(distance);
+            measure.setValue(distanceValue);
             return measure;
         } else if (CHARACTERISTIC_ANGLE_UUID.equals(aCharacteristic.getUuid())) {
 
             Float slopeInRadians = asFloat(aCharacteristic, ByteOrder.LITTLE_ENDIAN);
             if (slopeInRadians != null) {
-                Float slope = (float) Math.toDegrees(slopeInRadians);
+                Float slopeValue = (float) Math.toDegrees(slopeInRadians);
                 Log.i(Constants.LOG_TAG_BT, "SLOPE: " + slope);
 
                 Measure measure = new Measure();
                 measure.setMeasureUnit(Constants.MeasureUnits.degrees);
-                measure.setMeasureType(Constants.MeasureTypes.slope);
-                measure.setValue(slope);
+                measure.setMeasureType(slope);
+                measure.setValue(slopeValue);
                 return measure;
             }
         } else if (CHARACTERISTIC_DISTANCE_UNIT_UUID.equals(aCharacteristic.getUuid())) {

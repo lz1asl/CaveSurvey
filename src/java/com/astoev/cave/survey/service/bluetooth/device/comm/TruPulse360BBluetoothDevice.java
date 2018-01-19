@@ -10,6 +10,7 @@ import com.astoev.cave.survey.service.bluetooth.util.NMEAUtil;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -65,10 +66,10 @@ public class TruPulse360BBluetoothDevice extends AbstractBluetoothRFCOMMDevice {
     }
 
     @Override
-    public boolean isMeasureSupported(Constants.MeasureTypes aMeasureType) {
+    protected List<Constants.MeasureTypes> getSupportedMeasureTypes() {
         // single device supported, name ignored
         // has all distance, clino and azimuth
-        return true;
+        return Arrays.asList(Constants.MeasureTypes.values());
     }
 
     @Override

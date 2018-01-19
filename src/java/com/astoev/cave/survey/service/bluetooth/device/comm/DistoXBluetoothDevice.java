@@ -10,6 +10,7 @@ import com.astoev.cave.survey.service.bluetooth.util.DistoXProtocol;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -52,10 +53,10 @@ public class DistoXBluetoothDevice extends AbstractBluetoothRFCOMMDevice {
     }
 
     @Override
-    public boolean isMeasureSupported(Constants.MeasureTypes aMeasureType) {
+    protected List<Constants.MeasureTypes> getSupportedMeasureTypes() {
         // v1 and v2 with same measure types
         // all measures available on each shot
-        return true;
+        return Arrays.asList(Constants.MeasureTypes.values());
     }
 
     @Override

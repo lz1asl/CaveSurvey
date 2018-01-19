@@ -3,6 +3,8 @@ package com.astoev.cave.survey.service.bluetooth.device;
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.util.StringUtils;
 
+import java.util.List;
+
 /**
  * Any Bluetooth device.
  */
@@ -28,8 +30,11 @@ public abstract class AbstractBluetoothDevice implements Comparable {
      * @param aMeasureType
      * @return
      */
-    public abstract boolean isMeasureSupported(Constants.MeasureTypes aMeasureType);
+    public final boolean isMeasureSupported(Constants.MeasureTypes aMeasureType) {
+        return getSupportedMeasureTypes().contains(aMeasureType);
+    }
 
+    protected abstract List<Constants.MeasureTypes> getSupportedMeasureTypes();
 
     protected boolean deviceNameStartsWith(String aDeviceName, String aStart) {
         return StringUtils.isNotEmpty(aDeviceName) && aDeviceName.startsWith(aStart);

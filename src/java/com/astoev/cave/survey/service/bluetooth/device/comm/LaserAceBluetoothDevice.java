@@ -1,5 +1,6 @@
 package com.astoev.cave.survey.service.bluetooth.device.comm;
 
+import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.Constants.MeasureTypes;
 import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.Measure;
@@ -8,6 +9,7 @@ import com.astoev.cave.survey.service.bluetooth.util.NMEAUtil;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -42,10 +44,10 @@ public class LaserAceBluetoothDevice extends AbstractBluetoothRFCOMMDevice {
     }
 
     @Override
-    public boolean isMeasureSupported(MeasureTypes aMeasureType) {
+    protected List<Constants.MeasureTypes> getSupportedMeasureTypes() {
         // single device supported, name ignored
         // all current distance, angle and inclination are returned on each measure
-        return true;
+        return Arrays.asList(Constants.MeasureTypes.values());
     }
 
     @Override

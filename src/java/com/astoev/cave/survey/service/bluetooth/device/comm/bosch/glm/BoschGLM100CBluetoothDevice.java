@@ -9,6 +9,9 @@ import com.bosch.mtprotocol.glm100C.message.sync.SyncOutputMessage;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.astoev.cave.survey.Constants.MeasureTypes.distance;
+import static com.astoev.cave.survey.Constants.MeasureTypes.slope;
+
 /**
  * Bosch GLM100c over comm connection.
  * Support for distance, and inclination.
@@ -29,9 +32,9 @@ public class BoschGLM100CBluetoothDevice extends AbstractBoschGLMBluetoothDevice
     }
 
     @Override
-    public boolean isMeasureSupported(Constants.MeasureTypes aMeasureType) {
+    protected List<Constants.MeasureTypes> getSupportedMeasureTypes() {
         // 100m laser and 360' clino
-        return Constants.MeasureTypes.distance.equals(aMeasureType) || Constants.MeasureTypes.slope.equals(aMeasureType);
+        return Arrays.asList(distance, slope);
     }
 
     @Override

@@ -9,6 +9,9 @@ import com.bosch.mtprotocol.glm100C.message.edc.EDCOutputMessage;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.astoev.cave.survey.Constants.MeasureTypes.distance;
+import static com.astoev.cave.survey.Constants.MeasureTypes.slope;
+
 /**
  * Bosch PLR 50 C over comm.
  * Created by astoev on 12/24/15.
@@ -27,9 +30,9 @@ public class BoschPLR50CBluetoothDevice extends AbstractBoschGLMBluetoothDevice 
     }
 
     @Override
-    public boolean isMeasureSupported(Constants.MeasureTypes aMeasureType) {
+    protected List<Constants.MeasureTypes> getSupportedMeasureTypes() {
         // 50m laser and 360' clino
-        return Constants.MeasureTypes.distance.equals(aMeasureType) || Constants.MeasureTypes.slope.equals(aMeasureType);
+        return Arrays.asList(distance, slope);
     }
 
     @Override
