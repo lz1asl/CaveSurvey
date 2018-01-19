@@ -261,6 +261,11 @@
     <string name="bt_device_connected">Свързан с: %1$s</string>
     <string name="bt_device_lost">Загубена връзка: %1$s</string>
 
+    <!-- device mode validation -->
+    <string name="bt_device_mode">Използвай режим: %1$s измерване</string>
+    <string name="bt_device_mode_single">единично</string>
+    <string name="bt_device_mode_single_or_indirect">индиректно разстояние или единично</string>
+
     <string name="action_saved">Запазено</string>
     <string name="action_deleted">Изтрито</string>
     

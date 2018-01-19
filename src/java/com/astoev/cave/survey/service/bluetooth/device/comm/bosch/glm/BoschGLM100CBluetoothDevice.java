@@ -1,9 +1,13 @@
 package com.astoev.cave.survey.service.bluetooth.device.comm.bosch.glm;
 
 import com.astoev.cave.survey.Constants;
+import com.astoev.cave.survey.R;
 import com.bosch.mtprotocol.MtMessage;
 import com.bosch.mtprotocol.glm100C.message.sync.SyncInputMessage;
 import com.bosch.mtprotocol.glm100C.message.sync.SyncOutputMessage;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Bosch GLM100c over comm connection.
@@ -34,13 +38,18 @@ public class BoschGLM100CBluetoothDevice extends AbstractBoschGLMBluetoothDevice
     protected MtMessage createGLMConfigMessage() {
         SyncOutputMessage configMessage = new SyncOutputMessage();
         configMessage.setSyncControl(SyncOutputMessage.MODE_AUTOSYNC_CONTROL_ON);
-        configMessage.setMode(getGLMMode());
+        configMessage.setMode(getGLMModes().get(0));
         return configMessage;
     }
 
     @Override
-    protected int getGLMMode() {
-        return SyncInputMessage.MEAS_MODE_SINGLE;
+    protected List<Integer> getGLMModes() {
+        return Arrays.asList(SyncInputMessage.MEAS_MODE_SINGLE);
+    }
+
+    @Override
+    protected int getGLMModesLabel() {
+        return R.string.bt_device_mode_single;
     }
 
 }

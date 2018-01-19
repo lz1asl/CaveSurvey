@@ -8,6 +8,7 @@ import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.Measure;
 import com.astoev.cave.survey.service.bluetooth.device.comm.AbstractBluetoothRFCOMMDevice;
+import com.astoev.cave.survey.util.ConfigUtil;
 import com.bosch.mtprotocol.MtMessage;
 import com.bosch.mtprotocol.MtProtocol;
 import com.bosch.mtprotocol.glm100C.MtProtocolImpl;
@@ -71,7 +72,7 @@ public abstract class AbstractBoschGLMBluetoothDevice extends AbstractBluetoothR
                     measures.add(new Measure(Constants.MeasureTypes.slope, Constants.MeasureUnits.degrees, message.getComp2()));
                 }
             } else {
-                UIUtilities.showNotification("Bad measurement mode!");
+                warnToUseProperMode();
             }
         }
 
@@ -104,8 +105,11 @@ public abstract class AbstractBoschGLMBluetoothDevice extends AbstractBluetoothR
     // turn sync on and enter desired mode
     protected abstract MtMessage createGLMConfigMessage();
 
-    // used check measurement mode is valid, e.g. not changed meanwhile
-    protected abstract int getGLMMode();
+    // used to check measurement mode is valid, e.g. not changed meanwhile
+    protected abstract List<Integer> getGLMModes();
+
+    // displayed to the user
+    protected abstract int getGLMModesLabel();
 
     @Override
     public void onEvent(MtProtocol.MTProtocolEvent event) {
@@ -132,7 +136,7 @@ public abstract class AbstractBoschGLMBluetoothDevice extends AbstractBluetoothR
                 }
 
                 Log.i(Constants.LOG_TAG_BT, "SyncInputMessageReceived: " + syncMessage.toString());
-                if (getGLMMode() == syncMessage.getMode()) {
+                if (getGLMModes().contains(syncMessage.getMode())) {
                     if (syncMessage.getLaserOn() == 1) {
                         Log.d(Constants.LOG_TAG_BT, "Ignore laser 1 message");
                         lastMessage = null;
@@ -141,7 +145,7 @@ public abstract class AbstractBoschGLMBluetoothDevice extends AbstractBluetoothR
                         lastMessage = message;
                     }
                 } else {
-                    UIUtilities.showNotification("Bad measurement mode!");
+                    warnToUseProperMode();
                 }
 
             } else if(message instanceof EDCInputMessage) {
@@ -154,7 +158,7 @@ public abstract class AbstractBoschGLMBluetoothDevice extends AbstractBluetoothR
                 Log.d(Constants.LOG_TAG_BT, "Received EDC: " + message.toString());
                 EDCInputMessage edcMessage = (EDCInputMessage) message;
                 Log.d(Constants.LOG_TAG_BT, "EDCInputMessageReceived: " + edcMessage.toString());
-                if(getGLMMode() == edcMessage.getDevMode()) {
+                if(getGLMModes().contains(edcMessage.getDevMode())) {
                     if (edcMessage.getLaserOn() == 1) {
                         Log.d(Constants.LOG_TAG_BT, "Ignore laser 1 message");
                         lastMessage = null;
@@ -162,7 +166,7 @@ public abstract class AbstractBoschGLMBluetoothDevice extends AbstractBluetoothR
                         lastMessage = message;
                     }
                 } else {
-                    UIUtilities.showNotification("Please use single measurement mode!");
+                    warnToUseProperMode();
                 }
             } else {
                 Log.d(Constants.LOG_TAG_BT, "Received Unknown message");
@@ -176,6 +180,12 @@ public abstract class AbstractBoschGLMBluetoothDevice extends AbstractBluetoothR
             UIUtilities.showNotification(R.string.error);
         }
         initSyncRequest = false;
+    }
+
+    private void warnToUseProperMode() {
+        // warn user to use proper device mode
+        String requiredMode = ConfigUtil.getContext().getString(getGLMModesLabel());
+        UIUtilities.showNotification(R.string.bt_device_mode, requiredMode);
     }
 
     @Override
