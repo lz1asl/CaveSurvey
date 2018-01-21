@@ -66,16 +66,6 @@
                 android:layout_centerVertical="true"
                 android:text="@string/error_reporter_title"
                 android:textAppearance="?android:attr/textAppearanceMedium"/>
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/settingsDebugText"
-                android:clickable="true"
-                android:layout_centerVertical="true"
-                android:layout_margin="5dp"
-                android:src="@drawable/ic_info_white"
-                android:contentDescription="@string/information"
-                android:onClick="onErrorReporterChooseInfo" />
             <ToggleButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

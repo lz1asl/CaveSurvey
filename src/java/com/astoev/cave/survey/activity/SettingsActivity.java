@@ -33,12 +33,12 @@ public class SettingsActivity extends MainMenuActivity {
         setContentView(R.layout.settings);
 
         prepareLanguage();
-        prepareBluetooth();
+        prepareSensorsTest();
         prepareAutoBackup();
         prepareErrorReporter();
     }
 
-    private void prepareBluetooth() {
+    private void prepareSensorsTest() {
         TextView bt = (TextView) findViewById(R.id.settingsBluetooth);
         bt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,7 +71,16 @@ public class SettingsActivity extends MainMenuActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
+                    // start debug
                     ErrorReporter.startDebugSession();
+
+                    // show the info window
+                    Bundle bundle = new Bundle();
+                    String message = getString(R.string.error_reporter_info);
+                    bundle.putString(InfoDialogFragment.MESSAGE, message);
+                    InfoDialogFragment infoDialog = new InfoDialogFragment();
+                    infoDialog.setArguments(bundle);
+                    infoDialog.show(getSupportFragmentManager(), ERROR_REPORTER_TOOLTIP_DIALOG);
                 } else {
                     // stop session
                     String dumpFile = ErrorReporter.closeDebugSession();
@@ -111,17 +120,6 @@ public class SettingsActivity extends MainMenuActivity {
     protected void onResume() {
         super.onResume();
         prepareErrorReporter();
-    }
-
-    public void onErrorReporterChooseInfo(View viewArg) {
-        InfoDialogFragment infoDialog = new InfoDialogFragment();
-
-        Bundle bundle = new Bundle();
-        String message = getString(R.string.error_reporter_info);
-        bundle.putString(InfoDialogFragment.MESSAGE, message);
-        infoDialog.setArguments(bundle);
-
-        infoDialog.show(getSupportFragmentManager(), ERROR_REPORTER_TOOLTIP_DIALOG);
     }
 
     public void onAutoBackupChooseInfo(View viewArg) {

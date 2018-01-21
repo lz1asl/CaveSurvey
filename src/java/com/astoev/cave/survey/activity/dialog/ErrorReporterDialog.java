@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.astoev.cave.survey.R;
+import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.service.reports.ErrorReporter;
 import com.astoev.cave.survey.util.StringUtils;
 
@@ -20,6 +21,7 @@ import com.astoev.cave.survey.util.StringUtils;
  */
 public class ErrorReporterDialog extends DialogFragment {
 
+    private boolean reportSent = false;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -50,6 +52,7 @@ public class ErrorReporterDialog extends DialogFragment {
                 } else {
                     // report
                     ErrorReporter.reportToServer(messageBox.getText().toString(), dumpFile);
+                    reportSent = true;
                     dismiss();
                 }
 
@@ -57,5 +60,13 @@ public class ErrorReporterDialog extends DialogFragment {
         });
 
         return  builder.create();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (!reportSent) {
+            UIUtilities.showNotification(R.string.error_not_sent);
+        }
     }
 }
