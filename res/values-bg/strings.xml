@@ -26,6 +26,8 @@
     <string name="project_name">Име</string>
     <string name="project_name_required">Въведи име</string>
     <string name="project_name_characters">Съдържа непозволени символи</string>
+    <string name="project_import">Импорт</string>
+    <string name="import_success">Успешен импорт</string>
 
     <!-- main screen -->
     <string name="main_leg">Текуща отсечка</string>
@@ -360,7 +362,6 @@
     <!-- auto backup -->
     <string name="settings_auto_backup">Автоматичен експорт</string>
     <string name="settings_auto_backup_info">Създава автоматично резервно копие на активния проект всеки 5 минути</string>
-    <string name="settings_import">Импорт</string>
     <string name="settings_import_title">Импорт (Експериментален)</string>
     <string name="settings_import_source">Импорт от:</string>
     <string name="settings_import_target_name">Създай като:</string>

@@ -26,6 +26,10 @@
     <string name="project_name">Name</string>
     <string name="project_name_required">Enter name</string>
     <string name="project_name_characters">Contains bad characters</string>
+    <string name="project_import">Import</string>
+    <string name="import_success">Import successfull</string>
+
+
 
     <!-- main screen -->
     <string name="main_leg">Current leg</string>
@@ -376,7 +380,6 @@ Network connection is required.</string>
     <!-- auto backup -->
     <string name="settings_auto_backup">Auto backup</string>
     <string name="settings_auto_backup_info">Exports your active project to the SD card every 5 minutes</string>
-    <string name="settings_import">Import</string>
     <string name="settings_import_title">Import (experimental)</string>
     <string name="settings_import_source">Import from:</string>
     <string name="settings_import_target_name">Create as:</string>

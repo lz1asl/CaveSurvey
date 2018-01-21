@@ -5,8 +5,6 @@ import android.util.Log;
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.UIUtilities;
-import com.astoev.cave.survey.dto.ProjectConfig;
-import com.astoev.cave.survey.manager.ProjectManager;
 import com.astoev.cave.survey.model.Gallery;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Location;
@@ -15,6 +13,7 @@ import com.astoev.cave.survey.model.Option;
 import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.model.Vector;
+import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.service.Workspace;
 import com.astoev.cave.survey.service.export.excel.ExcelExport;
 import com.astoev.cave.survey.util.DaoUtil;
@@ -45,14 +44,9 @@ import java.util.concurrent.Callable;
  */
 public class ExcelImport {
 
-    public static Project importExcelFile(File aPath, final String aName) throws SQLException, IOException {
+    public static Object importExcelFile(File aPath, final Project aProject) throws SQLException, IOException {
 
-        Log.i(Constants.LOG_TAG_SERVICE, "Requested to import " + aPath + " as " + aName);
-
-        if (aPath == null || !aPath.exists()) {
-            Log.i(Constants.LOG_TAG_SERVICE, "Missing");
-            return null;
-        }
+        Log.i(Constants.LOG_TAG_SERVICE, "Requested to import " + aPath + " as " + aProject.getName());
 
         // locate and open
         FileInputStream file = null;
@@ -64,8 +58,7 @@ public class ExcelImport {
             Iterator<Row> rowIterator = sheet.iterator();
 
             // read header
-            final ProjectConfig config = prepareConfig(rowIterator.next(), aName);
-            Log.i(Constants.LOG_TAG_SERVICE, "Parsed header, working in " + config.getDistanceUnits() + ", " + config.getAzimuthUnits() + " and " + config.getSlopeUnits());
+            updateConfig(rowIterator.next(), aProject);
 
             // load all rows
             final List<LegData> legs = new ArrayList<>();
@@ -125,11 +118,9 @@ public class ExcelImport {
             Log.i(Constants.LOG_TAG_SERVICE, legs.size() + " records found");
 
             // no errors while reading, start creating as atomic operation
-            return TransactionManager.callInTransaction(Workspace.getCurrentInstance().getDBHelper().getConnectionSource(), new Callable<Project>() {
+            return TransactionManager.callInTransaction(Workspace.getCurrentInstance().getDBHelper().getConnectionSource(), new Callable() {
                 @Override
-                public Project call() throws Exception {
-                    final Project project = ProjectManager.instance().createProject(config);
-                    Log.i(Constants.LOG_TAG_SERVICE, "Project created");
+                public Object call() throws Exception {
 
                     Set<Leg> lastMiddleLegs = new HashSet<>();
                     int rowCounter = 1;
@@ -137,8 +128,8 @@ public class ExcelImport {
                         Log.i(Constants.LOG_TAG_SERVICE, "Processing record " + rowCounter ++);
 
                         // ensure gallery exists
-                        Gallery fromGallery = getOrInitializeGallery(project, leg.fromGallery);
-                        Gallery toGallery = getOrInitializeGallery(project, leg.toGallery);
+                        Gallery fromGallery = getOrInitializeGallery(aProject, leg.fromGallery);
+                        Gallery toGallery = getOrInitializeGallery(aProject, leg.toGallery);
 
                         if (leg.middlePoint) {
 
@@ -152,13 +143,13 @@ public class ExcelImport {
                                 Log.i(Constants.LOG_TAG_SERVICE, "Creating leg for middle " + leg.fromGallery + leg.fromPoint + " -> " + leg.toGallery + leg.toPoint);
 
 
-                                Point from = getOrInitializePoint(project, fromGallery, fromRealName);
-                                Point to = getOrInitializePoint(project, toGallery, toRealName);
+                                Point from = getOrInitializePoint(aProject, fromGallery, fromRealName);
+                                Point to = getOrInitializePoint(aProject, toGallery, toRealName);
 
                                 Leg fullLeg = DaoUtil.getLegByFromToPointId(toGallery, from, to);
                                 if (fullLeg == null) {
                                     Log.i(Constants.LOG_TAG_SERVICE, "Creating the full leg ");
-                                    fullLeg = new Leg(from, to, project, toGallery.getId());
+                                    fullLeg = new Leg(from, to, aProject, toGallery.getId());
                                     fullLeg.setDistance(leg.length); // leg will be updated later
                                     fullLeg.setAzimuth(leg.azimuth);
                                     fullLeg.setSlope(leg.slope);
@@ -173,8 +164,8 @@ public class ExcelImport {
                                 // regular middle point
                                 Log.i(Constants.LOG_TAG_SERVICE, "Middle " + leg.fromGallery + leg.fromPoint + " -> " + leg.toGallery + leg.toPoint);
 
-                                Point from = getOrInitializePoint(project, fromGallery, fromRealName);
-                                Point to = getOrInitializePoint(project, toGallery, toRealName);
+                                Point from = getOrInitializePoint(aProject, fromGallery, fromRealName);
+                                Point to = getOrInitializePoint(aProject, toGallery, toRealName);
 
                                 // create the leg, real length will be updated later
                                 Leg middleLeg = new Leg(from, to, fromGallery.getProject(), toGallery.getId());
@@ -210,7 +201,7 @@ public class ExcelImport {
                             Log.i(Constants.LOG_TAG_SERVICE, "Vector " + leg.fromGallery + leg.fromPoint + " -> " + leg.note);
 
                             // plain legs
-                            Point from = getOrInitializePoint(project, fromGallery, leg.fromPoint);
+                            Point from = getOrInitializePoint(aProject, fromGallery, leg.fromPoint);
 
                             Vector vector = new Vector();
                             vector.setDistance(leg.length);
@@ -224,14 +215,14 @@ public class ExcelImport {
                             Log.i(Constants.LOG_TAG_SERVICE, "Leg " +  leg.fromGallery + leg.fromPoint + " -> " + leg.toGallery + leg.toPoint + " : " + leg.length);
 
                             // plain legs
-                            Point from = getOrInitializePoint(project, fromGallery, leg.fromPoint);
-                            Point to = getOrInitializePoint(project, toGallery, leg.toPoint);
+                            Point from = getOrInitializePoint(aProject, fromGallery, leg.fromPoint);
+                            Point to = getOrInitializePoint(aProject, toGallery, leg.toPoint);
 
                             Leg dbLeg = DaoUtil.getLegByFromToPointId(toGallery, from, to);
                             if (dbLeg == null) {
                                 // not the first leg already created with the project
                                 Log.i(Constants.LOG_TAG_SERVICE, "Creating leg");
-                                dbLeg = new Leg(from, to, project, toGallery.getId());
+                                dbLeg = new Leg(from, to, aProject, toGallery.getId());
                             }
                             dbLeg.setDistance(leg.length);
                             dbLeg.setAzimuth(leg.azimuth);
@@ -266,8 +257,10 @@ public class ExcelImport {
                         }
 
                     }
-                    return  project;
+                    UIUtilities.showNotification(R.string.import_success);
+                    return null;
                 }
+
 
                 private Point getOrInitializePoint(Project aProject, Gallery aGallery, String aName) throws SQLException {
 
@@ -303,32 +296,21 @@ public class ExcelImport {
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_SERVICE, "Failed with import", e);
             UIUtilities.showNotification(R.string.error);
-            return null;
         } finally {
             StreamUtil.closeQuietly(file);
             if (workbook != null) {
                 workbook.close();
             }
         }
+        return null;
     }
 
-    private static ProjectConfig prepareConfig(Row aRow, String aName) {
-        ProjectConfig config = new ProjectConfig();
+    private static void updateConfig(Row aRow, Project aProject) throws SQLException {
 
-        // override the name
-        config.setName(aName);
-
-        // no sensors by default
-        config.setAzimuthSensor(Option.CODE_SENSOR_NONE);
-        config.setDistanceSensor(Option.CODE_SENSOR_NONE);
-        config.setSlopeSensor(Option.CODE_SENSOR_NONE);
-
-        // units
-        config.setDistanceUnits(getUnitFromHeaderCell(aRow, ExcelExport.CELL_LENGHT));
-        config.setAzimuthUnits(getUnitFromHeaderCell(aRow, ExcelExport.CELL_AZIMUTH));
-        config.setSlopeUnits(getUnitFromHeaderCell(aRow, ExcelExport.CELL_SLOPE));
-
-        return  config;
+        // units from the file
+        Options.createOption(Option.CODE_DISTANCE_UNITS, getUnitFromHeaderCell(aRow, ExcelExport.CELL_LENGHT));
+        Options.createOption(Option.CODE_AZIMUTH_UNITS, getUnitFromHeaderCell(aRow, ExcelExport.CELL_AZIMUTH));
+        Options.createOption(Option.CODE_SLOPE_UNITS, getUnitFromHeaderCell(aRow, ExcelExport.CELL_SLOPE));
     }
 
     private static String getUnitFromHeaderCell(Row aRow, int aCellIndex) {
