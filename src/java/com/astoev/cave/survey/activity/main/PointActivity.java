@@ -160,6 +160,11 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         super.onPause();
     }
 
+    @Override
+    protected boolean showBaseOptionsMenu() {
+        return false;
+    }
+
     /**
      * Shows the current leg as activity title
      *

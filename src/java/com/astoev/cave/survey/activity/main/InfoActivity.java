@@ -44,6 +44,10 @@ import java.io.File;
  * @author jmitrev
  */
 public class InfoActivity extends MainMenuActivity {
+    @Override
+    protected boolean showBaseOptionsMenu() {
+        return false;
+    }
 
     public static final String MIME_RESOURCE_FOLDER = "resource/folder";
     public static final String MIME_TYPE_ANY = "*/*";

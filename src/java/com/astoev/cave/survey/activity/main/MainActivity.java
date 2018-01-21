@@ -74,6 +74,11 @@ public class MainActivity extends MainMenuActivity implements AddNewSelectedHand
         vectorsPrefix = getString(R.string.table_vector_prefix);
     }
 
+    @Override
+    protected boolean showBaseOptionsMenu() {
+        return false;
+    }
+
     private void drawTable() {
         try {
             Leg activeLeg = getWorkspace().getActiveLeg();
