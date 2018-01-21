@@ -16,7 +16,7 @@
     <string name="home_new_project">Ново проучване</string>
     <string name="home_button_new_exists">Проучване %1$s вече съществува!</string>
     <string name="home_delete_project">Изтрий проучване %1$s?</string>
-    <string name="home_lang">Език</string>
+    <string name="home_lang"><u>Език</u></string>
 
     <!-- new project screen -->
     <string name="new_title">Ново проучване</string>
@@ -280,7 +280,7 @@
     <string name="azimuth_rotation">Завъртане:</string>
     <string name="azimuth_start">Старт</string>
     <string name="azimuth_stop">Стоп</string>
-    <string name="sensor_test_title">Вградени сензори</string>
+    <string name="sensor_test_title"><u>Вградени сензори</u></string>
     <string name="sensor_test_header">Тест на вградените сензори</string>
     <string name="sensor_choose_header">Избор на вграден сензор</string>
     <string name="no_sensors">Няма налични вградени сензори</string>

@@ -16,7 +16,7 @@
     <string name="home_new_project">New survey</string>
     <string name="home_button_new_exists">Survey %1$s exists!</string>
     <string name="home_delete_project">Delete survey %1$s?</string>
-    <string name="home_lang">Language</string>
+    <string name="home_lang"><u>Language</u></string>
 
     <!-- new project screen -->
     <string name="new_title">New Survey</string>
@@ -297,7 +297,7 @@
     <string name="azimuth_rotation">Rotation:</string>
     <string name="azimuth_start">Start</string>
     <string name="azimuth_stop">Stop</string>
-    <string name="sensor_test_title">Build-in Sensors</string>
+    <string name="sensor_test_title"><u>Build-in Sensors</u></string>
     <string name="sensor_test_header">Test Build-in Sensors</string>
     <string name="sensor_choose_header">Choose Build-in sensor</string>
     <string name="no_sensors">No available Build-in sensors</string>

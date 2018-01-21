@@ -137,4 +137,8 @@ public class SettingsActivity extends MainMenuActivity {
         return getString(R.string.main_button_settings);
     }
 
+    @Override
+    protected boolean showBaseOptionsMenu() {
+        return false;
+    }
 }
