@@ -385,6 +385,11 @@ public class SensorTestActivity extends MainMenuActivity {
 //        public boolean areAllItemsEnabled() {
 //            return false;
 //        }
+
+    @Override
+    protected boolean showBaseOptionsMenu() {
+        return false;
+    }
 //
 //        @Override
 //        public boolean isEnabled(int position) {

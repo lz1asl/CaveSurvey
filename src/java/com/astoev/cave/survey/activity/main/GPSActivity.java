@@ -223,7 +223,12 @@ public class GPSActivity extends MainMenuActivity {
         findViewById(R.id.current_location_container).setVisibility(View.VISIBLE);
         hasLocation = true;
     }
-    
+
+    @Override
+    protected boolean showBaseOptionsMenu() {
+        return false;
+    }
+
     /**
      * Helper method that defines how to initialize saved_location_container fragment with Location
      * 

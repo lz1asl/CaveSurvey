@@ -142,6 +142,11 @@ public class GPSManualActivity extends MainMenuActivity {
         }
     }
 
+    @Override
+    protected boolean showBaseOptionsMenu() {
+        return false;
+    }
+
     /**
      * Action method to save the gps location. Reads the UI components and generates the model
      * instance
