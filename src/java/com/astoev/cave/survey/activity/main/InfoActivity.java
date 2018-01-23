@@ -50,6 +50,7 @@ public class InfoActivity extends MainMenuActivity {
     }
 
     public static final String MIME_RESOURCE_FOLDER = "resource/folder";
+    public static final String MIME_RESOURCE_FILE = "file/*";
     public static final String MIME_TYPE_ANY = "*/*";
 
     public void onCreate(Bundle savedInstanceState) {
@@ -159,29 +160,40 @@ public class InfoActivity extends MainMenuActivity {
             String chooserTitle = getResources().getString(R.string.info_chooser_open_folder);
 
             Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(contentUri); // works wit OI File manager
 
-            PackageManager pacakgeManager = getPackageManager();
-
-            // works with OI File manager
-            if (intent.resolveActivity(pacakgeManager) != null) {
-
-                Log.i(Constants.LOG_TAG_SERVICE, "ACTION_VIEW resolved");
-
-                startActivity(Intent.createChooser(intent, chooserTitle));
-                return;
-            }
+            PackageManager packageManager = getPackageManager();
 
             // Works with ES file manager
             intent.setDataAndType(contentUri, MIME_RESOURCE_FOLDER);
-            if (intent.resolveActivity(pacakgeManager) != null) {
+            if (intent.resolveActivity(packageManager) != null) {
                 Log.i(Constants.LOG_TAG_SERVICE, "ACTION_VIEW with resource/folder resolved");
 
                 startActivity(Intent.createChooser(intent, chooserTitle));
                 return;
             }
 
+            // works with OI File manager
+            intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(contentUri);
+            if (intent.resolveActivity(packageManager) != null) {
+                Log.i(Constants.LOG_TAG_SERVICE, "ACTION_VIEW resolved");
+
+                startActivity(Intent.createChooser(intent, chooserTitle));
+                return;
+            }
+
+            // another test
+            intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.fromFile(projectHome));
+            intent.putExtra("org.openintents.extra.ABSOLUTE_PATH", projectHome.getPath());
+            if (intent.resolveActivity(packageManager) != null) {
+                Log.i(Constants.LOG_TAG_SERVICE, "ACTION_VIEW with extra resolved");
+                startActivity(Intent.createChooser(intent, chooserTitle));
+                return;
+            }
+
             // brute force to choose a file manager
+            intent = new Intent(Intent.ACTION_VIEW);
             Log.i(Constants.LOG_TAG_SERVICE, "ACTION_VIEW with */* resolved");
             intent.setDataAndType(contentUri, MIME_TYPE_ANY);
             startActivity(Intent.createChooser(intent, chooserTitle));
