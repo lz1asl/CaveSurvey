@@ -68,7 +68,7 @@ public abstract class AbstractBoschGLMBluetoothDevice extends AbstractBluetoothR
             } else if (EDCInputMessage.MODE_INDIRECT_LENGTH == message.getDevMode()) {
                 // PLR 50 C, GLM 50 C - distance and clino in indirect length mode
                 measures.add(new Measure(Constants.MeasureTypes.distance, Constants.MeasureUnits.meters, message.getComp1()));
-                if (isMeasureSupported(Constants.MeasureTypes.angle)) { // just in case
+                if (isMeasureSupported(Constants.MeasureTypes.slope)) { // just in case
                     measures.add(new Measure(Constants.MeasureTypes.slope, Constants.MeasureUnits.degrees, message.getComp2()));
                 }
             } else {
