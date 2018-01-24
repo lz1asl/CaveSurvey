@@ -183,7 +183,8 @@
         </TableRow>
 
         <!-- project config -->
-        <TableRow android:paddingTop="10dp">
+        <TableRow android:paddingTop="10dp"
+            android:layout_marginTop="20dp">
             <FrameLayout android:id="@+id/projectInfoContainer"
                 android:layout_width="0px"
                 android:layout_height="match_parent"
