@@ -12,7 +12,7 @@
     <string name="sk_paldin">Пълдин</string>
 
     <!-- welcome screen -->
-    <string name="home_no_projects">Няма проучвания!</string>
+    <string name="home_no_projects">Създай проучване</string>
     <string name="home_new_project">Ново проучване</string>
     <string name="home_button_new_exists">Проучване %1$s вече съществува!</string>
     <string name="home_delete_project">Изтрий проучване %1$s?</string>

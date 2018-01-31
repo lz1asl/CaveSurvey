@@ -12,7 +12,7 @@
     <string name="sk_paldin">Paldin</string>
 
     <!-- welcome screen -->
-    <string name="home_no_projects">No surveys yet!</string>
+    <string name="home_no_projects">Create survey</string>
     <string name="home_new_project">New survey</string>
     <string name="home_button_new_exists">Survey %1$s exists!</string>
     <string name="home_delete_project">Delete survey %1$s?</string>
