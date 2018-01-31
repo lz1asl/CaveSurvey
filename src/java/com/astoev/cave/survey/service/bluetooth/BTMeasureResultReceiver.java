@@ -60,6 +60,7 @@ public class BTMeasureResultReceiver extends ResultReceiver {
                     // screen specific population of the measures
                     mTarget.onReceiveMeasures(type, measure);
                 }
+                break;
 
             default:
                 UIUtilities.showNotification(aResultData.getString("error"));
