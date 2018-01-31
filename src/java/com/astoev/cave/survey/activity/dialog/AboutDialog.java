@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -23,12 +23,9 @@ import com.astoev.cave.survey.BuildConfig;
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.util.ConfigUtil;
-import com.astoev.cave.survey.util.StringUtils;
 
-import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
 /**
  * Fragment that shows about dialog
@@ -93,28 +90,16 @@ public class AboutDialog extends DialogFragment  {
         return  builder.create();
     }
 
-    // kind of ugly build date looking at the time the dex files were last updated
-    private String getBuildDate() {
-        Activity context = ConfigUtil.getContext();
-        ZipFile zf = null;
-        try {
-            ApplicationInfo ai = context.getPackageManager().getApplicationInfo(context.getPackageName(), 0);
-            zf = new ZipFile(ai.sourceDir);
-            ZipEntry ze = zf.getEntry("classes.dex");
-            long time = ze.getTime();
-            return " / " + StringUtils.dateToString(new Date(time));
 
-        } catch(Exception e) {
-            Log.e(Constants.LOG_TAG_UI, "Failed get build date", e);
+    private String getBuildDate() {
+        try {
+            Context c = ConfigUtil.getContext();
+            PackageInfo packageInfo = c.getPackageManager().getPackageInfo(c.getPackageName(), 0);
+            String appBuildDate = SimpleDateFormat.getDateInstance().format(new Date(packageInfo.lastUpdateTime));
+            return " / " + appBuildDate;
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.e(Constants.LOG_TAG_UI, "Failed to get build date", e);
             return "";
-        } finally {
-            if (zf != null) {
-                try {
-                    zf.close();
-                } catch (IOException e) {
-                    Log.e(Constants.LOG_TAG_UI, "Failed close file", e);
-                }
-            }
         }
     }
 
