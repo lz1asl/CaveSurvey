@@ -79,6 +79,22 @@ public class MapView extends View {
     public MapView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
+        // drawing constants
+        prepareDisplayParameters();
+
+        // need to instruct that changes to the canvas will be made, otherwise the screen might become blank
+        // see http://stackoverflow.com/questions/12261435/canvas-does-not-draw-in-custom-view
+        setWillNotDraw(false);
+
+        // project constants
+        azimuthUnits = Options.getOptionValue(Option.CODE_AZIMUTH_UNITS);
+        slopeUnits = Options.getOptionValue(Option.CODE_SLOPE_UNITS);
+
+        // project data cache
+
+    }
+
+    private void prepareDisplayParameters() {
         screenScale = getResources().getDisplayMetrics().density;
         pointRadius = 3 * screenScale;
         middlePointRadius = 2 * screenScale;
@@ -121,14 +137,6 @@ public class MapView extends View {
         vectorsPaint.setAlpha(50);
         vectorPointPaint.setStrokeWidth(1);
         vectorPointPaint.setAlpha(50);
-
-        // need to instruct that changes to the canvas will be made, otherwise the screen might become blank
-        // see http://stackoverflow.com/questions/12261435/canvas-does-not-draw-in-custom-view
-        setWillNotDraw(false);
-
-        azimuthUnits = Options.getOptionValue(Option.CODE_AZIMUTH_UNITS);
-        slopeUnits = Options.getOptionValue(Option.CODE_SLOPE_UNITS);
-
     }
 
     @Override
@@ -169,14 +177,8 @@ public class MapView extends View {
             int gridStartX = mapCenterMoveX % gridStep - (int) spacing + centerX - (centerX / gridStep) * gridStep;
             int gridStartY = mapCenterMoveY % gridStep - (int) spacing + centerY - (centerY / gridStep) * gridStep;
 
-            // grid horizontal lines
-            for (int x=0; x<maxX/gridStep; x++) {
-                canvas.drawLine(x*gridStep + spacing + gridStartX, spacing, x*gridStep + spacing + gridStartX, maxY - spacing, gridPaint);
-            }
-            // grid vertical lines
-            for (int y=0; y<maxY/gridStep; y++) {
-                canvas.drawLine(spacing, y*gridStep + spacing + gridStartY, maxX - spacing, y*gridStep + spacing + gridStartY, gridPaint);
-            }
+            drawGridLines(canvas, maxX, maxY, gridStep, gridStartX, gridStartY);
+
 
             // load the points
             List<Leg> legs = DaoUtil.getCurrProjectLegs(true);
@@ -373,47 +375,61 @@ public class MapView extends View {
                 }
             }
 
-
-            // borders
-            //top
-            canvas.drawLine(spacing, spacing, maxX - spacing, spacing, overlayPaint);
-            //right
-            canvas.drawLine(maxX - spacing, spacing, maxX - spacing, maxY - spacing, overlayPaint);
-            // bottom
-            canvas.drawLine(spacing, maxY - spacing, maxX - spacing, maxY - spacing, overlayPaint);
-            //left
-            canvas.drawLine(spacing, maxY - spacing, spacing, spacing, overlayPaint);
-
-            float scaled30 = 30 * screenScale;
-            float scaled20 = 20 * screenScale;
-            float scaled10 = 10 * screenScale;
-
-            if (horizontalPlan) {
-                // north arrow
-                northCenter.set((int) (maxX - scaled20), (int) (scaled30));
-                canvas.drawLine(northCenter.x, northCenter.y, northCenter.x + scaled10, northCenter.y + scaled10, overlayPaint);
-                canvas.drawLine(northCenter.x + scaled10, northCenter.y + scaled10, northCenter.x, northCenter.y - scaled20, overlayPaint);
-                canvas.drawLine(northCenter.x, northCenter.y - scaled20, northCenter.x - scaled10, northCenter.y + scaled10, overlayPaint);
-                canvas.drawLine(northCenter.x - scaled10, northCenter.y + scaled10, northCenter.x, northCenter.y, overlayPaint);
-                canvas.drawText("N", northCenter.x + 5 * screenScale, northCenter.y - scaled10, overlayPaint);
-            } else {
-                //  up awrrow
-                northCenter.set((int) (maxX - 15 * screenScale), (int) scaled10);
-                canvas.drawLine(northCenter.x + 1 * screenScale, northCenter.y, northCenter.x + 6 * screenScale, northCenter.y + scaled10, overlayPaint);
-                canvas.drawLine(northCenter.x - 5 * screenScale, northCenter.y + scaled10, northCenter.x, northCenter.y, overlayPaint);
-                canvas.drawLine(northCenter.x, northCenter.y - 1 * screenScale, northCenter.x, northCenter.y + scaled20, overlayPaint);
-            }
-
-            // scale
-            canvas.drawText("x" + scale, (20 * screenScale + gridStep/2), 45 * screenScale, overlayPaint);
-            canvas.drawLine(scaled30, 25 * screenScale, scaled30, 35 * screenScale, overlayPaint);
-            canvas.drawLine(scaled30, scaled30, scaled30 + gridStep, scaled30, overlayPaint);
-            canvas.drawLine(scaled30 + gridStep, 25 * screenScale, scaled30 + gridStep, 35 * screenScale, overlayPaint);
-            canvas.drawText(GRID_STEPS[gridStepIndex]  + "m" , 15 * screenScale + gridStep/2, 25 * screenScale, overlayPaint);
+            drawMapBordersScaleAndArrow(canvas, maxX, maxY, GRID_STEPS[gridStepIndex], gridStep);
 
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to draw map activity", e);
             UIUtilities.showNotification(R.string.error);
+        }
+    }
+
+    private void drawMapBordersScaleAndArrow(Canvas canvas, int aMaxX, int aMaxY, float aGridStep, int aGridStep2) {
+        // borders
+        //top
+        canvas.drawLine(spacing, spacing, aMaxX - spacing, spacing, overlayPaint);
+        //right
+        canvas.drawLine(aMaxX - spacing, spacing, aMaxX - spacing, aMaxY - spacing, overlayPaint);
+        // bottom
+        canvas.drawLine(spacing, aMaxY - spacing, aMaxX - spacing, aMaxY - spacing, overlayPaint);
+        //left
+        canvas.drawLine(spacing, aMaxY - spacing, spacing, spacing, overlayPaint);
+
+        float scaled30 = 30 * screenScale;
+        float scaled20 = 20 * screenScale;
+        float scaled10 = 10 * screenScale;
+
+        if (horizontalPlan) {
+            // north arrow
+            northCenter.set((int) (aMaxX - scaled20), (int) (scaled30));
+            canvas.drawLine(northCenter.x, northCenter.y, northCenter.x + scaled10, northCenter.y + scaled10, overlayPaint);
+            canvas.drawLine(northCenter.x + scaled10, northCenter.y + scaled10, northCenter.x, northCenter.y - scaled20, overlayPaint);
+            canvas.drawLine(northCenter.x, northCenter.y - scaled20, northCenter.x - scaled10, northCenter.y + scaled10, overlayPaint);
+            canvas.drawLine(northCenter.x - scaled10, northCenter.y + scaled10, northCenter.x, northCenter.y, overlayPaint);
+            canvas.drawText("N", northCenter.x + 5 * screenScale, northCenter.y - scaled10, overlayPaint);
+        } else {
+            //  up awrrow
+            northCenter.set((int) (aMaxX - 15 * screenScale), (int) scaled10);
+            canvas.drawLine(northCenter.x + 1 * screenScale, northCenter.y, northCenter.x + 6 * screenScale, northCenter.y + scaled10, overlayPaint);
+            canvas.drawLine(northCenter.x - 5 * screenScale, northCenter.y + scaled10, northCenter.x, northCenter.y, overlayPaint);
+            canvas.drawLine(northCenter.x, northCenter.y - 1 * screenScale, northCenter.x, northCenter.y + scaled20, overlayPaint);
+        }
+
+        // scale
+        canvas.drawText("x" + scale, (20 * screenScale + aGridStep2 /2), 45 * screenScale, overlayPaint);
+        canvas.drawLine(scaled30, 25 * screenScale, scaled30, 35 * screenScale, overlayPaint);
+        canvas.drawLine(scaled30, scaled30, scaled30 + aGridStep2, scaled30, overlayPaint);
+        canvas.drawLine(scaled30 + aGridStep2, 25 * screenScale, scaled30 + aGridStep2, 35 * screenScale, overlayPaint);
+        canvas.drawText(aGridStep + "m" , 15 * screenScale + aGridStep2 /2, 25 * screenScale, overlayPaint);
+    }
+
+    private void drawGridLines(Canvas canvas, int aMaxX, int aMaxY, int aGridStep, int aGridStartX, int aGridStartY) {
+        // grid horizontal lines
+        for (int x = 0; x< aMaxX / aGridStep; x++) {
+            canvas.drawLine(x* aGridStep + spacing + aGridStartX, spacing, x* aGridStep + spacing + aGridStartX, aMaxY - spacing, gridPaint);
+        }
+        // grid vertical lines
+        for (int y = 0; y< aMaxY / aGridStep; y++) {
+            canvas.drawLine(spacing, y* aGridStep + spacing + aGridStartY, aMaxX - spacing, y* aGridStep + spacing + aGridStartY, gridPaint);
         }
     }
 
