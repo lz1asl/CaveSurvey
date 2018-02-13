@@ -72,6 +72,9 @@ public class MapView extends View {
 
     private static float screenScale;
 
+    private String azimuthUnits;
+    private String slopeUnits;
+
 
     public MapView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -123,6 +126,9 @@ public class MapView extends View {
         // see http://stackoverflow.com/questions/12261435/canvas-does-not-draw-in-custom-view
         setWillNotDraw(false);
 
+        azimuthUnits = Options.getOptionValue(Option.CODE_AZIMUTH_UNITS);
+        slopeUnits = Options.getOptionValue(Option.CODE_SLOPE_UNITS);
+
     }
 
     @Override
@@ -153,9 +159,6 @@ public class MapView extends View {
                 centerX = maxX / 4;
                 centerY = maxY / 2;
             }
-
-            String azimuthUnits = Options.getOptionValue(Option.CODE_AZIMUTH_UNITS);
-            String slopeUnits = Options.getOptionValue(Option.CODE_SLOPE_UNITS);
 
             int gridStepIndex = scale/5;
 
