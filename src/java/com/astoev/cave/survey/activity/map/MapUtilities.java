@@ -3,8 +3,11 @@ package com.astoev.cave.survey.activity.map;
 import android.graphics.Color;
 
 import com.astoev.cave.survey.Constants;
+import com.astoev.cave.survey.activity.map.cache.Point;
 import com.astoev.cave.survey.model.Option;
 import com.astoev.cave.survey.service.Options;
+
+
 
 /**
  * Created by astoev on 12/31/13.
@@ -161,5 +164,32 @@ public class MapUtilities {
 
     public static boolean isSlopeInGradsValid(Float aSlope) {
         return aSlope != null && aSlope >= Option.MIN_VALUE_SLOPE_GRADS && aSlope <= Option.MAX_VALUE_SLOPE_GRADS;
+    }
+
+    public static Point createNextRawPoint(Point aStartPoint, Float aDistance, Float anAzimuth, String anAzimuthUnits,
+                                           Float aSlope, String aSlopeUnits, boolean isHorizontal) {
+
+        float deltaX, deltaY;
+
+        if (aDistance == null || aDistance == null) {
+            deltaX = deltaY = 0;
+        } else {
+
+            if (isHorizontal) {
+                Float azimuth = MapUtilities.getAzimuthInDegrees(anAzimuth, anAzimuthUnits);
+
+                float legDistance = MapUtilities.applySlopeToDistance(aDistance, MapUtilities.getSlopeInDegrees(aSlope, aSlopeUnits));
+
+                deltaX = (float) (legDistance * Math.sin(Math.toRadians(azimuth)));
+                deltaY = -(float) (legDistance * Math.cos(Math.toRadians(azimuth)));
+            } else {
+                Float slope = aSlope == null ? 0 : MapUtilities.getSlopeInDegrees(aSlope, aSlopeUnits);
+
+                deltaX = (float) (aDistance * Math.sin(Math.toRadians(MapUtilities.add90Degrees(slope))));
+                deltaY = (float) (aDistance * Math.cos(Math.toRadians(MapUtilities.add90Degrees(slope))));
+            }
+        }
+
+        return new Point(aStartPoint.getX() + deltaX, aStartPoint.getY() + deltaY);
     }
 }

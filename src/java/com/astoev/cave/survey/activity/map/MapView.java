@@ -6,7 +6,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
-import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -17,6 +16,10 @@ import android.view.View;
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.UIUtilities;
+import com.astoev.cave.survey.activity.map.cache.Line;
+import com.astoev.cave.survey.activity.map.cache.Point;
+import com.astoev.cave.survey.activity.map.cache.Shape;
+import com.astoev.cave.survey.activity.map.cache.ShapeType;
 import com.astoev.cave.survey.model.Gallery;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Option;
@@ -26,8 +29,12 @@ import com.astoev.cave.survey.service.Workspace;
 import com.astoev.cave.survey.util.DaoUtil;
 
 import java.io.ByteArrayOutputStream;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -60,7 +67,7 @@ public class MapView extends View {
     private int mapCenterMoveY = 0;
     private float initialMoveX = 0;
     private float initialMoveY = 0;
-    private Point northCenter = new Point();
+    private android.graphics.Point northCenter = new android.graphics.Point();
 
     private List<Integer> processedLegs = new ArrayList<Integer>();
     
@@ -90,7 +97,250 @@ public class MapView extends View {
         azimuthUnits = Options.getOptionValue(Option.CODE_AZIMUTH_UNITS);
         slopeUnits = Options.getOptionValue(Option.CODE_SLOPE_UNITS);
 
-        // project data cache
+        // build project data cache
+        Map<Point, List<Shape>> vectorCache = new HashMap<Point, List<Shape>>();
+
+        try {
+
+            // load the points
+            List<Leg> legs = DaoUtil.getCurrProjectLegs(true);
+            String pointLabel;
+
+            boolean firstLeg = true;
+            for (Leg l : legs) {
+
+                Log.i(Constants.LOG_TAG_UI, "Map cache: " + vectorCache);
+
+                // leg
+                Point lineStart = null;
+
+                if (firstLeg) {
+                    lineStart = new Point(0f, 0f, l.getFromPoint().getId());
+                    firstLeg = false;
+                } else {
+                    // find start
+                    for (Collection<Shape> shapes : vectorCache.values()) {
+                        for (Shape s : shapes) {
+                            if (ShapeType.LEG.equals(s.getType())) {
+                                Line cacheLine = (Line) s;
+                                if (cacheLine.getTo().getId().equals(l.getFromPoint().getId())) {
+                                    lineStart = cacheLine.getTo();
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (lineStart == null) {
+                    throw new RuntimeException("Failed to load point, tree is broken");
+                }
+
+                DaoUtil.refreshPoint(l.getFromPoint());
+                String startLabel = galleryNames.get(l.getGalleryId()) + l.getFromPoint().getName();
+                lineStart.setLabel(startLabel);
+
+                Float legDistance = l.isMiddle() ? l.getMiddlePointDistance() : l.getDistance();
+                Point lineEnd = getNextCachePoint(lineStart, l, legDistance);
+                lineEnd.setId(l.getToPoint().getId());
+                Line line = new Line(lineStart, lineEnd);
+                line.setType(ShapeType.LEG);
+
+                if (!vectorCache.containsKey(lineStart)) {
+                    vectorCache.put(lineStart, new ArrayList<Shape>());
+                }
+                List<Shape> pointShapes = vectorCache.get(lineStart);
+                pointShapes.add(line);
+
+                if (l.getLeft() != null) {
+                    Point lineLeft = getNextCachePoint(lineStart, l, l.getLeft());
+                    Shape left = new Line(lineStart, lineLeft);
+                    left.setType(ShapeType.SIDE);
+                    pointShapes.add(left);
+                }
+
+                if (l.getRight() != null) {
+                    Point lineRight = getNextCachePoint(lineStart, l, l.getRight());
+                    Shape right = new Line(lineStart, lineRight);
+                    right.setType(ShapeType.SIDE);
+                    pointShapes.add(right);
+                }
+
+                if (l.getTop() != null) {
+                    Point lineTop = getNextCachePoint(lineStart, l, l.getTop());
+                    Shape top = new Line(lineStart, lineTop);
+                    top.setType(ShapeType.SIDE);
+                    pointShapes.add(top);
+                }
+
+                if (l.getDown() != null) {
+                    Point lineDown = getNextCachePoint(lineStart, l, l.getDown());
+                    Shape down = new Line(lineStart, lineDown);
+                    down.setType(ShapeType.SIDE);
+                    pointShapes.add(down);
+                }
+
+            }
+
+/*
+
+
+                    if (mapPoints.get(l.getFromPoint().getId()) == null) {
+                        if (!l.isMiddle()) {
+                            mapPoints.put(l.getFromPoint().getId(), first);
+                        }
+
+                        // draw first point
+                        if (!l.isMiddle()) {
+                            //color
+                            if (galleryColors.get(l.getGalleryId(), Constants.NOT_FOUND) == Constants.NOT_FOUND) {
+                                galleryColors.put(l.getGalleryId(), MapUtilities.getNextGalleryColor(galleryColors.size()));
+                                Gallery gallery = DaoUtil.getGallery(l.getGalleryId());
+                                galleryNames.put(l.getGalleryId(), gallery.getName());
+                            }
+                            polygonPaint.setColor(galleryColors.get(l.getGalleryId()));
+                            polygonWidthPaint.setColor(galleryColors.get(l.getGalleryId()));
+                            vectorsPaint.setColor(galleryColors.get(l.getGalleryId()));
+                            vectorPointPaint.setColor(galleryColors.get(l.getGalleryId()));
+
+                            DaoUtil.refreshPoint(l.getFromPoint());
+
+                            pointLabel = galleryNames.get(l.getGalleryId()) + l.getFromPoint().getName();
+                            if (scale >= 3) {
+                                canvas.drawText(pointLabel, mapCenterMoveX + first.getX() + labelDeviationX, mapCenterMoveY + first.getY() + labelDeviationY, polygonPaint);
+                            }
+                            canvas.drawCircle(mapCenterMoveX + first.getX(), mapCenterMoveY + first.getY(), pointRadius, polygonPaint);
+                        }
+                    }
+
+                    float deltaX;
+                    float deltaY;
+                    if (horizontalPlan) {
+                        if (l.getDistance() == null || l.getAzimuth() == null) {
+                            deltaX = 0;
+                            deltaY = 0;
+                        } else {
+                            float legDistance;
+                            if (l.isMiddle()) {
+                                legDistance = MapUtilities.applySlopeToDistance(l.getMiddlePointDistance(), MapUtilities.getSlopeInDegrees(l.getSlope(), slopeUnits));
+                            } else {
+                                legDistance = MapUtilities.applySlopeToDistance(l.getDistance(), MapUtilities.getSlopeInDegrees(l.getSlope(), slopeUnits));
+                            }
+                            deltaY = -(float) (legDistance * Math.cos(Math.toRadians(MapUtilities.getAzimuthInDegrees(l.getAzimuth(), azimuthUnits)))) * scale;
+                            deltaX = (float) (legDistance * Math.sin(Math.toRadians(MapUtilities.getAzimuthInDegrees(l.getAzimuth(), azimuthUnits)))) * scale;
+                        }
+                    } else {
+                        if (l.getDistance() == null || l.getDistance() == 0) {
+                            deltaX = 0;
+                            deltaY = 0;
+                        } else {
+                            float legDistance;
+                            if (l.isMiddle()) {
+                                legDistance = l.getMiddlePointDistance();
+                            } else {
+                                legDistance = l.getDistance();
+                            }
+                            deltaY = (float) (legDistance * Math.cos(Math.toRadians(MapUtilities.add90Degrees(MapUtilities.getSlopeInDegrees(l.getSlope() == null ? 0 : l.getSlope(), slopeUnits))))) * scale;
+                            deltaX = (float) (legDistance * Math.sin(Math.toRadians(MapUtilities.add90Degrees(MapUtilities.getSlopeInDegrees(l.getSlope() == null ? 0 : l.getSlope(), slopeUnits))))) * scale;
+                        }
+                    }
+
+                    Point2D second = new Point2D(first.getX() + deltaX, first.getY() + deltaY);
+
+                    if (mapPoints.get(l.getToPoint().getId()) == null || l.isMiddle()) {
+                        if (!l.isMiddle()) {
+                            mapPoints.put(l.getToPoint().getId(), second);
+                        }
+
+                        // color
+                        if (galleryColors.get(l.getGalleryId(), Constants.NOT_FOUND) == Constants.NOT_FOUND) {
+                            galleryColors.put(l.getGalleryId(), MapUtilities.getNextGalleryColor(galleryColors.size()));
+                            Gallery gallery = DaoUtil.getGallery(l.getGalleryId());
+                            galleryNames.put(l.getGalleryId(), gallery.getName());
+                        }
+                        polygonPaint.setColor(galleryColors.get(l.getGalleryId()));
+                        polygonWidthPaint.setColor(galleryColors.get(l.getGalleryId()));
+                        vectorsPaint.setColor(galleryColors.get(l.getGalleryId()));
+                        vectorPointPaint.setColor(galleryColors.get(l.getGalleryId()));
+
+//                            Log.i(Constants.LOG_TAG_UI, "Drawing leg " + l.getFromPoint().getName() + ":" + l.getToPoint().getName() + "-" + l.getGalleryId());
+
+                        if (Workspace.getCurrentInstance().getActiveLegId().equals(l.getId())) {
+                            // you are here
+                            if (l.isMiddle()) {
+                                canvas.drawCircle(mapCenterMoveX + second.getX(), mapCenterMoveY + second.getY(), currPointRadius, youAreHerePaint);
+                            } else {
+                                canvas.drawCircle(mapCenterMoveX + first.getX(), mapCenterMoveY + first.getY(), currPointRadius, youAreHerePaint);
+                            }
+
+                        }
+
+                        DaoUtil.refreshPoint(l.getToPoint());
+                        if (l.isMiddle()) {
+                            canvas.drawCircle(mapCenterMoveX + second.getX(), mapCenterMoveY + second.getY(), middlePointRadius, polygonPaint);
+                        } else {
+                            pointLabel = galleryNames.get(l.getGalleryId()) + l.getToPoint().getName();
+                            if (scale >= 3) {
+                                canvas.drawText(pointLabel, mapCenterMoveX + second.getX() + labelDeviationX, mapCenterMoveY + second.getY() + labelDeviationY, polygonPaint);
+                            }
+                            canvas.drawCircle(mapCenterMoveX + second.getX(), mapCenterMoveY + second.getY(), pointRadius, polygonPaint);
+                        }
+
+                    }
+
+                    // leg
+                    if (!l.isMiddle()) {
+                        canvas.drawLine(mapCenterMoveX + first.getX(), mapCenterMoveY + first.getY(), mapCenterMoveX + second.getX(), mapCenterMoveY + second.getY(), polygonPaint);
+                    }
+
+                    Leg prevLeg = DaoUtil.getLegByToPoint(l.getFromPoint());
+
+                    if (scale >= 5) {
+                        if (horizontalPlan) {
+                            // left
+                            calculateAndDrawSide(canvas, l, first, second, prevLeg, first.getLeft(), azimuthUnits, true);
+                            // right
+                            calculateAndDrawSide(canvas, l, first, second, prevLeg, first.getRight(), azimuthUnits, false);
+                        } else {
+                            // top
+                            calculateAndDrawSide(canvas, l, first, second, prevLeg, first.getLeft(), slopeUnits, true);
+                            // down
+                            calculateAndDrawSide(canvas, l, first, second, prevLeg, first.getRight(), slopeUnits, false);
+                        }
+                    }
+
+                    if (!l.isMiddle() && scale >= 10) {
+                        // vectors
+                        List<Vector> vectors = DaoUtil.getLegVectors(l);
+                        if (vectors != null) {
+                            for (Vector v : vectors) {
+                                if (horizontalPlan) {
+                                    float legDistance = MapUtilities.applySlopeToDistance(v.getDistance(), MapUtilities.getSlopeInDegrees(v.getSlope(), slopeUnits));
+                                    deltaY = -(float) (legDistance * Math.cos(Math.toRadians(MapUtilities.getAzimuthInDegrees(v.getAzimuth(), azimuthUnits)))) * scale;
+                                    deltaX = (float) (legDistance * Math.sin(Math.toRadians(MapUtilities.getAzimuthInDegrees(v.getAzimuth(), azimuthUnits)))) * scale;
+                                } else {
+                                    float legDistance = v.getDistance();
+                                    deltaY = (float) (legDistance * Math.cos(Math.toRadians(MapUtilities.add90Degrees(
+                                            MapUtilities.getSlopeInDegrees(MapUtilities.getSlopeOrHorizontallyIfMissing(v.getSlope()), slopeUnits))))) * scale;
+                                    deltaX = (float) (legDistance * Math.sin(Math.toRadians(MapUtilities.add90Degrees(
+                                            MapUtilities.getSlopeInDegrees(MapUtilities.getSlopeOrHorizontallyIfMissing(v.getSlope()), slopeUnits))))) * scale;
+                                }
+                                canvas.drawLine(mapCenterMoveX + first.getX(), mapCenterMoveY + first.getY(), mapCenterMoveX + first.getX() + deltaX, mapCenterMoveY + first.getY() + deltaY, vectorsPaint);
+                                canvas.drawCircle(mapCenterMoveX + first.getX() + deltaX, mapCenterMoveY + first.getY() + deltaY, sidePointRadius, vectorPointPaint);
+                            }
+                        }
+                    }
+
+                    processedLegs.add(l.getId());
+                }
+
+            }
+        }*/
+
+        } catch (SQLException e) {
+            Log.e(Constants.LOG_TAG_UI, "Failed to load map cache", e);
+            UIUtilities.showNotification(R.string.error);
+        }
 
     }
 
@@ -570,6 +820,10 @@ public class MapView extends View {
             aCanvas.drawCircle(mapCenterMoveX + aFirst.getX() + aDeltaX, mapCenterMoveY + aFirst.getY() + aDeltaY, sidePointRadius, polygonWidthPaint);
         }
 
+    }
+
+    private Point getNextCachePoint(Point aStartPoint, Leg aLeg, Float aDistance) {
+        return MapUtilities.createNextRawPoint(aStartPoint, aDistance, aLeg.getAzimuth(), azimuthUnits, aLeg.getSlope(), slopeUnits, isHorizontalPlan());
     }
 
 }
