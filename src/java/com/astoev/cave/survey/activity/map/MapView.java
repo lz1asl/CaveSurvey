@@ -99,6 +99,10 @@ public class MapView extends View {
         azimuthUnits = Options.getOptionValue(Option.CODE_AZIMUTH_UNITS);
         slopeUnits = Options.getOptionValue(Option.CODE_SLOPE_UNITS);
 
+        buildMapCache();
+    }
+
+    private void buildMapCache() {
         // build project data cache
         vectorCache.clear();
         galleryColors.clear();
@@ -365,7 +369,6 @@ public class MapView extends View {
             Log.e(Constants.LOG_TAG_UI, "Failed to load map cache", e);
             UIUtilities.showNotification(R.string.error);
         }
-
     }
 
     private void prepareDisplayParameters() {
@@ -633,8 +636,9 @@ public class MapView extends View {
             }
 
             // TODO only for testing
-            mapCenterMoveX = 50 + centerX;
-            mapCenterMoveY = 50 + centerY;
+            int secondMapOffset = 30;
+            mapCenterMoveX += secondMapOffset;
+            mapCenterMoveY += secondMapOffset;
 
             // from cache drawing
             for (Point p : vectorCache.keySet()) {
@@ -681,6 +685,10 @@ public class MapView extends View {
                     }
                 }
             }
+
+            // TODO test reset coe
+            mapCenterMoveX -= secondMapOffset;
+            mapCenterMoveY -= secondMapOffset;
 
             drawMapBordersScaleAndArrow(canvas, maxX, maxY, GRID_STEPS[gridStepIndex], gridStep);
 
@@ -768,6 +776,7 @@ public class MapView extends View {
         scale = 10;
         mapCenterMoveX = 0;
         mapCenterMoveY = 0;
+        buildMapCache();
         invalidate();
     }
 
