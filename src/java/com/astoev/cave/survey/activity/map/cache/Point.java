@@ -4,21 +4,22 @@ package com.astoev.cave.survey.activity.map.cache;
  * Created by astoev on 2/13/18.
  */
 
-public class Point {
+public class Point extends Shape {
 
     private float x,y;
     private Integer id;
     private String label;
+    private boolean current;
 
     public Point(float aX, float aY) {
-        x = aX;
-        y = aY;
+        this(aX, aY, null);
     }
 
     public Point(float aX, float aY, Integer aId) {
         x = aX;
         y = aY;
         id = aId;
+        setType(ShapeType.POINT);
     }
 
     public float getX() {
@@ -51,6 +52,14 @@ public class Point {
 
     public void setLabel(String aLabel) {
         label = aLabel;
+    }
+
+    public boolean isCurrent() {
+        return current;
+    }
+
+    public void setCurrent(boolean aCurrent) {
+        current = aCurrent;
     }
 
     @Override

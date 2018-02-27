@@ -79,6 +79,8 @@ public class MapView extends View {
 
     private static float screenScale;
 
+    private Map<Point, List<Shape>> vectorCache = new HashMap<Point, List<Shape>>();
+
     private String azimuthUnits;
     private String slopeUnits;
 
@@ -98,13 +100,15 @@ public class MapView extends View {
         slopeUnits = Options.getOptionValue(Option.CODE_SLOPE_UNITS);
 
         // build project data cache
-        Map<Point, List<Shape>> vectorCache = new HashMap<Point, List<Shape>>();
+        vectorCache.clear();
+        galleryColors.clear();
+        galleryNames.clear();
 
         try {
 
             // load the points
             List<Leg> legs = DaoUtil.getCurrProjectLegs(true);
-            String pointLabel;
+            Integer currLegId = Workspace.getCurrentInstance().getActiveLegId();
 
             boolean firstLeg = true;
             for (Leg l : legs) {
@@ -132,11 +136,21 @@ public class MapView extends View {
                     }
                 }
 
+                lineStart.setGalleryId(l.getGalleryId());
                 if (lineStart == null) {
                     throw new RuntimeException("Failed to load point, tree is broken");
                 }
 
+                // initialize gallery colors
+                if (!l.isMiddle()) {
+                    if (galleryColors.get(l.getGalleryId(), Constants.NOT_FOUND) == Constants.NOT_FOUND) {
+                        galleryColors.put(l.getGalleryId(), MapUtilities.getNextGalleryColor(galleryColors.size()));
+                    }
+                }
+
                 DaoUtil.refreshPoint(l.getFromPoint());
+                Gallery gallery = DaoUtil.getGallery(l.getGalleryId());
+                galleryNames.put(l.getGalleryId(), gallery.getName());
                 String startLabel = galleryNames.get(l.getGalleryId()) + l.getFromPoint().getName();
                 lineStart.setLabel(startLabel);
 
@@ -145,6 +159,16 @@ public class MapView extends View {
                 lineEnd.setId(l.getToPoint().getId());
                 Line line = new Line(lineStart, lineEnd);
                 line.setType(ShapeType.LEG);
+                line.setGalleryId(l.getGalleryId());
+
+                // you are here
+                if (currLegId.equals(l.getId())) {
+                    if (l.isMiddle()) {
+                        lineEnd.setCurrent(true);
+                    } else {
+                        lineStart.setCurrent(true);
+                    }
+                }
 
                 if (!vectorCache.containsKey(lineStart)) {
                     vectorCache.put(lineStart, new ArrayList<Shape>());
@@ -398,8 +422,6 @@ public class MapView extends View {
         try {
             processedLegs.clear();
             mapPoints.clear();
-            galleryColors.clear();
-            galleryNames.clear();
 
             // prepare map surface
             int maxX = canvas.getWidth();
@@ -422,12 +444,7 @@ public class MapView extends View {
 
             // grid scale
             int gridStep = (int) (GRID_STEPS[gridStepIndex] * scale);
-
-            // grid start
-            int gridStartX = mapCenterMoveX % gridStep - (int) spacing + centerX - (centerX / gridStep) * gridStep;
-            int gridStartY = mapCenterMoveY % gridStep - (int) spacing + centerY - (centerY / gridStep) * gridStep;
-
-            drawGridLines(canvas, maxX, maxY, gridStep, gridStartX, gridStartY);
+            drawGridLines(canvas, maxX, maxY, gridStep);
 
 
             // load the points
@@ -481,11 +498,6 @@ public class MapView extends View {
                             // draw first point
                             if (!l.isMiddle()) {
                                 //color
-                                if (galleryColors.get(l.getGalleryId(), Constants.NOT_FOUND) == Constants.NOT_FOUND) {
-                                    galleryColors.put(l.getGalleryId(), MapUtilities.getNextGalleryColor(galleryColors.size()));
-                                    Gallery gallery = DaoUtil.getGallery(l.getGalleryId());
-                                    galleryNames.put(l.getGalleryId(), gallery.getName());
-                                }
                                 polygonPaint.setColor(galleryColors.get(l.getGalleryId()));
                                 polygonWidthPaint.setColor(galleryColors.get(l.getGalleryId()));
                                 vectorsPaint.setColor(galleryColors.get(l.getGalleryId()));
@@ -541,11 +553,6 @@ public class MapView extends View {
                             }
 
                             // color
-                            if (galleryColors.get(l.getGalleryId(), Constants.NOT_FOUND) == Constants.NOT_FOUND) {
-                                galleryColors.put(l.getGalleryId(), MapUtilities.getNextGalleryColor(galleryColors.size()));
-                                Gallery gallery = DaoUtil.getGallery(l.getGalleryId());
-                                galleryNames.put(l.getGalleryId(), gallery.getName());
-                            }
                             polygonPaint.setColor(galleryColors.get(l.getGalleryId()));
                             polygonWidthPaint.setColor(galleryColors.get(l.getGalleryId()));
                             vectorsPaint.setColor(galleryColors.get(l.getGalleryId()));
@@ -625,6 +632,56 @@ public class MapView extends View {
                 }
             }
 
+            // TODO only for testing
+            mapCenterMoveX = 50 + centerX;
+            mapCenterMoveY = 50 + centerY;
+
+            // from cache drawing
+            for (Point p : vectorCache.keySet()) {
+
+                // prepare colors
+                polygonPaint.setColor(galleryColors.get(p.getGalleryId()));
+                polygonWidthPaint.setColor(galleryColors.get(p.getGalleryId()));
+                vectorsPaint.setColor(galleryColors.get(p.getGalleryId()));
+                vectorPointPaint.setColor(galleryColors.get(p.getGalleryId()));
+
+                // draw point
+                if (scale >= 3) {
+                    canvas.drawText(p.getLabel(), mapCenterMoveX + p.getX() * scale + labelDeviationX, mapCenterMoveY + p.getY() * scale + labelDeviationY, polygonPaint);
+                }
+                canvas.drawCircle(mapCenterMoveX + p.getX() * scale, mapCenterMoveY + p.getY() * scale, pointRadius, polygonPaint);
+
+                if (p.isCurrent()) {
+                    canvas.drawCircle(mapCenterMoveX + p.getX() * scale, mapCenterMoveY + p.getY() * scale, currPointRadius, youAreHerePaint);
+                }
+
+
+                // shapes starting from that point
+
+                List<Shape> shapes = vectorCache.get(p);
+                for (Shape s : shapes) {
+                    switch (s.getType()) {
+
+                        case LEG:
+                            Line leg = (Line) s;
+                            canvas.drawLine(mapCenterMoveX + leg.getFrom().getX() * scale, mapCenterMoveY + leg.getFrom().getY() * scale,
+                                    mapCenterMoveX + leg.getTo().getX() * scale, mapCenterMoveY + leg.getTo().getY() * scale, polygonPaint);
+                            break;
+                        case SIDE:
+                            Line side = (Line) s;
+                            Point sidePoint = side.getTo();
+                            canvas.drawCircle(mapCenterMoveX + sidePoint.getX() * scale, mapCenterMoveY + sidePoint.getY() * scale, sidePointRadius, polygonWidthPaint);
+
+                            break;
+//                        s.draw(canvas, p, mapCenterMoveY, mapCenterMoveY, )
+
+                        default:
+//                            throw new RuntimeException("Not implemented");
+                            Log.i(Constants.LOG_TAG_UI, "Not implemented :" + s.getType());
+                    }
+                }
+            }
+
             drawMapBordersScaleAndArrow(canvas, maxX, maxY, GRID_STEPS[gridStepIndex], gridStep);
 
         } catch (Exception e) {
@@ -672,14 +729,14 @@ public class MapView extends View {
         canvas.drawText(aGridStep + "m" , 15 * screenScale + aGridStep2 /2, 25 * screenScale, overlayPaint);
     }
 
-    private void drawGridLines(Canvas canvas, int aMaxX, int aMaxY, int aGridStep, int aGridStartX, int aGridStartY) {
+    private void drawGridLines(Canvas canvas, int aMaxX, int aMaxY, int aGridStep) {
         // grid horizontal lines
         for (int x = 0; x< aMaxX / aGridStep; x++) {
-            canvas.drawLine(x* aGridStep + spacing + aGridStartX, spacing, x* aGridStep + spacing + aGridStartX, aMaxY - spacing, gridPaint);
+            canvas.drawLine(x* aGridStep + spacing, spacing, x* aGridStep + spacing, aMaxY - spacing, gridPaint);
         }
         // grid vertical lines
         for (int y = 0; y< aMaxY / aGridStep; y++) {
-            canvas.drawLine(spacing, y* aGridStep + spacing + aGridStartY, aMaxX - spacing, y* aGridStep + spacing + aGridStartY, gridPaint);
+            canvas.drawLine(spacing, y* aGridStep + spacing, aMaxX - spacing, y* aGridStep + spacing, gridPaint);
         }
     }
 
@@ -823,7 +880,9 @@ public class MapView extends View {
     }
 
     private Point getNextCachePoint(Point aStartPoint, Leg aLeg, Float aDistance) {
-        return MapUtilities.createNextRawPoint(aStartPoint, aDistance, aLeg.getAzimuth(), azimuthUnits, aLeg.getSlope(), slopeUnits, isHorizontalPlan());
+        Point p = MapUtilities.createNextRawPoint(aStartPoint, aDistance, aLeg.getAzimuth(), azimuthUnits, aLeg.getSlope(), slopeUnits, isHorizontalPlan());
+        p.setGalleryId(aLeg.getGalleryId());
+        return p;
     }
 
 }

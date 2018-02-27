@@ -6,5 +6,5 @@ package com.astoev.cave.survey.activity.map.cache;
 
 public enum ShapeType {
 
-    LEG, SIDE
+    LEG, SIDE, POINT
 }
