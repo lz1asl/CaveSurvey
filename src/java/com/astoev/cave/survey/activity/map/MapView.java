@@ -187,83 +187,24 @@ public class MapView extends View {
                 List<Shape> pointShapes = vectorCache.get(lineStart);
                 pointShapes.add(line);
 
-                if (horizontalPlan && l.getLeft() != null) {
-
-                      /*  // first or middle by 90'
-                        if (prevLeg == null || l.isMiddle()) {
-                            float angle;
-                            if (horizontalPlan) {
-                                if (left) {
-                                    angle = MapUtilities.minus90Degrees(l.getAngle());
-                                } else {
-                                    angle = MapUtilities.add90Degrees(first.getAngle());
-                                }
-                            } else {
-                                if (left) {
-                                    angle = Option.MIN_VALUE_AZIMUTH;
-                                } else {
-                                    angle = Option.MAX_VALUE_AZIMUTH_DEGREES / 2;
-                                }
-                            }
-                            galleryWidthAngle = Math.toRadians(angle);
-                        } else {
-                            float angle = first.getAngle() == null ? 0 : first.getAngle();
-                            // each next in the gallery by the bisector
-                            if (l.getGalleryId().equals(prevLeg.getGalleryId())) {
-
-                                if (horizontalPlan) {
-                                    angle = MapUtilities.getMiddleAngle(MapUtilities.getAzimuthInDegrees(prevLeg.getAzimuth(), anUnits), angle);
-                                    if (left) {
-                                        angle = MapUtilities.minus90Degrees(angle);
-                                    } else {
-                                        angle = MapUtilities.add90Degrees(angle);
-                                    }
-                                } else {
-                                    if (left) {
-                                        angle = Option.MIN_VALUE_AZIMUTH;
-                                    } else {
-                                        angle = Option.MAX_VALUE_AZIMUTH_DEGREES / 2;
-                                    }
-                                }
-                            } else { // new galleries again by 90'
-                                if (horizontalPlan) {
-                                    if (left) {
-                                        angle = MapUtilities.minus90Degrees(angle);
-                                    } else {
-                                        angle = MapUtilities.add90Degrees(angle);
-                                    }
-                                } else {
-                                    if (left) {
-                                        angle = Option.MIN_VALUE_AZIMUTH;
-                                    } else {
-                                        angle = Option.MAX_VALUE_AZIMUTH_DEGREES / 2;
-                                    }
-                                }
-                            }
-
-                            galleryWidthAngle = Math.toRadians(angle);
-                        }
-
-                        float deltaY = -(float) (aMeasure * Math.cos(galleryWidthAngle) * scale);
-                        float deltaX = (float) (aMeasure * Math.sin(galleryWidthAngle) * scale);*/
-
-                    Point lineLeft = getNextCachePoint(lineStart, l, l.getLeft());
-                    Shape left = new Line(lineStart, lineLeft);
-                    left.setType(ShapeType.SIDE);
-                    left.setGalleryId(galleryId);
-                    pointShapes.add(left);
-                }
-
                 if (horizontalPlan && l.getRight() != null) {
-                    Point lineRight = getNextCachePoint(lineStart, l, l.getRight());
+                    Point lineRight = MapUtilities.createSidePoint(lineStart, l, prevLeg, Constants.Measures.right, azimuthUnits);
                     Shape right = new Line(lineStart, lineRight);
                     right.setType(ShapeType.SIDE);
                     right.setGalleryId(galleryId);
                     pointShapes.add(right);
                 }
 
+                if (horizontalPlan && l.getLeft() != null) {
+                    Point lineLeft = MapUtilities.createSidePoint(lineStart, l, prevLeg, Constants.Measures.left, azimuthUnits);
+                    Shape left = new Line(lineStart, lineLeft);
+                    left.setType(ShapeType.SIDE);
+                    left.setGalleryId(galleryId);
+                    pointShapes.add(left);
+                }
+
                 if (!horizontalPlan && l.getTop() != null) {
-                    Point lineTop = getNextCachePoint(lineStart, l, l.getTop());
+                    Point lineTop = MapUtilities.createSidePoint(lineStart, l, prevLeg, Constants.Measures.up, azimuthUnits);
                     Shape top = new Line(lineStart, lineTop);
                     top.setType(ShapeType.SIDE);
                     top.setGalleryId(galleryId);
@@ -271,7 +212,7 @@ public class MapView extends View {
                 }
 
                 if (!horizontalPlan && l.getDown() != null) {
-                    Point lineDown = getNextCachePoint(lineStart, l, l.getDown());
+                    Point lineDown = MapUtilities.createSidePoint(lineStart, l, prevLeg, Constants.Measures.down, azimuthUnits);
                     Shape down = new Line(lineStart, lineDown);
                     down.setType(ShapeType.SIDE);
                     down.setGalleryId(galleryId);
@@ -982,5 +923,8 @@ public class MapView extends View {
         p.setGalleryId(aLeg.getGalleryId());
         return p;
     }
+
+
+
 
 }

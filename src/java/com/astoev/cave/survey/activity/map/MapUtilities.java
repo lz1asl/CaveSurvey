@@ -4,6 +4,7 @@ import android.graphics.Color;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.activity.map.cache.Point;
+import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Option;
 import com.astoev.cave.survey.service.Options;
 
@@ -188,6 +189,117 @@ public class MapUtilities {
                 deltaX = (float) (aDistance * Math.sin(Math.toRadians(MapUtilities.add90Degrees(slope))));
                 deltaY = (float) (aDistance * Math.cos(Math.toRadians(MapUtilities.add90Degrees(slope))));
             }
+        }
+
+        return new Point(aStartPoint.getX() + deltaX, aStartPoint.getY() + deltaY);
+    }
+
+    public static Point createSidePoint(Point aStartPoint, Leg aLeg, Leg aPrevLeg, Constants.Measures aMeasure, String anAzimuthUnits) {
+
+        float deltaX, deltaY;
+        Float distance = null;
+
+        // find the distance
+        switch (aMeasure) {
+            case right:
+                distance = aLeg.getRight();
+                break;
+
+            case left:
+                distance = aLeg.getLeft();
+                break;
+
+            case up:
+                distance = aLeg.getTop();
+                break;
+
+            case down:
+                distance = aLeg.getDown();
+                break;
+
+            default:
+                throw new RuntimeException("Not implemented");
+        }
+
+
+        if (distance == null || distance == null) {
+            deltaX = deltaY = 0;
+        } else {
+
+            // find the angle
+            Float legAzimuth = MapUtilities.getAzimuthInDegrees(aLeg.getAzimuth(), anAzimuthUnits);
+            double angle;
+            if (aPrevLeg == null || aLeg.isMiddle() || (aPrevLeg != null && aLeg.getGalleryId() != aPrevLeg.getGalleryId())) {
+                // first, middle or new gallery by 90'
+
+                switch (aMeasure) {
+                    case left:
+                        angle = MapUtilities.minus90Degrees(legAzimuth);
+                        break;
+
+                    case right:
+                        angle = MapUtilities.add90Degrees(legAzimuth);
+                        break;
+
+                    case up:
+                        angle = Option.MIN_VALUE_AZIMUTH;
+                        break;
+
+                    case down:
+                        angle = Option.MAX_VALUE_AZIMUTH_DEGREES / 2;
+                        break;
+
+                    default:
+                        throw new RuntimeException("Not implemented");
+                }
+
+            } else {
+                // each next in the gallery by the bisector
+                Float prevLegAzimuth = MapUtilities.getAzimuthInDegrees(aPrevLeg.getAzimuth(), anAzimuthUnits);
+
+                switch (aMeasure) {
+                    case left:
+                        angle = MapUtilities.minus90Degrees(MapUtilities.getMiddleAngle(prevLegAzimuth, legAzimuth));
+                        break;
+
+                    case right:
+                        angle = MapUtilities.add90Degrees(MapUtilities.getMiddleAngle(prevLegAzimuth, legAzimuth));
+                        break;
+
+                    case up:
+                        angle = Option.MIN_VALUE_AZIMUTH;
+                        break;
+
+                    case down:
+                        angle = Option.MAX_VALUE_AZIMUTH_DEGREES / 2;
+                        break;
+
+                    default:
+                        throw new RuntimeException("Not implemented");
+                }
+            }
+
+            double galleryWidthAngle = Math.toRadians(angle);
+
+            deltaY = -(float) (distance * Math.cos(galleryWidthAngle));
+            deltaX = (float) (distance * Math.sin(galleryWidthAngle));
+        }
+
+        return new Point(aStartPoint.getX() + deltaX, aStartPoint.getY() + deltaY);
+    }
+
+    public static Point createNextVerticalSidePoint(Point aStartPoint, Float aDistance, Float aSlope, String aSlopeUnits, Leg prevLeg) {
+
+        float deltaX, deltaY;
+
+        if (aDistance == null || aDistance == null) {
+            deltaX = deltaY = 0;
+        } else {
+
+            Float slope = aSlope == null ? 0 : MapUtilities.getSlopeInDegrees(aSlope, aSlopeUnits);
+
+            deltaX = (float) (aDistance * Math.sin(Math.toRadians(MapUtilities.add90Degrees(slope))));
+            deltaY = (float) (aDistance * Math.cos(Math.toRadians(MapUtilities.add90Degrees(slope))));
         }
 
         return new Point(aStartPoint.getX() + deltaX, aStartPoint.getY() + deltaY);
