@@ -3,7 +3,7 @@ package com.astoev.cave.survey.test.service.bluetooth.util;
 import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.Measure;
 import com.astoev.cave.survey.service.bluetooth.device.comm.AbstractBluetoothRFCOMMDevice;
-import com.astoev.cave.survey.service.bluetooth.device.comm.TruPulse360BBluetoothDevice;
+import com.astoev.cave.survey.service.bluetooth.device.comm.TruPulse360BluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.util.NMEAUtil;
 
 import org.junit.Test;
@@ -63,6 +63,6 @@ public class LTIProtocolTest extends AbstractDeviceProtocolTest {
 
     @Override
     protected AbstractBluetoothRFCOMMDevice getDeviceSpec() {
-        return new TruPulse360BBluetoothDevice();
+        return new TruPulse360BluetoothDevice();
     }
 }
