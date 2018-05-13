@@ -288,20 +288,4 @@ public class MapUtilities {
         return new Point(aStartPoint.getX() + deltaX, aStartPoint.getY() + deltaY);
     }
 
-    public static Point createNextVerticalSidePoint(Point aStartPoint, Float aDistance, Float aSlope, String aSlopeUnits, Leg prevLeg) {
-
-        float deltaX, deltaY;
-
-        if (aDistance == null || aDistance == null) {
-            deltaX = deltaY = 0;
-        } else {
-
-            Float slope = aSlope == null ? 0 : MapUtilities.getSlopeInDegrees(aSlope, aSlopeUnits);
-
-            deltaX = (float) (aDistance * Math.sin(Math.toRadians(MapUtilities.add90Degrees(slope))));
-            deltaY = (float) (aDistance * Math.cos(Math.toRadians(MapUtilities.add90Degrees(slope))));
-        }
-
-        return new Point(aStartPoint.getX() + deltaX, aStartPoint.getY() + deltaY);
-    }
 }

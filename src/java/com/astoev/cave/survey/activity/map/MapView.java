@@ -143,34 +143,37 @@ public class MapView extends View {
                     }
                 }
 
+                if (l.isMiddle()) {
+                    // move starting point to the middle distance
+                    lineStart = MapUtilities.createNextRawPoint(lineStart, l.getMiddlePointDistance(), l.getAzimuth(), azimuthUnits, l.getSlope(),
+                            slopeUnits, isHorizontalPlan());
+                    lineStart.setType(ShapeType.MIDDLE_POINT);
+                } else {
+                    // display starting station
+                    DaoUtil.refreshPoint(l.getFromPoint());
+                    Gallery gallery = DaoUtil.getGallery(galleryId);
+                    galleryNames.put(galleryId, gallery.getName());
+                    String startLabel = galleryNames.get(galleryId) + l.getFromPoint().getName();
+                    lineStart.setLabel(startLabel);
+                }
+
                 lineStart.setGalleryId(galleryId);
                 if (lineStart == null) {
                     throw new RuntimeException("Failed to load point, tree is broken");
                 }
 
                 // initialize gallery colors
-                if (!l.isMiddle()) {
-                    if (galleryColors.get(galleryId, Constants.NOT_FOUND) == Constants.NOT_FOUND) {
-                        galleryColors.put(galleryId, MapUtilities.getNextGalleryColor(galleryColors.size()));
-                    }
+                if (galleryColors.get(galleryId, Constants.NOT_FOUND) == Constants.NOT_FOUND) {
+                    galleryColors.put(galleryId, MapUtilities.getNextGalleryColor(galleryColors.size()));
                 }
 
-                DaoUtil.refreshPoint(l.getFromPoint());
-                Gallery gallery = DaoUtil.getGallery(galleryId);
-                galleryNames.put(galleryId, gallery.getName());
-                String startLabel = galleryNames.get(galleryId) + l.getFromPoint().getName();
-                lineStart.setLabel(startLabel);
-
+                // end station name
                 DaoUtil.refreshPoint(l.getToPoint());
                 Float legDistance = l.isMiddle() ? l.getMiddlePointDistance() : l.getDistance();
                 Point lineEnd = getNextCachePoint(lineStart, l, legDistance);
                 lineEnd.setId(l.getToPoint().getId());
                 String endLabel = galleryNames.get(galleryId) + l.getToPoint().getName();
                 lineEnd.setLabel(endLabel);
-
-                Line line = new Line(lineStart, lineEnd);
-                line.setType(ShapeType.LEG);
-                line.setGalleryId(galleryId);
 
                 // you are here
                 if (currLegId.equals(l.getId())) {
@@ -185,8 +188,15 @@ public class MapView extends View {
                     vectorCache.put(lineStart, new ArrayList<Shape>());
                 }
                 List<Shape> pointShapes = vectorCache.get(lineStart);
-                pointShapes.add(line);
 
+                if (!l.isMiddle()) {
+                    Line line = new Line(lineStart, lineEnd);
+                    line.setType(ShapeType.LEG);
+                    line.setGalleryId(galleryId);
+                    pointShapes.add(line);
+                }
+
+                // side measurements
                 if (horizontalPlan && l.getRight() != null) {
                     Point lineRight = MapUtilities.createSidePoint(lineStart, l, prevLeg, Constants.Measures.right, azimuthUnits);
                     Shape right = new Line(lineStart, lineRight);
@@ -651,7 +661,7 @@ public class MapView extends View {
             }
 
             // TODO only for testing
-            int secondMapOffset = 30;
+            int secondMapOffset = 10;
             mapCenterMoveX += secondMapOffset;
             mapCenterMoveY += secondMapOffset;
 
@@ -661,10 +671,21 @@ public class MapView extends View {
                 preparePaintsForGallery(p.getGalleryId());
 
                 // draw point
-                if (scale >= 3) {
+                if (scale >= 3 && p.getLabel() != null) {
                     canvas.drawText(p.getLabel(), mapCenterMoveX + p.getX() * scale + labelDeviationX, mapCenterMoveY + p.getY() * scale + labelDeviationY, polygonPaint);
                 }
-                canvas.drawCircle(mapCenterMoveX + p.getX() * scale, mapCenterMoveY + p.getY() * scale, pointRadius, polygonPaint);
+                switch (p.getType()) {
+                    case POINT:
+                        canvas.drawCircle(mapCenterMoveX + p.getX() * scale, mapCenterMoveY + p.getY() * scale, pointRadius, polygonPaint);
+                        break;
+                    case MIDDLE_POINT:
+                        canvas.drawCircle(mapCenterMoveX + p.getX() * scale, mapCenterMoveY + p.getY() * scale, middlePointRadius, polygonPaint);
+                        break;
+
+                    default:
+                        throw new RuntimeException("Type not implemented : " + p.getType());
+                }
+
 
                 if (p.isCurrent()) {
                     canvas.drawCircle(mapCenterMoveX + p.getX() * scale, mapCenterMoveY + p.getY() * scale, currPointRadius, youAreHerePaint);
@@ -690,20 +711,17 @@ public class MapView extends View {
                             }
                             canvas.drawCircle(mapCenterMoveX + secondPoint.getX() * scale, mapCenterMoveY + secondPoint.getY() * scale, pointRadius, polygonPaint);
 
-
                             break;
                         case SIDE:
                             Line side = (Line) s;
                             preparePaintsForGallery(side.getGalleryId());
                             Point sidePoint = side.getTo();
                             canvas.drawCircle(mapCenterMoveX + sidePoint.getX() * scale, mapCenterMoveY + sidePoint.getY() * scale, sidePointRadius, polygonWidthPaint);
-
                             break;
-//                        s.draw(canvas, p, mapCenterMoveY, mapCenterMoveY, )
 
                         default:
-//                            throw new RuntimeException("Not implemented");
-                            Log.i(Constants.LOG_TAG_UI, "Not implemented :" + s.getType());
+//                            Log.i(Constants.LOG_TAG_UI, "Not implemented :" + s.getType());
+                            throw new RuntimeException("Not implemented " + s.getType());
                     }
                 }
             }
