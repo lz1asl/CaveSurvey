@@ -23,7 +23,7 @@ There are several approaches for digital surveying and most of them rely on the 
 Where are we now
 ================
 
-We have started with an old Android 2.1 phone (cheap and small) up tested to 5.0 (better hardware and protection). Smartphones are recommended to have water protection (to survive), a compass (to read from) and a SPP Bluetooth profile (to connect instruments). The APK should also work on BlackBerry Q5 and probably others.
+We have started with an old Android 2.1 phone (cheap and small) up tested to 7.0 (better hardware and protection). Smartphones are recommended to have water protection (to survive), a compass (to read from) and a SPP or LE Bluetooth profile (to connect instruments). The APK should also work on BlackBerry Q5 and probably others.
 
 Currently with CaveSurvey you can:
   - make multiple cave surveys
