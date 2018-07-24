@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -110,6 +111,8 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         if (legEdited != null) {
             GPSActivity.initSavedLocationContainer(legEdited.getFromPoint(), this, savedInstanceState);
         }
+
+        loadLegPhotos(legEdited);
 
         loadLegVectors(legEdited);
 
@@ -473,6 +476,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 
                         getWorkspace().getDBHelper().getPhotoDao().create(photo);
                         Log.i(Constants.LOG_TAG_SERVICE, "Image stored");
+                        loadLegPhotos(mCurrentLeg);
 
                     } catch (SQLException e) {
                         Log.e(Constants.LOG_TAG_UI, "Picture object not saved", e);
@@ -758,6 +762,75 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
             }
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to load vectors", e);
+            UIUtilities.showNotification(R.string.error);
+        }
+    }
+
+    public void loadLegPhotos(Leg aLegEdited) {
+
+        if (aLegEdited.isNew()) {
+            // no vectors anyway
+            return;
+        }
+
+        if (aLegEdited.isMiddle()) {
+            // no need to proceed
+            return;
+        }
+
+        try {
+            TableLayout photosTable = (TableLayout) findViewById(R.id.point_photos_table);
+
+            // data
+            List<Photo> photosList = DaoUtil.getAllPhotosByPointAndGallery(
+                    aLegEdited.getFromPoint().getId(), aLegEdited.getGalleryId());
+            if (photosList != null && photosList.size() > 0) {
+
+                // remove old data
+                photosTable.removeAllViews();
+
+                // set headers
+                TableRow header = new TableRow(this);
+                TextView counterHeader = new TextView(this);
+                counterHeader.setText(getString(R.string.point_photos_header));
+                header.addView(counterHeader);
+                photosTable.addView(header);
+
+                // populate data
+                int index = 1;
+                for (final Photo photo : photosList) {
+                    TableRow row = new TableRow(this);
+                    TextView id = new TextView(this);
+                    String rowLabel = getString(R.string.point_photo_label, String.valueOf(index));
+                    id.setText(rowLabel);
+                    id.setGravity(Gravity.CENTER);
+                    row.addView(id);
+
+                    final int photoIndex = index;
+                    final String photoPath = photo.getFSPath();
+
+                    row.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            // show the picture
+                            Intent intent = new Intent();
+                            intent.setAction(Intent.ACTION_VIEW);
+                            intent.setDataAndType(Uri.parse("file://" + photoPath), "image/*");
+                            startActivity(intent);
+                        }
+                    });
+
+                    photosTable.addView(row);
+                    index++;
+                }
+
+                photosTable.setVisibility(View.VISIBLE);
+            } else {
+                photosTable.setVisibility(View.INVISIBLE);
+            }
+        } catch (Exception e) {
+            Log.e(Constants.LOG_TAG_UI, "Failed to load photos", e);
             UIUtilities.showNotification(R.string.error);
         }
     }

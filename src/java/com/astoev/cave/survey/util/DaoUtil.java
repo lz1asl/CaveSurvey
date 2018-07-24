@@ -74,6 +74,13 @@ public class DaoUtil {
         return Workspace.getCurrentInstance().getDBHelper().getPhotoDao().query(query.prepare());
     }
 
+    public static List<Photo> getAllPhotosByPointAndGallery(int aPointId, int aGalleryId) throws SQLException {
+        QueryBuilder<Photo, Integer> query = Workspace.getCurrentInstance().getDBHelper().getPhotoDao().queryBuilder();
+        query.where().eq(Photo.COLUMN_POINT_ID, aPointId)
+        .and().eq(Photo.COLUMN_GALLERY_ID, aGalleryId);
+        return Workspace.getCurrentInstance().getDBHelper().getPhotoDao().query(query.prepare());
+    }
+
     public static Location getLocationByPoint(Point pointArg) throws SQLException {
         Dao<Location, Integer> locationDao = Workspace.getCurrentInstance().getDBHelper().getLocationDao();
         QueryBuilder<Location, Integer> query = locationDao.queryBuilder();
