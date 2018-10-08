@@ -1,0 +1,647 @@
+Index: src/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/AbstractBoschGLMBluetoothDevice.java
+===================================================================
+--- src/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/AbstractBoschGLMBluetoothDevice.java	(revision 5064f2e2408fb88536b43d8d0e45c9f638127205)
++++ src/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/AbstractBoschGLMBluetoothDevice.java	(revision 5064f2e2408fb88536b43d8d0e45c9f638127205)
+@@ -1,208 +0,0 @@
+-package com.astoev.cave.survey.service.bluetooth.device.comm.bosch.glm;
+-
+-import android.util.Log;
+-
+-import com.astoev.cave.survey.Constants;
+-import com.astoev.cave.survey.R;
+-import com.astoev.cave.survey.activity.UIUtilities;
+-import com.astoev.cave.survey.exception.DataException;
+-import com.astoev.cave.survey.service.bluetooth.Measure;
+-import com.astoev.cave.survey.service.bluetooth.device.comm.AbstractBluetoothRFCOMMDevice;
+-import com.astoev.cave.survey.util.ConfigUtil;
+-import com.bosch.mtprotocol.MtMessage;
+-import com.bosch.mtprotocol.MtProtocol;
+-import com.bosch.mtprotocol.glm100C.MtProtocolImpl;
+-import com.bosch.mtprotocol.glm100C.event.MtProtocolFatalErrorEvent;
+-import com.bosch.mtprotocol.glm100C.event.MtProtocolReceiveMessageEvent;
+-import com.bosch.mtprotocol.glm100C.event.MtProtocolRequestTimeoutEvent;
+-import com.bosch.mtprotocol.glm100C.message.edc.EDCInputMessage;
+-import com.bosch.mtprotocol.glm100C.message.sync.SyncInputMessage;
+-
+-import java.io.IOException;
+-import java.io.InputStream;
+-import java.io.OutputStream;
+-import java.util.ArrayList;
+-import java.util.Arrays;
+-import java.util.List;
+-
+-/**
+- * Bosch GLM protocol based devices.
+- */
+-
+-public abstract class AbstractBoschGLMBluetoothDevice extends AbstractBluetoothRFCOMMDevice
+-        implements MtProtocol.MTProtocolEventObserver {
+-
+-    protected MtProtocolImpl protocol;
+-    private MtMessage lastMessage = null;
+-    private boolean initSyncRequest;
+-    private boolean ownReadError = false;
+-
+-    @Override
+-    public void triggerMeasures(OutputStream aStream, List<Constants.MeasureTypes> aMeasures) throws IOException {
+-        // no need to perform actions
+-    }
+-
+-    @Override
+-    public List<Measure> decodeMeasure(byte[] aResponseBytes, List<Constants.MeasureTypes> aMeasures) throws DataException {
+-
+-        List<Measure> measures = null;
+-
+-        if (lastMessage != null && lastMessage instanceof SyncInputMessage) {
+-            SyncInputMessage syncMessage = (SyncInputMessage) lastMessage;
+-
+-            Log.d(Constants.LOG_TAG_BT, "Decoding sync message: " + syncMessage.toString());
+-
+-            measures = Arrays.asList(
+-                    new Measure(Constants.MeasureTypes.distance, Constants.MeasureUnits.meters, syncMessage.getResult()),
+-                    new Measure(Constants.MeasureTypes.slope, Constants.MeasureUnits.degrees, syncMessage.getAngle()));
+-
+-        } else if (lastMessage != null && lastMessage instanceof EDCInputMessage) {
+-            EDCInputMessage message = (EDCInputMessage) lastMessage;
+-
+-            Log.d(Constants.LOG_TAG_BT, "Decoding edc message: " + message.toString());
+-
+-            measures = new ArrayList<>();
+-            if (EDCInputMessage.MODE_SINGLE_DISTANCE == message.getDevMode()) {
+-                // PLR 30 C and PLR 40 C - only distance available
+-                measures.add(new Measure(Constants.MeasureTypes.distance, Constants.MeasureUnits.meters, message.getResult()));
+-            } else if (EDCInputMessage.MODE_INDIRECT_LENGTH == message.getDevMode()) {
+-                // PLR 50 C, GLM 50 C - distance and clino in indirect length mode
+-                measures.add(new Measure(Constants.MeasureTypes.distance, Constants.MeasureUnits.meters, message.getComp1()));
+-                if (isMeasureSupported(Constants.MeasureTypes.slope)) { // just in case
+-                    measures.add(new Measure(Constants.MeasureTypes.slope, Constants.MeasureUnits.degrees, message.getComp2()));
+-                }
+-            } else {
+-                warnToUseProperMode();
+-            }
+-        }
+-
+-        // reset last message
+-        lastMessage = null;
+-
+-        return measures;
+-    }
+-
+-    @Override
+-    public boolean isFullPacketAvailable(byte[] aBytesBuffer) {
+-        return lastMessage != null || ownReadError;
+-    }
+-
+-    @Override
+-    public void configure(InputStream anInput, OutputStream anOutput) throws IOException {
+-
+-        // initialize the internal Bosch protocol
+-        protocol = new MtProtocolImpl();
+-        protocol.addObserver(this);
+-        protocol.setTimeout(5000);
+-        protocol.initialize(new GLMBluetoothConnectionWrapper(this, anInput, anOutput));
+-
+-        // instruct device to send events automatically
+-        initSyncRequest = true;
+-        MtMessage configMessage = createGLMConfigMessage();
+-        protocol.sendMessage(configMessage);
+-    }
+-
+-    // turn sync on and enter desired mode
+-    protected abstract MtMessage createGLMConfigMessage();
+-
+-    // used to check measurement mode is valid, e.g. not changed meanwhile
+-    protected abstract List<Integer> getGLMModes();
+-
+-    // displayed to the user
+-    protected abstract int getGLMModesLabel();
+-
+-    @Override
+-    public void onEvent(MtProtocol.MTProtocolEvent event) {
+-
+-        // something happening on the device
+-        Log.i(Constants.LOG_TAG_BT, "Got " + event.getClass().getSimpleName());
+-
+-        if(event instanceof MtProtocolFatalErrorEvent){
+-
+-            // fatal error
+-            Log.e(Constants.LOG_TAG_BT, "Received MtProtocolFatalErrorEvent");
+-            UIUtilities.showNotification(R.string.error);
+-        } else if(event instanceof MtProtocolReceiveMessageEvent) {
+-
+-            MtMessage message = ((MtProtocolReceiveMessageEvent) event).getMessage();
+-
+-            if (message instanceof SyncInputMessage) {
+-                SyncInputMessage syncMessage = (SyncInputMessage) message;
+-
+-                if(initSyncRequest) { // Ignore first response
+-                    initSyncRequest = false;
+-                    Log.d(Constants.LOG_TAG_BT, "Ignore syncMessage = " + syncMessage);
+-                    return;
+-                }
+-
+-                Log.i(Constants.LOG_TAG_BT, "SyncInputMessageReceived: " + syncMessage.toString());
+-                if (getGLMModes().contains(syncMessage.getMode())) {
+-                    if (syncMessage.getLaserOn() == 1) {
+-                        Log.d(Constants.LOG_TAG_BT, "Ignore laser 1 message");
+-                        lastMessage = null;
+-                    } else{
+-                        Log.d(Constants.LOG_TAG_BT, "Store message");
+-                        lastMessage = message;
+-                    }
+-                } else {
+-                    warnToUseProperMode();
+-                }
+-
+-            } else if(message instanceof EDCInputMessage) {
+-
+-                if (initSyncRequest) { // Ignore first response
+-                    initSyncRequest = false;
+-                    Log.d(Constants.LOG_TAG_BT, "Ignore syncMessage = " + message);
+-                    return;
+-                }
+-                Log.d(Constants.LOG_TAG_BT, "Received EDC: " + message.toString());
+-                EDCInputMessage edcMessage = (EDCInputMessage) message;
+-                Log.d(Constants.LOG_TAG_BT, "EDCInputMessageReceived: " + edcMessage.toString());
+-                if(getGLMModes().contains(edcMessage.getDevMode())) {
+-                    if (edcMessage.getLaserOn() == 1) {
+-                        Log.d(Constants.LOG_TAG_BT, "Ignore laser 1 message");
+-                        lastMessage = null;
+-                    } else{
+-                        lastMessage = message;
+-                    }
+-                } else {
+-                    warnToUseProperMode();
+-                }
+-            } else {
+-                Log.d(Constants.LOG_TAG_BT, "Received Unknown message");
+-                UIUtilities.showNotification(R.string.error);
+-            }
+-        } else if(event instanceof MtProtocolRequestTimeoutEvent){
+-            Log.d(Constants.LOG_TAG_BT, "Received MtProtocolRequestTimeoutEvent");
+-            UIUtilities.showNotification("Timeout");
+-        } else {
+-            Log.e(Constants.LOG_TAG_BT, "Received unknown event");
+-            UIUtilities.showNotification(R.string.error);
+-        }
+-        initSyncRequest = false;
+-    }
+-
+-    private void warnToUseProperMode() {
+-        // warn user to use proper device mode
+-        String requiredMode = ConfigUtil.getContext().getString(getGLMModesLabel());
+-        UIUtilities.showNotification(R.string.bt_device_mode, requiredMode);
+-    }
+-
+-    @Override
+-    public boolean useOwnRead() {
+-        // Bosch protocol responsible for reading the data
+-        return true;
+-    }
+-
+-    @Override
+-    public boolean getOwnReadError() {
+-        return ownReadError;
+-    }
+-
+-    @Override
+-    public void onError() {
+-        Log.e(Constants.LOG_TAG_BT, "Own protocol error");
+-        protocol.destroy();
+-        ownReadError = true;
+-    }
+-}
+Index: src/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschGLM100CBluetoothDevice.java
+===================================================================
+--- src/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschGLM100CBluetoothDevice.java	(revision 5064f2e2408fb88536b43d8d0e45c9f638127205)
++++ src/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschGLM100CBluetoothDevice.java	(revision 5064f2e2408fb88536b43d8d0e45c9f638127205)
+@@ -1,58 +0,0 @@
+-package com.astoev.cave.survey.service.bluetooth.device.comm.bosch.glm;
+-
+-import com.astoev.cave.survey.Constants;
+-import com.astoev.cave.survey.R;
+-import com.bosch.mtprotocol.MtMessage;
+-import com.bosch.mtprotocol.glm100C.message.sync.SyncInputMessage;
+-import com.bosch.mtprotocol.glm100C.message.sync.SyncOutputMessage;
+-
+-import java.util.Arrays;
+-import java.util.List;
+-
+-import static com.astoev.cave.survey.Constants.MeasureTypes.distance;
+-import static com.astoev.cave.survey.Constants.MeasureTypes.slope;
+-
+-/**
+- * Bosch GLM100c over comm connection.
+- * Support for distance, and inclination.
+- *
+- * Created by astoev on 10/11/17.
+- */
+-
+-public class BoschGLM100CBluetoothDevice extends AbstractBoschGLMBluetoothDevice {
+-
+-    @Override
+-    public boolean isNameSupported(String aName) {
+-        return deviceNameStartsWith(aName, "BOSCH GLM100C ");
+-    }
+-
+-    @Override
+-    public String getDescription() {
+-        return "Bosch GLM 100 C";
+-    }
+-
+-    @Override
+-    protected List<Constants.MeasureTypes> getSupportedMeasureTypes() {
+-        // 100m laser and 360' clino
+-        return Arrays.asList(distance, slope);
+-    }
+-
+-    @Override
+-    protected MtMessage createGLMConfigMessage() {
+-        SyncOutputMessage configMessage = new SyncOutputMessage();
+-        configMessage.setSyncControl(SyncOutputMessage.MODE_AUTOSYNC_CONTROL_ON);
+-        configMessage.setMode(getGLMModes().get(0));
+-        return configMessage;
+-    }
+-
+-    @Override
+-    protected List<Integer> getGLMModes() {
+-        return Arrays.asList(SyncInputMessage.MEAS_MODE_SINGLE);
+-    }
+-
+-    @Override
+-    protected int getGLMModesLabel() {
+-        return R.string.bt_device_mode_single;
+-    }
+-
+-}
+Index: src/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschPLR30CBluetoothDevice.java
+===================================================================
+--- src/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschPLR30CBluetoothDevice.java	(revision 5064f2e2408fb88536b43d8d0e45c9f638127205)
++++ src/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschPLR30CBluetoothDevice.java	(revision 5064f2e2408fb88536b43d8d0e45c9f638127205)
+@@ -1,54 +0,0 @@
+-package com.astoev.cave.survey.service.bluetooth.device.comm.bosch.glm;
+-
+-import com.astoev.cave.survey.Constants;
+-import com.astoev.cave.survey.R;
+-import com.bosch.mtprotocol.MtMessage;
+-import com.bosch.mtprotocol.glm100C.message.edc.EDCInputMessage;
+-import com.bosch.mtprotocol.glm100C.message.edc.EDCOutputMessage;
+-
+-import java.util.Arrays;
+-import java.util.List;
+-
+-import static com.astoev.cave.survey.Constants.MeasureTypes.distance;
+-
+-/**
+- * Bosch PLR 30 C over comm.
+- * Created by astoev on 12/24/15.
+- */
+-public class BoschPLR30CBluetoothDevice extends AbstractBoschGLMBluetoothDevice {
+-
+-
+-    @Override
+-    public boolean isNameSupported(String aName) {
+-        return deviceNameStartsWith(aName, "Bosch PLR30C");
+-    }
+-
+-    @Override
+-    public String getDescription() {
+-        return "Bosch PLR 30 C";
+-    }
+-
+-    @Override
+-    protected List<Constants.MeasureTypes> getSupportedMeasureTypes() {
+-        // only distance
+-        return Arrays.asList(distance);
+-    }
+-
+-    @Override
+-    protected MtMessage createGLMConfigMessage() {
+-        EDCOutputMessage configMessage = new EDCOutputMessage();
+-        configMessage.setSyncControl(EDCOutputMessage.MODE_AUTOSYNC_CONTROL_ON);
+-        configMessage.setDevMode(EDCOutputMessage.READ_ONLY_MODE);
+-        return configMessage;
+-    }
+-
+-    @Override
+-    protected List<Integer> getGLMModes() {
+-        return Arrays.asList(EDCInputMessage.MODE_SINGLE_DISTANCE);
+-    }
+-
+-    @Override
+-    protected int getGLMModesLabel() {
+-        return R.string.bt_device_mode_single;
+-    }
+-}
+Index: src/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschPLR40CBluetoothDevice.java
+===================================================================
+--- src/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschPLR40CBluetoothDevice.java	(revision 5064f2e2408fb88536b43d8d0e45c9f638127205)
++++ src/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschPLR40CBluetoothDevice.java	(revision 5064f2e2408fb88536b43d8d0e45c9f638127205)
+@@ -1,55 +0,0 @@
+-package com.astoev.cave.survey.service.bluetooth.device.comm.bosch.glm;
+-
+-import com.astoev.cave.survey.Constants;
+-import com.astoev.cave.survey.R;
+-import com.bosch.mtprotocol.MtMessage;
+-import com.bosch.mtprotocol.glm100C.message.edc.EDCInputMessage;
+-import com.bosch.mtprotocol.glm100C.message.edc.EDCOutputMessage;
+-
+-import java.util.Arrays;
+-import java.util.List;
+-
+-import static com.astoev.cave.survey.Constants.MeasureTypes.distance;
+-
+-/**
+- * Bosch PLR 40 C over comm.
+- * Created by astoev on 12/24/15.
+- */
+-public class BoschPLR40CBluetoothDevice extends AbstractBoschGLMBluetoothDevice {
+-
+-
+-    @Override
+-    public boolean isNameSupported(String aName) {
+-        return deviceNameStartsWith(aName, "Bosch PLR40C");
+-    }
+-
+-    @Override
+-    public String getDescription() {
+-        return "Bosch PLR 40 C";
+-    }
+-
+-    @Override
+-    protected List<Constants.MeasureTypes> getSupportedMeasureTypes() {
+-        // only distance
+-        return Arrays.asList(distance);
+-    }
+-
+-
+-    @Override
+-    protected MtMessage createGLMConfigMessage() {
+-        EDCOutputMessage configMessage = new EDCOutputMessage();
+-        configMessage.setSyncControl(EDCOutputMessage.MODE_AUTOSYNC_CONTROL_ON);
+-        configMessage.setDevMode(EDCOutputMessage.READ_ONLY_MODE);
+-        return configMessage;
+-    }
+-
+-    @Override
+-    protected List<Integer> getGLMModes() {
+-        return Arrays.asList(EDCInputMessage.MODE_SINGLE_DISTANCE);
+-    }
+-
+-    @Override
+-    protected int getGLMModesLabel() {
+-        return R.string.bt_device_mode_single;
+-    }
+-}
+Index: src/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/GLMBluetoothConnectionWrapper.java
+===================================================================
+--- src/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/GLMBluetoothConnectionWrapper.java	(revision 5064f2e2408fb88536b43d8d0e45c9f638127205)
++++ src/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/GLMBluetoothConnectionWrapper.java	(revision 5064f2e2408fb88536b43d8d0e45c9f638127205)
+@@ -1,75 +0,0 @@
+-package com.astoev.cave.survey.service.bluetooth.device.comm.bosch.glm;
+-
+-import android.util.Log;
+-
+-import com.astoev.cave.survey.Constants;
+-import com.bosch.mtprotocol.glm100C.connection.MtAsyncConnection;
+-
+-import java.io.IOException;
+-import java.io.InputStream;
+-import java.io.OutputStream;
+-
+-/**
+- * Created by astoev on 12/13/17.
+- */
+-
+-public class GLMBluetoothConnectionWrapper implements MtAsyncConnection {
+-
+-    private InputStream in;
+-    private OutputStream out;
+-    private AbstractBoschGLMBluetoothDevice deviceSpec;
+-
+-    public GLMBluetoothConnectionWrapper(AbstractBoschGLMBluetoothDevice aDevice, InputStream aIn, OutputStream aOut) {
+-        in = aIn;
+-        out = aOut;
+-        deviceSpec = aDevice;
+-    }
+-
+-    @Override
+-    public boolean isOpen() {
+-        // streams open before me
+-        return true;
+-    }
+-
+-    @Override
+-    public void openConnection() {
+-        // stream already open
+-    }
+-
+-    @Override
+-    public void closeConnection() {
+-        // error occured internally
+-        Log.e(Constants.LOG_TAG_BT, "Close connection requested");
+-        deviceSpec.onError();
+-    }
+-
+-    @Override
+-    public int read(byte[] buffer) throws IOException {
+-        if (in != null) {
+-            return in.read(buffer);
+-        }
+-        return 0;
+-    }
+-
+-    @Override
+-    public void write(byte[] data) throws IOException {
+-        if (out != null) {
+-            out.write(data);
+-        }
+-    }
+-
+-    @Override
+-    public int getState() {
+-        return 0;
+-    }
+-
+-    @Override
+-    public void addObserver(MTAsyncConnectionObserver observer) {
+-        // connection state managed outside me
+-    }
+-
+-    @Override
+-    public void removeObserver(MTAsyncConnectionObserver observer) {
+-        // connection state managed outside me
+-    }
+-}
+Index: src/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschPLR50CBluetoothDevice.java
+===================================================================
+--- src/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschPLR50CBluetoothDevice.java	(revision 5064f2e2408fb88536b43d8d0e45c9f638127205)
++++ src/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschPLR50CBluetoothDevice.java	(revision 5064f2e2408fb88536b43d8d0e45c9f638127205)
+@@ -1,57 +0,0 @@
+-package com.astoev.cave.survey.service.bluetooth.device.comm.bosch.glm;
+-
+-import com.astoev.cave.survey.Constants;
+-import com.astoev.cave.survey.R;
+-import com.bosch.mtprotocol.MtMessage;
+-import com.bosch.mtprotocol.glm100C.message.edc.EDCInputMessage;
+-import com.bosch.mtprotocol.glm100C.message.edc.EDCOutputMessage;
+-
+-import java.util.Arrays;
+-import java.util.List;
+-
+-import static com.astoev.cave.survey.Constants.MeasureTypes.distance;
+-import static com.astoev.cave.survey.Constants.MeasureTypes.slope;
+-
+-/**
+- * Bosch PLR 50 C over comm.
+- * Created by astoev on 12/24/15.
+- */
+-public class BoschPLR50CBluetoothDevice extends AbstractBoschGLMBluetoothDevice {
+-
+-
+-    @Override
+-    public boolean isNameSupported(String aName) {
+-        return deviceNameStartsWith(aName, "Bosch PLR50C");
+-    }
+-
+-    @Override
+-    public String getDescription() {
+-        return "Bosch PLR 50 C";
+-    }
+-
+-    @Override
+-    protected List<Constants.MeasureTypes> getSupportedMeasureTypes() {
+-        // 50m laser and 360' clino
+-        return Arrays.asList(distance, slope);
+-    }
+-
+-    @Override
+-    protected MtMessage createGLMConfigMessage() {
+-        EDCOutputMessage configMessage = new EDCOutputMessage();
+-        configMessage.setSyncControl(EDCOutputMessage.MODE_AUTOSYNC_CONTROL_ON);
+-        configMessage.setDevMode(EDCOutputMessage.READ_ONLY_MODE);
+-        // TODO auto enter indirect length mode
+-        return configMessage;
+-    }
+-
+-    @Override
+-    protected List<Integer> getGLMModes() {
+-        return Arrays.asList(EDCInputMessage.MODE_INDIRECT_LENGTH,
+-                EDCInputMessage.MODE_SINGLE_DISTANCE);
+-    }
+-
+-    @Override
+-    protected int getGLMModesLabel() {
+-        return R.string.bt_device_mode_single_or_indirect;
+-    }
+-}
+Index: src/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschGLM50CBluetoothDevice.java
+===================================================================
+--- src/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschGLM50CBluetoothDevice.java	(revision 5064f2e2408fb88536b43d8d0e45c9f638127205)
++++ src/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschGLM50CBluetoothDevice.java	(revision 5064f2e2408fb88536b43d8d0e45c9f638127205)
+@@ -1,59 +0,0 @@
+-package com.astoev.cave.survey.service.bluetooth.device.comm.bosch.glm;
+-
+-import com.astoev.cave.survey.Constants;
+-import com.astoev.cave.survey.R;
+-import com.bosch.mtprotocol.MtMessage;
+-import com.bosch.mtprotocol.glm100C.message.edc.EDCInputMessage;
+-import com.bosch.mtprotocol.glm100C.message.edc.EDCOutputMessage;
+-
+-import java.util.Arrays;
+-import java.util.List;
+-
+-import static com.astoev.cave.survey.Constants.MeasureTypes.distance;
+-import static com.astoev.cave.survey.Constants.MeasureTypes.slope;
+-
+-/**
+- * Bosch GLM50c over comm connection.
+- *
+- * Created by astoev on 12/13/17.
+- */
+-
+-public class BoschGLM50CBluetoothDevice extends AbstractBoschGLMBluetoothDevice {
+-
+-    @Override
+-    public boolean isNameSupported(String aName) {
+-        return deviceNameStartsWith(aName, "Bosch GLM50C ");
+-    }
+-
+-    @Override
+-    public String getDescription() {
+-        return "Bosch GLM 50 C";
+-    }
+-
+-
+-    @Override
+-    protected List<Constants.MeasureTypes> getSupportedMeasureTypes() {
+-        // 50m laser and 360' clino
+-        return Arrays.asList(distance, slope);
+-    }
+-
+-    @Override
+-    protected MtMessage createGLMConfigMessage() {
+-        EDCOutputMessage configMessage = new EDCOutputMessage();
+-        configMessage.setSyncControl(EDCOutputMessage.MODE_AUTOSYNC_CONTROL_ON);
+-        configMessage.setDevMode(EDCOutputMessage.READ_ONLY_MODE);
+-        // TODO auto enter indirect length mode
+-        return configMessage;
+-    }
+-
+-    @Override
+-    protected List<Integer> getGLMModes() {
+-        return Arrays.asList(EDCInputMessage.MODE_INDIRECT_LENGTH,
+-                EDCInputMessage.MODE_SINGLE_DISTANCE);
+-    }
+-
+-    @Override
+-    protected int getGLMModesLabel() {
+-        return R.string.bt_device_mode_single_or_indirect;
+-    }
+-}
+Index: src/java/com/astoev/cave/survey/service/bluetooth/BluetoothService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/java/com/astoev/cave/survey/service/bluetooth/BluetoothService.java	(revision 5064f2e2408fb88536b43d8d0e45c9f638127205)
++++ src/java/com/astoev/cave/survey/service/bluetooth/BluetoothService.java	(revision )
+@@ -35,11 +35,6 @@
+ import com.astoev.cave.survey.service.bluetooth.device.comm.DistoXBluetoothDevice;
+ import com.astoev.cave.survey.service.bluetooth.device.comm.LaserAceBluetoothDevice;
+ import com.astoev.cave.survey.service.bluetooth.device.comm.TruPulse360BluetoothDevice;
+-import com.astoev.cave.survey.service.bluetooth.device.comm.bosch.glm.BoschGLM100CBluetoothDevice;
+-import com.astoev.cave.survey.service.bluetooth.device.comm.bosch.glm.BoschGLM50CBluetoothDevice;
+-import com.astoev.cave.survey.service.bluetooth.device.comm.bosch.glm.BoschPLR30CBluetoothDevice;
+-import com.astoev.cave.survey.service.bluetooth.device.comm.bosch.glm.BoschPLR40CBluetoothDevice;
+-import com.astoev.cave.survey.service.bluetooth.device.comm.bosch.glm.BoschPLR50CBluetoothDevice;
+ import com.astoev.cave.survey.service.bluetooth.lecommands.AbstractBluetoothCommand;
+ import com.astoev.cave.survey.service.bluetooth.lecommands.EnableNotificationCommand;
+ import com.astoev.cave.survey.service.bluetooth.lecommands.WriteDescriptorCommand;
+@@ -77,11 +72,6 @@
+         SUPPORTED_BLUETOOTH_COM_DEVICES.add(new LaserAceBluetoothDevice());
+         SUPPORTED_BLUETOOTH_COM_DEVICES.add(new TruPulse360BluetoothDevice());
+         SUPPORTED_BLUETOOTH_COM_DEVICES.add(new DistoXBluetoothDevice());
+-        SUPPORTED_BLUETOOTH_COM_DEVICES.add(new BoschGLM50CBluetoothDevice());
+-        SUPPORTED_BLUETOOTH_COM_DEVICES.add(new BoschGLM100CBluetoothDevice());
+-        SUPPORTED_BLUETOOTH_COM_DEVICES.add(new BoschPLR30CBluetoothDevice());
+-        SUPPORTED_BLUETOOTH_COM_DEVICES.add(new BoschPLR40CBluetoothDevice());
+-        SUPPORTED_BLUETOOTH_COM_DEVICES.add(new BoschPLR50CBluetoothDevice());
+ 
+         // LE devices
+         SUPPORTED_BLUETOOTH_LE_DEVICES.add(new LeicaDistoBluetoothLEDevice());
+Index: build.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- build.gradle	(revision 5064f2e2408fb88536b43d8d0e45c9f638127205)
++++ build.gradle	(revision )
+@@ -22,7 +22,6 @@
+     compile 'org.apache.poi:poi:3.13'
+ 
+     // Bosch internal protocol
+-    compile files('../CaveSurveyBoschGLM/binary/CaveSurveyBoschGLM.jar')
+ 
+     androidTestCompile 'junit:junit:4.12'
+ }
