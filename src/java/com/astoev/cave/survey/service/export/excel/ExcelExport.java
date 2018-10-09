@@ -15,7 +15,7 @@ import com.astoev.cave.survey.service.export.AbstractExport;
 import com.astoev.cave.survey.util.LocationUtil;
 import com.astoev.cave.survey.util.StringUtils;
 
-import org.apache.poi.hssf.usermodel.HSSFHyperlink;
+import org.apache.poi.common.usermodel.HyperlinkType;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -151,7 +151,7 @@ public class ExcelExport extends AbstractExport {
 
     @Override
     protected void setPhoto(Photo photo) {
-        Hyperlink fileLink = helper.createHyperlink(HSSFHyperlink.LINK_FILE);
+        Hyperlink fileLink = helper.createHyperlink(HyperlinkType.FILE);
 
         Cell photoCell = legRow.createCell(CELL_PHOTO);
         String path = photo.getFSPath();
@@ -176,7 +176,7 @@ public class ExcelExport extends AbstractExport {
 
     @Override
     protected void setDrawing(Sketch aSketch) {
-        Hyperlink fileLink = helper.createHyperlink(HSSFHyperlink.LINK_FILE);
+        Hyperlink fileLink = helper.createHyperlink(HyperlinkType.FILE);
 
         Cell sketchCell = legRow.createCell(CELL_DRAWING);
         String path = aSketch.getFSPath();
