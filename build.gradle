@@ -1,43 +1,41 @@
 buildscript {
     repositories {
-        mavenCentral()
-        jcenter()
         google()
+        jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath 'com.android.tools.build:gradle:3.2.0'
     }
 }
 
-    apply plugin: 'android'
+apply plugin: 'com.android.application'
 
 repositories {
-    mavenCentral()
+    google()
+    jcenter()
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:23.1.1'
-    compile 'com.j256.ormlite:ormlite-core:4.48'
-    compile 'com.j256.ormlite:ormlite-android:4.48'
-    compile 'org.apache.poi:poi:3.13'
+    implementation 'com.android.support:appcompat-v7:24.1.1'
+    implementation 'com.j256.ormlite:ormlite-core:4.48'
+    implementation 'com.j256.ormlite:ormlite-android:4.48'
+    implementation 'org.apache.poi:poi:3.13'
 
     // Bosch internal protocol
     compile files('../CaveSurveyBoschGLM/binary/CaveSurveyBoschGLM.jar')
 
-    androidTestCompile 'junit:junit:4.12'
+    androidTestImplementation 'junit:junit:4.12'
 }
 
 
-
 android {
-    compileSdkVersion 23
-    buildToolsVersion '26.0.2'
+    compileSdkVersion 26
+    buildToolsVersion '28.0.3'
 
     defaultConfig {
         minSdkVersion 7
-        targetSdkVersion 15
+        targetSdkVersion 26
     }
-
 
     signingConfigs {
         release {
@@ -76,7 +74,7 @@ android {
             res.srcDirs = ['res']
         }
 
-        instrumentTest.setRoot('src/androidTest')
+        androidTest.setRoot('src/androidTest')
     }
 
     packagingOptions {
