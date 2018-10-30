@@ -1,7 +1,7 @@
 package com.astoev.cave.survey.service.bluetooth.device.ble.mileseey;
 
 /**
- *  Suaoki P7, almost identical to a Mileseey P7
+ *  Suaoki P7, almost identical to a Mileseey P7 but without the camera
  */
 
 public class SuaokiP7BluetoothLeDevice extends AbstractMileseeyBluetoothLeDevice {
