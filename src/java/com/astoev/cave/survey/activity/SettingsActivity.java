@@ -1,6 +1,7 @@
 package com.astoev.cave.survey.activity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -64,6 +65,12 @@ public class SettingsActivity extends MainMenuActivity {
 
     private void prepareErrorReporter() {
         ToggleButton errorReporterToggle = (ToggleButton) findViewById(R.id.settingsDebugToggle);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
+            // access to system logs disabled since 7.1
+            errorReporterToggle.setEnabled(false);
+            return;
+        }
+
         errorReporterToggle.setChecked(ErrorReporter.isDebugRunning());
 
         errorReporterToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
