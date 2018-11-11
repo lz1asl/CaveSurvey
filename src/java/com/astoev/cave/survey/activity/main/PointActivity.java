@@ -47,6 +47,7 @@ import com.astoev.cave.survey.service.orientation.AzimuthChangedListener;
 import com.astoev.cave.survey.service.orientation.SlopeChangedListener;
 import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.util.FileStorageUtil;
+import com.astoev.cave.survey.util.FileUtils;
 import com.astoev.cave.survey.util.PointUtil;
 import com.astoev.cave.survey.util.StringUtils;
 import com.j256.ormlite.misc.TransactionManager;
@@ -429,7 +430,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 
             Log.i(Constants.LOG_TAG_SERVICE, "Going to capture image in: " + photoFile.getAbsolutePath());
             final Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileUtils.getFileUri(photoFile));
             if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
