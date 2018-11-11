@@ -285,7 +285,7 @@ public class FileStorageUtil {
      */
     public static boolean isExternalStorageWritable() {
 //        String state = Environment.getExternalStorageState();
-//        return (Environment.MEDIA_MOUNTED.equals(state));
+//        return (Environment.MEDIA_MOUNTED.equals(state)) && PermissionUtil.hasExtStoragePermission();
         // TODO
         return false;
     }

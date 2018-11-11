@@ -58,6 +58,9 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.Callable;
 
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static android.Manifest.permission.CAMERA;
+
 /**
  * Created by IntelliJ IDEA.
  * User: astoev
@@ -365,6 +368,11 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
      * Called once the GPS buton is selected from the menu. Will show the dialog for manual/auto GPS
      */
     public void gpsButton() {
+
+        if (!requestPermission(ACCESS_FINE_LOCATION)) {
+            return;
+        }
+
         Log.i(Constants.LOG_TAG_UI, "Adding GPS Type dialog");
         GpsTypeDialog gpsTypeDialog = new GpsTypeDialog();
         gpsTypeDialog.show(getSupportFragmentManager(), GpsTypeDialog.GPS_TYPE_DIALOG);
@@ -401,6 +409,10 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
     public void photoButton() {
         // picture http://www.tutorialforandroid.com/2010/10/take-picture-in-android-with.html
         // https://developer.android.com/training/camera/photobasics.html
+
+        if (!requestPermission(CAMERA)) {
+            return;
+        }
 
         File photoFile;
         try {

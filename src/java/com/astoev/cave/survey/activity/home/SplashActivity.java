@@ -1,5 +1,6 @@
 package com.astoev.cave.survey.activity.home;
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,6 +14,7 @@ import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.service.Workspace;
 import com.astoev.cave.survey.util.ConfigUtil;
 import com.astoev.cave.survey.util.FileStorageUtil;
+import com.astoev.cave.survey.util.PermissionUtil;
 
 import java.io.File;
 import java.sql.SQLException;
@@ -39,7 +41,8 @@ public class SplashActivity extends AppCompatActivity {
             return;
         }
 
-        // FS initialization
+        // FS initialization, if available and allowed prepare to use external storage
+        PermissionUtil.requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, this);
         File home = FileStorageUtil.getStorageHome();
         if (home == null) {
             displayError("Storage unavailable!");

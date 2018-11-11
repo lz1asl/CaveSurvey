@@ -18,6 +18,10 @@ import com.astoev.cave.survey.fragment.InfoDialogFragment;
 import com.astoev.cave.survey.service.reports.ErrorReporter;
 import com.astoev.cave.survey.util.ConfigUtil;
 
+import static android.Manifest.permission.ACCESS_NETWORK_STATE;
+import static android.Manifest.permission.INTERNET;
+import static android.Manifest.permission.READ_LOGS;
+
 /**
  * Created by astoev on 10/11/15.
  */
@@ -68,6 +72,10 @@ public class SettingsActivity extends MainMenuActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
             // access to system logs disabled since 7.1
             errorReporterToggle.setEnabled(false);
+            return;
+        }
+
+        if (!requestPermission(new String[]{INTERNET, READ_LOGS, ACCESS_NETWORK_STATE})) {
             return;
         }
 

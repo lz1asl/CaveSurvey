@@ -5,27 +5,26 @@
           android:versionCode="36"
           android:versionName="1.35">
           
-    <!--<uses-permission android:name="android.permission.INTERNET" />-->
     <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-feature android:name="android.hardware.bluetooth_le" android:required="false"/>
     
     <!-- Store to SD -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="22"/>
 
     <!-- Take photos -->
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.CAMERA" android:maxSdkVersion="22"/>
 
     <!-- Bluetooth laser distance meter -->
-    <uses-permission android:name="android.permission.BLUETOOTH"/>
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
-    <uses-feature android:name="android.hardware.bluetooth_le" android:required="false"/>
+    <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="22"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="22"/>
 
     <!-- GPS -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" android:maxSdkVersion="22"/>
 
-    <!--used to dump the log on the FS, used only for debug purposes -->
-    <uses-permission android:name="android.permission.READ_LOGS" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!--used to dump the log on the FS, used only for debug purposes, not available on v25+ -->
+    <uses-permission android:name="android.permission.READ_LOGS" android:maxSdkVersion="24"/>
+    <uses-permission android:name="android.permission.INTERNET" android:maxSdkVersion="24" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" android:maxSdkVersion="24"/>
     
     <application android:allowBackup="true" 
         	     android:label="@string/app_name" 
@@ -81,11 +80,6 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.astoev.cave.survey.activity.home.HomeActivity" />
-        </activity>
-        <activity android:name="com.astoev.cave.survey.activity.main.ImportActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.astoev.cave.survey.activity.SettingsActivity" />
         </activity>
 	    <activity
             android:name=".openstopo.WebViewActivity"

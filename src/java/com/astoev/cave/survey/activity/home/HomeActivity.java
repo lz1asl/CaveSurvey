@@ -27,6 +27,9 @@ import com.astoev.cave.survey.util.DaoUtil;
 import java.io.Serializable;
 import java.util.List;
 
+import static android.Manifest.permission.BLUETOOTH;
+import static android.Manifest.permission.BLUETOOTH_ADMIN;
+
 /**
  * Home activity for managing projects and general settings.
  *
@@ -181,6 +184,11 @@ public class HomeActivity extends MainMenuActivity implements DeleteHandler {
      * Action method that handles click on "Bluetooth device"  button
      */
     private void pairBtDevice() {
+
+        if (!requestPermission(new String[]{BLUETOOTH, BLUETOOTH_ADMIN})) {
+            return;
+        }
+
         Intent intent = new Intent(this, BTActivity.class);
         startActivity(intent);
     }
