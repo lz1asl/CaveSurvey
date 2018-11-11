@@ -10,7 +10,7 @@
     
     <!-- Store to SD -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    
+
     <!-- Take photos -->
     <uses-permission android:name="android.permission.CAMERA"/>
 
@@ -32,13 +32,14 @@
         		 android:icon="@drawable/logo" 
         		 android:screenOrientation="portrait"
         		 android:theme="@style/Theme.AppCompat">
-        <activity android:name=".activity.home.HomeActivity"
+        <activity android:name=".activity.home.SplashActivity"
                   android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:name=".activity.home.HomeActivity"/>
         <activity android:name=".activity.main.MainActivity">
 			<meta-data
 	            android:name="android.support.PARENT_ACTIVITY"
