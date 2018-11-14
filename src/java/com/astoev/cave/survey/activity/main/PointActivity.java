@@ -369,10 +369,6 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
      */
     public void gpsButton() {
 
-        if (!requestPermission(ACCESS_FINE_LOCATION)) {
-            return;
-        }
-
         Log.i(Constants.LOG_TAG_UI, "Adding GPS Type dialog");
         GpsTypeDialog gpsTypeDialog = new GpsTypeDialog();
         gpsTypeDialog.show(getSupportFragmentManager(), GpsTypeDialog.GPS_TYPE_DIALOG);
@@ -1058,6 +1054,11 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 
         Point parentPoint = getCurrentLeg().getFromPoint();
         if (GpsTypeDialog.GPSType.AUTO.equals(gpsTypeArg)) {
+
+            if (!requestPermission(ACCESS_FINE_LOCATION)) {
+                return;
+            }
+
             Intent intent = new Intent(this, GPSActivity.class);
             intent.putExtra(GPSActivity.POINT, parentPoint);
             startActivity(intent);
