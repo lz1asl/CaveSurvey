@@ -17,6 +17,7 @@ import com.astoev.cave.survey.activity.poc.SensorTestActivity;
 import com.astoev.cave.survey.fragment.InfoDialogFragment;
 import com.astoev.cave.survey.service.reports.ErrorReporter;
 import com.astoev.cave.survey.util.ConfigUtil;
+import com.astoev.cave.survey.util.PermissionUtil;
 
 import static android.Manifest.permission.ACCESS_NETWORK_STATE;
 import static android.Manifest.permission.INTERNET;
@@ -75,7 +76,7 @@ public class SettingsActivity extends MainMenuActivity {
             return;
         }
 
-        if (!requestPermission(new String[]{INTERNET, READ_LOGS, ACCESS_NETWORK_STATE})) {
+        if (!PermissionUtil.requestPermissions(new String[]{INTERNET, READ_LOGS, ACCESS_NETWORK_STATE}, this, 401)) {
             return;
         }
 

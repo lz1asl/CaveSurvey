@@ -22,6 +22,8 @@ import java.sql.SQLException;
 /** Displayed while preparing */
 public class SplashActivity extends AppCompatActivity {
 
+    private static final int PERM_REQ_CODE_STORAGE = 201;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         // render splash
@@ -42,7 +44,7 @@ public class SplashActivity extends AppCompatActivity {
         }
 
         // FS initialization, if available and allowed prepare to use external storage
-        PermissionUtil.requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, this);
+        PermissionUtil.requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, this, PERM_REQ_CODE_STORAGE);
         File home = FileStorageUtil.getStorageHome();
         if (home == null) {
             displayError("Storage unavailable!");

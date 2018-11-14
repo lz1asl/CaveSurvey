@@ -13,20 +13,15 @@ import com.astoev.cave.survey.activity.UIUtilities;
 
 public class PermissionUtil {
 
-
-
-    public static final int PERMISSIONS_REQUEST_CODE = 101;
-
-
-    public static boolean requestPermission(String aPermission, AppCompatActivity aBaseActivity) {
-        return hasOrRequestPermission(new String[] { aPermission }, aBaseActivity);
+    public static boolean requestPermission(String aPermission, AppCompatActivity anActivity, int aCode) {
+        return hasOrRequestPermission(new String[] { aPermission }, anActivity, aCode);
     }
 
-    public static boolean requestPermissions(String[] aPermissions, AppCompatActivity aBaseActivity) {
-        return hasOrRequestPermission(aPermissions, aBaseActivity);
+    public static boolean requestPermissions(String[] aPermissions, AppCompatActivity anActivity, int aCode) {
+        return hasOrRequestPermission(aPermissions, anActivity, aCode);
     }
 
-    private static boolean hasOrRequestPermission(String[] aPermissions, AppCompatActivity anActivity) {
+    private static boolean hasOrRequestPermission(String[] aPermissions, AppCompatActivity anActivity, int aCode) {
         Log.d(Constants.LOG_TAG_SERVICE, "Checking permissions");
 
         if (isStaticPermissionBuild()) {
@@ -38,12 +33,10 @@ public class PermissionUtil {
                 Log.d(Constants.LOG_TAG_SERVICE, "Checking for " + permission);
                 if (!hasPermission(permission, anActivity)) {
                     Log.e(Constants.LOG_TAG_SERVICE, "Permission not granted, requesting access");
-//                    if (ActivityCompat.shouldShowRequestPermissionRationale(anActivity, permission)) {
-
-//                    } else {
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(anActivity, permission)) {
                         UIUtilities.showNotification("Please authorize CaveSurvey for " + permission);
-                        ActivityCompat.requestPermissions(anActivity, aPermissions, PERMISSIONS_REQUEST_CODE);
-//                    }
+                    }
+                    ActivityCompat.requestPermissions(anActivity, new String[] {permission}, aCode);
                     return false;
                 }
             }
@@ -68,5 +61,16 @@ public class PermissionUtil {
         return Build.VERSION.SDK_INT < Build.VERSION_CODES.M;
     }
 
+    public static boolean isGranted(String permissions[], int[] grantResults) {
+            // If request is cancelled, the result arrays are empty.
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.i(Constants.LOG_TAG_SERVICE, "Got permission");
+                return true;
+            } else {
+                Log.i(Constants.LOG_TAG_SERVICE, "Permission denied");
+                return false;
+            }
+    }
 
 }

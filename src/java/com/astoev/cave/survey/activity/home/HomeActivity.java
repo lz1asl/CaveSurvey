@@ -23,6 +23,7 @@ import com.astoev.cave.survey.activity.main.MainActivity;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.util.DaoUtil;
+import com.astoev.cave.survey.util.PermissionUtil;
 
 import java.io.Serializable;
 import java.util.List;
@@ -185,7 +186,7 @@ public class HomeActivity extends MainMenuActivity implements DeleteHandler {
      */
     private void pairBtDevice() {
 
-        if (!requestPermission(new String[]{BLUETOOTH, BLUETOOTH_ADMIN})) {
+        if (!PermissionUtil.requestPermissions(new String[]{BLUETOOTH, BLUETOOTH_ADMIN}, this, 301)) {
             return;
         }
 

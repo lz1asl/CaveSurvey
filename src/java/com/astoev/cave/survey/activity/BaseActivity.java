@@ -1,6 +1,5 @@
 package com.astoev.cave.survey.activity;
 
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -10,7 +9,6 @@ import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.service.Workspace;
 import com.astoev.cave.survey.service.export.AutoExport;
 import com.astoev.cave.survey.util.ConfigUtil;
-import com.astoev.cave.survey.util.PermissionUtil;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -122,33 +120,6 @@ public abstract class BaseActivity extends ActionBarActivity {
      */
     protected String getScreenTitle() {
         return null;
-    }
-
-    protected boolean requestPermission(String aPermission) {
-        return PermissionUtil.requestPermission(aPermission, this);
-    }
-
-    protected boolean requestPermission(String[] aPermissions) {
-        return PermissionUtil.requestPermissions(aPermissions, this);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case PermissionUtil.PERMISSIONS_REQUEST_CODE: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.i(Constants.LOG_TAG_SERVICE, "Got permission");
-                } else {
-                    Log.i(Constants.LOG_TAG_SERVICE, "Permission denied");
-                }
-                return;
-            }
-            default:
-                Log.i(Constants.LOG_TAG_SERVICE, "Ignore request " + requestCode);
-        }
     }
 
 }
