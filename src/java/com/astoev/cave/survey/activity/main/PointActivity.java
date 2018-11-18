@@ -47,6 +47,8 @@ import com.astoev.cave.survey.service.orientation.AzimuthChangedListener;
 import com.astoev.cave.survey.service.orientation.SlopeChangedListener;
 import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.util.FileStorageUtil;
+import com.astoev.cave.survey.util.FileUtils;
+import com.astoev.cave.survey.util.PermissionUtil;
 import com.astoev.cave.survey.util.PointUtil;
 import com.astoev.cave.survey.util.StringUtils;
 import com.j256.ormlite.misc.TransactionManager;
@@ -56,6 +58,9 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.Callable;
+
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static android.Manifest.permission.CAMERA;
 
 /**
  * Created by IntelliJ IDEA.
@@ -70,8 +75,10 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
     private static final int REQIEST_EDIT_NOTE = 2;
 
     private static final String VECTOR_DIALOG = "vector_dialog";
-
     private static final String STATE_PHOTO_PATH = "STATE_PHOTO_PATH";
+
+    private static final int PERM_REQ_CODE_CAMERA = 101;
+    private static final int PERM_REQ_CODE_GPS = 102;
 
     private String mNewNote = null;
 
@@ -364,6 +371,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
      * Called once the GPS buton is selected from the menu. Will show the dialog for manual/auto GPS
      */
     public void gpsButton() {
+
         Log.i(Constants.LOG_TAG_UI, "Adding GPS Type dialog");
         GpsTypeDialog gpsTypeDialog = new GpsTypeDialog();
         gpsTypeDialog.show(getSupportFragmentManager(), GpsTypeDialog.GPS_TYPE_DIALOG);
@@ -401,6 +409,10 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         // picture http://www.tutorialforandroid.com/2010/10/take-picture-in-android-with.html
         // https://developer.android.com/training/camera/photobasics.html
 
+        if (!PermissionUtil.requestPermission(CAMERA, this, PERM_REQ_CODE_CAMERA)) {
+            return;
+        }
+
         File photoFile;
         try {
             String projectName = getWorkspace().getActiveProject().getName();
@@ -429,7 +441,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 
             Log.i(Constants.LOG_TAG_SERVICE, "Going to capture image in: " + photoFile.getAbsolutePath());
             final Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileUtils.getFileUri(photoFile));
             if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
@@ -1045,6 +1057,11 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 
         Point parentPoint = getCurrentLeg().getFromPoint();
         if (GpsTypeDialog.GPSType.AUTO.equals(gpsTypeArg)) {
+
+            if (!PermissionUtil.requestPermission(ACCESS_FINE_LOCATION, this, PERM_REQ_CODE_GPS)) {
+                return;
+            }
+
             Intent intent = new Intent(this, GPSActivity.class);
             intent.putExtra(GPSActivity.POINT, parentPoint);
             startActivity(intent);
@@ -1052,6 +1069,31 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
             Intent intent = new Intent(this, GPSManualActivity.class);
             intent.putExtra(GPSActivity.POINT, parentPoint);
             startActivity(intent);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+
+        switch (requestCode) {
+            case PERM_REQ_CODE_CAMERA:
+                if (PermissionUtil.isGranted(permissions, grantResults)) {
+                    photoButton();
+                }
+                return;
+
+            case PERM_REQ_CODE_GPS:
+                if (PermissionUtil.isGranted(permissions, grantResults)) {
+                    Intent intent = new Intent(this, GPSActivity.class);
+                    Point parentPoint = getCurrentLeg().getFromPoint();
+                    intent.putExtra(GPSActivity.POINT, parentPoint);
+                    startActivity(intent);
+                }
+                return;
+
+            default:
+                Log.i(Constants.LOG_TAG_SERVICE, "Ignore request " + requestCode);
         }
     }
 }

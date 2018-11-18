@@ -29,6 +29,7 @@ import com.astoev.cave.survey.service.orientation.OrientationProcessorFactory;
 import com.astoev.cave.survey.service.orientation.RotationOrientationProcessor;
 import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.util.FileStorageUtil;
+import com.astoev.cave.survey.util.FileUtils;
 import com.astoev.cave.survey.util.ProjectInfo;
 import com.astoev.cave.survey.util.StringUtils;
 
@@ -157,7 +158,7 @@ public class InfoActivity extends MainMenuActivity {
         File projectHome = FileStorageUtil.getProjectHome(projectName);
 
         if (projectHome != null) {
-            Uri contentUri = Uri.fromFile(projectHome);
+            Uri contentUri = FileUtils.getFileUri(projectHome);
 
             Log.i(Constants.LOG_TAG_SERVICE, "Uri:" + contentUri);
 
@@ -188,7 +189,7 @@ public class InfoActivity extends MainMenuActivity {
 
             // another test
             intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.fromFile(projectHome));
+            intent.setData(FileUtils.getFileUri(projectHome));
             intent.putExtra("org.openintents.extra.ABSOLUTE_PATH", projectHome.getPath());
             if (intent.resolveActivity(packageManager) != null) {
                 Log.i(Constants.LOG_TAG_SERVICE, "ACTION_VIEW with extra resolved");
