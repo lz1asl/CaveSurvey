@@ -240,9 +240,12 @@
     <string name="middle_no_value">Изисква се разстояние</string>
 
     <string name="error">Възникна грешка</string>
+    <string name="error_no_space">Недостатъчно място</string>
     <string name="busy">Моля изчакайте&#8230;</string>
 
     <string name="todo">Предстои</string>
+
+    <string name="permission_required">Необходимо е разрешение за: %1$s</string>
 
 
     <!-- bluetooth -->
@@ -376,5 +379,11 @@
     <string name="export_openstopo_title">OpensTopo</string>
     <string name="information">Информация</string>
     <string name="info_project_home">Проектни файлове</string>
+
+    <!-- splash -->
+    <string name="splash_loading">Подготовка ...</string>
+    <string name="splash_error">Грешка: %1$s</string>
+    <string name="splash_error_database">Грешка в базата данни!</string>
+    <string name="splash_error_storage">Грешка във файловото хранилище!</string>
 
 </resources>

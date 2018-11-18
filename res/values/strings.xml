@@ -257,9 +257,12 @@
     <string name="middle_no_value">Distance required</string>
 
     <string name="error">Error occurred</string>
+    <string name="error_no_space">No space left on device</string>
     <string name="busy">Please wait&#8230;</string>
 
     <string name="todo">TODO</string>
+
+    <string name="permission_required">Please authorize CaveSurvey for: %1$s</string>
 
 
     <!-- bluetooth -->
@@ -395,5 +398,10 @@ Network connection is required.</string>
     <string name="information">Information</string>
     <string name="info_project_home">Project folder</string>
 
+    <!-- splash -->
+    <string name="splash_loading">Preparing ...</string>
+    <string name="splash_error">Failed: %1$s</string>
+    <string name="splash_error_database">Internal database unavailable!</string>
+    <string name="splash_error_storage">Storage unavailable!</string>
 
 </resources>

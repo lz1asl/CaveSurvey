@@ -39,7 +39,7 @@ public class SplashActivity extends AppCompatActivity {
             Workspace.getCurrentInstance().getDBHelper().getProjectDao().queryForAll();
         } catch (SQLException e) {
             Log.e(Constants.LOG_TAG_DB, "DB read failed", e);
-            displayError("Internal database unavailable");
+            displayError(R.string.splash_error_database);
             return;
         }
 
@@ -47,7 +47,7 @@ public class SplashActivity extends AppCompatActivity {
         PermissionUtil.requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, this, PERM_REQ_CODE_STORAGE);
         File home = FileStorageUtil.getStorageHome();
         if (home == null) {
-            displayError("Storage unavailable!");
+            displayError(R.string.splash_error_storage);
             return;
         }
 
@@ -59,10 +59,10 @@ public class SplashActivity extends AppCompatActivity {
         finish();
     }
 
-    private void displayError(String aMessage) {
+    private void displayError(int aMessage) {
         UIUtilities.showNotification(aMessage);
         TextView status = (TextView) findViewById(R.id.splashStatus);
-        status.setText("Initialization failed: " + aMessage);
+        status.setText(getString(R.string.splash_error, getText(aMessage)));
     }
 
 }

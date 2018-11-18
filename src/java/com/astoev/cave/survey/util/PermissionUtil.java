@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.astoev.cave.survey.Constants;
+import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.UIUtilities;
 
 public class PermissionUtil {
@@ -34,7 +35,7 @@ public class PermissionUtil {
                 if (!hasPermission(permission, anActivity)) {
                     Log.e(Constants.LOG_TAG_SERVICE, "Permission not granted, requesting access");
                     if (ActivityCompat.shouldShowRequestPermissionRationale(anActivity, permission)) {
-                        UIUtilities.showNotification("Please authorize CaveSurvey for " + permission);
+                        UIUtilities.showNotification(anActivity.getString(R.string.permission_required, permission));
                     }
                     ActivityCompat.requestPermissions(anActivity, new String[] {permission}, aCode);
                     return false;

@@ -12,6 +12,7 @@ import android.os.StatFs;
 import android.util.Log;
 
 import com.astoev.cave.survey.Constants;
+import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.model.Project;
@@ -271,7 +272,7 @@ public class FileStorageUtil {
         long availableBytes = stats.getAvailableBlocks() * (long) stats.getBlockSize();
         if (availableBytes < MIN_REQUIRED_STORAGE) {
             Log.e(Constants.LOG_TAG_UI, "No space left");
-            UIUtilities.showNotification("No space left on device"); // TODO internationalization
+            UIUtilities.showNotification(R.string.error_no_space);
             return null;
         }
 
