@@ -120,8 +120,8 @@ public class BluetoothService {
     private static Executor mCommandExecutor = Executors.newSingleThreadExecutor();
     private static Semaphore mCommandLock = new Semaphore(1,true);
 
-
-
+    // compile time switch to allow processing of all device characteristics
+    private static final boolean DEVELOPMENT_MODE = false;
 
     public static boolean isBluetoothSupported() {
         return mCurrContext != null
@@ -441,6 +441,11 @@ public class BluetoothService {
             @Override
             public void onScanFailed(int errorCode) {
                 Log.i(LOG_TAG_BT, "Scan failed: " + errorCode);
+                if (2 == errorCode) {
+                    // https://developer.android.com/reference/android/bluetooth/le/ScanCallback.html#SCAN_FAILED_APPLICATION_REGISTRATION_FAILED
+                    Log.i(LOG_TAG_BT, "Error code 2, bluetooth stack need a restart");
+                    UIUtilities.showNotification(R.string.bt_scan_failed);
+                }
             }
         };
     }
@@ -553,23 +558,21 @@ public class BluetoothService {
                 for (BluetoothGattService service : mBluetoothGatt.getServices()) {
                     Log.d(LOG_TAG_BT, "Service " + service.getUuid().toString() + " " + service.getType());
 
-                    // note, disable the checks for services, characteristics and descriptors to easily debug and add new devices
-
-//                    if (!leDevice.getServices().contains(service.getUuid())) {
-//                        continue;
-//                    }
+                    if (!DEVELOPMENT_MODE && !leDevice.getServices().contains(service.getUuid())) {
+                        continue;
+                    }
 
                     for (BluetoothGattCharacteristic c : service.getCharacteristics()) {
-//                        if (!leDevice.getCharacteristics().contains(c.getUuid())) {
-//                            continue;
-//                        }
+                        if (!DEVELOPMENT_MODE && !leDevice.getCharacteristics().contains(c.getUuid())) {
+                            continue;
+                        }
 
                         enqueueCommand(new EnableNotificationCommand(c));
 
                         for (BluetoothGattDescriptor descriptor : c.getDescriptors()) {
-//                            if (!leDevice.getDescriptors().contains(descriptor.getUuid())) {
-//                                continue;
-//                            }
+                            if (!DEVELOPMENT_MODE && !leDevice.getDescriptors().contains(descriptor.getUuid())) {
+                                continue;
+                            }
 
                             enqueueCommand(new WriteDescriptorCommand(descriptor, leDevice));
                         }

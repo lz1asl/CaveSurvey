@@ -285,6 +285,7 @@
     <string name="bt_supported_devices">Compatible with:</string>
     <string name="bt_device_connected">Connected to: %1$s</string>
     <string name="bt_device_lost">Device lost: %1$s</string>
+    <string name="bt_scan_failed">LE devices scan failed, please restart your device</string>
 
     <!-- device mode validation -->
     <string name="bt_device_mode">Use: %1$s measurement mode</string>
