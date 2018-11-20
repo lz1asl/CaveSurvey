@@ -37,6 +37,7 @@ public abstract class AbstractBluetoothLEDevice extends AbstractBluetoothDevice 
     public boolean needCharacteristicIndication() {
         return false;
     }
+    public boolean needCharacteristicPull() { return false; }
 
 
     // helper methods to reuse between the LE devices

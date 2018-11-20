@@ -31,6 +31,7 @@ import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.device.AbstractBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.ble.AbstractBluetoothLEDevice;
 import com.astoev.cave.survey.service.bluetooth.device.ble.LeicaDistoBluetoothLEDevice;
+import com.astoev.cave.survey.service.bluetooth.device.ble.StanleyBluetoothLeDevice;
 import com.astoev.cave.survey.service.bluetooth.device.ble.mileseey.MileseeyT7BluetoothLeDevice;
 import com.astoev.cave.survey.service.bluetooth.device.ble.mileseey.Mileseeyd5tBluetoothLeDevice;
 import com.astoev.cave.survey.service.bluetooth.device.comm.AbstractBluetoothRFCOMMDevice;
@@ -45,6 +46,7 @@ import com.astoev.cave.survey.service.bluetooth.device.comm.bosch.glm.BoschPLR40
 import com.astoev.cave.survey.service.bluetooth.device.comm.bosch.glm.BoschPLR50CBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.lecommands.AbstractBluetoothCommand;
 import com.astoev.cave.survey.service.bluetooth.lecommands.EnableNotificationCommand;
+import com.astoev.cave.survey.service.bluetooth.lecommands.PullCharacteristicCommand;
 import com.astoev.cave.survey.service.bluetooth.lecommands.WriteDescriptorCommand;
 import com.astoev.cave.survey.util.ConfigUtil;
 import com.astoev.cave.survey.util.StringUtils;
@@ -60,12 +62,14 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
 
+import static android.bluetooth.BluetoothGatt.GATT_SUCCESS;
 import static android.content.Context.BLUETOOTH_SERVICE;
 import static android.os.Build.VERSION.SDK_INT;
 import static android.os.Build.VERSION_CODES.GINGERBREAD;
 import static android.os.Build.VERSION_CODES.JELLY_BEAN_MR2;
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static com.astoev.cave.survey.Constants.LOG_TAG_BT;
+import static java.lang.Thread.sleep;
 
 /**
  * Created with IntelliJ IDEA.
@@ -97,6 +101,7 @@ public class BluetoothService {
         SUPPORTED_BLUETOOTH_LE_DEVICES.add(new LeicaDistoBluetoothLEDevice());
         SUPPORTED_BLUETOOTH_LE_DEVICES.add(new Mileseeyd5tBluetoothLeDevice());
         SUPPORTED_BLUETOOTH_LE_DEVICES.add(new MileseeyT7BluetoothLeDevice());
+        SUPPORTED_BLUETOOTH_LE_DEVICES.add(new StanleyBluetoothLeDevice());
     }
 
     // generic
@@ -359,6 +364,7 @@ public class BluetoothService {
     }
 
     public static void updateLeDeviceState(int aStateLabel) {
+        Log.i(Constants.LOG_TAG_BT, "Device state now: " + ConfigUtil.getContext().getString(aStateLabel));
         mLeDeviceState = aStateLabel;
         ((Refresheable) mCurrContext).refresh();
     }
@@ -387,15 +393,9 @@ public class BluetoothService {
     public static void discoverBluetoothLEDevices() {
 
         if (SDK_INT >= LOLLIPOP) {
-            Log.i(LOG_TAG_BT, "Start discovery for Lollipop+ Bluetooth LE devices");
-            final BluetoothManager btManager = (BluetoothManager) ConfigUtil.getContext().getSystemService(BLUETOOTH_SERVICE);
-            leCallbackLollipop = getLEScanCallbackLollipop();
-            btManager.getAdapter().getBluetoothLeScanner().startScan(leCallbackLollipop);
-
+            leCallbackLollipop = startLEScanCallbackLollipop();
         } else {
-            Log.i(LOG_TAG_BT, "Start discovery for Bluetooth LE devices");
-            leCallback = getLEScanCallback();
-            BluetoothAdapter.getDefaultAdapter().startLeScan(leCallback);
+            leCallback = startLEScanCallback();
         }
     }
 
@@ -405,27 +405,35 @@ public class BluetoothService {
 
         if (leCallback != null) {
             BluetoothAdapter.getDefaultAdapter().stopLeScan(leCallback);
+            leCallback = null;
         }
         if (leCallbackLollipop != null && SDK_INT >= LOLLIPOP) {
             final BluetoothManager btManager = (BluetoothManager) ConfigUtil.getContext().getSystemService(BLUETOOTH_SERVICE);
             btManager.getAdapter().getBluetoothLeScanner().stopScan(leCallbackLollipop);
+            leCallbackLollipop = null;
         }
     }
 
     @TargetApi(JELLY_BEAN_MR2)
-    public static BluetoothAdapter.LeScanCallback getLEScanCallback()  {
-        return new BluetoothAdapter.LeScanCallback() {
+    public static BluetoothAdapter.LeScanCallback startLEScanCallback()  {
+
+        Log.i(LOG_TAG_BT, "Start discovery for Bluetooth LE devices");
+        BluetoothAdapter.LeScanCallback callback = new BluetoothAdapter.LeScanCallback() {
 
             @Override
             public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) {
                 handleDeviceDiscovered(device, rssi);
             }
         };
+        BluetoothAdapter.getDefaultAdapter().startLeScan(leCallback);
+        return callback;
     }
 
     @TargetApi(LOLLIPOP)
-    private static ScanCallback getLEScanCallbackLollipop() {
-        return new ScanCallback() {
+    private static ScanCallback startLEScanCallbackLollipop() {
+        Log.i(LOG_TAG_BT, "Start discovery for Lollipop+ Bluetooth LE devices");
+
+        ScanCallback callback = new ScanCallback() {
             @Override
             public void onScanResult(int callbackType, ScanResult result) {
                 handleDeviceDiscovered(result.getDevice(), result.getRssi());
@@ -448,6 +456,10 @@ public class BluetoothService {
                 }
             }
         };
+
+        final BluetoothManager btManager = (BluetoothManager) ConfigUtil.getContext().getSystemService(BLUETOOTH_SERVICE);
+        btManager.getAdapter().getBluetoothLeScanner().startScan(callback);
+        return callback;
     }
 
     private static void handleDeviceDiscovered(BluetoothDevice device, int rssi) {
@@ -466,9 +478,10 @@ public class BluetoothService {
         }
     }
 
+    // will run the command in async using synchronized queue
     public static void enqueueCommand(final AbstractBluetoothCommand aCommand){
 
-        Log.d(LOG_TAG_BT, "Enqueue command");
+        Log.d(LOG_TAG_BT, "Enqueue command " + aCommand.getClass().getSimpleName());
         synchronized (mCommandQueue) {
             mCommandQueue.add(aCommand);
             mCommandExecutor.execute(new Runnable() {
@@ -487,6 +500,16 @@ public class BluetoothService {
 
                     if (aCommand.canProceedWithoutAnswer()) {
                         dequeueCommand();
+                    }
+
+                    // schedule again
+                    if (R.string.bt_device_connected == mLeDeviceState && aCommand instanceof PullCharacteristicCommand) {
+                        try {
+                            sleep(500);
+                        } catch (InterruptedException aE) {
+                            aE.printStackTrace();
+                        }
+                        enqueueCommand(aCommand);
                     }
                 }
             });
@@ -522,7 +545,6 @@ public class BluetoothService {
             if (newState == BluetoothProfile.STATE_CONNECTED) {
                 Log.i(LOG_TAG_BT, "Connected with " + gatt.getDevice().getName());
 
-
                 boolean flag = mBluetoothGatt.discoverServices();
                 if (!flag) {
                     Log.i(LOG_TAG_BT, "Retry get services ");
@@ -548,7 +570,7 @@ public class BluetoothService {
 
         @Override
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
-            if (status == BluetoothGatt.GATT_SUCCESS) {
+            if (status == GATT_SUCCESS) {
                 // notify connected
                 Log.i(LOG_TAG_BT, "Got services");
                 UIUtilities.showDeviceConnectedNotification(ConfigUtil.getContext(), mSelectedDeviceSpec.getDescription());
@@ -559,24 +581,39 @@ public class BluetoothService {
                     Log.d(LOG_TAG_BT, "Service " + service.getUuid().toString() + " " + service.getType());
 
                     if (!DEVELOPMENT_MODE && !leDevice.getServices().contains(service.getUuid())) {
+                        Log.d(LOG_TAG_BT, "Ignored");
                         continue;
                     }
 
                     for (BluetoothGattCharacteristic c : service.getCharacteristics()) {
+
+                        Log.d(LOG_TAG_BT, "Characteristics " + c.getUuid().toString());
                         if (!DEVELOPMENT_MODE && !leDevice.getCharacteristics().contains(c.getUuid())) {
+                            Log.d(LOG_TAG_BT, "Ignored");
                             continue;
                         }
 
-                        enqueueCommand(new EnableNotificationCommand(c));
+                        if (leDevice.needCharacteristicIndication() || leDevice.needCharacteristicNotification()) {
+                            enqueueCommand(new EnableNotificationCommand(c));
+                        }
+                        if (leDevice.needCharacteristicPull() && leDevice.getCharacteristics().contains(c.getUuid())) {
+                            Log.i(LOG_TAG_BT, "Request current characteristic data");
+                            enqueueCommand(new PullCharacteristicCommand(c, leDevice));
+                        }
+
 
                         for (BluetoothGattDescriptor descriptor : c.getDescriptors()) {
+
+                            Log.d(LOG_TAG_BT, "Descriptor " + descriptor.getUuid().toString());
                             if (!DEVELOPMENT_MODE && !leDevice.getDescriptors().contains(descriptor.getUuid())) {
+                                Log.d(LOG_TAG_BT, "Ignored");
                                 continue;
                             }
 
-                            enqueueCommand(new WriteDescriptorCommand(descriptor, leDevice));
+                            if (leDevice.needCharacteristicIndication() || leDevice.needCharacteristicNotification()) {
+                                enqueueCommand(new WriteDescriptorCommand(descriptor, leDevice));
+                            }
                         }
-
                     }
                 }
 
@@ -585,7 +622,7 @@ public class BluetoothService {
             } else {
                 Log.i(LOG_TAG_BT, "Got services error, retry in a while");
                 try {
-                    Thread.sleep(2000);
+                    sleep(2000);
                 } catch (InterruptedException e) {
                     Log.e(LOG_TAG_BT, "Interrupted: ", e);
                 }
@@ -615,8 +652,19 @@ public class BluetoothService {
         public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
             super.onDescriptorWrite(gatt, descriptor, status);
 
-            Log.i(LOG_TAG_BT, "Got descriptor back");
+            Log.i(LOG_TAG_BT, "Got descriptor " + descriptor.getUuid() + " back with status: " + status);
             dequeueCommand();
+        }
+
+        @Override
+        public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
+            super.onCharacteristicRead(gatt, characteristic, status);
+            Log.i(LOG_TAG_BT, "Got char, forwarding for status " + status);
+
+            if (GATT_SUCCESS == status) {
+                onCharacteristicChanged(gatt, characteristic);
+
+            }
         }
 
         private void sendMeasureToUI(Measure aMeasure) {
