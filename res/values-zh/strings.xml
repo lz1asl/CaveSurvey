@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- common -->
+    <string name="app_name">洞穴测量</string>
+    <string name="button_yes">是</string>
+    <string name="button_no">否</string>
+    <string name="required">必须</string>
+    <string name="invalid">无效</string>
+    <string name="success">成功</string>
+    
+    <string name="sk_paldin">Paldin</string>
+
+    <!-- welcome screen -->
+    <string name="home_no_projects">创建测量</string>
+    <string name="home_new_project">新测量</string>
+    <string name="home_button_new_exists">测量 %1$s 已存在！</string>
+    <string name="home_delete_project">要删除测量 %1$s 吗？</string>
+    <string name="home_lang"><u>语言</u></string>
+
+    <!-- new project screen -->
+    <string name="new_title">新测量</string>
+    <string name="new_button_create">创建</string>
+
+    <string name="project_header">测量名称</string>
+    <string name="project_name">名称</string>
+    <string name="project_name_required">输入名称</string>
+    <string name="project_name_characters">包含错误的字符</string>
+    <string name="project_import">导入</string>
+    <string name="import_success">成功导入</string>
+
+
+
+    <!-- main screen -->
+    <string name="main_leg">当前测量段</string>
+    <string name="main_button_change">选择</string>
+    <string name="main_button_change_title">选择测量段</string>
+    <string name="main_button_add">添加</string>
+    <string name="main_button_data">数据</string>
+    <string name="main_button_about">关于</string>
+    <string name="main_button_settings">设置</string>
+    <string name="main_button_map">地图</string>
+
+    <string name="main_table_header_from">来</string>
+    <string name="main_table_header_to">去</string>
+<!--     
+    <string name="main_table_header_distance_from_start">距离起点</string>
+ -->    
+    <string name="main_table_header_more">更多</string>
+    <string name="main_table_header_note">备注</string>
+    <string name="main_table_header_drawing">草图</string>
+<!--     
+    <string name="main_table_header_gps">GPS</string>
+ -->    
+    <string name="main_table_header_photo">照片</string>
+    
+    <string name="leg">测量段</string>
+    <string name="left">左</string>
+    <string name="right">右</string>
+    <string name="up">上</string>
+    <string name="down">下</string>
+    <string name="distance">长度</string>
+    <string name="azimuth">方位</string>
+    <string name="slope">倾角</string>
+
+    <string name="point_photos_header">照片</string>
+    <string name="point_photo_label">照片 %1$s</string>
+
+    <string name="point_vectors_header">向量</string>
+    <string name="point_vectors_counter">向量 #</string>
+    <string name="point_vectors_delete">删除向量 %1$s?</string>
+    <string name="point_swipe_not_possible">已到达通道边界</string>
+
+    <string name="slope_column">倾角：</string>
+    
+    <string name="sensor">传感器</string>
+    <string name="accuracy">精度</string>
+    
+    <!-- add popup -->
+    <string name="main_add_title">新建</string>
+    <string name="main_add_leg">下一测量段</string>
+    <string name="main_add_branch">下一通道</string>
+    <string name="main_add_middlepoint">中间点</string>
+    <string name="main_add_note">备注</string>
+    <string name="main_add_sketch">画图</string>
+    <string name="main_add_photo">照片</string>
+    <string name="main_add_gps">GPS</string>
+    <string name="main_add_vector">添加向量</string>
+    <string name="main_reverse">反向</string>
+    <string name="main_reverse_message">测量段 %1$s 的方向和倾角将反转！</string>
+    <string name="table_sketch_prefix">S</string>
+    <string name="table_note_prefix">N</string>
+    <string name="table_photo_prefix">P</string>
+    <string name="table_location_prefix">L</string>
+    <string name="table_vector_prefix">V</string>
+
+    <string name="gallery_after_first_point">对第一条测量段无效</string>
+
+    <!-- main menu -->
+<!--     
+    <string name="menu_help">帮助</string>
+ -->    
+    <string name="menu_exit">退出</string>
+
+    <string name="menu_exit_confirmation_question">要结束测量吗？</string>
+
+    <!-- point -->
+    <string name="point_save">保存</string>
+    <string name="point_delete">删除</string>
+<!--     
+    <string name="point_read">阅读</string>
+ -->
+ 
+    <!-- note screen -->
+    <string name="note_title">备注</string>
+    <string name="note_save">保存</string>
+    <string name="note_saved">已保存</string>
+
+    <!--vector screen -->
+    <string name="vector_button_add_again">保存 + 新建</string>
+
+    
+
+    <string name="sketch_pick_color">选择颜色</string>
+    <string name="sketch_pick_size">选择粗细</string>
+    <string name="sketch_pick_style">选择样式</string>
+    <string name="sketch_pick_style_thick">实线</string>
+    <string name="sketch_pick_style_fill">填充</string>
+    <string name="sketch_pick_style_dash">虚线</string>
+    <string name="sketch_saved">已保存</string>
+    
+    <string name="sketch_undo">撤销</string>
+    <string name="sketch_redo">重做</string>
+    <string name="sketch_save">保存</string>
+    <string name="sketch_colorpicker">调色板</string>
+    <string name="sketch_style">样式</string>
+    <string name="sketch_size">粗细</string>
+    
+    
+    <string name="map_edit">编辑</string>
+
+    <!-- info screen -->
+    <string name="update_project">更新</string>
+    <string name="message_project_udpated">项目已更新</string>
+    <string name="statistics">统计</string>
+    <string name="info_created">已创建</string>
+    <string name="info_galleries"># 通道</string>
+    <string name="info_legs"># 测量段</string>
+    <string name="info_total_distance">原始长度</string>
+    <string name="info_chooser_open_folder">打开文件夹</string>
+
+    <string name="info_num_notes"># 备注</string>
+    <string name="info_num_drawings"># 草图</string>
+    <string name="info_num_coordinates"># 坐标</string>
+    <string name="info_num_photos"># 照片</string>
+    <string name="info_num_vectors"># 向量</string>
+
+
+    <string name="export_xls">导出Excel</string>
+    <string name="export_view_files">数据文件</string>
+    <string name="export_done">导出到 %1$s</string>
+    <string name="export_io_error">无法写入SD卡</string>
+    <string name="io_error">无法访问SD卡</string>
+    
+    <!-- options -->
+    <string name="measures_title">数据输入</string>
+    <string name="data_input_units">单位</string>
+    <string name="data_input_source">来源</string>
+<!-- 
+    <string-array name="options_modes">
+        <item>手动输入</item>
+        <item>内建传感器</item>
+        <item>蓝牙传感器</item>
+    </string-array>
+ -->
+ 
+    <string name="options_units_distance">距离：</string>
+    <string-array name="distance_units">
+        <item>米</item>
+    </string-array>
+    <string-array name="distance_read_type">
+        <item>手动</item>
+        <item>来自蓝牙</item>
+    </string-array>
+
+    <string name="options_units_azimuth">方位：</string>
+    <string-array name="azimuth_units">
+        <item>角度</item>
+        <item>梯度</item>
+    </string-array>
+
+    <string-array name="azimuth_read_type_manually">
+        <item>手动</item>
+        <item>来自蓝牙</item>
+    </string-array>
+    
+    <string-array name="azimuth_read_type_all">
+        <item>手动</item>
+        <item>内建传感器</item>
+        <item>来自蓝牙</item>
+    </string-array>
+
+    <string name="options_units_slope">倾角：</string>
+    <string-array name="slope_units">
+        <item>角度</item>
+        <item>梯度</item>
+    </string-array>
+
+    <string-array name="slope_read_type">
+        <item>手动</item>
+        <item>来自蓝牙</item>
+    </string-array>
+    
+    <string-array name="slope_read_type_all">
+        <item>手动</item>
+        <item>来自蓝牙</item>
+        <item>内建传感器</item>
+    </string-array>
+
+    <string-array name="latitude_types">
+        <item>北</item>
+        <item>南</item>
+    </string-array>
+    <string-array name="longitude_types">
+        <item>东</item>
+        <item>西</item>
+    </string-array>
+
+
+    <!-- about screen -->
+    <string name="about_title">关于洞穴测量</string>
+    <string name="about_user_guide">帮助 &amp; 用户指南</string>
+    <string name="about_paldin">http://sk-paldin.eu</string>
+    <string name="about_help">https://github.com/lz1asl/CaveSurvey/wiki/User-Guide</string>
+
+
+    <!-- info -->
+    <string name="info_distance_in">距离</string>
+    <string name="info_azimuth_in">方位</string>
+    <string name="info_slope_in">倾角</string>
+    <string name="info_azimuth_build_in_sensor">内建传感器配置</string>
+    
+    <string name="sensor_none">-</string>
+    <string name="rotation_sensor">旋转向量传感器</string>
+    <string name="magnetic_sensor">磁场/加速度传感器</string>
+    <string name="orientation_sensor">方向传感器</string>
+
+
+    <!-- popup -->
+    <string name="middle_leg_add">添加中间点</string>
+    <string name="middle_leg_info">测量段  %1$s, %2$s%3$s</string>
+    <string name="middle_split_at">在</string>
+    <string name="middle_create">创建</string>
+    <string name="middle_bad_value">错误的值</string>
+    <string name="middle_leg_shorter">太短</string>
+    <string name="middle_leg_bigger">太长</string>
+    <string name="middle_no_value">必需有距离</string>
+
+    <string name="error">发生了错误</string>
+    <string name="error_no_space">设备上没有剩余空间</string>
+    <string name="busy">请等待&#8230;</string>
+
+    <string name="todo">待办</string>
+
+    <string name="permission_required">请授权给洞穴测量: %1$s</string>
+
+
+    <!-- bluetooth -->
+    <string name="bt_devices">设备</string>
+    <string name="bt_devices_info">兼容设备配对：</string>
+    <string name="bt_new_device">新设备</string>
+    <string name="bt_paired">已配对</string>
+    <string name="bt_connected">成功连接</string>
+    <string name="bt_not_paired">未配对</string>
+    <string name="bt_pair_failed">设备离线或不兼容</string>
+    <string name="bt_state_unknown">未知状态</string>
+    <string name="bt_state_bonded">已匹配状态</string>
+    <string name="bt_state_bonding">匹配状态</string>
+    <string name="bt_state_none">未知状态</string>
+    <string name="bt_state_connecting">连接中...</string>
+    <string name="bt_state_connected">已连接</string>
+    <string name="bt_not_on">未开启蓝牙</string>
+    <string name="bt_not_selected">未选择设备</string>
+    <string name="bt_device_connecting">连接到: %1$s</string>
+    <string name="bt_supported_devices">兼容：</string>
+    <string name="bt_device_connected">已连接到: %1$s</string>
+    <string name="bt_device_lost">设备丢失: %1$s</string>
+
+    <!-- device mode validation -->
+    <string name="bt_device_mode">使用: %1$s 测量模式</string>
+    <string name="bt_device_mode_single">单独</string>
+    <string name="bt_device_mode_single_or_indirect">间接长度或单一长度 </string>
+
+    <string name="action_saved">已保存</string>
+    <string name="action_deleted">已删除</string>
+    
+    <string name="azimuth_column">方位：</string>
+    <string name="accuracy_column">精确度：</string>
+    <string name="no_value_label">没有值</string>
+    <string name="azimuth_accuracy_no_value">-1</string>
+    <string name="azimuth_orination">方向：</string>
+    <string name="azimuth_magnetic">磁场：</string>
+    <string name="azimuth_rotation">旋转：</string>
+    <string name="azimuth_start">开始</string>
+    <string name="azimuth_stop">停止</string>
+    <string name="sensor_test_title"><u>内建传感器</u></string>
+    <string name="sensor_test_header">测试内建传感器</string>
+    <string name="sensor_choose_header">选择内建传感器</string>
+    <string name="no_sensors">没有可用的内建传感器</string>
+    <string name="sensor_choose_tooltip">您可以选择最合适的内置传感器，以满足您的精确度需求</string>
+    <string name="sensor_test_tooltip">您可以测试内置传感器。请记住，即使它们报告最高精确度，它们也可能不是可靠的测量工具。\n\n
+        传感器：\n
+        * 方向 – 基于软件的传感器，用于确定设备的位置。不推荐使用。\n
+        * 磁场 – 基于硬件的磁场和加速度传感器。通常提供较好的精确度。它们将提供两个精确度值。每个传感器一个。\n
+        * 旋转 - 基于软件的运动传感器。使用设备的陀螺仪（以及其他传感器）来提高稳定性和性能。\n\n
+        精确度：\n
+        -1 - 此传感器返回的值无法信任，因为传感器与其测量的内容没有任何联系\n
+        0 - 此传感器返回的值不可信，需要校准，或环境不允许读数\n
+        1 - 该传感器报告的数据精度较低，需要对环境进行校准\n
+        2 - 该传感器以平均精度水平报告数据，在环境中校准可以改善读数\n
+        3 - 该传感器以最高精度报告数据</string>
+
+    <string name="SENSOR_STATUS_UNRELIABLE">不可靠</string>
+    <string name="SENSOR_STATUS_ACCURACY_LOW">低</string>
+    <string name="SENSOR_STATUS_ACCURACY_MEDIUM">中</string>
+    <string name="SENSOR_STATUS_ACCURACY_HIGH">高</string>
+    <string name="SENSOR_STATUS_ACCURACY_UNKNOWN">未知</string>
+    
+    <string name="degrees">\u00B0</string>
+    <string name="grads">grads</string>
+<!--     
+    <string name="meters">m</string>
+ -->
+<!--  
+    <string name="lat_lon_template">%f\u00B0%s</string>
+ -->     
+    <string name="gps_title">GPS位置</string>
+    <string name="gps_altitude">海拔 (m)</string>
+    <string name="gps_latitude">纬度</string>
+    <string name="gps_longitude">经度</string>
+    <string name="gps_accuracy">精度 (m)</string>
+    <string name="gps_no_value">没有值</string>
+    <string name="gps_no_value_format">dd.dddddd</string>
+    <string name="gps_save">保存</string>
+    <string name="gps_disabled">GPS已禁用</string>
+    <string name="gps_no_signal">寻找GPS位置 ....</string>
+    <string name="gps_saved_location">保存的位置</string>
+    <string name="gps_current_location">当前位置</string>
+    
+    <string name="gps_error_no_location">没有GPS位置！</string>
+    <string name="gps_db_error">无法保存位置！</string>
+    
+    <string name="gps_enable_question">GPS被禁用！您想通过“设置”启用它吗？</string>
+
+    <string name="gps_type_title">选择GPS类型</string>
+    <string name="gps_type_auto">自动GPS</string>
+    <string name="gps_type_manual">手动GPS</string>
+
+    <string name="unit_meters">米</string>
+    <string name="unit_degrees">度</string>
+    <string name="unit_grads">梯度</string>
+
+    <string name="title_warning">警告</string>
+    <string name="error_list_legs">无法创建测量段列表</string>
+
+    <string name="lang_title">选择语言</string>
+    <string-array name="lang_array">
+        <item>English</item>
+        <item>Български</item>
+        <item>简体中文</item>
+    </string-array>
+
+    <!-- error reporter -->
+    <string name="error_reporter_title">错误报告</string>
+    <string name="error_reporter_report">发送</string>
+    <string name="error_reporter_info">用于报告问题：\n
+ 1) 启用\n
+ 2) 重复这些步骤\n
+ 3) 停用\n\n
+日志和您的描述将被发送以进行分析（可能需要一些时间）。\n\n
+需要网络连接。</string>
+    <string name="error_reporter_message">描述问题</string>
+    <string name="error_reporter_message_empty">请描述报告的问题</string>
+    <string name="network_unavailable">网络连接不可用</string>
+    <string name="network_error">网络错误</string>
+    <string name="error_not_sent">已取消报告</string>
+
+    <!-- auto backup -->
+    <string name="settings_auto_backup">自动备份</string>
+    <string name="settings_auto_backup_info">每5分钟将您的活动项目导出到SD卡</string>
+    <string name="settings_import_title">导入（实验）</string>
+    <string name="settings_import_source">导入自：</string>
+    <string name="settings_import_target_name">创建为：</string>
+    <string name="settings_import_no_files">未找到导出的测量</string>
+    <string name="settings_import_info">从现有文件创建测量。\n请使用v1.27之后创建的导出文件。\n照片或草图将被忽略。</string>
+
+    <!--opens topo -->
+    <string name="export_openstopo_title">OpensTopo</string>
+    <string name="information">信息</string>
+    <string name="info_project_home">项目文件夹</string>
+
+    <!-- splash -->
+    <string name="splash_loading">正在准备 ...</string>
+    <string name="splash_error">失败: %1$s</string>
+    <string name="splash_error_database">内部数据库不可用！</string>
+    <string name="splash_error_storage">存储不可用！</string>
+
+</resources>

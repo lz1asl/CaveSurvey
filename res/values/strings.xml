@@ -366,7 +366,8 @@
     <string name="lang_title">Select language</string>
     <string-array name="lang_array">
         <item>English</item>
-        <item>Bulgarian</item>
+        <item>Български</item>
+        <item>简体中文</item>
     </string-array>
 
     <!-- error reporter -->

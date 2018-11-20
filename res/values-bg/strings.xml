@@ -347,8 +347,9 @@
 
     <string name="lang_title">Избери език</string>
     <string-array name="lang_array">
-        <item>Английски</item>
+        <item>English</item>
         <item>Български</item>
+        <item>简体中文</item>
     </string-array>
 
     <!-- error reporter -->
