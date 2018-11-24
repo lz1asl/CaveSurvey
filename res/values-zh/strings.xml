@@ -7,7 +7,7 @@
     <string name="button_no">否</string>
     <string name="required">必须</string>
     <string name="invalid">无效</string>
-    <string name="success">成功</string>
+    <string name="success">成功</string>N
     
     <string name="sk_paldin">Paldin</string>
 
@@ -143,7 +143,7 @@
     <string name="update_project">更新</string>
     <string name="message_project_udpated">项目已更新</string>
     <string name="statistics">统计</string>
-    <string name="info_created">已创建</string>
+    <string name="info_created">创建于</string>
     <string name="info_galleries"># 通道</string>
     <string name="info_legs"># 测量段</string>
     <string name="info_total_distance">原始长度</string>
