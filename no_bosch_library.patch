@@ -638,7 +638,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 --- build.gradle	(revision 5064f2e2408fb88536b43d8d0e45c9f638127205)
 +++ build.gradle	(revision )
 @@ -22,7 +22,6 @@
-     compile 'org.apache.poi:poi:3.13'
+     compile 'org.apache.poi:poi:3.17'
  
      // Bosch internal protocol
 -    compile files('../CaveSurveyBoschGLM/binary/CaveSurveyBoschGLM.jar')
