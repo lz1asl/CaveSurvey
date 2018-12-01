@@ -1,6 +1,7 @@
 package com.astoev.cave.survey.activity.main;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,7 +14,6 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.MainMenuActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static com.astoev.cave.survey.Constants.LOG_TAG_UI;
 
 /**
  * Created with IntelliJ IDEA.
@@ -50,7 +52,7 @@ public class BTActivity extends MainMenuActivity implements Refresheable {
         try {
             // BT disabled?
             if (!BluetoothService.askBluetoothOn(this)) {
-                Log.i(Constants.LOG_TAG_UI, "BT disabled");
+                Log.i(LOG_TAG_UI, "BT disabled");
                 UIUtilities.showNotification(R.string.bt_not_on);
                 finish();
                 return;
@@ -74,15 +76,23 @@ public class BTActivity extends MainMenuActivity implements Refresheable {
             displaySupportedDevices();
 
         } catch (Exception e) {
-            Log.e(Constants.LOG_TAG_UI, "Failed during create", e);
+            Log.e(LOG_TAG_UI, "Failed during create", e);
             UIUtilities.showNotification(R.string.error);
         }
+    }
+
+    public void showDevicesHelp(View aView) {
+        Log.d(LOG_TAG_UI, "Displaying the devices help");
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        String url  = getString(R.string.bt_devices_help_url);
+        i.setData(Uri.parse(url));
+        startActivity(i);
     }
 
     private void displaySupportedDevices() {
         LinearLayout devicesList = (LinearLayout) findViewById(R.id.bt_container);
 
-        if (devicesList.getChildCount() <= 2) { // don't duplicate
+        if (devicesList.getChildCount() <= 3) { // don't duplicate
             for (AbstractBluetoothDevice device : BluetoothService.getSupportedDevices()) {
                 TextView deviceLabel = new TextView(getApplicationContext());
                 deviceLabel.setText("\t\u2022 " + device.getDescription());
@@ -175,7 +185,7 @@ public class BTActivity extends MainMenuActivity implements Refresheable {
         // get selected
         Spinner devicesChooser = (Spinner) findViewById(R.id.bt_devices);
         Pair<String, String> device = new ArrayList<Pair<String, String>>(devices).get(devicesChooser.getSelectedItemPosition());
-        Log.i(Constants.LOG_TAG_UI, "Try to use " + device.first + ":" + device.second);
+        Log.i(LOG_TAG_UI, "Try to use " + device.first + ":" + device.second);
 
         UIUtilities.showNotification(R.string.bt_device_connecting, device.first);
 

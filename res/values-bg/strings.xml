@@ -268,6 +268,7 @@
     <string name="bt_supported_devices">Съвместими устройства:</string>
     <string name="bt_device_connected">Свързан с: %1$s</string>
     <string name="bt_device_lost">Загубена връзка: %1$s</string>
+    <string name="bt_devices_help"><u>Информация за устройства</u></string>
 
     <!-- device mode validation -->
     <string name="bt_device_mode">Използвай режим: %1$s измерване</string>
