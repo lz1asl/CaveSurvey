@@ -668,7 +668,7 @@ public class BluetoothService {
         }
 
         private void sendMeasureToUI(Measure aMeasure) {
-            if (aMeasure != null) {
+            if (mReceiver != null && aMeasure != null) {
                 // consume
                 Bundle b = new Bundle();
                 b.putFloatArray(Constants.MEASURE_VALUE_KEY,  new float[] {aMeasure.getValue()});
