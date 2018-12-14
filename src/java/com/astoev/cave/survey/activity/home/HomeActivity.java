@@ -28,6 +28,7 @@ import com.astoev.cave.survey.util.PermissionUtil;
 import java.io.Serializable;
 import java.util.List;
 
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.Manifest.permission.BLUETOOTH;
 import static android.Manifest.permission.BLUETOOTH_ADMIN;
 
@@ -186,7 +187,7 @@ public class HomeActivity extends MainMenuActivity implements DeleteHandler {
      */
     private void pairBtDevice() {
 
-        if (!PermissionUtil.requestPermissions(new String[]{BLUETOOTH, BLUETOOTH_ADMIN}, this, 301)) {
+        if (!PermissionUtil.requestPermissions(new String[]{BLUETOOTH, BLUETOOTH_ADMIN, ACCESS_FINE_LOCATION}, this, 301)) {
             return;
         }
 

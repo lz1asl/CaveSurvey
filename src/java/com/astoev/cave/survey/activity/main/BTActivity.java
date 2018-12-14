@@ -2,6 +2,7 @@ package com.astoev.cave.survey.activity.main;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -96,6 +97,7 @@ public class BTActivity extends MainMenuActivity implements Refresheable {
             for (AbstractBluetoothDevice device : BluetoothService.getSupportedDevices()) {
                 TextView deviceLabel = new TextView(getApplicationContext());
                 deviceLabel.setText("\t\u2022 " + device.getDescription());
+                deviceLabel.setTextColor(Color.WHITE);
                 devicesList.addView(deviceLabel);
             }
         }

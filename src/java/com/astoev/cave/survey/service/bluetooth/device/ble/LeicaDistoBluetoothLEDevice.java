@@ -98,7 +98,7 @@ public class LeicaDistoBluetoothLEDevice extends AbstractBluetoothLEDevice {
 
         if (CHARACTERISTIC_DISTANCE_UUID.equals(aCharacteristic.getUuid())) {
             Float distanceValue = asFloat(aCharacteristic, ByteOrder.LITTLE_ENDIAN);
-            Log.i(Constants.LOG_TAG_BT, "DISTANCE: " + distance);
+            Log.i(Constants.LOG_TAG_BT, "DISTANCE: " + distanceValue);
 
             Measure measure = new Measure();
             measure.setMeasureUnit(Constants.MeasureUnits.meters);

@@ -287,6 +287,7 @@
     <string name="bt_device_lost">Device lost: %1$s</string>
     <string name="bt_devices_help"><u>Devices Info</u></string>
     <string name="bt_devices_help_url">https://github.com/lz1asl/CaveSurvey/wiki/Measurement-Devices</string>
+    <string name="bt_scan_failed">LE devices scan failed, please restart your device</string>
 
     <!-- device mode validation -->
     <string name="bt_device_mode">Use: %1$s measurement mode</string>
