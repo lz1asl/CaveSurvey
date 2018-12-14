@@ -369,6 +369,10 @@ public class BluetoothService {
         ((Refresheable) mCurrContext).refresh();
     }
 
+    private static boolean isLeDeviceActive() {
+        return R.string.bt_state_connected == mLeDeviceState;
+    }
+
     // for the current device
     public static boolean isMeasureSupported(Constants.MeasureTypes aMeasureType) {
         return mSelectedDeviceSpec != null && mSelectedDeviceSpec.isMeasureSupported(aMeasureType);
@@ -503,7 +507,7 @@ public class BluetoothService {
                     }
 
                     // schedule again
-                    if (R.string.bt_device_connected == mLeDeviceState && aCommand instanceof PullCharacteristicCommand) {
+                    if (isLeDeviceActive() && aCommand instanceof PullCharacteristicCommand) {
                         try {
                             sleep(500);
                         } catch (InterruptedException aE) {
@@ -636,12 +640,16 @@ public class BluetoothService {
             Log.i(LOG_TAG_BT, "onCharacteristicChanged " + characteristic.getUuid());
 
             try {
-                Log.d(LOG_TAG_BT, "processing " + characteristic.getUuid());
-                // decode
-                Measure measure = ((AbstractBluetoothLEDevice) mSelectedDeviceSpec).characteristicToMeasure(characteristic, mMeasureTypes);
+                if (mReceiver != null) {
+                    Log.d(LOG_TAG_BT, "processing " + characteristic.getUuid());
+                    // decode
+                    Measure measure = ((AbstractBluetoothLEDevice) mSelectedDeviceSpec).characteristicToMeasure(characteristic, mMeasureTypes);
 
-                // consume
-                sendMeasureToUI(measure);
+                    // consume
+                    sendMeasureToUI(measure);
+                } else {
+                    Log.d(LOG_TAG_BT, "No receiver");
+                }
             } catch (DataException e) {
                 Log.e(LOG_TAG_BT, "Fail to read data: ", e);
                 UIUtilities.showNotification(e.getMessage());
@@ -659,16 +667,13 @@ public class BluetoothService {
         @Override
         public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
             super.onCharacteristicRead(gatt, characteristic, status);
-            Log.i(LOG_TAG_BT, "Got char, forwarding for status " + status);
-
             if (GATT_SUCCESS == status) {
                 onCharacteristicChanged(gatt, characteristic);
-
             }
         }
 
         private void sendMeasureToUI(Measure aMeasure) {
-            if (mReceiver != null && aMeasure != null) {
+            if (aMeasure != null) {
                 // consume
                 Bundle b = new Bundle();
                 b.putFloatArray(Constants.MEASURE_VALUE_KEY,  new float[] {aMeasure.getValue()});

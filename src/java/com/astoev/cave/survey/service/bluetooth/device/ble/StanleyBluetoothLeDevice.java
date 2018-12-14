@@ -130,16 +130,6 @@ public class StanleyBluetoothLeDevice extends AbstractBluetoothLEDevice {
     }
 
     @Override
-    public boolean needCharacteristicNotification() {
-        return false;
-    }
-
-    @Override
-    public boolean needCharacteristicIndication() {
-        return false;
-    }
-
-    @Override
     public boolean needCharacteristicPull() {
         return true;
     }
