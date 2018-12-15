@@ -124,6 +124,7 @@ public class BluetoothService {
     private static LinkedList<AbstractBluetoothCommand> mCommandQueue = new LinkedList<AbstractBluetoothCommand>();
     private static Executor mCommandExecutor = Executors.newSingleThreadExecutor();
     private static Semaphore mCommandLock = new Semaphore(1,true);
+    private static boolean expectingMeasurement = false;
 
     // compile time switch to allow processing of all device characteristics
     private static final boolean DEVELOPMENT_MODE = false;
@@ -152,6 +153,7 @@ public class BluetoothService {
     public static void sendReadMeasureCommand(final ResultReceiver receiver, final Constants.Measures aMeasure, final Constants.Measures[] aMeasuresWelcome) {
 
         // measurements requested
+        expectingMeasurement = true;
         List<Constants.MeasureTypes> measureTypes = new ArrayList<Constants.MeasureTypes>();
         List<Constants.Measures> measureTargets = new ArrayList<Constants.Measures>();
 
@@ -174,6 +176,15 @@ public class BluetoothService {
 
             Log.i(LOG_TAG_BT, "Request LE read " + aMeasure);
             leDataCallback.awaitMeasures(measureTypes, measureTargets, receiver);
+
+            AbstractBluetoothLEDevice leDevice = (AbstractBluetoothLEDevice) mSelectedDeviceSpec;
+            if (leDevice.needCharacteristicPull() && SDK_INT >= JELLY_BEAN_MR2) {
+                Log.i(LOG_TAG_BT, "Request LE pull");
+                Constants.MeasureTypes type = getMeasureTypeFromTarget(aMeasure);
+                BluetoothGattCharacteristic c = mBluetoothGatt.getService(leDevice.getService(type)).getCharacteristic(leDevice.getCharacteristic(type));
+                enqueueCommand(new PullCharacteristicCommand(c, leDevice));
+            }
+
         } else {
             Log.d(LOG_TAG_BT, "Drop BT command : inactive communication : " + aMeasure);
         }
@@ -507,7 +518,7 @@ public class BluetoothService {
                     }
 
                     // schedule again
-                    if (isLeDeviceActive() && aCommand instanceof PullCharacteristicCommand) {
+                    if (isLeDeviceActive() && expectingMeasurement && aCommand instanceof PullCharacteristicCommand) {
                         try {
                             sleep(500);
                         } catch (InterruptedException aE) {
@@ -518,6 +529,10 @@ public class BluetoothService {
                 }
             });
         }
+    }
+
+    public static void cancelReadCommands() {
+        expectingMeasurement = false;
     }
 
     @TargetApi(GINGERBREAD)
@@ -537,11 +552,11 @@ public class BluetoothService {
         private ResultReceiver mReceiver = null;
 
         public void awaitMeasures(List<Constants.MeasureTypes> aMeasureTypes, List<Constants.Measures> aTargets, ResultReceiver aReceiver) {
+            expectingMeasurement = true;
             // persist expected measurements
             mTargets = aTargets;
             mMeasureTypes = aMeasureTypes;
             mReceiver = aReceiver;
-
         }
 
         @Override
@@ -673,7 +688,7 @@ public class BluetoothService {
         }
 
         private void sendMeasureToUI(Measure aMeasure) {
-            if (aMeasure != null) {
+            if (aMeasure != null && expectingMeasurement) {
                 // consume
                 Bundle b = new Bundle();
                 b.putFloatArray(Constants.MEASURE_VALUE_KEY,  new float[] {aMeasure.getValue()});

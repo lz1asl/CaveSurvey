@@ -47,6 +47,12 @@ public class VectorDialog extends DialogFragment implements BTResultAware, Azimu
     public VectorDialog() {
     }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mReceiver.resetMeasureExpectations();
+    }
+
     @SuppressLint("ValidFragment")
     public VectorDialog(FragmentManager aSupportFragmentManager) {
         mSupportFragmentManager = aSupportFragmentManager;

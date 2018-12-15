@@ -91,6 +91,7 @@ public class BTMeasureResultReceiver extends ResultReceiver {
 
     public void resetMeasureExpectations() {
         mExpectedMeasures.clear();
+        BluetoothService.cancelReadCommands();
     }
 
     public void bindBTMeasures(final EditText text, final Constants.Measures aMeasure, boolean aDirectSendCommandFlag, final Constants.Measures[] otherMeasuresWelcome) {

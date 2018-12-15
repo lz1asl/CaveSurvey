@@ -167,6 +167,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
     @Override
     protected void onPause() {
         MeasurementsUtil.closeDialogs();
+        mReceiver.resetMeasureExpectations();
         super.onPause();
     }
 
