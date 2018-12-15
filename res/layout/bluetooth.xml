@@ -18,8 +18,7 @@
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_margin="10dp">
+            android:orientation="horizontal">
 
             <Spinner
                 android:id="@+id/bt_devices"
@@ -37,6 +36,7 @@
 
             <TextView
                 android:id="@+id/bt_status"
+                android:layout_margin="10dp"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"/>
 
@@ -47,6 +47,7 @@
                 android:text="@string/bt_supported_devices"/>
 
             <TextView
+                android:id="@+id/bt_preparing"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/splash_loading"/>

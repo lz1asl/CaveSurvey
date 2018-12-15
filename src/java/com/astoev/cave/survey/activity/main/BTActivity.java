@@ -1,8 +1,8 @@
 package com.astoev.cave.survey.activity.main;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -94,6 +94,10 @@ public class BTActivity extends MainMenuActivity implements Refresheable {
         LinearLayout devicesList = (LinearLayout) findViewById(R.id.bt_container);
 
         if (devicesList.getChildCount() <= 3) { // don't duplicate
+
+            TextView preparing = (TextView) findViewById(R.id.bt_preparing);
+            preparing.setVisibility(View.INVISIBLE);
+
             for (AbstractBluetoothDevice device : BluetoothService.getSupportedDevices()) {
                 TextView deviceLabel = new TextView(getApplicationContext());
                 deviceLabel.setText("\t\u2022 " + device.getDescription());
