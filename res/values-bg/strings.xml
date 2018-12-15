@@ -39,6 +39,9 @@
     <string name="main_button_settings">Настройки</string>
     <string name="main_button_map">Карта</string>
 
+    <string name="map_plan">План</string>
+    <string name="map_section">Разрез</string>
+
     <string name="main_table_header_from">От</string>
     <string name="main_table_header_to">До</string>
 <!--     

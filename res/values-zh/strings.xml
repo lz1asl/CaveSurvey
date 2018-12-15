@@ -41,6 +41,9 @@
     <string name="main_button_settings">设置</string>
     <string name="main_button_map">地图</string>
 
+    <string name="map_plan">Plan</string>
+    <string name="map_section">Section</string>
+
     <string name="main_table_header_from">来</string>
     <string name="main_table_header_to">去</string>
 <!--     
