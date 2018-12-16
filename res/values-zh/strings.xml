@@ -41,8 +41,8 @@
     <string name="main_button_settings">设置</string>
     <string name="main_button_map">地图</string>
 
-    <string name="map_plan">Plan</string>
-    <string name="map_section">Section</string>
+    <string name="map_plan">平面</string>
+    <string name="map_section">剖面</string>
 
     <string name="main_table_header_from">来</string>
     <string name="main_table_header_to">去</string>
@@ -288,6 +288,8 @@
     <string name="bt_supported_devices">兼容：</string>
     <string name="bt_device_connected">已连接到: %1$s</string>
     <string name="bt_device_lost">设备丢失: %1$s</string>
+    <string name="bt_devices_help"><u>设备信息</u></string>
+    <string name="bt_scan_failed">LE设备扫描失败，请重新启动您的设备</string>
 
     <!-- device mode validation -->
     <string name="bt_device_mode">使用: %1$s 测量模式</string>
