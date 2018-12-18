@@ -14,6 +14,7 @@ import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.dialog.ErrorReporterDialog;
 import com.astoev.cave.survey.activity.dialog.LanguageDialog;
 import com.astoev.cave.survey.activity.poc.SensorTestActivity;
+import com.astoev.cave.survey.activity.poc.SensorsActivity;
 import com.astoev.cave.survey.fragment.InfoDialogFragment;
 import com.astoev.cave.survey.service.reports.ErrorReporter;
 import com.astoev.cave.survey.util.ConfigUtil;
@@ -39,13 +40,26 @@ public class SettingsActivity extends MainMenuActivity {
         setContentView(R.layout.settings);
 
         prepareLanguage();
+        prepareSensors();
         prepareSensorsTest();
         prepareAutoBackup();
         prepareErrorReporter();
     }
 
+    private void prepareSensors() {
+        TextView bt = (TextView) findViewById(R.id.settingsSensors);
+        bt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(Constants.LOG_TAG_UI, "Azimuth settings");
+                Intent intent = new Intent(SettingsActivity.this, SensorsActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+
     private void prepareSensorsTest() {
-        TextView bt = (TextView) findViewById(R.id.settingsBluetooth);
+        TextView bt = (TextView) findViewById(R.id.settingsSensorsTest);
         bt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

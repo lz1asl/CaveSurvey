@@ -308,7 +308,8 @@
     <string name="azimuth_rotation">旋转：</string>
     <string name="azimuth_start">开始</string>
     <string name="azimuth_stop">停止</string>
-    <string name="sensor_test_title"><u>内建传感器</u></string>
+    <string name="sensors_title"><u>内建传感器</u></string>
+    <string name="sensor_test_title"><u>传感器测试</u></string>
     <string name="sensor_test_header">测试内建传感器</string>
     <string name="sensor_choose_header">选择内建传感器</string>
     <string name="no_sensors">没有可用的内建传感器</string>

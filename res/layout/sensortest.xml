@@ -148,40 +148,5 @@
                     android:onClick="onStop"
                     android:enabled="false"/>
         </LinearLayout>
-
-        <!-- Choose block header -->
-        <LinearLayout android:layout_height="wrap_content"
-            android:layout_width="fill_parent"
-            android:orientation="horizontal"
-            android:layout_margin="10dp">
-            <TextView android:id="@+id/sensor_choose_text"
-                android:layout_height="wrap_content"
-                android:layout_width="0dp"
-                android:layout_weight="2"
-                android:text="@string/sensor_choose_header"
-                android:ellipsize="end" android:singleLine="true"
-                android:gravity="center"
-                android:textAlignment="center"
-                android:textAppearance="@android:style/TextAppearance.Large"
-                android:onClick="onSensorsChooseInfo"/>
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:src="@drawable/ic_info_white"
-                android:contentDescription="@string/information"
-                android:onClick="onSensorsChooseInfo"/>
-        </LinearLayout>
-        <LinearLayout android:id="@+id/sensors_spinner_layout"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_margin="10dp">
-            <Spinner android:id="@+id/sensors_spinner"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
-
     </LinearLayout>
 </ScrollView>

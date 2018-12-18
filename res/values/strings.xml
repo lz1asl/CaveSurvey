@@ -309,7 +309,8 @@
     <string name="azimuth_rotation">Rotation:</string>
     <string name="azimuth_start">Start</string>
     <string name="azimuth_stop">Stop</string>
-    <string name="sensor_test_title"><u>Build-in Sensors</u></string>
+    <string name="sensors_title"><u>Build-in Sensors</u></string>
+    <string name="sensor_test_title"><u>Sensors Test</u></string>
     <string name="sensor_test_header">Test Build-in Sensors</string>
     <string name="sensor_choose_header">Choose Build-in sensor</string>
     <string name="no_sensors">No available Build-in sensors</string>

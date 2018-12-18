@@ -6,11 +6,7 @@ package com.astoev.cave.survey.activity.poc;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.astoev.cave.survey.Constants;
@@ -23,15 +19,12 @@ import com.astoev.cave.survey.service.orientation.OrientationDeprecatedProcessor
 import com.astoev.cave.survey.service.orientation.OrientationProcessorFactory;
 import com.astoev.cave.survey.service.orientation.RotationOrientationProcessor;
 import com.astoev.cave.survey.service.orientation.SlopeChangedAdapter;
-import com.astoev.cave.survey.util.ConfigUtil;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 
 /**
  * Activity that tests all available azimuth sensors and processor implementations.
- * It also provides an option to choose the default sensor that will be used application wide.
- * 
+ *
  * @author Zhivko Mitrev
  */
 public class SensorTestActivity extends MainMenuActivity {
@@ -163,75 +156,6 @@ public class SensorTestActivity extends MainMenuActivity {
             }
         });
 
-        //  determine orientation sensors that are available on the device
-        ArrayList<Integer> sensorsList = new ArrayList<>();
-        if (rotationOrientationProcessor.canReadOrientation()){
-            sensorsList.add(OrientationProcessorFactory.SENSOR_TYPE_ROTATION);
-        }
-        if (magneticOrientationProcessor.canReadOrientation()){
-            sensorsList.add(OrientationProcessorFactory.SENSOR_TYPE_MAGNETIC);
-        }
-        if (orientationDeprecatedProcessor.canReadOrientation()){
-            sensorsList.add(OrientationProcessorFactory.SENSOR_TYPE_ORIENTATION);
-        }
-
-        // fill the sensor spinner if there are any available sensors
-        if (sensorsList.size() > 0) {
-            availableSensorsArray = new Integer[sensorsList.size()];
-            availableSensorsArray = sensorsList.toArray(availableSensorsArray);
-
-            // convert to strings array
-            String[] str = createTranslateArray(availableSensorsArray);
-
-            Spinner spinner = (Spinner) findViewById(R.id.sensors_spinner);
-            ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(this, android.R.layout.simple_spinner_item, str);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            spinner.setAdapter(adapter);
-
-            // read the default senor type and find the index in the spinner list
-            int savedSensorSelection = OrientationProcessorFactory.getDefaultSensorType(this);
-            Integer savedSensorUIIndex = null;
-            for(int i = 0; i < availableSensorsArray.length; i++){
-                if (availableSensorsArray[i] == savedSensorSelection){
-                    savedSensorUIIndex = i;
-                    break;
-                }
-            }
-
-            //set selection index in UI
-            if (savedSensorUIIndex != null){
-                spinner.setSelection(savedSensorUIIndex);
-            }
-
-            // add item selection that will handle the user input and will save the settings
-            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    int selectedSensor = availableSensorsArray[position];
-                    Log.i(Constants.LOG_TAG_UI, "Selected position:" + position + " sensor:" + selectedSensor);
-
-                    // save setting for preferred sensor
-                    int valueFromSettings = ConfigUtil.getIntProperty(ConfigUtil.PREF_SENSOR);
-                    if (valueFromSettings == 0 || valueFromSettings != selectedSensor) {
-                        ConfigUtil.setIntProperty(ConfigUtil.PREF_SENSOR, selectedSensor);
-                    }
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-                }
-            });
-        } else {
-            // no available sensors !
-            //disable spinner for choosing sensors
-            LinearLayout sensorsLinearLayout = (LinearLayout)findViewById(R.id.sensors_spinner_layout);
-            sensorsLinearLayout.setVisibility(View.GONE);
-
-            // change the text for sensors choose header
-            TextView sensorsChooseText = (TextView)findViewById(R.id.sensor_choose_text);
-            sensorsChooseText.setText(R.string.no_sensors);
-        }
-
 	}// end of onCreate
 
     private String[] createTranslateArray(Integer[] availableSensorsArrayArg){
@@ -329,22 +253,6 @@ public class SensorTestActivity extends MainMenuActivity {
 	}
 
     /**
-     * Action method that handles the tooltip for choosing a sensor
-     *
-     * @param viewArg - view to use
-     */
-    public void onSensorsChooseInfo(View viewArg){
-        InfoDialogFragment infoDialog = new InfoDialogFragment();
-
-        Bundle bundle = new Bundle();
-        String message = getString(R.string.sensor_choose_tooltip);
-        bundle.putString(InfoDialogFragment.MESSAGE, message);
-        infoDialog.setArguments(bundle);
-
-        infoDialog.show(getSupportFragmentManager(), CHOOSE_SENSORS_TOOLTIP_DIALOG);
-    }
-
-    /**
      * Action method that handles the tooltip for testing sensors
      *
      * @param viewArg - view to use
@@ -359,44 +267,9 @@ public class SensorTestActivity extends MainMenuActivity {
 
         infoDialog.show(getSupportFragmentManager(), TEST_SENSORS_TOOLTIP_DIALOG);
     }
-//
-//    public static class MyAdapter extends ArrayAdapter<CharSequence>{
-//
-//        private boolean enabledMap[];
-//
-//        public MyAdapter(Context context, int textViewResId, CharSequence[] strings) {
-//            super(context, textViewResId, strings);
-//        }
-//
-//        public static MyAdapter createFromResource(
-//                Context context, int textArrayResId, int textViewResId) {
-//
-//            Resources resources = context.getResources();
-//            CharSequence[] strings   = resources.getTextArray(textArrayResId);
-//
-//            return new MyAdapter(context, textViewResId, strings);
-//        }
-//
-//        public void setEnabledMap(boolean[] enabledMapArg){
-//            enabledMap = enabledMapArg;
-//        }
-//
-//        @Override
-//        public boolean areAllItemsEnabled() {
-//            return false;
-//        }
 
     @Override
     protected boolean showBaseOptionsMenu() {
         return false;
     }
-//
-//        @Override
-//        public boolean isEnabled(int position) {
-//            if (enabledMap == null || enabledMap.length <= position){
-//                return super.isEnabled(position);
-//            }
-//            return enabledMap[position];
-//        }
-//    }
 }
