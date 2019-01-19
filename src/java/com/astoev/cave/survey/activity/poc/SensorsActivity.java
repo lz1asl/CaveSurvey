@@ -142,7 +142,7 @@ public class SensorsActivity extends MainMenuActivity {
 	 */
 	@Override
 	protected String getScreenTitle() {
-		return getString(R.string.sensor_test_title);
+		return getString(R.string.sensors_title);
 	}
 
     /**

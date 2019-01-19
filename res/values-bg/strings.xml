@@ -294,6 +294,7 @@
     <string name="sensors_title"><u>Вградени сензори</u></string>
     <string name="sensor_test_title"><u>Тест на сензори</u></string>
     <string name="sensor_test_header">Тест на вградените сензори</string>
+    <string name="sensor_choose_timeout">Време за четене</string>
     <string name="sensor_choose_header">Избор на вграден сензор</string>
     <string name="no_sensors">Няма налични вградени сензори</string>
     <string name="sensor_choose_tooltip">Може да изберете най - подходящия вграден сензор, който да отговаря на нуждите ви за точност</string>
