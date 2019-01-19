@@ -6,9 +6,10 @@ import android.bluetooth.BluetoothGattDescriptor;
 import android.os.Build;
 import android.util.Log;
 
-import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.service.bluetooth.device.ble.AbstractBluetoothLEDevice;
+
+import static com.astoev.cave.survey.Constants.LOG_TAG_BT;
 
 /**
  * Created by astoev on 1/19/16.
@@ -29,30 +30,30 @@ public class WriteDescriptorCommand extends AbstractBluetoothCommand {
 
         // gatt indications where needed (e.g. Leica devices)
         if (mDevice.needCharacteristicIndication()) {
-            Log.d(Constants.LOG_TAG_BT, "Enable indication for: " + mDescriptor.getUuid().toString());
+            Log.d(LOG_TAG_BT, "Enable indication for: " + mDescriptor.getUuid().toString());
             mDescriptor.setValue(BluetoothGattDescriptor.ENABLE_INDICATION_VALUE);
             boolean flag = aBluetoothGatt.writeDescriptor(mDescriptor);
-            Log.i(Constants.LOG_TAG_BT, "Indication success " + flag);
+            Log.i(LOG_TAG_BT, "Indication success " + flag);
 
             if (!flag) {
                 UIUtilities.showNotification("Device communication error enabling indication");
             }
         } else {
-            Log.i(Constants.LOG_TAG_BT, "No indication for " + mDevice.getDescription());
+            Log.i(LOG_TAG_BT, "No indication for " + mDevice.getDescription());
         }
 
         // gatt notifications where needed (e.g. Mileseey devices)
         if (mDevice.needCharacteristicNotification()) {
-            Log.d(Constants.LOG_TAG_BT, "Enable notification for: " + mDescriptor.getUuid().toString());
+            Log.d(LOG_TAG_BT, "Enable notification for: " + mDescriptor.getUuid().toString());
             mDescriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
             boolean flag = aBluetoothGatt.writeDescriptor(mDescriptor);
-            Log.i(Constants.LOG_TAG_BT, "Notification success " + flag);
+            Log.i(LOG_TAG_BT, "Notification success " + flag);
 
             if (!flag) {
                 UIUtilities.showNotification("Device communication error enabling notification");
             }
         } else {
-            Log.i(Constants.LOG_TAG_BT, "No notification for " + mDevice.getDescription());
+            Log.i(LOG_TAG_BT, "No notification for " + mDevice.getDescription());
         }
     }
 }

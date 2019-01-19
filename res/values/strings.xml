@@ -41,6 +41,9 @@
     <string name="main_button_settings">Settings</string>
     <string name="main_button_map">Map</string>
 
+    <string name="map_plan">Plan</string>
+    <string name="map_section">Section</string>
+
     <string name="main_table_header_from">From</string>
     <string name="main_table_header_to">To</string>
 <!--     
@@ -257,9 +260,12 @@
     <string name="middle_no_value">Distance required</string>
 
     <string name="error">Error occurred</string>
+    <string name="error_no_space">No space left on device</string>
     <string name="busy">Please wait&#8230;</string>
 
     <string name="todo">TODO</string>
+
+    <string name="permission_required">Please authorize CaveSurvey for: %1$s</string>
 
 
     <!-- bluetooth -->
@@ -282,6 +288,9 @@
     <string name="bt_supported_devices">Compatible with:</string>
     <string name="bt_device_connected">Connected to: %1$s</string>
     <string name="bt_device_lost">Device lost: %1$s</string>
+    <string name="bt_devices_help"><u>Devices Info</u></string>
+    <string name="bt_devices_help_url">https://github.com/lz1asl/CaveSurvey/wiki/Measurement-Devices</string>
+    <string name="bt_scan_failed">LE devices scan failed, please restart your device</string>
 
     <!-- device mode validation -->
     <string name="bt_device_mode">Use: %1$s measurement mode</string>
@@ -363,7 +372,8 @@
     <string name="lang_title">Select language</string>
     <string-array name="lang_array">
         <item>English</item>
-        <item>Bulgarian</item>
+        <item>Български</item>
+        <item>简体中文</item>
     </string-array>
 
     <!-- error reporter -->
@@ -395,5 +405,10 @@ Network connection is required.</string>
     <string name="information">Information</string>
     <string name="info_project_home">Project folder</string>
 
+    <!-- splash -->
+    <string name="splash_loading">Preparing ...</string>
+    <string name="splash_error">Failed: %1$s</string>
+    <string name="splash_error_database">Internal database unavailable!</string>
+    <string name="splash_error_storage">Storage unavailable!</string>
 
 </resources>

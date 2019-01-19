@@ -12,6 +12,8 @@ import android.os.StatFs;
 import android.util.Log;
 
 import com.astoev.cave.survey.Constants;
+import com.astoev.cave.survey.R;
+import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.model.Project;
 
@@ -42,7 +44,8 @@ public class FileStorageUtil {
     public static final String POINT_PREFIX = "Point";
     public static final String MAP_PREFIX = "Map";
 
-    private static final String CAVE_SURVEY_FOLDER = "CaveSurvey";
+    private static final String FOLDER_DOCUMENTS = "Documents";
+    private static final String FOLDER_CAVE_SURVEY = "CaveSurvey";
     private static final String TIME_PATTERN = "yyyyMMdd";
     private static final int MIN_REQUIRED_STORAGE = 50 * 1024;
 
@@ -233,36 +236,46 @@ public class FileStorageUtil {
     @SuppressWarnings("deprecation")
     public static File getStorageHome() {
 
-        File extDir = null;
+        File documentsHome = null;
 
-        if (isExternalStorageWritable()) {
-            extDir = Environment.getExternalStorageDirectory();
-        } else {
-            Log.e(Constants.LOG_TAG_UI, "External storage unavailable");
-            extDir = ConfigUtil.getContext().getFilesDir();
+        // try to find writable folder
+        if (isExternalStorageWritable()) { // external storage
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
+                documentsHome = Environment.getExternalStoragePublicDirectory(FOLDER_DOCUMENTS);
+            } else {
+                documentsHome = new File(Environment.getExternalStorageDirectory(), FOLDER_DOCUMENTS);
+            }
+        } else { // internal storage
+            documentsHome = new File(ConfigUtil.getContext().getFilesDir(), FOLDER_DOCUMENTS);
         }
 
-        if (extDir == null) {
-            Log.e(Constants.LOG_TAG_UI, "Storage unavailable");
+        File storageHome = new File(documentsHome, FOLDER_CAVE_SURVEY);
+
+        Log.d(Constants.LOG_TAG_SERVICE, "Using as home: " + storageHome.getAbsolutePath());
+
+        // create folder for CaveSurvey if missing
+        if (!storageHome.exists()) {
+            if (!storageHome.mkdirs()) {
+                Log.e(Constants.LOG_TAG_UI, "Failed to create home folder: " + storageHome.getAbsolutePath());
+                return null;
+            }
+            Log.i(Constants.LOG_TAG_SERVICE, "Home folder created: " + storageHome.getAbsolutePath());
+        }
+
+        if (storageHome == null || !storageHome.exists()) {
+            Log.e(Constants.LOG_TAG_UI, "Storage unavailable: " + storageHome);
             return null;
         }
 
-        StatFs stats = new StatFs(extDir.getAbsolutePath());
-
+        // no space left check
+        StatFs stats = new StatFs(storageHome.getAbsolutePath());
         long availableBytes = stats.getAvailableBlocks() * (long) stats.getBlockSize();
         if (availableBytes < MIN_REQUIRED_STORAGE) {
             Log.e(Constants.LOG_TAG_UI, "No space left");
+            UIUtilities.showNotification(R.string.error_no_space);
             return null;
         }
 
-        File storageHome = new File(extDir, CAVE_SURVEY_FOLDER);
-        if (!storageHome.exists()) {
-            if (!storageHome.mkdirs()) {
-                Log.e(Constants.LOG_TAG_UI, "Failed to create folder " + storageHome.getAbsolutePath());
-                return null;
-            }
-            Log.i(Constants.LOG_TAG_SERVICE, "Export folder created");
-        }
         return storageHome;
     }
 
@@ -272,8 +285,10 @@ public class FileStorageUtil {
      * @return true if available for writing, otherwise false
      */
     public static boolean isExternalStorageWritable() {
-        String state = Environment.getExternalStorageState();
-        return (Environment.MEDIA_MOUNTED.equals(state));
+//        String state = Environment.getExternalStorageState();
+//        return (Environment.MEDIA_MOUNTED.equals(state)) && PermissionUtil.hasExtStoragePermission();
+        // TODO
+        return false;
     }
 
     /**
@@ -286,7 +301,7 @@ public class FileStorageUtil {
         if (addedFileArg == null) {
             return;
         }
-        Uri contentUri = Uri.fromFile(addedFileArg);
+        Uri contentUri = FileUtils.getFileUri(addedFileArg);
         notifyPictureAddedToGalery(contextArg, contentUri);
     }
 

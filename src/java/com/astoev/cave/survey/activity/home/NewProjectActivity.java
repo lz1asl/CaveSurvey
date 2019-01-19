@@ -59,7 +59,7 @@ public class NewProjectActivity extends MainMenuActivity {
             // locate excel files
             List<File> excelExportFiles = FileStorageUtil.listProjectFiles(null, ExcelExport.EXCEL_FILE_EXTENSION);
             if (excelExportFiles == null || excelExportFiles.isEmpty()) {
-                Log.i(Constants.LOG_TAG_UI, "Mo files to import");
+                Log.i(Constants.LOG_TAG_UI, "No files to import");
             }
 
             List<NewProjectActivity.ImportFile> importFiles = new ArrayList<>();

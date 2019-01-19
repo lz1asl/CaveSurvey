@@ -27,6 +27,7 @@ public class LanguageDialog extends DialogFragment {
     
     private static final int LANG_ENGLISH = 0;
     private static final int LANG_BULGARIAN = 1;
+    private static final int LANG_CHINESE = 2;
 
     /**
      * @see android.support.v4.app.DialogFragment#onCreateDialog(android.os.Bundle)
@@ -45,25 +46,28 @@ public class LanguageDialog extends DialogFragment {
             @Override
             public void onClick(DialogInterface dialogArg, int whichArg) {
                 
-                String language = "en";
+                Locale locale;
                 switch (whichArg) {
                 case LANG_ENGLISH:
-                    language = "en";
+                    locale = Locale.ENGLISH;
                     break;
                 case LANG_BULGARIAN:
-                    language = "bg";
+                    locale = new Locale("bg");
+                    break;
+                case LANG_CHINESE:
+                    locale = Locale.SIMPLIFIED_CHINESE;
                     break;
 
                 default:
+                    locale = Locale.ENGLISH;
                     break;
                 }
                 
                 // change locale only if it is different
                 String savedLanguage = ConfigUtil.getStringProperty(ConfigUtil.PREF_LOCALE);
-                if (!language.equals(savedLanguage)){
+                if (!locale.getLanguage().equals(savedLanguage)){
                 
                     // create prefurred locale
-                    Locale locale = new Locale(language);
                     Locale.setDefault(locale);
                     Configuration config = new Configuration();
                     config.locale = locale;
@@ -72,7 +76,7 @@ public class LanguageDialog extends DialogFragment {
                     resources.updateConfiguration(config, resources.getDisplayMetrics());
                     
                     // save settings
-                    ConfigUtil.setStringProperty(ConfigUtil.PREF_LOCALE, language);
+                    ConfigUtil.setStringProperty(ConfigUtil.PREF_LOCALE, locale.getLanguage());
                     
                     // restart parent activity
                     Intent intent = getActivity().getIntent();

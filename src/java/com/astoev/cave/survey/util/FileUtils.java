@@ -1,5 +1,8 @@
 package com.astoev.cave.survey.util;
 
+import android.net.Uri;
+import android.support.v4.content.FileProvider;
+
 import java.io.File;
 
 /**
@@ -16,4 +19,9 @@ public class FileUtils {
             }
         }
     }
+
+    public static Uri getFileUri(File file) {
+        return FileProvider.getUriForFile(ConfigUtil.getContext(),  "CaveSurvey.provider", file);
+    }
+
 }

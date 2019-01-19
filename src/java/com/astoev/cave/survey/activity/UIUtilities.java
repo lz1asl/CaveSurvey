@@ -2,6 +2,8 @@ package com.astoev.cave.survey.activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
@@ -21,6 +23,10 @@ import com.astoev.cave.survey.util.StringUtils;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+import static android.os.Build.VERSION.SDK_INT;
+import static android.os.Build.VERSION_CODES.JELLY_BEAN;
+import static android.os.Build.VERSION_CODES.O;
+
 /**
  * Created by IntelliJ IDEA.
  * User: astoev
@@ -29,6 +35,8 @@ import java.io.StringWriter;
  * To change this template use File | Settings | File Templates.
  */
 public class UIUtilities {
+
+    private static final String NOTIFICATION_CHANNEL_CAVE_SURVEY = "CaveSurvey";
 
     public static void showNotification(int aResourceId) {
         showNotification(ConfigUtil.getContext(), aResourceId, null);
@@ -129,11 +137,6 @@ public class UIUtilities {
 
     // see http://developer.android.com/guide/topics/ui/notifiers/notifications.html
     private static void showStatusBarMessage(Context aContext, int aIcon, Class anActivityClass, String aMessage) {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(aContext);
-        builder.setSmallIcon(aIcon);
-        builder.setContentTitle(aContext.getString(R.string.app_name));
-        builder.setContentText(aMessage);
-
 
         // Creates an explicit intent for an Activity in your app
         Intent resultIntent = new Intent(aContext, anActivityClass);
@@ -152,15 +155,41 @@ public class UIUtilities {
                         0,
                         PendingIntent.FLAG_UPDATE_CURRENT
                 );
-        builder.setContentIntent(resultPendingIntent);
-
-        builder.setAutoCancel(true);
 
         NotificationManager notificationManager =
                 (NotificationManager) aContext.getSystemService(Context.NOTIFICATION_SERVICE);
-
         notificationManager.cancelAll();
-        notificationManager.notify(1, builder.build());
+
+        if (SDK_INT >= JELLY_BEAN) {
+            Notification.Builder builder;
+            if (SDK_INT >= O) {
+                NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL_CAVE_SURVEY, NOTIFICATION_CHANNEL_CAVE_SURVEY, NotificationManager.IMPORTANCE_DEFAULT);
+                notificationManager.createNotificationChannel(channel);
+                builder = new Notification.Builder(aContext, NOTIFICATION_CHANNEL_CAVE_SURVEY);
+            } else {
+                builder = new Notification.Builder(aContext);
+            }
+
+            builder.setSmallIcon(aIcon);
+            builder.setContentTitle(aContext.getString(R.string.app_name));
+            builder.setContentText(aMessage);
+
+            builder.setContentIntent(resultPendingIntent);
+            builder.setAutoCancel(true);
+
+            notificationManager.notify(1, builder.build());
+        } else {
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(aContext);
+            builder.setSmallIcon(aIcon);
+            builder.setContentTitle(aContext.getString(R.string.app_name));
+            builder.setContentText(aMessage);
+
+            builder.setContentIntent(resultPendingIntent);
+            builder.setAutoCancel(true);
+
+            notificationManager.notify(1, builder.build());
+        }
+
     }
 
 
