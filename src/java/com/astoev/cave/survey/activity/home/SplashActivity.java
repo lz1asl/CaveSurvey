@@ -44,7 +44,10 @@ public class SplashActivity extends AppCompatActivity {
         }
 
         // FS initialization, if available and allowed prepare to use external storage
-        PermissionUtil.requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, this, PERM_REQ_CODE_STORAGE);
+        if (!PermissionUtil.requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, this, PERM_REQ_CODE_STORAGE)) {
+            UIUtilities.showNotification(R.string.splash_internal_storage_warning);
+        }
+
         File home = FileStorageUtil.getStorageHome();
         if (home == null) {
             displayError(R.string.splash_error_storage);

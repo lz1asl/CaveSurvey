@@ -236,20 +236,18 @@ public class FileStorageUtil {
     @SuppressWarnings("deprecation")
     public static File getStorageHome() {
 
-        File documentsHome = null;
+        File storageHome = null;
 
         // try to find writable folder
         if (isExternalStorageWritable()) { // external storage
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
-                documentsHome = Environment.getExternalStoragePublicDirectory(FOLDER_DOCUMENTS);
+                storageHome = Environment.getExternalStoragePublicDirectory(FOLDER_CAVE_SURVEY);
             } else {
-                documentsHome = new File(Environment.getExternalStorageDirectory(), FOLDER_DOCUMENTS);
+                storageHome = new File(Environment.getExternalStorageDirectory(), FOLDER_CAVE_SURVEY);
             }
         } else { // internal storage
-            documentsHome = new File(ConfigUtil.getContext().getFilesDir(), FOLDER_DOCUMENTS);
+            storageHome = new File(ConfigUtil.getContext().getFilesDir(), FOLDER_CAVE_SURVEY);
         }
-
-        File storageHome = new File(documentsHome, FOLDER_CAVE_SURVEY);
 
         Log.d(Constants.LOG_TAG_SERVICE, "Using as home: " + storageHome.getAbsolutePath());
 
@@ -285,10 +283,8 @@ public class FileStorageUtil {
      * @return true if available for writing, otherwise false
      */
     public static boolean isExternalStorageWritable() {
-//        String state = Environment.getExternalStorageState();
-//        return (Environment.MEDIA_MOUNTED.equals(state)) && PermissionUtil.hasExtStoragePermission();
-        // TODO
-        return false;
+        String state = Environment.getExternalStorageState();
+        return (Environment.MEDIA_MOUNTED.equals(state)) && PermissionUtil.hasExtStoragePermission(ConfigUtil.getContext());
     }
 
     /**
