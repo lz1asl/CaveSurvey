@@ -829,7 +829,9 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                             // show the picture
                             Intent intent = new Intent();
                             intent.setAction(Intent.ACTION_VIEW);
-                            intent.setDataAndType(Uri.parse("file://" + photoPath), "image/*");
+                            Uri fileUri =  FileUtils.getFileUri(new File(photoPath));
+                            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                            intent.setDataAndType(fileUri, "image/*");
                             startActivity(intent);
                         }
                     });

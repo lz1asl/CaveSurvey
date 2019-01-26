@@ -88,7 +88,7 @@
         </activity>
 
         <provider
-            android:name="android.support.v4.content.FileProvider"
+            android:name=".util.CaveSurveyFileProvider"
             android:authorities="CaveSurvey.provider"
             android:exported="false"
             android:grantUriPermissions="true">
