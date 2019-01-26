@@ -170,6 +170,7 @@ public class InfoActivity extends MainMenuActivity {
 
             // Works with ES file manager
             intent.setDataAndType(contentUri, MIME_RESOURCE_FOLDER);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             if (intent.resolveActivity(packageManager) != null) {
                 Log.i(Constants.LOG_TAG_SERVICE, "ACTION_VIEW with resource/folder resolved");
 
@@ -189,7 +190,7 @@ public class InfoActivity extends MainMenuActivity {
 
             // another test
             intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(FileUtils.getFileUri(projectHome));
+            intent.setData(contentUri);
             intent.putExtra("org.openintents.extra.ABSOLUTE_PATH", projectHome.getPath());
             if (intent.resolveActivity(packageManager) != null) {
                 Log.i(Constants.LOG_TAG_SERVICE, "ACTION_VIEW with extra resolved");
