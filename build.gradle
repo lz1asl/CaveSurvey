@@ -19,7 +19,7 @@ dependencies {
     implementation 'com.android.support:appcompat-v7:24.1.1'
     implementation 'com.j256.ormlite:ormlite-core:4.48'
     implementation 'com.j256.ormlite:ormlite-android:4.48'
-    implementation 'org.apache.poi:poi:3.17'
+    implementation 'org.apache.poi:poi:3.15'
 
     // Bosch internal protocol
     implementation files('../CaveSurveyBoschGLM/binary/CaveSurveyBoschGLM.jar')

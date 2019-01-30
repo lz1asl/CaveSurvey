@@ -1,6 +1,7 @@
 package com.astoev.cave.survey.util;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
@@ -47,13 +48,13 @@ public class PermissionUtil {
         return true;
     }
 
-    public static boolean hasExtStoragePermission(AppCompatActivity anActivity) {
+    public static boolean hasExtStoragePermission(Activity anActivity) {
         return isStaticPermissionBuild()
                 || hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, anActivity);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    private static boolean hasPermission(String aPermission, AppCompatActivity anActivity) {
+    private static boolean hasPermission(String aPermission, Activity anActivity) {
         return anActivity.checkSelfPermission(aPermission) == PackageManager.PERMISSION_GRANTED;
     }
 

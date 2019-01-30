@@ -34,6 +34,8 @@ import com.astoev.cave.survey.service.bluetooth.device.ble.LeicaDistoBluetoothLE
 import com.astoev.cave.survey.service.bluetooth.device.ble.StanleyBluetoothLeDevice;
 import com.astoev.cave.survey.service.bluetooth.device.ble.mileseey.MileseeyT7BluetoothLeDevice;
 import com.astoev.cave.survey.service.bluetooth.device.ble.mileseey.Mileseeyd5tBluetoothLeDevice;
+import com.astoev.cave.survey.service.bluetooth.device.ble.mileseey.SuaokiP7BluetoothLeDevice;
+import com.astoev.cave.survey.service.bluetooth.device.ble.mileseey.MileseeyP7BluetoothLeDevice;
 import com.astoev.cave.survey.service.bluetooth.device.comm.AbstractBluetoothRFCOMMDevice;
 import com.astoev.cave.survey.service.bluetooth.device.comm.CEMILDMBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.comm.DistoXBluetoothDevice;
@@ -100,8 +102,10 @@ public class BluetoothService {
         // LE devices
         SUPPORTED_BLUETOOTH_LE_DEVICES.add(new LeicaDistoBluetoothLEDevice());
         SUPPORTED_BLUETOOTH_LE_DEVICES.add(new Mileseeyd5tBluetoothLeDevice());
+        SUPPORTED_BLUETOOTH_LE_DEVICES.add(new MileseeyP7BluetoothLeDevice());
         SUPPORTED_BLUETOOTH_LE_DEVICES.add(new MileseeyT7BluetoothLeDevice());
         SUPPORTED_BLUETOOTH_LE_DEVICES.add(new StanleyBluetoothLeDevice());
+        SUPPORTED_BLUETOOTH_LE_DEVICES.add(new SuaokiP7BluetoothLeDevice());
     }
 
     // generic

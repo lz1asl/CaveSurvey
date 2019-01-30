@@ -412,5 +412,8 @@ Network connection is required.</string>
     <string name="splash_error">Failed: %1$s</string>
     <string name="splash_error_database">Internal database unavailable!</string>
     <string name="splash_error_storage">Storage unavailable!</string>
+    <string name="splash_internal_storage_warning">External storage is not available, project files cannot be accessed with file manager!</string>
+    <string name="splash_internal_storage_anyway">Use internal storage anyway</string>
+
 
 </resources>

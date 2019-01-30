@@ -90,7 +90,13 @@ public class SettingsActivity extends MainMenuActivity {
             return;
         }
 
-        if (!PermissionUtil.requestPermissions(new String[]{INTERNET, READ_LOGS, ACCESS_NETWORK_STATE}, this, 401)) {
+        try {
+            if (!PermissionUtil.requestPermissions(new String[]{INTERNET, READ_LOGS, ACCESS_NETWORK_STATE}, this, 401)) {
+                return;
+            }
+        } catch (Exception e) {
+            // requesting system permissions could be dangerous
+            Log.e(Constants.LOG_TAG_UI, "Failed to request log permission", e);
             return;
         }
 

@@ -30,6 +30,7 @@ public class OpensTopoJsonExport extends AbstractExport {
     private JSONArray rows;
     private JSONObject project;
     private JSONObject row;
+    private JSONObject prevRow;
 
     public OpensTopoJsonExport(Context aContext) {
         super(aContext);
@@ -67,12 +68,23 @@ public class OpensTopoJsonExport extends AbstractExport {
         headerRow.put("r", null);
 
         rows.put(headerRow);
+
+        // empty initial row to shift the side measurements
+        prepareEntity(0);
+        prevRow = row;
+        populateValue(Entities.FROM, "0");
+        populateValue(Entities.TO, "A0");
+        populateValue(Entities.DISTANCE, 0);
+        populateValue(Entities.COMPASS, 0);
+        populateValue(Entities.INCLINATION, 0);
+
         project.put("data", rows);
     }
 
     @Override
     protected void prepareEntity(int rowCounter) throws JSONException {
 
+        prevRow = row;
         row = new JSONObject();
         row.put("from", "");
         row.put("to", "");
@@ -121,16 +133,16 @@ public class OpensTopoJsonExport extends AbstractExport {
                 row.put("clino", aValue);
                 break;
             case LEFT:
-                row.put("left", aValue);
+                prevRow.put("left", aValue);
                 break;
             case RIGHT:
-                row.put("right", aValue);
+                prevRow.put("right", aValue);
                 break;
             case UP:
-                row.put("top", aValue);
+                prevRow.put("top", aValue);
                 break;
             case DOWN:
-                row.put("bottom", aValue);
+                prevRow.put("bottom", aValue);
                 break;
             case NOTE:
                 row.put("note", aValue);

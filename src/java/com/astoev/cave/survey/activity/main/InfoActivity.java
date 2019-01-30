@@ -45,6 +45,9 @@ import java.io.File;
  * @author jmitrev
  */
 public class InfoActivity extends MainMenuActivity {
+
+    public static final String MIME_OPEN_DIRECTORY = "vnd.android.document/directory";
+
     @Override
     protected boolean showBaseOptionsMenu() {
         return false;
@@ -170,6 +173,7 @@ public class InfoActivity extends MainMenuActivity {
 
             // Works with ES file manager
             intent.setDataAndType(contentUri, MIME_RESOURCE_FOLDER);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             if (intent.resolveActivity(packageManager) != null) {
                 Log.i(Constants.LOG_TAG_SERVICE, "ACTION_VIEW with resource/folder resolved");
 
@@ -189,10 +193,28 @@ public class InfoActivity extends MainMenuActivity {
 
             // another test
             intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(FileUtils.getFileUri(projectHome));
+            intent.setData(contentUri);
             intent.putExtra("org.openintents.extra.ABSOLUTE_PATH", projectHome.getPath());
             if (intent.resolveActivity(packageManager) != null) {
                 Log.i(Constants.LOG_TAG_SERVICE, "ACTION_VIEW with extra resolved");
+                startActivity(Intent.createChooser(intent, chooserTitle));
+                return;
+            }
+
+            // generic folder
+            intent = new Intent(Intent.ACTION_VIEW);
+            intent.setDataAndType(contentUri, MIME_RESOURCE_FOLDER);
+            if (intent.resolveActivity(packageManager) != null) {
+                Log.i(Constants.LOG_TAG_SERVICE, "ACTION_VIEW with folder resolved");
+                startActivity(Intent.createChooser(intent, chooserTitle));
+                return;
+            }
+
+            // open intent
+            intent = new Intent(Intent.ACTION_VIEW);
+            intent.setDataAndType(contentUri, MIME_OPEN_DIRECTORY);
+            if (intent.resolveActivity(packageManager) != null) {
+                Log.i(Constants.LOG_TAG_SERVICE, "ACTION_VIEW with directory resolved");
                 startActivity(Intent.createChooser(intent, chooserTitle));
                 return;
             }

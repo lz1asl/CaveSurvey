@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.astoev.cave.survey"
           android:installLocation="preferExternal"
-          android:versionCode="39"
-          android:versionName="1.38">
+          android:versionCode="40"
+          android:versionName="1.39">
           
     <uses-feature android:name="android.hardware.camera" android:required="false" />
     <uses-feature android:name="android.hardware.bluetooth_le" android:required="false"/>
@@ -93,7 +93,7 @@
         </activity>
 
         <provider
-            android:name="android.support.v4.content.FileProvider"
+            android:name=".util.CaveSurveyFileProvider"
             android:authorities="CaveSurvey.provider"
             android:exported="false"
             android:grantUriPermissions="true">
