@@ -148,5 +148,38 @@
                     android:onClick="onStop"
                     android:enabled="false"/>
         </LinearLayout>
+
+        <!-- test fields -->
+        <LinearLayout android:layout_width="fill_parent"
+                      android:layout_height="wrap_content"
+                      android:layout_marginTop="20dp">
+            <TextView android:layout_width="0dp"
+                      android:layout_height="wrap_content"
+                      android:layout_weight="1"
+                      android:gravity="center_horizontal"
+                      android:text="@string/azimuth"/>
+            <TextView android:layout_width="0dp"
+                      android:layout_height="wrap_content"
+                      android:layout_weight="1"
+                      android:gravity="center_horizontal"
+                      android:text="@string/slope"/>
+        </LinearLayout>
+        <LinearLayout android:layout_width="fill_parent"
+                      android:layout_height="wrap_content">
+            <EditText android:id="@+id/sensortest_azimuth"
+                      android:layout_width="0dp"
+                      android:layout_height="wrap_content"
+                      android:layout_weight="1"
+                      android:gravity="center"
+                      android:maxLength="5"
+                      android:ems="5"/>
+            <EditText android:id="@+id/sensortest_slope"
+                      android:layout_width="0dp"
+                      android:layout_height="wrap_content"
+                      android:layout_weight="1"
+                      android:gravity="center"
+                      android:maxLength="5"
+                      android:ems="5"/>
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>

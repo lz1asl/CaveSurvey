@@ -24,8 +24,13 @@ public class MeasurementsUtil {
 
 
     public static void bindAzimuthAwareField(final EditText anAzimuthBox, final FragmentManager aSupportFragmentManager) {
+        bindAzimuthAwareField(anAzimuthBox, aSupportFragmentManager, Options.getOptionValue(Option.CODE_AZIMUTH_SENSOR));
+
+    }
+
+    public static void bindAzimuthAwareField(final EditText anAzimuthBox, final FragmentManager aSupportFragmentManager, final String azimuthSensor) {
         // if the azimuth is read from build in sensors add onClickListener to show azimuth dialog
-        if (Option.CODE_SENSOR_INTERNAL.equals(Options.getOptionValue(Option.CODE_AZIMUTH_SENSOR))) {
+        if (Option.CODE_SENSOR_INTERNAL.equals(azimuthSensor)) {
             Log.i(Constants.LOG_TAG_UI, "Will register onClickListener for Azimuth");
             anAzimuthBox.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -43,8 +48,12 @@ public class MeasurementsUtil {
     }
 
     public static void bindSlopeAwareField(final EditText anSlopeBox, final FragmentManager aSupportFragmentManager) {
+        bindSlopeAwareField(anSlopeBox, aSupportFragmentManager, Options.getOptionValue(Option.CODE_SLOPE_SENSOR));
+    }
+
+    public static void bindSlopeAwareField(final EditText anSlopeBox, final FragmentManager aSupportFragmentManager, final String slopeSensor) {
         // if the slope is read from build in sensors add onClickListener to show slope dialog
-        if (Option.CODE_SENSOR_INTERNAL.equals(Options.getOptionValue(Option.CODE_SLOPE_SENSOR))) {
+        if (Option.CODE_SENSOR_INTERNAL.equals(slopeSensor)) {
             Log.i(Constants.LOG_TAG_UI, "Will register onClickListener for Slope");
             anSlopeBox.setOnClickListener(new View.OnClickListener() {
                 @Override

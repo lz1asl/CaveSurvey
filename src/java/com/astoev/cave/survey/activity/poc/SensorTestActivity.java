@@ -7,12 +7,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.MainMenuActivity;
 import com.astoev.cave.survey.fragment.InfoDialogFragment;
+import com.astoev.cave.survey.service.bluetooth.util.MeasurementsUtil;
 import com.astoev.cave.survey.service.orientation.AzimuthChangedAdapter;
 import com.astoev.cave.survey.service.orientation.MagneticOrientationProcessor;
 import com.astoev.cave.survey.service.orientation.OrientationDeprecatedProcessor;
@@ -21,6 +23,8 @@ import com.astoev.cave.survey.service.orientation.RotationOrientationProcessor;
 import com.astoev.cave.survey.service.orientation.SlopeChangedAdapter;
 
 import java.text.DecimalFormat;
+
+import static com.astoev.cave.survey.model.Option.CODE_SENSOR_INTERNAL;
 
 /**
  * Activity that tests all available azimuth sensors and processor implementations.
@@ -156,7 +160,16 @@ public class SensorTestActivity extends MainMenuActivity {
             }
         });
 
-	}// end of onCreate
+        // test fields
+		// handle double click for reading built-in azimuth
+		EditText azimuth = (EditText) findViewById(R.id.sensortest_azimuth);
+		MeasurementsUtil.bindAzimuthAwareField(azimuth, getSupportFragmentManager(), CODE_SENSOR_INTERNAL);
+
+		// handle double click for reading built-in slope
+		EditText slope = (EditText) findViewById(R.id.sensortest_slope);
+		MeasurementsUtil.bindSlopeAwareField(slope, getSupportFragmentManager(), CODE_SENSOR_INTERNAL);
+
+	}
 
     private String[] createTranslateArray(Integer[] availableSensorsArrayArg){
         String[] translateArray = new String[availableSensorsArrayArg.length];
