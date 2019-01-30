@@ -57,10 +57,6 @@ public class SplashActivity extends AppCompatActivity {
         // FS initialization, if available and allowed prepare to use external storage
         if (!PermissionUtil.requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, this, PERM_REQ_CODE_STORAGE)) {
 
-            // can temporary ignore the warning
-            Button continueAnywayButton = (Button) findViewById(R.id.splash_ignore_storage_warning_button);
-            continueAnywayButton.setVisibility(View.VISIBLE);
-
             // can't continue normally
             displayError(R.string.splash_internal_storage_warning);
             return;
@@ -91,17 +87,44 @@ public class SplashActivity extends AppCompatActivity {
         }
 
         // continue
+        loadHomeScreen();
+    }
+
+    private void loadHomeScreen() {
         Log.i(Constants.LOG_TAG_UI, "Loading home");
         startActivity(new Intent(this, HomeActivity.class));
         finish();
     }
 
 
-
     private void displayError(int aMessage) {
         UIUtilities.showNotification(aMessage);
         TextView status = (TextView) findViewById(R.id.splashStatus);
         status.setText(getString(R.string.splash_error, getText(aMessage)));
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+
+        switch (requestCode) {
+            case PERM_REQ_CODE_STORAGE:
+                if (PermissionUtil.isGranted(permissions, grantResults)) {
+                    loadHomeScreen();
+                } else {
+                    // can temporary ignore the warning
+                    Button continueAnywayButton = (Button) findViewById(R.id.splash_ignore_storage_warning_button);
+                    continueAnywayButton.setVisibility(View.VISIBLE);
+
+                    // can't continue normally
+                    displayError(R.string.splash_internal_storage_warning);
+                    return;
+                }
+                return;
+
+            default:
+                Log.i(Constants.LOG_TAG_SERVICE, "Ignore request " + requestCode);
+        }
     }
 
 }
