@@ -119,6 +119,14 @@ public class SensorsActivity extends MainMenuActivity {
             sensorsChooseText.setText(R.string.no_sensors);
         }
 
+        // read timeout
+        String [] timeouts = new String[]{"3"};
+        Spinner timeoutSpinner = (Spinner) findViewById(R.id.sensors_timeout_spinner);
+        ArrayAdapter<CharSequence> timeoutAdapter = new ArrayAdapter<CharSequence>(this, android.R.layout.simple_spinner_item, timeouts);
+        timeoutAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        timeoutSpinner.setAdapter(timeoutAdapter);
+
+
 	}// end of onCreate
 
     private String[] createTranslateArray(Integer[] availableSensorsArrayArg){
