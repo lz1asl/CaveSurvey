@@ -37,7 +37,6 @@
     
     <ProgressBar android:id="@+id/slope_progress"
                  android:progress="0"
-                 android:max="3"
                  android:layout_height="5dp"
                  android:layout_width="fill_parent"
                  android:maxHeight="2dp"

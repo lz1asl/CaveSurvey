@@ -40,7 +40,6 @@
         android:layout_margin="10dp">
         <ProgressBar android:id="@+id/azimuth_progress"
             android:progress="0"
-            android:max="3"
             android:layout_height="5dp"
             android:layout_width="fill_parent"
             android:maxHeight="2dp"

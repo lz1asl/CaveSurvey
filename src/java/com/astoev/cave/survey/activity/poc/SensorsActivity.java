@@ -24,6 +24,9 @@ import com.astoev.cave.survey.util.ConfigUtil;
 
 import java.util.ArrayList;
 
+import static com.astoev.cave.survey.activity.dialog.BaseBuildInMeasureDialog.PROGRESS_DEFAULT_VALUE;
+import static com.astoev.cave.survey.util.ConfigUtil.PREF_SENSOR_TIMEOUT;
+
 /**
  * Pprovides an option to choose the default sensor that will be used application wide.
  * 
@@ -120,14 +123,35 @@ public class SensorsActivity extends MainMenuActivity {
         }
 
         // read timeout
-        String [] timeouts = new String[]{"3"};
+        final Integer [] timeouts = new Integer[]{ 1, 2, 3, 4, 5 };
         Spinner timeoutSpinner = (Spinner) findViewById(R.id.sensors_timeout_spinner);
-        ArrayAdapter<CharSequence> timeoutAdapter = new ArrayAdapter<CharSequence>(this, android.R.layout.simple_spinner_item, timeouts);
+        ArrayAdapter<Integer> timeoutAdapter = new ArrayAdapter<Integer>(this, android.R.layout.simple_spinner_item, timeouts);
         timeoutAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         timeoutSpinner.setAdapter(timeoutAdapter);
 
+        // current setting
+        Integer userMaxProgressValue = ConfigUtil.getIntProperty(PREF_SENSOR_TIMEOUT, PROGRESS_DEFAULT_VALUE);
+        for(int i = 0; i < timeouts.length; i++){
+            if (userMaxProgressValue.equals(timeouts[i])){
+                timeoutSpinner.setSelection(i);
+                break;
+            }
+        }
+        // updated setting
+        timeoutSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> aAdapterView, View aView, int aPosition, long aId) {
+                int newReadTimeout = timeouts[aPosition];
+                Log.i(Constants.LOG_TAG_UI, "Selected new timeout:" + newReadTimeout);
+                ConfigUtil.setIntProperty(PREF_SENSOR_TIMEOUT, newReadTimeout);
+            }
 
-	}// end of onCreate
+            @Override
+            public void onNothingSelected(AdapterView<?> aAdapterView) {
+            }
+        });
+
+    }// end of onCreate
 
     private String[] createTranslateArray(Integer[] availableSensorsArrayArg){
         String[] translateArray = new String[availableSensorsArrayArg.length];

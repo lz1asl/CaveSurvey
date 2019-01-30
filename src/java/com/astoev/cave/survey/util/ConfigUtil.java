@@ -20,6 +20,7 @@ public class ConfigUtil {
     public static final String PREF_LOCALE = "language_pref";
     public static final String PREF_SENSOR = "sensor_pref";
     public static final String PREF_BACKUP = "backup_pref";
+    public static final String PREF_SENSOR_TIMEOUT = "sensor_timeout";
 
 
     private static Activity mAppContext;
@@ -33,7 +34,11 @@ public class ConfigUtil {
     }
 
     public static Integer getIntProperty(String aName) {
-        return getPrefs(Context.MODE_PRIVATE).getInt(aName, 0);
+        return getIntProperty(aName, 0);
+    }
+
+    public static Integer getIntProperty(String aName, Integer aDefaultValue) {
+        return getPrefs(Context.MODE_PRIVATE).getInt(aName, aDefaultValue);
     }
 
     public static boolean setIntProperty(String aName, Integer aValue) {

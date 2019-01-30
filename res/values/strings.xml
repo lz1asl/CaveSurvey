@@ -313,7 +313,7 @@
     <string name="sensor_test_title"><u>Sensors Test</u></string>
     <string name="sensor_test_header">Test Build-in Sensors</string>
     <string name="sensor_choose_header">Choose Build-in sensor</string>
-    <string name="sensor_choose_timeout">Read timeout</string>
+    <string name="sensor_choose_timeout">Targeting time (seconds)</string>
     <string name="no_sensors">No available Build-in sensors</string>
     <string name="sensor_choose_tooltip">You can choose the most appropriate build in sensor that fits your need of accuracy</string>
     <string name="sensor_test_tooltip">You can test build-in senors. Just keep in mind that they may not be a reliable instrument for taking measurements even they report maximum accuracy.\n\n

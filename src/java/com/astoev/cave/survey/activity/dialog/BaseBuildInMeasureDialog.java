@@ -16,9 +16,12 @@ import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.model.Option;
 import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.service.orientation.OrientationProcessor;
+import com.astoev.cave.survey.util.ConfigUtil;
 
 import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
+
+import static com.astoev.cave.survey.util.ConfigUtil.PREF_SENSOR_TIMEOUT;
 
 /**
  * Created by astoev on 4/25/15.
@@ -27,7 +30,9 @@ public class BaseBuildInMeasureDialog extends DialogFragment {
 
 
     /** Max value for the progress bar*/
-    private static int PROGRESS_MAX_VALUE = 3;
+    protected static int progressMaxValue;
+    public static int PROGRESS_DEFAULT_VALUE = 3;
+
 
     /** Formatter */
     protected DecimalFormat formater;
@@ -66,6 +71,13 @@ public class BaseBuildInMeasureDialog extends DialogFragment {
         } else {
             isInDegrees = false;
             unitsString = " " + getString(R.string.grads);
+        }
+
+        Integer userMaxProgressValue = ConfigUtil.getIntProperty(PREF_SENSOR_TIMEOUT);
+        if (userMaxProgressValue == null) {
+            progressMaxValue = PROGRESS_DEFAULT_VALUE;
+        } else {
+            progressMaxValue = userMaxProgressValue;
         }
 
         // create a handler and a thread that will drive the progress bar
@@ -107,7 +119,7 @@ public class BaseBuildInMeasureDialog extends DialogFragment {
             dialog.progressBar.setProgress(total);
             dialog.progressBar.setSecondaryProgress(total);
             dialog.progressBar.invalidate();
-            if (total >= PROGRESS_MAX_VALUE) {
+            if (total >= progressMaxValue) {
                 dialog.progressThread.setState(ProgressThread.STATE_DONE);
                 dialog.notifyEndProgress();
             }
@@ -192,7 +204,7 @@ public class BaseBuildInMeasureDialog extends DialogFragment {
         public void run() {
             mState = STATE_RUNNING;
             total = 0;
-            while (mState == STATE_RUNNING && total < PROGRESS_MAX_VALUE + 1) {
+            while (mState == STATE_RUNNING && total < progressMaxValue + 1) {
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
@@ -213,4 +225,7 @@ public class BaseBuildInMeasureDialog extends DialogFragment {
         }
     }// end of class ProgressThread
 
+    public static void setProgressMaxValue(int aProgressMaxValue) {
+        progressMaxValue = aProgressMaxValue;
+    }
 }

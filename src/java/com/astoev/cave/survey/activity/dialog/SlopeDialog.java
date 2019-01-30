@@ -52,7 +52,8 @@ public class SlopeDialog extends BaseBuildInMeasureDialog {
 
         // progress bar view
         progressBar = (ProgressBar)view.findViewById(R.id.slope_progress);
-        
+        progressBar.setMax(progressMaxValue);
+
         slopeView = (TextView)view.findViewById(R.id.slope_value);
         accuracyView = (TextView) view.findViewById(R.id.slope_accuracy);
         

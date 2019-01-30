@@ -4,7 +4,9 @@ import android.util.Log;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.model.Option;
+import com.astoev.cave.survey.model.Project;
 import com.j256.ormlite.stmt.QueryBuilder;
+import com.j256.ormlite.stmt.Where;
 
 import java.sql.SQLException;
 
@@ -31,7 +33,11 @@ public class Options {
 
         try {
             QueryBuilder<Option, Integer> query = Workspace.getCurrentInstance().getDBHelper().getOptionsDao().queryBuilder();
-            query.where().eq(Option.COLUMN_CODE, aCode).and().eq(Option.COLUMN_PROJECT_ID, Workspace.getCurrentInstance().getActiveProject().getId());
+            Where where = query.where().eq(Option.COLUMN_CODE, aCode);
+            Project currentProject = Workspace.getCurrentInstance().getActiveProject();
+            if (currentProject != null) {
+                where.and().eq(Option.COLUMN_PROJECT_ID, currentProject.getId());
+            }
 
             return Workspace.getCurrentInstance().getDBHelper().getOptionsDao().queryForFirst(query.prepare());
         } catch (SQLException e) {
