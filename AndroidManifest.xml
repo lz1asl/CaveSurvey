@@ -77,7 +77,7 @@
         <activity android:name="com.astoev.cave.survey.activity.poc.SensorTestActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.astoev.cave.survey.activity.SettingsActivity" />
+                android:value="com.astoev.cave.survey.activity.poc.SensorsActivity" />
         </activity>
         <activity android:name="com.astoev.cave.survey.activity.main.GPSActivity"/>
         <activity android:name="com.astoev.cave.survey.activity.main.GPSManualActivity"/>

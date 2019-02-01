@@ -4,6 +4,7 @@
 package com.astoev.cave.survey.activity.poc;
 
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
@@ -198,4 +199,9 @@ public class SensorsActivity extends MainMenuActivity {
         return false;
     }
 
+    public void openSensorsTest(View viewArg) {
+        Log.i(Constants.LOG_TAG_UI, "Azimuth Test");
+        Intent intent = new Intent(SensorsActivity.this, SensorTestActivity.class);
+        startActivity(intent);
+    }
 }

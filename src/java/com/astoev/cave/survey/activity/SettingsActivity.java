@@ -13,7 +13,6 @@ import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.dialog.ErrorReporterDialog;
 import com.astoev.cave.survey.activity.dialog.LanguageDialog;
-import com.astoev.cave.survey.activity.poc.SensorTestActivity;
 import com.astoev.cave.survey.activity.poc.SensorsActivity;
 import com.astoev.cave.survey.fragment.InfoDialogFragment;
 import com.astoev.cave.survey.service.reports.ErrorReporter;
@@ -41,7 +40,6 @@ public class SettingsActivity extends MainMenuActivity {
 
         prepareLanguage();
         prepareSensors();
-        prepareSensorsTest();
         prepareAutoBackup();
         prepareErrorReporter();
     }
@@ -53,18 +51,6 @@ public class SettingsActivity extends MainMenuActivity {
             public void onClick(View v) {
                 Log.i(Constants.LOG_TAG_UI, "Azimuth settings");
                 Intent intent = new Intent(SettingsActivity.this, SensorsActivity.class);
-                startActivity(intent);
-            }
-        });
-    }
-
-    private void prepareSensorsTest() {
-        TextView bt = (TextView) findViewById(R.id.settingsSensorsTest);
-        bt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i(Constants.LOG_TAG_UI, "Azimuth Test");
-                Intent intent = new Intent(SettingsActivity.this, SensorTestActivity.class);
                 startActivity(intent);
             }
         });
@@ -177,4 +163,5 @@ public class SettingsActivity extends MainMenuActivity {
     protected boolean showBaseOptionsMenu() {
         return false;
     }
+
 }

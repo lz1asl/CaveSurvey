@@ -24,15 +24,6 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_margin="10dp"/>
 
-        <TextView
-            android:id="@+id/settingsSensorsTest"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:icon="@drawable/ic_action_bluetooth_searching"
-            android:text="@string/sensor_test_title"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_margin="10dp"/>
-
         <!-- auto backup -->
         <RelativeLayout
             android:layout_width="fill_parent"
