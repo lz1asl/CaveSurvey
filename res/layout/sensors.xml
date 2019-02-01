@@ -42,6 +42,21 @@
         <TextView android:layout_height="wrap_content"
                   android:layout_weight="2"
                   android:layout_width="match_parent"
+                  android:text="@string/sensor_choose_simultaneously"
+                  android:gravity="left"
+                  android:layout_margin="10dp"
+                  android:textAppearance="@android:style/TextAppearance.Large"/>
+        <Spinner
+            android:id="@+id/sensors_simultaneously_spinner"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp">
+        </Spinner>
+
+        <TextView android:layout_height="wrap_content"
+                  android:layout_weight="2"
+                  android:layout_width="match_parent"
                   android:text="@string/sensor_choose_timeout"
                   android:gravity="left"
                   android:layout_margin="10dp"
@@ -54,6 +69,8 @@
             android:layout_margin="10dp">
         </Spinner>
 
+
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -61,7 +78,7 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:gravity="bottom"
             android:layout_gravity="center"
-            android:layout_margin="30dp"
+            android:layout_margin="50dp"
             android:onClick="openSensorsTest"/>
 
     </LinearLayout>

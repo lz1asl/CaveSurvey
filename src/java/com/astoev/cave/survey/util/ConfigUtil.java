@@ -21,6 +21,7 @@ public class ConfigUtil {
     public static final String PREF_SENSOR = "sensor_pref";
     public static final String PREF_BACKUP = "backup_pref";
     public static final String PREF_SENSOR_TIMEOUT = "sensor_timeout";
+    public static final String PREF_SENSOR_SIMULTANEOUSLY = "sensor_simulateneously";
 
 
     private static Activity mAppContext;

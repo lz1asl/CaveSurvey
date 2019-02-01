@@ -295,6 +295,11 @@
     <string name="sensor_test_title"><u>Тест на сензори</u></string>
     <string name="sensor_test_header">Тест на вградените сензори</string>
     <string name="sensor_choose_timeout">Време за насочване (секунди)</string>
+    <string name="sensor_choose_simultaneously">Отчитане</string>
+    <string-array name="sensors_reading_types">
+        <item>Независимо</item>
+        <item>Едновременно</item>
+    </string-array>
     <string name="sensor_choose_header">Избор на вграден сензор</string>
     <string name="no_sensors">Няма налични вградени сензори</string>
     <string name="sensor_choose_tooltip">Може да изберете най - подходящия вграден сензор, който да отговаря на нуждите ви за точност</string>

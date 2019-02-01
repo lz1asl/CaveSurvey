@@ -26,6 +26,7 @@ import com.astoev.cave.survey.util.ConfigUtil;
 import java.util.ArrayList;
 
 import static com.astoev.cave.survey.activity.dialog.BaseBuildInMeasureDialog.PROGRESS_DEFAULT_VALUE;
+import static com.astoev.cave.survey.util.ConfigUtil.PREF_SENSOR_SIMULTANEOUSLY;
 import static com.astoev.cave.survey.util.ConfigUtil.PREF_SENSOR_TIMEOUT;
 
 /**
@@ -149,6 +150,26 @@ public class SensorsActivity extends MainMenuActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> aAdapterView) {
+            }
+        });
+
+        // sensors reading
+        Spinner readTypeSpinner = (Spinner) findViewById(R.id.sensors_simultaneously_spinner);
+        final ArrayAdapter<String> readTypesAdapter =
+                new ArrayAdapter<String>(this,
+                        android.R.layout.simple_list_item_1,
+                        getResources().getStringArray(R.array.sensors_reading_types));
+        readTypeSpinner.setAdapter(readTypesAdapter);
+        readTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> aAdapterView, View aView, int aPosition, long aId) {
+                Log.i(Constants.LOG_TAG_UI, "Selected read mode: " + aPosition + " " + readTypesAdapter.getItem(aPosition));
+                ConfigUtil.setBooleanProperty(PREF_SENSOR_SIMULTANEOUSLY, aPosition == 1);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> aAdapterView) {
+
             }
         });
 
