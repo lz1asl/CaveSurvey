@@ -38,6 +38,7 @@ public class SensorsActivity extends MainMenuActivity {
 
     /** Dialog name to enable choose sensors tooltip dialog */
     private static final String CHOOSE_SENSORS_TOOLTIP_DIALOG = "CHOOSE_SENSORS_TOOLTIP_DIALOG";
+    private static final int SIMULTANEOUSLY_READING_POSITION = 1;
 
     private Integer[] availableSensorsArray;
 
@@ -164,7 +165,7 @@ public class SensorsActivity extends MainMenuActivity {
             @Override
             public void onItemSelected(AdapterView<?> aAdapterView, View aView, int aPosition, long aId) {
                 Log.i(Constants.LOG_TAG_UI, "Selected read mode: " + aPosition + " " + readTypesAdapter.getItem(aPosition));
-                ConfigUtil.setBooleanProperty(PREF_SENSOR_SIMULTANEOUSLY, aPosition == 1);
+                ConfigUtil.setBooleanProperty(PREF_SENSOR_SIMULTANEOUSLY, aPosition == SIMULTANEOUSLY_READING_POSITION);
             }
 
             @Override
@@ -172,6 +173,9 @@ public class SensorsActivity extends MainMenuActivity {
 
             }
         });
+        if (ConfigUtil.getBooleanProperty(PREF_SENSOR_SIMULTANEOUSLY)) {
+            readTypeSpinner.setSelection(SIMULTANEOUSLY_READING_POSITION);
+        }
 
     }// end of onCreate
 

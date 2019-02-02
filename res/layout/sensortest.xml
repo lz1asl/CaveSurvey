@@ -152,7 +152,7 @@
         <!-- test fields -->
         <LinearLayout android:layout_width="fill_parent"
                       android:layout_height="wrap_content"
-                      android:layout_marginTop="20dp">
+                      android:layout_marginTop="50dp">
             <TextView android:layout_width="0dp"
                       android:layout_height="wrap_content"
                       android:layout_weight="1"
@@ -168,6 +168,7 @@
                       android:layout_height="wrap_content">
             <EditText android:id="@+id/sensortest_azimuth"
                       android:layout_width="0dp"
+                      android:inputType="numberDecimal"
                       android:layout_height="wrap_content"
                       android:layout_weight="1"
                       android:gravity="center"
@@ -175,6 +176,7 @@
                       android:ems="5"/>
             <EditText android:id="@+id/sensortest_slope"
                       android:layout_width="0dp"
+                      android:inputType="numberDecimal"
                       android:layout_height="wrap_content"
                       android:layout_weight="1"
                       android:gravity="center"
