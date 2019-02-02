@@ -82,11 +82,11 @@ public class VectorDialog extends DialogFragment implements BTResultAware, Azimu
 
         EditText angleField = (EditText) mView.findViewById(R.id.vector_azimuth);
         mReceiver.bindBTMeasures(angleField, Constants.Measures.angle, false, new Constants.Measures[] {Constants.Measures.distance, Constants.Measures.slope});
-        MeasurementsUtil.bindAzimuthAwareField(angleField, mSupportFragmentManager);
 
         EditText slopeField = (EditText) mView.findViewById(R.id.vector_slope);
         mReceiver.bindBTMeasures(slopeField, Constants.Measures.slope, false, new Constants.Measures[] {Constants.Measures.angle, Constants.Measures.distance});
-        MeasurementsUtil.bindSlopeAwareField(slopeField, mSupportFragmentManager);
+
+        MeasurementsUtil.bindSensorsAwareFields(angleField, slopeField, mSupportFragmentManager);
 
         final Dialog dialog = builder.create();
 

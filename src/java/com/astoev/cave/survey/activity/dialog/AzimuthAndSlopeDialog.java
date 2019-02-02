@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.astoev.cave.survey.activity.dialog;
 
@@ -14,54 +14,48 @@ import android.widget.TextView;
 
 import com.astoev.cave.survey.R;
 
-/**
- * Slope dialog shows a progress bar that waits 3 seconds and reads an slope from internal sensor. It notifies 
- * the parent activity for the changed value if it implements SlopeChangedListener.
- * 
- * @author jmitrev
- */
-public class SlopeDialog extends BaseBuildInMeasureDialog {
-    
-    /** Slope value view*/
+public class AzimuthAndSlopeDialog extends BaseBuildInMeasureDialog {
+
+    private TextView azimuthView;
+    private TextView azimuthAccuracyView;
     private TextView slopeView;
     private TextView slopeAccuracyView;
-    
 
     /**
-     * @see android.support.v4.app.DialogFragment#onCreateDialog(android.os.Bundle)
+     * @see android.support.v4.app.DialogFragment#onCreateDialog(Bundle)
      */
-    @Override
     @NonNull
+    @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-
         // parent initialization
         super.onCreateDialog(savedInstanceState);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(getString(R.string.slope));
-        
+        builder.setTitle(getString(R.string.azimuth) + "/" + getString(R.string.slope));
+
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        View view = inflater.inflate(R.layout.slope_dialog, null);
+        View view = inflater.inflate(R.layout.azimuth_slope_dialog, null);
         builder.setView(view);
 
         // add key listener to handle the back button
         builder.setOnKeyListener(new BackKeyListener(this));
 
         // progress bar view
-        progressBar = (ProgressBar)view.findViewById(R.id.slope_progress);
+        progressBar = (ProgressBar) view.findViewById(R.id.azimuth_slope_progress);
         progressBar.setMax(progressMaxValue);
 
-        slopeView = (TextView)view.findViewById(R.id.slope_value);
-        slopeAccuracyView = (TextView) view.findViewById(R.id.slope_accuracy);
-        
+        azimuthView = (TextView) view.findViewById(R.id.azimuth_slope_azimuth_value);
+        azimuthAccuracyView = (TextView) view.findViewById(R.id.azimuth_slope_azimuth_accuracy);
+        slopeView = (TextView) view.findViewById(R.id.azimuth_slope_slope_value);
+        slopeAccuracyView = (TextView) view.findViewById(R.id.azimuth_slope_slope_accuracy);
+
         // create the Dialog
         AlertDialog alertDialg = builder.create();
-        
+
+        startAzimuthProcessor(azimuthView, azimuthAccuracyView);
         startSlopeProcessor(slopeView, slopeAccuracyView);
-        
+
         return alertDialg;
     }
-    
-
 
 }

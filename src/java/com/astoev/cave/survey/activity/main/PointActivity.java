@@ -106,13 +106,10 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
             loadPointData();
         }
 
-        // handle double click for reading built-in azimuth
+        // handle double click for reading built-in azimuth and slope
         EditText azimuth = (EditText) findViewById(R.id.point_azimuth);
-        MeasurementsUtil.bindAzimuthAwareField(azimuth, getSupportFragmentManager());
-
-        // handle double click for reading built-in slope
         EditText slope = (EditText) findViewById(R.id.point_slope);
-        MeasurementsUtil.bindSlopeAwareField(slope, getSupportFragmentManager());
+        MeasurementsUtil.bindSensorsAwareFields(azimuth, slope, getSupportFragmentManager());
 
         Leg legEdited = getCurrentLeg();
         if (legEdited != null) {

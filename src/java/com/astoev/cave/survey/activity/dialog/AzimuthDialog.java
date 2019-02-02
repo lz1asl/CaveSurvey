@@ -12,10 +12,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
-import com.astoev.cave.survey.service.orientation.AzimuthChangedAdapter;
-import com.astoev.cave.survey.service.orientation.OrientationProcessorFactory;
 
 /**
  * Azimuth dialog shows a progress bar that waits 3 seconds and reads an azimuth. It notifies the parent
@@ -57,35 +54,7 @@ public class AzimuthDialog extends BaseBuildInMeasureDialog {
         // create the Dialog
         AlertDialog alertDialg = builder.create();
 
-        // create azimuth processor to handle the azimuth sensors and value changes
-        orientationProcessor = OrientationProcessorFactory.getOrientationProcessor(getActivity(), new AzimuthChangedAdapter() {
-
-            /**
-             * Azimuth callback method. Edits the azimuth text view with the new value
-             *
-             * @see com.astoev.cave.survey.service.orientation.AzimuthChangedListener#onAzimuthChanged(float)
-             */
-            @Override
-            public void onAzimuthChanged(float newValueArg) {
-                //convert to Grads if necessary
-                lastValue = newValueArg;
-                if (!isInDegrees) {
-                    lastValue = newValueArg * Constants.DEC_TO_GRAD;
-                }
-
-                azimuthView.setText(formater.format(lastValue) + unitsString);
-            }
-
-            /**
-             * @see com.astoev.cave.survey.service.orientation.AzimuthChangedListener#onAzimuthChanged(float)
-             */
-            @Override
-            public void onAccuracyChanged(int accuracyArg) {
-                accuracyView.setText(orientationProcessor.getAccuracyAsString(accuracyArg));
-            }
-        });
-
-        orientationProcessor.startListening();
+        startAzimuthProcessor(azimuthView, accuracyView);
 
         return alertDialg;
     }

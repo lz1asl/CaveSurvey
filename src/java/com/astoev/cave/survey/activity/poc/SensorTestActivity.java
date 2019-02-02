@@ -161,14 +161,10 @@ public class SensorTestActivity extends MainMenuActivity {
         });
 
         // test fields
-		// handle double click for reading built-in azimuth
+		// handle double click for reading built-in azimuth and slope
 		EditText azimuth = (EditText) findViewById(R.id.sensortest_azimuth);
-		MeasurementsUtil.bindAzimuthAwareField(azimuth, getSupportFragmentManager(), CODE_SENSOR_INTERNAL);
-
-		// handle double click for reading built-in slope
 		EditText slope = (EditText) findViewById(R.id.sensortest_slope);
-		MeasurementsUtil.bindSlopeAwareField(slope, getSupportFragmentManager(), CODE_SENSOR_INTERNAL);
-
+		MeasurementsUtil.bindSensorsAwareFields(azimuth, slope, getSupportFragmentManager(), CODE_SENSOR_INTERNAL, CODE_SENSOR_INTERNAL);
 	}
 
     private String[] createTranslateArray(Integer[] availableSensorsArrayArg){

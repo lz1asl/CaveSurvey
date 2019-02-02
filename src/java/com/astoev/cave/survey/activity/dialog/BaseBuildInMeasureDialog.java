@@ -10,12 +10,16 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.model.Option;
 import com.astoev.cave.survey.service.Options;
+import com.astoev.cave.survey.service.orientation.AzimuthChangedAdapter;
 import com.astoev.cave.survey.service.orientation.OrientationProcessor;
+import com.astoev.cave.survey.service.orientation.OrientationProcessorFactory;
+import com.astoev.cave.survey.service.orientation.SlopeChangedAdapter;
 import com.astoev.cave.survey.util.ConfigUtil;
 
 import java.lang.ref.WeakReference;
@@ -51,13 +55,16 @@ public class BaseBuildInMeasureDialog extends DialogFragment {
     /** Progress handler*/
     protected ProgressHandler progressHandler;
 
-    /** OrientationProcessor that handles the work with the sensors*/
-    protected OrientationProcessor orientationProcessor;
+    /** OrientationProcessors that handle the work with the sensors*/
+    protected OrientationProcessor orientationAzimuthProcessor;
+    protected OrientationProcessor orientationSlopeProcessor;
 
     /** Last value for the slope from the sensor */
-    protected float lastValue;
+    protected float lastAzimuthValue;
+    protected float lastSlopeValue;
 
-    protected EditText targetTextBox;
+    protected EditText targetAzimuthTextBox;
+    protected EditText targetSlopeTextBox;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -88,8 +95,12 @@ public class BaseBuildInMeasureDialog extends DialogFragment {
         return null;
     }
 
-    public void setTargetTextBox(EditText aTargetTextBox) {
-        this.targetTextBox = aTargetTextBox;
+    public void setTargetAzimuthTextBox(EditText aTargetAzimuthTextBox) {
+        targetAzimuthTextBox = aTargetAzimuthTextBox;
+    }
+
+    public void setTargetSlopeTextBox(EditText aTargetSlopeTextBox) {
+        targetSlopeTextBox = aTargetSlopeTextBox;
     }
 
     /**
@@ -168,8 +179,13 @@ public class BaseBuildInMeasureDialog extends DialogFragment {
         }
 
         // stop azimuth listener
-        if (orientationProcessor != null) {
-            orientationProcessor.stopListening();
+        if (orientationAzimuthProcessor != null) {
+            orientationAzimuthProcessor.stopListening();
+        }
+
+        // stop slope listener
+        if (orientationSlopeProcessor != null) {
+            orientationSlopeProcessor.stopListening();
         }
 
         dismiss();
@@ -179,10 +195,16 @@ public class BaseBuildInMeasureDialog extends DialogFragment {
      * Helper method called to notify that progress bar is filled and the dialog should be dismissed.
      * Stops the azimuth processor notifies the parent activity and will dismiss the dialog
      */
-    protected void notifyEndProgress(){
-        orientationProcessor.stopListening();
+    protected void notifyEndProgress() {
 
-        targetTextBox.setText(String.valueOf(lastValue));
+        if (orientationAzimuthProcessor != null) {
+            orientationAzimuthProcessor.stopListening();
+            targetAzimuthTextBox.setText(String.valueOf(lastAzimuthValue));
+        }
+        if (orientationSlopeProcessor != null){
+            orientationSlopeProcessor.stopListening();
+            targetSlopeTextBox.setText(String.valueOf(lastSlopeValue));
+        }
 
         dismiss();
     }
@@ -227,5 +249,71 @@ public class BaseBuildInMeasureDialog extends DialogFragment {
 
     public static void setProgressMaxValue(int aProgressMaxValue) {
         progressMaxValue = aProgressMaxValue;
+    }
+
+
+    protected void startAzimuthProcessor(final TextView aAzimuthView, final TextView aAccuracyView) {
+        // create azimuth processor to handle the azimuth sensors and value changes
+        orientationAzimuthProcessor = OrientationProcessorFactory.getOrientationProcessor(getActivity(), new AzimuthChangedAdapter() {
+
+            /**
+             * Azimuth callback method. Edits the azimuth text view with the new value
+             *
+             * @see com.astoev.cave.survey.service.orientation.AzimuthChangedListener#onAzimuthChanged(float)
+             */
+            @Override
+            public void onAzimuthChanged(float newValueArg) {
+                //convert to Grads if necessary
+                lastAzimuthValue = newValueArg;
+                if (!isInDegrees) {
+                    lastAzimuthValue = newValueArg * Constants.DEC_TO_GRAD;
+                }
+
+                aAzimuthView.setText(formater.format(lastAzimuthValue) + unitsString);
+            }
+
+            /**
+             * @see com.astoev.cave.survey.service.orientation.AzimuthChangedListener#onAzimuthChanged(float)
+             */
+            @Override
+            public void onAccuracyChanged(int accuracyArg) {
+                aAccuracyView.setText(orientationAzimuthProcessor.getAccuracyAsString(accuracyArg));
+            }
+        });
+
+        orientationAzimuthProcessor.startListening();
+    }
+
+
+    protected void startSlopeProcessor(final TextView aSlopeView, final TextView aSlopeAccuracyView) {
+        // create azimuth processor to handle the azimuth sensors and value changes
+        orientationSlopeProcessor = OrientationProcessorFactory.getOrientationProcessor(getActivity(), new SlopeChangedAdapter() {
+
+            /**
+             * Slope callback method. Edits the slope text view with the new value
+             *
+             * @see com.astoev.cave.survey.service.orientation.SlopeChangedAdapter#onSlopeChanged(float)
+             */
+            @Override
+            public void onSlopeChanged(float newValueArg) {
+                //convert to Grads if necessary
+                lastSlopeValue = newValueArg;
+                if (!isInDegrees){
+                    lastSlopeValue = newValueArg * Constants.DEC_TO_GRAD;
+                }
+
+                aSlopeView.setText(formater.format(lastSlopeValue) + unitsString);
+            }
+
+            /**
+             * @see com.astoev.cave.survey.service.orientation.AzimuthChangedListener#onAzimuthChanged(float)
+             */
+            @Override
+            public void onAccuracyChanged(int accuracyArg) {
+                aSlopeAccuracyView.setText(orientationSlopeProcessor.getAccuracyAsString(accuracyArg));
+            }
+        });
+
+        orientationSlopeProcessor.startListening();
     }
 }
