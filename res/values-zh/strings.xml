@@ -313,11 +313,11 @@
     <string name="sensor_test_header">测试内建传感器</string>
     <string name="sensor_choose_header">选择内建传感器</string>
     <!-- TODO -->
-    <string name="sensor_choose_timeout">Targeting time (seconds)</string>
-    <string name="sensor_choose_simultaneously">Sensors reading</string>
+    <string name="sensor_choose_timeout">定位时间（秒）</string>
+    <string name="sensor_choose_simultaneously">传感器读数</string>
     <string-array name="sensors_reading_types">
-        <item>Independent</item>
-        <item>Simulateneously</item>
+        <item>单独</item>
+        <item>同时</item>
     </string-array>
     <string name="no_sensors">没有可用的内建传感器</string>
     <string name="sensor_choose_tooltip">您可以选择最合适的内置传感器，以满足您的精确度需求</string>
@@ -417,7 +417,7 @@
     <string name="splash_error">失败: %1$s</string>
     <string name="splash_error_database">内部数据库不可用！</string>
     <string name="splash_error_storage">存储不可用！</string>
-    <string name="splash_internal_storage_warning">External storage is not available, project files cannot be accessed with file manager!</string>
-    <string name="splash_internal_storage_anyway">Use internal storage anyway</string>
+    <string name="splash_internal_storage_warning">外部存储不可用，文件管理器无法访问项目文件！</string>
+    <string name="splash_internal_storage_anyway">仍然使用内部存储</string>
 
 </resources>
