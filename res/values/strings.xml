@@ -319,6 +319,11 @@
         <item>Independent</item>
         <item>Simulateneously</item>
     </string-array>
+    <string name="sensor_noise_reduction">Reading averaging</string>
+    <string-array name="sensor_noise_reduction_types">
+        <item>Disabled</item>
+        <item>Enabled</item>
+    </string-array>
     <string name="no_sensors">No available Build-in sensors</string>
     <string name="sensor_choose_tooltip">You can choose the most appropriate build in sensor that fits your need of accuracy</string>
     <string name="sensor_test_tooltip">You can test build-in senors. Just keep in mind that they may not be a reliable instrument for taking measurements even they report maximum accuracy.\n\n

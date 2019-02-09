@@ -177,6 +177,12 @@ public class SensorsActivity extends MainMenuActivity {
             readTypeSpinner.setSelection(SIMULTANEOUSLY_READING_POSITION);
         }
 
+        // noise reduction
+        Spinner noiseReductionSpinner = (Spinner) findViewById(R.id.sensors_noise_spinner);
+        ArrayAdapter<String> noiseReductionTypes = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.sensor_noise_reduction_types));
+        // TODO
+        noiseReductionSpinner.setAdapter(noiseReductionTypes);
+
     }// end of onCreate
 
     private String[] createTranslateArray(Integer[] availableSensorsArrayArg){
