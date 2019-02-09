@@ -15,14 +15,12 @@
         <TextView android:layout_height="wrap_content"
                   android:layout_width="0dp"
                   android:layout_weight="1"
-                  android:text="@string/sensor"
-                  android:textAppearance="?android:attr/textAppearanceLarge"/>
+                  android:text="@string/sensor" />
 
         <TextView android:layout_height="wrap_content"
                   android:layout_width="0dp"
                   android:layout_weight="1"
-                  android:text="@string/accuracy"
-                  android:textAppearance="?android:attr/textAppearanceLarge"/>
+                  android:text="@string/accuracy" />
 
     </LinearLayout>
 
@@ -46,8 +44,7 @@
                   android:layout_height="wrap_content"
                   android:layout_width="0dp"
                   android:layout_weight="1"
-                  android:text="@string/no_value_label"
-                  android:textAppearance="?android:attr/textAppearanceLarge"/>
+                  android:text="@string/no_value_label" />
 
     </LinearLayout>
 
@@ -72,8 +69,7 @@
                   android:layout_height="wrap_content"
                   android:layout_width="0dp"
                   android:layout_weight="1"
-                  android:text="@string/no_value_label"
-                  android:textAppearance="?android:attr/textAppearanceLarge"/>
+                  android:text="@string/no_value_label"/>
 
     </LinearLayout>
 
