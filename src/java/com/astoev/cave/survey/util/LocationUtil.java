@@ -9,8 +9,10 @@ package com.astoev.cave.survey.util;
  */
 public class LocationUtil {
 
+    private static final String DEGREE = "\u00B0";
+
     /** Template for formatting latitude and longitude */
-    private static final String LAT_LON_TEMPLATE = "%f\u00B0%s";
+    private static final String LAT_LON_TEMPLATE = "%f" + DEGREE + "%s";
 
     private static final String N = "N";
     private static final String S = "S";
@@ -35,8 +37,13 @@ public class LocationUtil {
     }
 
     public static Float descriptionToValue(String aCoordinateDescription) {
-        if (StringUtils.isNotEmpty(aCoordinateDescription)) {
-            String numberPart = aCoordinateDescription.substring(0, aCoordinateDescription.indexOf("\u00B0"));
+        // present
+        if (StringUtils.isNotEmpty(aCoordinateDescription) && aCoordinateDescription.contains(DEGREE)) {
+            // without suffix
+            String numberPart = aCoordinateDescription.substring(0, aCoordinateDescription.indexOf(DEGREE));
+            // proper number in default format
+            numberPart = numberPart.replace(",", ".");
+
             float coordinate = Float.parseFloat(numberPart);
             if (aCoordinateDescription.endsWith(S) || aCoordinateDescription.endsWith(W)) {
                 coordinate = -coordinate;

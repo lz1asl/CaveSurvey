@@ -16,6 +16,7 @@ import com.astoev.cave.survey.model.Vector;
 import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.service.Workspace;
 import com.astoev.cave.survey.service.export.excel.ExcelExport;
+import com.astoev.cave.survey.util.ConfigUtil;
 import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.util.LocationUtil;
 import com.astoev.cave.survey.util.PointUtil;
@@ -295,7 +296,9 @@ public class ExcelImport {
 
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_SERVICE, "Failed with import", e);
-            UIUtilities.showNotification(R.string.error);
+            String errorMessage = ConfigUtil.getContext().getString(R.string.error) + " - "
+                    + e.getClass().getSimpleName() + " : " + e.getMessage();
+            UIUtilities.showNotification(errorMessage);
         } finally {
             StreamUtil.closeQuietly(file);
             if (workbook != null) {
