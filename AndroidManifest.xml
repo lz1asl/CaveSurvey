@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.astoev.cave.survey"
           android:installLocation="preferExternal"
-          android:versionCode="40"
-          android:versionName="1.39">
+          android:versionCode="41"
+          android:versionName="1.40">
           
     <uses-feature android:name="android.hardware.camera" android:required="false" />
     <uses-feature android:name="android.hardware.bluetooth_le" android:required="false"/>
