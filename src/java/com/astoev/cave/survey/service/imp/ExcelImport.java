@@ -27,6 +27,7 @@ import com.j256.ormlite.misc.TransactionManager;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
 
 import java.io.File;
@@ -325,10 +326,14 @@ public class ExcelImport {
         return  units;
     }
 
-    private static Float getNotNullFloatCellValue(Row row, int cellIndex) {
-        Cell cellLength = row.getCell(cellIndex);
-        if (cellLength != null && cellLength.getStringCellValue() != null) {
-            return Float.parseFloat(cellLength.getStringCellValue());
+    private static Float getNotNullFloatCellValue(Row row, int index) {
+        Cell cell = row.getCell(index);
+        if (cell != null) {
+            DataFormatter formatter = new DataFormatter();
+            String val = formatter.formatCellValue(cell);
+            if (StringUtils.isNotEmpty(val)) {
+                return Float.parseFloat(val);
+            }
         }
         return  null;
     }
