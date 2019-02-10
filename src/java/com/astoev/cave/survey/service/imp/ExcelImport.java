@@ -52,6 +52,7 @@ public class ExcelImport {
         // locate and open
         FileInputStream file = null;
         HSSFWorkbook workbook = null;
+        int rowNum = 1;
         try {
             file = new FileInputStream(aPath);
             workbook = new HSSFWorkbook(file);
@@ -66,6 +67,7 @@ public class ExcelImport {
 
             while (rowIterator.hasNext()) {
                 Row row = rowIterator.next();
+                rowNum++;
                 LegData leg = new LegData();
                 Cell cellFrom = row.getCell(ExcelExport.CELL_FROM);
                 if (cellFrom == null) {
@@ -295,9 +297,9 @@ public class ExcelImport {
             });
 
         } catch (Exception e) {
-            Log.e(Constants.LOG_TAG_SERVICE, "Failed with import", e);
-            String errorMessage = ConfigUtil.getContext().getString(R.string.error) + " - "
-                    + e.getClass().getSimpleName() + " : " + e.getMessage();
+            String errorMessage = ConfigUtil.getContext().getString(R.string.settings_import_error,
+                    rowNum, e.getClass().getSimpleName(), e.getMessage());
+            Log.e(Constants.LOG_TAG_SERVICE, errorMessage, e);
             UIUtilities.showNotification(errorMessage);
         } finally {
             StreamUtil.closeQuietly(file);
