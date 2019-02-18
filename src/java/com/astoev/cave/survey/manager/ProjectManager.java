@@ -11,7 +11,7 @@ import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.service.Workspace;
-import com.astoev.cave.survey.util.DaoUtil;
+import com.astoev.cave.survey.util.GalleryUtil;
 import com.astoev.cave.survey.util.PointUtil;
 import com.j256.ormlite.misc.TransactionManager;
 
@@ -57,7 +57,7 @@ public class ProjectManager {
                         getWorkspace().setActiveProject(newProject);
 
                         // gallery
-                        Gallery firstGallery = DaoUtil.createGallery(true);
+                        Gallery firstGallery = GalleryUtil.createGallery(true);
 
                         // points
                         Point startPoint = PointUtil.createFirstPoint();

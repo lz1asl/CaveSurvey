@@ -48,6 +48,7 @@ import com.astoev.cave.survey.service.orientation.SlopeChangedListener;
 import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.util.FileStorageUtil;
 import com.astoev.cave.survey.util.FileUtils;
+import com.astoev.cave.survey.util.GalleryUtil;
 import com.astoev.cave.survey.util.PermissionUtil;
 import com.astoev.cave.survey.util.PointUtil;
 import com.astoev.cave.survey.util.StringUtils;
@@ -298,7 +299,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                             Leg legEdited = getCurrentLeg();
 
                             if (getIntent().getBooleanExtra(Constants.GALLERY_NEW, false)) {
-                                Gallery newGallery = DaoUtil.createGallery(false);
+                                Gallery newGallery = GalleryUtil.createGallery(false);
                                 legEdited.setGalleryId(newGallery.getId());
                             }
 

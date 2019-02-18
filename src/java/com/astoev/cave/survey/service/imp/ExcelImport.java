@@ -18,6 +18,7 @@ import com.astoev.cave.survey.service.Workspace;
 import com.astoev.cave.survey.service.export.excel.ExcelExport;
 import com.astoev.cave.survey.util.ConfigUtil;
 import com.astoev.cave.survey.util.DaoUtil;
+import com.astoev.cave.survey.util.GalleryUtil;
 import com.astoev.cave.survey.util.LocationUtil;
 import com.astoev.cave.survey.util.PointUtil;
 import com.astoev.cave.survey.util.StreamUtil;
@@ -290,7 +291,7 @@ public class ExcelImport {
                                 Log.i(Constants.LOG_TAG_SERVICE, "Got gallery " + gallery);
                         if (gallery == null) {
                             Log.i(Constants.LOG_TAG_SERVICE, "Creating gallery " + aGalleryName);
-                            gallery = DaoUtil.createGallery(aProject, aGalleryName);
+                            gallery = GalleryUtil.createGallery(aProject, aGalleryName);
                         }
                     }
                     return gallery;
