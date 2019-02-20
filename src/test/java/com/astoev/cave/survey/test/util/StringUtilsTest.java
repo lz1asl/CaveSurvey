@@ -1,9 +1,8 @@
 package com.astoev.cave.survey.test.util;
 
 import com.astoev.cave.survey.util.StringUtils;
-import junit.framework.TestCase;
 
-import junit.framework.Assert;
+import junit.framework.TestCase;
 
 public class StringUtilsTest extends TestCase {
 

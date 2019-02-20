@@ -1,4 +1,4 @@
-package com.astoev.cave.survey.test.service.bluetooth.util;
+package com.astoev.cave.survey.test.service.bluetooth.device;
 
 import com.astoev.cave.survey.service.bluetooth.device.comm.AbstractBluetoothRFCOMMDevice;
 import com.astoev.cave.survey.service.bluetooth.device.comm.DistoXBluetoothDevice;
