@@ -62,6 +62,8 @@ import java.util.concurrent.Callable;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.Manifest.permission.CAMERA;
+import static com.astoev.cave.survey.model.Leg.TRIANGLE_NONE;
+import static com.astoev.cave.survey.model.Leg.TRIANGLE_THIRD_LEG;
 
 /**
  * Created by IntelliJ IDEA.
@@ -82,8 +84,8 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
     private static final int PERM_REQ_CODE_GPS = 102;
 
     private String mNewNote = null;
-
     private String mCurrentPhotoPath;
+    private int triangleSequence = TRIANGLE_NONE;
 
     /**
      * Current leg to work with
@@ -101,29 +103,38 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.point);
         mNewNote = null;
+        triangleSequence = getIntent().getIntExtra(Constants.TRIANGLE_NEW, 0);
 
         // initialize the view with leg data only if the activity is new
         if (savedInstanceState == null) {
             loadPointData();
         }
 
-        // handle double click for reading built-in azimuth and slope
+        Leg legEdited = getCurrentLeg();
+
         EditText azimuth = (EditText) findViewById(R.id.point_azimuth);
         EditText slope = (EditText) findViewById(R.id.point_slope);
-        MeasurementsUtil.bindSensorsAwareFields(azimuth, slope, getSupportFragmentManager());
+        if (isTriangle()) {
+            // only slope processed
+            MeasurementsUtil.bindSensorsAwareFields(null, slope, getSupportFragmentManager());
+            azimuth.setEnabled(false);
+        } else {
+            // handle double click for reading built-in azimuth and slope
+            MeasurementsUtil.bindSensorsAwareFields(azimuth, slope, getSupportFragmentManager());
 
-        Leg legEdited = getCurrentLeg();
-        if (legEdited != null) {
-            GPSActivity.initSavedLocationContainer(legEdited.getFromPoint(), this, savedInstanceState);
+            if (legEdited != null) {
+                GPSActivity.initSavedLocationContainer(legEdited.getFromPoint(), this, savedInstanceState);
+            }
+
+            loadLegPhotos(legEdited);
+
+            loadLegVectors(legEdited);
+
+            // make swipe work
+            View view = findViewById(R.id.point_main_view);
+            view.setOnTouchListener(this);
         }
 
-        loadLegPhotos(legEdited);
-
-        loadLegVectors(legEdited);
-
-        // make swipe work
-        View view = findViewById(R.id.point_main_view);
-        view.setOnTouchListener(this);
     }
 
     @Override
@@ -182,7 +193,13 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
     @Override
     protected String getScreenTitle() {
         try {
-            StringBuilder builder = new StringBuilder(getString(R.string.leg));
+            StringBuilder builder = new StringBuilder();
+            if (isTriangle()) {
+                builder.append(getString(R.string.main_add_triangle));
+                builder.append("(").append(triangleSequence).append(")");
+            } else {
+                builder.append(getString(R.string.leg));
+            }
             builder.append(getCurrentLeg().buildLegDescription(true));
 
             return builder.toString();
@@ -251,6 +268,10 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                 }
             }
 
+            if (legEdited.getTriangleSequence() != null) {
+                triangleSequence = legEdited.getTriangleSequence();
+            }
+
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to render point", e);
             UIUtilities.showNotification(R.string.error);
@@ -269,10 +290,15 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
             boolean valid =  UIUtilities.validateNumber(distance, true);
 
             final EditText azimuth = (EditText) findViewById(R.id.point_azimuth);
-            valid = valid && UIUtilities.validateNumber(azimuth, true) && UIUtilities.checkAzimuth(azimuth);
+            // don't require azimuth for triangles
+            if (!isTriangle()) {
+                valid = valid && UIUtilities.validateNumber(azimuth, true) && UIUtilities.checkAzimuth(azimuth);
+            }
 
             final EditText slope = (EditText) findViewById(R.id.point_slope);
-            valid = valid && UIUtilities.validateNumber(slope, false) && UIUtilities.checkSlope(slope);
+            // slope assumed zero unless triangles are calculated
+            boolean slopeRequired = isTriangle() ? true : false;
+            valid = valid && UIUtilities.validateNumber(slope, slopeRequired) && UIUtilities.checkSlope(slope);
 
             final EditText up = (EditText) findViewById(R.id.point_up);
             valid = valid && UIUtilities.validateNumber(up, false);
@@ -317,6 +343,8 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                             legEdited.setLeft(StringUtils.getFromEditTextNotNull(left));
                             legEdited.setRight(StringUtils.getFromEditTextNotNull(right));
 
+                            legEdited.setTriangleSequence(triangleSequence);
+
                             // save leg
                             getWorkspace().getDBHelper().getLegDao().update(legEdited);
 
@@ -357,7 +385,24 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 
     public void saveButton() {
         if (saveLeg()) {
-            finish();
+            if (isLastTriangleLeg()) {
+                // get back and calculate the angles
+                calculateTriangle();
+
+                // then get back
+                finish();
+            } else if (isTriangle()) {
+                // start next triangle leg
+                triangleSequence ++;
+                Log.i(Constants.LOG_TAG_UI, "Triangle leg now " + triangleSequence);
+                Intent intent = getIntent();
+                intent.putExtra(Constants.TRIANGLE_NEW, triangleSequence);
+                finish();
+                startActivity(intent);
+            } else {
+                // work on this screen has completed
+                finish();
+            }
         }
     }
 
@@ -651,7 +696,16 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                     currGalleryId = null;
                 } else {
                     newFrom = getWorkspace().getLastGalleryPoint(currGalleryId);
-                    newTo = PointUtil.generateNextPoint(currGalleryId);
+                    if (isLastTriangleLeg()) {
+                        // find second leg
+                        Leg secondLeg = DaoUtil.getLegByToPoint(newFrom);
+                        // find first leg
+                        Leg firstLeg = DaoUtil.getLegByToPoint(secondLeg.getFromPoint());
+                        // close the triangle
+                        newTo = firstLeg.getFromPoint();
+                    } else {
+                        newTo = PointUtil.generateNextPoint(currGalleryId);
+                    }
                 }
 
                 Log.i(Constants.LOG_TAG_UI, "PointView for new point");
@@ -1095,6 +1149,29 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 
             default:
                 Log.i(Constants.LOG_TAG_SERVICE, "Ignore request " + requestCode);
+        }
+    }
+
+    private boolean isTriangle() {
+        return triangleSequence > TRIANGLE_NONE;
+    }
+
+    private boolean isLastTriangleLeg() {
+        return triangleSequence == TRIANGLE_THIRD_LEG;
+    }
+
+    private void calculateTriangle() {
+
+        Log.i(Constants.LOG_TAG_UI, "Triangle closed, calculating");
+        try {
+            Leg thirdLeg = getCurrentLeg();
+            Leg secondLeg = DaoUtil.getLegByToPoint(thirdLeg.getFromPoint());
+            Leg firstLeg = DaoUtil.getLegByToPoint(secondLeg.getFromPoint());
+            // now we have 3 lengths, should be able to calculate the angles, see https://www.mathsisfun.com/algebra/trig-solving-sss-triangles.html
+
+        } catch (SQLException e) {
+            UIUtilities.showNotification(R.string.error);
+            Log.e(Constants.LOG_TAG_UI, "Triangle not closed not saved", e);
         }
     }
 }

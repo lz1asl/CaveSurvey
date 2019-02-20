@@ -74,6 +74,7 @@
     <string name="main_add_leg">Следваща отсечка</string>
     <string name="main_add_branch">Следваща галерия</string>
     <string name="main_add_middlepoint">Междинна точка</string>
+    <string name="main_add_triangle">Триъгълник</string>
     <string name="main_add_note">Бележка</string>
     <string name="main_add_sketch">Скица</string>
     <string name="main_add_photo">Снимка</string>

@@ -276,7 +276,7 @@ public class MainActivity extends MainMenuActivity implements AddNewSelectedHand
         try {
             if (0 == itemArg) {
                 // next leg
-                addLeg(false);
+                addLeg(false, 0);
             } else if (1 == itemArg) {
                 Leg prevLeg = DaoUtil.getLegByToPoint(Workspace.getCurrentInstance().getActiveLeg().getFromPoint());
                 if (prevLeg == null) {
@@ -284,10 +284,12 @@ public class MainActivity extends MainMenuActivity implements AddNewSelectedHand
                     UIUtilities.showNotification(R.string.gallery_after_first_point);
                 } else {
                     // next gallery
-                    addLeg(true);
+                    addLeg(true, 0);
                 }
             } else if (2 == itemArg) {
                 requestLengthAndAddMiddle();
+            } else if(3 == itemArg) {
+                addLeg(false, 1);
             }
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Error adding", e);
@@ -299,11 +301,12 @@ public class MainActivity extends MainMenuActivity implements AddNewSelectedHand
         new MiddlePointDialog().show(getSupportFragmentManager(), "middle_point_dialog");
     }
 
-    private void addLeg(final boolean isDeviation) throws SQLException {
+    private void addLeg(final boolean isDeviation, final int triangleSequence) throws SQLException {
         Log.i(Constants.LOG_TAG_UI, "Creating leg");
 
         Intent intent = new Intent(MainActivity.this, PointActivity.class);
         intent.putExtra(Constants.GALLERY_NEW, isDeviation);
+        intent.putExtra(Constants.TRIANGLE_NEW, triangleSequence);
 
         startActivity(intent);
     }

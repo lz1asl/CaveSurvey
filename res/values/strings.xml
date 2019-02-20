@@ -84,6 +84,7 @@
     <string name="main_add_leg">Next Leg</string>
     <string name="main_add_branch">Next Gallery</string>
     <string name="main_add_middlepoint">Middle point</string>
+    <string name="main_add_triangle">Triangle</string>
     <string name="main_add_note">Note</string>
     <string name="main_add_sketch">Draw</string>
     <string name="main_add_photo">Photo</string>

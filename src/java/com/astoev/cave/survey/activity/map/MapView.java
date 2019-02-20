@@ -55,6 +55,7 @@ public class MapView extends View {
     private final Paint gridPaint = new Paint();
     private final Paint vectorsPaint = new Paint();
     private final Paint vectorPointPaint = new Paint();
+    private final Paint trianglePaint = new Paint();
     private int scale = 10;
     private int mapCenterMoveX = 0;
     private int mapCenterMoveY = 0;
@@ -100,14 +101,20 @@ public class MapView extends View {
 
         polygonPaint.setColor(Color.RED);
         polygonPaint.setStrokeWidth(2);
+        polygonPaint.setTextSize(polygonPaint.getTextSize() * screenScale);
         polygonWidthPaint.setColor(Color.RED);
         polygonWidthPaint.setStrokeWidth(1);
         polygonWidthPaint.setAlpha(50);
-        polygonPaint.setTextSize(polygonPaint.getTextSize() * screenScale);
         overlayPaint.setColor(Color.WHITE);
         overlayPaint.setTextSize(overlayPaint.getTextSize() * screenScale);
         youAreHerePaint.setColor(Color.WHITE);
         youAreHerePaint.setAlpha(50);
+        trianglePaint.setColor(Color.RED);
+        trianglePaint.setStrokeWidth(2);
+        trianglePaint.setTextSize(trianglePaint.getTextSize() * screenScale);
+        trianglePaint.setStyle(Paint.Style.STROKE);
+        trianglePaint.setPathEffect(new DashPathEffect(new float[]{3, 4}, 0));
+        trianglePaint.setAlpha(50);
 
         // semi transparent white
         gridPaint.setColor(Color.parseColor("#11FFFFFF"));
@@ -235,6 +242,7 @@ public class MapView extends View {
                                 polygonWidthPaint.setColor(galleryColors.get(l.getGalleryId()));
                                 vectorsPaint.setColor(galleryColors.get(l.getGalleryId()));
                                 vectorPointPaint.setColor(galleryColors.get(l.getGalleryId()));
+                                trianglePaint.setColor(galleryColors.get(l.getGalleryId()));
 
                                 DaoUtil.refreshPoint(l.getFromPoint());
 
@@ -295,6 +303,7 @@ public class MapView extends View {
                             polygonWidthPaint.setColor(galleryColors.get(l.getGalleryId()));
                             vectorsPaint.setColor(galleryColors.get(l.getGalleryId()));
                             vectorPointPaint.setColor(galleryColors.get(l.getGalleryId()));
+                            trianglePaint.setColor(galleryColors.get(l.getGalleryId()));
 
 //                            Log.i(Constants.LOG_TAG_UI, "Drawing leg " + l.getFromPoint().getName() + ":" + l.getToPoint().getName() + "-" + l.getGalleryId());
 
@@ -323,7 +332,11 @@ public class MapView extends View {
 
                         // leg
                         if (!l.isMiddle()) {
-                            canvas.drawLine(mapCenterMoveX + first.getX(), mapCenterMoveY + first.getY(), mapCenterMoveX + second.getX(), mapCenterMoveY + second.getY(), polygonPaint);
+                            if (l.isThirdTriangleLeg()) {
+                                canvas.drawLine(mapCenterMoveX + first.getX(), mapCenterMoveY + first.getY(), mapCenterMoveX + second.getX(), mapCenterMoveY + second.getY(), trianglePaint);
+                            } else {
+                                canvas.drawLine(mapCenterMoveX + first.getX(), mapCenterMoveY + first.getY(), mapCenterMoveX + second.getX(), mapCenterMoveY + second.getY(), polygonPaint);
+                            }
                         }
 
                         Leg prevLeg = DaoUtil.getLegByToPoint(l.getFromPoint());

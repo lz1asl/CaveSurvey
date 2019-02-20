@@ -84,6 +84,7 @@
     <string name="main_add_leg">下一测量段</string>
     <string name="main_add_branch">下一通道</string>
     <string name="main_add_middlepoint">中间点</string>
+    <string name="main_add_triangle">Triangle</string>
     <string name="main_add_note">备注</string>
     <string name="main_add_sketch">画图</string>
     <string name="main_add_photo">照片</string>

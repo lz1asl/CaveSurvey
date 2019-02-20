@@ -34,7 +34,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private static final int DATABASE_VERSION_1 = 1;
     private static final int DATABASE_VERSION_2 = 2;
-    private static final int DATABASE_VERSION_LATEST = 3;
+    private static final int DATABASE_VERSION_3 = 3;
+    private static final int DATABASE_VERSION_4 = 4;
+    private static final int DATABASE_VERSION_LATEST = DATABASE_VERSION_4;
     private static final String DATABASE_NAME = "CaveSurvey";
 
     private Dao<Leg, Integer> mLegDao;
@@ -103,10 +105,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 if (aOldVersion < DATABASE_VERSION_2) {
                     Log.i(Constants.LOG_TAG_DB, "Upgrading DB to V2");
                     aSqLiteDatabase.execSQL("alter table legs add column middle_point_distance decimal default null");
-                    Log.i(Constants.LOG_TAG_DB, "Upgrade success");
+                    Log.i(Constants.LOG_TAG_DB, "Upgrade to V2 success");
                 }
 
-                if (aOldVersion < DATABASE_VERSION_LATEST) {
+                if (aOldVersion < DATABASE_VERSION_3) {
                     Log.i(Constants.LOG_TAG_DB, "Upgrading DB to V3");
                     aSqLiteDatabase.execSQL("alter table vectors add column gallery_id decimal default null");
                     aSqLiteDatabase.execSQL("update vectors set gallery_id = " +
@@ -126,7 +128,14 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
                     aSqLiteDatabase.setTransactionSuccessful();
 
-                    Log.i(Constants.LOG_TAG_DB, "Upgrade success");
+                    Log.i(Constants.LOG_TAG_DB, "Upgrade to V3 success");
+                }
+
+                if (aOldVersion < DATABASE_VERSION_4) {
+                    Log.i(Constants.LOG_TAG_DB, "Upgrading DB to V4");
+                    aSqLiteDatabase.execSQL("alter table legs add column triangle_sequence decimal default 0");
+                    aSqLiteDatabase.execSQL("update legs set triangle_sequence = 0");
+                    Log.i(Constants.LOG_TAG_DB, "Upgrade to V4 success");
                 }
 
             } finally {

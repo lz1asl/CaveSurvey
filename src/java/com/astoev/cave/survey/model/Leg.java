@@ -29,6 +29,13 @@ public class Leg implements Serializable {
     public static final String COLUMN_TO_POINT = "to_point_id";
     public static final String COLUMN_GALLERY_ID = "gallery_id";
     public static final String COLUMN_MIDDLE_POINT_AT_DISTANCE = "middle_point_distance";
+    public static final String COLUMN_TRIANGLE_SEQUENCE = "triangle_sequence";
+
+    public static final int TRIANGLE_NONE = 0;
+    public static final int TRIANGLE_FIRST_LEG = 1;
+    public static final int TRIANGLE_SECOND_LEG = 2;
+    public static final int TRIANGLE_THIRD_LEG = 3;
+
 
     @DatabaseField(generatedId = true, columnName = COLUMN_ID)
     private Integer mId;
@@ -56,6 +63,8 @@ public class Leg implements Serializable {
     private Integer mGalleryId;
     @DatabaseField(columnName = COLUMN_MIDDLE_POINT_AT_DISTANCE)
     private Float mMiddlePointDistance;
+    @DatabaseField(columnName = COLUMN_TRIANGLE_SEQUENCE)
+    private Integer mTriangleSequence;
 
 
     public Leg() {
@@ -248,6 +257,14 @@ public class Leg implements Serializable {
         mMiddlePointDistance = aMiddlePointDistance;
     }
 
+    public Integer getTriangleSequence() {
+        return mTriangleSequence;
+    }
+
+    public void setTriangleSequence(Integer aTriangleSequence) {
+        mTriangleSequence = aTriangleSequence;
+    }
+
     /**
 	 * @see java.lang.Object#toString()
 	 */
@@ -286,6 +303,14 @@ public class Leg implements Serializable {
 
     public boolean isMiddle() {
         return mMiddlePointDistance != null;
+    }
+
+    public boolean isTriangle() {
+        return mTriangleSequence != TRIANGLE_NONE;
+    }
+
+    public boolean isThirdTriangleLeg() {
+	    return mTriangleSequence == TRIANGLE_THIRD_LEG;
     }
 
 }
