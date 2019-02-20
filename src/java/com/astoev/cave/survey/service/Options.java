@@ -47,7 +47,11 @@ public class Options {
     }
 
     public static void createOption(String aCode, String aValue) throws SQLException {
-        Option o = new Option(aCode, aValue, Workspace.getCurrentInstance().getActiveProject());
+        createOption(aCode, aValue, Workspace.getCurrentInstance().getActiveProject());
+    }
+
+    public static void createOption(String aCode, String aValue, Project aProject) throws SQLException {
+        Option o = new Option(aCode, aValue, aProject);
         Workspace.getCurrentInstance().getDBHelper().getOptionsDao().create(o);
     }
 
