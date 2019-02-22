@@ -30,14 +30,18 @@ public class AddNewDialog extends DialogFragment {
     private static final int[] ADD_ITEM_LABELS = {R.string.main_add_leg,
             R.string.main_add_branch,
             R.string.main_add_middlepoint,
+            R.string.main_add_triangle_gallery,
             R.string.main_add_triangle
     };
+
+    private static final AddNewSelectedHandler.NewItem[] NEW_ITEMS = AddNewSelectedHandler.NewItem.values();
 
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         final String[] labels = new String[ADD_ITEM_LABELS.length];
+        // TODO filter only applicable
         for (int i = 0; i < ADD_ITEM_LABELS.length; i++) {
             labels[i] = getString(ADD_ITEM_LABELS[i]);
         }
@@ -48,10 +52,11 @@ public class AddNewDialog extends DialogFragment {
         ListAdapter adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, labels);
 
         builder.setSingleChoiceItems(adapter, -1, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int item) {
+            public void onClick(DialogInterface dialog, int itemIndex) {
                 Activity activity = getActivity();
                 if (activity instanceof AddNewSelectedHandler) {
-                    ((AddNewSelectedHandler) activity).addNewSelected(item);
+                    AddNewSelectedHandler.NewItem newItem = NEW_ITEMS[itemIndex];
+                    ((AddNewSelectedHandler) activity).addNewSelected(newItem);
                 } else {
                     Log.e(Constants.LOG_TAG_UI, "Parent activity not instance of AddNewSelectedHandler");
                     UIUtilities.showNotification(R.string.error);

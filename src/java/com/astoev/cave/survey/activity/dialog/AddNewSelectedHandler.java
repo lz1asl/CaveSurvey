@@ -8,5 +8,9 @@ package com.astoev.cave.survey.activity.dialog;
  */
 public interface AddNewSelectedHandler {
 
-    void addNewSelected(int itemArg);
+    public enum NewItem {
+        LEG, BRANCH, MIDDLE_POINT, TRIANGLE_GALLERY, TRIANGLE;
+    }
+
+    void addNewSelected(NewItem itemArg);
 }

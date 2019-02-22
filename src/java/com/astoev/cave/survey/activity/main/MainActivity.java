@@ -264,7 +264,7 @@ public class MainActivity extends MainMenuActivity implements AddNewSelectedHand
      *
      * @param itemArg item selected
      */
-    public void addNewSelected(int itemArg){
+    public void addNewSelected(NewItem itemArg){
 
         // dismiss the dialog
         Fragment prev = getSupportFragmentManager().findFragmentByTag(AddNewDialog.ADD_NEW_DIALOG);
@@ -274,22 +274,38 @@ public class MainActivity extends MainMenuActivity implements AddNewSelectedHand
         }
 
         try {
-            if (0 == itemArg) {
-                // next leg
-                addLeg(false, 0);
-            } else if (1 == itemArg) {
-                Leg prevLeg = DaoUtil.getLegByToPoint(Workspace.getCurrentInstance().getActiveLeg().getFromPoint());
-                if (prevLeg == null) {
-                    // not supported
-                    UIUtilities.showNotification(R.string.gallery_after_first_point);
-                } else {
-                    // next gallery
-                    addLeg(true, 0);
-                }
-            } else if (2 == itemArg) {
-                requestLengthAndAddMiddle();
-            } else if(3 == itemArg) {
-                addLeg(false, 1);
+            switch (itemArg) {
+                case LEG:
+                    // next leg
+                    addLeg(false, false);
+                    break;
+
+                case BRANCH:
+                    Leg prevLeg = DaoUtil.getLegByToPoint(Workspace.getCurrentInstance().getActiveLeg().getFromPoint());
+                    if (prevLeg == null) {
+                        // not supported
+                        UIUtilities.showNotification(R.string.gallery_after_first_point);
+                    } else {
+                        // next gallery
+                        addLeg(true, false);
+                    }
+                    break;
+
+                case MIDDLE_POINT:
+                    requestLengthAndAddMiddle();
+                    break;
+
+                case TRIANGLE_GALLERY:
+                    addLeg(true, true);
+                    break;
+
+                case TRIANGLE:
+                    addLeg(false, true);
+                    break;
+
+                default:
+                    throw new RuntimeException("Not implemented");
+
             }
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Error adding", e);
@@ -301,7 +317,7 @@ public class MainActivity extends MainMenuActivity implements AddNewSelectedHand
         new MiddlePointDialog().show(getSupportFragmentManager(), "middle_point_dialog");
     }
 
-    private void addLeg(final boolean isDeviation, final int triangleSequence) throws SQLException {
+    private void addLeg(final boolean isDeviation, final boolean triangleSequence) throws SQLException {
         Log.i(Constants.LOG_TAG_UI, "Creating leg");
 
         Intent intent = new Intent(MainActivity.this, PointActivity.class);

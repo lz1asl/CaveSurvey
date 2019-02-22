@@ -62,7 +62,9 @@ import java.util.concurrent.Callable;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.Manifest.permission.CAMERA;
+import static com.astoev.cave.survey.model.Leg.TRIANGLE_FIRST_LEG;
 import static com.astoev.cave.survey.model.Leg.TRIANGLE_NONE;
+import static com.astoev.cave.survey.model.Leg.TRIANGLE_SECOND_LEG;
 import static com.astoev.cave.survey.model.Leg.TRIANGLE_THIRD_LEG;
 
 /**
@@ -103,7 +105,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.point);
         mNewNote = null;
-        triangleSequence = getIntent().getIntExtra(Constants.TRIANGLE_NEW, 0);
+        triangleSequence = TRIANGLE_NONE;
 
         // initialize the view with leg data only if the activity is new
         if (savedInstanceState == null) {
@@ -114,7 +116,11 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 
         EditText azimuth = (EditText) findViewById(R.id.point_azimuth);
         EditText slope = (EditText) findViewById(R.id.point_slope);
-        if (isTriangle()) {
+
+        if (isTriangleFirstLeg()) {
+            // handle double click for reading built-in azimuth and slope
+            MeasurementsUtil.bindSensorsAwareFields(azimuth, slope, getSupportFragmentManager());
+        } else if (isTriangle()) {
             // only slope processed
             MeasurementsUtil.bindSensorsAwareFields(null, slope, getSupportFragmentManager());
             azimuth.setEnabled(false);
@@ -135,6 +141,8 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
             view.setOnTouchListener(this);
         }
 
+        // update the title
+        setTitle(getScreenTitle());
     }
 
     @Override
@@ -291,7 +299,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 
             final EditText azimuth = (EditText) findViewById(R.id.point_azimuth);
             // don't require azimuth for triangles
-            if (!isTriangle()) {
+            if (!isTriangle() || isTriangleFirstLeg()) {
                 valid = valid && UIUtilities.validateNumber(azimuth, true) && UIUtilities.checkAzimuth(azimuth);
             }
 
@@ -385,7 +393,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 
     public void saveButton() {
         if (saveLeg()) {
-            if (isLastTriangleLeg()) {
+            if (isTriangleLastLeg()) {
                 // get back and calculate the angles
                 calculateTriangle();
 
@@ -689,20 +697,29 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 
                 // another leg, starting from the latest in the gallery
                 boolean newGalleryFlag = extras != null && extras.getBoolean(Constants.GALLERY_NEW, false);
+                boolean trianglFlag = extras != null && extras.getBoolean(Constants.TRIANGLE_NEW, false);
                 Point newFrom, newTo;
                 if (newGalleryFlag) {
                     newFrom = getWorkspace().getActiveLeg().getFromPoint();
                     newTo = PointUtil.createSecondPoint();
                     currGalleryId = null;
+                    if (trianglFlag) {
+                        triangleSequence = TRIANGLE_FIRST_LEG;
+                    }
                 } else {
                     newFrom = getWorkspace().getLastGalleryPoint(currGalleryId);
-                    if (isLastTriangleLeg()) {
-                        // find second leg
-                        Leg secondLeg = DaoUtil.getLegByToPoint(newFrom);
-                        // find first leg
-                        Leg firstLeg = DaoUtil.getLegByToPoint(secondLeg.getFromPoint());
-                        // close the triangle
-                        newTo = firstLeg.getFromPoint();
+
+                    if (trianglFlag) {
+                        Leg prevLeg = DaoUtil.getLegByToPoint(newFrom);
+                        triangleSequence = prevLeg.getTriangleSequence() + 1;
+                        if (prevLeg.getTriangleSequence() == TRIANGLE_SECOND_LEG) {
+                            // time to close the loop
+                            Leg firstLeg = DaoUtil.getLegByToPoint(prevLeg.getFromPoint());
+                            newTo = firstLeg.getFromPoint();
+                            DaoUtil.refreshPoint(newTo);
+                        } else {
+                            newTo = PointUtil.generateNextPoint(currGalleryId);
+                        }
                     } else {
                         newTo = PointUtil.generateNextPoint(currGalleryId);
                     }
@@ -710,6 +727,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 
                 Log.i(Constants.LOG_TAG_UI, "PointView for new point");
                 mCurrentLeg = new Leg(newFrom, newTo, getWorkspace().getActiveProject(), currGalleryId);
+                mCurrentLeg.setTriangleSequence(triangleSequence);
             } catch (SQLException sqle) {
                 throw new RuntimeException(sqle);
             }
@@ -1156,7 +1174,11 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         return triangleSequence > TRIANGLE_NONE;
     }
 
-    private boolean isLastTriangleLeg() {
+    private boolean isTriangleFirstLeg() {
+        return triangleSequence == TRIANGLE_FIRST_LEG;
+    }
+
+    private boolean isTriangleLastLeg() {
         return triangleSequence == TRIANGLE_THIRD_LEG;
     }
 
@@ -1168,6 +1190,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
             Leg secondLeg = DaoUtil.getLegByToPoint(thirdLeg.getFromPoint());
             Leg firstLeg = DaoUtil.getLegByToPoint(secondLeg.getFromPoint());
             // now we have 3 lengths, should be able to calculate the angles, see https://www.mathsisfun.com/algebra/trig-solving-sss-triangles.html
+
 
         } catch (SQLException e) {
             UIUtilities.showNotification(R.string.error);
