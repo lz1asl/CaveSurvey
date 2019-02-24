@@ -404,7 +404,8 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                 triangleSequence ++;
                 Log.i(Constants.LOG_TAG_UI, "Triangle leg now " + triangleSequence);
                 Intent intent = getIntent();
-                intent.putExtra(Constants.TRIANGLE_NEW, triangleSequence);
+                intent.putExtra(Constants.TRIANGLE_NEW, true);
+                intent.putExtra(Constants.GALLERY_NEW, false);
                 finish();
                 startActivity(intent);
             } else {
@@ -1189,8 +1190,18 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
             Leg thirdLeg = getCurrentLeg();
             Leg secondLeg = DaoUtil.getLegByToPoint(thirdLeg.getFromPoint());
             Leg firstLeg = DaoUtil.getLegByToPoint(secondLeg.getFromPoint());
-            // now we have 3 lengths, should be able to calculate the angles, see https://www.mathsisfun.com/algebra/trig-solving-sss-triangles.html
+            // now we have 3 lengths, should be able to calculate the angles
 
+            float secondLegAzimuth = MapUtilities.calculateTriangleSecondLegAzimuth(firstLeg, secondLeg, thirdLeg);
+            secondLeg.setAzimuth(secondLegAzimuth);
+            getWorkspace().getDBHelper().getLegDao().update(secondLeg);
+            getWorkspace().setActiveLeg(secondLeg);
+
+            float thirdLegAzimuth = MapUtilities.calculateTriangleThirdLegAzimuth(firstLeg, secondLeg, thirdLeg);
+            thirdLeg.setAzimuth(thirdLegAzimuth);
+            getWorkspace().getDBHelper().getLegDao().update(thirdLeg);
+
+            Log.i(Constants.LOG_TAG_UI, "Triangle updated");
 
         } catch (SQLException e) {
             UIUtilities.showNotification(R.string.error);

@@ -317,12 +317,12 @@ public class MainActivity extends MainMenuActivity implements AddNewSelectedHand
         new MiddlePointDialog().show(getSupportFragmentManager(), "middle_point_dialog");
     }
 
-    private void addLeg(final boolean isDeviation, final boolean triangleSequence) throws SQLException {
+    private void addLeg(final boolean isDeviation, final boolean isTriangle) throws SQLException {
         Log.i(Constants.LOG_TAG_UI, "Creating leg");
 
         Intent intent = new Intent(MainActivity.this, PointActivity.class);
         intent.putExtra(Constants.GALLERY_NEW, isDeviation);
-        intent.putExtra(Constants.TRIANGLE_NEW, triangleSequence);
+        intent.putExtra(Constants.TRIANGLE_NEW, isTriangle);
 
         startActivity(intent);
     }

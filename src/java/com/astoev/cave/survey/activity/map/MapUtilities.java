@@ -3,6 +3,7 @@ package com.astoev.cave.survey.activity.map;
 import android.graphics.Color;
 
 import com.astoev.cave.survey.Constants;
+import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Option;
 import com.astoev.cave.survey.service.Options;
 
@@ -161,5 +162,42 @@ public class MapUtilities {
 
     public static boolean isSlopeInGradsValid(Float aSlope) {
         return aSlope != null && aSlope >= Option.MIN_VALUE_SLOPE_GRADS && aSlope <= Option.MAX_VALUE_SLOPE_GRADS;
+    }
+
+    public static float calculateTriangleSecondLegAzimuth(Leg aFirstLeg, Leg aSecondLeg, Leg aThirdLeg) {
+        float firstLegAzimuth = aFirstLeg.getAzimuth();
+
+        float firstLegDistance = aFirstLeg.getDistance(); // TODO inclination and units
+        float secondLegDistance = aSecondLeg.getDistance();
+        float thirdLegDistance = aThirdLeg.getDistance();
+
+        float firstSecondLegAngle = calculateTriangleAngle(firstLegDistance, secondLegDistance, thirdLegDistance);
+        float secondLegAzimuth = firstLegAzimuth + firstSecondLegAngle;
+        return secondLegAzimuth;
+    }
+
+    public static float calculateTriangleThirdLegAzimuth(Leg aFirstLeg, Leg aSecondLeg, Leg aThirdLeg) {
+
+        float secondLegAzimuth = aSecondLeg.getAzimuth();
+
+        float firstLegDistance = aFirstLeg.getDistance(); // TODO inclination and units
+        float secondLegDistance = aSecondLeg.getDistance();
+        float thirdLegDistance = aThirdLeg.getDistance();
+
+        float secondThirdLegAngle = calculateTriangleAngle(secondLegDistance, thirdLegDistance, firstLegDistance);
+        float thirdLegAzimuth = secondLegAzimuth + secondThirdLegAngle;
+        return thirdLegAzimuth;
+    }
+
+    /**
+     * gives the angle in degrees between the first two legs
+     * @see https://www.mathsisfun.com/algebra/trig-solving-sss-triangles.html
+      */
+    public static float calculateTriangleAngle(float firstDistance, float secondDistance, float thirdDistance) {
+        double angleCos =  (Math.pow(firstDistance, 2) + Math.pow(secondDistance, 2) - Math.pow(thirdDistance, 2))
+                / (2 * firstDistance * secondDistance);
+        double angleAcos = Math.acos(angleCos);
+        float angle = (float) Math.toDegrees(angleAcos);
+        return angle;
     }
 }

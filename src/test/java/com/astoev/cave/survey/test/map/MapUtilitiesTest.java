@@ -1,6 +1,7 @@
 package com.astoev.cave.survey.test.map;
 
 import com.astoev.cave.survey.activity.map.MapUtilities;
+import com.astoev.cave.survey.model.Leg;
 
 import junit.framework.TestCase;
 
@@ -108,4 +109,54 @@ public class MapUtilitiesTest extends TestCase {
         assertEquals(400f, MapUtilities.degreesToGrads(360f), 0.001);
     }
 
+    public void testCalculateTriangleAngle() {
+        // equilateral
+        assertEquals(60.0, MapUtilities.calculateTriangleAngle(1, 1, 1), 0.1);
+        assertEquals(60.0, MapUtilities.calculateTriangleAngle(5, 5, 5), 0.1);
+        assertEquals(60.0, MapUtilities.calculateTriangleAngle(3.6f, 3.6f, 3.6f), 1);
+
+        // any + reversed direction
+        assertEquals(75.522f, MapUtilities.calculateTriangleAngle(6, 7, 8), 0.001);
+        assertEquals(75.522f, MapUtilities.calculateTriangleAngle(7, 6, 8), 0.001);
+        assertEquals(46.567f, MapUtilities.calculateTriangleAngle(7, 8, 6), 0.001);
+        assertEquals(46.567f, MapUtilities.calculateTriangleAngle(8, 7, 6), 0.001);
+
+        assertEquals(28.388f, MapUtilities.calculateTriangleAngle(7.9f, 3.5f, 5.1f), 0.001);
+        assertEquals(132.568f, MapUtilities.calculateTriangleAngle(3.5f, 5.1f, 7.9f), 0.001);
+        assertEquals(19, MapUtilities.calculateTriangleAngle(7.9f, 5.1f, 3.5f), 0.1);
+
+        // all 180 degrees
+        assertEquals(180, MapUtilities.calculateTriangleAngle(6, 7, 8)
+            + MapUtilities.calculateTriangleAngle(7, 8, 6)
+            + MapUtilities.calculateTriangleAngle(8, 6, 7), 0.001);
+    }
+
+    public void testCalculateTriangleAzimuths() {
+        Leg first = new Leg();
+        first.setDistance(6f);
+        first.setAzimuth(30f);
+
+        Leg second = new Leg();
+        second.setDistance(7f);
+
+        Leg third = new Leg();
+        third.setDistance(8f);
+
+        // second angle
+        float secondAzimuth = MapUtilities.calculateTriangleSecondLegAzimuth(first, second, third);
+        assertEquals(first.getAzimuth() + 75.522, secondAzimuth, 0.001);
+
+        // third angle
+        second.setAzimuth(secondAzimuth);
+        float thirdAzimuth = MapUtilities.calculateTriangleThirdLegAzimuth(first, second, third);
+        assertEquals(secondAzimuth + 46.567, thirdAzimuth, 0.001);
+    }
+
+    public void testCalculateTriangleWithGrads() {
+        fail("Not ready");
+    }
+
+    public void testCalculateTriangleWithInclination() {
+        fail("Not ready");;
+    }
 }
