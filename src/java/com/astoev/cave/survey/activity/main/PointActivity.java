@@ -706,13 +706,15 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                     currGalleryId = null;
                     if (trianglFlag) {
                         triangleSequence = TRIANGLE_FIRST_LEG;
+                        Gallery newGallery = GalleryUtil.createGallery(false);
+                        currGalleryId = newGallery.getId();
                     }
                 } else {
                     newFrom = getWorkspace().getLastGalleryPoint(currGalleryId);
 
                     if (trianglFlag) {
                         Leg prevLeg = DaoUtil.getLegByToPoint(newFrom);
-                        triangleSequence = prevLeg.getTriangleSequence() + 1;
+                        triangleSequence = prevLeg.getTriangleSequence() == TRIANGLE_THIRD_LEG ? TRIANGLE_SECOND_LEG : TRIANGLE_THIRD_LEG;
                         if (prevLeg.getTriangleSequence() == TRIANGLE_SECOND_LEG) {
                             // time to close the loop
                             Leg firstLeg = DaoUtil.getLegByToPoint(prevLeg.getFromPoint());

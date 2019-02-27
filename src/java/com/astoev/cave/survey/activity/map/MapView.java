@@ -113,7 +113,7 @@ public class MapView extends View {
         trianglePaint.setStrokeWidth(2);
         trianglePaint.setTextSize(trianglePaint.getTextSize() * screenScale);
         trianglePaint.setStyle(Paint.Style.STROKE);
-        trianglePaint.setPathEffect(new DashPathEffect(new float[]{3, 4}, 0));
+        trianglePaint.setPathEffect(new DashPathEffect(new float[]{1, 4}, 1));
         trianglePaint.setAlpha(50);
 
         // semi transparent white
