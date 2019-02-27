@@ -21,7 +21,6 @@ import com.astoev.cave.survey.util.PermissionUtil;
 
 import static android.Manifest.permission.ACCESS_NETWORK_STATE;
 import static android.Manifest.permission.INTERNET;
-import static android.Manifest.permission.READ_LOGS;
 
 /**
  * Created by astoev on 10/11/15.
@@ -70,19 +69,10 @@ public class SettingsActivity extends MainMenuActivity {
 
     private void prepareErrorReporter() {
         ToggleButton errorReporterToggle = (ToggleButton) findViewById(R.id.settingsDebugToggle);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
             // access to system logs disabled since 7.1
             errorReporterToggle.setEnabled(false);
-            return;
-        }
-
-        try {
-            if (!PermissionUtil.requestPermissions(new String[]{INTERNET, READ_LOGS, ACCESS_NETWORK_STATE}, this, 401)) {
-                return;
-            }
-        } catch (Exception e) {
-            // requesting system permissions could be dangerous
-            Log.e(Constants.LOG_TAG_UI, "Failed to request log permission", e);
             return;
         }
 
@@ -92,17 +82,34 @@ public class SettingsActivity extends MainMenuActivity {
 
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    // start debug
-                    ErrorReporter.startDebugSession();
 
-                    // show the info window
-                    Bundle bundle = new Bundle();
-                    String message = getString(R.string.error_reporter_info);
-                    bundle.putString(InfoDialogFragment.MESSAGE, message);
-                    InfoDialogFragment infoDialog = new InfoDialogFragment();
-                    infoDialog.setArguments(bundle);
-                    infoDialog.show(getSupportFragmentManager(), ERROR_REPORTER_TOOLTIP_DIALOG);
+                try {
+                    if (!PermissionUtil.requestPermissions(new String[]{INTERNET, ACCESS_NETWORK_STATE}, SettingsActivity.this, 401)) {
+                        return;
+                    }
+                } catch (Exception e) {
+                    // requesting system permissions could be dangerous
+                    Log.e(Constants.LOG_TAG_UI, "Failed to request log permission", e);
+                    return;
+                }
+
+                if (isChecked) {
+
+                    // start debug
+                    try {
+                        ErrorReporter.startDebugSession();
+
+                        // show the info window
+                        Bundle bundle = new Bundle();
+                        String message = getString(R.string.error_reporter_info);
+                        bundle.putString(InfoDialogFragment.MESSAGE, message);
+                        InfoDialogFragment infoDialog = new InfoDialogFragment();
+                        infoDialog.setArguments(bundle);
+                        infoDialog.show(getSupportFragmentManager(), ERROR_REPORTER_TOOLTIP_DIALOG);
+                    } catch (Exception e) {
+                        Log.e(Constants.LOG_TAG_UI, "Error launching error reporter", e);
+                        UIUtilities.showNotification(R.string.error);
+                    }
                 } else {
                     // stop session
                     String dumpFile = ErrorReporter.closeDebugSession();
