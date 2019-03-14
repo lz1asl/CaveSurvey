@@ -11,6 +11,8 @@ import com.j256.ormlite.table.DatabaseTable;
 import java.io.Serializable;
 import java.sql.SQLException;
 
+import static com.astoev.cave.survey.model.LegType.TRIANGLE;
+
 /**
  * Created by IntelliJ IDEA.
  * User: astoev
@@ -30,12 +32,12 @@ public class Leg implements Serializable {
     public static final String COLUMN_GALLERY_ID = "gallery_id";
     public static final String COLUMN_MIDDLE_POINT_AT_DISTANCE = "middle_point_distance";
     public static final String COLUMN_TRIANGLE_SEQUENCE = "triangle_sequence";
+    public static final String COLUMN_TYPE = "type";
 
     public static final int TRIANGLE_NONE = 0;
     public static final int TRIANGLE_FIRST_LEG = 1;
     public static final int TRIANGLE_SECOND_LEG = 2;
     public static final int TRIANGLE_THIRD_LEG = 3;
-
 
     @DatabaseField(generatedId = true, columnName = COLUMN_ID)
     private Integer mId;
@@ -47,6 +49,8 @@ public class Leg implements Serializable {
     private Project mProject;
     @DatabaseField(columnName = "distance")
     private Float mDistance;
+    @DatabaseField(columnName = COLUMN_TYPE)
+    private LegType mType;
     @DatabaseField(columnName = "azimuth")
     private Float mAzimuth;
     @DatabaseField(columnName = "slope")
@@ -265,6 +269,14 @@ public class Leg implements Serializable {
         mTriangleSequence = aTriangleSequence;
     }
 
+    public LegType getType() {
+        return mType;
+    }
+
+    public void setType(LegType aType) {
+        mType = aType;
+    }
+
     /**
 	 * @see java.lang.Object#toString()
 	 */
@@ -306,11 +318,11 @@ public class Leg implements Serializable {
     }
 
     public boolean isTriangle() {
-        return mTriangleSequence != TRIANGLE_NONE;
+        return mType == TRIANGLE;
     }
 
     public boolean isThirdTriangleLeg() {
-	    return mTriangleSequence == TRIANGLE_THIRD_LEG;
+	    return isTriangle() && mTriangleSequence == TRIANGLE_THIRD_LEG;
     }
 
 }

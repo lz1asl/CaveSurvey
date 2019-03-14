@@ -1,5 +1,5 @@
 #
-# generated on 2019/02/20 11:39:24
+# generated on 2019/03/14 02:45:37
 #
 # --table-start--
 dataClass=com.astoev.cave.survey.model.Location
@@ -65,6 +65,10 @@ foreignAutoRefresh=true
 # --field-start--
 fieldName=mDistance
 columnName=distance
+# --field-end--
+# --field-start--
+fieldName=mType
+columnName=type
 # --field-end--
 # --field-start--
 fieldName=mAzimuth

@@ -135,6 +135,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                     Log.i(Constants.LOG_TAG_DB, "Upgrading DB to V4");
                     aSqLiteDatabase.execSQL("alter table legs add column triangle_sequence decimal default 0");
                     aSqLiteDatabase.execSQL("update legs set triangle_sequence = 0");
+                    aSqLiteDatabase.execSQL("alter table legs add column type text default 'LEG'");
+                    aSqLiteDatabase.execSQL("update legs set type = 'LEG'");
                     Log.i(Constants.LOG_TAG_DB, "Upgrade to V4 success");
                 }
 

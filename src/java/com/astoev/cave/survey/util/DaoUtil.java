@@ -9,6 +9,7 @@ import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.dto.ProjectConfig;
 import com.astoev.cave.survey.model.Gallery;
 import com.astoev.cave.survey.model.Leg;
+import com.astoev.cave.survey.model.LegType;
 import com.astoev.cave.survey.model.Location;
 import com.astoev.cave.survey.model.Note;
 import com.astoev.cave.survey.model.Option;
@@ -30,6 +31,8 @@ import java.io.File;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.Callable;
+
+import static com.astoev.cave.survey.model.LegType.LEG;
 
 /**
  * @author jmitrev
@@ -169,9 +172,14 @@ public class DaoUtil {
     }
 
     public static Leg getLegByToPoint(Point aToPoint) throws SQLException {
+        return getLegByToPoint(aToPoint, LEG);
+    }
+
+    public static Leg getLegByToPoint(Point aToPoint, LegType aType) throws SQLException {
         // TODO this will work as soon as we keep a tree of legs. Once we start closing circles will break and will have to change the logic
         QueryBuilder<Leg, Integer> query = Workspace.getCurrentInstance().getDBHelper().getLegDao().queryBuilder();
-        query.where().eq(Leg.COLUMN_TO_POINT, aToPoint).and().isNull(Leg.COLUMN_MIDDLE_POINT_AT_DISTANCE);
+        query.where().eq(Leg.COLUMN_TO_POINT, aToPoint).and().isNull(Leg.COLUMN_MIDDLE_POINT_AT_DISTANCE)
+        .and().eq(Leg.COLUMN_TYPE, aType);
         return query.queryForFirst();
     }
 
