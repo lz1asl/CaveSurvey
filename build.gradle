@@ -25,6 +25,7 @@ dependencies {
     implementation files('../CaveSurveyBoschGLM/binary/CaveSurveyBoschGLM.jar')
 
     androidTestImplementation 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.12'
 }
 
 
@@ -74,7 +75,7 @@ android {
             res.srcDirs = ['res']
         }
 
-        androidTest.setRoot('src/androidTest')
+//        androidTest.setRoot('src/androidTest')
     }
 
     packagingOptions {
@@ -86,6 +87,10 @@ android {
     lintOptions {
         // if true, stop the gradle build if errors are found
         abortOnError false
+    }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
     }
 }
 

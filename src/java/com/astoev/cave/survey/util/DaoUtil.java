@@ -168,32 +168,6 @@ public class DaoUtil {
         Workspace.getCurrentInstance().getDBHelper().getPointDao().refresh(aPoint);
     }
 
-    public static Gallery createGallery(boolean isFirst) throws SQLException {
-        Project currProject = Workspace.getCurrentInstance().getActiveProject();
-        String name;
-        if (isFirst) {
-            name = Gallery.getFirstGalleryName();
-        } else {
-            name = Gallery.generateNextGalleryName(currProject.getId());
-        }
-        return createGallery(currProject, name);
-    }
-
-    public static Gallery createGallery(Project aProject, String aName) throws SQLException {
-        Gallery gallery = new Gallery();
-        gallery.setName(aName);
-        gallery.setProject(aProject);
-        Workspace.getCurrentInstance().getDBHelper().getGalleryDao().create(gallery);
-        return gallery;
-    }
-
-    public static Gallery getLastGallery(Integer aProjectId) throws SQLException {
-        QueryBuilder<Gallery, Integer> query = Workspace.getCurrentInstance().getDBHelper().getGalleryDao().queryBuilder();
-        query.where().eq(Gallery.COLUMN_PROJECT_ID, aProjectId);
-        query.orderBy(Gallery.COLUMN_ID, false);
-        return query.queryForFirst();
-    }
-
     public static Leg getLegByToPoint(Point aToPoint) throws SQLException {
         // TODO this will work as soon as we keep a tree of legs. Once we start closing circles will break and will have to change the logic
         QueryBuilder<Leg, Integer> query = Workspace.getCurrentInstance().getDBHelper().getLegDao().queryBuilder();
@@ -595,7 +569,7 @@ public class DaoUtil {
 
                     // delete galleries
                     Gallery g;
-                    while ((g = DaoUtil.getLastGallery(aProjectId)) != null) {
+                    while ((g = getLastGallery(aProjectId)) != null) {
                         DaoUtil.deleteGallery(g);
                     }
 
@@ -620,5 +594,12 @@ public class DaoUtil {
 
     private static void deleteGallery(Gallery aG) throws SQLException {
         Workspace.getCurrentInstance().getDBHelper().getGalleryDao().delete(aG);
+    }
+
+    public static Gallery getLastGallery(Integer aProjectId) throws SQLException {
+        QueryBuilder<Gallery, Integer> query = Workspace.getCurrentInstance().getDBHelper().getGalleryDao().queryBuilder();
+        query.where().eq(Gallery.COLUMN_PROJECT_ID, aProjectId);
+        query.orderBy(Gallery.COLUMN_ID, false);
+        return query.queryForFirst();
     }
 }

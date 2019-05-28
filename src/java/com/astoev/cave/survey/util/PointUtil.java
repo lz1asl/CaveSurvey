@@ -1,12 +1,13 @@
 package com.astoev.cave.survey.util;
 
 import com.astoev.cave.survey.Constants;
-import com.astoev.cave.survey.model.Gallery;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.service.Workspace;
 
 import java.sql.SQLException;
+
+import static com.astoev.cave.survey.util.GalleryUtil.generateNextGalleryName;
 
 /**
  * Created by IntelliJ IDEA.
@@ -120,7 +121,7 @@ public class PointUtil {
             return DaoUtil.getGallery(galleryId).getName();
         } else {
             // fresh leg for new gallery
-            return Gallery.generateNextGalleryName(Workspace.getCurrentInstance().getActiveProjectId());
+            return generateNextGalleryName();
         }
     }
 
