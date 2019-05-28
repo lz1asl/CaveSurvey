@@ -2,6 +2,7 @@ package com.astoev.cave.survey.activity.main;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -62,6 +63,8 @@ import java.util.concurrent.Callable;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.Manifest.permission.CAMERA;
+import static android.Manifest.permission.RECORD_AUDIO;
+import static java.lang.Thread.sleep;
 
 /**
  * Created by IntelliJ IDEA.
@@ -80,6 +83,8 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 
     private static final int PERM_REQ_CODE_CAMERA = 101;
     private static final int PERM_REQ_CODE_GPS = 102;
+    private static final int PERM_REQ_CODE_AUDIO = 103;
+
 
     private String mNewNote = null;
 
@@ -540,6 +545,9 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
             case R.id.point_action_note:
                 noteButton(null);
                 return true;
+            case R.id.point_action_audio:
+                audioButton();
+                return true;
             case R.id.point_action_draw:
                 drawingButton();
                 return true;
@@ -562,6 +570,29 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void audioButton() {
+
+        if (!PermissionUtil.requestPermission(RECORD_AUDIO, this, PERM_REQ_CODE_AUDIO)) {
+            return;
+        }
+
+        MediaRecorder recorder = new MediaRecorder();
+        try {
+            recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+            recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+            recorder.setOutputFile(fileName);
+            recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+            recorder.prepare();
+            recorder.start();
+            sleep(5000);
+            recorder.stop();
+            recorder.release();
+        } catch (Exception aE) {
+            aE.printStackTrace();
+        }
+
     }
 
     @Override

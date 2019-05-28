@@ -12,8 +12,14 @@
 	      android:icon="@drawable/ic_action_labels"
 	      android:title="@string/main_add_note"
 	      android:visible="true"
-	      myapp:showAsAction="ifRoom|withText"/>	
-	
+	      myapp:showAsAction="ifRoom|withText"/>
+
+	<item android:id="@+id/point_action_audio"
+		  android:icon="@drawable/ic_action_labels"
+		  android:title="@string/main_add_audio_note"
+		  android:visible="true"
+		  myapp:showAsAction="ifRoom|withText"/>
+
 	<item android:id="@+id/point_action_draw"
 	      android:icon="@drawable/ic_action_edit"
 	      android:title="@string/main_add_sketch"
