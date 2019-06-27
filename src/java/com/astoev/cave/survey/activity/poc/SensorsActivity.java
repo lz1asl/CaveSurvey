@@ -27,6 +27,7 @@ import java.util.ArrayList;
 
 import static com.astoev.cave.survey.activity.dialog.BaseBuildInMeasureDialog.PROGRESS_DEFAULT_VALUE;
 import static com.astoev.cave.survey.util.ConfigUtil.PREF_SENSOR_NOISE_REDUCTION;
+import static com.astoev.cave.survey.util.ConfigUtil.PREF_SENSOR_NOISE_REDUCTION_NUM_MEASUREMENTS;
 import static com.astoev.cave.survey.util.ConfigUtil.PREF_SENSOR_SIMULTANEOUSLY;
 import static com.astoev.cave.survey.util.ConfigUtil.PREF_SENSOR_TIMEOUT;
 
@@ -40,7 +41,7 @@ public class SensorsActivity extends MainMenuActivity {
     /** Dialog name to enable choose sensors tooltip dialog */
     private static final String CHOOSE_SENSORS_TOOLTIP_DIALOG = "CHOOSE_SENSORS_TOOLTIP_DIALOG";
     private static final int SIMULTANEOUSLY_READING_POSITION = 1;
-    private static final int NOISE_REDUCTION_ENABLED_POSITION = 0;
+    private static final int NOISE_REDUCTION_DISABLED_POSITION = 0;
 
     private Integer[] availableSensorsArray;
 
@@ -179,15 +180,51 @@ public class SensorsActivity extends MainMenuActivity {
             readTypeSpinner.setSelection(SIMULTANEOUSLY_READING_POSITION);
         }
 
+        // noise reduction num measurements
+        final Spinner noiseReductionNumMeasurements = (Spinner) findViewById(R.id.sensors_num_measurements_spinner);
+        final TextView noiseReductionNumMeasurementsLabel = (TextView) findViewById(R.id.sensors_num_measurements_label);
+        final ArrayAdapter<String> numMeasurementValues = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.sensor_num_measurements));
+        noiseReductionNumMeasurements.setAdapter(numMeasurementValues);
+        noiseReductionNumMeasurements.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> aAdapterView, View aView, int aPosition, long aL) {
+                Log.i(Constants.LOG_TAG_UI, "Noise reduction num measurements: " + aPosition + " " + numMeasurementValues.getItem(aPosition));
+                ConfigUtil.setIntProperty(PREF_SENSOR_NOISE_REDUCTION_NUM_MEASUREMENTS, Integer.valueOf(numMeasurementValues.getItem(aPosition)));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> aAdapterView) {
+
+            }
+        });
+        Integer numMeasurements = ConfigUtil.getIntProperty(PREF_SENSOR_NOISE_REDUCTION_NUM_MEASUREMENTS, 3);
+        for (int i=0; i<numMeasurementValues.getCount(); i++) {
+            if (numMeasurements.equals(Integer.valueOf(numMeasurementValues.getItem(i)))) {
+                noiseReductionNumMeasurements.setSelection(i);
+                break;
+            }
+        }
+
         // noise reduction
-        Spinner noiseReductionSpinner = (Spinner) findViewById(R.id.sensors_noise_spinner);
+        final Spinner noiseReductionSpinner = (Spinner) findViewById(R.id.sensors_noise_spinner);
         final ArrayAdapter<String> noiseReductionTypes = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.sensor_noise_reduction_types));
         noiseReductionSpinner.setAdapter(noiseReductionTypes);
         noiseReductionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> aAdapterView, View aView, int aPosition, long aL) {
                 Log.i(Constants.LOG_TAG_UI, "Noise reduction: " + aPosition + " " + noiseReductionTypes.getItem(aPosition));
-                ConfigUtil.setBooleanProperty(PREF_SENSOR_NOISE_REDUCTION, aPosition == NOISE_REDUCTION_ENABLED_POSITION);
+                boolean enabled = aPosition != NOISE_REDUCTION_DISABLED_POSITION;
+                ConfigUtil.setBooleanProperty(PREF_SENSOR_NOISE_REDUCTION, enabled);
+
+                if (enabled) {
+                    noiseReductionSpinner.setSelection(NOISE_REDUCTION_DISABLED_POSITION + 1);
+                    noiseReductionNumMeasurements.setVisibility(View.VISIBLE);
+                    noiseReductionNumMeasurementsLabel.setVisibility(View.VISIBLE);
+                } else {
+                    noiseReductionSpinner.setSelection(NOISE_REDUCTION_DISABLED_POSITION);
+                    noiseReductionNumMeasurements.setVisibility(View.INVISIBLE);
+                    noiseReductionNumMeasurementsLabel.setVisibility(View.INVISIBLE);
+                }
             }
 
             @Override
@@ -196,10 +233,15 @@ public class SensorsActivity extends MainMenuActivity {
             }
         });
         if (ConfigUtil.getBooleanProperty(PREF_SENSOR_NOISE_REDUCTION)) {
-            noiseReductionSpinner.setSelection(NOISE_REDUCTION_ENABLED_POSITION);
+            noiseReductionSpinner.setSelection(NOISE_REDUCTION_DISABLED_POSITION + 1);
+            noiseReductionNumMeasurements.setVisibility(View.VISIBLE);
+            noiseReductionNumMeasurementsLabel.setVisibility(View.VISIBLE);
         } else {
-            noiseReductionSpinner.setSelection(NOISE_REDUCTION_ENABLED_POSITION + 1);
+            noiseReductionSpinner.setSelection(NOISE_REDUCTION_DISABLED_POSITION);
+            noiseReductionNumMeasurements.setVisibility(View.INVISIBLE);
+            noiseReductionNumMeasurementsLabel.setVisibility(View.INVISIBLE);
         }
+
 
     }// end of onCreate
 

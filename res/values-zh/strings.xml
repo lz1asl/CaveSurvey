@@ -324,6 +324,12 @@
         <item>Disabled</item>
         <item>Enabled</item>
     </string-array>
+    <string name="sensor_num_measurements">Measurements</string>
+    <string-array name="sensor_num_measurements">
+        <item>3</item>
+        <item>5</item>
+        <item>10</item>
+    </string-array>
     <string name="no_sensors">没有可用的内建传感器</string>
     <string name="sensor_choose_tooltip">您可以选择最合适的内置传感器，以满足您的精确度需求</string>
     <string name="sensor_test_tooltip">您可以测试内置传感器。请记住，即使它们报告最高精确度，它们也可能不是可靠的测量工具。\n\n
