@@ -41,12 +41,12 @@ public class MeasurementsFilter {
                 Log.i(Constants.LOG_TAG_SERVICE, "Averaging: " + value);
                 List<Float> lastMeasurements = getLastMeasurements();
                 float deviation = getDeviation(lastMeasurements);
-                if (deviation < lastDeviation || lastMeasurements.size() < numMeasurements) {
-                    // continue to receive values
-                    lastDeviation = deviation;
-                    averaged = getAverage(lastMeasurements);
-                } else {
-                    // new noise, interrupt
+
+                lastDeviation = deviation;
+                averaged = getAverage(lastMeasurements);
+
+                if (deviation >= lastDeviation && lastMeasurements.size() >= numMeasurements) {
+                    // enough measurements + new noise = interrupt
                     ready = true;
                 }
             }
@@ -96,19 +96,13 @@ public class MeasurementsFilter {
         if (values.isEmpty()) {
             return 0;
         }
-        float min = 0;
-        float max = 0;
-        boolean first = true;
+        float maxDeviation = 0;
+        float average = getAverage(values);
         for (Float reading : values) {
-            if (first) {
-                min = max = reading;
-                first = false;
-            } else {
-                min = Math.min(min, reading);
-                max = Math.max(max, reading);
-            }
+            float deviation = Math.abs(average - reading);
+            maxDeviation = Math.max(deviation, maxDeviation);
         }
-        return max - min;
+        return maxDeviation;
     }
 
     public String getAccuracyString() {
