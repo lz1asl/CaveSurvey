@@ -30,12 +30,18 @@ public class MeasurementsFilter {
         if (averagingEnabled) {
             // collect measurements history
             measurements.add(value);
+
+            // remove old values
+            if (measurements.size() > numMeasurements + 1) {
+                measurements.remove(0);
+            }
+
             if (averaging) {
                 // time to get the best value
                 Log.i(Constants.LOG_TAG_SERVICE, "Averaging: " + value);
                 List<Float> lastMeasurements = getLastMeasurements();
                 float deviation = getDeviation(lastMeasurements);
-                if (deviation < lastDeviation) {
+                if (deviation < lastDeviation || lastMeasurements.size() < numMeasurements) {
                     // continue to receive values
                     lastDeviation = deviation;
                     averaged = getAverage(lastMeasurements);
