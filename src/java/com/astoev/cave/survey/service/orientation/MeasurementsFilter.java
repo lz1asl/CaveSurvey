@@ -1,5 +1,8 @@
 package com.astoev.cave.survey.service.orientation;
 
+import android.util.Log;
+
+import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.util.ConfigUtil;
 
 import java.util.ArrayList;
@@ -10,87 +13,87 @@ import static com.astoev.cave.survey.util.ConfigUtil.PREF_SENSOR_NOISE_REDUCTION
 
 public class MeasurementsFilter {
 
-    private List<Float> measurements;
-    boolean averagingEnabled;
-    int numMeasurements;
+    private List<Float> measurements = new ArrayList<>();
+    private boolean averagingEnabled = false;
+    private int numMeasurements = 1;
+    private boolean ready = false;
+    private boolean averaging = false;
+    private float lastDeviation = 0;
+    private float averaged;
 
-    public MeasurementsFilter() {
-        averagingEnabled = false;
-        numMeasurements = 1;
-        measurements = new ArrayList<>(numMeasurements);
-    }
-
-    public void initialize() {
+    public void initializeFromConfig() {
         averagingEnabled = ConfigUtil.getBooleanProperty(PREF_SENSOR_NOISE_REDUCTION);
         numMeasurements = ConfigUtil.getIntProperty(PREF_SENSOR_NOISE_REDUCTION_NUM_MEASUREMENTS, 1);
-        measurements = new ArrayList<>(numMeasurements);
     }
 
     public void addMeasurement(Float value) {
-        measurements.add(value);
-        // limit the size
-        if (measurements.size() > numMeasurements) {
-            measurements.remove(0);
+        if (averagingEnabled) {
+            // collect measurements history
+            measurements.add(value);
+            if (averaging) {
+                // time to get the best value
+                Log.i(Constants.LOG_TAG_SERVICE, "Averaging: " + value);
+                List<Float> lastMeasurements = getLastMeasurements();
+                float deviation = getDeviation(lastMeasurements);
+                if (deviation < lastDeviation) {
+                    // continue to receive values
+                    lastDeviation = deviation;
+                    averaged = getAverage(lastMeasurements);
+                } else {
+                    // new noise, interrupt
+                    ready = true;
+                }
+            }
+        } else {
+            // directly assign the value
+            averaged = value;
+            ready = true;
         }
+    }
+
+    public void startAveraging() {
+        averaging = true;
     }
 
     public boolean isReady() {
-        return measurements.size() >= numMeasurements;
+        return ready;
     }
 
-    public Float getLastValue() {
-        if (!measurements.isEmpty()) {
-            return measurements.get(measurements.size() - 1);
-        } else {
-            return null;
-        }
-    }
-
-    public List<Float> getMeasurements() {
-        return measurements;
-    }
-
-    public void setMeasurements(List<Float> aMeasurements) {
-        measurements = aMeasurements;
-    }
-
-    public boolean isAveragingEnabled() {
-        return averagingEnabled;
+    public Float getValue() {
+        return averaged;
     }
 
     public void setAveragingEnabled(boolean aAveragingEnabled) {
         averagingEnabled = aAveragingEnabled;
     }
 
-    public int getNumMeasurements() {
-        return numMeasurements;
-    }
-
     public void setNumMeasurements(int aNumMeasurements) {
         numMeasurements = aNumMeasurements;
     }
 
-    public Float getAverage() {
-        if (measurements.isEmpty()) {
+    public Float getAverage(List<Float> values) {
+        if (values.isEmpty()) {
             return null;
         }
         int readingsCount = 0;
         float sum = 0;
-        for (Float reading : measurements) {
+        for (Float reading : values) {
             readingsCount++;
             sum += reading;
         }
-        return sum / readingsCount;
+        float average = sum / readingsCount;
+        Log.i(Constants.LOG_TAG_SERVICE, "Averaged to: " + average);
+        return average;
     }
 
-    public float getDeviation() {
-        if (measurements.isEmpty()) {
+    public float getDeviation(List<Float> values) {
+        if (values.isEmpty()) {
             return 0;
         }
         float min = 0;
         float max = 0;
         boolean first = true;
-        for (Float reading : measurements) {
+        for (Float reading : values) {
             if (first) {
                 min = max = reading;
                 first = false;
@@ -103,6 +106,12 @@ public class MeasurementsFilter {
     }
 
     public String getAccuracyString() {
-        return "(" + getDeviation() + " out of " + getNumMeasurements() + ")";
+        return "(" + lastDeviation + " out of " + numMeasurements + ")";
+    }
+
+    // last PREF_SENSOR_NOISE_REDUCTION_NUM_MEASUREMENTS measurements or less if not available yet
+    private List<Float> getLastMeasurements() {
+        int lastMeasurementsCount = Math.min(measurements.size(), numMeasurements);
+        return measurements.subList(measurements.size() - lastMeasurementsCount, measurements.size());
     }
 }

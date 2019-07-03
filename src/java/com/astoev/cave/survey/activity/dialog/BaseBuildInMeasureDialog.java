@@ -17,6 +17,7 @@ import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.model.Option;
 import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.service.orientation.AzimuthChangedAdapter;
+import com.astoev.cave.survey.service.orientation.MeasurementsFilter;
 import com.astoev.cave.survey.service.orientation.OrientationProcessor;
 import com.astoev.cave.survey.service.orientation.OrientationProcessorFactory;
 import com.astoev.cave.survey.service.orientation.SlopeChangedAdapter;
@@ -60,11 +61,14 @@ public class BaseBuildInMeasureDialog extends DialogFragment {
     protected OrientationProcessor orientationSlopeProcessor;
 
     /** Last value for the slope from the sensor */
-    protected float lastAzimuthValue;
-    protected float lastSlopeValue;
+    protected MeasurementsFilter azimuthFilter;
+    protected MeasurementsFilter slopeFilter;
 
     protected EditText targetAzimuthTextBox;
     protected EditText targetSlopeTextBox;
+
+    protected int lastAzimuthAccuracy;
+    protected int lastSlopeAccuracy;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -86,6 +90,11 @@ public class BaseBuildInMeasureDialog extends DialogFragment {
         } else {
             progressMaxValue = userMaxProgressValue;
         }
+
+        azimuthFilter = new MeasurementsFilter();
+        azimuthFilter.initializeFromConfig();
+        slopeFilter = new MeasurementsFilter();
+        slopeFilter.initializeFromConfig();
 
         // create a handler and a thread that will drive the progress bar
         progressHandler = new ProgressHandler(this);
@@ -188,6 +197,9 @@ public class BaseBuildInMeasureDialog extends DialogFragment {
             orientationSlopeProcessor.stopListening();
         }
 
+        azimuthFilter = null;
+        slopeFilter = null;
+
         dismiss();
     }
 
@@ -197,13 +209,26 @@ public class BaseBuildInMeasureDialog extends DialogFragment {
      */
     protected void notifyEndProgress() {
 
+        // actual averaging work
+        azimuthFilter.startAveraging();
+        slopeFilter.startAveraging();
+
+        while(!azimuthFilter.isReady() && slopeFilter.isReady()) {
+            Log.i(Constants.LOG_TAG_SERVICE, "Awaiting filters");
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException aE) {
+                Log.e(Constants.LOG_TAG_SERVICE, "Interrupted while waiting the filters", aE);
+            }
+        }
+
         if (orientationAzimuthProcessor != null) {
             orientationAzimuthProcessor.stopListening();
-            targetAzimuthTextBox.setText(String.valueOf(lastAzimuthValue));
+            targetAzimuthTextBox.setText(String.valueOf(azimuthFilter.getValue()));
         }
         if (orientationSlopeProcessor != null){
             orientationSlopeProcessor.stopListening();
-            targetSlopeTextBox.setText(String.valueOf(lastSlopeValue));
+            targetSlopeTextBox.setText(String.valueOf(slopeFilter.getValue()));
         }
 
         dismiss();
@@ -264,12 +289,14 @@ public class BaseBuildInMeasureDialog extends DialogFragment {
             @Override
             public void onAzimuthChanged(float newValueArg) {
                 //convert to Grads if necessary
-                lastAzimuthValue = newValueArg;
+                float lastAzimuthValue = newValueArg;
                 if (!isInDegrees) {
                     lastAzimuthValue = newValueArg * Constants.DEC_TO_GRAD;
                 }
+                azimuthFilter.addMeasurement(lastAzimuthValue);
 
-                aAzimuthView.setText(formater.format(lastAzimuthValue) + unitsString);
+                aAzimuthView.setText(formater.format(azimuthFilter.getValue()) + unitsString);
+                aAccuracyView.setText(orientationAzimuthProcessor.getAccuracyAsString(lastAzimuthAccuracy) + azimuthFilter.getAccuracyString());
             }
 
             /**
@@ -277,7 +304,8 @@ public class BaseBuildInMeasureDialog extends DialogFragment {
              */
             @Override
             public void onAccuracyChanged(int accuracyArg) {
-                aAccuracyView.setText(orientationAzimuthProcessor.getAccuracyAsString(accuracyArg));
+                lastAzimuthAccuracy = accuracyArg;
+                aAccuracyView.setText(orientationAzimuthProcessor.getAccuracyAsString(accuracyArg) + azimuthFilter.getAccuracyString());
             }
         });
 
@@ -297,12 +325,13 @@ public class BaseBuildInMeasureDialog extends DialogFragment {
             @Override
             public void onSlopeChanged(float newValueArg) {
                 //convert to Grads if necessary
-                lastSlopeValue = newValueArg;
+                float lastSlopeValue = newValueArg;
                 if (!isInDegrees){
                     lastSlopeValue = newValueArg * Constants.DEC_TO_GRAD;
                 }
+                slopeFilter.addMeasurement(lastSlopeValue);
 
-                aSlopeView.setText(formater.format(lastSlopeValue) + unitsString);
+                aSlopeView.setText(formater.format(slopeFilter.getValue()) + unitsString);
             }
 
             /**
@@ -310,7 +339,8 @@ public class BaseBuildInMeasureDialog extends DialogFragment {
              */
             @Override
             public void onAccuracyChanged(int accuracyArg) {
-                aSlopeAccuracyView.setText(orientationSlopeProcessor.getAccuracyAsString(accuracyArg));
+                lastSlopeAccuracy = accuracyArg;
+                aSlopeAccuracyView.setText(orientationSlopeProcessor.getAccuracyAsString(accuracyArg) + slopeFilter.getAccuracyString());
             }
         });
 
