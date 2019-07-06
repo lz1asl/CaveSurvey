@@ -8,6 +8,7 @@ import com.astoev.cave.survey.util.ConfigUtil;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.astoev.cave.survey.model.Option.MAX_VALUE_AZIMUTH_DEGREES;
 import static com.astoev.cave.survey.util.ConfigUtil.PREF_SENSOR_NOISE_REDUCTION;
 import static com.astoev.cave.survey.util.ConfigUtil.PREF_SENSOR_NOISE_REDUCTION_NUM_MEASUREMENTS;
 
@@ -78,18 +79,52 @@ public class MeasurementsFilter {
     }
 
     public Float getAverage(List<Float> values) {
-        if (values.isEmpty()) {
-            return null;
+        // TODO to degrees if needed with kMapUtilities.getAzimuthInDegrees(java.lang.Float, java.lang.String)
+
+        return getAverageAzimuthDegrees(values);
+
+    }
+
+    public float getAverageAzimuthDegrees(float first, float second) {
+
+        // sum
+        float sum = first + second;
+
+        // 360 degrees = 0
+        if (sum == MAX_VALUE_AZIMUTH_DEGREES) {
+            return 0;
         }
-        int readingsCount = 0;
-        float sum = 0;
-        for (Float reading : values) {
-            readingsCount++;
-            sum += reading;
+
+        // two opposite values
+        int half = MAX_VALUE_AZIMUTH_DEGREES / 2;
+        if (Math.abs(first - second) > MAX_VALUE_AZIMUTH_DEGREES / 2) {
+            sum += MAX_VALUE_AZIMUTH_DEGREES;
         }
-        float average = sum / readingsCount;
-        Log.i(Constants.LOG_TAG_SERVICE, "Averaged to: " + average);
-        return average;
+
+        // average
+        float average = sum / 2;
+
+        // normalize if needed
+        if (average >= MAX_VALUE_AZIMUTH_DEGREES) {
+            return average - MAX_VALUE_AZIMUTH_DEGREES;
+        } else {
+            return average;
+        }
+    }
+
+    public Float getAverageAzimuthDegrees(List<Float> measurements) {
+
+        if (measurements.size() == 1) {
+            return measurements.get(0);
+        }
+
+        // left
+        List<Float> averages = new ArrayList<>();
+        for (int i=1; i<measurements.size(); i++) {
+            float average = getAverageAzimuthDegrees(measurements.get(i-1), measurements.get(i));
+            averages.add(average);
+        }
+        return getAverageAzimuthDegrees(averages);
     }
 
     public float getDeviation(List<Float> values) {

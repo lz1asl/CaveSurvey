@@ -6,6 +6,8 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 
+import java.util.Arrays;
+
 public class MeasurementsFilterTest extends TestCase {
 
     @Test
@@ -110,6 +112,36 @@ public class MeasurementsFilterTest extends TestCase {
         filter.addMeasurement(5f);
         assertEquals(3, filter.getValue(), 0.0);
         assertEquals( "(2.0 out of 5)", filter.getAccuracyString());
+    }
+
+    @Test
+    public void testTwoAzimuthsAverage() {
+        MeasurementsFilter filter = new MeasurementsFilter();
+        assertEquals(2f, filter.getAverageAzimuthDegrees(2f, 2f), 0.00f);
+        assertEquals(10f, filter.getAverageAzimuthDegrees(0f, 20f), 0.00f);
+        assertEquals(1.5f, filter.getAverageAzimuthDegrees(1f, 2f), 0.00f);
+        assertEquals(330f, filter.getAverageAzimuthDegrees(320f, 340f), 0.00f);
+        assertEquals(110f, filter.getAverageAzimuthDegrees(120f, 100f), 0.00f);
+        assertEquals(110f, filter.getAverageAzimuthDegrees(120f, 100f), 0.00f);
+        assertEquals(0f, filter.getAverageAzimuthDegrees(355f, 5f), 0.00f);
+        assertEquals(356f, filter.getAverageAzimuthDegrees(350f, 2f), 0.00f);
+        assertEquals(1f, filter.getAverageAzimuthDegrees(355f, 7f), 0.00f);
+    }
+
+    @Test
+    public void testMultipleAzimuthsAverage() {
+        MeasurementsFilter filter = new MeasurementsFilter();
+        assertEquals(2f, filter.getAverageAzimuthDegrees(Arrays.asList(2f)), 0.00f);
+        assertEquals(2f, filter.getAverageAzimuthDegrees(Arrays.asList(2f, 2f)), 0.00f);
+        assertEquals(2f, filter.getAverageAzimuthDegrees(Arrays.asList(2f, 2f, 2f)), 0.00f);
+        assertEquals(2f, filter.getAverageAzimuthDegrees(Arrays.asList(2f, 2f, 2f, 2f)), 0.00f);
+        assertEquals(2.5f, filter.getAverageAzimuthDegrees(Arrays.asList(1f, 2f, 3f, 4f)), 0.00f);
+        assertEquals(0f, filter.getAverageAzimuthDegrees(Arrays.asList(350f, 0f, 10f)), 0.00f);
+        assertEquals(130f, filter.getAverageAzimuthDegrees(Arrays.asList(120f, 130f, 140f)), 0.00f);
+        assertEquals(2.5f, filter.getAverageAzimuthDegrees(Arrays.asList(2f, 2f, 4f)), 0.00f);
+        assertEquals(4f, filter.getAverageAzimuthDegrees(Arrays.asList(2f, 2f, 6f)), 0.00f);
+        assertEquals(2f, filter.getAverageAzimuthDegrees(Arrays.asList(1f, 1f, 4f)), 0.00f);
+
     }
 
 }
