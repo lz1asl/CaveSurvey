@@ -142,6 +142,8 @@ public class BaseBuildInMeasureDialog extends DialogFragment {
             dialog.progressBar.invalidate();
             if (total >= progressMaxValue) {
                 dialog.progressThread.setState(ProgressThread.STATE_DONE);
+                dialog.progressBar.setIndeterminate(true);
+                dialog.progressBar.invalidate();
                 dialog.notifyEndProgress();
             }
         }
@@ -215,16 +217,8 @@ public class BaseBuildInMeasureDialog extends DialogFragment {
         azimuthFilter.startAveraging();
         slopeFilter.startAveraging();
 
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException aE) {
-            Log.e(LOG_TAG_SERVICE, "Interrupted while waiting the filters", aE);
-        }
-
-
-
         if (orientationAzimuthProcessor != null) {
-         /*   // await averaging
+            // await averaging
             while(!azimuthFilter.isReady()) {
                 Log.i(LOG_TAG_SERVICE, "Awaiting azimuth");
                 try {
@@ -232,7 +226,7 @@ public class BaseBuildInMeasureDialog extends DialogFragment {
                 } catch (InterruptedException aE) {
                     Log.e(LOG_TAG_SERVICE, "Interrupted while waiting the filters", aE);
                 }
-            }*/
+            }
 
             // stop
             Log.i(LOG_TAG_SERVICE, "Stop azimuth processor");
@@ -241,7 +235,7 @@ public class BaseBuildInMeasureDialog extends DialogFragment {
         }
 
         if (orientationSlopeProcessor != null) {
-           /* // await averaging
+            // await averaging
             while(!slopeFilter.isReady()) {
                 Log.i(LOG_TAG_SERVICE, "Awaiting azimuth");
                 try {
@@ -249,7 +243,7 @@ public class BaseBuildInMeasureDialog extends DialogFragment {
                 } catch (InterruptedException aE) {
                     Log.e(LOG_TAG_SERVICE, "Interrupted while waiting the filters", aE);
                 }
-            }*/
+            }
 
             // stop
             Log.i(LOG_TAG_SERVICE, "Stop slope processor");

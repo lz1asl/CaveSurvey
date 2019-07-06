@@ -52,7 +52,6 @@ public class MeasurementsFilter {
         if (averagingEnabled) {
             // collect measurements history
             if (measurements.size() > numMeasurements) {
-                Log.i(LOG_TAG_SERVICE, measurements.size() +" samples collected");
                 measurements.remove(0);
             }
             measurements.add(value);
@@ -66,6 +65,8 @@ public class MeasurementsFilter {
 
             // time to get the best value
             if (averaging) {
+
+                Log.i(LOG_TAG_SERVICE, "Averaging ...");
 
                 if (deviation >= lastDeviation && lastMeasurements.size() >= numMeasurements) {
                     // enough measurements + new noise = finalize
@@ -218,7 +219,7 @@ public class MeasurementsFilter {
 
     public String getAccuracyString() {
         if (averagingEnabled) {
-            return " \u00B1" + formatter.format(lastDeviation) + "/" + formatter.format(numMeasurements);
+            return " \u00B1" + formatter.format(lastDeviation) + "/" + numMeasurements;
         } else {
             return "";
         }
