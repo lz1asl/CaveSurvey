@@ -26,6 +26,7 @@ import com.astoev.cave.survey.util.ConfigUtil;
 import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
 
+import static com.astoev.cave.survey.Constants.LOG_TAG_SERVICE;
 import static com.astoev.cave.survey.util.ConfigUtil.PREF_SENSOR_TIMEOUT;
 
 /**
@@ -181,7 +182,7 @@ public class BaseBuildInMeasureDialog extends DialogFragment {
      * Helper method that handles when the dialog is handled. It will stop the thread and stop the azimuth
      * processor
      */
-    public void cancelDialog(){
+    public void cancelDialog() {
         // stop the progress thread
         if (progressThread != null) {
             progressThread.setState(ProgressThread.STATE_DONE);
@@ -208,25 +209,50 @@ public class BaseBuildInMeasureDialog extends DialogFragment {
      * Stops the azimuth processor notifies the parent activity and will dismiss the dialog
      */
     protected void notifyEndProgress() {
+        Log.i(LOG_TAG_SERVICE, "End of targeting time");
 
         // actual averaging work
         azimuthFilter.startAveraging();
         slopeFilter.startAveraging();
 
-        while(!azimuthFilter.isReady() && slopeFilter.isReady()) {
-            Log.i(Constants.LOG_TAG_SERVICE, "Awaiting filters");
-            try {
-                Thread.sleep(50);
-            } catch (InterruptedException aE) {
-                Log.e(Constants.LOG_TAG_SERVICE, "Interrupted while waiting the filters", aE);
-            }
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException aE) {
+            Log.e(LOG_TAG_SERVICE, "Interrupted while waiting the filters", aE);
         }
 
+
+
         if (orientationAzimuthProcessor != null) {
+         /*   // await averaging
+            while(!azimuthFilter.isReady()) {
+                Log.i(LOG_TAG_SERVICE, "Awaiting azimuth");
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException aE) {
+                    Log.e(LOG_TAG_SERVICE, "Interrupted while waiting the filters", aE);
+                }
+            }*/
+
+            // stop
+            Log.i(LOG_TAG_SERVICE, "Stop azimuth processor");
             orientationAzimuthProcessor.stopListening();
             targetAzimuthTextBox.setText(String.valueOf(azimuthFilter.getValue()));
         }
-        if (orientationSlopeProcessor != null){
+
+        if (orientationSlopeProcessor != null) {
+           /* // await averaging
+            while(!slopeFilter.isReady()) {
+                Log.i(LOG_TAG_SERVICE, "Awaiting azimuth");
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException aE) {
+                    Log.e(LOG_TAG_SERVICE, "Interrupted while waiting the filters", aE);
+                }
+            }*/
+
+            // stop
+            Log.i(LOG_TAG_SERVICE, "Stop slope processor");
             orientationSlopeProcessor.stopListening();
             targetSlopeTextBox.setText(String.valueOf(slopeFilter.getValue()));
         }
@@ -290,12 +316,14 @@ public class BaseBuildInMeasureDialog extends DialogFragment {
             public void onAzimuthChanged(float newValueArg) {
                 //convert to Grads if necessary
                 float lastAzimuthValue = newValueArg;
-                if (!isInDegrees) {
-                    lastAzimuthValue = newValueArg * Constants.DEC_TO_GRAD;
-                }
                 azimuthFilter.addMeasurement(lastAzimuthValue);
 
-                aAzimuthView.setText(formater.format(azimuthFilter.getValue()) + unitsString);
+                float processedValue = azimuthFilter.getValue();
+                if (!isInDegrees) {
+                    processedValue = processedValue * Constants.DEC_TO_GRAD;
+                }
+
+                aAzimuthView.setText(formater.format(processedValue) + unitsString);
                 aAccuracyView.setText(orientationAzimuthProcessor.getAccuracyAsString(lastAzimuthAccuracy) + azimuthFilter.getAccuracyString());
             }
 
@@ -326,12 +354,15 @@ public class BaseBuildInMeasureDialog extends DialogFragment {
             public void onSlopeChanged(float newValueArg) {
                 //convert to Grads if necessary
                 float lastSlopeValue = newValueArg;
-                if (!isInDegrees){
-                    lastSlopeValue = newValueArg * Constants.DEC_TO_GRAD;
-                }
                 slopeFilter.addMeasurement(lastSlopeValue);
 
-                aSlopeView.setText(formater.format(slopeFilter.getValue()) + unitsString);
+                float processedValue = slopeFilter.getValue();
+                if (!isInDegrees){
+                    processedValue = processedValue * Constants.DEC_TO_GRAD;
+                }
+
+                aSlopeView.setText(formater.format(processedValue) + unitsString);
+                aSlopeAccuracyView.setText(orientationSlopeProcessor.getAccuracyAsString(lastSlopeAccuracy) + slopeFilter.getAccuracyString());
             }
 
             /**

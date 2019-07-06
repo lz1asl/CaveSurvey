@@ -235,7 +235,6 @@ public class SensorTestActivity extends MainMenuActivity {
 			
 			startButton.setEnabled(false);
 			stopButton.setEnabled(true);
-
 		}
 	}
 	

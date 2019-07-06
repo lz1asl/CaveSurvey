@@ -307,9 +307,9 @@
     </string-array>
     <string name="sensor_num_measurements">Измервания</string>
     <string-array name="sensor_num_measurements">
-        <item>3</item>
         <item>5</item>
         <item>10</item>
+        <item>20</item>
     </string-array>
     <string name="sensor_choose_header">Избор на вграден сензор</string>
     <string name="no_sensors">Няма налични вградени сензори</string>
