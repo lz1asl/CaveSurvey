@@ -37,7 +37,7 @@ Currently with CaveSurvey you can:
   - preview a 2D plan/section map of the current survey
   - export to Excel, AutoCad, Therion, KML and more
 
-See the current list of [issues](https://github.com/lz1asl/CaveSurvey/issues) we are working on. Feel free to join our team and help adding other devices/functionalities.
+See the current list of [issues](https://github.com/lz1asl/CaveSurvey/issues) we are working on. Feel free to [join](https://github.com/lz1asl/CaveSurvey/wiki/CaveSurvey-Development) our team and help adding other devices/functionalities.
 
 
 About
@@ -47,7 +47,7 @@ Developed by members of caving club [Paldin](http://sk-paldin.eu/) Plovdiv, Bulg
 
 ![Picture](res/drawable-mdpi/paldin.jpg)
 
-You can use the official version at [Google Play](https://play.google.com/store/apps/details?id=com.astoev.cave.survey) or the [latest beta build](https://razhodki.ci.cloudbees.com/job/CaveSurvey/lastSuccessfulBuild/artifact/build/outputs/apk/CaveSurvey-defaultFlavor-release.apk) for devces without Google Play, release [history](https://github.com/lz1asl/CaveSurvey/wiki/Releases).
+You can use the official version at [Google Play](https://play.google.com/store/apps/details?id=com.astoev.cave.survey) <s>or the [latest beta build](https://razhodki.ci.cloudbees.com/job/CaveSurvey/lastSuccessfulBuild/artifact/build/outputs/apk/CaveSurvey-defaultFlavor-release.apk) for devces without Google Play</s>, release [history](https://github.com/lz1asl/CaveSurvey/wiki/Releases).
 
 ![CloudBees](http://www.cloudbees.com/sites/default/files/Button-Built-on-CB-1.png)
 
