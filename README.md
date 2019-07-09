@@ -31,9 +31,9 @@ Currently with CaveSurvey you can:
   - add stations and interim points
   - save notes, pictures, drawings, GPS coordinates and vectors at any station
   - input measurements:
-   - manually
-   - from the built-in sensors
-   - from several Bluetooth enabled [devices](https://github.com/lz1asl/CaveSurvey/wiki/Measurement-Devices)
+    - manually
+    - from the built-in sensors
+    - from several Bluetooth enabled [devices](https://github.com/lz1asl/CaveSurvey/wiki/Measurement-Devices)
   - preview a 2D plan/section map of the current survey
   - export to Excel, AutoCad, Therion, KML and more
 
