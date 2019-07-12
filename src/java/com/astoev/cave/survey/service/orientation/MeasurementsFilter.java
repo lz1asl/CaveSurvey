@@ -44,16 +44,14 @@ public class MeasurementsFilter {
 
     public void addMeasurement(Float value) {
 
-        if (ready) {
-            Log.i(LOG_TAG_SERVICE, "Ignore measurement, ready");
-            return;
-        }
-
         if (averagingEnabled) {
-            // collect measurements history
-            if (measurements.size() > numMeasurements) {
-                measurements.remove(0);
+
+            if (ready) {
+                Log.i(LOG_TAG_SERVICE, "Ignore measurement, ready");
+                return;
             }
+
+            // collect measurements history
             measurements.add(value);
             Log.i(LOG_TAG_SERVICE, "Adding " + value);
 
@@ -74,9 +72,9 @@ public class MeasurementsFilter {
                     ready = true;
 
                     // remove last noise
-                    if (deviation > lastDeviation) {
+                    if (deviation > lastDeviation && lastMeasurements.size() > numMeasurements) {
                         Log.i(LOG_TAG_SERVICE, "Remove last measurement " + value);
-                        measurements.remove(measurements.size());
+                        measurements.remove(measurements.size() -1 );
                     }
 
                     // final processing
@@ -97,6 +95,10 @@ public class MeasurementsFilter {
 
             // prepare for next iteration
             lastDeviation = deviation;
+
+            if (measurements.size() > numMeasurements) {
+                measurements.remove(0);
+            }
         } else {
             // directly assign the value
             Log.i(LOG_TAG_SERVICE, "Direct value " + value);
@@ -108,31 +110,32 @@ public class MeasurementsFilter {
         }
     }
 
-    private List<Float> removeNoise(List<Float> aLastMeasurements, float anAveraged, float aDeviation) {
+    public List<Float> removeNoise(List<Float> aLastMeasurements, float anAveraged, float aDeviation) {
+        List<Float> filtered = new ArrayList<>(aLastMeasurements);
         // remove up to 20 percent of the measurements
         int numMeasurementsToRemove = (int) (numMeasurements * NOISE_COUNT_TRESHOLD);
 
         // that are more than 60% away from the average
-        float noiseDistance = (float) (Math.abs(aDeviation - anAveraged) * DISTANCE_TRESHOLD);
+        float noiseDistance = (Math.abs(aDeviation - anAveraged) * DISTANCE_TRESHOLD);
 
         for (int i=0; i< numMeasurementsToRemove; i++) {
             // find farthest value
             float value = findBiggestDistance(aLastMeasurements, anAveraged); // TODO
 
             // remove if distance above treshold
-            float distance = getDeviation(anAveraged, value);
+            float distance = getHalfDistance(anAveraged, value);
             if (distance > noiseDistance) {
                 Log.i(LOG_TAG_SERVICE, "Removing noise " + value + " by distance " + distance);
-                aLastMeasurements.remove(value);
+                filtered.remove(value);
             }
         }
-        return aLastMeasurements;
+        return filtered;
     }
 
     private float findBiggestDistance(List<Float> aMeasurements, float anAverage) {
         float mostDistance = aMeasurements.get(0);
         for (int i=1; i<aMeasurements.size(); i++) {
-            if (getDeviation(aMeasurements.get(i), anAverage) > mostDistance) {
+            if (getHalfDistance(aMeasurements.get(i), anAverage) > mostDistance) {
                 mostDistance = aMeasurements.get(i);
             }
         }
@@ -185,19 +188,21 @@ public class MeasurementsFilter {
         }
     }
 
-    public Float getAverageAzimuthDegrees(List<Float> measurements) {
+    public float getAverageAzimuthDegrees(List<Float> measurements) {
 
-        if (measurements.size() == 1) {
-            return measurements.get(0);
+        float sum = 0;
+        for(Float measurement : measurements) {
+
+            if (measurement > VALUE_AZIMUTH_180_DEGREES) {
+                // make 180+ degrees negative
+                sum += (measurement - MAX_VALUE_AZIMUTH_DEGREES);
+            } else {
+                sum += measurement;
+            }
         }
 
-        // left
-        List<Float> averages = new ArrayList<>();
-        for (int i=1; i<measurements.size(); i++) {
-            float average = getAverageAzimuthDegrees(measurements.get(i-1), measurements.get(i));
-            averages.add(average);
-        }
-        return getAverageAzimuthDegrees(averages);
+        float average = sum / measurements.size();
+        return Math.abs(average);
     }
 
     public float getDeviation(List<Float> values, float anAverage) {
@@ -206,13 +211,13 @@ public class MeasurementsFilter {
         }
         float maxDeviation = 0;
         for (Float reading : values) {
-            float deviation = getDeviation(anAverage, reading);
+            float deviation = 2 * getHalfDistance(anAverage, reading);
             maxDeviation = Math.max(deviation, maxDeviation);
         }
         return maxDeviation;
     }
 
-    private float getDeviation(float value1, float value2) {
+    public float getHalfDistance(float value1, float value2) {
         float average = getAverageAzimuthDegrees(value1, value2);
         return Math.min(Math.abs(average - value1), Math.abs(average - value2));
     }
@@ -229,5 +234,16 @@ public class MeasurementsFilter {
     private List<Float> getLastMeasurements() {
         int lastMeasurementsCount = Math.min(measurements.size(), numMeasurements);
         return measurements.subList(measurements.size() - lastMeasurementsCount, measurements.size());
+    }
+
+    public void resetMeasurements() {
+        measurements.clear();
+        averaged = 0;
+        lastDeviation = 0;
+    }
+
+
+    public List<Float> getMeasurements() {
+        return measurements;
     }
 }
