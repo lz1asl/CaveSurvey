@@ -217,16 +217,10 @@ public class BaseBuildInMeasureDialog extends DialogFragment {
         azimuthFilter.startAveraging();
         slopeFilter.startAveraging();
 
+
         if (orientationAzimuthProcessor != null) {
             // await averaging
-            while(!azimuthFilter.isReady()) {
-                Log.i(LOG_TAG_SERVICE, "Awaiting azimuth");
-                try {
-                    Thread.sleep(50);
-                } catch (InterruptedException aE) {
-                    Log.e(LOG_TAG_SERVICE, "Interrupted while waiting the filters", aE);
-                }
-            }
+            azimuthFilter.awaitReady();
 
             // stop
             Log.i(LOG_TAG_SERVICE, "Stop azimuth processor");
@@ -236,14 +230,7 @@ public class BaseBuildInMeasureDialog extends DialogFragment {
 
         if (orientationSlopeProcessor != null) {
             // await averaging
-            while(!slopeFilter.isReady()) {
-                Log.i(LOG_TAG_SERVICE, "Awaiting azimuth");
-                try {
-                    Thread.sleep(50);
-                } catch (InterruptedException aE) {
-                    Log.e(LOG_TAG_SERVICE, "Interrupted while waiting the filters", aE);
-                }
-            }
+            slopeFilter.awaitReady();
 
             // stop
             Log.i(LOG_TAG_SERVICE, "Stop slope processor");

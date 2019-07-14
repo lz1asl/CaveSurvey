@@ -7,6 +7,8 @@ import com.astoev.cave.survey.util.ConfigUtil;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import static com.astoev.cave.survey.Constants.LOG_TAG_SERVICE;
 import static com.astoev.cave.survey.model.Option.MAX_VALUE_AZIMUTH_DEGREES;
@@ -36,6 +38,9 @@ public class MeasurementsFilter {
     // final values
     private Float lastSD = null;
     private float averaged;
+
+    // await from the UI
+    private CountDownLatch latch = new CountDownLatch(1);
 
     public void initializeFromConfig() {
         averagingEnabled = ConfigUtil.getBooleanProperty(PREF_SENSOR_NOISE_REDUCTION);
@@ -96,6 +101,8 @@ public class MeasurementsFilter {
                     averaged = getAverageAzimuthDegrees(lastMeasurements);
                     lastSD = getStandardDeviation(lastMeasurements);
                     Log.i(LOG_TAG_SERVICE, "With noise reduction " + averaged + " with deviation " + lastSD);
+
+                    latch.countDown();
                 }
             }
 
@@ -160,6 +167,18 @@ public class MeasurementsFilter {
 
     public boolean isReady() {
         return ready;
+    }
+
+    public void awaitReady() {
+        try {
+            latch.await(2, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            Log.e(LOG_TAG_SERVICE, "interrupted", e);
+        }
+
+        if (!isReady()) {
+            Log.e(LOG_TAG_SERVICE, "Averaging not ready");
+        }
     }
 
     public Float getValue() {
@@ -251,15 +270,21 @@ public class MeasurementsFilter {
     }
 
     public float getStandardDeviation(List<Float> values) {
+
+        List<Float> normalizedValues = new ArrayList<>();
+        for (Float value : values) {
+            normalizedValues.add(value + 99999);
+        }
+
         float sum = 0f, standardDeviation = 0f;
-        for(float value : values) {
+        for(float value : normalizedValues) {
             sum += value;
         }
-        double mean = sum / values.size();
-        for(double value: values) {
+        double mean = sum / normalizedValues.size();
+        for(double value: normalizedValues) {
             standardDeviation += Math.pow(value - mean, 2);
         }
-        return (float) Math.sqrt(standardDeviation / values.size());
+        return (float) Math.sqrt(standardDeviation / normalizedValues.size());
     }
 
     public float getHalfDistance(float value1, float value2) {
@@ -268,7 +293,7 @@ public class MeasurementsFilter {
     }
 
     public String getAccuracyString() {
-        if (averagingEnabled) {
+        if (averagingEnabled && lastSD != null) {
             return " \u00B1" + formatter.format(lastSD) + "/" + numMeasurements;
         } else {
             return "";
