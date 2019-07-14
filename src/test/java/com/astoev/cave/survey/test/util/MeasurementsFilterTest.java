@@ -173,12 +173,12 @@ public class MeasurementsFilterTest extends TestCase {
                 is(Arrays.asList(1f, 1f, 1f, 1f, 1f, 1f, 1f, 1f, 1f)));
         // close values kept
         assertThat(filter.removeNoise(Arrays.asList(2f, 1f, 1f, 1f, 1f, 1f, 1f, 1f, 1f, 1f), avg, dev),
-                is(Arrays.asList(2f, 1f, 1f, 1f, 1f, 1f, 1f, 1f, 1f, 1f, 1f)));
+                is(Arrays.asList(2f, 1f, 1f, 1f, 1f, 1f, 1f, 1f, 1f, 1f)));
         // only most extreme removed
         assertThat(filter.removeNoise(Arrays.asList(1f, 2f, 6f, 1f, 8f, 1f, 1f, 4f, 1f, 1f), avg, dev),
-                is(Arrays.asList(1f, 2f, 1f, 1f, 1f, 1f, 4f, 1f, 1f)));
-        assertThat(filter.removeNoise(Arrays.asList(4f, 1f, -5f, 1f, 3f, 1f, 1f, 1f, 1f, 1f), avg, dev),
-                is(Arrays.asList(1f, 1f, 1f, 1f, 1f, 1f, 1f, 1f, 1f)));
+                is(Arrays.asList(1f, 2f, 1f, 1f, 1f, 4f, 1f, 1f)));
+        assertThat(filter.removeNoise(Arrays.asList(4f, 1f, -5f, 1f, 3f, 1f, 1f, 1f, 1f, 1f, 1f), avg, dev),
+                is(Arrays.asList(1f, 1f, 3f, 1f, 1f, 1f, 1f, 1f, 1f)));
     }
 
     @Test
@@ -233,6 +233,16 @@ public class MeasurementsFilterTest extends TestCase {
         assertEquals(1.5f, filter.getValue(), 0.0f);
         assertEquals( " ±0.50/2", filter.getAccuracyString());
         assertThat(filter.getMeasurements(), is(Arrays.asList(1f, 2f)));
+    }
+
+    @Test
+    public void testFindBiggestDistance() {
+        MeasurementsFilter filter = new MeasurementsFilter();
+        assertEquals(4f, filter.findMostDistantValue(Arrays.asList(1f, 2f, 1f, 4f, 2f), 2f));
+        assertEquals(8f, filter.findMostDistantValue(Arrays.asList(1f, 2f, 6f, 1f, 8f, 1f, 1f, 4f, 1f, 1f), 2f));
+        assertEquals(6f, filter.findMostDistantValue(Arrays.asList(1f, 2f, 6f, 1f, 1f, 1f, 4f, 1f, 1f), 2f));
+        assertEquals(9f, filter.findMostDistantValue(Arrays.asList(9f, 1f, 2f, 6f, 1f, 1f, 1f, 4f, 1f, 1f), 2f));
+        assertEquals(7f, filter.findMostDistantValue(Arrays.asList(1f, 2f, 6f, 1f, 1f, 1f, 4f, 1f, 1f, 7f), 2f));
     }
 
 }

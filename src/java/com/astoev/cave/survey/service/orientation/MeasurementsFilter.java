@@ -113,33 +113,39 @@ public class MeasurementsFilter {
     public List<Float> removeNoise(List<Float> aLastMeasurements, float anAveraged, float aDeviation) {
         List<Float> filtered = new ArrayList<>(aLastMeasurements);
         // remove up to 20 percent of the measurements
-        int numMeasurementsToRemove = (int) (numMeasurements * NOISE_COUNT_TRESHOLD);
+        int maxNumMeasurementsToRemove = (int) (numMeasurements * NOISE_COUNT_TRESHOLD);
 
         // that are more than 60% away from the average
-        float noiseDistance = (Math.abs(aDeviation - anAveraged) * DISTANCE_TRESHOLD);
+        float minNoiseDistance = Math.abs(aDeviation * DISTANCE_TRESHOLD);
 
-        for (int i=0; i< numMeasurementsToRemove; i++) {
+        for (int i=0; i< maxNumMeasurementsToRemove; i++) {
             // find farthest value
-            float value = findBiggestDistance(aLastMeasurements, anAveraged); // TODO
+            float value = findMostDistantValue(filtered, anAveraged); // TODO
 
             // remove if distance above treshold
             float distance = getHalfDistance(anAveraged, value);
-            if (distance > noiseDistance) {
+            if (distance > minNoiseDistance) {
                 Log.i(LOG_TAG_SERVICE, "Removing noise " + value + " by distance " + distance);
                 filtered.remove(value);
+            } else {
+                break;
             }
         }
         return filtered;
     }
 
-    private float findBiggestDistance(List<Float> aMeasurements, float anAverage) {
-        float mostDistance = aMeasurements.get(0);
-        for (int i=1; i<aMeasurements.size(); i++) {
-            if (getHalfDistance(aMeasurements.get(i), anAverage) > mostDistance) {
-                mostDistance = aMeasurements.get(i);
+    public float findMostDistantValue(List<Float> aMeasurements, float anAverage) {
+        int biggestDistanceIndex = 0;
+        float biggestDistance = -1;
+        float currentDistance;
+        for (int i=0; i<aMeasurements.size(); i++) {
+            currentDistance = getHalfDistance(aMeasurements.get(i), anAverage);
+            if (currentDistance > biggestDistance) {
+                biggestDistance = currentDistance;
+                biggestDistanceIndex = i;
             }
         }
-        return mostDistance;
+        return aMeasurements.get(biggestDistanceIndex);
     }
 
     public void startAveraging() {
