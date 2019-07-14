@@ -34,7 +34,7 @@ public class MeasurementsFilter {
     private boolean averaging = false;
 
     // final values
-    private float lastDeviation = 0;
+    private Float lastSD = null;
     private float averaged;
 
     public void initializeFromConfig() {
@@ -58,21 +58,27 @@ public class MeasurementsFilter {
 
             List<Float> lastMeasurements = getLastMeasurements();
             averaged = getAverageAzimuthDegrees(lastMeasurements);
-            float deviation = getDeviation(lastMeasurements, averaged);
-            Log.i(LOG_TAG_SERVICE, "Deviation got " + deviation);
+            float sd = getStandardDeviation(lastMeasurements);
+
+            if (measurements.size() <= 2) {
+                // not enough to average
+                return;
+            }
+
+            Log.i(LOG_TAG_SERVICE, "Deviation got " + sd);
 
             // time to get the best value
             if (averaging) {
 
                 Log.i(LOG_TAG_SERVICE, "Averaging ...");
 
-                if (deviation >= lastDeviation && lastMeasurements.size() >= numMeasurements) {
+                if (lastSD != null && sd >= lastSD && measurements.size() >= numMeasurements) {
                     // enough measurements + new noise = finalize
                     Log.i(LOG_TAG_SERVICE, "Got enough measurements, noise increasing");
                     ready = true;
 
                     // remove last noise
-                    if (deviation > lastDeviation && lastMeasurements.size() > numMeasurements) {
+                    if (sd > lastSD && measurements.size() > numMeasurements) {
                         Log.i(LOG_TAG_SERVICE, "Remove last measurement " + value);
                         measurements.remove(measurements.size() -1 );
                     }
@@ -80,21 +86,21 @@ public class MeasurementsFilter {
                     // final processing
                     lastMeasurements = getLastMeasurements();
                     averaged = getAverageAzimuthDegrees(lastMeasurements);
-                    deviation = getDeviation(lastMeasurements, averaged);
-                    Log.i(LOG_TAG_SERVICE, "Average " + averaged + " with deviation " + deviation);
+                    sd = getStandardDeviation(lastMeasurements);
+                    Log.i(LOG_TAG_SERVICE, "Average " + averaged + " with deviation " + sd);
 
                     // remove noise
-                    lastMeasurements = removeNoise(lastMeasurements, averaged, deviation);
+                    lastMeasurements = removeNoise(lastMeasurements, averaged, sd);
 
                     // average samples left
                     averaged = getAverageAzimuthDegrees(lastMeasurements);
-                    lastDeviation = getDeviation(lastMeasurements, averaged);
-                    Log.i(LOG_TAG_SERVICE, "With noise reduction " + averaged + " with deviation " + deviation);
+                    lastSD = getStandardDeviation(lastMeasurements);
+                    Log.i(LOG_TAG_SERVICE, "With noise reduction " + averaged + " with deviation " + lastSD);
                 }
             }
 
             // prepare for next iteration
-            lastDeviation = deviation;
+            lastSD = sd;
 
             if (measurements.size() > numMeasurements) {
                 measurements.remove(0);
@@ -196,31 +202,64 @@ public class MeasurementsFilter {
 
     public float getAverageAzimuthDegrees(List<Float> measurements) {
 
-        float sum = 0;
-        for(Float measurement : measurements) {
+        float sum = 0, average;
 
-            if (measurement > VALUE_AZIMUTH_180_DEGREES) {
-                // make 180+ degrees negative
-                sum += (measurement - MAX_VALUE_AZIMUTH_DEGREES);
-            } else {
+        // do we need normalization?
+        float max = findBiggestValue(measurements);
+        float min = findSmallestValue(measurements);
+
+        if (max - min < VALUE_AZIMUTH_180_DEGREES) {
+            for(Float measurement : measurements) {
                 sum += measurement;
             }
-        }
 
-        float average = sum / measurements.size();
-        return Math.abs(average);
+            average = sum / measurements.size();
+            return average;
+        } else {
+            for (Float measurement : measurements) {
+                if (measurement > VALUE_AZIMUTH_180_DEGREES) {
+                    // make 180+ degrees negative
+                    sum += (measurement - MAX_VALUE_AZIMUTH_DEGREES);
+                } else {
+                    sum += measurement;
+                }
+            }
+
+            average = sum / measurements.size();
+            return Math.abs(average);
+        }
     }
 
-    public float getDeviation(List<Float> values, float anAverage) {
-        if (values.size() <= 1) {
-            return 0;
+    private float findBiggestValue(List<Float> measurements) {
+        float max = 0;
+        for (Float measurement : measurements) {
+            if (measurement > max) {
+                max = measurement;
+            }
         }
-        float maxDeviation = 0;
-        for (Float reading : values) {
-            float deviation = 2 * getHalfDistance(anAverage, reading);
-            maxDeviation = Math.max(deviation, maxDeviation);
+        return max;
+    }
+
+    private float findSmallestValue(List<Float> measurements) {
+        float min = MAX_VALUE_AZIMUTH_DEGREES;
+        for (Float measurement : measurements) {
+            if (measurement < min) {
+                min = measurement;
+            }
         }
-        return maxDeviation;
+        return min;
+    }
+
+    public float getStandardDeviation(List<Float> values) {
+        float sum = 0f, standardDeviation = 0f;
+        for(float value : values) {
+            sum += value;
+        }
+        double mean = sum / values.size();
+        for(double value: values) {
+            standardDeviation += Math.pow(value - mean, 2);
+        }
+        return (float) Math.sqrt(standardDeviation / values.size());
     }
 
     public float getHalfDistance(float value1, float value2) {
@@ -230,7 +269,7 @@ public class MeasurementsFilter {
 
     public String getAccuracyString() {
         if (averagingEnabled) {
-            return " \u00B1" + formatter.format(lastDeviation) + "/" + numMeasurements;
+            return " \u00B1" + formatter.format(lastSD) + "/" + numMeasurements;
         } else {
             return "";
         }
@@ -245,7 +284,7 @@ public class MeasurementsFilter {
     public void resetMeasurements() {
         measurements.clear();
         averaged = 0;
-        lastDeviation = 0;
+        lastSD = null;
     }
 
 
