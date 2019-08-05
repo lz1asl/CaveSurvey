@@ -257,31 +257,88 @@ public class MeasurementsFilterTest extends TestCase {
 
     @Test
     public void testFindBiggestDistance() {
-        MeasurementsFilter filter = new MeasurementsFilter();
         // single
-        assertEquals(4f, filter.findMostDistantValue(Arrays.asList(1f, 2f, 1f, 4f, 2f), 2f));
+        assertEquals(4f, MeasurementsFilter.findMostDistantValue(Arrays.asList(1f, 2f, 1f, 4f, 2f), 2f));
         // multiple
-        assertEquals(8f, filter.findMostDistantValue(Arrays.asList(1f, 2f, 6f, 1f, 8f, 1f, 1f, 4f, 1f, 1f), 2f));
-        assertEquals(6f, filter.findMostDistantValue(Arrays.asList(1f, 2f, 6f, 1f, 6f, 1f, 4f, 1f, 1f), 2f));
+        assertEquals(8f, MeasurementsFilter.findMostDistantValue(Arrays.asList(1f, 2f, 6f, 1f, 8f, 1f, 1f, 4f, 1f, 1f), 2f));
+        assertEquals(6f, MeasurementsFilter.findMostDistantValue(Arrays.asList(1f, 2f, 6f, 1f, 6f, 1f, 4f, 1f, 1f), 2f));
         // leading
-        assertEquals(9f, filter.findMostDistantValue(Arrays.asList(9f, 1f, 2f, 6f, 1f, 1f, 1f, 4f, 1f, 1f), 2f));
+        assertEquals(9f, MeasurementsFilter.findMostDistantValue(Arrays.asList(9f, 1f, 2f, 6f, 1f, 1f, 1f, 4f, 1f, 1f), 2f));
         // trailing
-        assertEquals(7f, filter.findMostDistantValue(Arrays.asList(1f, 2f, 6f, 1f, 1f, 1f, 4f, 1f, 1f, 7f), 2f));
+        assertEquals(7f, MeasurementsFilter.findMostDistantValue(Arrays.asList(1f, 2f, 6f, 1f, 1f, 1f, 4f, 1f, 1f, 7f), 2f));
     }
 
     @Test
     public void testStandardDeviation() {
-        MeasurementsFilter filter = new MeasurementsFilter();
         // no deviation single value
-        assertEquals(0f, filter.getStandardDeviation(Arrays.asList(1f)), 0.00f);
+        assertEquals(0f, MeasurementsFilter.getStandardDeviation(Arrays.asList(1f)), 0.00f);
         // no deviation same values
-        assertEquals(0f, filter.getStandardDeviation(Arrays.asList(1f, 1f)), 0.00f);
+        assertEquals(0f, MeasurementsFilter.getStandardDeviation(Arrays.asList(1f, 1f)), 0.00f);
         // distance
-        assertEquals(0.5f, filter.getStandardDeviation(Arrays.asList(1f, 2f)), 0.00f);
+        assertEquals(0.5f, MeasurementsFilter.getStandardDeviation(Arrays.asList(1f, 2f)), 0.00f);
         // going down
-        assertEquals(0.47f, filter.getStandardDeviation(Arrays.asList(1f, 1f, 2f)), 0.01f);
+        assertEquals(0.47f, MeasurementsFilter.getStandardDeviation(Arrays.asList(1f, 1f, 2f)), 0.01f);
         // and down
-        assertEquals(0.43f, filter.getStandardDeviation(Arrays.asList(1f, 1f, 2f, 1f)), 0.01f);
+        assertEquals(0.43f, MeasurementsFilter.getStandardDeviation(Arrays.asList(1f, 1f, 2f, 1f)), 0.01f);
+        // around
+        assertEquals(0.5f, MeasurementsFilter.getStandardDeviation(Arrays.asList(50f, 51f, 50f, 51f)), 0.01f);
+        assertEquals(0.5f, MeasurementsFilter.getStandardDeviation(Arrays.asList(120f, 121f, 120f, 121f)), 0.01f);
+        assertEquals(0.5f, MeasurementsFilter.getStandardDeviation(Arrays.asList(160f, 161f, 160f, 161f)), 0.01f);
+        assertEquals(0.5f, MeasurementsFilter.getStandardDeviation(Arrays.asList(220f, 221f, 220f, 221f)), 0.01f);
+        assertEquals(0.5f, MeasurementsFilter.getStandardDeviation(Arrays.asList(280f, 281f, 280f, 281f)), 0.01f);
+        assertEquals(0.5f, MeasurementsFilter.getStandardDeviation(Arrays.asList(350f, 351f, 350f, 351f)), 0.01f);
+        assertEquals(1f, MeasurementsFilter.getStandardDeviation(Arrays.asList(359f, 1f, 359f, 1f)), 0.01f);
+    }
+
+    @Test
+    public void testFirstQuadrant() {
+        assertEquals(true, MeasurementsFilter.isFirstQuadrant(0));
+        assertEquals(true, MeasurementsFilter.isFirstQuadrant(10));
+        assertEquals(true, MeasurementsFilter.isFirstQuadrant(40));
+        assertEquals(true, MeasurementsFilter.isFirstQuadrant(50));
+        assertEquals(true, MeasurementsFilter.isFirstQuadrant(80));
+        assertEquals(true, MeasurementsFilter.isFirstQuadrant(90));
+        assertEquals(false, MeasurementsFilter.isFirstQuadrant(91));
+        assertEquals(false, MeasurementsFilter.isFirstQuadrant(120));
+        assertEquals(false, MeasurementsFilter.isFirstQuadrant(220));
+        assertEquals(false, MeasurementsFilter.isFirstQuadrant(300));
+        assertEquals(false, MeasurementsFilter.isFirstQuadrant(350));
+    }
+
+    @Test
+    public void testForthQuadrant() {
+        assertEquals(true, MeasurementsFilter.isForthQuadrant(359));
+        assertEquals(true, MeasurementsFilter.isForthQuadrant(300));
+        assertEquals(true, MeasurementsFilter.isForthQuadrant(270));
+        assertEquals(false, MeasurementsFilter.isForthQuadrant(200));
+        assertEquals(false, MeasurementsFilter.isForthQuadrant(150));
+        assertEquals(false, MeasurementsFilter.isForthQuadrant(110));
+        assertEquals(false, MeasurementsFilter.isForthQuadrant(80));
+        assertEquals(false, MeasurementsFilter.isForthQuadrant(20));
+    }
+
+    @Test
+    public void testNeedNormalization() {
+        assertEquals(false, MeasurementsFilter.needNormalization(Arrays.asList(1f, 2f, 3f)));
+        assertEquals(false, MeasurementsFilter.needNormalization(Arrays.asList(100f, 200f, 300f)));
+        assertEquals(false, MeasurementsFilter.needNormalization(Arrays.asList(350f, 320f)));
+        assertEquals(true, MeasurementsFilter.needNormalization(Arrays.asList(1f, 350f, 3f)));
+        assertEquals(true, MeasurementsFilter.needNormalization(Arrays.asList(80f, 300f, 40f)));
+    }
+
+    @Test
+    public void testNormalization() {
+        assertThat(MeasurementsFilter.normalize(Arrays.asList(1f, 2f, 3f)),
+                is(Arrays.asList(181f, 182f, 183f)));
+
+        assertThat(MeasurementsFilter.normalize(Arrays.asList(350f, 2f, 3f)),
+                is(Arrays.asList(170f, 182f, 183f)));
+    }
+
+    @Test
+    public void testRestoreNormalization() {
+        assertEquals(5f, MeasurementsFilter.restoreInitial(185));
+        assertEquals(350f, MeasurementsFilter.restoreInitial(170));
     }
 
 }

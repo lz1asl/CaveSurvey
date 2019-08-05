@@ -13,6 +13,8 @@ import java.util.concurrent.TimeUnit;
 import static com.astoev.cave.survey.Constants.LOG_TAG_SERVICE;
 import static com.astoev.cave.survey.model.Option.MAX_VALUE_AZIMUTH_DEGREES;
 import static com.astoev.cave.survey.model.Option.VALUE_AZIMUTH_180_DEGREES;
+import static com.astoev.cave.survey.model.Option.VALUE_AZIMUTH_270_DEGREES;
+import static com.astoev.cave.survey.model.Option.VALUE_AZIMUTH_90_DEGREES;
 import static com.astoev.cave.survey.util.ConfigUtil.PREF_SENSOR_NOISE_REDUCTION;
 import static com.astoev.cave.survey.util.ConfigUtil.PREF_SENSOR_NOISE_REDUCTION_NUM_MEASUREMENTS;
 
@@ -147,7 +149,7 @@ public class MeasurementsFilter {
         return filtered;
     }
 
-    public float findMostDistantValue(List<Float> aMeasurements, float anAverage) {
+    public static float findMostDistantValue(List<Float> aMeasurements, float anAverage) {
         int biggestDistanceIndex = 0;
         float biggestDistance = -1;
         float currentDistance;
@@ -193,7 +195,7 @@ public class MeasurementsFilter {
         numMeasurements = aNumMeasurements;
     }
 
-    public float getAverageAzimuthDegrees(float first, float second) {
+    public static float getAverageAzimuthDegrees(float first, float second) {
 
         // sum
         float sum = first + second;
@@ -224,56 +226,34 @@ public class MeasurementsFilter {
         float sum = 0, average;
 
         // do we need normalization?
-        float max = findBiggestValue(measurements);
-        float min = findSmallestValue(measurements);
-
-        if (max - min < VALUE_AZIMUTH_180_DEGREES) {
-            for(Float measurement : measurements) {
-                sum += measurement;
-            }
-
-            average = sum / measurements.size();
-            return average;
+        boolean normalized = false;
+        List<Float> normalizedMeasurements;
+        if (needNormalization(measurements)) {
+            normalized = true;
+            normalizedMeasurements = normalize(measurements);
         } else {
-            for (Float measurement : measurements) {
-                if (measurement > VALUE_AZIMUTH_180_DEGREES) {
-                    // make 180+ degrees negative
-                    sum += (measurement - MAX_VALUE_AZIMUTH_DEGREES);
-                } else {
-                    sum += measurement;
-                }
-            }
-
-            average = sum / measurements.size();
-            return Math.abs(average);
+            normalizedMeasurements = measurements;
         }
+
+        for(Float measurement : normalizedMeasurements) {
+            sum += measurement;
+        }
+
+        average = sum / normalizedMeasurements.size();
+
+        if (normalized) {
+            average = restoreInitial(average);
+        }
+        return  average;
     }
 
-    private float findBiggestValue(List<Float> measurements) {
-        float max = 0;
-        for (Float measurement : measurements) {
-            if (measurement > max) {
-                max = measurement;
-            }
-        }
-        return max;
-    }
+    public static float getStandardDeviation(List<Float> values) {
 
-    private float findSmallestValue(List<Float> measurements) {
-        float min = MAX_VALUE_AZIMUTH_DEGREES;
-        for (Float measurement : measurements) {
-            if (measurement < min) {
-                min = measurement;
-            }
-        }
-        return min;
-    }
-
-    public float getStandardDeviation(List<Float> values) {
-
-        List<Float> normalizedValues = new ArrayList<>();
-        for (Float value : values) {
-            normalizedValues.add(value + 99999);
+        List<Float> normalizedValues;
+        if (needNormalization(values)) {
+            normalizedValues = normalize(values);
+        } else {
+            normalizedValues = values;
         }
 
         float sum = 0f, standardDeviation = 0f;
@@ -287,7 +267,7 @@ public class MeasurementsFilter {
         return (float) Math.sqrt(standardDeviation / normalizedValues.size());
     }
 
-    public float getHalfDistance(float value1, float value2) {
+    public static float getHalfDistance(float value1, float value2) {
         float average = getAverageAzimuthDegrees(value1, value2);
         return Math.min(Math.abs(average - value1), Math.abs(average - value2));
     }
@@ -315,5 +295,51 @@ public class MeasurementsFilter {
 
     public List<Float> getMeasurements() {
         return measurements;
+    }
+
+    public static boolean isForthQuadrant(float measurement) {
+        return measurement >= VALUE_AZIMUTH_270_DEGREES && measurement <= MAX_VALUE_AZIMUTH_DEGREES;
+    }
+
+    public static boolean isFirstQuadrant(float measurement) {
+        return measurement >= 0 && measurement <= VALUE_AZIMUTH_90_DEGREES;
+    }
+
+    public static boolean needNormalization(List<Float> measurements) {
+        boolean firstQuadrantValues = false;
+        boolean forthQuadrantValues = false;
+
+        for (Float measurement : measurements) {
+            if (isFirstQuadrant(measurement)) {
+                firstQuadrantValues = true;
+            } else if (isForthQuadrant(measurement)) {
+                forthQuadrantValues = true;
+            }
+        }
+
+        return firstQuadrantValues && forthQuadrantValues;
+    }
+
+    public static List<Float> normalize(List<Float> measurements) {
+
+        List<Float> normalizedMeasurements = new ArrayList<>();
+        for (Float measurement : measurements) {
+            Float normalized = measurement + VALUE_AZIMUTH_180_DEGREES;
+
+            if (normalized >= MAX_VALUE_AZIMUTH_DEGREES) {
+                normalized = normalized - MAX_VALUE_AZIMUTH_DEGREES;
+            }
+
+            normalizedMeasurements.add(normalized);
+        }
+        return normalizedMeasurements;
+    }
+
+    public static float restoreInitial(float normalized) {
+        float restored = normalized - VALUE_AZIMUTH_180_DEGREES;
+        if (restored < 0) {
+            restored += MAX_VALUE_AZIMUTH_DEGREES;
+        }
+        return restored;
     }
 }
