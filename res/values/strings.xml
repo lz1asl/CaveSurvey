@@ -78,7 +78,8 @@
     
     <string name="sensor">Sensor</string>
     <string name="accuracy">Accuracy</string>
-    
+    <string name="value">Value</string>
+
     <!-- add popup -->
     <string name="main_add_title">Add new</string>
     <string name="main_add_leg">Next Leg</string>

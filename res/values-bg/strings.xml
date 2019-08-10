@@ -68,7 +68,8 @@
     
     <string name="sensor">Сензор</string>
     <string name="accuracy">Точност</string>
-    
+    <string name="value">Стойност</string>
+
     <!-- add popup -->
     <string name="main_add_title">Добави измерване</string>
     <string name="main_add_leg">Следваща отсечка</string>

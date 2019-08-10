@@ -1,7 +1,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:isScrollContainer="true">
 
     <!-- headers -->
     <LinearLayout android:layout_height="wrap_content"
@@ -10,16 +11,20 @@
 
         <TextView android:layout_height="wrap_content"
                   android:layout_width="0dp"
+                  android:text="@string/sensor"
+                  android:textStyle="bold|italic"
                   android:layout_weight="1"/>
 
         <TextView android:layout_height="wrap_content"
                   android:layout_width="0dp"
                   android:layout_weight="1"
-                  android:text="@string/sensor" />
+                  android:textStyle="bold|italic"
+                  android:text="@string/value" />
 
         <TextView android:layout_height="wrap_content"
                   android:layout_width="0dp"
                   android:layout_weight="1"
+                  android:textStyle="bold|italic"
                   android:text="@string/accuracy" />
 
     </LinearLayout>
@@ -32,18 +37,22 @@
         <TextView android:layout_height="wrap_content"
                   android:layout_width="0dp"
                   android:layout_weight="1"
+                  android:layout_gravity="center"
                   android:text="@string/azimuth_column"/>
 
         <TextView android:id="@+id/azimuth_slope_azimuth_value"
                   android:layout_height="wrap_content"
                   android:layout_width="0dp"
                   android:layout_weight="1"
+                  android:layout_gravity="center"
                   android:text="@string/no_value_label"
                   android:textAppearance="?android:attr/textAppearanceLarge"/>
         <TextView android:id="@+id/azimuth_slope_azimuth_accuracy"
                   android:layout_height="wrap_content"
                   android:layout_width="0dp"
                   android:layout_weight="1"
+                  android:layout_margin="5dp"
+                  android:layout_gravity="center"
                   android:text="@string/no_value_label" />
 
     </LinearLayout>
@@ -55,13 +64,15 @@
                   
         <TextView android:layout_height="wrap_content"
                   android:layout_width="0dp"
-                  android:layout_weight="1" 
+                  android:layout_weight="1"
+                  android:layout_gravity="center"
                   android:text="@string/slope_column"/>
         
         <TextView android:id="@+id/azimuth_slope_slope_value"
                   android:layout_height="wrap_content"
                   android:layout_width="0dp"
                   android:layout_weight="1"
+                  android:layout_gravity="center"
                   android:text="@string/no_value_label"
                   android:textAppearance="?android:attr/textAppearanceLarge"/>
 
@@ -69,6 +80,8 @@
                   android:layout_height="wrap_content"
                   android:layout_width="0dp"
                   android:layout_weight="1"
+                  android:layout_margin="5dp"
+                  android:layout_gravity="center"
                   android:text="@string/no_value_label"/>
 
     </LinearLayout>

@@ -78,7 +78,9 @@
     
     <string name="sensor">传感器</string>
     <string name="accuracy">精度</string>
-    
+    <string name="value">值</string>
+
+
     <!-- add popup -->
     <string name="main_add_title">新建</string>
     <string name="main_add_leg">下一测量段</string>
