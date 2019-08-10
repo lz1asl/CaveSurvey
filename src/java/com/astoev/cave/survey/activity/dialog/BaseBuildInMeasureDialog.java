@@ -25,9 +25,13 @@ import com.astoev.cave.survey.util.ConfigUtil;
 
 import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.FutureTask;
 
 import static com.astoev.cave.survey.Constants.LOG_TAG_SERVICE;
 import static com.astoev.cave.survey.util.ConfigUtil.PREF_SENSOR_TIMEOUT;
+import static java.lang.Thread.sleep;
 
 /**
  * Created by astoev on 4/25/15.
@@ -132,7 +136,7 @@ public class BaseBuildInMeasureDialog extends DialogFragment {
         public void handleMessage(Message msg) {
 
             BaseBuildInMeasureDialog dialog = reference.get();
-            if (dialog == null){
+            if (dialog == null) {
                 return;
             }
 
@@ -142,8 +146,6 @@ public class BaseBuildInMeasureDialog extends DialogFragment {
             dialog.progressBar.invalidate();
             if (total >= progressMaxValue) {
                 dialog.progressThread.setState(ProgressThread.STATE_DONE);
-                dialog.progressBar.setIndeterminate(true);
-                dialog.progressBar.invalidate();
                 dialog.notifyEndProgress();
             }
         }
@@ -213,33 +215,63 @@ public class BaseBuildInMeasureDialog extends DialogFragment {
     protected void notifyEndProgress() {
         Log.i(LOG_TAG_SERVICE, "End of targeting time");
 
-        // actual averaging work
+        // start post processing
         azimuthFilter.startAveraging();
         slopeFilter.startAveraging();
 
-
-        if (orientationAzimuthProcessor != null) {
-            // await averaging
-            azimuthFilter.awaitReady();
-
-            // stop
-            Log.i(LOG_TAG_SERVICE, "Stop azimuth processor");
-            orientationAzimuthProcessor.stopListening();
-            targetAzimuthTextBox.setText(String.valueOf(azimuthFilter.getValue()));
+        // await results and stop processors
+        ExecutorService executor = Executors.newFixedThreadPool(3);
+        executor.submit(new FutureTask(new AwaitFilterRunnable(orientationAzimuthProcessor, azimuthFilter, targetAzimuthTextBox), null));
+        executor.submit(new FutureTask(new AwaitFilterRunnable(orientationSlopeProcessor, slopeFilter, targetSlopeTextBox), null));
+        try {
+            sleep(200);
+            executor.shutdown();
+        } catch (Exception e) {
+            Log.e(LOG_TAG_SERVICE, "Interrupted", e);
         }
 
-        if (orientationSlopeProcessor != null) {
-            // await averaging
-            slopeFilter.awaitReady();
-
-            // stop
-            Log.i(LOG_TAG_SERVICE, "Stop slope processor");
-            orientationSlopeProcessor.stopListening();
-            targetSlopeTextBox.setText(String.valueOf(slopeFilter.getValue()));
-        }
-
+        // dismiss the dialog
         dismiss();
     }
+
+    class AwaitFilterRunnable implements Runnable {
+
+        public AwaitFilterRunnable(OrientationProcessor processor, MeasurementsFilter filter, EditText targetTextBox) {
+            this.processor = processor;
+            this.filter = filter;
+            this.targetTextBox = targetTextBox;
+        }
+
+        OrientationProcessor processor;
+        MeasurementsFilter filter;
+        EditText targetTextBox;
+
+        @Override
+        public void run() {
+            if (processor != null) {
+                // await averaging
+                for (int i = 0; i < 30; i++) {
+                    try {
+                        Thread.currentThread().sleep(100);
+                    } catch (InterruptedException e) {
+                        Log.e(LOG_TAG_SERVICE, "interrupted", e);
+                    }
+
+                    if (filter.isReady()) {
+                        Log.i(LOG_TAG_SERVICE, "Stop azimuth processor");
+                        processor.stopListening();
+                        // averaged value
+                        targetTextBox.setText(String.valueOf(filter.getValue()));
+                        return;
+                    }
+                }
+
+                Log.e(LOG_TAG_SERVICE, "Averaging not ready");
+            }
+        }
+    }
+
+
 
     /**
      * Nested class that performs progress calculations (counting)
@@ -260,7 +292,7 @@ public class BaseBuildInMeasureDialog extends DialogFragment {
             total = 0;
             while (mState == STATE_RUNNING && total < progressMaxValue + 1) {
                 try {
-                    Thread.sleep(1000);
+                    sleep(1000);
                 } catch (InterruptedException e) {
                     Log.e("ERROR", "Thread Interrupted");
                 }

@@ -8,7 +8,6 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 import static com.astoev.cave.survey.Constants.LOG_TAG_SERVICE;
 import static com.astoev.cave.survey.model.Option.MAX_VALUE_AZIMUTH_DEGREES;
@@ -72,12 +71,10 @@ public class MeasurementsFilter {
                 return;
             }
 
-            Log.i(LOG_TAG_SERVICE, "Deviation got " + sd);
-
             // time to get the best value
             if (averaging) {
 
-                Log.i(LOG_TAG_SERVICE, "Averaging ...");
+                Log.i(LOG_TAG_SERVICE, "Deviation got " + sd + ", Averaging ...");
 
                 if (lastSD != null && sd >= lastSD && measurements.size() >= numMeasurements) {
                     // enough measurements + new noise = finalize
@@ -169,18 +166,6 @@ public class MeasurementsFilter {
 
     public boolean isReady() {
         return ready;
-    }
-
-    public void awaitReady() {
-        try {
-            latch.await(2, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            Log.e(LOG_TAG_SERVICE, "interrupted", e);
-        }
-
-        if (!isReady()) {
-            Log.e(LOG_TAG_SERVICE, "Averaging not ready");
-        }
     }
 
     public Float getValue() {
@@ -291,7 +276,6 @@ public class MeasurementsFilter {
         averaged = 0;
         lastSD = null;
     }
-
 
     public List<Float> getMeasurements() {
         return measurements;
