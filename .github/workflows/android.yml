@@ -1,4 +1,4 @@
-name: Android CI
+name: CaveSurvey Build
 
 on: [push]
 
@@ -13,5 +13,7 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.8
-    - name: Build with Gradle
+    - name: Patch No Bosch Library
+      run: git apply no_bosch_library.patch
+    - name: Assemble Debug
       run: ./gradlew assembleDebug
