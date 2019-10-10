@@ -14,6 +14,8 @@ import java.io.OutputStream;
 import java.util.List;
 import java.util.UUID;
 
+import static android.bluetooth.BluetoothDevice.DEVICE_TYPE_CLASSIC;
+
 /**
  * Bluetooth device using standard serial communication port.
  */
@@ -123,4 +125,8 @@ public abstract class AbstractBluetoothRFCOMMDevice extends AbstractBluetoothDev
 
     }
 
+    @Override
+    public int getDeviceType() {
+        return DEVICE_TYPE_CLASSIC;
+    }
 }
