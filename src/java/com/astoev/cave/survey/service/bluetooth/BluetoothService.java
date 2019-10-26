@@ -40,6 +40,7 @@ import com.astoev.cave.survey.service.bluetooth.device.comm.AbstractBluetoothRFC
 import com.astoev.cave.survey.service.bluetooth.device.comm.CEMILDMBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.comm.DistoXBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.comm.LaserAceBluetoothDevice;
+import com.astoev.cave.survey.service.bluetooth.device.comm.LeicaDistoD3aBtBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.comm.TruPulse360BluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.comm.bosch.glm.BoschGLM100CBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.comm.bosch.glm.BoschGLM50CBluetoothDevice;
@@ -98,6 +99,7 @@ public class BluetoothService {
         SUPPORTED_BLUETOOTH_COM_DEVICES.add(new BoschPLR30CBluetoothDevice());
         SUPPORTED_BLUETOOTH_COM_DEVICES.add(new BoschPLR40CBluetoothDevice());
         SUPPORTED_BLUETOOTH_COM_DEVICES.add(new BoschPLR50CBluetoothDevice());
+        SUPPORTED_BLUETOOTH_COM_DEVICES.add(new LeicaDistoD3aBtBluetoothDevice());
 
         // LE devices
         SUPPORTED_BLUETOOTH_LE_DEVICES.add(new LeicaDistoBluetoothLEDevice());
