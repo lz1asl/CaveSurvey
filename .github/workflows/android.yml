@@ -17,9 +17,10 @@ jobs:
       run: git apply --ignore-space-change --ignore-whitespace no_bosch_library.patch
     - name: Assemble Debug
       run: ./gradlew assembleDebug
+    - name: Unit tests
+      run: ./gradlew check
     - name: Store APK
       uses: actions/upload-artifact@v1
       with:
-        name: debug
+        name: CaveSurvey-debug.apk
         path: build/outputs/apk/defaultFlavor/debug
-
