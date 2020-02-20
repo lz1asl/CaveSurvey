@@ -14,6 +14,6 @@ jobs:
       with:
         java-version: 1.8
     - name: Patch No Bosch Library
-      run: git apply no_bosch_library.patch
+      run: git apply --ignore-space-change --ignore-whitespace no_bosch_library.patch
     - name: Assemble Debug
       run: ./gradlew assembleDebug
