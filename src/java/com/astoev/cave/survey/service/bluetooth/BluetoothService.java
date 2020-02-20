@@ -32,14 +32,15 @@ import com.astoev.cave.survey.service.bluetooth.device.AbstractBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.ble.AbstractBluetoothLEDevice;
 import com.astoev.cave.survey.service.bluetooth.device.ble.LeicaDistoBluetoothLEDevice;
 import com.astoev.cave.survey.service.bluetooth.device.ble.StanleyBluetoothLeDevice;
+import com.astoev.cave.survey.service.bluetooth.device.ble.mileseey.MileseeyP7BluetoothLeDevice;
 import com.astoev.cave.survey.service.bluetooth.device.ble.mileseey.MileseeyT7BluetoothLeDevice;
 import com.astoev.cave.survey.service.bluetooth.device.ble.mileseey.Mileseeyd5tBluetoothLeDevice;
 import com.astoev.cave.survey.service.bluetooth.device.ble.mileseey.SuaokiP7BluetoothLeDevice;
-import com.astoev.cave.survey.service.bluetooth.device.ble.mileseey.MileseeyP7BluetoothLeDevice;
 import com.astoev.cave.survey.service.bluetooth.device.comm.AbstractBluetoothRFCOMMDevice;
 import com.astoev.cave.survey.service.bluetooth.device.comm.CEMILDMBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.comm.DistoXBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.comm.LaserAceBluetoothDevice;
+import com.astoev.cave.survey.service.bluetooth.device.comm.LeicaDistoD3aBtBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.comm.TruPulse360BluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.comm.bosch.glm.BoschGLM100CBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.comm.bosch.glm.BoschGLM50CBluetoothDevice;
@@ -98,6 +99,7 @@ public class BluetoothService {
         SUPPORTED_BLUETOOTH_COM_DEVICES.add(new BoschPLR30CBluetoothDevice());
         SUPPORTED_BLUETOOTH_COM_DEVICES.add(new BoschPLR40CBluetoothDevice());
         SUPPORTED_BLUETOOTH_COM_DEVICES.add(new BoschPLR50CBluetoothDevice());
+        SUPPORTED_BLUETOOTH_COM_DEVICES.add(new LeicaDistoD3aBtBluetoothDevice());
 
         // LE devices
         SUPPORTED_BLUETOOTH_LE_DEVICES.add(new LeicaDistoBluetoothLEDevice());
@@ -236,7 +238,7 @@ public class BluetoothService {
             return;
         }
         mSelectedDevice = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(aDeviceAddress);
-        mSelectedDeviceSpec = getSupportedDevice(mSelectedDevice.getName());
+        mSelectedDeviceSpec = getSupportedDevice(mSelectedDevice);
         if (mSelectedDeviceSpec == null) {
             Log.i(LOG_TAG_BT, "No spec found");
             return;
@@ -291,23 +293,19 @@ public class BluetoothService {
         return mCommunicationThread != null && mCommunicationThread.ismPaired();
     }
 
-    public static AbstractBluetoothDevice getSupportedDevice(String aDeviceName) {
-        Log.d(LOG_TAG_BT, "Search supported device for " + aDeviceName);
+    public static AbstractBluetoothDevice getSupportedDevice(BluetoothDevice aDevice) {
+        Log.d(LOG_TAG_BT, "Search supported device for " + aDevice.getName());
         for (AbstractBluetoothRFCOMMDevice device : SUPPORTED_BLUETOOTH_COM_DEVICES) {
-            if (device.isNameSupported(aDeviceName)) {
+            if (device.isTypeCompatible(aDevice) && device.isNameSupported(aDevice.getName())) {
                 return device;
             }
         }
         for (AbstractBluetoothLEDevice device : SUPPORTED_BLUETOOTH_LE_DEVICES) {
-            if (device.isNameSupported(aDeviceName)) {
+            if (device.isTypeCompatible(aDevice) && device.isNameSupported(aDevice.getName())) {
                 return device;
             }
         }
         return null;
-    }
-
-    public static boolean isSupported(String aDeviceName) {
-        return getSupportedDevice(aDeviceName) != null;
     }
 
     public static List<AbstractBluetoothDevice> getSupportedDevices() {
@@ -318,15 +316,15 @@ public class BluetoothService {
     }
 
     public static boolean isSupported(BluetoothDevice aDevice) {
-        return aDevice != null && isSupported(aDevice.getName());
+        return aDevice != null && getSupportedDevice(aDevice) != null;
     }
 
     public static Set<Pair<String, String>> getPairedCompatibleDevices() {
         Set<Pair<String, String>> result = new HashSet<>();
         Set<BluetoothDevice> devices = BluetoothAdapter.getDefaultAdapter().getBondedDevices();
         for (BluetoothDevice d : devices) {
-            if (isSupported(d.getName())) {
-                result.add(new Pair<String, String>(d.getName(), d.getAddress()));
+            if (isSupported(d)) {
+                result.add(new Pair<>(d.getName(), d.getAddress()));
             }
         }
         if (mLastLEDevice != null) {
@@ -483,7 +481,7 @@ public class BluetoothService {
 
     private static void handleDeviceDiscovered(BluetoothDevice device, int rssi) {
         Log.d(LOG_TAG_BT, "Discovered: " + device.getName());
-        AbstractBluetoothDevice deviceParent = BluetoothService.getSupportedDevice(device.getName());
+        AbstractBluetoothDevice deviceParent = BluetoothService.getSupportedDevice(device);
 
         if (deviceParent != null && deviceParent instanceof AbstractBluetoothLEDevice) {
             AbstractBluetoothLEDevice deviceSpec = (AbstractBluetoothLEDevice) deviceParent;

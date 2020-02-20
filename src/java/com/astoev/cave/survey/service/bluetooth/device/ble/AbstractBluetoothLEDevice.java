@@ -15,6 +15,8 @@ import java.nio.ByteOrder;
 import java.util.List;
 import java.util.UUID;
 
+import static android.bluetooth.BluetoothDevice.DEVICE_TYPE_LE;
+
 /**
  * Bluetooth device using Bluetooth 4 LTE communication.
  */
@@ -76,4 +78,8 @@ public abstract class AbstractBluetoothLEDevice extends AbstractBluetoothDevice 
         return aCharacteristic.getIntValue(dataFormat, 0).intValue();
     }
 
+    @Override
+    public int getDeviceType() {
+        return DEVICE_TYPE_LE;
+    }
 }
