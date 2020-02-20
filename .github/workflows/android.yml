@@ -23,15 +23,15 @@ jobs:
 
   test:
     runs-on: macOS-latest
-      steps:
-      - name: checkout
-        uses: actions/checkout@v2
-      - name: Patch No Bosch Library
-        run: git apply --ignore-space-change --ignore-whitespace no_bosch_library.patch
-      - name: Unit tests
-        run: ./gradlew check
-      - name: Connected tests
-        uses: reactivecircus/android-emulator-runner@v2
-          with:
-            api-level: 29
-            script: ./gradlew connectedCheck
+    steps:
+    - name: checkout
+      uses: actions/checkout@v2
+    - name: Patch No Bosch Library
+      run: git apply --ignore-space-change --ignore-whitespace no_bosch_library.patch
+    - name: Unit tests
+      run: ./gradlew check
+    - name: Connected tests
+      uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 29
+          script: ./gradlew connectedCheck
