@@ -4,11 +4,9 @@ on: [push]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - name: set up JDK 1.8
       uses: actions/setup-java@v1
       with:
@@ -17,10 +15,23 @@ jobs:
       run: git apply --ignore-space-change --ignore-whitespace no_bosch_library.patch
     - name: Assemble Debug
       run: ./gradlew assembleDebug
-    - name: Unit tests
-      run: ./gradlew check
     - name: Store APK
       uses: actions/upload-artifact@v1
       with:
         name: CaveSurvey-debug.apk
         path: build/outputs/apk/defaultFlavor/debug
+
+  test:
+    runs-on: macOS-latest
+      steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: Patch No Bosch Library
+        run: git apply --ignore-space-change --ignore-whitespace no_bosch_library.patch
+      - name: Unit tests
+        run: ./gradlew check
+      - name: Connected tests
+        uses: reactivecircus/android-emulator-runner@v2
+          with:
+            api-level: 29
+            script: ./gradlew connectedCheck
