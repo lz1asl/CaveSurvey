@@ -26,13 +26,13 @@ public class LeicaDistoD3aBtProtocolTest extends AbstractDeviceProtocolTest {
 
     @Test
     public void testLeicaD3aDecodeSuccess() {
-        ensureSucces("31..00+00000788", 78.8f, null, null);
-        ensureSucces("31..00+00000583", 58.3f, null, null);
-        ensureSucces("22..01+00002130 31..00+00000605", 60.5f, null, 21.3f);
-        ensureSucces("22..01+00002235 31..00+00000611", 61.1f, null, 22.35f);
-        ensureSucces("22..01+00001835 31..00+00002596", 259.6f, null, 18.35f);
-        ensureSucces("22..01-00001285 31..00+00002370", 237f, null, -12.85f);
-        ensureSucces("22..01+00000895 31..00+00002896", 289.6f, null, 8.95f);
+        ensureSucces("31..00+00000788", 0.788f, null, null);
+        ensureSucces("31..00+00000583", 0.583f, null, null);
+        ensureSucces("22..01+00002130 31..00+00000605", 0.605f, null, 21.3f);
+        ensureSucces("22..01+00002235 31..00+00000611", 0.611f, null, 22.35f);
+        ensureSucces("22..01+00001835 31..00+00002596", 2.596f, null, 18.35f);
+        ensureSucces("22..01-00001285 31..00+00002370", 2.37f, null, -12.85f);
+        ensureSucces("22..01+00000895 31..00+00002896", 2.896f, null, 8.95f);
     }
 
     private void ensureFails(String aBadMessage) {
