@@ -47,9 +47,7 @@ Developed by members of caving club [Paldin](http://sk-paldin.eu/) Plovdiv, Bulg
 
 ![Picture](res/drawable-mdpi/paldin.jpg)
 
-You can use the official version at [Google Play](https://play.google.com/store/apps/details?id=com.astoev.cave.survey) <s>or the [latest beta build](https://razhodki.ci.cloudbees.com/job/CaveSurvey/lastSuccessfulBuild/artifact/build/outputs/apk/CaveSurvey-defaultFlavor-release.apk) for devces without Google Play</s>, release [history](https://github.com/lz1asl/CaveSurvey/wiki/Releases).
-
-![CloudBees](http://www.cloudbees.com/sites/default/files/Button-Built-on-CB-1.png)
+You can use the official version at [Google Play](https://play.google.com/store/apps/details?id=com.astoev.cave.survey) or the [latest test builds](https://github.com/lz1asl/CaveSurvey/actions?query=is%3Asuccess%2C+branch%3Amaster). [Releases history](https://github.com/lz1asl/CaveSurvey/wiki/Releases).
 
 
 This software is free to use and modify.
