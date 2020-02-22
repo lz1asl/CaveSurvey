@@ -68,13 +68,13 @@ public class LeicaDistoD3aBtBluetoothDevice extends AbstractBluetoothRFCOMMDevic
             Measure slopeMeasure = new Measure(Constants.MeasureTypes.slope, Constants.MeasureUnits.degrees, slope);
             measures.add(slopeMeasure);
 
-            float distance = getDistanceInMm(message.substring(24));
+            float distance = getDistanceInMeters(message.substring(24));
             Measure distanceMeasure = new Measure(Constants.MeasureTypes.distance, Constants.MeasureUnits.meters, distance);
             measures.add(distanceMeasure);
 
         } else {
             // distance only
-            float distance = getDistanceInMm(message.substring(7));
+            float distance = getDistanceInMeters(message.substring(7));
             Measure distanceMeasure = new Measure(Constants.MeasureTypes.distance, Constants.MeasureUnits.meters, distance);
             measures.add(distanceMeasure);
         }
@@ -93,7 +93,7 @@ public class LeicaDistoD3aBtBluetoothDevice extends AbstractBluetoothRFCOMMDevic
         return aBytesBuffer != null && new String(aBytesBuffer).endsWith("\n");
     }
 
-    private float getDistanceInMm(String distanceMessage) {
+    private float getDistanceInMeters(String distanceMessage) {
         return Float.parseFloat(distanceMessage) / 1000;
     }
 
