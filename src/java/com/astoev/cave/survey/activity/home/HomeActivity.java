@@ -123,15 +123,18 @@ public class HomeActivity extends MainMenuActivity implements DeleteHandler {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                        Project project = (Project) parent.getAdapter().getItem(position);
+                        Object selectedObject = parent.getAdapter().getItem(position);
+                        if (selectedObject != null && selectedObject instanceof Project) {
+                            Project project = (Project) selectedObject;
 
-                        Log.i(Constants.LOG_TAG_UI, "Selected project " + project.getId());
-                        getWorkspace().setActiveProject(project);
-                        Leg lastProjectLeg = getWorkspace().getLastLeg();
-                        getWorkspace().setActiveLeg(lastProjectLeg);
+                            Log.i(Constants.LOG_TAG_UI, "Selected project " + project.getId());
+                            getWorkspace().setActiveProject(project);
+                            Leg lastProjectLeg = getWorkspace().getLastLeg();
+                            getWorkspace().setActiveLeg(lastProjectLeg);
 
-                        Intent intent = new Intent(HomeActivity.this, MainActivity.class);
-                        startActivity(intent);
+                            Intent intent = new Intent(HomeActivity.this, MainActivity.class);
+                            startActivity(intent);
+                        }
                     }
                 });
 
@@ -140,17 +143,21 @@ public class HomeActivity extends MainMenuActivity implements DeleteHandler {
                     @Override
                     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
-                        final Project p = (Project) parent.getAdapter().getItem(position);
-                        // instantiate dialog for confirming the delete and pass the selected project's id
-                        String message = getString(R.string.home_delete_project, p.getName());
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable(ConfirmDeleteDialog.ELEMENT, p.getId());
-                        bundle.putString(ConfirmDeleteDialog.MESSAGE, message);
+                        Object selectedObject = parent.getAdapter().getItem(position);
+                        if (selectedObject != null && selectedObject instanceof Project) {
+                            Project project = (Project) selectedObject;
+                            // instantiate dialog for confirming the delete and pass the selected project's id
+                            String message = getString(R.string.home_delete_project, project.getName());
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable(ConfirmDeleteDialog.ELEMENT, project.getId());
+                            bundle.putString(ConfirmDeleteDialog.MESSAGE, message);
 
-                        ConfirmDeleteDialog deleteVecotrDialog = new ConfirmDeleteDialog();
-                        deleteVecotrDialog.setArguments(bundle);
-                        deleteVecotrDialog.show(getSupportFragmentManager(), ConfirmDeleteDialog.DELETE_VECTOR_DIALOG);
-                        return true;
+                            ConfirmDeleteDialog deleteVecotrDialog = new ConfirmDeleteDialog();
+                            deleteVecotrDialog.setArguments(bundle);
+                            deleteVecotrDialog.show(getSupportFragmentManager(), ConfirmDeleteDialog.DELETE_VECTOR_DIALOG);
+                            return true;
+                        }
+                        return false;
                     }
                 });
 
