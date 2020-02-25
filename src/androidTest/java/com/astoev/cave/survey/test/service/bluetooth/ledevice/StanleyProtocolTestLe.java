@@ -1,4 +1,4 @@
-package com.astoev.cave.survey.test.service.bluetooth.device;
+package com.astoev.cave.survey.test.service.bluetooth.ledevice;
 
 import android.annotation.TargetApi;
 import android.bluetooth.BluetoothGattCharacteristic;
@@ -9,13 +9,11 @@ import com.astoev.cave.survey.service.bluetooth.device.ble.StanleyBluetoothLeDev
 
 import org.junit.Test;
 
-import java.io.IOException;
-
-public class StanleyProtocolTest extends AbstractDeviceProtocolTest {
+public class StanleyProtocolTestLe extends AbstractLeDeviceProtocolTest {
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     @Test
-    public void testDataPacket() throws IOException {
+    public void testDataPacket() {
 
         BluetoothGattCharacteristic c = new BluetoothGattCharacteristic(StanleyBluetoothLeDevice.CHARACTERISTIC_DISTANCE_UUID, 0, 0);
 

@@ -10,7 +10,7 @@ import org.junit.Test;
 
 import java.util.List;
 
-public class LTIProtocolTest extends AbstractDeviceProtocolTest {
+public class LTIProtocolTestComm extends AbstractCommDeviceProtocolTest {
 
 
     @Test

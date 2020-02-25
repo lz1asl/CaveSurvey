@@ -1,4 +1,4 @@
-package com.astoev.cave.survey.test.service.bluetooth.device;
+package com.astoev.cave.survey.test.service.bluetooth.ledevice;
 
 import android.annotation.TargetApi;
 import android.bluetooth.BluetoothGattCharacteristic;
@@ -9,17 +9,15 @@ import com.astoev.cave.survey.service.bluetooth.device.ble.mileseey.Mileseeyd5tB
 
 import org.junit.Test;
 
-import java.io.IOException;
-
 /**
  * Created by astoev on 8/1/17.
  */
 
-public class MileseeyD5ProtocolTest extends AbstractDeviceProtocolTest {
+public class MileseeyD5ProtocolTestLe extends AbstractLeDeviceProtocolTest {
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     @Test
-    public void testDataPacket() throws IOException {
+    public void testDataPacket() {
 
         BluetoothGattCharacteristic c = new BluetoothGattCharacteristic(Mileseeyd5tBluetoothLeDevice.CHAR_DATA_UUID, 0, 0);
         c.setValue("1.2m".getBytes());

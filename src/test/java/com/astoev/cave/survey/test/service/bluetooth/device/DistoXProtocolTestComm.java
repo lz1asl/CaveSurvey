@@ -10,7 +10,7 @@ import java.io.IOException;
 /**
  * Created by astoev on 7/19/15.
  */
-public class DistoXProtocolTest extends AbstractDeviceProtocolTest {
+public class DistoXProtocolTestComm extends AbstractCommDeviceProtocolTest {
 
     @Test
     public void testDataPacket() throws IOException {

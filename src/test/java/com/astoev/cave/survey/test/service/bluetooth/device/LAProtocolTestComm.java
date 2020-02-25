@@ -10,7 +10,7 @@ import org.junit.Test;
 
 import java.util.List;
 
-public class LAProtocolTest extends AbstractDeviceProtocolTest {
+public class LAProtocolTestComm extends AbstractCommDeviceProtocolTest {
 
     @Test
     public void testLaserAceDecodeErrors() {

@@ -1,4 +1,4 @@
-package com.astoev.cave.survey.test.service.bluetooth.device;
+package com.astoev.cave.survey.test.service.bluetooth.ledevice;
 
 import android.bluetooth.BluetoothGattCharacteristic;
 
@@ -7,7 +7,6 @@ import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.Measure;
 import com.astoev.cave.survey.service.bluetooth.device.AbstractBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.ble.AbstractBluetoothLEDevice;
-import com.astoev.cave.survey.service.bluetooth.device.comm.AbstractBluetoothRFCOMMDevice;
 
 import junit.framework.TestCase;
 
@@ -20,26 +19,10 @@ import java.util.Set;
 /**
  * Created by astoev on 7/19/15.
  */
-public abstract class AbstractDeviceProtocolTest extends TestCase {
+public abstract class AbstractLeDeviceProtocolTest extends TestCase {
 
     protected abstract AbstractBluetoothDevice getDeviceSpec();
 
-    protected void ensureSucces(String aMessage, Float aDistance, Float anAzimuth, Float anAngle)  {
-        ensureSucces(aMessage.getBytes(), aDistance, anAzimuth, anAngle);
-    }
-
-    protected void ensureSucces(byte[] aMessage, Float aDistance, Float anAzimuth, Float anAngle)  {
-        try {
-            List<Constants.MeasureTypes> types = Arrays.asList(Constants.MeasureTypes.distance,
-                    Constants.MeasureTypes.angle, Constants.MeasureTypes.slope);
-
-            List<Measure> measures = ((AbstractBluetoothRFCOMMDevice) getDeviceSpec()).decodeMeasure(aMessage, types);
-            assertMeasurements(aDistance, anAzimuth, anAngle, measures);
-
-        } catch (DataException de) {
-            fail("Message not recognized: " + de.getMessage());
-        }
-    }
 
     protected void ensureSucces(BluetoothGattCharacteristic aCharacteristic, Float aDistance, Float anAzimuth, Float anAngle)  {
         try {

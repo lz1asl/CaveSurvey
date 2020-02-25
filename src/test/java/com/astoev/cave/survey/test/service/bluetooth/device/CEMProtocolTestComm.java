@@ -10,7 +10,7 @@ import java.io.IOException;
 /**
  * Created by astoev on 8/10/15.
  */
-public class CEMProtocolTest extends AbstractDeviceProtocolTest {
+public class CEMProtocolTestComm extends AbstractCommDeviceProtocolTest {
 
     @Test
     public void testDataPacket() throws IOException {

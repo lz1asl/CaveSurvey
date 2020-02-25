@@ -1,4 +1,4 @@
-package com.astoev.cave.survey.test.service.bluetooth.device;
+package com.astoev.cave.survey.test.service.bluetooth.ledevice;
 
 import android.annotation.TargetApi;
 import android.bluetooth.BluetoothGattCharacteristic;
@@ -9,16 +9,14 @@ import com.astoev.cave.survey.service.bluetooth.device.ble.LeicaDistoBluetoothLE
 
 import org.junit.Test;
 
-import java.io.IOException;
-
 /**
  * Created by astoev on 1/15/16.
  */
-public class LeicaDistoProtocolTest extends AbstractDeviceProtocolTest {
+public class LeicaDistoProtocolTestLe extends AbstractLeDeviceProtocolTest {
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     @Test
-    public void testDistance() throws IOException {
+    public void testDistance() {
 
         BluetoothGattCharacteristic c = new BluetoothGattCharacteristic(LeicaDistoBluetoothLEDevice.CHARACTERISTIC_DISTANCE_UUID, 0, 0);
         c.setValue(new byte[] {-128, 72, 79, 63});
@@ -36,7 +34,7 @@ public class LeicaDistoProtocolTest extends AbstractDeviceProtocolTest {
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     @Test
-    public void testDistanceUnit() throws IOException {
+    public void testDistanceUnit() {
 
         BluetoothGattCharacteristic c = new BluetoothGattCharacteristic(LeicaDistoBluetoothLEDevice.CHARACTERISTIC_DISTANCE_UNIT_UUID, 0, 0);
         setInt(c, 0);
@@ -58,7 +56,7 @@ public class LeicaDistoProtocolTest extends AbstractDeviceProtocolTest {
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     @Test
-    public void testAngle() throws IOException {
+    public void testAngle() {
 
         BluetoothGattCharacteristic c = new BluetoothGattCharacteristic(LeicaDistoBluetoothLEDevice.CHARACTERISTIC_ANGLE_UUID, 0, 0);
         c.setValue(new byte[]{124, -14, -81, 58});
@@ -73,7 +71,7 @@ public class LeicaDistoProtocolTest extends AbstractDeviceProtocolTest {
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     @Test
-    public void testAngleUnit() throws IOException {
+    public void testAngleUnit() {
 
         BluetoothGattCharacteristic c = new BluetoothGattCharacteristic(LeicaDistoBluetoothLEDevice.CHARACTERISTIC_ANGLE_UNIT_UUID, 0, 0);
         setInt(c, 0);
