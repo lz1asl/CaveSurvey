@@ -45,7 +45,7 @@ About
 
 Developed by members of caving club [Paldin](http://sk-paldin.eu/) Plovdiv, Bulgaria with cavers help around the world.
 
-![Picture](res/drawable-mdpi/paldin.jpg)
+![Picture](src/main/res/drawable-mdpi/paldin.jpg)
 
 You can use the official version at [Google Play](https://play.google.com/store/apps/details?id=com.astoev.cave.survey) or the [latest test builds](https://github.com/lz1asl/CaveSurvey/actions?query=is%3Asuccess%2C+branch%3Amaster). [Releases history](https://github.com/lz1asl/CaveSurvey/wiki/Releases).
 

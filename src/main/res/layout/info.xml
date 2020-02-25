@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:id="@+id/scrollView">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:layout_height="fill_parent"
+                  android:layout_width="fill_parent"
+                  android:orientation="vertical"
+                  android:layout_margin="5dp">
+
+        <!-- stats -->
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_margin="10dp">
+
+            <TextView
+                android:id="@+id/iinfo_statistics_label"
+                android:layout_height="wrap_content"
+                android:text="@string/statistics"
+                android:gravity="left"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:layout_width="match_parent"
+                android:layout_marginBottom="10dp"/>
+
+            <LinearLayout android:id="@+id/info_created_layout"
+                          android:layout_width="fill_parent"
+                          android:layout_height="wrap_content"
+                          android:layout_below="@id/iinfo_statistics_label">
+                <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="0px"
+                    android:layout_weight="1"
+                    android:text="@string/info_created"/>
+                <TextView
+                    android:id="@+id/infoProjectCreated"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:layout_width="0px"
+                    android:layout_weight="1"/>
+            </LinearLayout>
+
+            <LinearLayout android:id="@+id/info_galleries_layout"
+                          android:layout_below="@id/info_created_layout"
+                          android:layout_width="fill_parent"
+                          android:layout_height="wrap_content">
+                <TextView
+                    android:layout_height="wrap_content"
+                    android:text="@string/info_galleries"
+                    android:layout_width="0px"
+                    android:layout_weight="1"/>
+                <TextView
+                    android:id="@+id/infoNumGalleries"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:layout_width="0px"
+                    android:layout_weight="1"/>
+            </LinearLayout>
+
+            <LinearLayout android:id="@+id/info_legs_layout"
+                          android:layout_below="@id/info_galleries_layout"
+                          android:layout_width="fill_parent"
+                          android:layout_height="wrap_content">
+                <TextView
+                    android:layout_height="wrap_content"
+                    android:text="@string/info_legs"
+                    android:layout_width="0px"
+                    android:layout_weight="1"
+                    android:gravity="left"/>
+                <TextView
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:layout_width="0px"
+                    android:layout_weight="1"
+                    android:id="@+id/infoNumLegs"/>
+            </LinearLayout>
+
+            <LinearLayout android:id="@+id/info_notes_layout"
+                          android:layout_below="@id/info_legs_layout"
+                          android:layout_width="fill_parent"
+                          android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="0px"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@string/info_num_notes"
+                    android:gravity="left"/>
+                <TextView
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:layout_width="0px"
+                    android:layout_weight="1"
+                    android:id="@+id/infoNumNotes"/>
+            </LinearLayout>
+
+            <LinearLayout android:id="@+id/info_drawings_layout"
+                          android:layout_below="@id/info_notes_layout"
+                          android:layout_width="fill_parent"
+                          android:layout_height="wrap_content">
+                <TextView
+                    android:layout_height="wrap_content"
+                    android:text="@string/info_num_drawings"
+                    android:layout_width="0px"
+                    android:layout_weight="1"/>
+                <TextView
+                    android:id="@+id/infoNumDrawings"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:layout_width="0px"
+                    android:layout_weight="1"/>
+            </LinearLayout>
+
+            <LinearLayout android:id="@+id/info_coordinates_layout"
+                          android:layout_below="@id/info_drawings_layout"
+                          android:layout_width="fill_parent"
+                          android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="0px"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@string/info_num_coordinates"
+                    android:gravity="left"/>
+                <TextView
+                    android:id="@+id/infoNumCoordinates"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:layout_width="0px"
+                    android:layout_weight="1"/>
+            </LinearLayout>
+
+            <LinearLayout android:id="@+id/info_photos_layout"
+                          android:layout_below="@id/info_coordinates_layout"
+                          android:layout_width="fill_parent"
+                          android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="0px"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@string/info_num_photos"
+                    android:gravity="left"/>
+                <TextView
+                    android:layout_width="0px"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:id="@+id/infoNumPhotos"/>
+            </LinearLayout>
+
+            <LinearLayout android:id="@+id/info_vectors_layout"
+                          android:layout_below="@id/info_photos_layout"
+                          android:layout_width="fill_parent"
+                          android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="0px"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@string/info_num_vectors"
+                    android:gravity="left"/>
+                <TextView
+                    android:layout_width="0px"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:id="@+id/infoNumVectors"/>
+            </LinearLayout>
+
+            <LinearLayout android:id="@+id/info_totallength_layout"
+                          android:layout_below="@id/info_vectors_layout"
+                          android:layout_width="fill_parent"
+                          android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="0px"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@string/info_total_distance"
+                    android:gravity="left"/>
+                <TextView
+                    android:layout_width="0px"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:id="@+id/infoRawDistance"/>
+            </LinearLayout>
+
+            <LinearLayout android:id="@+id/info_sensor_layout"
+                          android:layout_below="@id/info_totallength_layout"
+                          android:layout_width="fill_parent"
+                          android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="0px"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@string/info_azimuth_build_in_sensor"
+                    android:gravity="left"/>
+                <TextView
+                          android:id="@+id/info_azimuth_sensor"
+                          android:layout_width="0px"
+                          android:layout_weight="1"
+                          android:layout_height="wrap_content"
+                          android:text="@string/sensor_none"
+                          android:gravity="center_horizontal"/>
+            </LinearLayout>
+
+            <LinearLayout android:id="@+id/info_path_layout"
+                          android:layout_below="@id/info_sensor_layout"
+                          android:layout_width="fill_parent"
+                          android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="0px"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@string/info_project_home"
+                    android:gravity="left"/>
+                <TextView
+                          android:id="@+id/info_project_home"
+                          android:layout_width="0px"
+                          android:layout_weight="1"
+                          android:layout_height="wrap_content"
+                          android:gravity="center_horizontal"/>
+            </LinearLayout>
+
+            <!-- project config -->
+            <LinearLayout
+                android:layout_below="@id/info_path_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="20dp">
+
+                <FrameLayout android:id="@+id/projectInfoContainer"
+                             android:layout_width="match_parent"
+                             android:layout_height="wrap_content"
+                             android:layout_weight="1"/>
+
+                <Button android:id="@+id/updateProject"
+                        android:text="@string/update_project"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_span="2"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="10dp"
+                        android:onClick="update" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+</ScrollView>

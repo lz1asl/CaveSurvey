@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_height="fill_parent" 
+              android:layout_width="fill_parent" 
+              android:orientation="vertical">
+
+	<LinearLayout android:layout_width="fill_parent" 
+	    		  android:layout_height="wrap_content"
+	    		  android:layout_marginLeft="5dp">
+          <TextView
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="@string/main_leg" />
+          <TextView
+                  android:id="@+id/mainActiveLeg"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  />
+	</LinearLayout>            
+       
+	<LinearLayout android:layout_width="fill_parent" 
+	    		  android:layout_height="wrap_content"
+	    		  android:layout_marginLeft="5dp">
+		<TextView android:text="@string/main_table_header_from" android:layout_margin="5dp" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:gravity="center" android:ellipsize="end" android:singleLine="true"/>
+		<TextView android:text="@string/main_table_header_to"   android:layout_margin="5dp" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:gravity="center" android:ellipsize="end" android:singleLine="true"/>
+		<TextView android:text="@string/distance"               android:layout_margin="5dp" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:gravity="center" android:ellipsize="end" android:singleLine="true"/>
+		<TextView android:text="@string/azimuth"  				android:layout_margin="5dp" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:gravity="center" android:ellipsize="end" android:singleLine="true"/>
+		<TextView android:text="@string/slope"    				android:layout_margin="5dp" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:gravity="center" android:ellipsize="end" android:singleLine="true"/>
+		<TextView android:text="@string/main_table_header_more" android:layout_margin="5dp" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:gravity="center" android:ellipsize="end" android:singleLine="true"/>
+
+	</LinearLayout>                            
+
+    <ScrollView android:id="@+id/mainTableScroll"
+				android:layout_width="fill_parent"
+        		android:layout_height="wrap_content"
+                android:scrollbars="vertical">
+
+        <TableLayout android:id="@+id/mainTable"
+            		 android:layout_width="fill_parent"
+                     android:layout_height="wrap_content"
+                     android:stretchColumns="*"
+                     android:scrollbars="horizontal|vertical">
+        </TableLayout>
+    </ScrollView>
+
+</LinearLayout>

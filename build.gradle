@@ -68,15 +68,6 @@ android {
         }
     }
 
-    sourceSets {
-        main {
-            manifest.srcFile 'AndroidManifest.xml'
-            res.srcDirs = ['res']
-        }
-
-//        androidTest.setRoot('src/androidTest')
-    }
-
     packagingOptions {
         exclude 'LICENSE.txt'
         exclude 'META-INF/LICENSE.txt'

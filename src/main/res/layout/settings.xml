@@ -1,0 +1,80 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_height="fill_parent" 
+              android:layout_width="fill_parent" 
+              android:orientation="vertical"
+              android:layout_margin="10dp">
+
+        <TextView
+            android:id="@+id/settingsLanguage"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/home_lang"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_margin="10dp"/>
+
+        <TextView
+            android:id="@+id/settingsSensors"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/ic_action_bluetooth_searching"
+            android:text="@string/sensors_title"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_margin="10dp"/>
+
+        <!-- auto backup -->
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp">
+
+            <TextView
+                android:id="@+id/settingsBackupText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:text="@string/settings_auto_backup"
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/settingsBackupText"
+                android:clickable="true"
+                android:layout_centerVertical="true"
+                android:layout_margin="5dp"
+                android:src="@drawable/ic_info_white"
+                android:contentDescription="@string/information"
+                android:onClick="onAutoBackupChooseInfo" />
+            <ToggleButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/settingsBackupToggle"
+                android:layout_alignParentRight="true" />
+        </RelativeLayout>
+
+        <!-- error reporter -->
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp">
+
+            <TextView
+                android:id="@+id/settingsDebugText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:text="@string/error_reporter_title"
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
+            <ToggleButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/settingsDebugToggle"
+                android:layout_alignParentRight="true" />
+        </RelativeLayout>
+
+    </LinearLayout>
+</ScrollView>
