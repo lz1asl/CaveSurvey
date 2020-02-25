@@ -216,18 +216,20 @@ public class BaseBuildInMeasureDialog extends DialogFragment {
         Log.i(LOG_TAG_SERVICE, "End of targeting time");
 
         // start post processing
-        azimuthFilter.startAveraging();
-        slopeFilter.startAveraging();
+        if (azimuthFilter != null && slopeFilter != null) {
+            azimuthFilter.startAveraging();
+            slopeFilter.startAveraging();
 
-        // await results and stop processors
-        ExecutorService executor = Executors.newFixedThreadPool(3);
-        executor.submit(new FutureTask(new AwaitFilterRunnable(orientationAzimuthProcessor, azimuthFilter, targetAzimuthTextBox), null));
-        executor.submit(new FutureTask(new AwaitFilterRunnable(orientationSlopeProcessor, slopeFilter, targetSlopeTextBox), null));
-        try {
-            sleep(200);
-            executor.shutdown();
-        } catch (Exception e) {
-            Log.e(LOG_TAG_SERVICE, "Interrupted", e);
+            // await results and stop processors
+            ExecutorService executor = Executors.newFixedThreadPool(3);
+            executor.submit(new FutureTask(new AwaitFilterRunnable(orientationAzimuthProcessor, azimuthFilter, targetAzimuthTextBox), null));
+            executor.submit(new FutureTask(new AwaitFilterRunnable(orientationSlopeProcessor, slopeFilter, targetSlopeTextBox), null));
+            try {
+                sleep(200);
+                executor.shutdown();
+            } catch (Exception e) {
+                Log.e(LOG_TAG_SERVICE, "Interrupted", e);
+            }
         }
 
         // dismiss the dialog
