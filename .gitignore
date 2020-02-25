@@ -1,8 +1,6 @@
 /.idea
-*.project
-*.classpath
-*.settings
-/bin
 /.idea
 /CaveSurvey.iml
 /build
+.gradle
+local.properties
