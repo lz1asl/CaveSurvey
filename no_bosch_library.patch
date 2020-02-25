@@ -1,29 +1,29 @@
-From 7b6500de470afe622f5f98450cccce39e07b2da3 Mon Sep 17 00:00:00 2001
-From: lz1asl <cave.survey.project@gmail.com>
-Date: Thu, 20 Feb 2020 23:24:45 +0200
-Subject: [PATCH] remove the bosch library
+From 0769d110d7e7d46aec9e12cf9dfa51825a01e143 Mon Sep 17 00:00:00 2001
+From: lz1asl <aleksandar@fintechproviders.com>
+Date: Tue, 25 Feb 2020 22:38:58 +0200
+Subject: [PATCH] remove bosch library
 
 ---
- build.gradle                                       |   3 -
- .../survey/service/bluetooth/BluetoothService.java |  10 -
- .../bosch/glm/AbstractBoschGLMBluetoothDevice.java | 208 ---------------------
- .../bosch/glm/BoschGLM100CBluetoothDevice.java     |  58 ------
- .../comm/bosch/glm/BoschGLM50CBluetoothDevice.java |  59 ------
- .../comm/bosch/glm/BoschPLR30CBluetoothDevice.java |  54 ------
- .../comm/bosch/glm/BoschPLR40CBluetoothDevice.java |  55 ------
- .../comm/bosch/glm/BoschPLR50CBluetoothDevice.java |  57 ------
- .../bosch/glm/GLMBluetoothConnectionWrapper.java   |  75 --------
+ build.gradle                                  |   3 -
+ .../service/bluetooth/BluetoothService.java   |  10 -
+ .../glm/AbstractBoschGLMBluetoothDevice.java  | 208 ------------------
+ .../glm/BoschGLM100CBluetoothDevice.java      |  58 -----
+ .../bosch/glm/BoschGLM50CBluetoothDevice.java |  59 -----
+ .../bosch/glm/BoschPLR30CBluetoothDevice.java |  54 -----
+ .../bosch/glm/BoschPLR40CBluetoothDevice.java |  55 -----
+ .../bosch/glm/BoschPLR50CBluetoothDevice.java |  57 -----
+ .../glm/GLMBluetoothConnectionWrapper.java    |  75 -------
  9 files changed, 579 deletions(-)
- delete mode 100644 src/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/AbstractBoschGLMBluetoothDevice.java
- delete mode 100644 src/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschGLM100CBluetoothDevice.java
- delete mode 100644 src/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschGLM50CBluetoothDevice.java
- delete mode 100644 src/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschPLR30CBluetoothDevice.java
- delete mode 100644 src/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschPLR40CBluetoothDevice.java
- delete mode 100644 src/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschPLR50CBluetoothDevice.java
- delete mode 100644 src/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/GLMBluetoothConnectionWrapper.java
+ delete mode 100644 src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/AbstractBoschGLMBluetoothDevice.java
+ delete mode 100644 src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschGLM100CBluetoothDevice.java
+ delete mode 100644 src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschGLM50CBluetoothDevice.java
+ delete mode 100644 src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschPLR30CBluetoothDevice.java
+ delete mode 100644 src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschPLR40CBluetoothDevice.java
+ delete mode 100644 src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschPLR50CBluetoothDevice.java
+ delete mode 100644 src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/GLMBluetoothConnectionWrapper.java
 
 diff --git a/build.gradle b/build.gradle
-index d5654f8..aa7eda2 100644
+index 7d56fe5..a715cda 100644
 --- a/build.gradle
 +++ b/build.gradle
 @@ -21,9 +21,6 @@ dependencies {
@@ -36,10 +36,10 @@ index d5654f8..aa7eda2 100644
      androidTestImplementation 'junit:junit:4.12'
      testImplementation 'junit:junit:4.12'
  }
-diff --git a/src/java/com/astoev/cave/survey/service/bluetooth/BluetoothService.java b/src/java/com/astoev/cave/survey/service/bluetooth/BluetoothService.java
+diff --git a/src/main/java/com/astoev/cave/survey/service/bluetooth/BluetoothService.java b/src/main/java/com/astoev/cave/survey/service/bluetooth/BluetoothService.java
 index a8652c3..9921bef 100644
---- a/src/java/com/astoev/cave/survey/service/bluetooth/BluetoothService.java
-+++ b/src/java/com/astoev/cave/survey/service/bluetooth/BluetoothService.java
+--- a/src/main/java/com/astoev/cave/survey/service/bluetooth/BluetoothService.java
++++ b/src/main/java/com/astoev/cave/survey/service/bluetooth/BluetoothService.java
 @@ -42,11 +42,6 @@ import com.astoev.cave.survey.service.bluetooth.device.comm.DistoXBluetoothDevic
  import com.astoev.cave.survey.service.bluetooth.device.comm.LaserAceBluetoothDevice;
  import com.astoev.cave.survey.service.bluetooth.device.comm.LeicaDistoD3aBtBluetoothDevice;
@@ -64,10 +64,10 @@ index a8652c3..9921bef 100644
          SUPPORTED_BLUETOOTH_COM_DEVICES.add(new LeicaDistoD3aBtBluetoothDevice());
  
          // LE devices
-diff --git a/src/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/AbstractBoschGLMBluetoothDevice.java b/src/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/AbstractBoschGLMBluetoothDevice.java
+diff --git a/src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/AbstractBoschGLMBluetoothDevice.java b/src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/AbstractBoschGLMBluetoothDevice.java
 deleted file mode 100644
 index cd4dc52..0000000
---- a/src/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/AbstractBoschGLMBluetoothDevice.java
+--- a/src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/AbstractBoschGLMBluetoothDevice.java
 +++ /dev/null
 @@ -1,208 +0,0 @@
 -package com.astoev.cave.survey.service.bluetooth.device.comm.bosch.glm;
@@ -278,10 +278,10 @@ index cd4dc52..0000000
 -        ownReadError = true;
 -    }
 -}
-diff --git a/src/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschGLM100CBluetoothDevice.java b/src/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschGLM100CBluetoothDevice.java
+diff --git a/src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschGLM100CBluetoothDevice.java b/src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschGLM100CBluetoothDevice.java
 deleted file mode 100644
 index 2e6071c..0000000
---- a/src/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschGLM100CBluetoothDevice.java
+--- a/src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschGLM100CBluetoothDevice.java
 +++ /dev/null
 @@ -1,58 +0,0 @@
 -package com.astoev.cave.survey.service.bluetooth.device.comm.bosch.glm;
@@ -342,10 +342,10 @@ index 2e6071c..0000000
 -    }
 -
 -}
-diff --git a/src/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschGLM50CBluetoothDevice.java b/src/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschGLM50CBluetoothDevice.java
+diff --git a/src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschGLM50CBluetoothDevice.java b/src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschGLM50CBluetoothDevice.java
 deleted file mode 100644
 index ee13a1a..0000000
---- a/src/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschGLM50CBluetoothDevice.java
+--- a/src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschGLM50CBluetoothDevice.java
 +++ /dev/null
 @@ -1,59 +0,0 @@
 -package com.astoev.cave.survey.service.bluetooth.device.comm.bosch.glm;
@@ -407,10 +407,10 @@ index ee13a1a..0000000
 -        return R.string.bt_device_mode_single_or_indirect;
 -    }
 -}
-diff --git a/src/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschPLR30CBluetoothDevice.java b/src/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschPLR30CBluetoothDevice.java
+diff --git a/src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschPLR30CBluetoothDevice.java b/src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschPLR30CBluetoothDevice.java
 deleted file mode 100644
 index 9b0972c..0000000
---- a/src/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschPLR30CBluetoothDevice.java
+--- a/src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschPLR30CBluetoothDevice.java
 +++ /dev/null
 @@ -1,54 +0,0 @@
 -package com.astoev.cave.survey.service.bluetooth.device.comm.bosch.glm;
@@ -467,10 +467,10 @@ index 9b0972c..0000000
 -        return R.string.bt_device_mode_single;
 -    }
 -}
-diff --git a/src/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschPLR40CBluetoothDevice.java b/src/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschPLR40CBluetoothDevice.java
+diff --git a/src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschPLR40CBluetoothDevice.java b/src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschPLR40CBluetoothDevice.java
 deleted file mode 100644
 index c9761fe..0000000
---- a/src/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschPLR40CBluetoothDevice.java
+--- a/src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschPLR40CBluetoothDevice.java
 +++ /dev/null
 @@ -1,55 +0,0 @@
 -package com.astoev.cave.survey.service.bluetooth.device.comm.bosch.glm;
@@ -528,10 +528,10 @@ index c9761fe..0000000
 -        return R.string.bt_device_mode_single;
 -    }
 -}
-diff --git a/src/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschPLR50CBluetoothDevice.java b/src/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschPLR50CBluetoothDevice.java
+diff --git a/src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschPLR50CBluetoothDevice.java b/src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschPLR50CBluetoothDevice.java
 deleted file mode 100644
 index e6f1b48..0000000
---- a/src/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschPLR50CBluetoothDevice.java
+--- a/src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschPLR50CBluetoothDevice.java
 +++ /dev/null
 @@ -1,57 +0,0 @@
 -package com.astoev.cave.survey.service.bluetooth.device.comm.bosch.glm;
@@ -591,10 +591,10 @@ index e6f1b48..0000000
 -        return R.string.bt_device_mode_single_or_indirect;
 -    }
 -}
-diff --git a/src/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/GLMBluetoothConnectionWrapper.java b/src/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/GLMBluetoothConnectionWrapper.java
+diff --git a/src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/GLMBluetoothConnectionWrapper.java b/src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/GLMBluetoothConnectionWrapper.java
 deleted file mode 100644
 index 2f8e4b2..0000000
---- a/src/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/GLMBluetoothConnectionWrapper.java
+--- a/src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/GLMBluetoothConnectionWrapper.java
 +++ /dev/null
 @@ -1,75 +0,0 @@
 -package com.astoev.cave.survey.service.bluetooth.device.comm.bosch.glm;
@@ -673,5 +673,5 @@ index 2f8e4b2..0000000
 -    }
 -}
 -- 
-2.13.7
+2.17.1
 
