@@ -16,7 +16,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.android.support:appcompat-v7:24.1.1'
+    implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation 'com.j256.ormlite:ormlite-core:4.48'
     implementation 'com.j256.ormlite:ormlite-android:4.48'
     implementation 'org.apache.poi:poi:3.15'
@@ -34,7 +34,7 @@ android {
     buildToolsVersion '28.0.3'
 
     defaultConfig {
-        minSdkVersion 7
+        minSdkVersion 14
         targetSdkVersion 28
     }
 
