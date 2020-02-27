@@ -10,7 +10,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
+import androidx.fragment.app.DialogFragment;
 import android.widget.ArrayAdapter;
 
 import com.astoev.cave.survey.R;
@@ -30,7 +30,7 @@ public class LanguageDialog extends DialogFragment {
     private static final int LANG_CHINESE = 2;
 
     /**
-     * @see android.support.v4.app.DialogFragment#onCreateDialog(android.os.Bundle)
+     * @see DialogFragment#onCreateDialog(android.os.Bundle)
      */
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceStateArg) {

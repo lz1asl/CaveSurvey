@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.fragment.app.Fragment;
+
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.service.gps.GPSProcessor;
 import com.astoev.cave.survey.service.gps.LocationListenerAdapter;
@@ -42,7 +44,7 @@ public class UpdatebleLocationFragment extends LocationFragment {
     }
 
     /**
-     * @see android.support.v4.app.Fragment#onPause()
+     * @see Fragment#onPause()
      */
     @Override
     public void onPause() {
@@ -51,7 +53,7 @@ public class UpdatebleLocationFragment extends LocationFragment {
     }
 
     /**
-     * @see android.support.v4.app.Fragment#onResume()
+     * @see Fragment#onResume()
      */
     @Override
     public void onResume() {

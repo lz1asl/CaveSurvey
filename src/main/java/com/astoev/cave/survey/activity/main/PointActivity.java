@@ -5,8 +5,10 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -160,7 +162,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
     }
 
     /**
-     * @see android.support.v4.app.FragmentActivity#onPause()
+     * @see FragmentActivity#onPause()
      */
     @Override
     protected void onPause() {

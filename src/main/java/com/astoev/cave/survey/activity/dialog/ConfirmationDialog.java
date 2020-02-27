@@ -5,8 +5,8 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
 import android.util.Log;
 
 import com.astoev.cave.survey.Constants;
@@ -29,7 +29,7 @@ public class ConfirmationDialog extends DialogFragment {
     private ConfirmationHandler confirmationHandler;
 
     /**
-     * @see android.support.v4.app.DialogFragment#onCreateDialog(android.os.Bundle)
+     * @see DialogFragment#onCreateDialog(android.os.Bundle)
      */
     @NonNull
     @Override

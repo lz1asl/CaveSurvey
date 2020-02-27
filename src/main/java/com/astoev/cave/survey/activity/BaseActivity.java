@@ -2,8 +2,10 @@ package com.astoev.cave.survey.activity;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentActivity;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.service.Workspace;
@@ -21,7 +23,7 @@ import java.util.Locale;
  * Time: 5:43 PM
  * To change this template use File | Settings | File Templates.
  */
-public abstract class BaseActivity extends ActionBarActivity {
+public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +92,7 @@ public abstract class BaseActivity extends ActionBarActivity {
     }
 
     /**
-     * @see android.support.v4.app.FragmentActivity#onResume()
+     * @see FragmentActivity#onResume()
      */
     @Override
     protected void onResume() {

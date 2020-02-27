@@ -10,6 +10,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.fragment.app.FragmentActivity;
+
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.MainMenuActivity;
@@ -199,7 +201,7 @@ public class SensorTestActivity extends MainMenuActivity {
 	}
 
 	/**
-	 * @see android.support.v4.app.FragmentActivity#onPause()
+	 * @see FragmentActivity#onPause()
 	 */
 	@Override
 	protected void onPause() {

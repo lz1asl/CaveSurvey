@@ -6,11 +6,13 @@ package com.astoev.cave.survey.activity.dialog;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.fragment.app.DialogFragment;
 
 import com.astoev.cave.survey.R;
 
@@ -28,7 +30,7 @@ public class SlopeDialog extends BaseBuildInMeasureDialog {
     
 
     /**
-     * @see android.support.v4.app.DialogFragment#onCreateDialog(android.os.Bundle)
+     * @see DialogFragment#onCreateDialog(android.os.Bundle)
      */
     @Override
     @NonNull

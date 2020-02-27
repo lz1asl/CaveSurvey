@@ -1,6 +1,6 @@
 package com.astoev.cave.survey.service.bluetooth.util;
 
-import android.support.v4.app.FragmentManager;
+import androidx.fragment.app.FragmentManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;

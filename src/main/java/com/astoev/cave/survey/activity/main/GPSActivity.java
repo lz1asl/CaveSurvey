@@ -6,7 +6,9 @@ package com.astoev.cave.survey.activity.main;
 import android.location.Location;
 import android.location.LocationProvider;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
+
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -94,7 +96,7 @@ public class GPSActivity extends MainMenuActivity {
 	}
 
 	/**
-	 * @see android.support.v4.app.FragmentActivity#onPause()
+	 * @see FragmentActivity#onPause()
 	 */
 	@Override
 	protected void onPause() {

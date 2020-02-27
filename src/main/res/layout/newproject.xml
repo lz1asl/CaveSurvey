@@ -35,7 +35,7 @@
                 android:contentDescription="@string/information"
                 android:onClick="onChooseInfo" />
 
-            <android.support.v7.widget.AppCompatSpinner
+            <androidx.appcompat.widget.AppCompatSpinner
                 android:id="@+id/import_files"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"

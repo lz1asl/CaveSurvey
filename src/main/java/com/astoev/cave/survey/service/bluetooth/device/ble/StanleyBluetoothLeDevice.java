@@ -2,7 +2,7 @@ package com.astoev.cave.survey.service.bluetooth.device.ble;
 
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.os.Build;
-import android.support.annotation.RequiresApi;
+import androidx.annotation.RequiresApi;
 import android.util.Log;
 
 import com.astoev.cave.survey.Constants;
