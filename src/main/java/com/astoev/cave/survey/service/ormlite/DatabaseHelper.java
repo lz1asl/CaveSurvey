@@ -35,7 +35,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static final int DATABASE_VERSION_1 = 1;
     private static final int DATABASE_VERSION_2 = 2;
     private static final int DATABASE_VERSION_LATEST = 3;
-    private static final String DATABASE_NAME = "CaveSurvey";
+    public static final String DATABASE_NAME = "CaveSurvey";
 
     private Dao<Leg, Integer> mLegDao;
     private Dao<Location, Integer> mLocationDao;

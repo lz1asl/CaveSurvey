@@ -4,10 +4,11 @@ import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
 
 import com.astoev.cave.survey.activity.home.SplashActivity;
-import com.astoev.cave.survey.test.helper.Home;
 
 import org.junit.Rule;
 import org.junit.Test;
+
+import static com.astoev.cave.survey.test.helper.Home.goHome;
 
 public class SplashScreenTests {
 
@@ -18,7 +19,7 @@ public class SplashScreenTests {
     @Test
     @LargeTest
     public void testStoragePermissionGranted() {
-        Home.goHome();
+        goHome();
     }
 
 }

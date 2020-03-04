@@ -4,10 +4,12 @@ import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
 
 import com.astoev.cave.survey.activity.home.SplashActivity;
-import com.astoev.cave.survey.test.helper.Home;
 
 import org.junit.Rule;
 import org.junit.Test;
+
+import static com.astoev.cave.survey.test.helper.Home.goHome;
+import static com.astoev.cave.survey.test.helper.Survey.createSurvey;
 
 public class HomeScreenTest {
 
@@ -18,7 +20,7 @@ public class HomeScreenTest {
     @Test
     @LargeTest
     public void testCreateSurvey() {
-        Home.goHome();
-        Home.createSurvey();
+        goHome();
+        createSurvey("New");
     }
 }
