@@ -29,9 +29,9 @@ jobs:
     - name: Patch No Bosch Library
       run: git apply --ignore-space-change --ignore-whitespace no_bosch_library.patch
     - name: Unit tests
-      run: ./gradlew check
+      run: ./gradlew test
     - name: Connected tests
       uses: reactivecircus/android-emulator-runner@v2
       with:
         api-level: 29
-        script: ./gradlew connectedCheck
+        script: ./gradlew connectedAndroidTest
