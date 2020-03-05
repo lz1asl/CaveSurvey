@@ -15,7 +15,7 @@ import static com.astoev.cave.survey.test.helper.Survey.addLeg;
 import static com.astoev.cave.survey.test.helper.Survey.createSurvey;
 import static com.astoev.cave.survey.test.helper.Survey.openSurvey;
 
-public class TestXlsExport {
+public class XlsExportTest {
 
     @Rule
     public ActivityTestRule<SplashActivity> activityRule = new ActivityTestRule<>(SplashActivity.class);
