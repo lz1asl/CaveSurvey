@@ -1,7 +1,7 @@
-From 0769d110d7e7d46aec9e12cf9dfa51825a01e143 Mon Sep 17 00:00:00 2001
+From dcb2f1c9599fb94bcc917a34962ca0dedaef6243 Mon Sep 17 00:00:00 2001
 From: lz1asl <aleksandar@fintechproviders.com>
-Date: Tue, 25 Feb 2020 22:38:58 +0200
-Subject: [PATCH] remove bosch library
+Date: Mon, 9 Mar 2020 21:22:37 +0200
+Subject: [PATCH] update no bosch library patch
 
 ---
  build.gradle                                  |   3 -
@@ -23,7 +23,7 @@ Subject: [PATCH] remove bosch library
  delete mode 100644 src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/GLMBluetoothConnectionWrapper.java
 
 diff --git a/build.gradle b/build.gradle
-index 7d56fe5..a715cda 100644
+index 1d08c26..44f734e 100644
 --- a/build.gradle
 +++ b/build.gradle
 @@ -21,9 +21,6 @@ dependencies {
@@ -33,9 +33,9 @@ index 7d56fe5..a715cda 100644
 -    // Bosch internal protocol
 -    implementation files('../CaveSurveyBoschGLM/binary/CaveSurveyBoschGLM.jar')
 -
+     // unit tests
      androidTestImplementation 'junit:junit:4.12'
      testImplementation 'junit:junit:4.12'
- }
 diff --git a/src/main/java/com/astoev/cave/survey/service/bluetooth/BluetoothService.java b/src/main/java/com/astoev/cave/survey/service/bluetooth/BluetoothService.java
 index a8652c3..9921bef 100644
 --- a/src/main/java/com/astoev/cave/survey/service/bluetooth/BluetoothService.java
