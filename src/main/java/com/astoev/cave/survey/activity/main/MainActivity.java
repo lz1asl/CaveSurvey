@@ -3,8 +3,6 @@ package com.astoev.cave.survey.activity.main;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
 import android.util.Log;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
@@ -16,6 +14,9 @@ import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
@@ -254,9 +255,27 @@ public class MainActivity extends MainMenuActivity implements AddNewSelectedHand
 
     public void addButtonClick() {
 
-        Log.i(Constants.LOG_TAG_UI, "Adding");
-        AddNewDialog addNewDialog = new AddNewDialog();
-        addNewDialog.show(getSupportFragmentManager(), AddNewDialog.ADD_NEW_DIALOG);
+        try {
+            Leg activeLeg = Workspace.getCurrentInstance().getActiveLeg();
+            if (activeLeg.getDistance() == null) {
+                Log.i(Constants.LOG_TAG_UI, "Go straight to the first leg, unable to create next");
+                UIUtilities.showNotification(R.string.gallery_after_first_point);
+                Intent intent = new Intent(this, PointActivity.class);
+                intent.putExtra(Constants.LEG_SELECTED, activeLeg.getId());
+                Workspace.getCurrentInstance().setActiveLeg(activeLeg);
+                startActivity(intent);
+                return;
+            }
+
+
+            Log.i(Constants.LOG_TAG_UI, "Adding");
+            AddNewDialog addNewDialog = new AddNewDialog();
+            addNewDialog.show(getSupportFragmentManager(), AddNewDialog.ADD_NEW_DIALOG);
+
+        } catch (Exception e) {
+            Log.e(Constants.LOG_TAG_UI, "Error adding", e);
+            UIUtilities.showNotification(R.string.error);
+        }
     }
 
     /**
@@ -278,6 +297,7 @@ public class MainActivity extends MainMenuActivity implements AddNewSelectedHand
                 // next leg
                 addLeg(false);
             } else if (1 == itemArg) {
+                // next gallery
                 Leg prevLeg = DaoUtil.getLegByToPoint(Workspace.getCurrentInstance().getActiveLeg().getFromPoint());
                 if (prevLeg == null) {
                     // not supported
@@ -287,6 +307,7 @@ public class MainActivity extends MainMenuActivity implements AddNewSelectedHand
                     addLeg(true);
                 }
             } else if (2 == itemArg) {
+                // middle point
                 requestLengthAndAddMiddle();
             }
         } catch (Exception e) {
