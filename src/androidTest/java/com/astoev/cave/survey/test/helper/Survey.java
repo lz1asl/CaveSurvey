@@ -34,6 +34,14 @@ public class Survey {
         // select leg
         onView(withText(R.string.main_add_leg)).perform(click());
 
+        setLegData(length, azimuth);
+    }
+
+    public static void selectFirstSurveyLeg() {
+        onView(withId(R.id.main_action_add)).perform(click());
+    }
+
+    public static void setLegData(float length, float azimuth) {
         // populate
         onView(withId(R.id.point_distance)).perform(typeText("" + length));
         onView(withId(R.id.point_azimuth)).perform(typeText("" + azimuth));

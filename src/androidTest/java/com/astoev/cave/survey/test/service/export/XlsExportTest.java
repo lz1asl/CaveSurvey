@@ -18,12 +18,18 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import static com.astoev.cave.survey.model.Option.UNIT_DEGREES;
+import static com.astoev.cave.survey.model.Option.UNIT_METERS;
+import static com.astoev.cave.survey.sharedtest.export.ExcelTestUtils.assertConfigUnits;
+import static com.astoev.cave.survey.sharedtest.export.ExcelTestUtils.assertLeg;
 import static com.astoev.cave.survey.test.helper.Data.dataScreen;
 import static com.astoev.cave.survey.test.helper.Data.xlsExport;
 import static com.astoev.cave.survey.test.helper.Home.goHome;
 import static com.astoev.cave.survey.test.helper.Survey.addLeg;
 import static com.astoev.cave.survey.test.helper.Survey.createSurvey;
 import static com.astoev.cave.survey.test.helper.Survey.openSurvey;
+import static com.astoev.cave.survey.test.helper.Survey.selectFirstSurveyLeg;
+import static com.astoev.cave.survey.test.helper.Survey.setLegData;
 import static org.junit.Assert.assertEquals;
 
 public class XlsExportTest {
@@ -48,7 +54,8 @@ public class XlsExportTest {
         openSurvey(surveyName);
 
         // add data
-        addLeg(1, 2);
+        selectFirstSurveyLeg();
+        setLegData(1, 2);
         addLeg(1.2f, 2.2f);
 
         // export
@@ -61,15 +68,10 @@ public class XlsExportTest {
 
         ProjectData data = ExcelImport.loadProjectData(exportFile);
 
-        // TODO options
+        assertConfigUnits(data, UNIT_METERS, UNIT_DEGREES, UNIT_DEGREES);
         List<LegData> legs = data.getLegs();
         assertEquals(2, legs.size());
-        assertLeg(legs.get(0), 1, 2);
-        assertLeg(legs.get(1), 1.2f, 2.2f);
-    }
-
-    private void assertLeg(LegData leg, float length, float azimuth) {
-        assertEquals(length, leg.getLength(), 0.001);
-        assertEquals(azimuth, leg.getAzimuth(), 0.001);
+        assertLeg(legs.get(0), 1f, 2f, null);
+        assertLeg(legs.get(1), 1.2f, 2.2f, null);
     }
 }
