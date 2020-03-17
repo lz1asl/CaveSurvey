@@ -2,13 +2,9 @@ package com.astoev.cave.survey.test.helper;
 
 import androidx.test.runner.permission.PermissionRequester;
 
-import com.astoev.cave.survey.R;
-
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static com.astoev.cave.survey.R.id.homeProjects;
+import static com.astoev.cave.survey.test.helper.Common.checkVisible;
 
 public class Home {
 
@@ -19,7 +15,9 @@ public class Home {
         permissionRequester.requestPermissions();
 
         // goes directly to the home screen
-        onView(withId(R.id.homeProjects)).check(matches(isDisplayed()));
+        checkVisible(homeProjects);
     }
+
+
 
 }

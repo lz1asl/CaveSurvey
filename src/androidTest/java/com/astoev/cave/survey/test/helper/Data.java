@@ -1,23 +1,20 @@
 package com.astoev.cave.survey.test.helper;
 
-import com.astoev.cave.survey.R;
-
 import static androidx.test.espresso.Espresso.onIdle;
-import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.openContextualActionModeOverflowMenu;
-import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static com.astoev.cave.survey.R.id.info_action_export;
+import static com.astoev.cave.survey.R.string.main_button_data;
+import static com.astoev.cave.survey.test.helper.Common.click;
 
 public class Data {
 
     public static void dataScreen() {
         openContextualActionModeOverflowMenu();
         onIdle();
-        onView(withText(R.string.main_button_data)).perform(click());
+        click(main_button_data);
     }
 
     public static void xlsExport() {
-        onView(withId(R.id.info_action_export)).perform(click());
+        click(info_action_export);
     }
 }

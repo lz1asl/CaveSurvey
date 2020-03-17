@@ -45,18 +45,15 @@ public class XlsExportTest {
 
     @Test
     @LargeTest
-    public void testCreateSurvey() throws IOException {
+    public void testExportSurvey() throws IOException {
 
         // create survey
-        final String surveyName = "xls" + System.currentTimeMillis();
-        goHome();
-        createSurvey(surveyName);
-        openSurvey(surveyName);
+        final String surveyName = createAndOpenSurvey();
 
         // add data
         selectFirstSurveyLeg();
-        setLegData(1, 2);
-        addLeg(1.2f, 2.2f);
+        setLegData(1, 2, null);
+        addLeg(1.2f, 2.2f, 1.2f);
 
         // export
         dataScreen();
@@ -73,5 +70,13 @@ public class XlsExportTest {
         assertEquals(2, legs.size());
         assertLeg(legs.get(0), 1f, 2f, null);
         assertLeg(legs.get(1), 1.2f, 2.2f, null);
+    }
+
+    public String createAndOpenSurvey() {
+        final String surveyName = "xls" + System.currentTimeMillis();
+        goHome();
+        createSurvey(surveyName);
+        openSurvey(surveyName);
+        return surveyName;
     }
 }
