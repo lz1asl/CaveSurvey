@@ -19,6 +19,7 @@ import static com.astoev.cave.survey.R.id.point_up;
 import static com.astoev.cave.survey.R.string.main_add_leg;
 import static com.astoev.cave.survey.test.helper.Common.click;
 import static com.astoev.cave.survey.test.helper.Common.type;
+import static com.astoev.cave.survey.test.helper.Home.goHome;
 
 public class Survey {
 
@@ -36,6 +37,14 @@ public class Survey {
 
     public static void openSurvey(String aName) {
         click(aName);
+    }
+
+    public static String createAndOpenSurvey() {
+        final String surveyName = "xls" + System.currentTimeMillis();
+        goHome();
+        createSurvey(surveyName);
+        openSurvey(surveyName);
+        return surveyName;
     }
 
     public static void addLeg(float length, float azimuth, Float slope) {
@@ -71,4 +80,6 @@ public class Survey {
         // save
         click(point_action_save);
     }
+
+
 }

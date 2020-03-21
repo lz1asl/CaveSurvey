@@ -8,6 +8,7 @@ import com.astoev.cave.survey.service.export.excel.ExcelExport;
 import com.astoev.cave.survey.service.imp.ExcelImport;
 import com.astoev.cave.survey.service.imp.LegData;
 import com.astoev.cave.survey.service.imp.ProjectData;
+import com.astoev.cave.survey.test.helper.Survey;
 import com.astoev.cave.survey.util.FileStorageUtil;
 
 import org.junit.After;
@@ -24,10 +25,7 @@ import static com.astoev.cave.survey.sharedtest.export.ExcelTestUtils.assertConf
 import static com.astoev.cave.survey.sharedtest.export.ExcelTestUtils.assertLeg;
 import static com.astoev.cave.survey.test.helper.Data.dataScreen;
 import static com.astoev.cave.survey.test.helper.Data.xlsExport;
-import static com.astoev.cave.survey.test.helper.Home.goHome;
 import static com.astoev.cave.survey.test.helper.Survey.addLeg;
-import static com.astoev.cave.survey.test.helper.Survey.createSurvey;
-import static com.astoev.cave.survey.test.helper.Survey.openSurvey;
 import static com.astoev.cave.survey.test.helper.Survey.selectFirstSurveyLeg;
 import static com.astoev.cave.survey.test.helper.Survey.setLegData;
 import static org.junit.Assert.assertEquals;
@@ -45,10 +43,10 @@ public class XlsExportTest {
 
     @Test
     @LargeTest
-    public void testExportSurvey() throws IOException {
+    public void testSimpleExport() throws IOException {
 
         // create survey
-        final String surveyName = createAndOpenSurvey();
+        final String surveyName = Survey.createAndOpenSurvey();
 
         // add data
         selectFirstSurveyLeg();
@@ -72,11 +70,4 @@ public class XlsExportTest {
         assertLeg(legs.get(1), 1.2f, 2.2f, null);
     }
 
-    public String createAndOpenSurvey() {
-        final String surveyName = "xls" + System.currentTimeMillis();
-        goHome();
-        createSurvey(surveyName);
-        openSurvey(surveyName);
-        return surveyName;
-    }
 }

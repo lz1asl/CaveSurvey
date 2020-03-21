@@ -5,6 +5,7 @@ import android.content.Context;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.platform.app.InstrumentationRegistry;
 
+import static androidx.test.espresso.Espresso.onIdle;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -19,21 +20,27 @@ public class Common {
     }
 
     public static void click(int id) {
-        onView(withId(id)).perform(ViewActions.click());
+        onView(withId(id)).noActivity().perform(ViewActions.click());
+        onIdle();
     }
 
     public static void click(String text) {
-        onView(withText(text)).perform(ViewActions.click());
+        onView(withText(text)).noActivity().perform(ViewActions.click());
+        onIdle();
     }
 
     public static void type(int id, Float value) {
         if (value != null) {
             onView(withId(id)).perform(typeText("" + value));
+            onIdle();
         }
     }
 
     public static void type(int id, String value) {
-        onView(withId(id)).perform(typeText(value));
+        if (value != null) {
+            onView(withId(id)).noActivity().perform(typeText(value));
+            onIdle();
+        }
     }
 
     public static void checkVisible(int id) {
