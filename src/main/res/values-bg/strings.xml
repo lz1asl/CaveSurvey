@@ -73,7 +73,7 @@
     <!-- add popup -->
     <string name="main_add_title">Добави измерване</string>
     <string name="main_add_leg">Следваща отсечка</string>
-    <string name="main_add_branch">Следваща галерия</string>
+    <string name="main_add_gallery">Следваща галерия</string>
     <string name="main_add_middlepoint">Междинна точка</string>
     <string name="main_add_note">Бележка</string>
     <string name="main_add_sketch">Скица</string>
@@ -155,6 +155,7 @@
 
 
     <string name="export_xls">Excel eкспорт</string>
+    <string name="export_vtopo">Visual Topo eкспорт</string>
     <string name="export_view_files">Файлове</string>
     <string name="export_done">Експортирано в %1$s</string>
     <string name="export_io_error">Неуспешно писане на SD картата</string>

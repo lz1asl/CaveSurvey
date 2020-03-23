@@ -22,6 +22,7 @@ import com.astoev.cave.survey.openstopo.WebViewActivity;
 import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.service.export.excel.ExcelExport;
 import com.astoev.cave.survey.service.export.json.OpensTopoJsonExport;
+import com.astoev.cave.survey.service.export.vtopo.VisualTopoExport;
 import com.astoev.cave.survey.service.orientation.MagneticOrientationProcessor;
 import com.astoev.cave.survey.service.orientation.OrientationDeprecatedProcessor;
 import com.astoev.cave.survey.service.orientation.OrientationProcessor;
@@ -127,13 +128,33 @@ public class InfoActivity extends MainMenuActivity {
         }
     }
 
-    private void exportProject() {
+    private void exportProjectXls() {
         try {
             Log.i(Constants.LOG_TAG_SERVICE, "Start excel export");
 
             // export legs
 
             ExcelExport export = new ExcelExport(this);
+            String exportPath = export.runExport(getWorkspace().getActiveProject());
+            if (StringUtils.isEmpty(exportPath)) {
+                UIUtilities.showNotification(this, R.string.export_io_error, exportPath);
+            } else {
+                UIUtilities.showNotification(this, R.string.export_done, exportPath);
+            }
+
+        } catch (Exception e) {
+            Log.e(Constants.LOG_TAG_UI, "Failed to export project", e);
+            UIUtilities.showNotification(R.string.error);
+        }
+    }
+
+    private void exportProjectVTopo() {
+        try {
+            Log.i(Constants.LOG_TAG_SERVICE, "Start vtopo export");
+
+            // export legs
+
+            VisualTopoExport export = new VisualTopoExport(this);
             String exportPath = export.runExport(getWorkspace().getActiveProject());
             if (StringUtils.isEmpty(exportPath)) {
                 UIUtilities.showNotification(this, R.string.export_io_error, exportPath);
@@ -264,10 +285,15 @@ public class InfoActivity extends MainMenuActivity {
         Log.i(Constants.LOG_TAG_UI, "Info activity's menu selected - " + item.toString());
 
         switch (item.getItemId()) {
-            case R.id.info_action_export: {
-                exportProject();
+            case R.id.info_action_export_xls: {
+                exportProjectXls();
                 return true;
             }
+            case R.id.info_action_export_vtopo: {
+                exportProjectVTopo();
+                return true;
+            }
+
             case R.id.info_action_openstopo: {
 
                 try {

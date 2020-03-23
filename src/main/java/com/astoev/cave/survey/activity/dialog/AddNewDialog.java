@@ -28,7 +28,7 @@ public class AddNewDialog extends DialogFragment {
     public static final String ADD_NEW_DIALOG = "ADD_NEW_DIALOG";
 
     private static final int[] ADD_ITEM_LABELS = {R.string.main_add_leg,
-            R.string.main_add_branch,
+            R.string.main_add_gallery,
             R.string.main_add_middlepoint
     };
 

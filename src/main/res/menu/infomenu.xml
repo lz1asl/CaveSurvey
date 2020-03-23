@@ -2,9 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:myapp="http://schemas.android.com/apk/res-auto">
       
-	<item android:id="@+id/info_action_export"
+	<item android:id="@+id/info_action_export_xls"
 	      android:icon="@drawable/ic_action_import_export"
 	      android:title="@string/export_xls"
+	      android:visible="true"
+	      myapp:showAsAction="ifRoom|withText"/>
+	<item android:id="@+id/info_action_export_vtopo"
+	      android:icon="@drawable/vtopo"
+	      android:title="@string/export_vtopo"
 	      android:visible="true"
 	      myapp:showAsAction="ifRoom|withText"/>
     <item android:id="@+id/info_action_openstopo"
