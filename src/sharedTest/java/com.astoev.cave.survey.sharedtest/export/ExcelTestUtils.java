@@ -23,10 +23,29 @@ public class ExcelTestUtils {
     }
 
     public static void assertLeg(LegData aLeg, Float aDistance, Float anAzimuth, Float aSlope) {
+        assertLeg(aLeg, aDistance, anAzimuth, aSlope, null, null, null, null);
+    }
+
+    public static void assertLeg(LegData aLeg, Float aDistance, Float anAzimuth, Float aSlope,
+                                 Float up, Float down, Float left, Float right) {
         assertNotNull(aLeg);
         assertEquals(aDistance, aLeg.getLength());
         assertEquals(anAzimuth, aLeg.getAzimuth());
         assertEquals(aSlope, aLeg.getSlope());
+        assertEquals(up, aLeg.getUp());
+        assertEquals(down, aLeg.getDown());
+        assertEquals(left, aLeg.getLeft());
+        assertEquals(right, aLeg.getRight());
+    }
+
+    public static void assertLeg(LegData aLeg, String aGaleryFrom, String aPointFrom, String aGalleryTo,
+                                 String aPointTo, boolean isMiddle, boolean isVector) {
+        assertEquals(aGaleryFrom, aLeg.getFromGallery());
+        assertEquals(aPointFrom, aLeg.getFromPoint());
+        assertEquals(aGalleryTo, aLeg.getToGallery());
+        assertEquals(aPointTo, aLeg.getToPoint());
+        assertEquals(isMiddle, aLeg.isMiddlePoint());
+        assertEquals(isVector, aLeg.isVector());
     }
 
     public static void assertDefaultUnits(ProjectData aData) {

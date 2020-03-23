@@ -2,16 +2,20 @@ package com.astoev.cave.survey.test.helper;
 
 import android.content.Context;
 
+import androidx.test.espresso.Espresso;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.platform.app.InstrumentationRegistry;
 
+import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onIdle;
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.CoreMatchers.anything;
 
 public class Common {
 
@@ -20,12 +24,17 @@ public class Common {
     }
 
     public static void click(int id) {
-        onView(withId(id)).noActivity().perform(ViewActions.click());
+        onView(withId(id)).perform(ViewActions.click());
         onIdle();
     }
 
     public static void click(String text) {
-        onView(withText(text)).noActivity().perform(ViewActions.click());
+        onView(withText(text)).perform(ViewActions.click());
+        onIdle();
+    }
+
+    public static void clickDialogSpinnerAtPosition(int position) {
+        onData(anything()).atPosition(position).perform(ViewActions.click());
         onIdle();
     }
 
@@ -38,6 +47,7 @@ public class Common {
 
     public static void type(int id, String value) {
         if (value != null) {
+            onIdle();
             onView(withId(id)).noActivity().perform(typeText(value));
             onIdle();
         }
@@ -45,5 +55,21 @@ public class Common {
 
     public static void checkVisible(int id) {
         onView(withId(id)).check(matches(isDisplayed()));
+    }
+
+    public static void goBack() {
+        Espresso.pressBack();
+    }
+
+    public static void sleep() {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void openContextMenu() {
+        openActionBarOverflowOrOptionsMenu(getContext());
     }
 }
