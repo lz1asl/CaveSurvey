@@ -1,9 +1,10 @@
 package com.astoev.cave.survey.service.bluetooth.util;
 
-import androidx.fragment.app.FragmentManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+
+import androidx.fragment.app.FragmentManager;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.activity.dialog.AzimuthAndSlopeDialog;
@@ -41,18 +42,15 @@ public class MeasurementsUtil {
         if (anAzimuthBox != null && aSlopeBox != null && Option.CODE_SENSOR_INTERNAL.equals(azimuthSensor)
                 && Option.CODE_SENSOR_INTERNAL.equals(slopeSensor) && ConfigUtil.getBooleanProperty(PREF_SENSOR_SIMULTANEOUSLY)) {
             Log.i(Constants.LOG_TAG_UI, "Will register combined sensors");
-            View.OnClickListener dialogListener = new View.OnClickListener() {
-                @Override
-                public void onClick(View aView) {
-                    if (mAzimuthSlopeDialog != null) {
-                        mAzimuthSlopeDialog.dismiss();
-                        mAzimuthSlopeDialog.cancelDialog();
-                    }
-                    mAzimuthSlopeDialog = new AzimuthAndSlopeDialog();
-                    mAzimuthSlopeDialog.setTargetAzimuthTextBox(anAzimuthBox);
-                    mAzimuthSlopeDialog.setTargetSlopeTextBox(aSlopeBox);
-                    mAzimuthSlopeDialog.show(aSupportFragmentManager, AZIMUTH_SLOPE_DIALOG);
+            View.OnClickListener dialogListener = aView -> {
+                if (mAzimuthSlopeDialog != null) {
+                    mAzimuthSlopeDialog.dismiss();
+                    mAzimuthSlopeDialog.cancelDialog();
                 }
+                mAzimuthSlopeDialog = new AzimuthAndSlopeDialog();
+                mAzimuthSlopeDialog.setTargetAzimuthTextBox(anAzimuthBox);
+                mAzimuthSlopeDialog.setTargetSlopeTextBox(aSlopeBox);
+                mAzimuthSlopeDialog.show(aSupportFragmentManager, AZIMUTH_SLOPE_DIALOG);
             };
             anAzimuthBox.setOnClickListener(dialogListener);
             aSlopeBox.setOnClickListener(dialogListener);
@@ -64,34 +62,28 @@ public class MeasurementsUtil {
         // separate azimuth dialog
         if (anAzimuthBox != null && Option.CODE_SENSOR_INTERNAL.equals(azimuthSensor)) {
             Log.i(Constants.LOG_TAG_UI, "Will register onClickListener for Azimuth");
-            anAzimuthBox.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mAzimuthDialog != null) {
-                        mAzimuthDialog.dismiss();
-                        mAzimuthDialog.cancelDialog();
-                    }
-                    mAzimuthDialog = new AzimuthDialog();
-                    mAzimuthDialog.setTargetAzimuthTextBox(anAzimuthBox);
-                    mAzimuthDialog.show(aSupportFragmentManager, AZIMUTH_DIALOG);
+            anAzimuthBox.setOnClickListener(v -> {
+                if (mAzimuthDialog != null) {
+                    mAzimuthDialog.dismiss();
+                    mAzimuthDialog.cancelDialog();
                 }
+                mAzimuthDialog = new AzimuthDialog();
+                mAzimuthDialog.setTargetAzimuthTextBox(anAzimuthBox);
+                mAzimuthDialog.show(aSupportFragmentManager, AZIMUTH_DIALOG);
             });
         }
 
         // separate slope dialog
         if (aSlopeBox != null && Option.CODE_SENSOR_INTERNAL.equals(slopeSensor)) {
             Log.i(Constants.LOG_TAG_UI, "Will register onClickListener for Slope");
-            aSlopeBox.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View viewArg) {
-                    if (mSlopeDialog != null) {
-                        mSlopeDialog.dismiss();
-                        mSlopeDialog.cancelDialog();
-                    }
-                    mSlopeDialog = new SlopeDialog();
-                    mSlopeDialog.setTargetSlopeTextBox(aSlopeBox);
-                    mSlopeDialog.show(aSupportFragmentManager, SLOPE_DIALOG);
+            aSlopeBox.setOnClickListener(viewArg -> {
+                if (mSlopeDialog != null) {
+                    mSlopeDialog.dismiss();
+                    mSlopeDialog.cancelDialog();
                 }
+                mSlopeDialog = new SlopeDialog();
+                mSlopeDialog.setTargetSlopeTextBox(aSlopeBox);
+                mSlopeDialog.show(aSupportFragmentManager, SLOPE_DIALOG);
             });
         }
     }

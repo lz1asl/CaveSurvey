@@ -123,9 +123,7 @@ public class ExcelExportTest {
         // loadTransitionBridgingViewAction
         List<File> excelExportFiles = FileStorageUtil.listProjectFiles(null, ExcelExport.EXCEL_FILE_EXTENSION);
         File exportFile = excelExportFiles.stream()
-                .filter(file -> file.getName().startsWith(aSurveyName))
-                .sorted((f1, f2) -> -f1.getName().compareTo(f2.getName()))
-                .findFirst().get();
+                .filter(file -> file.getName().startsWith(aSurveyName)).min((f1, f2) -> -f1.getName().compareTo(f2.getName())).get();
         ProjectData data = ExcelImport.loadProjectData(exportFile);
 
         // default units

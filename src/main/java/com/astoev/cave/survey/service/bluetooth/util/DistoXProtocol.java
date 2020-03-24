@@ -47,7 +47,7 @@ public class DistoXProtocol {
 
         Log.i(Constants.LOG_TAG_BT, "Decoding distoX : " + Base64.encodeBase64(dataPacket));
 
-        List<Measure> measures = new ArrayList<Measure>();
+        List<Measure> measures = new ArrayList<>();
 
         int d0 = dataPacket[ADMIN] & 0x40;
         int d1  = dataPacket[DISTANCE_LOW_BYTE] & 0xff;

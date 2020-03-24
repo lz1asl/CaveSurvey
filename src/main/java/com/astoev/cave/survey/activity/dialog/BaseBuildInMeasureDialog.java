@@ -5,12 +5,13 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import androidx.fragment.app.DialogFragment;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.fragment.app.DialogFragment;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
@@ -130,7 +131,7 @@ public class BaseBuildInMeasureDialog extends DialogFragment {
 
         public ProgressHandler(BaseBuildInMeasureDialog dialogFragmentArg)
         {
-            reference = new WeakReference<BaseBuildInMeasureDialog>(dialogFragmentArg);
+            reference = new WeakReference<>(dialogFragmentArg);
         }
 
         public void handleMessage(Message msg) {
@@ -157,7 +158,7 @@ public class BaseBuildInMeasureDialog extends DialogFragment {
 
         public BackKeyListener(BaseBuildInMeasureDialog dialogFragmentArg)
         {
-            reference = new WeakReference<BaseBuildInMeasureDialog>(dialogFragmentArg);
+            reference = new WeakReference<>(dialogFragmentArg);
         }
 
         @Override
@@ -236,7 +237,7 @@ public class BaseBuildInMeasureDialog extends DialogFragment {
         dismiss();
     }
 
-    class AwaitFilterRunnable implements Runnable {
+    static class AwaitFilterRunnable implements Runnable {
 
         public AwaitFilterRunnable(OrientationProcessor processor, MeasurementsFilter filter, EditText targetTextBox) {
             this.processor = processor;
@@ -278,7 +279,7 @@ public class BaseBuildInMeasureDialog extends DialogFragment {
     /**
      * Nested class that performs progress calculations (counting)
      */
-    protected class ProgressThread extends Thread {
+    protected static class ProgressThread extends Thread {
         Handler mHandler;
         final static int STATE_DONE = 0;
         final static int STATE_RUNNING = 1;
@@ -330,8 +331,7 @@ public class BaseBuildInMeasureDialog extends DialogFragment {
             @Override
             public void onAzimuthChanged(float newValueArg) {
                 //convert to Grads if necessary
-                float lastAzimuthValue = newValueArg;
-                azimuthFilter.addMeasurement(lastAzimuthValue);
+                azimuthFilter.addMeasurement(newValueArg);
 
                 float processedValue = azimuthFilter.getValue();
                 if (!isInDegrees) {
@@ -368,8 +368,7 @@ public class BaseBuildInMeasureDialog extends DialogFragment {
             @Override
             public void onSlopeChanged(float newValueArg) {
                 //convert to Grads if necessary
-                float lastSlopeValue = newValueArg;
-                slopeFilter.addMeasurement(lastSlopeValue);
+                slopeFilter.addMeasurement(newValueArg);
 
                 float processedValue = slopeFilter.getValue();
                 if (!isInDegrees){

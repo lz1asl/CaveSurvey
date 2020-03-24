@@ -61,14 +61,6 @@ public class Common {
         Espresso.pressBack();
     }
 
-    public static void sleep() {
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
     public static void openContextMenu() {
         openActionBarOverflowOrOptionsMenu(getContext());
     }

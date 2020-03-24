@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.astoev.cave.survey.service.orientation;
 
 import android.annotation.TargetApi;
@@ -126,10 +123,8 @@ public abstract class OrientationProcessor implements SensorEventListener {
 	 * @return rotation
 	 */
 	protected int getRotation(){
-    	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO){
-    		rotation = getSafeRotation();
-    	}
-    	return rotation;
+		rotation = getSafeRotation();
+		return rotation;
 	}
 	
 	/**

@@ -5,6 +5,6 @@ package com.astoev.cave.survey.activity.draw.colorpicker;
  */
 public interface ColorChangedListener {
 
-    public void colorChanged(int color);
+    void colorChanged(int color);
 
 }

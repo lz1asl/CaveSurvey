@@ -5,15 +5,15 @@
     android:layout_height="fill_parent"
     android:id="@+id/scrollView">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                  android:layout_height="fill_parent"
+    <LinearLayout
+        android:layout_height="fill_parent"
                   android:layout_width="fill_parent"
                   android:orientation="vertical"
                   android:layout_margin="5dp">
 
         <!-- stats -->
-        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                        android:layout_width="fill_parent"
+        <RelativeLayout
+            android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:layout_margin="10dp">
@@ -233,7 +233,7 @@
 
                 <FrameLayout android:id="@+id/projectInfoContainer"
                              android:layout_width="match_parent"
-                             android:layout_height="wrap_content"
+                             android:layout_height="0dp"
                              android:layout_weight="1"/>
 
                 <Button android:id="@+id/updateProject"

@@ -3,12 +3,13 @@ package com.astoev.cave.survey.activity.home;
 import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
@@ -71,8 +72,8 @@ public class SplashActivity extends AppCompatActivity {
         // TODO - prepare language and configuration for later usage
 
         // continue
-        Log.i(Constants.LOG_TAG_UI, "Loading home");
-        startActivity(new Intent(this, HomeActivity.class));
+        Log.i(Constants.LOG_TAG_UI, "Loading surveys");
+        startActivity(new Intent(this, SurveysActivity.class));
         finish();
 
     }
@@ -91,21 +92,21 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void loadHomeScreen() {
-        Log.i(Constants.LOG_TAG_UI, "Loading home");
-        startActivity(new Intent(this, HomeActivity.class));
+        Log.i(Constants.LOG_TAG_UI, "Loading surveys");
+        startActivity(new Intent(this, SurveysActivity.class));
         finish();
     }
 
 
     private void displayError(int aMessage) {
         UIUtilities.showNotification(aMessage);
-        TextView status = (TextView) findViewById(R.id.splashStatus);
+        TextView status = findViewById(R.id.splashStatus);
         status.setText(getString(R.string.splash_error, getText(aMessage)));
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
+                                           String[] permissions, int[] grantResults) {
 
         switch (requestCode) {
             case PERM_REQ_CODE_STORAGE:
@@ -113,7 +114,7 @@ public class SplashActivity extends AppCompatActivity {
                     loadHomeScreen();
                 } else {
                     // can temporary ignore the warning
-                    Button continueAnywayButton = (Button) findViewById(R.id.splash_ignore_storage_warning_button);
+                    Button continueAnywayButton = findViewById(R.id.splash_ignore_storage_warning_button);
                     continueAnywayButton.setVisibility(View.VISIBLE);
 
                     // can't continue normally

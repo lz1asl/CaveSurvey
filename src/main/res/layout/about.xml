@@ -20,7 +20,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_margin="10dp"
         android:contentDescription="@string/sk_paldin"
-        android:src="@drawable/paldin" />
+        android:src="@drawable/paldin_logo" />
 
     <TextView
         android:id="@+id/aboutUserGuide"

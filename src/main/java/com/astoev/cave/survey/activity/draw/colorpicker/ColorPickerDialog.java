@@ -27,13 +27,11 @@ public class ColorPickerDialog extends Dialog {
         setTitle(R.string.sketch_pick_color);
         setContentView(R.layout.color_picker);
 
-        ColorPickerView view = (ColorPickerView) findViewById(R.id.colorPicker);
+        ColorPickerView view = findViewById(R.id.colorPicker);
         view.setInitialColor(mInitialColor);
-        view.setListener(new ColorChangedListener() {
-            public void colorChanged(int color) {
-                mListener.colorChanged(color);
-                dismiss();
-            }
+        view.setListener(color -> {
+            mListener.colorChanged(color);
+            dismiss();
         });
 
     }

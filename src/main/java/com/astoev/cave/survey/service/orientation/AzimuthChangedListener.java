@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.astoev.cave.survey.service.orientation;
 
 /**

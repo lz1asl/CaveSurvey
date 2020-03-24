@@ -24,7 +24,7 @@ public class ByteUtils {
     }
 
     public static byte[] copyBytes(byte[] anOrigByteArray, int aLength) {
-        byte result[] = new byte[aLength];
+        byte[] result = new byte[aLength];
         for (int i=0; i<aLength; i++) {
             result[i] = anOrigByteArray[i];
         }
@@ -32,7 +32,7 @@ public class ByteUtils {
     }
 
     public static float[] copyBytes(float[] anOrigFloatArray, int aLength) {
-        float result[] = new float[aLength];
+        float[] result = new float[aLength];
         for (int i=0; i<aLength; i++) {
             result[i] = anOrigFloatArray[i];
         }
@@ -40,7 +40,7 @@ public class ByteUtils {
     }
 
     public static String[] copyBytes(String[] anOrigStringArray, int aLength) {
-        String result[] = new String[aLength];
+        String[] result = new String[aLength];
         for (int i=0; i<aLength; i++) {
             result[i] = anOrigStringArray[i];
         }

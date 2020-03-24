@@ -7,5 +7,5 @@ import com.astoev.cave.survey.Constants;
  */
 public interface BTResultAware {
 
-    public void onReceiveMeasures(Constants.Measures aMeasureTarget, float aMeasureValue);
+    void onReceiveMeasures(Constants.Measures aMeasureTarget, float aMeasureValue);
 }

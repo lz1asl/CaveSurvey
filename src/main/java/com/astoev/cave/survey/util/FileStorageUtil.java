@@ -19,7 +19,6 @@ import com.astoev.cave.survey.model.Project;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FilenameFilter;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
@@ -148,12 +147,7 @@ public class FileStorageUtil {
         return pictureFile.getAbsolutePath();
     }
 
-    /**
-     * Helper method that checks if we use a public folder to store files.
-     *
-     * @return if api version 8+ return true, otherwise false
-     */
-//    public static boolean isPublicFolder(){
+    //    public static boolean isPublicFolder(){
 //    	return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO);
 //    }
 
@@ -222,7 +216,7 @@ public class FileStorageUtil {
                 Log.e(Constants.LOG_TAG_UI, "Failed to create folder " + projectHome.getAbsolutePath());
                 return null;
             }
-            Log.i(Constants.LOG_TAG_SERVICE, "Project home created");
+            Log.i(Constants.LOG_TAG_SERVICE, "Project surveys created");
         }
         return projectHome;
     }
@@ -240,21 +234,17 @@ public class FileStorageUtil {
 
         // try to find writable folder
         if (isExternalStorageWritable()) { // external storage
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
-                storageHome = Environment.getExternalStoragePublicDirectory(FOLDER_CAVE_SURVEY);
-            } else {
-                storageHome = new File(Environment.getExternalStorageDirectory(), FOLDER_CAVE_SURVEY);
-            }
+            storageHome = Environment.getExternalStoragePublicDirectory(FOLDER_CAVE_SURVEY);
         } else { // internal storage
             storageHome = new File(ConfigUtil.getContext().getFilesDir(), FOLDER_CAVE_SURVEY);
         }
 
-        Log.d(Constants.LOG_TAG_SERVICE, "Using as home: " + storageHome.getAbsolutePath());
+        Log.d(Constants.LOG_TAG_SERVICE, "Using as surveys: " + storageHome.getAbsolutePath());
 
         // create folder for CaveSurvey if missing
         if (!storageHome.exists()) {
             if (!storageHome.mkdirs()) {
-                Log.e(Constants.LOG_TAG_UI, "Failed to create home folder: " + storageHome.getAbsolutePath());
+                Log.e(Constants.LOG_TAG_UI, "Failed to create surveys folder: " + storageHome.getAbsolutePath());
                 return null;
             }
             Log.i(Constants.LOG_TAG_SERVICE, "Home folder created: " + storageHome.getAbsolutePath());
@@ -322,7 +312,7 @@ public class FileStorageUtil {
      * @param fileNameArg - file name
      * @return true if the file exists, otherwise false
      */
-    public static final boolean isFileExists(String fileNameArg) {
+    public static boolean isFileExists(String fileNameArg) {
         if (fileNameArg == null) {
             return false;
         }
@@ -352,12 +342,7 @@ public class FileStorageUtil {
             return new ArrayList();
         } else {
             if (StringUtils.isNotEmpty(anExtension)) {
-                return Arrays.asList(aFolder.listFiles(new FilenameFilter() {
-                    @Override
-                    public boolean accept(File dir, String filename) {
-                        return filename.endsWith(anExtension);
-                    }
-                }));
+                return Arrays.asList(aFolder.listFiles((dir, filename) -> filename.endsWith(anExtension)));
             } else {
                 return Arrays.asList(aFolder.listFiles());
             }

@@ -127,7 +127,7 @@ public class BluetoothService {
     private static int mLeDeviceState = R.string.bt_state_none;
 
     // needed by le command queueing, details and credit http://www.brendanwhelan.net/2015/bluetooth-command-queuing-for-android
-    private static LinkedList<AbstractBluetoothCommand> mCommandQueue = new LinkedList<AbstractBluetoothCommand>();
+    private static LinkedList<AbstractBluetoothCommand> mCommandQueue = new LinkedList<>();
     private static Executor mCommandExecutor = Executors.newSingleThreadExecutor();
     private static Semaphore mCommandLock = new Semaphore(1,true);
     private static boolean expectingMeasurement = false;
@@ -160,8 +160,8 @@ public class BluetoothService {
 
         // measurements requested
         expectingMeasurement = true;
-        List<Constants.MeasureTypes> measureTypes = new ArrayList<Constants.MeasureTypes>();
-        List<Constants.Measures> measureTargets = new ArrayList<Constants.Measures>();
+        List<Constants.MeasureTypes> measureTypes = new ArrayList<>();
+        List<Constants.Measures> measureTargets = new ArrayList<>();
 
         measureTypes.add(getMeasureTypeFromTarget(aMeasure));
         measureTargets.add(aMeasure);
@@ -328,7 +328,7 @@ public class BluetoothService {
             }
         }
         if (mLastLEDevice != null) {
-            Pair<String, String> lastLeDevice = new Pair<String, String>(mLastLEDevice.getName(), mLastLEDevice.getAddress());
+            Pair<String, String> lastLeDevice = new Pair<>(mLastLEDevice.getName(), mLastLEDevice.getAddress());
             if (!devices.contains(lastLeDevice)) {
                 result.add(lastLeDevice);
             }
@@ -435,13 +435,7 @@ public class BluetoothService {
     public static BluetoothAdapter.LeScanCallback startLEScanCallback()  {
 
         Log.i(LOG_TAG_BT, "Start discovery for Bluetooth LE devices");
-        BluetoothAdapter.LeScanCallback callback = new BluetoothAdapter.LeScanCallback() {
-
-            @Override
-            public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) {
-                handleDeviceDiscovered(device, rssi);
-            }
-        };
+        BluetoothAdapter.LeScanCallback callback = (device, rssi, scanRecord) -> handleDeviceDiscovered(device, rssi);
         BluetoothAdapter.getDefaultAdapter().startLeScan(leCallback);
         return callback;
     }
@@ -501,33 +495,30 @@ public class BluetoothService {
         Log.d(LOG_TAG_BT, "Enqueue command " + aCommand.getClass().getSimpleName());
         synchronized (mCommandQueue) {
             mCommandQueue.add(aCommand);
-            mCommandExecutor.execute(new Runnable() {
-                @Override
-                public void run() {
-                    Log.i(LOG_TAG_BT, "Execute command");
-                    mCommandLock.acquireUninterruptibly();
+            mCommandExecutor.execute(() -> {
+                Log.i(LOG_TAG_BT, "Execute command");
+                mCommandLock.acquireUninterruptibly();
 
+                try {
+                    Thread.currentThread().sleep(200);
+                } catch (InterruptedException e) {
+                    Log.e(LOG_TAG_BT, "interrupted");
+                }
+
+                aCommand.execute(mBluetoothGatt);
+
+                if (aCommand.canProceedWithoutAnswer()) {
+                    dequeueCommand();
+                }
+
+                // schedule again
+                if (isLeDeviceActive() && expectingMeasurement && aCommand instanceof PullCharacteristicCommand) {
                     try {
-                        Thread.currentThread().sleep(200);
-                    } catch (InterruptedException e) {
-                        Log.e(LOG_TAG_BT, "interrupted");
+                        sleep(500);
+                    } catch (InterruptedException aE) {
+                        aE.printStackTrace();
                     }
-
-                    aCommand.execute(mBluetoothGatt);
-
-                    if (aCommand.canProceedWithoutAnswer()) {
-                        dequeueCommand();
-                    }
-
-                    // schedule again
-                    if (isLeDeviceActive() && expectingMeasurement && aCommand instanceof PullCharacteristicCommand) {
-                        try {
-                            sleep(500);
-                        } catch (InterruptedException aE) {
-                            aE.printStackTrace();
-                        }
-                        enqueueCommand(aCommand);
-                    }
+                    enqueueCommand(aCommand);
                 }
             });
         }

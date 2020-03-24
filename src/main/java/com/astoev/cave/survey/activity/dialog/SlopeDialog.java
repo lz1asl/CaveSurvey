@@ -1,17 +1,13 @@
-/**
- * 
- */
 package com.astoev.cave.survey.activity.dialog;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
 import com.astoev.cave.survey.R;
@@ -23,11 +19,7 @@ import com.astoev.cave.survey.R;
  * @author jmitrev
  */
 public class SlopeDialog extends BaseBuildInMeasureDialog {
-    
-    /** Slope value view*/
-    private TextView slopeView;
-    private TextView slopeAccuracyView;
-    
+
 
     /**
      * @see DialogFragment#onCreateDialog(android.os.Bundle)
@@ -50,11 +42,12 @@ public class SlopeDialog extends BaseBuildInMeasureDialog {
         builder.setOnKeyListener(new BackKeyListener(this));
 
         // progress bar view
-        progressBar = (ProgressBar)view.findViewById(R.id.slope_progress);
+        progressBar = view.findViewById(R.id.slope_progress);
         progressBar.setMax(progressMaxValue);
 
-        slopeView = (TextView)view.findViewById(R.id.slope_value);
-        slopeAccuracyView = (TextView) view.findViewById(R.id.slope_accuracy);
+        /** Slope value view*/
+        TextView slopeView = view.findViewById(R.id.slope_value);
+        TextView slopeAccuracyView = view.findViewById(R.id.slope_accuracy);
         
         // create the Dialog
         AlertDialog alertDialg = builder.create();

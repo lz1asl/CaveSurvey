@@ -62,11 +62,11 @@ public class MapView extends View {
     private float initialMoveY = 0;
     private Point northCenter = new Point();
 
-    private List<Integer> processedLegs = new ArrayList<Integer>();
+    private List<Integer> processedLegs = new ArrayList<>();
     
-    private SparseArray<Point2D> mapPoints = new SparseArray<Point2D>();
+    private SparseArray<Point2D> mapPoints = new SparseArray<>();
     private SparseIntArray galleryColors = new SparseIntArray();
-    private SparseArray<String> galleryNames = new SparseArray<String>();
+    private SparseArray<String> galleryNames = new SparseArray<>();
 
     private boolean horizontalPlan = true;
 

@@ -74,38 +74,38 @@ public class InfoActivity extends MainMenuActivity {
 
             ProjectInfo projectInfo = DaoUtil.getProjectInfo();
 
-            TextView projectCreated = (TextView) findViewById(R.id.infoProjectCreated);
+            TextView projectCreated = findViewById(R.id.infoProjectCreated);
             projectCreated.setText(projectInfo.getCreationDate());
 
-            TextView projectNumGalleries = (TextView) findViewById(R.id.infoNumGalleries);
+            TextView projectNumGalleries = findViewById(R.id.infoNumGalleries);
             projectNumGalleries.setText(String.valueOf(projectInfo.getGalleries()));
 
-            TextView projectNumLegs = (TextView) findViewById(R.id.infoNumLegs);
+            TextView projectNumLegs = findViewById(R.id.infoNumLegs);
             projectNumLegs.setText(String.valueOf(projectInfo.getLegs()));
 
-            TextView projectTotalLength = (TextView) findViewById(R.id.infoRawDistance);
+            TextView projectTotalLength = findViewById(R.id.infoRawDistance);
 
             String lengthLabel = StringUtils.floatToLabel(projectInfo.getLength()) + " " + Options.getOptionValue(Option.CODE_DISTANCE_UNITS);
             projectTotalLength.setText(lengthLabel);
 
-            TextView projectNumNotes = (TextView) findViewById(R.id.infoNumNotes);
+            TextView projectNumNotes = findViewById(R.id.infoNumNotes);
             projectNumNotes.setText(StringUtils.intToLabel(projectInfo.getNotes()));
 
-            TextView projectNumDrawings = (TextView) findViewById(R.id.infoNumDrawings);
+            TextView projectNumDrawings = findViewById(R.id.infoNumDrawings);
             projectNumDrawings.setText(StringUtils.intToLabel(projectInfo.getSketches()));
 
-            TextView projectNumCoordinates = (TextView) findViewById(R.id.infoNumCoordinates);
+            TextView projectNumCoordinates = findViewById(R.id.infoNumCoordinates);
             projectNumCoordinates.setText(StringUtils.intToLabel(projectInfo.getLocations()));
 
-            TextView projectNumPhotos = (TextView) findViewById(R.id.infoNumPhotos);
+            TextView projectNumPhotos = findViewById(R.id.infoNumPhotos);
             projectNumPhotos.setText(StringUtils.intToLabel(projectInfo.getPhotos()));
 
-            TextView projectNumVectors = (TextView) findViewById(R.id.infoNumVectors);
+            TextView projectNumVectors = findViewById(R.id.infoNumVectors);
             projectNumVectors.setText(StringUtils.intToLabel(projectInfo.getVectors()));
 
             // set the value for azimuth build in processor
             if (Option.CODE_SENSOR_INTERNAL.equals(Options.getOption(Option.CODE_AZIMUTH_SENSOR).getValue())) {
-                TextView azimuthSensor = (TextView) findViewById(R.id.info_azimuth_sensor);
+                TextView azimuthSensor = findViewById(R.id.info_azimuth_sensor);
                 OrientationProcessor orientationProcessor = OrientationProcessorFactory.getOrientationProcessor(this, null);
                 if (orientationProcessor.canReadOrientation()) {
                     if (orientationProcessor instanceof RotationOrientationProcessor) {
@@ -118,7 +118,7 @@ public class InfoActivity extends MainMenuActivity {
                 }
             }
 
-            TextView projectHome = (TextView) findViewById(R.id.info_project_home);
+            TextView projectHome = findViewById(R.id.info_project_home);
             String projectHomeFolder = FileStorageUtil.getProjectHome(projectInfo.getName()).getAbsolutePath();
             projectHome.setText(projectHomeFolder);
 
@@ -150,7 +150,7 @@ public class InfoActivity extends MainMenuActivity {
 
     private void exportProjectVTopo() {
         try {
-            Log.i(Constants.LOG_TAG_SERVICE, "Start vtopo export");
+            Log.i(Constants.LOG_TAG_SERVICE, "Start vtopo_logo export");
 
             // export legs
 

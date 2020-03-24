@@ -27,11 +27,11 @@
     <string name="project_name_required">Enter name</string>
     <string name="project_name_characters">Contains bad characters</string>
     <string name="project_import">Import</string>
-    <string name="import_success">Import successfull</string>
+    <string name="import_success">Import successful</string>
 
 
 
-    <!-- main screen -->
+    <!-- survey screen -->
     <string name="main_leg">Current leg</string>
     <string name="main_button_change">Select</string>
     <string name="main_button_change_title">Select leg</string>
@@ -100,7 +100,7 @@
 
     <string name="gallery_after_first_point">Not available for first leg</string>
 
-    <!-- main menu -->
+    <!-- survey menu -->
 <!--     
     <string name="menu_help">Help</string>
  -->    

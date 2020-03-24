@@ -2,7 +2,6 @@ package com.astoev.cave.survey.activity.draw;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -71,15 +70,15 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
         setCurrentPaint();
         currentBrush = new PenBrush();
 
-        drawingSurface = (DrawingSurface) findViewById(R.id.drawingSurface);
+        drawingSurface = findViewById(R.id.drawingSurface);
         drawingSurface.setOnTouchListener(this);
         drawingSurface.previewPath = new DrawingPath();
         drawingSurface.previewPath.path = new Path();
         drawingSurface.previewPath.paint = currentPaint;
 
-        redoBtn = (Button) findViewById(R.id.redoBtn);
-        undoBtn = (Button) findViewById(R.id.undoBtn);
-        saveBtn = (ImageButton) findViewById(R.id.saveDrawingBtn);
+        redoBtn = findViewById(R.id.redoBtn);
+        undoBtn = findViewById(R.id.undoBtn);
+        saveBtn = findViewById(R.id.saveDrawingBtn);
 
         redoBtn.setEnabled(false);
         undoBtn.setEnabled(false);
@@ -221,12 +220,9 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
     }
 
     public void pickColor(View aView) {
-        ColorChangedListener listener = new ColorChangedListener() {
-            @Override
-            public void colorChanged(int color) {
-                currentColor = color;
-                setCurrentPaint();
-            }
+        ColorChangedListener listener = color -> {
+            currentColor = color;
+            setCurrentPaint();
         };
         Dialog dialog = new ColorPickerDialog(this, listener, currentColor);
         dialog.show();
@@ -246,14 +242,12 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.sketch_pick_size);
 
-        builder.setSingleChoiceItems(items, selectedIndex, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int item) {
+        builder.setSingleChoiceItems(items, selectedIndex, (dialog, item) -> {
 
-                Log.i(Constants.LOG_TAG_UI, "Selected size " + item);
-                currentSize = item;
-                setCurrentPaint();
-                dialog.dismiss();
-            }
+            Log.i(Constants.LOG_TAG_UI, "Selected size " + item);
+            currentSize = item;
+            setCurrentPaint();
+            dialog.dismiss();
         });
 
         AlertDialog alert = builder.create();
@@ -275,14 +269,12 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.sketch_pick_style);
 
-        builder.setSingleChoiceItems(itemsLabels, selectedIndex, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int item) {
+        builder.setSingleChoiceItems(itemsLabels, selectedIndex, (dialog, item) -> {
 
-                Log.i(Constants.LOG_TAG_UI, "Selected style " + item);
-                currentStyle = item;
-                setCurrentPaint();
-                dialog.dismiss();
-            }
+            Log.i(Constants.LOG_TAG_UI, "Selected style " + item);
+            currentStyle = item;
+            setCurrentPaint();
+            dialog.dismiss();
         });
         AlertDialog alert = builder.create();
         alert.show();

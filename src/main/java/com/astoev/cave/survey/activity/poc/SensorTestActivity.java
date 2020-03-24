@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.astoev.cave.survey.activity.poc;
 
 import android.os.Bundle;
@@ -77,20 +74,20 @@ public class SensorTestActivity extends MainMenuActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sensortest);
         
-        orientationView = (TextView)findViewById(R.id.azimuth_orientation);
-        magneticView = (TextView)findViewById(R.id.azimuth_magnetic);
-        rotationView = (TextView)findViewById(R.id.azimuth_rotation);
+        orientationView = findViewById(R.id.azimuth_orientation);
+        magneticView = findViewById(R.id.azimuth_magnetic);
+        rotationView = findViewById(R.id.azimuth_rotation);
         
-        orientationSlopeView = (TextView)findViewById(R.id.slope_orientation);
-        magneticSlopeView = (TextView)findViewById(R.id.slope_magnetic);
-        rotationSlopeView = (TextView)findViewById(R.id.slope_rotation);
+        orientationSlopeView = findViewById(R.id.slope_orientation);
+        magneticSlopeView = findViewById(R.id.slope_magnetic);
+        rotationSlopeView = findViewById(R.id.slope_rotation);
         
-        orientationAccuracyView = (TextView)findViewById(R.id.azimuth_orientation_accuracy);
-        magneticAccuracyView = (TextView)findViewById(R.id.azimuth_magnetic_accuracy);
-        rotationAccuracyView = (TextView)findViewById(R.id.azimuth_rotation_accuracy);
+        orientationAccuracyView = findViewById(R.id.azimuth_orientation_accuracy);
+        magneticAccuracyView = findViewById(R.id.azimuth_magnetic_accuracy);
+        rotationAccuracyView = findViewById(R.id.azimuth_rotation_accuracy);
         
-        startButton = (Button)findViewById(R.id.azimuth_btn_start);
-        stopButton = (Button)findViewById(R.id.azimuth_btn_stop);
+        startButton = findViewById(R.id.azimuth_btn_start);
+        stopButton = findViewById(R.id.azimuth_btn_stop);
         
         azimuthFormater = new DecimalFormat("#.#");
         
@@ -164,8 +161,8 @@ public class SensorTestActivity extends MainMenuActivity {
 
         // test fields
 		// handle double click for reading built-in azimuth and slope
-		EditText azimuth = (EditText) findViewById(R.id.sensortest_azimuth);
-		EditText slope = (EditText) findViewById(R.id.sensortest_slope);
+		EditText azimuth = findViewById(R.id.sensortest_azimuth);
+		EditText slope = findViewById(R.id.sensortest_slope);
 		MeasurementsUtil.bindSensorsAwareFields(azimuth, slope, getSupportFragmentManager(), CODE_SENSOR_INTERNAL, CODE_SENSOR_INTERNAL);
 	}
 

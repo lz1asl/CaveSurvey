@@ -1,14 +1,12 @@
-/**
- * 
- */
 package com.astoev.cave.survey.fragment;
 
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.fragment.app.Fragment;
 
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.model.Location;
@@ -39,10 +37,10 @@ public class LocationFragment extends Fragment {
 
         View view = inflaterArg.inflate(R.layout.location_fragment, containerArg, false);
         
-        latitudeView  = (TextView)view.findViewById(R.id.gps_latitude);
-        longitudeView = (TextView)view.findViewById(R.id.gps_longitude);
-        altitudeView  = (TextView)view.findViewById(R.id.gps_altitude);
-        accuracyView  = (TextView)view.findViewById(R.id.gps_accuracy);
+        latitudeView  = view.findViewById(R.id.gps_latitude);
+        longitudeView = view.findViewById(R.id.gps_longitude);
+        altitudeView  = view.findViewById(R.id.gps_altitude);
+        accuracyView  = view.findViewById(R.id.gps_accuracy);
         
         Bundle arguments = getArguments();
         if (arguments != null && arguments.get(LOCATION_KEY) != null){

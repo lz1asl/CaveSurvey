@@ -5,5 +5,5 @@ package com.astoev.cave.survey.activity.main;
  */
 public interface Refresheable {
 
-    public void refresh();
+    void refresh();
 }

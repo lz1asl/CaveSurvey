@@ -13,8 +13,8 @@ import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.MainMenuActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
-import com.astoev.cave.survey.activity.main.MainActivity;
 import com.astoev.cave.survey.activity.main.PointActivity;
+import com.astoev.cave.survey.activity.main.SurveyMainActivity;
 import com.astoev.cave.survey.dto.ProjectConfig;
 import com.astoev.cave.survey.fragment.InfoDialogFragment;
 import com.astoev.cave.survey.fragment.ProjectFragment;
@@ -54,7 +54,7 @@ public class NewProjectActivity extends MainMenuActivity {
     private void prepareImportFiles() {
         try {
 
-            Spinner spinner = (Spinner) findViewById(R.id.import_files);
+            Spinner spinner = findViewById(R.id.import_files);
 
             // locate excel files
             List<File> excelExportFiles = FileStorageUtil.listProjectFiles(null, ExcelExport.EXCEL_FILE_EXTENSION);
@@ -64,12 +64,12 @@ public class NewProjectActivity extends MainMenuActivity {
 
             List<NewProjectActivity.ImportFile> importFiles = new ArrayList<>();
             for (File file : excelExportFiles) {
-                importFiles.add(new NewProjectActivity.ImportFile(file));
+                importFiles.add(new ImportFile(file));
             }
             Collections.sort(importFiles);
 
             // default empty value
-            importFiles.add(0, new NewProjectActivity.ImportFile(null));
+            importFiles.add(0, new ImportFile(null));
 
             ArrayAdapter<NewProjectActivity.ImportFile> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, importFiles);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -97,7 +97,7 @@ public class NewProjectActivity extends MainMenuActivity {
             ProjectFragment projectFragment = (ProjectFragment)getSupportFragmentManager().findFragmentById(R.id.project_container);
             final ProjectConfig projectConfig = projectFragment.getProjectConfig();
 
-            EditText projectNameField = (EditText) findViewById(R.id.new_projectname);
+            EditText projectNameField = findViewById(R.id.new_projectname);
             final String newProjectName = projectNameField.getText().toString();
 
             // name is required
@@ -124,7 +124,7 @@ public class NewProjectActivity extends MainMenuActivity {
             // create the project
             final Project project = ProjectManager.instance().createProject(projectConfig);
 
-            Spinner spinner = (Spinner) findViewById(R.id.import_files);
+            Spinner spinner = findViewById(R.id.import_files);
             boolean projectImported;
             if (spinner.getSelectedItem() == null
                     || ImportFile.NO_FILE_SELECTED.equals(spinner.getSelectedItem().toString())) {
@@ -148,7 +148,7 @@ public class NewProjectActivity extends MainMenuActivity {
 
                 Intent intent;
                 if (projectImported) {
-                    intent = new Intent(NewProjectActivity.this, MainActivity.class);
+                    intent = new Intent(NewProjectActivity.this, SurveyMainActivity.class);
                 } else {
                     intent = new Intent(NewProjectActivity.this, PointActivity.class);
                     intent.putExtra(Constants.LEG_SELECTED, getWorkspace().getActiveLegId());
@@ -211,7 +211,7 @@ public class NewProjectActivity extends MainMenuActivity {
         infoDialog.show(getSupportFragmentManager(), IMPORT_TOOLTIP_DIALOG);
     }
 
-    class ImportFile implements Comparable {
+    static class ImportFile implements Comparable {
         public static final String NO_FILE_SELECTED = " --- ";
         File file;
 

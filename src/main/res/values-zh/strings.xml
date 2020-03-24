@@ -31,7 +31,7 @@
 
 
 
-    <!-- main screen -->
+    <!-- survey screen -->
     <string name="main_leg">当前测量段</string>
     <string name="main_button_change">选择</string>
     <string name="main_button_change_title">选择测量段</string>
@@ -101,7 +101,7 @@
 
     <string name="gallery_after_first_point">对第一条测量段无效</string>
 
-    <!-- main menu -->
+    <!-- survey menu -->
 <!--     
     <string name="menu_help">帮助</string>
  -->    

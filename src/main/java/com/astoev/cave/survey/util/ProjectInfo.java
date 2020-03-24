@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.astoev.cave.survey.util;
 
 /**
@@ -31,7 +28,7 @@ public class ProjectInfo {
     /** Number of notes*/
     private int notes;
     
-    /** Number of gps locations*/
+    /** Number of gps_auto locations*/
     private int locations;
     
     /** Number of sketches*/

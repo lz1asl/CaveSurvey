@@ -93,11 +93,9 @@ public class ErrorReporter {
         PackageInfo info = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
         version.put("versionName", info.versionName);
         version.put("versionCode", info.versionCode);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
-            version.put("firstInstall", info.firstInstallTime);
-            version.put("lastUpdate", info.lastUpdateTime);
-        }
-//        version.put("installLocation", info.installLocation);
+        version.put("firstInstall", info.firstInstallTime);
+        version.put("lastUpdate", info.lastUpdateTime);
+        //        version.put("installLocation", info.installLocation);
         report.put("cave_survey_app", version);
 
         // Android device details

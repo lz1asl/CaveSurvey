@@ -19,7 +19,7 @@ public abstract class AbstractBluetoothDevice implements Comparable {
     /**
      * Used to filter paired devices by name.
      *
-     * @param aName
+     * @param aName name of the device
      * @return
      */
     public abstract boolean isNameSupported(String aName);

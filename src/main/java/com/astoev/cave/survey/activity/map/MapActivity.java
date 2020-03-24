@@ -5,7 +5,6 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.ToggleButton;
 import android.widget.ZoomControls;
 
@@ -28,37 +27,25 @@ public class MapActivity extends MainMenuActivity implements View.OnTouchListene
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.map);
-        map = (MapView) findViewById(R.id.mapSurface);
+        map = findViewById(R.id.mapSurface);
         map.setOnTouchListener(this);
 
         getSupportActionBar().hide();
 
-        final ZoomControls zoom = (ZoomControls) findViewById(R.id.mapZoom);
-        zoom.setOnZoomInClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View aView) {
-                map.zoomIn();
-                zoom.setIsZoomOutEnabled(map.canZoomOut());
-                zoom.setIsZoomInEnabled(map.canZoomIn());
-            }
+        final ZoomControls zoom = findViewById(R.id.mapZoom);
+        zoom.setOnZoomInClickListener(aView -> {
+            map.zoomIn();
+            zoom.setIsZoomOutEnabled(map.canZoomOut());
+            zoom.setIsZoomInEnabled(map.canZoomIn());
         });
-        zoom.setOnZoomOutClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View aView) {
-                map.zoomOut();
-                zoom.setIsZoomOutEnabled(map.canZoomOut());
-                zoom.setIsZoomInEnabled(map.canZoomIn());
-            }
+        zoom.setOnZoomOutClickListener(aView -> {
+            map.zoomOut();
+            zoom.setIsZoomOutEnabled(map.canZoomOut());
+            zoom.setIsZoomInEnabled(map.canZoomIn());
         });
 
-        final ToggleButton viewSelector = (ToggleButton) findViewById(R.id.mapHorizonatalToggle);
-        viewSelector.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                map.setHorizontalPlan(!isChecked);
-            }
-        });
+        final ToggleButton viewSelector = findViewById(R.id.mapHorizonatalToggle);
+        viewSelector.setOnCheckedChangeListener((buttonView, isChecked) -> map.setHorizontalPlan(!isChecked));
     }
 
     @Override
@@ -77,7 +64,7 @@ public class MapActivity extends MainMenuActivity implements View.OnTouchListene
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
-        map = (MapView) findViewById(R.id.mapSurface);
+        map = findViewById(R.id.mapSurface);
         map.setOnTouchListener(this);
     }
 

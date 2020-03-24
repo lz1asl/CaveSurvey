@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.astoev.cave.survey.activity.poc;
 
 import android.content.Context;
@@ -79,8 +76,8 @@ public class SensorsActivity extends MainMenuActivity {
             // convert to strings array
             String[] str = createTranslateArray(availableSensorsArray);
 
-            Spinner spinner = (Spinner) findViewById(R.id.sensors_spinner);
-            ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(this, android.R.layout.simple_spinner_item, str);
+            Spinner spinner = findViewById(R.id.sensors_spinner);
+            ArrayAdapter<CharSequence> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, str);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spinner.setAdapter(adapter);
 
@@ -120,18 +117,18 @@ public class SensorsActivity extends MainMenuActivity {
         } else {
             // no available sensors !
             //disable spinner for choosing sensors
-            LinearLayout sensorsLinearLayout = (LinearLayout)findViewById(R.id.sensors_spinner_layout);
+            LinearLayout sensorsLinearLayout = findViewById(R.id.sensors_spinner_layout);
             sensorsLinearLayout.setVisibility(View.GONE);
 
             // change the text for sensors choose header
-            TextView sensorsChooseText = (TextView)findViewById(R.id.sensor_choose_text);
+            TextView sensorsChooseText = findViewById(R.id.sensor_choose_text);
             sensorsChooseText.setText(R.string.no_sensors);
         }
 
         // read timeout
         final Integer [] timeouts = new Integer[]{ 1, 2, 3, 4, 5 };
-        Spinner timeoutSpinner = (Spinner) findViewById(R.id.sensors_timeout_spinner);
-        ArrayAdapter<Integer> timeoutAdapter = new ArrayAdapter<Integer>(this, android.R.layout.simple_spinner_item, timeouts);
+        Spinner timeoutSpinner = findViewById(R.id.sensors_timeout_spinner);
+        ArrayAdapter<Integer> timeoutAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, timeouts);
         timeoutAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         timeoutSpinner.setAdapter(timeoutAdapter);
 
@@ -158,9 +155,9 @@ public class SensorsActivity extends MainMenuActivity {
         });
 
         // sensors reading
-        Spinner readTypeSpinner = (Spinner) findViewById(R.id.sensors_simultaneously_spinner);
+        Spinner readTypeSpinner = findViewById(R.id.sensors_simultaneously_spinner);
         final ArrayAdapter<String> readTypesAdapter =
-                new ArrayAdapter<String>(this,
+                new ArrayAdapter<>(this,
                         android.R.layout.simple_list_item_1,
                         getResources().getStringArray(R.array.sensors_reading_types));
         readTypeSpinner.setAdapter(readTypesAdapter);
@@ -181,8 +178,8 @@ public class SensorsActivity extends MainMenuActivity {
         }
 
         // noise reduction num measurements
-        final Spinner noiseReductionNumMeasurements = (Spinner) findViewById(R.id.sensors_num_measurements_spinner);
-        final TextView noiseReductionNumMeasurementsLabel = (TextView) findViewById(R.id.sensors_num_measurements_label);
+        final Spinner noiseReductionNumMeasurements = findViewById(R.id.sensors_num_measurements_spinner);
+        final TextView noiseReductionNumMeasurementsLabel = findViewById(R.id.sensors_num_measurements_label);
         final ArrayAdapter<String> numMeasurementValues = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.sensor_num_measurements));
         noiseReductionNumMeasurements.setAdapter(numMeasurementValues);
         noiseReductionNumMeasurements.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -206,7 +203,7 @@ public class SensorsActivity extends MainMenuActivity {
         }
 
         // noise reduction
-        final Spinner noiseReductionSpinner = (Spinner) findViewById(R.id.sensors_noise_spinner);
+        final Spinner noiseReductionSpinner = findViewById(R.id.sensors_noise_spinner);
         final ArrayAdapter<String> noiseReductionTypes = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.sensor_noise_reduction_types));
         noiseReductionSpinner.setAdapter(noiseReductionTypes);
         noiseReductionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

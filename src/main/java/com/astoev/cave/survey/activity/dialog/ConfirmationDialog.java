@@ -3,11 +3,11 @@ package com.astoev.cave.survey.activity.dialog;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
-import android.util.Log;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
@@ -51,19 +51,14 @@ public class ConfirmationDialog extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(title);
         builder.setMessage(message);
-        builder.setPositiveButton(R.string.button_yes, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // delete vector
-                confirmationHandler.confirmOperation(operation);
-            }
+        builder.setPositiveButton(R.string.button_yes, (dialog, id) -> {
+            // delete vector
+            confirmationHandler.confirmOperation(operation);
         });
 
-        builder.setNegativeButton(R.string.button_no, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogArg, int whichArg) {
-                // cancel
-                ConfirmationDialog.this.getDialog().cancel();
-            }
+        builder.setNegativeButton(R.string.button_no, (dialogArg, whichArg) -> {
+            // cancel
+            ConfirmationDialog.this.getDialog().cancel();
         });
 
         return builder.create();

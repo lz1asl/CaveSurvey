@@ -29,7 +29,7 @@ public class NMEAUtil {
             String messageString = new String(aMessage).trim();
             Log.i(Constants.LOG_TAG_BT, "Got message " + messageString);
 
-            List<Measure> measures = new ArrayList<Measure>();
+            List<Measure> measures = new ArrayList<>();
             StringTokenizer tokenizer = new StringTokenizer(messageString, ",*");
 
             // header
@@ -146,7 +146,7 @@ public class NMEAUtil {
             String messageString = new String(aMessage).trim();
             Log.i(Constants.LOG_TAG_BT, "Got message " + messageString);
 
-            List<Measure> measures = new ArrayList<Measure>();
+            List<Measure> measures = new ArrayList<>();
             StringTokenizer tokenizer = new StringTokenizer(messageString, ",*", true);
 
             // ignore OKs

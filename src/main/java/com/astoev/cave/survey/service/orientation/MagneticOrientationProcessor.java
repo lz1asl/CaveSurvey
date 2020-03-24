@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.astoev.cave.survey.service.orientation;
 
 import android.content.Context;
@@ -32,9 +29,9 @@ public class MagneticOrientationProcessor extends OrientationProcessor {
 //    private float[] I = new float[16];
 //    private float[] R = new float[16];
 //    private float[] I = new float[16];
-    private float aData[] = new float[3];
-    private float mData[] = new float[3];
-    private float oData[] = new float[3];
+    private float[] aData = new float[3];
+    private float[] mData = new float[3];
+    private float[] oData = new float[3];
     
     /**
      * Constructor for MagneticOrientationProcessor

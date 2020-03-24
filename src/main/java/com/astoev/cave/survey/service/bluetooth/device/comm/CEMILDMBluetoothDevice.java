@@ -125,7 +125,7 @@ public class CEMILDMBluetoothDevice extends AbstractBluetoothRFCOMMDevice {
     }
 
     private List<Measure> singleMeasureToResult(Measure m) {
-        List<Measure> measures = new ArrayList<Measure>();
+        List<Measure> measures = new ArrayList<>();
         measures.add(m);
         return measures;
     }

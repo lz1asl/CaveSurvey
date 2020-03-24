@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.astoev.cave.survey.service.orientation;
 
 import android.annotation.TargetApi;
@@ -46,24 +43,22 @@ public class RotationOrientationProcessor extends OrientationProcessor {
 	public void onSensorChanged(SensorEvent event) {
 		System.arraycopy(event.values, 0, rData, 0, 3);
 		
-		if (isApiAvailable()){
-			processSafeData();
-			
-			int rotation = getRotation();
-			R = (rotation != Surface.ROTATION_0) ? remapCoordinateSystem(R, rotation): R;
+		processSafeData();
 
-			if (R != null){
-				SensorManager.getOrientation(R, oData);
-	
-				lastValue = oData[0] < 0 ? oData[0] * RAD2GRAD + 360 : oData[0] * RAD2GRAD;
-				
-				if (listener != null){
-                    float[] converted = new float[3];
-                    converted[0] = lastValue;
-                    converted[1] = oData[1] * RAD2GRAD;
-                    converted[2] = oData[2] * RAD2GRAD;
-                    listener.onOrinationChanged(converted);
-				}
+		int rotation = getRotation();
+		R = (rotation != Surface.ROTATION_0) ? remapCoordinateSystem(R, rotation): R;
+
+		if (R != null){
+			SensorManager.getOrientation(R, oData);
+
+			lastValue = oData[0] < 0 ? oData[0] * RAD2GRAD + 360 : oData[0] * RAD2GRAD;
+
+			if (listener != null){
+				float[] converted = new float[3];
+				converted[0] = lastValue;
+				converted[1] = oData[1] * RAD2GRAD;
+				converted[2] = oData[2] * RAD2GRAD;
+				listener.onOrinationChanged(converted);
 			}
 		}
 	}
@@ -94,9 +89,6 @@ public class RotationOrientationProcessor extends OrientationProcessor {
 	 */
 	@Override
 	public Sensor getSensor() {
-		if (!isApiAvailable()){
-			return null;
-		}
 		return getSafeRotationSensor();
 	}
 
@@ -120,15 +112,6 @@ public class RotationOrientationProcessor extends OrientationProcessor {
 		if (sensorManager != null && rotationSensor != null){
 			sensorManager.unregisterListener(this, rotationSensor);
 		}
-	}
-
-	/**
-	 * Helper method that checks if the sensor is available for the current api version
-	 * 
-	 * @return true if os version newer the api 9, otherwise false
-	 */
-	private boolean isApiAvailable(){
-		return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD);
 	}
 
 }

@@ -4,7 +4,6 @@ import android.graphics.Canvas;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -19,8 +18,8 @@ public class CommandManager {
     private List<DrawingPath> redoStack;
 
     public CommandManager() {
-        currentStack = Collections.synchronizedList(new ArrayList<DrawingPath>());
-        redoStack = Collections.synchronizedList(new ArrayList<DrawingPath>());
+        currentStack = Collections.synchronizedList(new ArrayList<>());
+        redoStack = Collections.synchronizedList(new ArrayList<>());
     }
 
     public void addCommand(DrawingPath command) {
@@ -46,10 +45,8 @@ public class CommandManager {
     public void executeAll(Canvas canvas) {
         if (currentStack != null) {
             synchronized (currentStack) {
-                final Iterator<DrawingPath> i = currentStack.iterator();
 
-                while (i.hasNext()) {
-                    final DrawingPath drawingPath = i.next();
+                for (DrawingPath drawingPath : currentStack) {
                     drawingPath.draw(canvas);
                 }
             }

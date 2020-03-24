@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -19,7 +17,7 @@ import com.astoev.cave.survey.activity.dialog.AboutDialog;
 import com.astoev.cave.survey.activity.dialog.ConfirmDeleteDialog;
 import com.astoev.cave.survey.activity.dialog.DeleteHandler;
 import com.astoev.cave.survey.activity.main.BTActivity;
-import com.astoev.cave.survey.activity.main.MainActivity;
+import com.astoev.cave.survey.activity.main.SurveyMainActivity;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.util.DaoUtil;
@@ -38,7 +36,7 @@ import static android.Manifest.permission.BLUETOOTH_ADMIN;
  * @author Aleksander Stoev
  * @author Jivko Mitrev
  */
-public class HomeActivity extends MainMenuActivity implements DeleteHandler {
+public class SurveysActivity extends MainMenuActivity implements DeleteHandler {
 
     private static final String ABOUT_DIALOG = "ABOUT_DIALOG";
 
@@ -48,7 +46,7 @@ public class HomeActivity extends MainMenuActivity implements DeleteHandler {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.home);
+        setContentView(R.layout.surveys);
     }
 
     @Override
@@ -58,7 +56,7 @@ public class HomeActivity extends MainMenuActivity implements DeleteHandler {
         // then we call the parent that will set a title depending on the active project
         super.onResume();
 
-        loadProjects();
+        loadSurveysList();
     }
 
     /**
@@ -71,7 +69,7 @@ public class HomeActivity extends MainMenuActivity implements DeleteHandler {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.i(Constants.LOG_TAG_UI, "Home menu selected - " + item.toString());
+        Log.i(Constants.LOG_TAG_UI, "Surveys menu selected - " + item.toString());
         switch (item.getItemId()) {
             case R.id.action_new_project: {
                 newProjectOnClick();
@@ -102,10 +100,10 @@ public class HomeActivity extends MainMenuActivity implements DeleteHandler {
         aboutDialogFragment.show(getSupportFragmentManager(), ABOUT_DIALOG);
     }
 
-    private void loadProjects() {
+    private void loadSurveysList() {
         try {
 
-            ListView projectsContainer = (ListView) findViewById(R.id.homeProjects);
+            ListView projectsContainer = findViewById(R.id.surveysList);
 
             final List<Project> projectsList = getWorkspace().getDBHelper().getProjectDao().queryForAll();
 
@@ -118,47 +116,40 @@ public class HomeActivity extends MainMenuActivity implements DeleteHandler {
                 projectsContainer.setAdapter(projectsAdapter);
 
                 // item clicked
-                projectsContainer.setOnItemClickListener(new OnItemClickListener() {
+                projectsContainer.setOnItemClickListener((parent, view, position, id) -> {
 
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Object selectedObject = parent.getAdapter().getItem(position);
+                    if (selectedObject != null && selectedObject instanceof Project) {
+                        Project project = (Project) selectedObject;
 
-                        Object selectedObject = parent.getAdapter().getItem(position);
-                        if (selectedObject != null && selectedObject instanceof Project) {
-                            Project project = (Project) selectedObject;
+                        Log.i(Constants.LOG_TAG_UI, "Selected survey " + project.getId());
+                        getWorkspace().setActiveProject(project);
+                        Leg lastProjectLeg = getWorkspace().getLastLeg();
+                        getWorkspace().setActiveLeg(lastProjectLeg);
 
-                            Log.i(Constants.LOG_TAG_UI, "Selected project " + project.getId());
-                            getWorkspace().setActiveProject(project);
-                            Leg lastProjectLeg = getWorkspace().getLastLeg();
-                            getWorkspace().setActiveLeg(lastProjectLeg);
-
-                            Intent intent = new Intent(HomeActivity.this, MainActivity.class);
-                            startActivity(intent);
-                        }
+                        Intent intent = new Intent(SurveysActivity.this, SurveyMainActivity.class);
+                        startActivity(intent);
                     }
                 });
 
                 // item long pressed
-                projectsContainer.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-                    @Override
-                    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                projectsContainer.setOnItemLongClickListener((parent, view, position, id) -> {
 
-                        Object selectedObject = parent.getAdapter().getItem(position);
-                        if (selectedObject != null && selectedObject instanceof Project) {
-                            Project project = (Project) selectedObject;
-                            // instantiate dialog for confirming the delete and pass the selected project's id
-                            String message = getString(R.string.home_delete_project, project.getName());
-                            Bundle bundle = new Bundle();
-                            bundle.putSerializable(ConfirmDeleteDialog.ELEMENT, project.getId());
-                            bundle.putString(ConfirmDeleteDialog.MESSAGE, message);
+                    Object selectedObject = parent.getAdapter().getItem(position);
+                    if (selectedObject != null && selectedObject instanceof Project) {
+                        Project project = (Project) selectedObject;
+                        // instantiate dialog for confirming the delete and pass the selected project's id
+                        String message = getString(R.string.home_delete_project, project.getName());
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable(ConfirmDeleteDialog.ELEMENT, project.getId());
+                        bundle.putString(ConfirmDeleteDialog.MESSAGE, message);
 
-                            ConfirmDeleteDialog deleteVecotrDialog = new ConfirmDeleteDialog();
-                            deleteVecotrDialog.setArguments(bundle);
-                            deleteVecotrDialog.show(getSupportFragmentManager(), ConfirmDeleteDialog.DELETE_VECTOR_DIALOG);
-                            return true;
-                        }
-                        return false;
+                        ConfirmDeleteDialog deleteVecotrDialog = new ConfirmDeleteDialog();
+                        deleteVecotrDialog.setArguments(bundle);
+                        deleteVecotrDialog.show(getSupportFragmentManager(), ConfirmDeleteDialog.DELETE_VECTOR_DIALOG);
+                        return true;
                     }
+                    return false;
                 });
 
             } else {
@@ -170,14 +161,10 @@ public class HomeActivity extends MainMenuActivity implements DeleteHandler {
                 projectsContainer.setAdapter(noprojectsAdapter);
 
                 // item clicked listener
-                OnItemClickListener projectClickedListener = new OnItemClickListener() {
+                OnItemClickListener projectClickedListener = (parent, view, position, id) -> {
 
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                        Intent intent = new Intent(HomeActivity.this, NewProjectActivity.class);
-                        startActivity(intent);
-                    }
+                    Intent intent = new Intent(SurveysActivity.this, NewProjectActivity.class);
+                    startActivity(intent);
                 };
 
                 projectsContainer.setOnItemClickListener(projectClickedListener);
@@ -220,23 +207,23 @@ public class HomeActivity extends MainMenuActivity implements DeleteHandler {
      * Receives the id of the project to be deleted from the confirmation dialog. Tries to delete
      * the selected project
      *
-     * @param projectIdArg - id of the project confirmed for deleting
+     * @param surveyIdArg - id of the project confirmed for deleting
      */
     @Override
-    public void delete(Serializable projectIdArg) {
+    public void delete(Serializable surveyIdArg) {
         Log.i(Constants.LOG_TAG_UI, "Delete project");
         try {
-            if (projectIdArg != null && projectIdArg instanceof Integer) {
-                DaoUtil.deleteProject((Integer)projectIdArg);
+            if (surveyIdArg != null && surveyIdArg instanceof Integer) {
+                DaoUtil.deleteProject((Integer)surveyIdArg);
                 UIUtilities.showNotification(R.string.action_deleted);
-                loadProjects();
+                loadSurveysList();
             } else {
-                String projectIdClass = projectIdArg != null ? projectIdArg.getClass().getName() : null;
-                Log.e(Constants.LOG_TAG_UI, "Failed to delete project. Expected project it but:" + projectIdClass);
+                String projectIdClass = surveyIdArg != null ? surveyIdArg.getClass().getName() : null;
+                Log.e(Constants.LOG_TAG_UI, "Failed to delete survey. Expected project it but:" + projectIdClass);
                 UIUtilities.showNotification(R.string.error);
             }
         } catch (Exception e) {
-            Log.e(Constants.LOG_TAG_UI, "Failed to delete project", e);
+            Log.e(Constants.LOG_TAG_UI, "Failed to delete survey", e);
             UIUtilities.showNotification(R.string.error);
         }
     }

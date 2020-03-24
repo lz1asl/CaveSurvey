@@ -145,15 +145,15 @@ public class MeasurementsFilterTest {
     @Test
     public void testTwoAzimuthsAverage() {
         MeasurementsFilter filter = new MeasurementsFilter();
-        assertEquals(2f, filter.getAverageAzimuthDegrees(2f, 2f), 0.00f);
-        assertEquals(10f, filter.getAverageAzimuthDegrees(0f, 20f), 0.00f);
-        assertEquals(1.5f, filter.getAverageAzimuthDegrees(1f, 2f), 0.00f);
-        assertEquals(330f, filter.getAverageAzimuthDegrees(320f, 340f), 0.00f);
-        assertEquals(110f, filter.getAverageAzimuthDegrees(120f, 100f), 0.00f);
-        assertEquals(110f, filter.getAverageAzimuthDegrees(120f, 100f), 0.00f);
-        assertEquals(0f, filter.getAverageAzimuthDegrees(355f, 5f), 0.00f);
-        assertEquals(356f, filter.getAverageAzimuthDegrees(350f, 2f), 0.00f);
-        assertEquals(1f, filter.getAverageAzimuthDegrees(355f, 7f), 0.00f);
+        assertEquals(2f, MeasurementsFilter.getAverageAzimuthDegrees(2f, 2f), 0.00f);
+        assertEquals(10f, MeasurementsFilter.getAverageAzimuthDegrees(0f, 20f), 0.00f);
+        assertEquals(1.5f, MeasurementsFilter.getAverageAzimuthDegrees(1f, 2f), 0.00f);
+        assertEquals(330f, MeasurementsFilter.getAverageAzimuthDegrees(320f, 340f), 0.00f);
+        assertEquals(110f, MeasurementsFilter.getAverageAzimuthDegrees(120f, 100f), 0.00f);
+        assertEquals(110f, MeasurementsFilter.getAverageAzimuthDegrees(120f, 100f), 0.00f);
+        assertEquals(0f, MeasurementsFilter.getAverageAzimuthDegrees(355f, 5f), 0.00f);
+        assertEquals(356f, MeasurementsFilter.getAverageAzimuthDegrees(350f, 2f), 0.00f);
+        assertEquals(1f, MeasurementsFilter.getAverageAzimuthDegrees(355f, 7f), 0.00f);
     }
 
     @Test
@@ -207,10 +207,10 @@ public class MeasurementsFilterTest {
     @Test
     public void testGetHalfDistance() {
         MeasurementsFilter filter = new MeasurementsFilter();
-        assertEquals(1, filter.getHalfDistance(0, 2), 0.0f);
-        assertEquals(0.5, filter.getHalfDistance(1, 2), 0.0f);
-        assertEquals(2, filter.getHalfDistance(350, 354), 0.0f);
-        assertEquals(5, filter.getHalfDistance(355, 5), 0.0f);
+        assertEquals(1, MeasurementsFilter.getHalfDistance(0, 2), 0.0f);
+        assertEquals(0.5, MeasurementsFilter.getHalfDistance(1, 2), 0.0f);
+        assertEquals(2, MeasurementsFilter.getHalfDistance(350, 354), 0.0f);
+        assertEquals(5, MeasurementsFilter.getHalfDistance(355, 5), 0.0f);
     }
 
     @Test

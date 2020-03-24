@@ -42,7 +42,7 @@ public class GPSManualActivity extends MainMenuActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.gpsmanual);
+        setContentView(R.layout.gps_manual);
 
         Bundle extras = getIntent().getExtras();
         parentPoint = (Point)extras.get(GPSActivity.POINT);
@@ -56,10 +56,10 @@ public class GPSManualActivity extends MainMenuActivity {
             }
         }
 
-        latitudeView = (EditText)findViewById(R.id.gps_manual_latitude);
-        longitudeView = (EditText)findViewById(R.id.gps_manual_longitude);
-        altitudeView = (EditText)findViewById(R.id.gps_manual_altitude);
-        accuracyView = (EditText)findViewById(R.id.gps_manual_accuracy);
+        latitudeView = findViewById(R.id.gps_manual_latitude);
+        longitudeView = findViewById(R.id.gps_manual_longitude);
+        altitudeView = findViewById(R.id.gps_manual_altitude);
+        accuracyView = findViewById(R.id.gps_manual_accuracy);
 
         int latDirection = NORTH_INDEX;// North by default
         int lonDirection = EAST_INDEX; // East by default
@@ -101,7 +101,7 @@ public class GPSManualActivity extends MainMenuActivity {
      * @return Spinner instance
      */
     private Spinner prepareSpinner(int spinnerIdArg, Integer selectionArg) {
-        Spinner spinner = (Spinner) findViewById(spinnerIdArg);
+        Spinner spinner = findViewById(spinnerIdArg);
 
         if (selectionArg != null) {
             spinner.setSelection(selectionArg);
@@ -148,7 +148,7 @@ public class GPSManualActivity extends MainMenuActivity {
     }
 
     /**
-     * Action method to save the gps location. Reads the UI components and generates the model
+     * Action method to save the gps_auto location. Reads the UI components and generates the model
      * instance
      */
     private void saveLocation(){

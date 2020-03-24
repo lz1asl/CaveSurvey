@@ -5,21 +5,20 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
@@ -60,7 +59,6 @@ import java.io.File;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.concurrent.Callable;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.Manifest.permission.CAMERA;
@@ -110,8 +108,8 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         }
 
         // handle double click for reading built-in azimuth and slope
-        EditText azimuth = (EditText) findViewById(R.id.point_azimuth);
-        EditText slope = (EditText) findViewById(R.id.point_slope);
+        EditText azimuth = findViewById(R.id.point_azimuth);
+        EditText slope = findViewById(R.id.point_slope);
         MeasurementsUtil.bindSensorsAwareFields(azimuth, slope, getSupportFragmentManager());
 
         Leg legEdited = getCurrentLeg();
@@ -141,11 +139,6 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         mCurrentPhotoPath = savedInstanceState.getString(STATE_PHOTO_PATH);
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
     }
 
     @Override
@@ -202,39 +195,39 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
             Leg legEdited = getCurrentLeg();
 
             // up
-            EditText up = (EditText) findViewById(R.id.point_up);
+            EditText up = findViewById(R.id.point_up);
             StringUtils.setNotNull(up, legEdited.getTop());
             mReceiver.bindBTMeasures(up, Constants.Measures.up, false, null);
 
             // down
-            EditText down = (EditText) findViewById(R.id.point_down);
+            EditText down = findViewById(R.id.point_down);
             StringUtils.setNotNull(down, legEdited.getDown());
             mReceiver.bindBTMeasures(down, Constants.Measures.down, false, null);
 
             // left
-            EditText left = (EditText) findViewById(R.id.point_left);
+            EditText left = findViewById(R.id.point_left);
             StringUtils.setNotNull(left, legEdited.getLeft());
             mReceiver.bindBTMeasures(left, Constants.Measures.left, false, null);
 
             // right
-            EditText right = (EditText) findViewById(R.id.point_right);
+            EditText right = findViewById(R.id.point_right);
             StringUtils.setNotNull(right, legEdited.getRight());
             mReceiver.bindBTMeasures(right, Constants.Measures.right, false, null);
 
             // distance
-            EditText distance = (EditText) findViewById(R.id.point_distance);
+            EditText distance = findViewById(R.id.point_distance);
             StringUtils.setNotNull(distance, legEdited.getDistance());
             mReceiver.bindBTMeasures(distance, Constants.Measures.distance, false, new Constants.Measures[]{Constants.Measures.angle, Constants.Measures.slope});
             disableIfMiddle(legEdited, distance);
 
             // azimuth
-            EditText azimuth = (EditText) findViewById(R.id.point_azimuth);
+            EditText azimuth = findViewById(R.id.point_azimuth);
             StringUtils.setNotNull(azimuth, legEdited.getAzimuth());
             mReceiver.bindBTMeasures(azimuth, Constants.Measures.angle, false, new Constants.Measures[]{Constants.Measures.distance, Constants.Measures.slope});
             disableIfMiddle(legEdited, azimuth);
 
             // slope
-            EditText slope = (EditText) findViewById(R.id.point_slope);
+            EditText slope = findViewById(R.id.point_slope);
             slope.setText("0");
             StringUtils.setNotNull(slope, legEdited.getSlope());
             mReceiver.bindBTMeasures(slope, Constants.Measures.slope, false, new Constants.Measures[]{Constants.Measures.angle, Constants.Measures.distance});
@@ -243,7 +236,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
             if (!legEdited.isMiddle()) {
                 // fill note_text with its value
                 Note note = DaoUtil.getActiveLegNote(legEdited);
-                TextView textView = (TextView) findViewById(R.id.point_note_text);
+                TextView textView = findViewById(R.id.point_note_text);
                 if (note != null && note.getText() != null) {
                     textView.setText(note.getText());
                     textView.setClickable(true);
@@ -267,25 +260,25 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         try {
 
             // start validation
-            final EditText distance = (EditText) findViewById(R.id.point_distance);
+            final EditText distance = findViewById(R.id.point_distance);
             boolean valid =  UIUtilities.validateNumber(distance, true);
 
-            final EditText azimuth = (EditText) findViewById(R.id.point_azimuth);
+            final EditText azimuth = findViewById(R.id.point_azimuth);
             valid = valid && UIUtilities.validateNumber(azimuth, true) && UIUtilities.checkAzimuth(azimuth);
 
-            final EditText slope = (EditText) findViewById(R.id.point_slope);
+            final EditText slope = findViewById(R.id.point_slope);
             valid = valid && UIUtilities.validateNumber(slope, false) && UIUtilities.checkSlope(slope);
 
-            final EditText up = (EditText) findViewById(R.id.point_up);
+            final EditText up = findViewById(R.id.point_up);
             valid = valid && UIUtilities.validateNumber(up, false);
 
-            final EditText down = (EditText) findViewById(R.id.point_down);
+            final EditText down = findViewById(R.id.point_down);
             valid = valid && UIUtilities.validateNumber(down, false);
 
-            final EditText left = (EditText) findViewById(R.id.point_left);
+            final EditText left = findViewById(R.id.point_left);
             valid = valid && UIUtilities.validateNumber(left, false);
 
-            final EditText right = (EditText) findViewById(R.id.point_right);
+            final EditText right = findViewById(R.id.point_right);
             valid = valid && UIUtilities.validateNumber(right, false);
 
             if (!valid) {
@@ -295,51 +288,49 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
             Log.i(Constants.LOG_TAG_UI, "Saving leg");
 
             TransactionManager.callInTransaction(getWorkspace().getDBHelper().getConnectionSource(),
-                    new Callable<Integer>() {
-                        public Integer call() throws Exception {
+                    () -> {
 
-                            Leg legEdited = getCurrentLeg();
+                        Leg legEdited = getCurrentLeg();
 
-                            if (getIntent().getBooleanExtra(Constants.GALLERY_NEW, false)) {
-                                Gallery newGallery = GalleryUtil.createGallery(false);
-                                legEdited.setGalleryId(newGallery.getId());
-                            }
-
-                            if (legEdited.isNew()) {
-                                getWorkspace().getDBHelper().getPointDao().create(legEdited.getToPoint());
-                                getWorkspace().getDBHelper().getLegDao().create(legEdited);
-                            }
-
-                            // update model
-                            legEdited.setDistance(StringUtils.getFromEditTextNotNull(distance));
-                            legEdited.setAzimuth(StringUtils.getFromEditTextNotNull(azimuth));
-                            legEdited.setSlope(StringUtils.getFromEditTextNotNull(slope));
-                            legEdited.setTop(StringUtils.getFromEditTextNotNull(up));
-                            legEdited.setDown(StringUtils.getFromEditTextNotNull(down));
-                            legEdited.setLeft(StringUtils.getFromEditTextNotNull(left));
-                            legEdited.setRight(StringUtils.getFromEditTextNotNull(right));
-
-                            // save leg
-                            getWorkspace().getDBHelper().getLegDao().update(legEdited);
-
-                            if (mNewNote != null) {
-                                // create new note
-                                Note note = new Note(mNewNote);
-                                note.setPoint(legEdited.getFromPoint());
-                                note.setGalleryId(legEdited.getGalleryId());
-                                getWorkspace().getDBHelper().getNoteDao().create(note);
-                            }
-
-                            if (legEdited.isMiddle()) {
-                                getWorkspace().setActiveLeg(DaoUtil.getLegByToPoint(legEdited.getToPoint()));
-                            } else {
-                                getWorkspace().setActiveLeg(legEdited);
-                            }
-
-                            Log.i(Constants.LOG_TAG_UI, "Saved");
-                            UIUtilities.showNotification(R.string.action_saved);
-                            return 0;
+                        if (getIntent().getBooleanExtra(Constants.GALLERY_NEW, false)) {
+                            Gallery newGallery = GalleryUtil.createGallery(false);
+                            legEdited.setGalleryId(newGallery.getId());
                         }
+
+                        if (legEdited.isNew()) {
+                            getWorkspace().getDBHelper().getPointDao().create(legEdited.getToPoint());
+                            getWorkspace().getDBHelper().getLegDao().create(legEdited);
+                        }
+
+                        // update model
+                        legEdited.setDistance(StringUtils.getFromEditTextNotNull(distance));
+                        legEdited.setAzimuth(StringUtils.getFromEditTextNotNull(azimuth));
+                        legEdited.setSlope(StringUtils.getFromEditTextNotNull(slope));
+                        legEdited.setTop(StringUtils.getFromEditTextNotNull(up));
+                        legEdited.setDown(StringUtils.getFromEditTextNotNull(down));
+                        legEdited.setLeft(StringUtils.getFromEditTextNotNull(left));
+                        legEdited.setRight(StringUtils.getFromEditTextNotNull(right));
+
+                        // save leg
+                        getWorkspace().getDBHelper().getLegDao().update(legEdited);
+
+                        if (mNewNote != null) {
+                            // create new note
+                            Note note = new Note(mNewNote);
+                            note.setPoint(legEdited.getFromPoint());
+                            note.setGalleryId(legEdited.getGalleryId());
+                            getWorkspace().getDBHelper().getNoteDao().create(note);
+                        }
+
+                        if (legEdited.isMiddle()) {
+                            getWorkspace().setActiveLeg(DaoUtil.getLegByToPoint(legEdited.getToPoint()));
+                        } else {
+                            getWorkspace().setActiveLeg(legEdited);
+                        }
+
+                        Log.i(Constants.LOG_TAG_UI, "Saved");
+                        UIUtilities.showNotification(R.string.action_saved);
+                        return 0;
                     }
             );
             return true;
@@ -499,7 +490,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                 break;
                 case REQIEST_EDIT_NOTE:
                     mNewNote = aData.getStringExtra("note");
-                    TextView textView = (TextView) findViewById(R.id.point_note_text);
+                    TextView textView = findViewById(R.id.point_note_text);
                     textView.setText(mNewNote);
                     textView.setClickable(true);
             }
@@ -592,7 +583,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 
         // check if the device has a camera
         PackageManager packageManager = getPackageManager();
-        if (!packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA) || currLeg.isMiddle()) {
+        if (!packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY) || currLeg.isMiddle()) {
             // if there is no camera remove the photo button
             MenuItem photoMenuItem = menu.findItem(R.id.point_action_photo);
             photoMenuItem.setVisible(false);
@@ -670,7 +661,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
      */
     @Override
     public void onAzimuthChanged(float newValueArg) {
-        final EditText azimuth = (EditText) findViewById(R.id.point_azimuth);
+        final EditText azimuth = findViewById(R.id.point_azimuth);
         azimuth.setText(String.valueOf(newValueArg));
     }
 
@@ -679,7 +670,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
      */
     @Override
     public void onSlopeChanged(float newValueArg) {
-        final EditText slope = (EditText) findViewById(R.id.point_slope);
+        final EditText slope = findViewById(R.id.point_slope);
         slope.setText(String.valueOf(newValueArg));
     }
 
@@ -696,7 +687,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         }
 
         try {
-            TableLayout vectorsTable = (TableLayout) findViewById(R.id.point_vectors_table);
+            TableLayout vectorsTable = findViewById(R.id.point_vectors_table);
 
             // data
             List<Vector> vectorsList = DaoUtil.getLegVectors(aLegEdited);
@@ -748,21 +739,18 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                     final int finalIndex = index;
                     final Vector finalVector = v;
 
-                    row.setOnLongClickListener(new View.OnLongClickListener() {
-                        @Override
-                        public boolean onLongClick(View v) {
+                    row.setOnLongClickListener(v1 -> {
 
-                            // instantiate delete dialog and pass the vector
-                            String message = getString(R.string.point_vectors_delete, finalIndex);
-                            Bundle bundle = new Bundle();
-                            bundle.putSerializable(ConfirmDeleteDialog.ELEMENT, finalVector);
-                            bundle.putString(ConfirmDeleteDialog.MESSAGE, message);
+                        // instantiate delete dialog and pass the vector
+                        String message = getString(R.string.point_vectors_delete, finalIndex);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable(ConfirmDeleteDialog.ELEMENT, finalVector);
+                        bundle.putString(ConfirmDeleteDialog.MESSAGE, message);
 
-                            ConfirmDeleteDialog deleteVecotrDialog = new ConfirmDeleteDialog();
-                            deleteVecotrDialog.setArguments(bundle);
-                            deleteVecotrDialog.show(getSupportFragmentManager(), ConfirmDeleteDialog.DELETE_VECTOR_DIALOG);
-                            return true;
-                        }
+                        ConfirmDeleteDialog deleteVecotrDialog = new ConfirmDeleteDialog();
+                        deleteVecotrDialog.setArguments(bundle);
+                        deleteVecotrDialog.show(getSupportFragmentManager(), ConfirmDeleteDialog.DELETE_VECTOR_DIALOG);
+                        return true;
                     });
 
                     vectorsTable.addView(row);
@@ -792,7 +780,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         }
 
         try {
-            TableLayout photosTable = (TableLayout) findViewById(R.id.point_photos_table);
+            TableLayout photosTable = findViewById(R.id.point_photos_table);
 
             // data
             List<Photo> photosList = DaoUtil.getAllPhotosByPointAndGallery(
@@ -822,18 +810,15 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                     final int photoIndex = index;
                     final String photoPath = photo.getFSPath();
 
-                    row.setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
+                    row.setOnClickListener(v -> {
 
-                            // show the picture
-                            Intent intent = new Intent();
-                            intent.setAction(Intent.ACTION_VIEW);
-                            Uri fileUri =  FileUtils.getFileUri(new File(photoPath));
-                            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                            intent.setDataAndType(fileUri, "image/*");
-                            startActivity(intent);
-                        }
+                        // show the picture
+                        Intent intent = new Intent();
+                        intent.setAction(Intent.ACTION_VIEW);
+                        Uri fileUri =  FileUtils.getFileUri(new File(photoPath));
+                        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        intent.setDataAndType(fileUri, "image/*");
+                        startActivity(intent);
                     });
 
                     photosTable.addView(row);
@@ -894,7 +879,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
     }
 
     private void populateMeasure(float aMeasure, int anEditTextId) {
-        EditText field = (EditText) findViewById(anEditTextId);
+        EditText field = findViewById(anEditTextId);
         StringUtils.setNotNull(field, aMeasure);
     }
 
@@ -954,8 +939,8 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         try {
 
             // validate
-            final EditText azimuth = (EditText) findViewById(R.id.point_azimuth);
-            final EditText slope = (EditText) findViewById(R.id.point_slope);
+            final EditText azimuth = findViewById(R.id.point_azimuth);
+            final EditText slope = findViewById(R.id.point_slope);
 
             if (UIUtilities.validateNumber(azimuth, true) && UIUtilities.checkAzimuth(azimuth)
                     && UIUtilities.validateNumber(slope, false) && UIUtilities.checkSlope(slope) ) {
@@ -996,8 +981,8 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
     private void reverseLeg() {
         Log.i(Constants.LOG_TAG_UI, "Reverse leg");
         // validate
-        final EditText azimuth = (EditText) findViewById(R.id.point_azimuth);
-        final EditText slope = (EditText) findViewById(R.id.point_slope);
+        final EditText azimuth = findViewById(R.id.point_azimuth);
+        final EditText slope = findViewById(R.id.point_slope);
 
         // if values are present update them in the UI only, they will be persisted on "save"
         try {
@@ -1077,7 +1062,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
+                                           String[] permissions, int[] grantResults) {
 
         switch (requestCode) {
             case PERM_REQ_CODE_CAMERA:

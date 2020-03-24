@@ -11,6 +11,6 @@ import android.graphics.Canvas;
  * To change this template use File | Settings | File Templates.
  */
 public interface ICanvasCommand {
-    public void draw(Canvas canvas);
+    void draw(Canvas canvas);
 
 }

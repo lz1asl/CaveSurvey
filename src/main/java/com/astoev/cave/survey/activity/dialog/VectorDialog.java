@@ -5,14 +5,15 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
@@ -77,22 +78,22 @@ public class VectorDialog extends DialogFragment implements BTResultAware, Azimu
 
         // Bluetooth registrations
         mReceiver = new BTMeasureResultReceiver(this);
-        EditText distanceField = (EditText) mView.findViewById(R.id.vector_distance);
+        EditText distanceField = mView.findViewById(R.id.vector_distance);
         mReceiver.bindBTMeasures(distanceField, Constants.Measures.distance, false, new Constants.Measures[] {Constants.Measures.angle, Constants.Measures.slope});
 
-        EditText angleField = (EditText) mView.findViewById(R.id.vector_azimuth);
+        EditText angleField = mView.findViewById(R.id.vector_azimuth);
         mReceiver.bindBTMeasures(angleField, Constants.Measures.angle, false, new Constants.Measures[] {Constants.Measures.distance, Constants.Measures.slope});
 
-        EditText slopeField = (EditText) mView.findViewById(R.id.vector_slope);
+        EditText slopeField = mView.findViewById(R.id.vector_slope);
         mReceiver.bindBTMeasures(slopeField, Constants.Measures.slope, false, new Constants.Measures[] {Constants.Measures.angle, Constants.Measures.distance});
 
         MeasurementsUtil.bindSensorsAwareFields(angleField, slopeField, mSupportFragmentManager);
 
         final Dialog dialog = builder.create();
 
-        Button addButton = (Button) view.findViewById(R.id.vector_add);
+        Button addButton = view.findViewById(R.id.vector_add);
         addButton.setOnClickListener(new AddVectorListener(mView, dialog, false));
-        Button addAgainButton = (Button) view.findViewById(R.id.vector_add_again);
+        Button addAgainButton = view.findViewById(R.id.vector_add_again);
         addAgainButton.setOnClickListener(new AddVectorListener(mView, dialog, true));
 
         return dialog;
@@ -126,12 +127,12 @@ public class VectorDialog extends DialogFragment implements BTResultAware, Azimu
      */
     @Override
     public void onAzimuthChanged(float newValueArg) {
-        EditText angleField = (EditText) mView.findViewById(R.id.vector_azimuth);
+        EditText angleField = mView.findViewById(R.id.vector_azimuth);
         angleField.setText(String.valueOf(newValueArg));
     }
 
     private void populateMeasure(float aMeasure, int anEditTextId) {
-        EditText field = (EditText) mView.findViewById(anEditTextId);
+        EditText field = mView.findViewById(anEditTextId);
         StringUtils.setNotNull(field, aMeasure);
     }
 
@@ -151,9 +152,9 @@ public class VectorDialog extends DialogFragment implements BTResultAware, Azimu
             public void onClick(View v) {
 
                 // get values
-                EditText distanceEdit = (EditText) mView.findViewById(R.id.vector_distance);
-                EditText azimuthEdit = (EditText) mView.findViewById(R.id.vector_azimuth);
-                EditText slopeEdit = (EditText) mView.findViewById(R.id.vector_slope);
+                EditText distanceEdit = mView.findViewById(R.id.vector_distance);
+                EditText azimuthEdit = mView.findViewById(R.id.vector_azimuth);
+                EditText slopeEdit = mView.findViewById(R.id.vector_slope);
 
                 // validate
                 boolean valid = true;

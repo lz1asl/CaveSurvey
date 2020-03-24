@@ -1,27 +1,18 @@
-/**
- *
- */
 package com.astoev.cave.survey.activity.dialog;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
 import com.astoev.cave.survey.R;
 
 public class AzimuthAndSlopeDialog extends BaseBuildInMeasureDialog {
-
-    private TextView azimuthView;
-    private TextView azimuthAccuracyView;
-    private TextView slopeView;
-    private TextView slopeAccuracyView;
 
     /**
      * @see DialogFragment#onCreateDialog(Bundle)
@@ -43,13 +34,13 @@ public class AzimuthAndSlopeDialog extends BaseBuildInMeasureDialog {
         builder.setOnKeyListener(new BackKeyListener(this));
 
         // progress bar view
-        progressBar = (ProgressBar) view.findViewById(R.id.azimuth_slope_progress);
+        progressBar = view.findViewById(R.id.azimuth_slope_progress);
         progressBar.setMax(progressMaxValue);
 
-        azimuthView = (TextView) view.findViewById(R.id.azimuth_slope_azimuth_value);
-        azimuthAccuracyView = (TextView) view.findViewById(R.id.azimuth_slope_azimuth_accuracy);
-        slopeView = (TextView) view.findViewById(R.id.azimuth_slope_slope_value);
-        slopeAccuracyView = (TextView) view.findViewById(R.id.azimuth_slope_slope_accuracy);
+        TextView azimuthView = view.findViewById(R.id.azimuth_slope_azimuth_value);
+        TextView azimuthAccuracyView = view.findViewById(R.id.azimuth_slope_azimuth_accuracy);
+        TextView slopeView = view.findViewById(R.id.azimuth_slope_slope_value);
+        TextView slopeAccuracyView = view.findViewById(R.id.azimuth_slope_slope_accuracy);
 
         // create the Dialog
         AlertDialog alertDialg = builder.create();

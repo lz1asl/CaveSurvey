@@ -4,13 +4,14 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.fragment.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import androidx.fragment.app.DialogFragment;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
@@ -26,7 +27,6 @@ import com.astoev.cave.survey.util.StringUtils;
 import com.j256.ormlite.misc.TransactionManager;
 
 import java.sql.SQLException;
-import java.util.concurrent.Callable;
 
 /**
  * Dialog for chosing middle point length.
@@ -49,7 +49,7 @@ public class MiddlePointDialog extends DialogFragment implements BTResultAware {
 
         try {
             final Leg currLeg = Workspace.getCurrentInstance().getActiveLeg();
-            TextView label = (TextView) mView.findViewById(R.id.middleLegInfo);
+            TextView label = mView.findViewById(R.id.middleLegInfo);
             CharSequence distanceUnitsLabel = StringUtils.extractDynamicResource(
                     getResources(), StringUtils.RESOURCE_PREFIX_UNITS + Options.getOptionValue(Option.CODE_DISTANCE_UNITS));
             label.setText(getString(
@@ -64,50 +64,47 @@ public class MiddlePointDialog extends DialogFragment implements BTResultAware {
 
         // Bluetooth registrations
         mReceiver = new BTMeasureResultReceiver(this);
-        EditText distanceField = (EditText) mView.findViewById(R.id.middle_distance);
+        EditText distanceField = mView.findViewById(R.id.middle_distance);
         mReceiver.bindBTMeasures(distanceField, Constants.Measures.distance, true, null);
 
         final Dialog dialog = builder.create();
 
-        Button createButton = (Button) mView.findViewById(R.id.middle_create);
-        createButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    EditText distanceInput = (EditText) mView.findViewById(R.id.middle_distance);
-                    Float distance = StringUtils.getFromEditTextNotNull(distanceInput);
-                    if (null == distance) {
-                        distanceInput.setError(getString(R.string.middle_no_value));
-                        return;
-                    }
-
-                    if (distance.floatValue() <= 0) {
-                        distanceInput.setError(getString(R.string.middle_leg_shorter));
-                        return;
-                    }
-
-                    final Leg currLeg = Workspace.getCurrentInstance().getActiveLeg();
-
-                    if (currLeg.getDistance().floatValue() <= distance.floatValue()) {
-                        distanceInput.setError(getString(R.string.middle_leg_bigger));
-                        return;
-                    }
-
-                    //  update DB
-                    Leg theNewLeg = addMiddle(currLeg, distance.floatValue());
-
-                    // show PointActivity
-                    Intent intent = new Intent(mView.getContext(), PointActivity.class);
-                    intent.putExtra(Constants.LEG_SELECTED, theNewLeg.getId());
-                    Workspace.getCurrentInstance().setActiveLeg(theNewLeg);
-                    startActivity(intent);
-
-                } catch (Exception e) {
-                    Log.e(Constants.LOG_TAG_UI, "Failed to add middle point", e);
-                    UIUtilities.showNotification(R.string.error);
+        Button createButton = mView.findViewById(R.id.middle_create);
+        createButton.setOnClickListener(v -> {
+            try {
+                EditText distanceInput = mView.findViewById(R.id.middle_distance);
+                Float distance = StringUtils.getFromEditTextNotNull(distanceInput);
+                if (null == distance) {
+                    distanceInput.setError(getString(R.string.middle_no_value));
+                    return;
                 }
-                dialog.dismiss();
+
+                if (distance <= 0) {
+                    distanceInput.setError(getString(R.string.middle_leg_shorter));
+                    return;
+                }
+
+                final Leg currLeg = Workspace.getCurrentInstance().getActiveLeg();
+
+                if (currLeg.getDistance() <= distance) {
+                    distanceInput.setError(getString(R.string.middle_leg_bigger));
+                    return;
+                }
+
+                //  update DB
+                Leg theNewLeg = addMiddle(currLeg, distance);
+
+                // show PointActivity
+                Intent intent = new Intent(mView.getContext(), PointActivity.class);
+                intent.putExtra(Constants.LEG_SELECTED, theNewLeg.getId());
+                Workspace.getCurrentInstance().setActiveLeg(theNewLeg);
+                startActivity(intent);
+
+            } catch (Exception e) {
+                Log.e(Constants.LOG_TAG_UI, "Failed to add middle point", e);
+                UIUtilities.showNotification(R.string.error);
             }
+            dialog.dismiss();
         });
 
         return dialog;
@@ -118,24 +115,22 @@ public class MiddlePointDialog extends DialogFragment implements BTResultAware {
 
         Log.i(Constants.LOG_TAG_UI, "Creating middle point");
         return TransactionManager.callInTransaction(Workspace.getCurrentInstance().getDBHelper().getConnectionSource(),
-                new Callable<Leg>() {
-                    public Leg call() throws Exception {
-                        try {
+                () -> {
+                    try {
 
-                            // copy the leg
-                            Leg newLeg = new Leg(aCurrentLeg.getFromPoint(), aCurrentLeg.getToPoint(), aCurrentLeg.getProject(), aCurrentLeg.getGalleryId());
-                            newLeg.setMiddlePointDistance(atDistance);
+                        // copy the leg
+                        Leg newLeg = new Leg(aCurrentLeg.getFromPoint(), aCurrentLeg.getToPoint(), aCurrentLeg.getProject(), aCurrentLeg.getGalleryId());
+                        newLeg.setMiddlePointDistance(atDistance);
 
-                            newLeg.setAzimuth(aCurrentLeg.getAzimuth());
-                            newLeg.setDistance(aCurrentLeg.getDistance());
-                            newLeg.setSlope(aCurrentLeg.getSlope());
-                            Workspace.getCurrentInstance().getDBHelper().getLegDao().create(newLeg);
+                        newLeg.setAzimuth(aCurrentLeg.getAzimuth());
+                        newLeg.setDistance(aCurrentLeg.getDistance());
+                        newLeg.setSlope(aCurrentLeg.getSlope());
+                        Workspace.getCurrentInstance().getDBHelper().getLegDao().create(newLeg);
 
-                            return newLeg;
-                        } catch (Exception e) {
-                            Log.e(Constants.LOG_TAG_DB, "Failed to add middle point", e);
-                            throw e;
-                        }
+                        return newLeg;
+                    } catch (Exception e) {
+                        Log.e(Constants.LOG_TAG_DB, "Failed to add middle point", e);
+                        throw e;
                     }
                 }
         );
@@ -155,7 +150,7 @@ public class MiddlePointDialog extends DialogFragment implements BTResultAware {
     }
 
     private void populateMeasure(float aMeasure, int anEditTextId) {
-        EditText field = (EditText) mView.findViewById(anEditTextId);
+        EditText field = mView.findViewById(anEditTextId);
         StringUtils.setNotNull(field, aMeasure);
     }
 }

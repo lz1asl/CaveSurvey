@@ -4,10 +4,11 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import androidx.annotation.RequiresApi;
-import androidx.core.app.ActivityCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
+
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
@@ -63,7 +64,7 @@ public class PermissionUtil {
         return Build.VERSION.SDK_INT < Build.VERSION_CODES.M;
     }
 
-    public static boolean isGranted(String permissions[], int[] grantResults) {
+    public static boolean isGranted(String[] permissions, int[] grantResults) {
             // If request is cancelled, the result arrays are empty.
             if (grantResults.length > 0
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED) {

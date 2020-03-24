@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.astoev.cave.survey.fragment;
 
 import android.location.Location;
@@ -38,7 +35,7 @@ public class UpdatebleLocationFragment extends LocationFragment {
         View view = super.onCreateView(inflaterArg, containerArg, savedInstanceStateArg);
         
         // update title of the fragment
-        TextView title = (TextView)view.findViewById(R.id.location_fragment_title);
+        TextView title = view.findViewById(R.id.location_fragment_title);
         title.setText(getString(R.string.gps_current_location));
         return view;
     }

@@ -1,12 +1,8 @@
-/**
- * @author Alessandro Vernassa
- */
 package com.astoev.cave.survey.openstopo;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.webkit.JavascriptInterface;
@@ -52,7 +48,7 @@ public class WebViewActivity extends Activity {
 
     private void initializeView(Bundle savedInstanceState) {
         if (webView == null) {
-            webView = (WebView) findViewById(R.id.webView1);
+            webView = findViewById(R.id.webView1);
 
 
             final String projectName = getIntent().getStringExtra("projectName");
@@ -68,9 +64,7 @@ public class WebViewActivity extends Activity {
                     .setJavaScriptCanOpenWindowsAutomatically(true);
             webView.getSettings().setSupportMultipleWindows(true);
             webView.getSettings().setLoadWithOverviewMode(true);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                webView.getSettings().setAllowContentAccess(true);
-            }
+            webView.getSettings().setAllowContentAccess(true);
             webView.getSettings().setAllowFileAccess(true);
             webView.getSettings().setBuiltInZoomControls(true);
 

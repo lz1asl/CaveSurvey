@@ -46,7 +46,7 @@ public class CommDeviceCommunicationThread extends Thread {
     private List<Constants.MeasureTypes> mMeasureTypes = null;
     private List<Constants.Measures> mTargets = null;
     private ResultReceiver mReceiver = null;
-    private static List<BroadcastReceiver> mRegisteredReceivers = new ArrayList<BroadcastReceiver>();
+    private static List<BroadcastReceiver> mRegisteredReceivers = new ArrayList<>();
     private boolean running = true;
     private Long lastActiveTimestamp = null;
     private BluetoothSocket mSocket;
@@ -91,7 +91,7 @@ public class CommDeviceCommunicationThread extends Thread {
                 mDevice = device;
                 mDeviceSpec = (AbstractBluetoothRFCOMMDevice) BluetoothService.getSupportedDevice(device);
 
-                TextView status = (TextView) ConfigUtil.getContext().findViewById(R.id.bt_status);
+                TextView status = ConfigUtil.getContext().findViewById(R.id.bt_status);
                 status.setText(BluetoothService.getCurrDeviceStatusLabel(ConfigUtil.getContext()));
 
             } catch (Exception e) {
@@ -134,7 +134,7 @@ public class CommDeviceCommunicationThread extends Thread {
 
                     UIUtilities.showDeviceDisconnectedNotification(ConfigUtil.getContext(), mDeviceSpec.getDescription());
 
-                    TextView status = (TextView) ConfigUtil.getContext().findViewById(R.id.bt_status);
+                    TextView status = ConfigUtil.getContext().findViewById(R.id.bt_status);
                     status.setText(BluetoothService.getCurrDeviceStatusLabel(ConfigUtil.getContext()));
                 } else {
                     // ignore events for other non paired devices
@@ -184,12 +184,8 @@ public class CommDeviceCommunicationThread extends Thread {
             Log.i(Constants.LOG_TAG_BT, "Start communication thread for " + mDeviceSpec.getDescription());
 
             try {
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD_MR1) {
-                    mSocket = mDevice.createRfcommSocketToServiceRecord(mDeviceSpec.getSPPUUID());
-                } else {
-                    mSocket = createSocketApi10Plus();
-                }
 
+                mSocket = createSocketApi10Plus();
                 mSocket.connect();
                 mIn = mSocket.getInputStream();
                 mOut = mSocket.getOutputStream();

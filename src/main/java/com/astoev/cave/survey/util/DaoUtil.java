@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.astoev.cave.survey.util;
 
 import android.util.Log;
@@ -29,7 +26,6 @@ import com.j256.ormlite.support.ConnectionSource;
 import java.io.File;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.concurrent.Callable;
 
 /**
  * @author jmitrev
@@ -231,32 +227,28 @@ public class DaoUtil {
             throws SQLException {
 
         ConnectionSource connetionSource = Workspace.getCurrentInstance().getDBHelper().getConnectionSource();
-        TransactionManager.callInTransaction(connetionSource, new Callable<Integer>() {
+        TransactionManager.callInTransaction(connetionSource, () -> {
+            Location oldLocation = getLocationByPoint(parentPointArg);
+            if (oldLocation != null) {
+                oldLocation.setLatitude(gpsLocationArg.getLatitude());
+                oldLocation.setLongitude(gpsLocationArg.getLongitude());
+                oldLocation.setAltitude((int) gpsLocationArg.getAltitude());
+                oldLocation.setAccuracy((int) gpsLocationArg.getAccuracy());
+                Workspace.getCurrentInstance().getDBHelper().getLocationDao().update(oldLocation);
 
-            @Override
-            public Integer call() throws Exception {
-                Location oldLocation = getLocationByPoint(parentPointArg);
-                if (oldLocation != null) {
-                    oldLocation.setLatitude(gpsLocationArg.getLatitude());
-                    oldLocation.setLongitude(gpsLocationArg.getLongitude());
-                    oldLocation.setAltitude((int) gpsLocationArg.getAltitude());
-                    oldLocation.setAccuracy((int) gpsLocationArg.getAccuracy());
-                    Workspace.getCurrentInstance().getDBHelper().getLocationDao().update(oldLocation);
+                Log.i(Constants.LOG_TAG_DB, "Update location with id:" + oldLocation.getId() + " for point:" + parentPointArg.getId());
+                return oldLocation.getId();
+            } else {
+                Location newLocation = new Location();
+                newLocation.setPoint(parentPointArg);
+                newLocation.setLatitude(gpsLocationArg.getLatitude());
+                newLocation.setLongitude(gpsLocationArg.getLongitude());
+                newLocation.setAltitude((int) gpsLocationArg.getAltitude());
+                newLocation.setAccuracy((int) gpsLocationArg.getAccuracy());
+                Workspace.getCurrentInstance().getDBHelper().getLocationDao().create(newLocation);
 
-                    Log.i(Constants.LOG_TAG_DB, "Update location with id:" + oldLocation.getId() + " for point:" + parentPointArg.getId());
-                    return oldLocation.getId();
-                } else {
-                    Location newLocation = new Location();
-                    newLocation.setPoint(parentPointArg);
-                    newLocation.setLatitude(gpsLocationArg.getLatitude());
-                    newLocation.setLongitude(gpsLocationArg.getLongitude());
-                    newLocation.setAltitude((int) gpsLocationArg.getAltitude());
-                    newLocation.setAccuracy((int) gpsLocationArg.getAccuracy());
-                    Workspace.getCurrentInstance().getDBHelper().getLocationDao().create(newLocation);
-
-                    Log.i(Constants.LOG_TAG_DB, "Creted location with id:" + newLocation.getId() + " for point:" + parentPointArg.getId());
-                    return newLocation.getId();
-                }
+                Log.i(Constants.LOG_TAG_DB, "Creted location with id:" + newLocation.getId() + " for point:" + parentPointArg.getId());
+                return newLocation.getId();
             }
         });
     }
@@ -272,27 +264,23 @@ public class DaoUtil {
             throws SQLException {
 
         ConnectionSource connetionSource = Workspace.getCurrentInstance().getDBHelper().getConnectionSource();
-        TransactionManager.callInTransaction(connetionSource, new Callable<Integer>() {
+        TransactionManager.callInTransaction(connetionSource, () -> {
+            Location oldLocation = getLocationByPoint(parentPointArg);
+            if (oldLocation != null) {
+                oldLocation.setLatitude(gpsLocationArg.getLatitude());
+                oldLocation.setLongitude(gpsLocationArg.getLongitude());
+                oldLocation.setAltitude(gpsLocationArg.getAltitude());
+                oldLocation.setAccuracy(gpsLocationArg.getAccuracy());
+                Workspace.getCurrentInstance().getDBHelper().getLocationDao().update(oldLocation);
 
-            @Override
-            public Integer call() throws Exception {
-                Location oldLocation = getLocationByPoint(parentPointArg);
-                if (oldLocation != null) {
-                    oldLocation.setLatitude(gpsLocationArg.getLatitude());
-                    oldLocation.setLongitude(gpsLocationArg.getLongitude());
-                    oldLocation.setAltitude((int) gpsLocationArg.getAltitude());
-                    oldLocation.setAccuracy((int) gpsLocationArg.getAccuracy());
-                    Workspace.getCurrentInstance().getDBHelper().getLocationDao().update(oldLocation);
+                Log.i(Constants.LOG_TAG_DB, "Update location with id:" + oldLocation.getId() + " for point:" + parentPointArg.getId());
+                return oldLocation.getId();
+            } else {
+                gpsLocationArg.setPoint(parentPointArg);
+                Workspace.getCurrentInstance().getDBHelper().getLocationDao().create(gpsLocationArg);
 
-                    Log.i(Constants.LOG_TAG_DB, "Update location with id:" + oldLocation.getId() + " for point:" + parentPointArg.getId());
-                    return oldLocation.getId();
-                } else {
-                    gpsLocationArg.setPoint(parentPointArg);
-                    Workspace.getCurrentInstance().getDBHelper().getLocationDao().create(gpsLocationArg);
-
-                    Log.i(Constants.LOG_TAG_DB, "Creted location with id:" + gpsLocationArg.getId() + " for point:" + parentPointArg.getId());
-                    return gpsLocationArg.getId();
-                }
+                Log.i(Constants.LOG_TAG_DB, "Creted location with id:" + gpsLocationArg.getId() + " for point:" + parentPointArg.getId());
+                return gpsLocationArg.getId();
             }
         });
     }
@@ -312,81 +300,79 @@ public class DaoUtil {
         final Workspace workspace = Workspace.getCurrentInstance();
         final DatabaseHelper dbHelper = Workspace.getCurrentInstance().getDBHelper();
 
-        TransactionManager.callInTransaction(dbHelper.getConnectionSource(), new Callable<Object>() {
-            public Object call() throws Exception {
-                Log.d(Constants.LOG_TAG_DB, "Deleting " + workspace.getActiveLegId());
+        TransactionManager.callInTransaction(dbHelper.getConnectionSource(), () -> {
+            Log.d(Constants.LOG_TAG_DB, "Deleting " + workspace.getActiveLegId());
 
-                if (aLegToDelete.isMiddle()) {
+            if (aLegToDelete.isMiddle()) {
 
-                    // delete middle leg
-                    int deletedLeg = dbHelper.getLegDao().delete(aLegToDelete);
-                    Log.d(Constants.LOG_TAG_DB, "Deleted middle leg:" + deletedLeg);
+                // delete middle leg
+                int deletedLeg = dbHelper.getLegDao().delete(aLegToDelete);
+                Log.d(Constants.LOG_TAG_DB, "Deleted middle leg:" + deletedLeg);
 
-                    workspace.setActiveLeg(getLegByToPoint(aLegToDelete.getToPoint()));
-                } else {
+                workspace.setActiveLeg(getLegByToPoint(aLegToDelete.getToPoint()));
+            } else {
 
-                    Point toPoint = aLegToDelete.getToPoint();
+                Point toPoint = aLegToDelete.getToPoint();
 
-                    // delete note
-                    Note note = getActiveLegNote(aLegToDelete);
-                    if (note != null) {
-                        int deleted = dbHelper.getNoteDao().delete(note);
-                        Log.d(Constants.LOG_TAG_DB, "Deleted note:" + deleted);
-                    }
-
-                    // delete location
-                    Location location = getLocationByPoint(toPoint);
-                    if (location != null) {
-                        int deleted = dbHelper.getLocationDao().delete(location);
-                        Log.d(Constants.LOG_TAG_DB, "Deleted location:" + deleted);
-                    }
-
-                    // delete photos
-                    List<Photo> photosList = getAllPhotosByPoint(toPoint);
-                    if (photosList != null && !photosList.isEmpty()) {
-                        int deleted = dbHelper.getPhotoDao().delete(photosList);
-                        Log.d(Constants.LOG_TAG_DB, "Deleted photos:" + deleted);
-                    }
-
-                    // delete sketches
-                    List<Sketch> sketchList = getAllSketchesByPoint(toPoint);
-                    if (sketchList != null && !sketchList.isEmpty()) {
-                        int deleted = dbHelper.getSketchDao().delete(sketchList);
-                        Log.d(Constants.LOG_TAG_DB, "Deleted sketches:" + deleted);
-                    }
-
-                    List<Vector> legVectors = getLegVectors(aLegToDelete);
-                    if (legVectors != null) {
-                        for (Vector v : legVectors) {
-                            Log.d(Constants.LOG_TAG_DB, "Deleting vector:" + v.getId());
-                            deleteVector(v);
-                        }
-
-                    }
-
-                    // delete leg
-                    int deletedLeg = dbHelper.getLegDao().delete(aLegToDelete);
-                    Log.d(Constants.LOG_TAG_DB, "Deleted leg:" + deletedLeg);
-
-
-                    // delete middle points
-                    List<Leg> legMiddles = getLegsMiddles(aLegToDelete);
-                    if (legMiddles != null) {
-                        for (Leg l : legMiddles) {
-                            Log.d(Constants.LOG_TAG_DB, "Deleting middle:" + l.getId());
-                            dbHelper.getLegDao().delete(l);
-                        }
-                    }
-
-                    // delete to point
-                    int deletedPoint = dbHelper.getPointDao().delete(toPoint);
-                    Log.d(Constants.LOG_TAG_DB, "Deleted point:" + deletedPoint);
-
-                    workspace.setActiveLeg(workspace.getLastLeg());
+                // delete note
+                Note note = getActiveLegNote(aLegToDelete);
+                if (note != null) {
+                    int deleted = dbHelper.getNoteDao().delete(note);
+                    Log.d(Constants.LOG_TAG_DB, "Deleted note:" + deleted);
                 }
 
-                return null;
+                // delete location
+                Location location = getLocationByPoint(toPoint);
+                if (location != null) {
+                    int deleted = dbHelper.getLocationDao().delete(location);
+                    Log.d(Constants.LOG_TAG_DB, "Deleted location:" + deleted);
+                }
+
+                // delete photos
+                List<Photo> photosList = getAllPhotosByPoint(toPoint);
+                if (photosList != null && !photosList.isEmpty()) {
+                    int deleted = dbHelper.getPhotoDao().delete(photosList);
+                    Log.d(Constants.LOG_TAG_DB, "Deleted photos:" + deleted);
+                }
+
+                // delete sketches
+                List<Sketch> sketchList = getAllSketchesByPoint(toPoint);
+                if (sketchList != null && !sketchList.isEmpty()) {
+                    int deleted = dbHelper.getSketchDao().delete(sketchList);
+                    Log.d(Constants.LOG_TAG_DB, "Deleted sketches:" + deleted);
+                }
+
+                List<Vector> legVectors = getLegVectors(aLegToDelete);
+                if (legVectors != null) {
+                    for (Vector v : legVectors) {
+                        Log.d(Constants.LOG_TAG_DB, "Deleting vector:" + v.getId());
+                        deleteVector(v);
+                    }
+
+                }
+
+                // delete leg
+                int deletedLeg = dbHelper.getLegDao().delete(aLegToDelete);
+                Log.d(Constants.LOG_TAG_DB, "Deleted leg:" + deletedLeg);
+
+
+                // delete middle points
+                List<Leg> legMiddles = getLegsMiddles(aLegToDelete);
+                if (legMiddles != null) {
+                    for (Leg l : legMiddles) {
+                        Log.d(Constants.LOG_TAG_DB, "Deleting middle:" + l.getId());
+                        dbHelper.getLegDao().delete(l);
+                    }
+                }
+
+                // delete to point
+                int deletedPoint = dbHelper.getPointDao().delete(toPoint);
+                Log.d(Constants.LOG_TAG_DB, "Deleted point:" + deletedPoint);
+
+                workspace.setActiveLeg(workspace.getLastLeg());
             }
+
+            return null;
         });
         return true;
     }
@@ -426,7 +412,7 @@ public class DaoUtil {
                 numDrawings += sketchesList.size();
             }
 
-            // gps
+            // gps_auto
             Location locaiton = DaoUtil.getLocationByPoint(fromPoint);
             if (locaiton != null) {
                 numCoordinates++;
@@ -514,75 +500,73 @@ public class DaoUtil {
 
 
         try {
-            TransactionManager.callInTransaction(Workspace.getCurrentInstance().getDBHelper().getConnectionSource(), new Callable<Object>() {
-                public Object call() throws Exception {
-                    List<Leg> legs = getProjectLegs(aProjectId, false);
-                    if (legs != null) {
-                        for (Leg l : legs) {
-                            // delete photos
-                            List<Photo> photos = getAllPhotosByPoint(l.getFromPoint());
-                            if (photos != null && photos.size() > 0) {
-                                for (Photo p : photos) {
-                                    FileUtils.deleteQuietly(new File(p.getFSPath()));
-                                    Workspace.getCurrentInstance().getDBHelper().getPhotoDao().delete(p);
-                                }
+            TransactionManager.callInTransaction(Workspace.getCurrentInstance().getDBHelper().getConnectionSource(), () -> {
+                List<Leg> legs = getProjectLegs(aProjectId, false);
+                if (legs != null) {
+                    for (Leg l : legs) {
+                        // delete photos
+                        List<Photo> photos = getAllPhotosByPoint(l.getFromPoint());
+                        if (photos != null && photos.size() > 0) {
+                            for (Photo p : photos) {
+                                FileUtils.deleteQuietly(new File(p.getFSPath()));
+                                Workspace.getCurrentInstance().getDBHelper().getPhotoDao().delete(p);
                             }
-
-                            // delete sketches
-                            List<Sketch> sketches = getAllSketchesByPoint(l.getFromPoint());
-                            if (sketches != null && sketches.size() > 0) {
-                                for (Sketch s : sketches) {
-                                    FileUtils.deleteQuietly(new File(s.getFSPath()));
-                                    Workspace.getCurrentInstance().getDBHelper().getSketchDao().delete(s);
-                                }
-                            }
-
-                            // delete vectors
-                            List<Vector> vectors = getLegVectors(l);
-                            if (vectors != null && vectors.size() > 0) {
-                                Workspace.getCurrentInstance().getDBHelper().getVectorsDao().delete(vectors);
-                            }
-
-                            // delete middle points
-                            List<Leg> legMiddles = getLegsMiddles(l);
-                            if (legMiddles != null) {
-                                for (Leg m : legMiddles) {
-                                    Log.d(Constants.LOG_TAG_DB, "Deleting middle:" + m.getId());
-                                    Workspace.getCurrentInstance().getDBHelper().getLegDao().delete(m);
-                                }
-                            }
-
-                            // delete locations
-                            Location location = getLocationByPoint(l.getFromPoint());
-                            if (location != null) {
-                                Workspace.getCurrentInstance().getDBHelper().getLocationDao().delete(location);
-                            }
-
-                            // delete points
-                            Workspace.getCurrentInstance().getDBHelper().getPointDao().delete(l.getFromPoint());
-                            Workspace.getCurrentInstance().getDBHelper().getPointDao().delete(l.getToPoint());
-
-                            // delete leg
-                            Workspace.getCurrentInstance().getDBHelper().getLegDao().delete(l);
                         }
+
+                        // delete sketches
+                        List<Sketch> sketches = getAllSketchesByPoint(l.getFromPoint());
+                        if (sketches != null && sketches.size() > 0) {
+                            for (Sketch s : sketches) {
+                                FileUtils.deleteQuietly(new File(s.getFSPath()));
+                                Workspace.getCurrentInstance().getDBHelper().getSketchDao().delete(s);
+                            }
+                        }
+
+                        // delete vectors
+                        List<Vector> vectors = getLegVectors(l);
+                        if (vectors != null && vectors.size() > 0) {
+                            Workspace.getCurrentInstance().getDBHelper().getVectorsDao().delete(vectors);
+                        }
+
+                        // delete middle points
+                        List<Leg> legMiddles = getLegsMiddles(l);
+                        if (legMiddles != null) {
+                            for (Leg m : legMiddles) {
+                                Log.d(Constants.LOG_TAG_DB, "Deleting middle:" + m.getId());
+                                Workspace.getCurrentInstance().getDBHelper().getLegDao().delete(m);
+                            }
+                        }
+
+                        // delete locations
+                        Location location = getLocationByPoint(l.getFromPoint());
+                        if (location != null) {
+                            Workspace.getCurrentInstance().getDBHelper().getLocationDao().delete(location);
+                        }
+
+                        // delete points
+                        Workspace.getCurrentInstance().getDBHelper().getPointDao().delete(l.getFromPoint());
+                        Workspace.getCurrentInstance().getDBHelper().getPointDao().delete(l.getToPoint());
+
+                        // delete leg
+                        Workspace.getCurrentInstance().getDBHelper().getLegDao().delete(l);
                     }
-
-                    // delete galleries
-                    Gallery g;
-                    while ((g = getLastGallery(aProjectId)) != null) {
-                        DaoUtil.deleteGallery(g);
-                    }
-
-                    // delete project
-                    Project p = getProject(aProjectId);
-                    Workspace.getCurrentInstance().getDBHelper().getProjectDao().delete(p);
-
-                    FileUtils.deleteQuietly(FileStorageUtil.getProjectHome(p.getName()));
-
-                    Log.i(Constants.LOG_TAG_DB, "Deleted project " + aProjectId);
-
-                    return null;
                 }
+
+                // delete galleries
+                Gallery g;
+                while ((g = getLastGallery(aProjectId)) != null) {
+                    DaoUtil.deleteGallery(g);
+                }
+
+                // delete project
+                Project p = getProject(aProjectId);
+                Workspace.getCurrentInstance().getDBHelper().getProjectDao().delete(p);
+
+                FileUtils.deleteQuietly(FileStorageUtil.getProjectHome(p.getName()));
+
+                Log.i(Constants.LOG_TAG_DB, "Deleted project " + aProjectId);
+
+                return null;
             });
         } catch (SQLException e) {
             Log.e(Constants.LOG_TAG_DB, "Failed to delete project", e);

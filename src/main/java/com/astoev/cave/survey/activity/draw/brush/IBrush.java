@@ -10,9 +10,9 @@ import android.graphics.Path;
  * To change this template use File | Settings | File Templates.
  */
 public interface IBrush {
-    public void mouseDown(Path path, float x, float y);
+    void mouseDown(Path path, float x, float y);
 
-    public void mouseMove(Path path, float x, float y);
+    void mouseMove(Path path, float x, float y);
 
-    public void mouseUp(Path path, float x, float y);
+    void mouseUp(Path path, float x, float y);
 }

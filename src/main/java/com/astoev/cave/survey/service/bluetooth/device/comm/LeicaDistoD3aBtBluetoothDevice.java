@@ -23,7 +23,7 @@ import static com.astoev.cave.survey.Constants.MeasureTypes.slope;
 public class LeicaDistoD3aBtBluetoothDevice extends AbstractBluetoothRFCOMMDevice {
 
 
-    private final String MESSAGE_REGEX = "(22\\.\\.01[\\+|\\-][0-9]{8} )?31\\.\\.00\\+[0-9]{8}";
+    private static final String MESSAGE_REGEX = "(22\\.\\.01[\\+|\\-][0-9]{8} )?31\\.\\.00\\+[0-9]{8}";
 
 
     @Override
@@ -60,7 +60,7 @@ public class LeicaDistoD3aBtBluetoothDevice extends AbstractBluetoothRFCOMMDevic
             throw new DataException("Bad data");
         }
 
-        List<Measure> measures = new ArrayList<Measure>();
+        List<Measure> measures = new ArrayList<>();
         if (message.length() > 15) {
             // inclination + distance
 

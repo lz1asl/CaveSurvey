@@ -5,7 +5,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -44,31 +43,25 @@ public class SettingsActivity extends MainMenuActivity {
     }
 
     private void prepareSensors() {
-        TextView bt = (TextView) findViewById(R.id.settingsSensors);
-        bt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i(Constants.LOG_TAG_UI, "Azimuth settings");
-                Intent intent = new Intent(SettingsActivity.this, SensorsActivity.class);
-                startActivity(intent);
-            }
+        TextView bt = findViewById(R.id.settingsSensors);
+        bt.setOnClickListener(v -> {
+            Log.i(Constants.LOG_TAG_UI, "Azimuth settings");
+            Intent intent = new Intent(SettingsActivity.this, SensorsActivity.class);
+            startActivity(intent);
         });
     }
 
     private void prepareLanguage() {
 
-        TextView language = (TextView) findViewById(R.id.settingsLanguage);
-        language.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LanguageDialog languageDialog = new LanguageDialog();
-                languageDialog.show(getSupportFragmentManager(), LANGUAGE_DIALOG);
-            }
+        TextView language = findViewById(R.id.settingsLanguage);
+        language.setOnClickListener(v -> {
+            LanguageDialog languageDialog = new LanguageDialog();
+            languageDialog.show(getSupportFragmentManager(), LANGUAGE_DIALOG);
         });
     }
 
     private void prepareErrorReporter() {
-        ToggleButton errorReporterToggle = (ToggleButton) findViewById(R.id.settingsDebugToggle);
+        ToggleButton errorReporterToggle = findViewById(R.id.settingsDebugToggle);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
             // access to system logs disabled since 7.1
@@ -78,69 +71,61 @@ public class SettingsActivity extends MainMenuActivity {
 
         errorReporterToggle.setChecked(ErrorReporter.isDebugRunning());
 
-        errorReporterToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        errorReporterToggle.setOnCheckedChangeListener((buttonView, isChecked) -> {
 
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-                try {
-                    if (!PermissionUtil.requestPermissions(new String[]{INTERNET, ACCESS_NETWORK_STATE}, SettingsActivity.this, 401)) {
-                        return;
-                    }
-                } catch (Exception e) {
-                    // requesting system permissions could be dangerous
-                    Log.e(Constants.LOG_TAG_UI, "Failed to request log permission", e);
+            try {
+                if (!PermissionUtil.requestPermissions(new String[]{INTERNET, ACCESS_NETWORK_STATE}, SettingsActivity.this, 401)) {
                     return;
                 }
+            } catch (Exception e) {
+                // requesting system permissions could be dangerous
+                Log.e(Constants.LOG_TAG_UI, "Failed to request log permission", e);
+                return;
+            }
 
-                if (isChecked) {
+            if (isChecked) {
 
-                    // start debug
-                    try {
-                        ErrorReporter.startDebugSession();
+                // start debug
+                try {
+                    ErrorReporter.startDebugSession();
 
-                        // show the info window
-                        Bundle bundle = new Bundle();
-                        String message = getString(R.string.error_reporter_info);
-                        bundle.putString(InfoDialogFragment.MESSAGE, message);
-                        InfoDialogFragment infoDialog = new InfoDialogFragment();
-                        infoDialog.setArguments(bundle);
-                        infoDialog.show(getSupportFragmentManager(), ERROR_REPORTER_TOOLTIP_DIALOG);
-                    } catch (Exception e) {
-                        Log.e(Constants.LOG_TAG_UI, "Error launching error reporter", e);
-                        UIUtilities.showNotification(R.string.error);
-                    }
-                } else {
-                    // stop session
-                    String dumpFile = ErrorReporter.closeDebugSession();
-
-                    // show message dialog that sends the report
-                    ErrorReporterDialog aboutDialogFragment = new ErrorReporterDialog();
-                    Bundle arguments = new Bundle();
-                    arguments.putString("dumpFile", dumpFile);
-                    aboutDialogFragment.setArguments(arguments);
-                    aboutDialogFragment.show(getSupportFragmentManager(), ERROR_REPORTER_MESSAGE_DIALOG);
+                    // show the info window
+                    Bundle bundle = new Bundle();
+                    String message = getString(R.string.error_reporter_info);
+                    bundle.putString(InfoDialogFragment.MESSAGE, message);
+                    InfoDialogFragment infoDialog = new InfoDialogFragment();
+                    infoDialog.setArguments(bundle);
+                    infoDialog.show(getSupportFragmentManager(), ERROR_REPORTER_TOOLTIP_DIALOG);
+                } catch (Exception e) {
+                    Log.e(Constants.LOG_TAG_UI, "Error launching error reporter", e);
+                    UIUtilities.showNotification(R.string.error);
                 }
+            } else {
+                // stop session
+                String dumpFile = ErrorReporter.closeDebugSession();
+
+                // show message dialog that sends the report
+                ErrorReporterDialog aboutDialogFragment = new ErrorReporterDialog();
+                Bundle arguments = new Bundle();
+                arguments.putString("dumpFile", dumpFile);
+                aboutDialogFragment.setArguments(arguments);
+                aboutDialogFragment.show(getSupportFragmentManager(), ERROR_REPORTER_MESSAGE_DIALOG);
             }
         });
     }
 
     private void prepareAutoBackup() {
-        ToggleButton autoBackupToggle = (ToggleButton) findViewById(R.id.settingsBackupToggle);
+        ToggleButton autoBackupToggle = findViewById(R.id.settingsBackupToggle);
         boolean enabled = ConfigUtil.getBooleanProperty(ConfigUtil.PREF_BACKUP);
         autoBackupToggle.setChecked(enabled);
 
-        autoBackupToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    Log.i(Constants.LOG_TAG_UI, "Auto backup on");
-                    ConfigUtil.setBooleanProperty(ConfigUtil.PREF_BACKUP, true);
-                } else {
-                    Log.i(Constants.LOG_TAG_UI, "Auto backup off");
-                    ConfigUtil.setBooleanProperty(ConfigUtil.PREF_BACKUP, false);
-                }
+        autoBackupToggle.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                Log.i(Constants.LOG_TAG_UI, "Auto backup on");
+                ConfigUtil.setBooleanProperty(ConfigUtil.PREF_BACKUP, true);
+            } else {
+                Log.i(Constants.LOG_TAG_UI, "Auto backup off");
+                ConfigUtil.setBooleanProperty(ConfigUtil.PREF_BACKUP, false);
             }
         });
     }

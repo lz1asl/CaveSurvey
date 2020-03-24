@@ -62,7 +62,7 @@ public abstract class AbstractLeDeviceProtocolTest {
         // 3 minus the nulls passed results expected
         int numMeasuresExpected = 3 - Collections.frequency(Arrays.asList(aDistance, anAzimuth, anAngle), null);
         assertEquals(numMeasuresExpected, measures.size());
-        Set<Constants.MeasureTypes> measuresProcessed = new HashSet<Constants.MeasureTypes>();
+        Set<Constants.MeasureTypes> measuresProcessed = new HashSet<>();
 
         for (Measure m : measures) {
             switch (m.getMeasureType()) {

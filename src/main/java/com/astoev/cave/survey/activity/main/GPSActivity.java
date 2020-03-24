@@ -1,17 +1,14 @@
-/**
- * 
- */
 package com.astoev.cave.survey.activity.main;
 
 import android.location.Location;
 import android.location.LocationProvider;
 import android.os.Bundle;
-
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentTransaction;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
@@ -57,7 +54,7 @@ public class GPSActivity extends MainMenuActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.gps);
+		setContentView(R.layout.gps_auto);
 		
         Bundle extras = getIntent().getExtras();
         parentPoint = (Point)extras.get(POINT);
@@ -79,7 +76,7 @@ public class GPSActivity extends MainMenuActivity {
 		if (!getGPSProcessor().canRead()) {
 		    
 		    if (!gpsRequested){
-		        // one request to turn on gps if disabled on settings page
+		        // one request to turn on gps_auto if disabled on settings page
     		    gpsRequested = true;
     		    TurnOnGPSDialogFragment turnOnGPSDialog = new TurnOnGPSDialogFragment();
     		    turnOnGPSDialog.show(getSupportFragmentManager(), GPS_DIALOG);
@@ -138,7 +135,7 @@ public class GPSActivity extends MainMenuActivity {
     }
     
     /**
-     * Action method to save the gps location
+     * Action method to save the gps_auto location
      */
     private void saveLocation(){
         

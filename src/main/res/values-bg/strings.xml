@@ -29,7 +29,7 @@
     <string name="project_import">Импорт</string>
     <string name="import_success">Успешен импорт</string>
 
-    <!-- main screen -->
+    <!-- survey screen -->
     <string name="main_leg">Текуща отсечка</string>
     <string name="main_button_change">Избери</string>
     <string name="main_button_change_title">Избери отсечка</string>
@@ -98,7 +98,7 @@
 
     <string name="gallery_after_first_point">Недостъпно за първата отсечка</string>
 
-    <!-- main menu -->
+    <!-- survey menu -->
     <string name="menu_exit">Изход</string>
 
     <string name="menu_exit_confirmation_question">Край на проучването?</string>

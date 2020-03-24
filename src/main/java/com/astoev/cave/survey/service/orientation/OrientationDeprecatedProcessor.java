@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.astoev.cave.survey.service.orientation;
 
 import android.content.Context;
@@ -112,7 +109,6 @@ public class OrientationDeprecatedProcessor extends OrientationProcessor {
 	/**
 	 * @see com.astoev.cave.survey.service.orientation.OrientationProcessor#getSensor()
 	 */
-	@SuppressWarnings("deprecation")
 	@Override
 	public Sensor getSensor() {
 		if (orientationSensor == null){

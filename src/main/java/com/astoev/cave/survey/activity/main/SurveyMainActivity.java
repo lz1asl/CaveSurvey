@@ -8,7 +8,6 @@ import android.util.SparseArray;
 import android.util.SparseIntArray;
 import android.view.Gravity;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ScrollView;
 import android.widget.TableLayout;
@@ -51,7 +50,7 @@ import java.util.List;
  * @author Alexander Stoev
  * @author Zhivko Mitrev
  */
-public class MainActivity extends MainMenuActivity implements AddNewSelectedHandler{
+public class SurveyMainActivity extends MainMenuActivity implements AddNewSelectedHandler{
 
     private SparseIntArray mGalleryColors = new SparseIntArray();
     private SparseArray<String> mGalleryNames = new SparseArray<>();
@@ -66,7 +65,7 @@ public class MainActivity extends MainMenuActivity implements AddNewSelectedHand
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
+        setContentView(R.layout.survey);
         
         sketchPrefix   = getString(R.string.table_sketch_prefix);
         notePrefix     = getString(R.string.table_note_prefix);
@@ -93,10 +92,10 @@ public class MainActivity extends MainMenuActivity implements AddNewSelectedHand
             mGalleryNames.clear();
 
             // prepare labels
-            TextView activeLegName = (TextView) findViewById(R.id.mainActiveLeg);
+            TextView activeLegName = findViewById(R.id.mainActiveLeg);
             activeLegName.setText(activeLeg.buildLegDescription());
 
-            TableLayout table = (TableLayout) findViewById(R.id.mainTable);
+            TableLayout table = findViewById(R.id.mainTable);
 
             // prepare grid
             table.removeAllViews();
@@ -111,14 +110,11 @@ public class MainActivity extends MainMenuActivity implements AddNewSelectedHand
                 TableRow row = new TableRow(this);
                 LayoutParams params = new TableLayout.LayoutParams(0, LayoutParams.WRAP_CONTENT, 1);
                 row.setLayoutParams(params);
-                row.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View aView) {
-                        Intent intent = new Intent(MainActivity.this, PointActivity.class);
-                        intent.putExtra(Constants.LEG_SELECTED, l.getId());
-                        getWorkspace().setActiveLeg(l);
-                        startActivity(intent);
-                    }
+                row.setOnClickListener(aView -> {
+                    Intent intent = new Intent(SurveyMainActivity.this, PointActivity.class);
+                    intent.putExtra(Constants.LEG_SELECTED, l.getId());
+                    getWorkspace().setActiveLeg(l);
+                    startActivity(intent);
                 });
 
                 currLegFlag = activeLeg.getId().equals(l.getId());
@@ -211,17 +207,12 @@ public class MainActivity extends MainMenuActivity implements AddNewSelectedHand
             table.invalidate();
 
             // scroll to the active leg
-            final ScrollView sv = (ScrollView) findViewById(R.id.mainTableScroll);
+            final ScrollView sv = findViewById(R.id.mainTableScroll);
             final TableRow activeRowFinal = activeRow;
-            sv.post(new Runnable() {
-                @Override
-                public void run() {
-                    sv.scrollTo(0, activeRowFinal.getTop());
-                }
-            });
+            sv.post(() -> sv.scrollTo(0, activeRowFinal.getTop()));
 
         } catch (Exception e) {
-            Log.e(Constants.LOG_TAG_UI, "Failed to render main activity", e);
+            Log.e(Constants.LOG_TAG_UI, "Failed to render survey activity", e);
             UIUtilities.showNotification(R.string.error);
         }
     }
@@ -323,7 +314,7 @@ public class MainActivity extends MainMenuActivity implements AddNewSelectedHand
     private void addLeg(final boolean isDeviation) throws SQLException {
         Log.i(Constants.LOG_TAG_UI, "Creating leg");
 
-        Intent intent = new Intent(MainActivity.this, PointActivity.class);
+        Intent intent = new Intent(SurveyMainActivity.this, PointActivity.class);
         intent.putExtra(Constants.GALLERY_NEW, isDeviation);
 
         startActivity(intent);

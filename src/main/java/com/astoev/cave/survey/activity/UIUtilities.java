@@ -9,10 +9,11 @@ import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.TaskStackBuilder;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.TaskStackBuilder;
 
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.main.BTActivity;
@@ -51,20 +52,16 @@ public class UIUtilities {
     }
 
     public static void showNotification(final Activity aContext, final int aResourceId, final Object aParams) {
-        aContext.runOnUiThread(new Runnable() {
-            public void run() {
-                Toast toast = Toast.makeText(aContext, aContext.getString(aResourceId, aParams), Toast.LENGTH_SHORT);
-                toast.show();
-            }
+        aContext.runOnUiThread(() -> {
+            Toast toast = Toast.makeText(aContext, aContext.getString(aResourceId, aParams), Toast.LENGTH_SHORT);
+            toast.show();
         });
     }
 
     public static void showNotification(final Activity aContext, final String aMessage, final Object aParams) {
-        aContext.runOnUiThread(new Runnable() {
-            public void run() {
-                Toast toast = Toast.makeText(aContext, aMessage, Toast.LENGTH_SHORT);
-                toast.show();
-            }
+        aContext.runOnUiThread(() -> {
+            Toast toast = Toast.makeText(aContext, aMessage, Toast.LENGTH_SHORT);
+            toast.show();
         });
     }
 

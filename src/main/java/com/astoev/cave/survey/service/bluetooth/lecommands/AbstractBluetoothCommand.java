@@ -9,7 +9,7 @@ public abstract class AbstractBluetoothCommand {
 
     public boolean canProceedWithoutAnswer() {
         return false;
-    };
+    }
 
     public abstract void execute(BluetoothGatt aBluetoothGatt);
 }

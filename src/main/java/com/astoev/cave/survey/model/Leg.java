@@ -137,9 +137,7 @@ public class Leg implements Serializable {
 
             Leg lastLeg = Workspace.getCurrentInstance().getLastLeg(aLeg.getGalleryId());
             // only last leg for now and no other galleries start from here
-            if (lastLeg.getId().equals(aLeg.getId()) && !DaoUtil.hasLegsByFromPoint(aLeg.getToPoint())) {
-                return true;
-            }
+            return lastLeg.getId().equals(aLeg.getId()) && !DaoUtil.hasLegsByFromPoint(aLeg.getToPoint());
         }
         return false;
     }

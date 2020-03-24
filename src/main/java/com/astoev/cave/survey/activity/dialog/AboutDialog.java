@@ -8,8 +8,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.fragment.app.DialogFragment;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
@@ -18,6 +16,9 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
 
 import com.astoev.cave.survey.BuildConfig;
 import com.astoev.cave.survey.Constants;
@@ -58,7 +59,7 @@ public class AboutDialog extends DialogFragment  {
         View view = inflater.inflate(R.layout.about, null);
         builder.setView(view);
 
-        TextView url = (TextView) view.findViewById(R.id.aboutUrl);
+        TextView url = view.findViewById(R.id.aboutUrl);
         Linkify.addLinks(url, Linkify.WEB_URLS);
 
         StringBuilder versionText = new StringBuilder("v");
@@ -75,7 +76,7 @@ public class AboutDialog extends DialogFragment  {
             versionText.append(" (Debug)");
         }
 
-        TextView version = (TextView) view.findViewById(R.id.aboutVersion);
+        TextView version = view.findViewById(R.id.aboutVersion);
         version.setText(versionText.toString());
 
         StringBuilder userGuideText = new StringBuilder("<a href=\"");
@@ -83,7 +84,7 @@ public class AboutDialog extends DialogFragment  {
         userGuideText.append("\">");
         userGuideText.append(getString(R.string.about_user_guide));
         userGuideText.append("</a>");
-        TextView userGuide = (TextView) view.findViewById(R.id.aboutUserGuide);
+        TextView userGuide = view.findViewById(R.id.aboutUserGuide);
         userGuide.setText(Html.fromHtml(userGuideText.toString()));
         userGuide.setMovementMethod(LinkMovementMethod.getInstance());
 

@@ -3,13 +3,13 @@ package com.astoev.cave.survey.activity.dialog;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.fragment.app.DialogFragment;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
@@ -46,15 +46,13 @@ public class AddNewDialog extends DialogFragment {
 
         ListAdapter adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, labels);
 
-        builder.setSingleChoiceItems(adapter, -1, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int item) {
-                Activity activity = getActivity();
-                if (activity instanceof AddNewSelectedHandler) {
-                    ((AddNewSelectedHandler) activity).addNewSelected(item);
-                } else {
-                    Log.e(Constants.LOG_TAG_UI, "Parent activity not instance of AddNewSelectedHandler");
-                    UIUtilities.showNotification(R.string.error);
-                }
+        builder.setSingleChoiceItems(adapter, -1, (dialog, item) -> {
+            Activity activity = getActivity();
+            if (activity instanceof AddNewSelectedHandler) {
+                ((AddNewSelectedHandler) activity).addNewSelected(item);
+            } else {
+                Log.e(Constants.LOG_TAG_UI, "Parent activity not instance of AddNewSelectedHandler");
+                UIUtilities.showNotification(R.string.error);
             }
         });
 

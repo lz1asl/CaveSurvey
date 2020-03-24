@@ -22,7 +22,7 @@ import com.astoev.cave.survey.service.bluetooth.BluetoothService;
  * @author Alexander Stoev
  * @author Zhivko Mitrev
  */
-public class MainMenuActivity extends BaseActivity implements ConfirmationHandler {
+public abstract class MainMenuActivity extends BaseActivity implements ConfirmationHandler {
 
 	/** Constant that shows that there is no child menu item */
 	protected static int NO_CHILD_MENU_ITEMS = 0;
@@ -56,7 +56,7 @@ public class MainMenuActivity extends BaseActivity implements ConfirmationHandle
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        Log.d(Constants.LOG_TAG_UI, "Creating main menu");
+        Log.d(Constants.LOG_TAG_UI, "Creating survey menu");
         
         MenuInflater menuInflater = getMenuInflater();
         

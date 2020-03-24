@@ -2,17 +2,17 @@ package com.astoev.cave.survey.activity.dialog;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
-import android.util.Log;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.UIUtilities;
-import com.astoev.cave.survey.activity.main.MainActivity;
+import com.astoev.cave.survey.activity.main.SurveyMainActivity;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.service.Workspace;
 import com.astoev.cave.survey.util.DaoUtil;
@@ -58,17 +58,15 @@ public class ChangeLegDialog extends DialogFragment{
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setTitle(R.string.main_button_change_title);
 
-            builder.setSingleChoiceItems(items, selectedItem, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int item) {
+            builder.setSingleChoiceItems(items, selectedItem, (dialog, item) -> {
 
-                    Log.i(Constants.LOG_TAG_UI, "Selected leg " + legs.get(item));
-                    Workspace.getCurrentInstance().setActiveLeg(legs.get(item));
+                Log.i(Constants.LOG_TAG_UI, "Selected leg " + legs.get(item));
+                Workspace.getCurrentInstance().setActiveLeg(legs.get(item));
 
-                    Intent intent = new Intent(getActivity(), MainActivity.class);
-                    startActivity(intent);
-                    dialog.dismiss();
-                    getActivity().finish();
-                }
+                Intent intent = new Intent(getActivity(), SurveyMainActivity.class);
+                startActivity(intent);
+                dialog.dismiss();
+                getActivity().finish();
             });
             return builder.create();
         } catch (Exception e) {
@@ -80,11 +78,7 @@ public class ChangeLegDialog extends DialogFragment{
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.title_warning);
         builder.setMessage(R.string.error_list_legs);
-        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dismiss();
-            }
-        });
+        builder.setPositiveButton(android.R.string.ok, (dialog, id) -> dismiss());
 
         return builder.create();
     }

@@ -44,14 +44,14 @@ public class NoteActivity extends MainMenuActivity {
                 Note note = DaoUtil.getActiveLegNote(activeLeg);
                 if (note != null) {
                     // load note if any
-                    TextView noteText = (TextView) findViewById(R.id.note_text);
+                    TextView noteText = findViewById(R.id.note_text);
                     noteText.setText(note.getText());
                 }
             } else {
                 mCurrLeg = null;
                 String mCurrNote = extras.getString(Constants.LEG_NOTE);
                 if (mCurrNote != null) {
-                    TextView noteText = (TextView) findViewById(R.id.note_text);
+                    TextView noteText = findViewById(R.id.note_text);
                     noteText.setText(mCurrNote);
                 }
             }
@@ -68,43 +68,41 @@ public class NoteActivity extends MainMenuActivity {
 
             Log.v(Constants.LOG_TAG_UI, "Saving note");
 
-            final TextView noteText = (TextView) findViewById(R.id.note_text);
+            final TextView noteText = findViewById(R.id.note_text);
 
             if (mCurrLeg != null) {
                 TransactionManager.callInTransaction(getWorkspace().getDBHelper().getConnectionSource(),
-                        new Callable<Void>() {
-                            public Void call() throws Exception {
-                                try {
-                                    Leg activeLeg = DaoUtil.getLeg(mCurrLeg);
+                        (Callable<Void>) () -> {
+                            try {
+                                Leg activeLeg = DaoUtil.getLeg(mCurrLeg);
 
-                                    Note existingNote = DaoUtil.getActiveLegNote(activeLeg);
+                                Note existingNote = DaoUtil.getActiveLegNote(activeLeg);
 
-                                    if (null != existingNote) {
-                                        Log.i(Constants.LOG_TAG_DB, "Existing note found");
-                                        // update existing
-                                        existingNote.setText(noteText.getText().toString());
-                                        getWorkspace().getDBHelper().getNoteDao().update(existingNote);
-                                    } else {
-                                        // create new
-                                        existingNote = new Note(noteText.getText().toString());
-                                        existingNote.setPoint(activeLeg.getFromPoint());
-                                        existingNote.setGalleryId(activeLeg.getGalleryId());
-                                        getWorkspace().getDBHelper().getNoteDao().create(existingNote);
-                                    }
-
-                                    UIUtilities.showNotification(R.string.note_saved);
-                                    Intent data = new Intent();
-                                    data.putExtra("note", noteText.getText().toString());
-                                    setResult(RESULT_OK, data);
-                                    finish();
-
-                                    Log.i(Constants.LOG_TAG_DB, "Note stored");
-                                    return null;
-                                } catch (Exception e) {
-                                    Log.e(Constants.LOG_TAG_DB, "Failed to save note", e);
-                                    UIUtilities.showNotification(R.string.error);
-                                    throw e;
+                                if (null != existingNote) {
+                                    Log.i(Constants.LOG_TAG_DB, "Existing note found");
+                                    // update existing
+                                    existingNote.setText(noteText.getText().toString());
+                                    getWorkspace().getDBHelper().getNoteDao().update(existingNote);
+                                } else {
+                                    // create new
+                                    existingNote = new Note(noteText.getText().toString());
+                                    existingNote.setPoint(activeLeg.getFromPoint());
+                                    existingNote.setGalleryId(activeLeg.getGalleryId());
+                                    getWorkspace().getDBHelper().getNoteDao().create(existingNote);
                                 }
+
+                                UIUtilities.showNotification(R.string.note_saved);
+                                Intent data = new Intent();
+                                data.putExtra("note", noteText.getText().toString());
+                                setResult(RESULT_OK, data);
+                                finish();
+
+                                Log.i(Constants.LOG_TAG_DB, "Note stored");
+                                return null;
+                            } catch (Exception e) {
+                                Log.e(Constants.LOG_TAG_DB, "Failed to save note", e);
+                                UIUtilities.showNotification(R.string.error);
+                                throw e;
                             }
                         });
 

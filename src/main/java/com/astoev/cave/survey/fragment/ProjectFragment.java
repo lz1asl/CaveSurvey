@@ -1,8 +1,6 @@
 package com.astoev.cave.survey.fragment;
 
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +8,9 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.dto.ProjectConfig;
@@ -80,7 +81,7 @@ public class ProjectFragment extends Fragment {
 
         if (config != null){
             // there is a project config. Working in edit mode
-            EditText projectNameField = (EditText) view.findViewById(R.id.new_projectname);
+            EditText projectNameField = view.findViewById(R.id.new_projectname);
             projectNameField.setText(config.getName());
             projectNameField.setEnabled(false);
             projectNameField.setInputType(EditorInfo.TYPE_NULL);
@@ -164,7 +165,7 @@ public class ProjectFragment extends Fragment {
      * @return Spinner
      */
     private Spinner prepareSpinner(View viewArg, int spinnerIdArg, int textArrayIdArg) {
-        Spinner spinner = (Spinner) viewArg.findViewById(spinnerIdArg);
+        Spinner spinner = viewArg.findViewById(spinnerIdArg);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), textArrayIdArg, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
@@ -178,7 +179,7 @@ public class ProjectFragment extends Fragment {
      * @return int selected value
      */
     private int getSpinnerValue(int spinnerIdArg) {
-        Spinner spinner = (Spinner) getActivity().findViewById(spinnerIdArg);
+        Spinner spinner = getActivity().findViewById(spinnerIdArg);
         return spinner.getSelectedItemPosition();
     }
 
@@ -190,7 +191,7 @@ public class ProjectFragment extends Fragment {
     public ProjectConfig getProjectConfig(){
         ProjectConfig projectConfig = new ProjectConfig();
 
-        EditText projectNameField = (EditText) getActivity().findViewById(R.id.new_projectname);
+        EditText projectNameField = getActivity().findViewById(R.id.new_projectname);
         final String projectName = projectNameField.getText().toString();
 
         projectConfig.setName(projectName);

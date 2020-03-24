@@ -41,31 +41,27 @@ public abstract class BaseActivity extends AppCompatActivity {
         final Thread.UncaughtExceptionHandler initialExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
 
         // override
-        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+        Thread.setDefaultUncaughtExceptionHandler((paramThread, paramThrowable) -> {
 
-            @Override
-            public void uncaughtException(Thread paramThread, Throwable paramThrowable) {
+            // log
+            Log.e(Constants.LOG_TAG_SERVICE, "General exception occurred");
+            if (paramThread != null) {
+                Log.e(Constants.LOG_TAG_SERVICE, "In Thread: " + paramThread.getName());
+            }
+            Log.e(Constants.LOG_TAG_SERVICE, "Cause: " + paramThrowable.getCause());
 
-                // log
-                Log.e(Constants.LOG_TAG_SERVICE, "General exception occurred");
-                if (paramThread != null) {
-                    Log.e(Constants.LOG_TAG_SERVICE, "In Thread: " + paramThread.getName());
-                }
-                Log.e(Constants.LOG_TAG_SERVICE, "Cause: " + paramThrowable.getCause());
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw, true);
+            paramThrowable.printStackTrace(pw);
+            Log.e(Constants.LOG_TAG_SERVICE, "Trace: " + sw.getBuffer().toString());
 
-                StringWriter sw = new StringWriter();
-                PrintWriter pw = new PrintWriter(sw, true);
-                paramThrowable.printStackTrace(pw);
-                Log.e(Constants.LOG_TAG_SERVICE, "Trace: " + sw.getBuffer().toString());
-
-                if (initialExceptionHandler != null) {
-                    // if possible notify the default handler
-                    Log.e(Constants.LOG_TAG_SERVICE, "Escalate");
-                    initialExceptionHandler.uncaughtException(paramThread, paramThrowable);
-                } else {
-                    Log.e(Constants.LOG_TAG_SERVICE, "Can't retrow");
-                    System.exit(1);
-                }
+            if (initialExceptionHandler != null) {
+                // if possible notify the default handler
+                Log.e(Constants.LOG_TAG_SERVICE, "Escalate");
+                initialExceptionHandler.uncaughtException(paramThread, paramThrowable);
+            } else {
+                Log.e(Constants.LOG_TAG_SERVICE, "Can't retrow");
+                System.exit(1);
             }
         });
     }
