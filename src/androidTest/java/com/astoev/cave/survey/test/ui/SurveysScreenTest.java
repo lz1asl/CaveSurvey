@@ -11,7 +11,7 @@ import org.junit.Test;
 import static com.astoev.cave.survey.test.helper.Home.goHome;
 import static com.astoev.cave.survey.test.helper.Survey.createSurvey;
 
-public class HomeScreenTest {
+public class SurveysScreenTest {
 
     @Rule
     public ActivityTestRule<SplashActivity> activityRule = new ActivityTestRule<>(SplashActivity.class);

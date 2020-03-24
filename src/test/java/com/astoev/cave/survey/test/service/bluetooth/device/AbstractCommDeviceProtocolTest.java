@@ -6,18 +6,20 @@ import com.astoev.cave.survey.service.bluetooth.Measure;
 import com.astoev.cave.survey.service.bluetooth.device.AbstractBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.comm.AbstractBluetoothRFCOMMDevice;
 
-import junit.framework.TestCase;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
+
 /**
  * Created by astoev on 7/19/15.
  */
-public abstract class AbstractCommDeviceProtocolTest extends TestCase {
+public abstract class AbstractCommDeviceProtocolTest {
 
     protected abstract AbstractBluetoothDevice getDeviceSpec();
 

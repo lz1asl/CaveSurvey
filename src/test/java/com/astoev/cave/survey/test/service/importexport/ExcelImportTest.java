@@ -4,8 +4,6 @@ import com.astoev.cave.survey.service.imp.ExcelImport;
 import com.astoev.cave.survey.service.imp.LegData;
 import com.astoev.cave.survey.service.imp.ProjectData;
 
-import junit.framework.TestCase;
-
 import org.junit.Test;
 
 import java.io.File;
@@ -18,8 +16,9 @@ import static com.astoev.cave.survey.sharedtest.export.ExcelTestUtils.assertConf
 import static com.astoev.cave.survey.sharedtest.export.ExcelTestUtils.assertDefaultUnits;
 import static com.astoev.cave.survey.sharedtest.export.ExcelTestUtils.assertLeg;
 import static com.astoev.cave.survey.sharedtest.export.ExcelTestUtils.assertLegLocation;
+import static org.junit.Assert.assertEquals;
 
-public class ExcelImportTest extends TestCase {
+public class ExcelImportTest {
 
     @Test
     public void testSimpleFile() throws IOException {
@@ -33,7 +32,7 @@ public class ExcelImportTest extends TestCase {
         // check some data
         List<LegData> legs = data.getLegs();
         assertEquals(1, legs.size());
-        assertLeg(legs.get(0), 1f, 2f, 3f);
+        assertLeg(legs.get(0), 1f, 2f, 3f, 1f, 3f, 4f, 2f);
         assertLegLocation(legs.get(0), null, null, null, null);
     }
 

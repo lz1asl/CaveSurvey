@@ -10,6 +10,8 @@ import org.junit.Test;
 
 import java.util.List;
 
+import static org.junit.Assert.fail;
+
 public class LAProtocolTestComm extends AbstractCommDeviceProtocolTest {
 
     @Test

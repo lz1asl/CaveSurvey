@@ -3,16 +3,21 @@ package com.astoev.cave.survey.test.util;
 import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.util.PointUtil;
 
-import junit.framework.TestCase;
-
 import org.junit.Test;
 
-public class PointUtilTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+public class PointUtilTest  {
+
+    @Test
     public void testCreateFirstPoint() {
         Point p = PointUtil.createFirstPoint();
         assertEquals("0", p.getName());
     }
 
+    @Test
     public void testCreateSecondPoint() {
         Point p = PointUtil.createSecondPoint();
         assertEquals("1", p.getName());
@@ -42,7 +47,7 @@ public class PointUtilTest extends TestCase {
         String name = "C3-C4@1.5";
         assertEquals("C3", PointUtil.getMiddleFromName(name));
         assertEquals("C4", PointUtil.getMiddleToName(name));
-        assertEquals(1.5f, PointUtil.getMiddleLength(name));
+        assertEquals(1.5f, PointUtil.getMiddleLength(name), 0.001);
     }
 
     @Test

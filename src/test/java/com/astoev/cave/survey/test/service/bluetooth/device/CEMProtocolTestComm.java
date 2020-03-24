@@ -5,15 +5,13 @@ import com.astoev.cave.survey.service.bluetooth.device.comm.CEMILDMBluetoothDevi
 
 import org.junit.Test;
 
-import java.io.IOException;
-
 /**
  * Created by astoev on 8/10/15.
  */
 public class CEMProtocolTestComm extends AbstractCommDeviceProtocolTest {
 
     @Test
-    public void testDataPacket() throws IOException {
+    public void testDataPacket() {
 
         // distance read
         ensureSucces(new byte[] {-43, -16, 0, 20, 0, 1, 2, 1, 0, 0, 4, -26, 0, 0, 4, -12, 0, 0, 28, -58, -17, -1, -1, -2, 13 }, 7.366f, null, null);

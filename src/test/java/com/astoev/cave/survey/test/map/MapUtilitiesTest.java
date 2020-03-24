@@ -2,13 +2,19 @@ package com.astoev.cave.survey.test.map;
 
 import com.astoev.cave.survey.activity.map.MapUtilities;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by astoev on 1/20/14.
  */
-public class MapUtilitiesTest extends TestCase {
+public class MapUtilitiesTest {
 
+    @Test
     public void testGetNextGalleryColor() {
         int count = (int) (Math.random() * 5);
         int initial = MapUtilities.getNextGalleryColor(count);
@@ -22,6 +28,7 @@ public class MapUtilitiesTest extends TestCase {
         }
     }
 
+    @Test
     public void testIsAzimuthInDegreesValid() {
         assertTrue(MapUtilities.isAzimuthInDegreesValid(0f));
         assertTrue(MapUtilities.isAzimuthInDegreesValid(20f));
@@ -33,6 +40,7 @@ public class MapUtilitiesTest extends TestCase {
         assertFalse(MapUtilities.isAzimuthInDegreesValid(365f));
     }
 
+    @Test
     public void testIsAzimuthInGradsValid() {
         assertTrue(MapUtilities.isAzimuthInGradsValid(0f));
         assertTrue(MapUtilities.isAzimuthInGradsValid(20f));
@@ -44,6 +52,7 @@ public class MapUtilitiesTest extends TestCase {
         assertFalse(MapUtilities.isAzimuthInGradsValid(420f));
     }
 
+    @Test
     public void testIsSlopeInDegreesValid() {
         assertTrue(MapUtilities.isSlopeInDegreesValid(0f));
         assertTrue(MapUtilities.isSlopeInDegreesValid(-2.5f));
@@ -57,6 +66,7 @@ public class MapUtilitiesTest extends TestCase {
         assertFalse(MapUtilities.isSlopeInDegreesValid(+100f));
     }
 
+    @Test
     public void testIsSlopeInGradsValid() {
         assertTrue(MapUtilities.isSlopeInGradsValid(0f));
         assertTrue(MapUtilities.isSlopeInGradsValid(-2.5f));
@@ -70,16 +80,18 @@ public class MapUtilitiesTest extends TestCase {
         assertFalse(MapUtilities.isSlopeInGradsValid(+120f));
     }
 
+    @Test
     public void testGetMiddleAngle() {
-        assertEquals(20f, MapUtilities.getMiddleAngle(10f, 30f));
-        assertEquals(130f, MapUtilities.getMiddleAngle(50f, 210f));
-        assertEquals(330f, MapUtilities.getMiddleAngle(340f, 320f));
-        assertEquals(20f, MapUtilities.getMiddleAngle(340f, 60f));
+        assertEquals(20f, MapUtilities.getMiddleAngle(10f, 30f), 0);
+        assertEquals(130f, MapUtilities.getMiddleAngle(50f, 210f), 0);
+        assertEquals(330f, MapUtilities.getMiddleAngle(340f, 320f), 0);
+        assertEquals(20f, MapUtilities.getMiddleAngle(340f, 60f), 0);
     }
 
+    @Test
     public void testApplySlopeToDistance() {
-        assertEquals(20f, MapUtilities.applySlopeToDistance(20f, null));
-        assertEquals(20f, MapUtilities.applySlopeToDistance(20f, 0f));
+        assertEquals(20f, MapUtilities.applySlopeToDistance(20f, null), 0);
+        assertEquals(20f, MapUtilities.applySlopeToDistance(20f, 0f), 0);
         // TODO it seem bad values are produced below
 //        assertEquals(10f, MapUtilities.applySlopeToDistance(20f, 45f));
 //        assertEquals(10f, MapUtilities.applySlopeToDistance(20f, -45f));
@@ -87,21 +99,24 @@ public class MapUtilitiesTest extends TestCase {
 //        assertEquals(0f, MapUtilities.applySlopeToDistance(20f, 90f));
     }
 
+    @Test
     public void testAddDegrees() {
-        assertEquals(110f, MapUtilities.add90Degrees(20f));
-        assertEquals(210f, MapUtilities.add90Degrees(120f));
-        assertEquals(310f, MapUtilities.add90Degrees(220f));
-        assertEquals(50f, MapUtilities.add90Degrees(320f));
+        assertEquals(110f, MapUtilities.add90Degrees(20f), 0);
+        assertEquals(210f, MapUtilities.add90Degrees(120f), 0);
+        assertEquals(310f, MapUtilities.add90Degrees(220f), 0);
+        assertEquals(50f, MapUtilities.add90Degrees(320f), 0);
     }
 
+    @Test
     public void testMinusDegrees() {
-        assertEquals(10f, MapUtilities.minus90Degrees(100f));
-        assertEquals(220f, MapUtilities.minus90Degrees(310f));
-        assertEquals(330f, MapUtilities.minus90Degrees(60f));
+        assertEquals(10f, MapUtilities.minus90Degrees(100f), 0);
+        assertEquals(220f, MapUtilities.minus90Degrees(310f), 0);
+        assertEquals(330f, MapUtilities.minus90Degrees(60f), 0);
     }
 
+    @Test
     public void testDegreeToGrads() {
-        assertEquals(0f, MapUtilities.degreesToGrads(0f));
+        assertEquals(0f, MapUtilities.degreesToGrads(0f), 0);
         assertEquals(50f, MapUtilities.degreesToGrads(45f), 0.001);
         assertEquals(100f, MapUtilities.degreesToGrads(90f), 0.001);
         assertEquals(200f, MapUtilities.degreesToGrads(180f), 0.001);

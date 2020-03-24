@@ -2,7 +2,9 @@ package com.astoev.cave.survey.test.util;
 
 import com.astoev.cave.survey.util.GalleryUtil;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created with IntelliJ IDEA.
@@ -11,12 +13,14 @@ import junit.framework.TestCase;
  * Time: 12:55 AM
  * To change this template use File | Settings | File Templates.
  */
-public class GalleryUtilTest extends TestCase {
+public class GalleryUtilTest {
 
+    @Test
     public void testFirstName() {
         assertEquals("A", GalleryUtil.getFirstGalleryName());
     }
-    
+
+    @Test
     public void testNextName() {
         assertEquals("B", GalleryUtil.generateNextGalleryName("A"));
         assertEquals("C", GalleryUtil.generateNextGalleryName("B"));

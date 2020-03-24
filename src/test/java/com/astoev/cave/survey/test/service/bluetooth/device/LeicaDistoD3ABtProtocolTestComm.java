@@ -11,6 +11,8 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.Assert.fail;
+
 public class LeicaDistoD3ABtProtocolTestComm extends AbstractCommDeviceProtocolTest {
 
     private LeicaDistoD3aBtBluetoothDevice device = new LeicaDistoD3aBtBluetoothDevice();

@@ -2,10 +2,14 @@ package com.astoev.cave.survey.test.util;
 
 import com.astoev.cave.survey.util.StringUtils;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class StringUtilsTest extends TestCase {
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
+public class StringUtilsTest {
+
+    @Test
     public void testIsEmpty() {
         String nullString = null;
         assertTrue(StringUtils.isEmpty(nullString));
@@ -13,6 +17,7 @@ public class StringUtilsTest extends TestCase {
         assertFalse(StringUtils.isEmpty("text"));
     }
 
+    @Test
     public void testIsNotEmpty() {
         String nullString = null;
         assertFalse(StringUtils.isNotEmpty(nullString));

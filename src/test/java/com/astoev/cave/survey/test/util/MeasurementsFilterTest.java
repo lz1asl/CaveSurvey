@@ -2,16 +2,17 @@ package com.astoev.cave.survey.test.util;
 
 import com.astoev.cave.survey.service.orientation.MeasurementsFilter;
 
-import junit.framework.TestCase;
-
 import org.junit.Test;
 
 import java.util.Arrays;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
-public class MeasurementsFilterTest extends TestCase {
+public class MeasurementsFilterTest {
 
     @Test
     public void testAveragingDisabled() {
@@ -25,21 +26,21 @@ public class MeasurementsFilterTest extends TestCase {
         filter.startAveraging();
         filter.addMeasurement(value1);
         assertTrue(filter.isReady());
-        assertEquals(value1, filter.getValue());
+        assertEquals(value1, filter.getValue(), 0.001);
         assertEquals( "", filter.getAccuracyString());
 
         // last value always used
         float value2 = 2.34F;
         filter.addMeasurement(value2);
         assertTrue(filter.isReady());
-        assertEquals(value2, filter.getValue());
+        assertEquals(value2, filter.getValue(), 0.001);
         assertEquals( "", filter.getAccuracyString());
 
         // averaging 1 out of 1
         filter.startAveraging();
         filter.addMeasurement(value1);
         assertTrue(filter.isReady());
-        assertEquals(value1, filter.getValue());
+        assertEquals(value1, filter.getValue(), 0.001);
         assertEquals( "", filter.getAccuracyString());
     }
 
@@ -258,14 +259,14 @@ public class MeasurementsFilterTest extends TestCase {
     @Test
     public void testFindBiggestDistance() {
         // single
-        assertEquals(4f, MeasurementsFilter.findMostDistantValue(Arrays.asList(1f, 2f, 1f, 4f, 2f), 2f));
+        assertEquals(4f, MeasurementsFilter.findMostDistantValue(Arrays.asList(1f, 2f, 1f, 4f, 2f), 2f), 0f);
         // multiple
-        assertEquals(8f, MeasurementsFilter.findMostDistantValue(Arrays.asList(1f, 2f, 6f, 1f, 8f, 1f, 1f, 4f, 1f, 1f), 2f));
-        assertEquals(6f, MeasurementsFilter.findMostDistantValue(Arrays.asList(1f, 2f, 6f, 1f, 6f, 1f, 4f, 1f, 1f), 2f));
+        assertEquals(8f, MeasurementsFilter.findMostDistantValue(Arrays.asList(1f, 2f, 6f, 1f, 8f, 1f, 1f, 4f, 1f, 1f), 2f), 0f);
+        assertEquals(6f, MeasurementsFilter.findMostDistantValue(Arrays.asList(1f, 2f, 6f, 1f, 6f, 1f, 4f, 1f, 1f), 2f), 0f);
         // leading
-        assertEquals(9f, MeasurementsFilter.findMostDistantValue(Arrays.asList(9f, 1f, 2f, 6f, 1f, 1f, 1f, 4f, 1f, 1f), 2f));
+        assertEquals(9f, MeasurementsFilter.findMostDistantValue(Arrays.asList(9f, 1f, 2f, 6f, 1f, 1f, 1f, 4f, 1f, 1f), 2f), 0f);
         // trailing
-        assertEquals(7f, MeasurementsFilter.findMostDistantValue(Arrays.asList(1f, 2f, 6f, 1f, 1f, 1f, 4f, 1f, 1f, 7f), 2f));
+        assertEquals(7f, MeasurementsFilter.findMostDistantValue(Arrays.asList(1f, 2f, 6f, 1f, 1f, 1f, 4f, 1f, 1f, 7f), 2f), 0f);
     }
 
     @Test
@@ -292,38 +293,38 @@ public class MeasurementsFilterTest extends TestCase {
 
     @Test
     public void testFirstQuadrant() {
-        assertEquals(true, MeasurementsFilter.isFirstQuadrant(0));
-        assertEquals(true, MeasurementsFilter.isFirstQuadrant(10));
-        assertEquals(true, MeasurementsFilter.isFirstQuadrant(40));
-        assertEquals(true, MeasurementsFilter.isFirstQuadrant(50));
-        assertEquals(true, MeasurementsFilter.isFirstQuadrant(80));
-        assertEquals(true, MeasurementsFilter.isFirstQuadrant(90));
-        assertEquals(false, MeasurementsFilter.isFirstQuadrant(91));
-        assertEquals(false, MeasurementsFilter.isFirstQuadrant(120));
-        assertEquals(false, MeasurementsFilter.isFirstQuadrant(220));
-        assertEquals(false, MeasurementsFilter.isFirstQuadrant(300));
-        assertEquals(false, MeasurementsFilter.isFirstQuadrant(350));
+        assertTrue(MeasurementsFilter.isFirstQuadrant(0));
+        assertTrue(MeasurementsFilter.isFirstQuadrant(10));
+        assertTrue(MeasurementsFilter.isFirstQuadrant(40));
+        assertTrue(MeasurementsFilter.isFirstQuadrant(50));
+        assertTrue(MeasurementsFilter.isFirstQuadrant(80));
+        assertTrue(MeasurementsFilter.isFirstQuadrant(90));
+        assertFalse(MeasurementsFilter.isFirstQuadrant(91));
+        assertFalse(MeasurementsFilter.isFirstQuadrant(120));
+        assertFalse(MeasurementsFilter.isFirstQuadrant(220));
+        assertFalse(MeasurementsFilter.isFirstQuadrant(300));
+        assertFalse(MeasurementsFilter.isFirstQuadrant(350));
     }
 
     @Test
     public void testForthQuadrant() {
-        assertEquals(true, MeasurementsFilter.isForthQuadrant(359));
-        assertEquals(true, MeasurementsFilter.isForthQuadrant(300));
-        assertEquals(true, MeasurementsFilter.isForthQuadrant(270));
-        assertEquals(false, MeasurementsFilter.isForthQuadrant(200));
-        assertEquals(false, MeasurementsFilter.isForthQuadrant(150));
-        assertEquals(false, MeasurementsFilter.isForthQuadrant(110));
-        assertEquals(false, MeasurementsFilter.isForthQuadrant(80));
-        assertEquals(false, MeasurementsFilter.isForthQuadrant(20));
+        assertTrue(MeasurementsFilter.isForthQuadrant(359));
+        assertTrue(MeasurementsFilter.isForthQuadrant(300));
+        assertTrue(MeasurementsFilter.isForthQuadrant(270));
+        assertFalse(MeasurementsFilter.isForthQuadrant(200));
+        assertFalse(MeasurementsFilter.isForthQuadrant(150));
+        assertFalse(MeasurementsFilter.isForthQuadrant(110));
+        assertFalse(MeasurementsFilter.isForthQuadrant(80));
+        assertFalse(MeasurementsFilter.isForthQuadrant(20));
     }
 
     @Test
     public void testNeedNormalization() {
-        assertEquals(false, MeasurementsFilter.needNormalization(Arrays.asList(1f, 2f, 3f)));
-        assertEquals(false, MeasurementsFilter.needNormalization(Arrays.asList(100f, 200f, 300f)));
-        assertEquals(false, MeasurementsFilter.needNormalization(Arrays.asList(350f, 320f)));
-        assertEquals(true, MeasurementsFilter.needNormalization(Arrays.asList(1f, 350f, 3f)));
-        assertEquals(true, MeasurementsFilter.needNormalization(Arrays.asList(80f, 300f, 40f)));
+        assertFalse(MeasurementsFilter.needNormalization(Arrays.asList(1f, 2f, 3f)));
+        assertFalse(MeasurementsFilter.needNormalization(Arrays.asList(100f, 200f, 300f)));
+        assertFalse(MeasurementsFilter.needNormalization(Arrays.asList(350f, 320f)));
+        assertTrue(MeasurementsFilter.needNormalization(Arrays.asList(1f, 350f, 3f)));
+        assertTrue(MeasurementsFilter.needNormalization(Arrays.asList(80f, 300f, 40f)));
     }
 
     @Test
@@ -337,8 +338,8 @@ public class MeasurementsFilterTest extends TestCase {
 
     @Test
     public void testRestoreNormalization() {
-        assertEquals(5f, MeasurementsFilter.restoreInitial(185));
-        assertEquals(350f, MeasurementsFilter.restoreInitial(170));
+        assertEquals(5f, MeasurementsFilter.restoreInitial(185), 0f);
+        assertEquals(350f, MeasurementsFilter.restoreInitial(170), 0f);
     }
 
 }
