@@ -2,23 +2,24 @@ package com.astoev.cave.survey.test.service.export;
 
 import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
+import androidx.test.rule.GrantPermissionRule;
 
 import com.astoev.cave.survey.activity.home.SplashActivity;
-import com.astoev.cave.survey.service.export.excel.ExcelExport;
 import com.astoev.cave.survey.service.imp.ExcelImport;
 import com.astoev.cave.survey.service.imp.LegData;
 import com.astoev.cave.survey.service.imp.ProjectData;
-import com.astoev.cave.survey.test.helper.Survey;
-import com.astoev.cave.survey.util.FileStorageUtil;
+import com.astoev.cave.survey.test.helper.Data;
 
 import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TestRule;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static com.astoev.cave.survey.model.Option.UNIT_DEGREES;
 import static com.astoev.cave.survey.model.Option.UNIT_METERS;
 import static com.astoev.cave.survey.sharedtest.export.ExcelTestUtils.assertConfigUnits;
@@ -30,6 +31,7 @@ import static com.astoev.cave.survey.test.helper.Database.clearDatabase;
 import static com.astoev.cave.survey.test.helper.Survey.addLeg;
 import static com.astoev.cave.survey.test.helper.Survey.addLegMiddle;
 import static com.astoev.cave.survey.test.helper.Survey.addVector;
+import static com.astoev.cave.survey.test.helper.Survey.createAndOpenSurvey;
 import static com.astoev.cave.survey.test.helper.Survey.nextGallery;
 import static com.astoev.cave.survey.test.helper.Survey.openLegWithText;
 import static com.astoev.cave.survey.test.helper.Survey.saveLeg;
@@ -37,23 +39,25 @@ import static com.astoev.cave.survey.test.helper.Survey.selectFirstSurveyLeg;
 import static com.astoev.cave.survey.test.helper.Survey.setLegData;
 import static org.junit.Assert.assertEquals;
 
-public class ExcelExportTest {
+@LargeTest
+public class ExcelTest {
 
     @Rule
     public ActivityTestRule<SplashActivity> activityRule = new ActivityTestRule<>(SplashActivity.class);
 
+    @Rule
+    public TestRule permissionRule = GrantPermissionRule.grant(WRITE_EXTERNAL_STORAGE);
 
     @After
-    public void cleanUp() {
+    public void clean() {
         clearDatabase();
     }
 
     @Test
-    @LargeTest
     public void testExport() throws IOException {
 
         // create survey
-        final String surveyName = Survey.createAndOpenSurvey();
+        String surveyName = createAndOpenSurvey();
 
         // empty first leg
         List<LegData> legs = exportAndRead(surveyName, 1);
@@ -111,6 +115,18 @@ public class ExcelExportTest {
         assertFifthLegWithMiddlePoint(legs);
         assertSixthLegWithVectors(legs);
         assertSeventhLegNextGallery(legs);
+
+        // now try to import it back and check the data
+        goBack();
+        surveyName = createAndOpenSurvey(true);
+        legs = exportAndRead(surveyName, 11);
+        assertFirstLegNoSlope(legs);
+        assertSecondSimpleLeg(legs);
+        assertThirdWithSidesLeg(legs);
+        assertForthWithSidesLeg(legs);
+        assertFifthLegWithMiddlePoint(legs);
+        assertSixthLegWithVectors(legs);
+        assertSeventhLegNextGallery(legs);
     }
 
 
@@ -121,9 +137,7 @@ public class ExcelExportTest {
         goBack();
 
         // loadTransitionBridgingViewAction
-        List<File> excelExportFiles = FileStorageUtil.listProjectFiles(null, ExcelExport.EXCEL_FILE_EXTENSION);
-        File exportFile = excelExportFiles.stream()
-                .filter(file -> file.getName().startsWith(aSurveyName)).min((f1, f2) -> -f1.getName().compareTo(f2.getName())).get();
+        File exportFile = Data.getLastXlsExport(aSurveyName);
         ProjectData data = ExcelImport.loadProjectData(exportFile);
 
         // default units

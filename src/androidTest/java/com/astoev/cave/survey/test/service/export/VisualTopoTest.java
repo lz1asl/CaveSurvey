@@ -16,7 +16,7 @@ import static com.astoev.cave.survey.test.helper.Survey.addLeg;
 import static com.astoev.cave.survey.test.helper.Survey.selectFirstSurveyLeg;
 import static com.astoev.cave.survey.test.helper.Survey.setLegData;
 
-public class VisualTopoExportTest {
+public abstract class VisualTopoTest {
 
     @Rule
     public ActivityTestRule<SplashActivity> activityRule = new ActivityTestRule<>(SplashActivity.class);

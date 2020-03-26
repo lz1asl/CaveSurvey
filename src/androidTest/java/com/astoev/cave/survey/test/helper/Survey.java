@@ -2,11 +2,15 @@ package com.astoev.cave.survey.test.helper;
 
 import androidx.test.espresso.action.ViewActions;
 
+import static androidx.test.espresso.Espresso.onData;
+import static androidx.test.espresso.Espresso.onIdle;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.pressBack;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static com.astoev.cave.survey.R.id.action_new_project;
+import static com.astoev.cave.survey.R.id.import_files;
 import static com.astoev.cave.survey.R.id.main_action_add;
 import static com.astoev.cave.survey.R.id.middle_create;
 import static com.astoev.cave.survey.R.id.middle_distance;
@@ -29,20 +33,40 @@ import static com.astoev.cave.survey.test.helper.Common.click;
 import static com.astoev.cave.survey.test.helper.Common.clickDialogSpinnerAtPosition;
 import static com.astoev.cave.survey.test.helper.Common.openContextMenu;
 import static com.astoev.cave.survey.test.helper.Common.type;
+import static com.astoev.cave.survey.test.helper.Data.getXlsExportFilesCount;
 import static com.astoev.cave.survey.test.helper.Home.goHome;
+import static org.hamcrest.Matchers.anything;
 
 public class Survey {
 
     public static void createSurvey(String aName) {
+        createSurvey(aName, false);
+    }
+
+    public static void createSurvey(String aName, boolean importFile) {
         // open new survey screen
         click(action_new_project);
+
+        if (importFile) {
+            selectLastImport();
+        }
 
         // enter name
         type(new_projectname, aName);
 
         // save & go back
         click(new_action_create);
-        onView(withId(point_main_view)).perform(pressBack());
+
+        if (!importFile) {
+            onView(withId(point_main_view)).perform(pressBack());
+        }
+    }
+
+    public static void selectLastImport() {
+        click(import_files);
+        onData(anything()).atPosition(getXlsExportFilesCount())
+                .perform(scrollTo(), ViewActions.click());
+        onIdle();
     }
 
     public static void openSurvey(String aName) {
@@ -50,9 +74,13 @@ public class Survey {
     }
 
     public static String createAndOpenSurvey() {
-        final String surveyName = "xls" + System.currentTimeMillis();
+        return createAndOpenSurvey(false);
+    }
+
+    public static String createAndOpenSurvey(boolean importFile) {
+        final String surveyName = "" + System.currentTimeMillis();
         goHome();
-        createSurvey(surveyName);
+        createSurvey(surveyName, importFile);
         openSurvey(surveyName);
         return surveyName;
     }

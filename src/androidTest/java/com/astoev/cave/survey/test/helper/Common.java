@@ -10,6 +10,7 @@ import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onIdle;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -33,6 +34,11 @@ public class Common {
         onIdle();
     }
 
+    public static void scrollAndClick(String text) {
+        onView(withText(text)).perform(scrollTo(), ViewActions.click());
+        onIdle();
+    }
+
     public static void clickDialogSpinnerAtPosition(int position) {
         onData(anything()).atPosition(position).perform(ViewActions.click());
         onIdle();
@@ -48,7 +54,7 @@ public class Common {
     public static void type(int id, String value) {
         if (value != null) {
             onIdle();
-            onView(withId(id)).noActivity().perform(typeText(value));
+            onView(withId(id)).perform(typeText(value));
             onIdle();
         }
     }
