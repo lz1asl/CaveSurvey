@@ -49,12 +49,16 @@ public class MiddlePointDialog extends DialogFragment implements BTResultAware {
 
         try {
             final Leg currLeg = Workspace.getCurrentInstance().getActiveLeg();
-            TextView label = mView.findViewById(R.id.middleLegInfo);
+            TextView legInfoLabel = mView.findViewById(R.id.middleLegInfo);
+            legInfoLabel.setText(getString(
+                    R.string.middle_leg_info,
+                    currLeg.buildLegDescription()));
+
             CharSequence distanceUnitsLabel = StringUtils.extractDynamicResource(
                     getResources(), StringUtils.RESOURCE_PREFIX_UNITS + Options.getOptionValue(Option.CODE_DISTANCE_UNITS));
-            label.setText(getString(
-                    R.string.middle_leg_info,
-                    currLeg.buildLegDescription(),
+            TextView legDistanceLabel = mView.findViewById(R.id.middleLegDistance);
+            legDistanceLabel.setText(getString(
+                    R.string.middle_leg_distance,
                     StringUtils.floatToLabel(currLeg.getDistance()),
                     distanceUnitsLabel));
         } catch (SQLException e) {

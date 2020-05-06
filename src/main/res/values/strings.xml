@@ -253,7 +253,8 @@
 
     <!-- popup -->
     <string name="middle_leg_add">Add middle point</string>
-    <string name="middle_leg_info">Leg  %1$s, %2$s%3$s</string>
+    <string name="middle_leg_info">Leg  %1$s</string>
+    <string name="middle_leg_distance">out of %1$s %2$s</string>
     <string name="middle_split_at">At</string>
     <string name="middle_create">Create</string>
     <string name="middle_bad_value">Bad value</string>

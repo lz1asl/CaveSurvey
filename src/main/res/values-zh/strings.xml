@@ -254,7 +254,8 @@
 
     <!-- popup -->
     <string name="middle_leg_add">添加中间点</string>
-    <string name="middle_leg_info">测量段  %1$s, %2$s%3$s</string>
+    <string name="middle_leg_info">测量段  %1$s</string>
+    <string name="middle_leg_distance">總數 %1$s %2$s</string>
     <string name="middle_split_at">在</string>
     <string name="middle_create">创建</string>
     <string name="middle_bad_value">错误的值</string>

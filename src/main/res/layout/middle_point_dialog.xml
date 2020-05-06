@@ -33,7 +33,16 @@
             android:layout_margin="10dp"
             android:maxLength="5"
             android:ems="5"
+            android:gravity="center"
             android:id="@+id/middle_distance"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/middle_leg_distance"
+            android:id="@+id/middleLegDistance"
+            android:layout_margin="10dp"
+            android:layout_gravity="center"/>
 
     </LinearLayout>
 
