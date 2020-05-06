@@ -13,26 +13,26 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
         <ImageButton
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/colorpicker"
-                android:contentDescription="@string/sketch_colorpicker"
-                android:onClick="pickColor"/>
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/colorpicker"
+            android:contentDescription="@string/sketch_colorpicker"
+            android:onClick="pickColor"/>
         <ImageButton
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/paints"
-                android:contentDescription="@string/sketch_style"
-                android:onClick="pickStyle"/>
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/paints"
+            android:contentDescription="@string/sketch_style"
+            android:onClick="pickStyle"/>
         <ImageButton
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/sizes"
-                android:contentDescription="@string/sketch_size"
-                android:onClick="pickSize"/>
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/sizes"
+            android:contentDescription="@string/sketch_size"
+            android:onClick="pickSize"/>
 
     </LinearLayout>
 
@@ -43,26 +43,28 @@
             android:gravity="bottom">
 
         <Button
-                android:id="@+id/undoBtn"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="@string/sketch_undo"
-                android:onClick="onClick"/>
+            android:id="@+id/undoBtn"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/sketch_undo"
+            android:onClick="onClick"
+            android:textAllCaps="false"/>
         <Button
-                android:id="@+id/redoBtn"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="@string/sketch_redo"
-                android:onClick="onClick"/>
+            android:id="@+id/redoBtn"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/sketch_redo"
+            android:onClick="onClick"
+            android:textAllCaps="false"/>
 
         <ImageButton
-                android:id="@+id/saveDrawingBtn"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_action_save"
-                android:contentDescription="@string/sketch_save"
-                android:onClick="saveDrawing"/>
+            android:id="@+id/saveDrawingBtn"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_action_save"
+            android:contentDescription="@string/sketch_save"
+            android:onClick="saveDrawing"/>
     </LinearLayout>
 
 
