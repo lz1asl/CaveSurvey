@@ -4,7 +4,6 @@ import android.content.Context;
 
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.action.ViewActions;
-import androidx.test.platform.app.InstrumentationRegistry;
 
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onIdle;
@@ -16,12 +15,13 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static org.hamcrest.CoreMatchers.anything;
 
 public class Common {
 
     public static Context getContext() {
-        return InstrumentationRegistry.getInstrumentation().getTargetContext();
+        return getInstrumentation().getTargetContext();
     }
 
     public static void click(int id) {

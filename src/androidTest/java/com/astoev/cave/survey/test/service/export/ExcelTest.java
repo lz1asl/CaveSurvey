@@ -27,7 +27,6 @@ import static com.astoev.cave.survey.sharedtest.export.ExcelTestUtils.assertLeg;
 import static com.astoev.cave.survey.test.helper.Common.goBack;
 import static com.astoev.cave.survey.test.helper.Data.dataScreen;
 import static com.astoev.cave.survey.test.helper.Data.xlsExport;
-import static com.astoev.cave.survey.test.helper.Database.clearDatabase;
 import static com.astoev.cave.survey.test.helper.Survey.addLeg;
 import static com.astoev.cave.survey.test.helper.Survey.addLegMiddle;
 import static com.astoev.cave.survey.test.helper.Survey.addVector;
@@ -50,7 +49,7 @@ public class ExcelTest {
 
     @After
     public void clean() {
-        clearDatabase();
+//        clearDatabase();
     }
 
     @Test

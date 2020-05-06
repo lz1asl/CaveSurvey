@@ -88,7 +88,7 @@ public abstract class AbstractBoschGLMBluetoothDevice extends AbstractBluetoothR
     }
 
     @Override
-    public void configure(InputStream anInput, OutputStream anOutput) throws IOException {
+    public void configure(InputStream anInput, OutputStream anOutput) {
 
         // initialize the internal Bosch protocol
         protocol = new MtProtocolImpl();
