@@ -1,9 +1,12 @@
 package com.astoev.cave.survey.test.service.export
 
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
-import androidx.test.runner.AndroidJUnit4
 import com.astoev.cave.survey.activity.home.SplashActivity
+import com.astoev.cave.survey.test.helper.Common.goBack
+import com.astoev.cave.survey.test.helper.Data.dataScreen
+import com.astoev.cave.survey.test.helper.Data.visualTopoExport
 import com.astoev.cave.survey.test.helper.Survey
 import org.junit.Rule
 import org.junit.Test
@@ -23,5 +26,15 @@ class VisualTopoTest {
         // create survey
         val surveyName = Survey.createAndOpenSurvey()
 
+        // export
+        export();
+
+    }
+
+    private fun export() {
+        // export
+        dataScreen()
+        visualTopoExport()
+        goBack()
     }
 }

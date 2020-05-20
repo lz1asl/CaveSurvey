@@ -5,6 +5,7 @@ import com.astoev.cave.survey.util.FileStorageUtil;
 import java.io.File;
 import java.util.List;
 
+import static com.astoev.cave.survey.R.id.info_action_export_vtopo;
 import static com.astoev.cave.survey.R.id.info_action_export_xls;
 import static com.astoev.cave.survey.service.export.excel.ExcelExport.EXCEL_FILE_EXTENSION;
 import static com.astoev.cave.survey.test.helper.Common.click;
@@ -21,6 +22,10 @@ public class Data {
         click(info_action_export_xls);
     }
 
+    public static void visualTopoExport() {
+        click(info_action_export_vtopo);
+    }
+
     public static File getLastXlsExport(String aSurveyName) {
         List<File> excelExportFiles = FileStorageUtil.listProjectFiles(null, EXCEL_FILE_EXTENSION);
         return excelExportFiles.stream()
@@ -30,4 +35,6 @@ public class Data {
     public static int getXlsExportFilesCount() {
         return FileStorageUtil.listProjectFiles(null, EXCEL_FILE_EXTENSION).size();
     }
+
+
 }
