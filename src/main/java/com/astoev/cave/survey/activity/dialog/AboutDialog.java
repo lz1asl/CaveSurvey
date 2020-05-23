@@ -23,6 +23,7 @@ import androidx.fragment.app.DialogFragment;
 import com.astoev.cave.survey.BuildConfig;
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
+import com.astoev.cave.survey.util.AndroidUtil;
 import com.astoev.cave.survey.util.ConfigUtil;
 
 import java.text.SimpleDateFormat;
@@ -63,11 +64,7 @@ public class AboutDialog extends DialogFragment  {
         Linkify.addLinks(url, Linkify.WEB_URLS);
 
         StringBuilder versionText = new StringBuilder("v");
-        try {
-            versionText.append(context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName);
-        } catch (PackageManager.NameNotFoundException e) {
-            Log.e(Constants.LOG_TAG_UI, "Failed get version for about dialog", e);
-        }
+        versionText.append(AndroidUtil.getAppVersion());
 
         String buildDate = getBuildDate();
         versionText.append(buildDate);
