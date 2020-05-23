@@ -11,8 +11,8 @@ buildscript {
 }
 
 apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 repositories {
     google()
@@ -28,6 +28,10 @@ dependencies {
     // Bosch internal protocol
     implementation files('../CaveSurveyBoschGLM/binary/CaveSurveyBoschGLM.jar')
 
+    // kotlin
+    implementation "androidx.core:core-ktx:+"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
     // unit tests
     androidTestImplementation 'junit:junit:4.12'
     testImplementation 'junit:junit:4.12'
@@ -40,8 +44,6 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-intents:3.2.0'
     androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
-    implementation "androidx.core:core-ktx:+"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 
 
