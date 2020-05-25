@@ -12,6 +12,7 @@ import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.model.Sketch;
 import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.service.export.AbstractExport;
+import com.astoev.cave.survey.service.export.ExportEntityType;
 import com.astoev.cave.survey.util.LocationUtil;
 import com.astoev.cave.survey.util.StringUtils;
 
@@ -83,7 +84,7 @@ public class ExcelExport extends AbstractExport {
     }
 
     @Override
-    protected void prepareEntity(int rowCounter) {
+    protected void prepareEntity(int rowCounter, ExportEntityType type) {
         legRow = sheet.createRow(rowCounter);
     }
 

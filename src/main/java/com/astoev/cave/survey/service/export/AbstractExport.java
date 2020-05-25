@@ -18,12 +18,14 @@ import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.util.FileStorageUtil;
 import com.astoev.cave.survey.util.StringUtils;
 
-import org.json.JSONException;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.List;
+
+import static com.astoev.cave.survey.service.export.ExportEntityType.LEG;
+import static com.astoev.cave.survey.service.export.ExportEntityType.MIDDLE;
+import static com.astoev.cave.survey.service.export.ExportEntityType.VECTOR;
 
 /**
  * Created by astoev on 8/28/14.
@@ -42,12 +44,13 @@ public abstract class AbstractExport {
     }
 
     // implementation details, methods called in the same order
-    protected abstract void prepare(Project aProject) throws JSONException;
-    protected abstract void prepareEntity(int rowCounter) throws JSONException;
-    protected abstract void setValue(Entities entityType, String aLabel) throws JSONException;
-    protected abstract void setValue(Entities entityType, Float aValue) throws JSONException;
+    protected abstract void prepare(Project aProject);
+    protected abstract void prepareEntity(int rowCounter, ExportEntityType type);
+    protected void endEntity(int rowCounter) {};
+    protected abstract void setValue(Entities entityType, String aLabel);
+    protected abstract void setValue(Entities entityType, Float aValue);
     protected abstract void setPhoto(Photo aPhoto);
-    protected abstract void setLocation(Location aLocation) throws JSONException;
+    protected abstract void setLocation(Location aLocation);
     protected abstract void setDrawing(Sketch aSketch);
     protected abstract InputStream getContent() throws IOException;
 
@@ -92,7 +95,7 @@ public abstract class AbstractExport {
 
                 rowCounter++;
 
-                prepareEntity(rowCounter);
+                prepareEntity(rowCounter, LEG);
 
                 if (l.getGalleryId().equals(lastGalleryId)) {
                     setValue(Entities.FROM, galleryNames.get(l.getGalleryId()) + fromPoint.getName());
@@ -120,6 +123,8 @@ public abstract class AbstractExport {
                 // picture
                 exportPhotos(l);
 
+                endEntity(rowCounter);
+
                 // middles
                 if (middles != null && middles.size() > 0) {
 
@@ -139,7 +144,7 @@ public abstract class AbstractExport {
                     for (Leg middle : middles) {
                         rowCounter++;
                         index ++;
-                        prepareEntity(rowCounter);
+                        prepareEntity(rowCounter, MIDDLE);
 
                         setValue(Entities.FROM, lastMiddleName == null ? fromPointName : lastMiddleName);
                         lastMiddleName = fromPointName + Constants.FROM_TO_POINT_DELIMITER + toPointName + Constants.MIDDLE_POINT_DELIMITER + StringUtils.floatToLabel(middle.getMiddlePointDistance());
@@ -155,13 +160,15 @@ public abstract class AbstractExport {
                             exportAroundMeasures(prevMiddle);
                         }
 
+                        endEntity(rowCounter);
+
                         prevLength = middle.getMiddlePointDistance();
                         prevMiddle = middle;
                     }
 
                     // last explicit leg
                     rowCounter++;
-                    prepareEntity(rowCounter);
+                    prepareEntity(rowCounter, MIDDLE);
 
                     setValue(Entities.FROM, lastMiddleName);
                     setValue(Entities.TO, toPointName);
@@ -170,6 +177,8 @@ public abstract class AbstractExport {
                     exportLegSlope(l);
 
                     exportAroundMeasures(middles.get(middles.size() - 1));
+
+                    endEntity(rowCounter);
                 }
 
                 // vectors
@@ -179,7 +188,7 @@ public abstract class AbstractExport {
                     for (Vector v : vectors) {
                         rowCounter++;
 
-                        prepareEntity(rowCounter);
+                        prepareEntity(rowCounter, VECTOR);
 
                         String fromPointName;
                         if (l.getGalleryId().equals(prevGalleryId)) {
@@ -196,6 +205,8 @@ public abstract class AbstractExport {
                         }
                         setValue(Entities.NOTE, "v" + vectorCounter);
 
+                        endEntity(rowCounter);
+
                         vectorCounter++;
                     }
                 }
@@ -210,38 +221,38 @@ public abstract class AbstractExport {
         }
     }
 
-    private void exportLegMeasures(Leg l) throws SQLException, JSONException {
+    private void exportLegMeasures(Leg l) throws SQLException {
         exportLegDistance(l);
         exportLegCompass(l);
         exportLegSlope(l);
     }
 
-    private void exportNote(Leg l) throws SQLException, JSONException {
+    private void exportNote(Leg l) throws SQLException {
         Note n = DaoUtil.getActiveLegNote(l);
         if (n != null) {
             setValue(Entities.NOTE, n.getText());
         }
     }
 
-    private void exportLegSlope(Leg l) throws SQLException, JSONException {
+    private void exportLegSlope(Leg l) {
         if (l.getSlope() != null) {
             setValue(Entities.INCLINATION, l.getSlope());
         }
     }
 
-    private void exportLegDistance(Leg l) throws SQLException, JSONException {
+    private void exportLegDistance(Leg l) {
         if (l.getDistance() != null) {
             setValue(Entities.DISTANCE, l.getDistance());
         }
     }
 
-    private void exportLegCompass(Leg l) throws SQLException, JSONException {
+    private void exportLegCompass(Leg l) {
         if (l.getAzimuth() != null) {
             setValue(Entities.COMPASS, l.getAzimuth());
         }
     }
 
-    private void exportAroundMeasures(Leg l) throws SQLException, JSONException {
+    private void exportAroundMeasures(Leg l) {
         if (l.getLeft() != null) {
             setValue(Entities.LEFT, l.getLeft());
         }
@@ -273,7 +284,7 @@ public abstract class AbstractExport {
         }
     }
 
-    private void exportLocation(Point fromPoint) throws SQLException, JSONException {
+    private void exportLocation(Point fromPoint) throws SQLException {
         Location location = DaoUtil.getLocationByPoint(fromPoint);
         if (location != null) {
             setLocation(location);

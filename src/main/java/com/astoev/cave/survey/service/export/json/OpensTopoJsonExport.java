@@ -12,6 +12,7 @@ import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.model.Sketch;
 import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.service.export.AbstractExport;
+import com.astoev.cave.survey.service.export.ExportEntityType;
 import com.astoev.cave.survey.util.ConfigUtil;
 import com.astoev.cave.survey.util.FileStorageUtil;
 
@@ -21,6 +22,8 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+
+import static com.astoev.cave.survey.service.export.ExportEntityType.LEG;
 
 /**
  * Created by astoev on 8/28/14.
@@ -39,65 +42,74 @@ public class OpensTopoJsonExport extends AbstractExport {
     }
 
     @Override
-    protected void prepare(Project aProject) throws JSONException {
+    protected void prepare(Project aProject) {
         Log.i(Constants.LOG_TAG_SERVICE, "Start JSON export ");
 
-        project = new JSONObject();
-        project.put("name", FileStorageUtil.getNormalizedProjectName(aProject.getName()));
-        project.put("northdeclination", "0");
+        try {
 
-        rows = new JSONArray();
-        JSONObject headerRow = new JSONObject();
+            project = new JSONObject();
+            project.put("name", FileStorageUtil.getNormalizedProjectName(aProject.getName()));
+            project.put("northdeclination", "0");
 
-        headerRow.put("from", null);
-        headerRow.put("to", null);
-        headerRow.put("len", "m"); // currently only meters supported
-        if (Option.UNIT_GRADS.equals(Options.getOptionValue(Option.CODE_AZIMUTH_UNITS))
-                || Option.UNIT_GRADS.equals(Options.getOptionValue(Option.CODE_SLOPE_UNITS))) {
-            // opens topo does not support grads, may implement conversion in the future
-            Log.i(Constants.LOG_TAG_SERVICE, "OpensTopo - conversion to grads not implemented");
-            UIUtilities.showRawMessage(ConfigUtil.getContext(), "Grads not supported in OpensTopo");
-            throw new RuntimeException("Unable to convert to grads");
+            rows = new JSONArray();
+            JSONObject headerRow = new JSONObject();
+
+            headerRow.put("from", null);
+            headerRow.put("to", null);
+            headerRow.put("len", "m"); // currently only meters supported
+            if (Option.UNIT_GRADS.equals(Options.getOptionValue(Option.CODE_AZIMUTH_UNITS))
+                    || Option.UNIT_GRADS.equals(Options.getOptionValue(Option.CODE_SLOPE_UNITS))) {
+                // opens topo does not support grads, may implement conversion in the future
+                Log.i(Constants.LOG_TAG_SERVICE, "OpensTopo - conversion to grads not implemented");
+                UIUtilities.showRawMessage(ConfigUtil.getContext(), "Grads not supported in OpensTopo");
+                throw new RuntimeException("Unable to convert to grads");
+            }
+            headerRow.put("compass", "deg");
+            headerRow.put("clino", "deg");
+            headerRow.put("top", "m");
+            headerRow.put("left", "m");
+            headerRow.put("right", "m");
+            headerRow.put("bottom", "m");
+            headerRow.put("r", null);
+
+            rows.put(headerRow);
+
+            // empty initial row to shift the side measurements
+            prepareEntity(0, LEG);
+            prevRow = row;
+            populateValue(Entities.FROM, "0");
+            populateValue(Entities.TO, "A0");
+            populateValue(Entities.DISTANCE, 0);
+            populateValue(Entities.COMPASS, 0);
+            populateValue(Entities.INCLINATION, 0);
+
+            project.put("data", rows);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
         }
-        headerRow.put("compass", "deg");
-        headerRow.put("clino", "deg");
-        headerRow.put("top", "m");
-        headerRow.put("left", "m");
-        headerRow.put("right", "m");
-        headerRow.put("bottom", "m");
-        headerRow.put("r", null);
-
-        rows.put(headerRow);
-
-        // empty initial row to shift the side measurements
-        prepareEntity(0);
-        prevRow = row;
-        populateValue(Entities.FROM, "0");
-        populateValue(Entities.TO, "A0");
-        populateValue(Entities.DISTANCE, 0);
-        populateValue(Entities.COMPASS, 0);
-        populateValue(Entities.INCLINATION, 0);
-
-        project.put("data", rows);
     }
 
     @Override
-    protected void prepareEntity(int rowCounter) throws JSONException {
+    protected void prepareEntity(int rowCounter, ExportEntityType type) {
 
-        prevRow = row;
-        row = new JSONObject();
-        row.put("from", "");
-        row.put("to", "");
-        row.put("len", "");
-        row.put("compass", "");
-        row.put("clino", "");
-        row.put("top", "");
-        row.put("left", "");
-        row.put("right", "");
-        row.put("bottom", "");
-        row.put("r", "");
+        try {
+            prevRow = row;
+            row = new JSONObject();
+            row.put("from", "");
+            row.put("to", "");
+            row.put("len", "");
+            row.put("compass", "");
+            row.put("clino", "");
+            row.put("top", "");
+            row.put("left", "");
+            row.put("right", "");
+            row.put("bottom", "");
+            row.put("r", "");
 
-        rows.put(row);
+            rows.put(row);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -106,47 +118,51 @@ public class OpensTopoJsonExport extends AbstractExport {
     }
 
     @Override
-    protected void setValue(Entities entityType, String aLabel) throws JSONException {
+    protected void setValue(Entities entityType, String aLabel) {
         populateValue(entityType, aLabel);
     }
 
     @Override
-    protected void setValue(Entities entityType, Float aValue) throws JSONException {
+    protected void setValue(Entities entityType, Float aValue) {
         populateValue(entityType, "" + aValue);
     }
 
-    private void populateValue(Entities entityType, Object aValue) throws JSONException {
-        switch (entityType) {
-            case FROM:
-                row.put("from", escapeName((String) aValue));
-                break;
-            case TO:
-                row.put("to", escapeName((String) aValue));
-                break;
-            case DISTANCE:
-                row.put("len", aValue);
-                break;
-            case COMPASS:
-                row.put("compass", aValue);
-                break;
-            case INCLINATION:
-                row.put("clino", aValue);
-                break;
-            case LEFT:
-                prevRow.put("left", aValue);
-                break;
-            case RIGHT:
-                prevRow.put("right", aValue);
-                break;
-            case UP:
-                prevRow.put("top", aValue);
-                break;
-            case DOWN:
-                prevRow.put("bottom", aValue);
-                break;
-            case NOTE:
-                row.put("note", aValue);
-                break;
+    private void populateValue(Entities entityType, Object aValue) {
+        try {
+            switch (entityType) {
+                case FROM:
+                    row.put("from", escapeName((String) aValue));
+                    break;
+                case TO:
+                    row.put("to", escapeName((String) aValue));
+                    break;
+                case DISTANCE:
+                    row.put("len", aValue);
+                    break;
+                case COMPASS:
+                    row.put("compass", aValue);
+                    break;
+                case INCLINATION:
+                    row.put("clino", aValue);
+                    break;
+                case LEFT:
+                    prevRow.put("left", aValue);
+                    break;
+                case RIGHT:
+                    prevRow.put("right", aValue);
+                    break;
+                case UP:
+                    prevRow.put("top", aValue);
+                    break;
+                case DOWN:
+                    prevRow.put("bottom", aValue);
+                    break;
+                case NOTE:
+                    row.put("note", aValue);
+                    break;
+            }
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -160,12 +176,15 @@ public class OpensTopoJsonExport extends AbstractExport {
     }
 
     @Override
-    protected void setLocation(Location aLocation) throws JSONException {
-
-        project.putOpt("geoPoint", row.get("from"));
-        project.putOpt("altitude", String.valueOf(aLocation.getAltitude()));
-        project.putOpt("latitude", String.valueOf(aLocation.getLatitude()));
-        project.putOpt("longitude", String.valueOf(aLocation.getLongitude()));
+    protected void setLocation(Location aLocation) {
+        try {
+            project.putOpt("geoPoint", row.get("from"));
+            project.putOpt("altitude", String.valueOf(aLocation.getAltitude()));
+            project.putOpt("latitude", String.valueOf(aLocation.getLatitude()));
+            project.putOpt("longitude", String.valueOf(aLocation.getLongitude()));
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
