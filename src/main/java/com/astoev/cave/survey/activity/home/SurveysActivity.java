@@ -24,6 +24,7 @@ import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.util.PermissionUtil;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
@@ -106,6 +107,7 @@ public class SurveysActivity extends MainMenuActivity implements DeleteHandler {
             ListView projectsContainer = findViewById(R.id.surveysList);
 
             final List<Project> projectsList = getWorkspace().getDBHelper().getProjectDao().queryForAll();
+            Collections.sort(projectsList);
 
             if (projectsList.size() > 0) {
                 Project[] projectsArray = new Project[projectsList.size()];

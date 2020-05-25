@@ -17,7 +17,7 @@ import java.util.Date;
  * To change this template use File | Settings | File Templates.
  */
 @DatabaseTable(tableName = "projects")
-public class Project implements Serializable {
+public class Project implements Serializable, Comparable<Project> {
 
     public static final String COLUMN_NAME = "name";
 
@@ -75,5 +75,9 @@ public class Project implements Serializable {
 	public String toString() {
 		return getName();
 	}
-    
+
+    @Override
+    public int compareTo(Project o) {
+        return o.getCreationDate().compareTo(getCreationDate());
+    }
 }
