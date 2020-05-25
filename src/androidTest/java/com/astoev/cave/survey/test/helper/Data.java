@@ -7,6 +7,7 @@ import java.util.List;
 
 import static com.astoev.cave.survey.R.id.info_action_export_vtopo;
 import static com.astoev.cave.survey.R.id.info_action_export_xls;
+import static com.astoev.cave.survey.R.id.info_action_openstopo;
 import static com.astoev.cave.survey.service.export.excel.ExcelExport.EXCEL_FILE_EXTENSION;
 import static com.astoev.cave.survey.test.helper.Common.click;
 import static com.astoev.cave.survey.test.helper.Common.openContextMenu;
@@ -24,6 +25,10 @@ public class Data {
 
     public static void visualTopoExport() {
         click(info_action_export_vtopo);
+    }
+
+    public static void opensTopoExport() {
+        click(info_action_openstopo);
     }
 
     public static File getLastXlsExport(String aSurveyName) {

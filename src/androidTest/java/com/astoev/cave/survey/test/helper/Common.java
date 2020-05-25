@@ -20,8 +20,12 @@ import static org.hamcrest.CoreMatchers.anything;
 
 public class Common {
 
-    public static Context getContext() {
+    public static Context getTargetContext() {
         return getInstrumentation().getTargetContext();
+    }
+
+    public static Context getContext() {
+        return getInstrumentation().getContext();
     }
 
     public static void click(int id) {

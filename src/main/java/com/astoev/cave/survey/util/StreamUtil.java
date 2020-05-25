@@ -42,4 +42,13 @@ public class StreamUtil {
         anOutput.flush();
     }
 
+    public static void copyAndClose(InputStream anInput, OutputStream anOutput) throws IOException {
+        try {
+            copy(anInput, anOutput);
+        } finally {
+            closeQuietly(anInput);
+            closeQuietly(anOutput);
+        }
+    }
+
 }

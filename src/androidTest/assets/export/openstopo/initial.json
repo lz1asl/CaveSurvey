@@ -1,0 +1,51 @@
+{
+  "name": "1590429149541",
+  "northdeclination": "0",
+  "data": [
+    {
+      "len": "m",
+      "compass": "deg",
+      "clino": "deg",
+      "top": "m",
+      "left": "m",
+      "right": "m",
+      "bottom": "m"
+    },
+    {
+      "from": "0",
+      "to": "A0",
+      "len": 0,
+      "compass": 0,
+      "clino": 0,
+      "top": "",
+      "left": "",
+      "right": "",
+      "bottom": "",
+      "r": ""
+    },
+    {
+      "from": "A0",
+      "to": "A1",
+      "len": "1.0",
+      "compass": "2.0",
+      "clino": "",
+      "top": "",
+      "left": "",
+      "right": "",
+      "bottom": "",
+      "r": ""
+    },
+    {
+      "from": "A1",
+      "to": "A2",
+      "len": "1.2",
+      "compass": "2.2",
+      "clino": "1.3",
+      "top": "1.1",
+      "left": "1.3",
+      "right": "1.4",
+      "bottom": "1.2",
+      "r": ""
+    }
+  ]
+}

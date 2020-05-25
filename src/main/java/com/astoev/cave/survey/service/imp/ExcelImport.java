@@ -33,6 +33,7 @@ import org.apache.poi.ss.usermodel.Row;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -242,14 +243,16 @@ public class ExcelImport {
     }
 
     public static ProjectData loadProjectData(File aPath) throws IOException {
+        return loadProjectData(new FileInputStream(aPath));
+    }
+
+    public static ProjectData loadProjectData(InputStream stream) throws IOException {
         // locate and open
-        FileInputStream file = null;
         HSSFWorkbook workbook = null;
         ProjectData data = new ProjectData();
         int rowNum = 1;
         try {
-            file = new FileInputStream(aPath);
-            workbook = new HSSFWorkbook(file);
+            workbook = new HSSFWorkbook(stream);
             HSSFSheet sheet = workbook.getSheetAt(0);
             Iterator<Row> rowIterator = sheet.iterator();
 
@@ -315,12 +318,12 @@ public class ExcelImport {
             Log.i(Constants.LOG_TAG_SERVICE, legs.size() + " records found");
             return data;
         } catch (Exception e) {
+            Log.e(Constants.LOG_TAG_SERVICE, "Error during import", e);
             String errorMessage = ConfigUtil.getContext().getString(R.string.settings_import_error,
                     rowNum, e.getClass().getSimpleName(), e.getMessage());
-            Log.e(Constants.LOG_TAG_SERVICE, errorMessage, e);
             UIUtilities.showNotification(errorMessage);
         } finally {
-            StreamUtil.closeQuietly(file);
+            StreamUtil.closeQuietly(stream);
             if (workbook != null) {
                 workbook.close();
             }

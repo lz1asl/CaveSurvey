@@ -1,23 +1,29 @@
-package com.astoev.cave.survey.test.service.importexport;
+package com.astoev.cave.survey.test.service.data;
+
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.filters.LargeTest;
 
 import com.astoev.cave.survey.service.imp.ExcelImport;
 import com.astoev.cave.survey.service.imp.LegData;
 import com.astoev.cave.survey.service.imp.ProjectData;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import static com.astoev.cave.survey.model.Option.UNIT_GRADS;
 import static com.astoev.cave.survey.model.Option.UNIT_METERS;
-import static com.astoev.cave.survey.sharedtest.export.ExcelTestUtils.assertConfigUnits;
-import static com.astoev.cave.survey.sharedtest.export.ExcelTestUtils.assertDefaultUnits;
-import static com.astoev.cave.survey.sharedtest.export.ExcelTestUtils.assertLeg;
-import static com.astoev.cave.survey.sharedtest.export.ExcelTestUtils.assertLegLocation;
+import static com.astoev.cave.survey.test.helper.ExcelTestUtils.assertConfigUnits;
+import static com.astoev.cave.survey.test.helper.ExcelTestUtils.assertDefaultUnits;
+import static com.astoev.cave.survey.test.helper.ExcelTestUtils.assertLeg;
+import static com.astoev.cave.survey.test.helper.ExcelTestUtils.assertLegLocation;
 import static org.junit.Assert.assertEquals;
 
+@RunWith(AndroidJUnit4.class)
+@LargeTest
 public class ExcelImportTest {
 
     @Test
@@ -73,8 +79,8 @@ public class ExcelImportTest {
     }
 
     private ProjectData loadExcel(String aFile) throws IOException {
-        File f = new File("src/test/resources/xls/" + aFile + ".xls");
-        ProjectData data = ExcelImport.loadProjectData(f);
+        InputStream resourceStream = this.getClass().getClassLoader().getResourceAsStream("/export/xls/" + aFile + ".xls");
+        ProjectData data = ExcelImport.loadProjectData(resourceStream);
         return data;
     }
 }
