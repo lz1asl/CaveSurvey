@@ -20,7 +20,6 @@ import com.astoev.cave.survey.fragment.InfoDialogFragment;
 import com.astoev.cave.survey.fragment.ProjectFragment;
 import com.astoev.cave.survey.manager.ProjectManager;
 import com.astoev.cave.survey.model.Project;
-import com.astoev.cave.survey.service.export.excel.ExcelExport;
 import com.astoev.cave.survey.service.imp.ExcelImport;
 import com.astoev.cave.survey.util.FileStorageUtil;
 import com.astoev.cave.survey.util.StringUtils;
@@ -29,6 +28,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import static com.astoev.cave.survey.service.export.excel.ExcelExport.EXCEL_FILE_EXTENSION;
 
 /**
  * Created by IntelliJ IDEA.
@@ -57,7 +58,7 @@ public class NewProjectActivity extends MainMenuActivity {
             Spinner spinner = findViewById(R.id.import_files);
 
             // locate excel files
-            List<File> excelExportFiles = FileStorageUtil.listProjectFiles(null, ExcelExport.EXCEL_FILE_EXTENSION);
+            List<File> excelExportFiles = FileStorageUtil.listProjectFiles(null, EXCEL_FILE_EXTENSION);
             if (excelExportFiles == null || excelExportFiles.isEmpty()) {
                 Log.i(Constants.LOG_TAG_UI, "No files to import");
             }

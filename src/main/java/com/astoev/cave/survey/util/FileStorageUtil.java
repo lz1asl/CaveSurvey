@@ -337,7 +337,7 @@ public class FileStorageUtil {
         }
     }
 
-    private static List<File> getFolderFiles(File aFolder, final String anExtension) {
+    public static List<File> getFolderFiles(File aFolder, final String anExtension) {
         if (aFolder == null || !aFolder.isDirectory()) {
             return new ArrayList();
         } else {
