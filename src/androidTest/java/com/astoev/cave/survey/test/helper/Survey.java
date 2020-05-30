@@ -143,7 +143,7 @@ public class Survey {
         openContextMenu();
 
         // select leg
-        click("Add vector");
+        click("Add Vector");
 
         // set data
         type(vector_distance, aDistance);

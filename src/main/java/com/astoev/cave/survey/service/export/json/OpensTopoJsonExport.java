@@ -114,7 +114,11 @@ public class OpensTopoJsonExport extends AbstractExport {
 
     @Override
     protected InputStream getContent() {
-        return new ByteArrayInputStream(project.toString().getBytes());
+        try {
+            return new ByteArrayInputStream(project.toString(2).getBytes());
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

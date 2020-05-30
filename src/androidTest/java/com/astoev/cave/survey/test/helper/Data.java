@@ -24,6 +24,7 @@ public class Data {
     }
 
     public static void visualTopoExport() {
+        openContextMenu();
         click(info_action_export_vtopo);
     }
 

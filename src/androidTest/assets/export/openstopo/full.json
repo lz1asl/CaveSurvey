@@ -1,0 +1,162 @@
+{
+  "name": "$PROJECT_NAME",
+  "northdeclination": "0",
+  "data": [
+    {
+      "len": "m",
+      "compass": "deg",
+      "clino": "deg",
+      "top": "m",
+      "left": "m",
+      "right": "m",
+      "bottom": "m"
+    },
+    {
+      "from": "0",
+      "to": "A0",
+      "len": 0,
+      "compass": 0,
+      "clino": 0,
+      "top": "",
+      "left": "",
+      "right": "",
+      "bottom": "",
+      "r": ""
+    },
+    {
+      "from": "A0",
+      "to": "A1",
+      "len": "1.0",
+      "compass": "2.0",
+      "clino": "",
+      "top": "",
+      "left": "",
+      "right": "",
+      "bottom": "",
+      "r": ""
+    },
+    {
+      "from": "A1",
+      "to": "A2",
+      "len": "1.2",
+      "compass": "2.2",
+      "clino": "1.3",
+      "top": "1.1",
+      "left": "1.3",
+      "right": "1.4",
+      "bottom": "1.2",
+      "r": ""
+    },
+    {
+      "from": "A2",
+      "to": "A3",
+      "len": "2.3",
+      "compass": "3.4",
+      "clino": "4.5",
+      "top": "2.1",
+      "left": "2.3",
+      "right": "2.4",
+      "bottom": "2.2",
+      "r": ""
+    },
+    {
+      "from": "A3",
+      "to": "A4",
+      "len": "5.5",
+      "compass": "4.4",
+      "clino": "5.5",
+      "top": "2.1",
+      "left": "2.3",
+      "right": "2.4",
+      "bottom": "2.2",
+      "r": ""
+    },
+    {
+      "from": "A3",
+      "to": "A3-A4_at_3.1",
+      "len": "3.1",
+      "compass": "4.4",
+      "clino": "5.5",
+      "top": "3.1",
+      "left": "3.3",
+      "right": "3.4",
+      "bottom": "3.2",
+      "r": ""
+    },
+    {
+      "from": "A3-A4_at_3.1",
+      "to": "A4",
+      "len": "2.4",
+      "compass": "4.4",
+      "clino": "5.5",
+      "top": "6.1",
+      "left": "6.3",
+      "right": "6.4",
+      "bottom": "6.2",
+      "r": ""
+    },
+    {
+      "from": "A4",
+      "to": "A5",
+      "len": "3.4",
+      "compass": "3.5",
+      "clino": "3.6",
+      "top": "",
+      "left": "",
+      "right": "",
+      "bottom": "",
+      "r": ""
+    },
+    {
+      "from": "A4",
+      "to": "",
+      "len": "1.1",
+      "compass": "1.2",
+      "clino": "1.3",
+      "top": "",
+      "left": "",
+      "right": "",
+      "bottom": "",
+      "r": "",
+      "note": "v1"
+    },
+    {
+      "from": "A4",
+      "to": "",
+      "len": "1.4",
+      "compass": "1.5",
+      "clino": "1.6",
+      "top": "",
+      "left": "",
+      "right": "",
+      "bottom": "",
+      "r": "",
+      "note": "v2"
+    },
+    {
+      "from": "A4",
+      "to": "",
+      "len": "1.7",
+      "compass": "1.8",
+      "clino": "1.9",
+      "top": "0.1",
+      "left": "0.3",
+      "right": "0.4",
+      "bottom": "0.2",
+      "r": "",
+      "note": "v3"
+    },
+    {
+      "from": "A4",
+      "to": "B1",
+      "len": "4.4",
+      "compass": "4.5",
+      "clino": "4.6",
+      "top": "",
+      "left": "",
+      "right": "",
+      "bottom": "",
+      "r": ""
+    }
+  ]
+}

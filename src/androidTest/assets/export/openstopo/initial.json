@@ -1,5 +1,5 @@
 {
-  "name": "1590429149541",
+  "name": "$PROJECT_NAME",
   "northdeclination": "0",
   "data": [
     {
@@ -45,6 +45,18 @@
       "left": "1.3",
       "right": "1.4",
       "bottom": "1.2",
+      "r": ""
+    },
+    {
+      "from": "A2",
+      "to": "A3",
+      "len": "2.3",
+      "compass": "3.4",
+      "clino": "4.5",
+      "top": "",
+      "left": "",
+      "right": "",
+      "bottom": "",
       "r": ""
     }
   ]
