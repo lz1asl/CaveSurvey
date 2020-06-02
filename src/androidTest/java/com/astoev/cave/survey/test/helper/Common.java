@@ -48,7 +48,7 @@ public class Common {
         onIdle();
     }
 
-    public static void type(int id, Float value) {
+    public static void type(int id, Number value) {
         if (value != null) {
             onView(withId(id)).perform(typeText("" + value));
             onIdle();

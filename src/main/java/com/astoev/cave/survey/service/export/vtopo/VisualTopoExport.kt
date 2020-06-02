@@ -65,7 +65,7 @@ class VisualTopoExport(aContext: Context?) : AbstractExport(aContext) {
             val utmCoordinate = UtmCoordinate(aLocation.latitude, aLocation.longitude);
             location = SEPARATOR + utmCoordinate.easting +
                 SEPARATOR + utmCoordinate.northing  +
-                SEPARATOR + "%.2f".format(aLocation.altitude) +
+                SEPARATOR + aLocation.altitude + ".00" +
                 SEPARATOR + "UTM"
         }
     }

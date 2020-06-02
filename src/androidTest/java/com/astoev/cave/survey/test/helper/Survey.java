@@ -10,6 +10,11 @@ import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static com.astoev.cave.survey.R.id.action_new_project;
+import static com.astoev.cave.survey.R.id.gps_action_save;
+import static com.astoev.cave.survey.R.id.gps_manual_accuracy;
+import static com.astoev.cave.survey.R.id.gps_manual_altitude;
+import static com.astoev.cave.survey.R.id.gps_manual_latitude;
+import static com.astoev.cave.survey.R.id.gps_manual_longitude;
 import static com.astoev.cave.survey.R.id.import_files;
 import static com.astoev.cave.survey.R.id.main_action_add;
 import static com.astoev.cave.survey.R.id.middle_create;
@@ -152,6 +157,21 @@ public class Survey {
 
         // save
         click(vector_add);
+    }
+
+    public static void addCoordinate(float lat, float lon, int altitude, int precision) {
+        openContextMenu();
+
+        click("GPS");
+        click("GPS Manual");
+
+        type(gps_manual_latitude, lat);
+        type(gps_manual_longitude, lon);
+        type(gps_manual_altitude, altitude);
+        type(gps_manual_accuracy, precision);
+
+        click(gps_action_save);
+        saveLeg();
     }
 
     public static void nextGallery() {
