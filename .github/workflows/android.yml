@@ -35,3 +35,8 @@ jobs:
       with:
         api-level: 29
         script: ./gradlew connectedAndroidTest
+    - name: Test reports
+      uses: actions/upload-artifact@v1
+      with:
+        name: test-reports
+        path: build/reports/
