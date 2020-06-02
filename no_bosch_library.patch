@@ -1,7 +1,7 @@
-From dcb2f1c9599fb94bcc917a34962ca0dedaef6243 Mon Sep 17 00:00:00 2001
-From: lz1asl <aleksandar@fintechproviders.com>
-Date: Mon, 9 Mar 2020 21:22:37 +0200
-Subject: [PATCH] update no bosch library patch
+From 7fff67280ff05116e7a08dde61c705548c83e816 Mon Sep 17 00:00:00 2001
+From: lz1asl <alexander.stoev@gmail.com>
+Date: Tue, 2 Jun 2020 23:03:25 +0300
+Subject: [PATCH] update bosch patch
 
 ---
  build.gradle                                  |   3 -
@@ -23,21 +23,21 @@ Subject: [PATCH] update no bosch library patch
  delete mode 100644 src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/GLMBluetoothConnectionWrapper.java
 
 diff --git a/build.gradle b/build.gradle
-index 1d08c26..44f734e 100644
+index bd8a7d7..2af64a2 100644
 --- a/build.gradle
 +++ b/build.gradle
-@@ -21,9 +21,6 @@ dependencies {
+@@ -25,9 +25,6 @@ dependencies {
      implementation 'com.j256.ormlite:ormlite-android:4.48'
      implementation 'org.apache.poi:poi:3.15'
  
 -    // Bosch internal protocol
 -    implementation files('../CaveSurveyBoschGLM/binary/CaveSurveyBoschGLM.jar')
 -
-     // unit tests
-     androidTestImplementation 'junit:junit:4.12'
-     testImplementation 'junit:junit:4.12'
+     // kotlin
+     implementation "androidx.core:core-ktx:+"
+     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 diff --git a/src/main/java/com/astoev/cave/survey/service/bluetooth/BluetoothService.java b/src/main/java/com/astoev/cave/survey/service/bluetooth/BluetoothService.java
-index a8652c3..9921bef 100644
+index 967a35a..52d109c 100644
 --- a/src/main/java/com/astoev/cave/survey/service/bluetooth/BluetoothService.java
 +++ b/src/main/java/com/astoev/cave/survey/service/bluetooth/BluetoothService.java
 @@ -42,11 +42,6 @@ import com.astoev.cave.survey.service.bluetooth.device.comm.DistoXBluetoothDevic
@@ -66,7 +66,7 @@ index a8652c3..9921bef 100644
          // LE devices
 diff --git a/src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/AbstractBoschGLMBluetoothDevice.java b/src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/AbstractBoschGLMBluetoothDevice.java
 deleted file mode 100644
-index cd4dc52..0000000
+index 9b89a92..0000000
 --- a/src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/AbstractBoschGLMBluetoothDevice.java
 +++ /dev/null
 @@ -1,208 +0,0 @@
@@ -160,7 +160,7 @@ index cd4dc52..0000000
 -    }
 -
 -    @Override
--    public void configure(InputStream anInput, OutputStream anOutput) throws IOException {
+-    public void configure(InputStream anInput, OutputStream anOutput) {
 -
 -        // initialize the internal Bosch protocol
 -        protocol = new MtProtocolImpl();
@@ -673,5 +673,5 @@ index 2f8e4b2..0000000
 -    }
 -}
 -- 
-2.17.1
+2.25.1
 
