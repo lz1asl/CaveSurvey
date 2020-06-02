@@ -14,19 +14,19 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * TruPulse 360B handler.
+ * TruPulse 360, 360B or 360R handler.
  * Created by astoev on 9/9/14.
  */
 public class TruPulse360BluetoothDevice extends AbstractBluetoothRFCOMMDevice {
 
     @Override
     public boolean isNameSupported(String aName) {
-        return deviceNameStartsWith(aName, "TP360B") || deviceNameStartsWith(aName, "TP360RB");
+        return deviceNameStartsWith(aName, "TP360");
     }
 
     @Override
     public String getDescription() {
-        return "LTI TruPulse: 360B, 360R";
+        return "LTI TruPulse: 360, 360B, 360R";
     }
 
     @Override
