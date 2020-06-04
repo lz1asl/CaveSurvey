@@ -17,7 +17,7 @@ import java.io.InputStream
 
 //@RunWith(AndroidJUnit4::class)
 @LargeTest
-open abstract class AbstractExportTest {
+abstract class AbstractExportTest {
 
     var PARAM_PROJECT_NAME = "PROJECT_NAME"
     var PARAM_TODAY = "TODAY"

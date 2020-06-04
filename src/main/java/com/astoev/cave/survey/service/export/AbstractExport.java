@@ -93,41 +93,42 @@ public abstract class AbstractExport {
                 List<Leg> middles = DaoUtil.getLegsMiddles(l);
 
 
-                rowCounter++;
+                if (middles == null || middles.size() == 0) {
 
-                prepareEntity(rowCounter, LEG);
+                    // simple leg
+                    rowCounter++;
 
-                if (l.getGalleryId().equals(lastGalleryId)) {
-                    setValue(Entities.FROM, galleryNames.get(l.getGalleryId()) + fromPoint.getName());
+                    prepareEntity(rowCounter, LEG);
+
+                    if (l.getGalleryId().equals(lastGalleryId)) {
+                        setValue(Entities.FROM, galleryNames.get(l.getGalleryId()) + fromPoint.getName());
+                    } else {
+                        setValue(Entities.FROM, galleryNames.get(prevGalleryId) + fromPoint.getName());
+                    }
+
+                    setValue(Entities.TO, galleryNames.get(l.getGalleryId()) + toPoint.getName());
+
+                    // distance, azimuth, inclination
+                    exportLegMeasures(l);
+
+                    //up/down/left/right
+                    exportAroundMeasures(l);
+
+                    // note
+                    exportNote(l);
+
+                    // location
+                    exportLocation(fromPoint);
+
+                    // sketch
+                    exportSketches(l);
+
+                    // picture
+                    exportPhotos(l);
+
+                    endEntity(rowCounter);
                 } else {
-                    setValue(Entities.FROM, galleryNames.get(prevGalleryId) + fromPoint.getName());
-                }
-
-                setValue(Entities.TO, galleryNames.get(l.getGalleryId()) + toPoint.getName());
-
-                // distance, azimuth, inclination
-                exportLegMeasures(l);
-
-                //up/down/left/right
-                exportAroundMeasures(l);
-
-                // note
-                exportNote(l);
-
-                // location
-                exportLocation(fromPoint);
-
-                // sketch
-                exportSketches(l);
-
-                // picture
-                exportPhotos(l);
-
-                endEntity(rowCounter);
-
-                // middles
-                if (middles != null && middles.size() > 0) {
-
+                    // leg split by middles
                     int index = 0;
                     float prevLength = 0;
                     String fromPointName;
@@ -156,6 +157,13 @@ public abstract class AbstractExport {
 
                         if (index == 1) {
                             exportAroundMeasures(l);
+
+                            // other attributes of the main leg
+                            exportNote(l);
+                            exportLocation(fromPoint);
+                            exportSketches(l);
+                            exportPhotos(l);
+
                         } else {
                             exportAroundMeasures(prevMiddle);
                         }
