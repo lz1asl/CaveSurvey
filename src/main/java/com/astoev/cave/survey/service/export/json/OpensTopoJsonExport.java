@@ -128,11 +128,18 @@ public class OpensTopoJsonExport extends AbstractExport {
 
     @Override
     protected void setValue(Entities entityType, Float aValue) {
-        populateValue(entityType, "" + aValue);
+        if (aValue != null) {
+            populateValue(entityType, "" + aValue);
+        }
     }
 
     private void populateValue(Entities entityType, Object aValue) {
         try {
+
+            if (aValue == null) {
+                return;
+            }
+
             switch (entityType) {
                 case FROM:
                     row.put("from", escapeName((String) aValue));

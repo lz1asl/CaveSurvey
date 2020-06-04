@@ -97,6 +97,11 @@ public class ExcelExport extends AbstractExport {
 
     @Override
     protected void setValue(Entities entityType, String aLabel) {
+
+        if (aLabel == null) {
+            return;
+        }
+
         switch (entityType) {
             case FROM:
                 Cell from = legRow.createCell(CELL_FROM);
@@ -118,6 +123,11 @@ public class ExcelExport extends AbstractExport {
 
     @Override
     protected void setValue(Entities entityType, Float aValue) {
+
+        if (aValue == null) {
+            return;
+        }
+
         switch (entityType) {
             case DISTANCE:
                 Cell length = legRow.createCell(CELL_LENGHT);

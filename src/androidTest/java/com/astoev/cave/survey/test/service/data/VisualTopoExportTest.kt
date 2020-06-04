@@ -1,10 +1,12 @@
 package com.astoev.cave.survey.test.service.data
 
+import com.astoev.cave.survey.service.export.vtopo.VisualTopoExport
 import com.astoev.cave.survey.test.helper.Common.goBack
 import com.astoev.cave.survey.test.helper.Data.dataScreen
 import com.astoev.cave.survey.test.helper.Data.visualTopoExport
 import com.astoev.cave.survey.test.helper.Survey.*
 import org.junit.Test
+import java.util.*
 
 class VisualTopoExportTest() : AbstractExportTest() {
 
@@ -51,7 +53,8 @@ class VisualTopoExportTest() : AbstractExportTest() {
 
     private fun compare(projectName: String, expected: String) {
         val expectedStream = findAsset("export/vtopo/$expected.tro")
-        val params = mapOf(PARAM_PROJECT_NAME to projectName)
+        val params = mapOf(PARAM_PROJECT_NAME to projectName,
+                PARAM_TODAY to VisualTopoExport.formatDate(Date()))
         compareContents(expectedStream, params, projectName, ".tro");
     }
 }

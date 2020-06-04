@@ -30,6 +30,8 @@ class ExcelExportTest() : AbstractExportTest() {
         // fist minimal and base leg
         selectFirstSurveyLeg()
         setLegData(1f, 2f, null)
+        openLegWithText("A1")
+        addCoordinate(42.811522f, 23.378906f, 123, 5);
         addLeg(1.2f, 2.2f, 1.3f)
         legs = exportAndRead(surveyName, 2)
         assertFirstLegNoSlope(legs)
@@ -93,7 +95,7 @@ class ExcelExportTest() : AbstractExportTest() {
     }
 
     @Throws(IOException::class)
-    private fun exportAndRead(aSurveyName: String, aLegsCount: Int): List<LegData?> {
+    private fun exportAndRead(aSurveyName: String, aLegsCount: Int): List<LegData> {
         // export
         dataScreen()
         xlsExport()
@@ -112,9 +114,17 @@ class ExcelExportTest() : AbstractExportTest() {
         return legs
     }
 
-    private fun assertFirstLegNoSlope(legs: List<LegData?>) {
+    private fun assertFirstLegNoSlope(legs: List<LegData>) {
         assertLeg(legs[0], 1f, 2f, null)
         assertLeg(legs[0], "A", "0", "A", "1", false, false)
+        assertLegCoordinate(legs[0], 42.811522f, 23.378906f, 123, 5);
+    }
+
+    private fun assertLegCoordinate(legData: LegData, lat: Float, lon: Float, alt: Int, accuracy: Int) {
+        assertEquals(lat, legData.lat)
+        assertEquals(lon, legData.lon)
+        assertEquals(alt, legData.alt.toInt())
+        assertEquals(accuracy, legData.accuracy.toInt())
     }
 
     private fun assertSecondSimpleLeg(legs: List<LegData?>) {

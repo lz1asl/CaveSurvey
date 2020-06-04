@@ -235,9 +235,7 @@ public abstract class AbstractExport {
     }
 
     private void exportLegSlope(Leg l) {
-        if (l.getSlope() != null) {
-            setValue(Entities.INCLINATION, l.getSlope());
-        }
+        setValue(Entities.INCLINATION, l.getSlope());
     }
 
     private void exportLegDistance(Leg l) {
@@ -253,21 +251,10 @@ public abstract class AbstractExport {
     }
 
     private void exportAroundMeasures(Leg l) {
-        if (l.getLeft() != null) {
-            setValue(Entities.LEFT, l.getLeft());
-        }
-
-        if (l.getRight() != null) {
-            setValue(Entities.RIGHT, l.getRight());
-        }
-
-        if (l.getTop() != null) {
-            setValue(Entities.UP, l.getTop());
-        }
-
-        if (l.getDown() != null) {
-            setValue(Entities.DOWN, l.getDown());
-        }
+        setValue(Entities.LEFT, l.getLeft());
+        setValue(Entities.RIGHT, l.getRight());
+        setValue(Entities.UP, l.getTop());
+        setValue(Entities.DOWN, l.getDown());
     }
 
     private void exportPhotos(Leg l) throws SQLException {

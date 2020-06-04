@@ -59,5 +59,9 @@
       "bottom": "",
       "r": ""
     }
-  ]
+  ],
+  "geoPoint": "A0",
+  "altitude": "123",
+  "latitude": "42.811523",
+  "longitude": "23.378906"
 }

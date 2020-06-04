@@ -20,6 +20,7 @@ import java.io.InputStream
 open abstract class AbstractExportTest {
 
     var PARAM_PROJECT_NAME = "PROJECT_NAME"
+    var PARAM_TODAY = "TODAY"
 
     @get:Rule
     var activityRule: ActivityTestRule<SplashActivity> = ActivityTestRule(SplashActivity::class.java)

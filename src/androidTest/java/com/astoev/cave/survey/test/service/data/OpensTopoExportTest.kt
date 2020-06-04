@@ -17,6 +17,8 @@ class OpensTopoExportTest() : AbstractExportTest() {
         // first test legs
         selectFirstSurveyLeg()
         setLegData(1f, 2f, null)
+        openLegWithText("A1")
+        addCoordinate(42.811522f, 23.378906f, 123, 5);
         addLeg(1.2f, 2.2f, 1.3f)
         addLeg(2.3f, 3.4f, 4.5f, 1.1f, 1.2f, 1.3f, 1.4f)
 
