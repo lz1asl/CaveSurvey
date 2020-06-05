@@ -22,7 +22,7 @@ jobs:
         path: build/outputs/apk/defaultFlavor/debug
 
   test:
-    runs-on: macOS-latest
+    runs-on: macos-latest
     steps:
     - name: checkout
       uses: actions/checkout@v2
@@ -34,10 +34,7 @@ jobs:
       uses: reactivecircus/android-emulator-runner@v2
       with:
         api-level: 29
-        target: default
-        arch: x86
-        profile: Nexus 6
-        script: ./gradlew connectedAndroidTest
+        script: ./gradlew connectedCheck
     - name: Test reports
       uses: actions/upload-artifact@v2
       if: failure()
