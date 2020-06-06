@@ -34,7 +34,10 @@ jobs:
       uses: reactivecircus/android-emulator-runner@v2
       with:
         api-level: 29
-        script: ./gradlew connectedCheck
+        script: |
+          adb logcat -c
+          adb logcat &
+          ./gradlew :presentation:connectedDebugAndroidTest
     - name: Test reports
       uses: actions/upload-artifact@v2
       if: failure()
