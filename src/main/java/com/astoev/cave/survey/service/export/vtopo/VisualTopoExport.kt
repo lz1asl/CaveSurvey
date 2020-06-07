@@ -90,7 +90,7 @@ class VisualTopoExport(aContext: Context?) : AbstractExport(aContext) {
             .append(aProject.name)
             .appendln(COORDINATE_PLACEHOLDER)
         body.appendln("Entree A0")
-        body.appendln("Couleur 255,255,255")
+        body.appendln("Couleur 0,0,0")
         body.appendln()
         body.append("Param Deca ")
             .append(if (UNIT_GRADS.equals(getOptionValue(CODE_AZIMUTH_UNITS))) "Gra" else "Degd")
