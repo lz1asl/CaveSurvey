@@ -24,11 +24,14 @@ class VisualTopoExport(aContext: Context?) : AbstractExport(aContext) {
 
     val SEPARATOR = ","
     val COORDINATE_PLACEHOLDER = ",,,,LT93";
+    val ENTRANCE = "Entree A0"
     val PLACEHOLDER = "*"
 
     private var body = StringBuilder()
     private var rowType: ExportEntityType? = null
     private var location: String = COORDINATE_PLACEHOLDER
+    private var legFrom: String = "A0"
+    private var entrance: String = ENTRANCE
 
     init {
         mUseUniqueName = true;
@@ -38,9 +41,12 @@ class VisualTopoExport(aContext: Context?) : AbstractExport(aContext) {
 
     override fun setValue(entityType: Entities, value: String) {
         val entry = when (entityType) {
-            FROM -> if (VECTOR.equals(rowType)) {
-                        rightPad(PLACEHOLDER, 12) + rightPad(PLACEHOLDER, 22)
-                    } else rightPad(ensureNotEmpty(value), 12)
+            FROM -> {
+                legFrom = value
+                if (VECTOR.equals(rowType)) {
+                    rightPad(PLACEHOLDER, 12) + rightPad(PLACEHOLDER, 22)
+                } else rightPad(ensureNotEmpty(value), 12)
+            }
             TO -> rightPad(ensureNotEmpty(value), 22)
             else -> ""
         }
@@ -68,12 +74,15 @@ class VisualTopoExport(aContext: Context?) : AbstractExport(aContext) {
                 SEPARATOR + utmCoordinate.northing / 1000  +
                 SEPARATOR + aLocation.altitude + ".00" +
                 SEPARATOR + "UTM" + utmCoordinate.zone
+            entrance = "Entree " + legFrom
         }
     }
 
     override fun getContent(): InputStream {
         // apply the location
-        val troContents = body.toString().replace(COORDINATE_PLACEHOLDER, location);
+        val troContents = body.toString()
+                .replace(COORDINATE_PLACEHOLDER, location)
+                .replace(ENTRANCE, entrance)
         // result
         return ByteArrayInputStream(troContents.toByteArray());
     }
@@ -102,6 +111,7 @@ class VisualTopoExport(aContext: Context?) : AbstractExport(aContext) {
             .append(AndroidUtil.getAppVersion())
         body.appendln(";")
         body.appendln()
+        body.appendln("A0          A0                        0.00    0.00    0.00      *      *      *      * N I * *")
 
         Log.i(Constants.LOG_TAG_SERVICE, "Generated body: $body")
     }
@@ -126,7 +136,8 @@ class VisualTopoExport(aContext: Context?) : AbstractExport(aContext) {
         //Fourth flag : S if you want a vertical section (only if there are enough splay shots to compute it), * otherwise
         body.append(" N ")
             .append(if (LEG.equals(rowType) || MIDDLE.equals(rowType)) "I" else "E")
-            .appendln(" M S")
+            .append(if (LEG.equals(rowType) || MIDDLE.equals(rowType)) " *" else " M")
+            .appendln(" *")
     }
 
     override fun setDrawing(aSketch: Sketch?) {
@@ -165,8 +176,6 @@ class VisualTopoExport(aContext: Context?) : AbstractExport(aContext) {
     }
 
     companion object {
-
-
         val HEADER_DATE_FORMAT = "dd/MM/yyyy"
 
         fun formatDate(date: Date): String {
