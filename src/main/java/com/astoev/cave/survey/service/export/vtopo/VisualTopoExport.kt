@@ -64,10 +64,10 @@ class VisualTopoExport(aContext: Context?) : AbstractExport(aContext) {
         // use the first location
         if (COORDINATE_PLACEHOLDER.equals(location)) {
             val utmCoordinate = UtmCoordinate(aLocation.latitude, aLocation.longitude);
-            location = SEPARATOR + utmCoordinate.easting +
-                SEPARATOR + utmCoordinate.northing  +
+            location = SEPARATOR + utmCoordinate.easting / 1000 +
+                SEPARATOR + utmCoordinate.northing / 1000  +
                 SEPARATOR + aLocation.altitude + ".00" +
-                SEPARATOR + "UTM"
+                SEPARATOR + "UTM" + utmCoordinate.zone
         }
     }
 
@@ -86,7 +86,8 @@ class VisualTopoExport(aContext: Context?) : AbstractExport(aContext) {
         body.appendln("Version 5.11")
         body.appendln("Verification 1")
         body.appendln()
-        body.append(aProject.name)
+        body.append("Trou ")
+            .append(aProject.name)
             .appendln(COORDINATE_PLACEHOLDER)
         body.appendln("Entree A0")
         body.appendln("Couleur 255,255,255")
