@@ -49,7 +49,7 @@ class VisualTopoExport(aContext: Context?) : AbstractExport(aContext) {
 
     override fun setValue(entityType: Entities?, aValue: Float?) {
         val entry = when (entityType) {
-            DISTANCE, COMPASS, INCLINATION -> leftPad(ensureNotEmpty(aValue), 8)
+            DISTANCE, COMPASS, INCLINATION -> leftPad(ensureNotEmpty(aValue, "0.00"), 8)
             LEFT, RIGHT, UP, DOWN -> leftPad(ensureNotEmpty(aValue), 7)
             else -> ""
         }
@@ -146,12 +146,20 @@ class VisualTopoExport(aContext: Context?) : AbstractExport(aContext) {
     }
 
     private fun ensureNotEmpty(value: String?): String {
-        return value ?: PLACEHOLDER
+        return ensureNotEmpty(value, PLACEHOLDER)
+    }
+
+    private fun ensureNotEmpty(value: String?, placeholder: String): String {
+        return value ?: placeholder
     }
 
     private fun ensureNotEmpty(value: Float?): String {
+        return ensureNotEmpty(value, PLACEHOLDER)
+    }
+
+    private fun ensureNotEmpty(value: Float?, placeholder: String): String {
         if (value == null) {
-            return PLACEHOLDER
+            return placeholder
         }
         return format(value)
     }
