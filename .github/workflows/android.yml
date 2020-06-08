@@ -37,7 +37,7 @@ jobs:
         script: |
           adb logcat -c
           adb logcat &
-          ./gradlew :presentation:connectedDebugAndroidTest
+          ./gradlew connectedAndroidTest
     - name: Test reports
       uses: actions/upload-artifact@v2
       if: failure()
