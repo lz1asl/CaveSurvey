@@ -19,7 +19,7 @@ public class ConfigUtil {
     public static final String PROP_CURR_BT_DEVICE_NAME = "curr_bt_device_name";
     public static final String PREF_LOCALE = "language_pref";
     public static final String PREF_SENSOR = "sensor_pref";
-    public static final String PREF_BACKUP = "backup_pref";
+    public static final String PREF_AUTO_BACKUP = "backup_pref";
     public static final String PREF_SENSOR_TIMEOUT = "sensor_timeout";
     public static final String PREF_SENSOR_SIMULTANEOUSLY = "sensor_simulateneously";
     public static final String PREF_SENSOR_NOISE_REDUCTION = "sensor_noise_reduction";
@@ -61,6 +61,10 @@ public class ConfigUtil {
 
     public static Boolean getBooleanProperty(String aName) {
         return getPrefs(Context.MODE_PRIVATE).getBoolean(aName, false);
+    }
+
+    public static Boolean getBooleanProperty(String aName, Boolean defaultValue) {
+        return getPrefs(Context.MODE_PRIVATE).getBoolean(aName, defaultValue);
     }
 
     public static boolean setBooleanProperty(String aName, boolean aValue) {

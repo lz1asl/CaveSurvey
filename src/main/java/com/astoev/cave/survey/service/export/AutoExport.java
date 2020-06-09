@@ -24,7 +24,7 @@ public class AutoExport {
 
     public static void notifyUIActivity() {
 
-        if (!ConfigUtil.getBooleanProperty(ConfigUtil.PREF_BACKUP)) {
+        if (!ConfigUtil.getBooleanProperty(ConfigUtil.PREF_AUTO_BACKUP)) {
             // auto backup disabled
             return;
         }
@@ -47,7 +47,7 @@ public class AutoExport {
     private static void processAutoExport() {
 
         try {
-            if (ConfigUtil.getBooleanProperty(ConfigUtil.PREF_BACKUP)) {
+            if (ConfigUtil.getBooleanProperty(ConfigUtil.PREF_AUTO_BACKUP)) {
                 Log.i(Constants.LOG_TAG_SERVICE, "Start auto export");
                 ExcelExport export = new ExcelExport(ConfigUtil.getContext());
                 export.setUseUniqueName(false);

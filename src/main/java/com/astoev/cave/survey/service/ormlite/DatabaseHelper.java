@@ -16,12 +16,18 @@ import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.model.Sketch;
 import com.astoev.cave.survey.model.Vector;
+import com.astoev.cave.survey.util.ConfigUtil;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
 import java.sql.SQLException;
+
+import static com.astoev.cave.survey.util.ConfigUtil.PREF_AUTO_BACKUP;
+import static com.astoev.cave.survey.util.ConfigUtil.PREF_SENSOR_NOISE_REDUCTION;
+import static com.astoev.cave.survey.util.ConfigUtil.PREF_SENSOR_NOISE_REDUCTION_NUM_MEASUREMENTS;
+import static com.astoev.cave.survey.util.ConfigUtil.PREF_SENSOR_SIMULTANEOUSLY;
 
 /**
  * Created by IntelliJ IDEA.
@@ -34,7 +40,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private static final int DATABASE_VERSION_1 = 1;
     private static final int DATABASE_VERSION_2 = 2;
-    private static final int DATABASE_VERSION_LATEST = 3;
+    private static final int DATABASE_VERSION_3 = 3;
+    private static final int DATABASE_VERSION_LATEST = 4;
     public static final String DATABASE_NAME = "CaveSurvey";
 
     private Dao<Leg, Integer> mLegDao;
@@ -106,7 +113,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                     Log.i(Constants.LOG_TAG_DB, "Upgrade success");
                 }
 
-                if (aOldVersion < DATABASE_VERSION_LATEST) {
+                if (aOldVersion < DATABASE_VERSION_3) {
                     Log.i(Constants.LOG_TAG_DB, "Upgrading DB to V3");
                     aSqLiteDatabase.execSQL("alter table vectors add column gallery_id decimal default null");
                     aSqLiteDatabase.execSQL("update vectors set gallery_id = " +
@@ -129,7 +136,42 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                     Log.i(Constants.LOG_TAG_DB, "Upgrade success");
                 }
 
-            } finally {
+                if (aOldVersion < DATABASE_VERSION_3) {
+                    Log.i(Constants.LOG_TAG_DB, "Upgrading DB to V4");
+
+                    // auto backup by default
+                    Boolean autoBackup = ConfigUtil.getBooleanProperty(PREF_AUTO_BACKUP, null);
+                    if (autoBackup == null) {
+                        Log.i(Constants.LOG_TAG_DB, "Enable auto backup");
+                        ConfigUtil.setBooleanProperty(PREF_AUTO_BACKUP, true);
+                    }
+
+                    // read sensors simultaneously by default
+                    Boolean simultaneousSensorsReading = ConfigUtil.getBooleanProperty(PREF_SENSOR_SIMULTANEOUSLY, null);
+                    if (simultaneousSensorsReading == null) {
+                        Log.i(Constants.LOG_TAG_DB, "Enable simultaneous sensors reading");
+                        ConfigUtil.setBooleanProperty(PREF_SENSOR_SIMULTANEOUSLY, true);
+                    }
+
+                    // averaging enabled by default
+                    Boolean averagingEnabled = ConfigUtil.getBooleanProperty(PREF_SENSOR_NOISE_REDUCTION, null);
+                    if (averagingEnabled == null) {
+                        Log.i(Constants.LOG_TAG_DB, "Enable sensors averaging");
+                        ConfigUtil.setBooleanProperty(PREF_SENSOR_NOISE_REDUCTION, true);
+                    }
+
+                    // averaging over 20 measurements by default
+                    Integer numMeasurementsAveraged = ConfigUtil.getIntProperty(PREF_SENSOR_NOISE_REDUCTION_NUM_MEASUREMENTS, null);
+                    if (numMeasurementsAveraged == null || numMeasurementsAveraged == 5) {
+                        Log.i(Constants.LOG_TAG_DB, "20 measurements averaged");
+                        ConfigUtil.setIntProperty(PREF_SENSOR_NOISE_REDUCTION_NUM_MEASUREMENTS, 20);
+                    }
+
+                    aSqLiteDatabase.setTransactionSuccessful();
+                    Log.i(Constants.LOG_TAG_DB, "Upgrade success");
+                }
+
+                } finally {
                 aSqLiteDatabase.endTransaction();
             }
 

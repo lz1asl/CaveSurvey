@@ -116,16 +116,16 @@ public class SettingsActivity extends MainMenuActivity {
 
     private void prepareAutoBackup() {
         ToggleButton autoBackupToggle = findViewById(R.id.settingsBackupToggle);
-        boolean enabled = ConfigUtil.getBooleanProperty(ConfigUtil.PREF_BACKUP);
+        boolean enabled = ConfigUtil.getBooleanProperty(ConfigUtil.PREF_AUTO_BACKUP);
         autoBackupToggle.setChecked(enabled);
 
         autoBackupToggle.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 Log.i(Constants.LOG_TAG_UI, "Auto backup on");
-                ConfigUtil.setBooleanProperty(ConfigUtil.PREF_BACKUP, true);
+                ConfigUtil.setBooleanProperty(ConfigUtil.PREF_AUTO_BACKUP, true);
             } else {
                 Log.i(Constants.LOG_TAG_UI, "Auto backup off");
-                ConfigUtil.setBooleanProperty(ConfigUtil.PREF_BACKUP, false);
+                ConfigUtil.setBooleanProperty(ConfigUtil.PREF_AUTO_BACKUP, false);
             }
         });
     }
