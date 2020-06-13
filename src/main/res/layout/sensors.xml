@@ -24,17 +24,18 @@
                 android:clickable="true"
                 android:src="@drawable/ic_info_white"
                 android:contentDescription="@string/information"
-                android:onClick="onSensorsChooseInfo"/>
+                android:onClick="onSensorsChooseInfo"
+                android:layout_gravity="center_vertical"/>
         </LinearLayout>
         <LinearLayout android:id="@+id/sensors_spinner_layout"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_margin="10dp">
+            android:orientation="horizontal">
             <Spinner android:id="@+id/sensors_spinner"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_weight="1"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"/>
         </LinearLayout>
 
         <TextView android:layout_height="wrap_content"
@@ -48,8 +49,8 @@
             android:id="@+id/sensors_simultaneously_spinner"
             android:layout_width="match_parent"
             android:layout_weight="1"
-            android:layout_height="wrap_content" >
-        </Spinner>
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"/>
 
         <TextView android:layout_height="wrap_content"
                   android:layout_weight="2"
@@ -63,8 +64,21 @@
             android:layout_width="match_parent"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp">
-        </Spinner>
+            android:layout_margin="10dp"/>
+
+        <TextView android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:layout_width="match_parent"
+            android:text="@string/sensor_device_heading"
+            android:gravity="left"
+            android:layout_margin="10dp"
+            android:textAppearance="@android:style/TextAppearance.Large"/>
+        <Spinner
+            android:id="@+id/sensors_device_heading"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"/>
 
         <TextView android:layout_height="wrap_content"
                   android:layout_weight="2"
@@ -77,8 +91,8 @@
             android:id="@+id/sensors_noise_spinner"
             android:layout_width="match_parent"
             android:layout_weight="1"
-            android:layout_height="wrap_content">
-        </Spinner>
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"/>
         <TextView android:id="@+id/sensors_num_measurements_label"
                   android:layout_height="wrap_content"
                   android:layout_weight="2"
@@ -92,9 +106,8 @@
             android:layout_width="match_parent"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:visibility="invisible">
-        </Spinner>
-
+            android:layout_margin="10dp"
+            android:visibility="invisible"/>
 
         <TextView
             android:layout_width="wrap_content"

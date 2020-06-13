@@ -13,7 +13,6 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.MainMenuActivity;
 import com.astoev.cave.survey.fragment.InfoDialogFragment;
@@ -22,7 +21,9 @@ import com.astoev.cave.survey.util.ConfigUtil;
 
 import java.util.ArrayList;
 
+import static com.astoev.cave.survey.Constants.LOG_TAG_UI;
 import static com.astoev.cave.survey.activity.dialog.BaseBuildInMeasureDialog.PROGRESS_DEFAULT_VALUE;
+import static com.astoev.cave.survey.util.ConfigUtil.PREF_DEVICE_HEADING_CAMERA;
 import static com.astoev.cave.survey.util.ConfigUtil.PREF_SENSOR_NOISE_REDUCTION;
 import static com.astoev.cave.survey.util.ConfigUtil.PREF_SENSOR_NOISE_REDUCTION_NUM_MEASUREMENTS;
 import static com.astoev.cave.survey.util.ConfigUtil.PREF_SENSOR_SIMULTANEOUSLY;
@@ -39,6 +40,7 @@ public class SensorsActivity extends MainMenuActivity {
     private static final String CHOOSE_SENSORS_TOOLTIP_DIALOG = "CHOOSE_SENSORS_TOOLTIP_DIALOG";
     private static final int SIMULTANEOUSLY_READING_POSITION = 1;
     private static final int NOISE_REDUCTION_DISABLED_POSITION = 0;
+    private static final int CAMERA_HEADING_POSITION = 1;
 
     private Integer[] availableSensorsArray;
 
@@ -101,7 +103,7 @@ public class SensorsActivity extends MainMenuActivity {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     int selectedSensor = availableSensorsArray[position];
-                    Log.i(Constants.LOG_TAG_UI, "Selected position:" + position + " sensor:" + selectedSensor);
+                    Log.i(LOG_TAG_UI, "Selected position:" + position + " sensor:" + selectedSensor);
 
                     // save setting for preferred sensor
                     int valueFromSettings = ConfigUtil.getIntProperty(ConfigUtil.PREF_SENSOR);
@@ -145,7 +147,7 @@ public class SensorsActivity extends MainMenuActivity {
             @Override
             public void onItemSelected(AdapterView<?> aAdapterView, View aView, int aPosition, long aId) {
                 int newReadTimeout = timeouts[aPosition];
-                Log.i(Constants.LOG_TAG_UI, "Selected new timeout:" + newReadTimeout);
+                Log.i(LOG_TAG_UI, "Selected new timeout:" + newReadTimeout);
                 ConfigUtil.setIntProperty(PREF_SENSOR_TIMEOUT, newReadTimeout);
             }
 
@@ -153,6 +155,29 @@ public class SensorsActivity extends MainMenuActivity {
             public void onNothingSelected(AdapterView<?> aAdapterView) {
             }
         });
+
+        // read device orientation
+        Spinner deviceHeadingSpinner = findViewById(R.id.sensors_device_heading);
+        final ArrayAdapter<String> deviceHeadingsAdapter =
+                new ArrayAdapter<>(this,
+                        android.R.layout.simple_list_item_1,
+                        getResources().getStringArray(R.array.sensor_device_headings));
+        deviceHeadingSpinner.setAdapter(deviceHeadingsAdapter);
+        deviceHeadingSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> aAdapterView, View aView, int aPosition, long aId) {
+                Log.i(LOG_TAG_UI, "Selected heading mode: " + aPosition + " " + deviceHeadingsAdapter.getItem(aPosition));
+                ConfigUtil.setBooleanProperty(PREF_DEVICE_HEADING_CAMERA, aPosition == CAMERA_HEADING_POSITION);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> aAdapterView) {
+
+            }
+        });
+        if (ConfigUtil.getBooleanProperty(PREF_DEVICE_HEADING_CAMERA)) {
+            deviceHeadingSpinner.setSelection(CAMERA_HEADING_POSITION);
+        }
 
         // sensors reading
         Spinner readTypeSpinner = findViewById(R.id.sensors_simultaneously_spinner);
@@ -164,7 +189,7 @@ public class SensorsActivity extends MainMenuActivity {
         readTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> aAdapterView, View aView, int aPosition, long aId) {
-                Log.i(Constants.LOG_TAG_UI, "Selected read mode: " + aPosition + " " + readTypesAdapter.getItem(aPosition));
+                Log.i(LOG_TAG_UI, "Selected read mode: " + aPosition + " " + readTypesAdapter.getItem(aPosition));
                 ConfigUtil.setBooleanProperty(PREF_SENSOR_SIMULTANEOUSLY, aPosition == SIMULTANEOUSLY_READING_POSITION);
             }
 
@@ -185,7 +210,7 @@ public class SensorsActivity extends MainMenuActivity {
         noiseReductionNumMeasurements.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> aAdapterView, View aView, int aPosition, long aL) {
-                Log.i(Constants.LOG_TAG_UI, "Noise reduction num measurements: " + aPosition + " " + numMeasurementValues.getItem(aPosition));
+                Log.i(LOG_TAG_UI, "Noise reduction num measurements: " + aPosition + " " + numMeasurementValues.getItem(aPosition));
                 ConfigUtil.setIntProperty(PREF_SENSOR_NOISE_REDUCTION_NUM_MEASUREMENTS, Integer.valueOf(numMeasurementValues.getItem(aPosition)));
             }
 
@@ -209,7 +234,7 @@ public class SensorsActivity extends MainMenuActivity {
         noiseReductionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> aAdapterView, View aView, int aPosition, long aL) {
-                Log.i(Constants.LOG_TAG_UI, "Noise reduction: " + aPosition + " " + noiseReductionTypes.getItem(aPosition));
+                Log.i(LOG_TAG_UI, "Noise reduction: " + aPosition + " " + noiseReductionTypes.getItem(aPosition));
                 boolean enabled = aPosition != NOISE_REDUCTION_DISABLED_POSITION;
                 ConfigUtil.setBooleanProperty(PREF_SENSOR_NOISE_REDUCTION, enabled);
 
@@ -251,7 +276,7 @@ public class SensorsActivity extends MainMenuActivity {
                 case OrientationProcessorFactory.SENSOR_TYPE_MAGNETIC : translateArray[i] = getString(R.string.magnetic_sensor); break;
                 case OrientationProcessorFactory.SENSOR_TYPE_ORIENTATION : translateArray[i] = getString(R.string.orientation_sensor);break;
                 default:
-                    Log.e(Constants.LOG_TAG_UI, "Unknown sensor type: " + currentSensor);
+                    Log.e(LOG_TAG_UI, "Unknown sensor type: " + currentSensor);
                     translateArray[i] = getString(R.string.sensor_none);
             }
         }
@@ -288,7 +313,7 @@ public class SensorsActivity extends MainMenuActivity {
     }
 
     public void openSensorsTest(View viewArg) {
-        Log.i(Constants.LOG_TAG_UI, "Azimuth Test");
+        Log.i(LOG_TAG_UI, "Azimuth Test");
         Intent intent = new Intent(SensorsActivity.this, SensorTestActivity.class);
         startActivity(intent);
     }

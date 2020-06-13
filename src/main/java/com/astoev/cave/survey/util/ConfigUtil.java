@@ -21,6 +21,7 @@ public class ConfigUtil {
     public static final String PREF_SENSOR = "sensor_pref";
     public static final String PREF_AUTO_BACKUP = "backup_pref";
     public static final String PREF_SENSOR_TIMEOUT = "sensor_timeout";
+    public static final String PREF_DEVICE_HEADING_CAMERA = "device_heading";
     public static final String PREF_SENSOR_SIMULTANEOUSLY = "sensor_simulateneously";
     public static final String PREF_SENSOR_NOISE_REDUCTION = "sensor_noise_reduction";
     public static final String PREF_SENSOR_NOISE_REDUCTION_NUM_MEASUREMENTS = "sensor_noise_reduction_measurements";

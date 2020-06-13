@@ -316,7 +316,7 @@
     <string name="sensor_test_title"><u>Sensors Test</u></string>
     <string name="sensor_test_header">Test Build-in Sensors</string>
     <string name="sensor_choose_header">Choose Build-in sensor</string>
-    <string name="sensor_choose_timeout">Targeting time (seconds)</string>
+    <string name="sensor_choose_timeout">Heading time (seconds)</string>
     <string name="sensor_choose_simultaneously">Sensors reading</string>
     <string-array name="sensors_reading_types">
         <item>Independent</item>
@@ -332,6 +332,11 @@
         <item>10</item>
         <item>20</item>
         <item>50</item>
+    </string-array>
+    <string name="sensor_device_heading">Heading</string>
+    <string-array name="sensor_device_headings">
+        <item>Point with the device</item>
+        <item>Use the camera</item>
     </string-array>
     <string name="no_sensors">No available Build-in sensors</string>
     <string name="sensor_choose_tooltip">You can choose the most appropriate build in sensor that fits your need of accuracy</string>
