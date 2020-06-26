@@ -7,7 +7,6 @@ import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import com.astoev.cave.survey.Constants;
@@ -16,15 +15,15 @@ import com.astoev.cave.survey.activity.UIUtilities;
 
 public class PermissionUtil {
 
-    public static boolean requestPermission(String aPermission, AppCompatActivity anActivity, int aCode) {
+    public static boolean requestPermission(String aPermission, Activity anActivity, int aCode) {
         return hasOrRequestPermission(new String[] { aPermission }, anActivity, aCode);
     }
 
-    public static boolean requestPermissions(String[] aPermissions, AppCompatActivity anActivity, int aCode) {
+    public static boolean requestPermissions(String[] aPermissions, Activity anActivity, int aCode) {
         return hasOrRequestPermission(aPermissions, anActivity, aCode);
     }
 
-    private static boolean hasOrRequestPermission(String[] aPermissions, AppCompatActivity anActivity, int aCode) {
+    private static boolean hasOrRequestPermission(String[] aPermissions, Activity anActivity, int aCode) {
         Log.d(Constants.LOG_TAG_SERVICE, "Checking permissions");
 
         if (isStaticPermissionBuild()) {

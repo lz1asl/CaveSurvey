@@ -1,98 +1,117 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:isScrollContainer="true">
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_gravity="bottom">
 
-    <!-- headers -->
-    <LinearLayout android:layout_height="wrap_content"
-                  android:layout_width="fill_parent"
-                  android:layout_margin="10dp">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-        <TextView android:layout_height="wrap_content"
-                  android:layout_width="0dp"
-                  android:text="@string/sensor"
-                  android:textStyle="bold|italic"
-                  android:layout_weight="1"/>
+        <SurfaceView
+            android:id="@+id/cameraPreview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:visibility="gone"/>
 
-        <TextView android:layout_height="wrap_content"
-                  android:layout_width="0dp"
-                  android:layout_weight="1"
-                  android:textStyle="bold|italic"
-                  android:text="@string/value" />
+ <!--       <com.astoev.cave.survey.activity.dialog.CameraDialogOverlay android:id="@+id/cameraOverlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:visibility="gone"/>-->
 
-        <TextView android:layout_height="wrap_content"
-                  android:layout_width="0dp"
-                  android:layout_weight="1"
-                  android:textStyle="bold|italic"
-                  android:text="@string/accuracy" />
+        <LinearLayout android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_gravity="bottom|center_horizontal">
 
-    </LinearLayout>
+            <!-- headers -->
+            <LinearLayout android:layout_height="match_parent"
+                          android:layout_width="match_parent"
+                          android:weightSum="3"
+                          android:layout_margin="10dp">
 
-    <!-- azimuth -->
-    <LinearLayout android:layout_height="wrap_content"
-                  android:layout_width="fill_parent"
-                  android:layout_margin="10dp">
+                <TextView android:layout_height="wrap_content"
+                          android:layout_width="0dp"
+                          android:text="@string/sensor"
+                          android:textStyle="bold|italic"
+                          android:layout_weight="1"/>
 
-        <TextView android:layout_height="wrap_content"
-                  android:layout_width="0dp"
-                  android:layout_weight="1"
-                  android:layout_gravity="center"
-                  android:text="@string/azimuth_column"/>
+                <TextView android:layout_height="wrap_content"
+                          android:layout_width="0dp"
+                          android:layout_weight="1"
+                          android:textStyle="bold|italic"
+                          android:text="@string/value" />
 
-        <TextView android:id="@+id/azimuth_slope_azimuth_value"
-                  android:layout_height="wrap_content"
-                  android:layout_width="0dp"
-                  android:layout_weight="1"
-                  android:layout_gravity="center"
-                  android:text="@string/no_value_label"
-                  android:textAppearance="?android:attr/textAppearanceLarge"/>
-        <TextView android:id="@+id/azimuth_slope_azimuth_accuracy"
-                  android:layout_height="wrap_content"
-                  android:layout_width="0dp"
-                  android:layout_weight="1"
-                  android:layout_margin="5dp"
-                  android:layout_gravity="center"
-                  android:text="@string/no_value_label" />
+                <TextView android:layout_height="wrap_content"
+                          android:layout_width="0dp"
+                          android:layout_weight="1"
+                          android:textStyle="bold|italic"
+                          android:text="@string/accuracy" />
 
-    </LinearLayout>
+            </LinearLayout>
 
-    <!-- slope -->
-    <LinearLayout android:layout_height="wrap_content"
-                  android:layout_width="fill_parent"
-                  android:layout_margin="10dp">
-                  
-        <TextView android:layout_height="wrap_content"
-                  android:layout_width="0dp"
-                  android:layout_weight="1"
-                  android:layout_gravity="center"
-                  android:text="@string/slope_column"/>
-        
-        <TextView android:id="@+id/azimuth_slope_slope_value"
-                  android:layout_height="wrap_content"
-                  android:layout_width="0dp"
-                  android:layout_weight="1"
-                  android:layout_gravity="center"
-                  android:text="@string/no_value_label"
-                  android:textAppearance="?android:attr/textAppearanceLarge"/>
+            <!-- azimuth -->
+            <LinearLayout android:layout_height="wrap_content"
+                          android:layout_width="wrap_content"
+                          android:weightSum="3"
+                          android:layout_margin="10dp">
 
-        <TextView android:id="@+id/azimuth_slope_slope_accuracy"
-                  android:layout_height="wrap_content"
-                  android:layout_width="0dp"
-                  android:layout_weight="1"
-                  android:layout_margin="5dp"
-                  android:layout_gravity="center"
-                  android:text="@string/no_value_label"/>
+                <TextView android:layout_height="wrap_content"
+                          android:layout_width="0dp"
+                          android:layout_weight="1"
+                          android:text="@string/azimuth_column"/>
 
-    </LinearLayout>
+                <TextView android:id="@+id/azimuth_slope_azimuth_value"
+                          android:layout_height="wrap_content"
+                          android:layout_width="0dp"
+                          android:layout_weight="1"
+                          android:text="@string/no_value_label"
+                          android:textAppearance="?android:attr/textAppearanceLarge"/>
+                <TextView android:id="@+id/azimuth_slope_azimuth_accuracy"
+                          android:layout_height="wrap_content"
+                          android:layout_width="0dp"
+                          android:layout_weight="1"
+                          android:layout_margin="5dp"
+                          android:text="@string/no_value_label" />
 
-    
+            </LinearLayout>
+
+            <!-- slope -->
+            <LinearLayout android:layout_height="wrap_content"
+                          android:layout_width="match_parent"
+                          android:weightSum="3"
+                          android:layout_margin="10dp">
+
+                <TextView android:layout_height="wrap_content"
+                          android:layout_width="0dp"
+                          android:layout_weight="1"
+                          android:text="@string/slope_column"/>
+
+                <TextView android:id="@+id/azimuth_slope_slope_value"
+                          android:layout_height="wrap_content"
+                          android:layout_width="0dp"
+                          android:layout_weight="1"
+                          android:text="@string/no_value_label"
+                          android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+                <TextView android:id="@+id/azimuth_slope_slope_accuracy"
+                          android:layout_height="wrap_content"
+                          android:layout_width="0dp"
+                          android:layout_weight="1"
+                          android:layout_margin="5dp"
+                          android:text="@string/no_value_label"/>
+            </LinearLayout>
+        </LinearLayout>
+    </FrameLayout>
+
     <ProgressBar android:id="@+id/azimuth_slope_progress"
-                 android:progress="0"
-                 android:layout_height="5dp"
-                 android:layout_width="fill_parent"
-                 android:maxHeight="2dp"
-                 style="@android:style/Widget.ProgressBar.Horizontal"
-                 android:layout_margin="10dp"/> 
-    
+        android:progress="0"
+        android:layout_height="5dp"
+        android:layout_width="match_parent"
+        android:maxHeight="2dp"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_margin="10dp"/>
+
 </LinearLayout>

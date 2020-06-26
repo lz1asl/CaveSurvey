@@ -2,11 +2,17 @@ package com.astoev.cave.survey.activity.dialog;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.res.Resources;
+import android.hardware.Camera;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -23,26 +29,34 @@ import com.astoev.cave.survey.service.orientation.OrientationProcessor;
 import com.astoev.cave.survey.service.orientation.OrientationProcessorFactory;
 import com.astoev.cave.survey.service.orientation.SlopeChangedAdapter;
 import com.astoev.cave.survey.util.ConfigUtil;
+import com.astoev.cave.survey.util.PermissionUtil;
 
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
 
+import static android.Manifest.permission.CAMERA;
+import static android.hardware.Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO;
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 import static com.astoev.cave.survey.Constants.LOG_TAG_SERVICE;
+import static com.astoev.cave.survey.util.ConfigUtil.PREF_DEVICE_HEADING_CAMERA;
 import static com.astoev.cave.survey.util.ConfigUtil.PREF_SENSOR_TIMEOUT;
 import static java.lang.Thread.sleep;
 
 /**
  * Created by astoev on 4/25/15.
  */
-public class BaseBuildInMeasureDialog extends DialogFragment {
+public class BaseBuildInMeasureDialog extends DialogFragment implements SurfaceHolder.Callback {
 
 
     /** Max value for the progress bar*/
     protected static int progressMaxValue;
     public static int PROGRESS_DEFAULT_VALUE = 3;
+    private static final int PERM_REQ_CODE_CAMERA = 101;
 
 
     /** Formatter */
@@ -75,6 +89,14 @@ public class BaseBuildInMeasureDialog extends DialogFragment {
 
     protected int lastAzimuthAccuracy;
     protected int lastSlopeAccuracy;
+
+    // camera preview
+    private boolean cameraMode = false;
+    private Camera camera;
+    private SurfaceHolder surfaceHolder;
+    private boolean isCameraViewOn = false;
+    private SurfaceView cameraPreview;
+    private CameraDialogOverlay cameraOverlay;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -110,6 +132,33 @@ public class BaseBuildInMeasureDialog extends DialogFragment {
         return null;
     }
 
+    protected void initCameraPreview(View aView) {
+        if (ConfigUtil.getBooleanProperty(PREF_DEVICE_HEADING_CAMERA)) {
+
+
+            if (!PermissionUtil.requestPermission(CAMERA, this.getActivity(), PERM_REQ_CODE_CAMERA)) {
+                return;
+            }
+
+            cameraMode = true;
+
+            cameraPreview = aView.findViewById(R.id.cameraPreview);
+
+            // scale the preview
+            DisplayMetrics displayMetrics = Resources.getSystem().getDisplayMetrics();
+            float scaleFactor = 0.6f;
+            surfaceHolder = cameraPreview.getHolder();
+            surfaceHolder.addCallback(this);
+            surfaceHolder.setFixedSize((int) (displayMetrics.widthPixels * scaleFactor),  (int) (displayMetrics.heightPixels * scaleFactor));
+
+            cameraPreview.setVisibility(VISIBLE);
+
+            cameraOverlay = aView.findViewById(R.id.cameraOverlay);
+            cameraOverlay.setCameraMode(true);
+            cameraOverlay.setVisibility(VISIBLE);
+        }
+    }
+
     public void setTargetAzimuthTextBox(EditText aTargetAzimuthTextBox) {
         targetAzimuthTextBox = aTargetAzimuthTextBox;
     }
@@ -129,8 +178,7 @@ public class BaseBuildInMeasureDialog extends DialogFragment {
 
         private WeakReference<BaseBuildInMeasureDialog> reference;
 
-        public ProgressHandler(BaseBuildInMeasureDialog dialogFragmentArg)
-        {
+        public ProgressHandler(BaseBuildInMeasureDialog dialogFragmentArg) {
             reference = new WeakReference<>(dialogFragmentArg);
         }
 
@@ -390,5 +438,57 @@ public class BaseBuildInMeasureDialog extends DialogFragment {
         });
 
         orientationSlopeProcessor.startListening();
+    }
+
+    @Override
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+        if (cameraMode) {
+            if (isCameraViewOn) {
+                camera.stopPreview();
+                isCameraViewOn = false;
+            }
+
+            if (camera != null) {
+                try {
+                    camera.setPreviewDisplay(surfaceHolder);
+                    camera.startPreview();
+                    isCameraViewOn = true;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    @Override
+    public void surfaceCreated(SurfaceHolder holder) {
+
+        if (cameraMode) {
+
+            camera = Camera.open();
+            camera.setDisplayOrientation(90);
+
+            //set camera to continually auto-focus
+            Camera.Parameters params = camera.getParameters();
+            if (params.getSupportedFocusModes().contains(FOCUS_MODE_CONTINUOUS_VIDEO)) {
+                params.setFocusMode(FOCUS_MODE_CONTINUOUS_VIDEO);
+            }
+            camera.setParameters(params);
+        }
+    }
+
+
+    @Override
+    public void surfaceDestroyed(SurfaceHolder holder) {
+
+        if (cameraMode) {
+            if (camera != null) {
+                camera.stopPreview();
+                camera.release();
+                camera = null;
+            }
+            isCameraViewOn = false;
+            cameraPreview.setVisibility(GONE);
+        }
     }
 }

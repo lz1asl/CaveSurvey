@@ -327,7 +327,7 @@
         <item>Disabled</item>
         <item>Enabled</item>
     </string-array>
-    <string name="sensor_num_measurements">Measurements</string>
+    <string name="sensor_num_measurements">Averaged Measurements</string>
     <string-array name="sensor_num_measurements">
         <item>10</item>
         <item>20</item>
