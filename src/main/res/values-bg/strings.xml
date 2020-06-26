@@ -308,7 +308,7 @@
         <item>Изключено</item>
         <item>Включено</item>
     </string-array>
-    <string name="sensor_num_measurements">Измервания</string>
+    <string name="sensor_num_measurements">Усреднени измервания</string>
     <string-array name="sensor_num_measurements">
         <item>10</item>
         <item>20</item>
