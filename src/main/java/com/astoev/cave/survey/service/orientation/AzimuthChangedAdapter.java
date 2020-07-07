@@ -8,7 +8,7 @@ package com.astoev.cave.survey.service.orientation;
 public class AzimuthChangedAdapter implements AzimuthChangedListener, OrientationChangedListener {
 
     @Override
-    public void onOrinationChanged(float[] dataArg) {
+    public void onOrientationChanged(float[] dataArg) {
         onAzimuthChanged(dataArg[0]);
     }
 

@@ -8,7 +8,7 @@ package com.astoev.cave.survey.service.orientation;
  */
 public interface OrientationChangedListener {
 
-    void onOrinationChanged(float[] data);
+    void onOrientationChanged(float[] data);
     
     void onAccuracyChanged(int accuracyArg);
 }

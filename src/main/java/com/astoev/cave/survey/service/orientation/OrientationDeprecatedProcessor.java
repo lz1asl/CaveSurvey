@@ -80,7 +80,7 @@ public class OrientationDeprecatedProcessor extends OrientationProcessor {
         converted[0] = lastValue;
         converted[1] = pitch;
         converted[2] = roll;
-        listener.onOrinationChanged(converted);
+        listener.onOrientationChanged(converted);
 
 	}
 

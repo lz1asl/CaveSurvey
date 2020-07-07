@@ -9,7 +9,7 @@ package com.astoev.cave.survey.service.orientation;
 public class SlopeChangedAdapter implements OrientationChangedListener, SlopeChangedListener{
 
     @Override
-    public void onOrinationChanged(float[] dataArg) {
+    public void onOrientationChanged(float[] dataArg) {
         onSlopeChanged(-dataArg[1]);
     }
 

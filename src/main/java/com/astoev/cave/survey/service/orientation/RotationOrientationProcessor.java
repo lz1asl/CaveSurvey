@@ -58,7 +58,7 @@ public class RotationOrientationProcessor extends OrientationProcessor {
 				converted[0] = lastValue;
 				converted[1] = oData[1] * RAD2GRAD;
 				converted[2] = oData[2] * RAD2GRAD;
-				listener.onOrinationChanged(converted);
+				listener.onOrientationChanged(converted);
 			}
 		}
 	}
