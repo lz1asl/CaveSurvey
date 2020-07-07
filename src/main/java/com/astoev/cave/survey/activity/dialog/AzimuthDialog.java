@@ -43,6 +43,8 @@ public class AzimuthDialog extends BaseBuildInMeasureDialog {
         progressBar = view.findViewById(R.id.azimuth_progress);
         progressBar.setMax(progressMaxValue);
 
+        initCameraPreview(view);
+
         TextView azimuthView = view.findViewById(R.id.azimuth_value);
         TextView accuracyView = view.findViewById(R.id.azimuth_accuracy);
 

@@ -43,6 +43,7 @@ import static android.hardware.Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static com.astoev.cave.survey.Constants.LOG_TAG_SERVICE;
+import static com.astoev.cave.survey.model.Option.MAX_VALUE_SLOPE_DEGREES;
 import static com.astoev.cave.survey.util.ConfigUtil.PREF_DEVICE_HEADING_CAMERA;
 import static com.astoev.cave.survey.util.ConfigUtil.PREF_SENSOR_TIMEOUT;
 import static java.lang.Thread.sleep;
@@ -133,24 +134,23 @@ public class BaseBuildInMeasureDialog extends DialogFragment implements SurfaceH
     }
 
     protected void initCameraPreview(View aView) {
-        if (ConfigUtil.getBooleanProperty(PREF_DEVICE_HEADING_CAMERA)) {
+        cameraMode = ConfigUtil.getBooleanProperty(PREF_DEVICE_HEADING_CAMERA);
 
+
+        if (cameraMode) {
 
             if (!PermissionUtil.requestPermission(CAMERA, this.getActivity(), PERM_REQ_CODE_CAMERA)) {
                 return;
             }
 
-            cameraMode = true;
-
             cameraPreview = aView.findViewById(R.id.cameraPreview);
 
-            // scale the preview
+            // scale the preview TODO
             DisplayMetrics displayMetrics = Resources.getSystem().getDisplayMetrics();
-            float scaleFactor = 0.6f;
+            float scaleFactor = 0.5f;
             surfaceHolder = cameraPreview.getHolder();
             surfaceHolder.addCallback(this);
             surfaceHolder.setFixedSize((int) (displayMetrics.widthPixels * scaleFactor),  (int) (displayMetrics.heightPixels * scaleFactor));
-
             cameraPreview.setVisibility(VISIBLE);
 
             cameraOverlay = aView.findViewById(R.id.cameraOverlay);
@@ -274,7 +274,7 @@ public class BaseBuildInMeasureDialog extends DialogFragment implements SurfaceH
             executor.submit(new FutureTask(new AwaitFilterRunnable(orientationAzimuthProcessor, azimuthFilter, targetAzimuthTextBox), null));
             executor.submit(new FutureTask(new AwaitFilterRunnable(orientationSlopeProcessor, slopeFilter, targetSlopeTextBox), null));
             try {
-                sleep(200);
+                sleep(100);
                 executor.shutdown();
             } catch (Exception e) {
                 Log.e(LOG_TAG_SERVICE, "Interrupted", e);
@@ -301,9 +301,9 @@ public class BaseBuildInMeasureDialog extends DialogFragment implements SurfaceH
         public void run() {
             if (processor != null) {
                 // await averaging
-                for (int i = 0; i < 30; i++) {
+                for (int i = 0; i < 60; i++) {
                     try {
-                        Thread.currentThread().sleep(100);
+                        Thread.currentThread().sleep(50);
                     } catch (InterruptedException e) {
                         Log.e(LOG_TAG_SERVICE, "interrupted", e);
                     }
@@ -312,6 +312,7 @@ public class BaseBuildInMeasureDialog extends DialogFragment implements SurfaceH
                         Log.i(LOG_TAG_SERVICE, "Stop azimuth processor");
                         processor.stopListening();
                         // averaged value
+                        // TODO the value is without camera offset and proper units
                         targetTextBox.setText(String.valueOf(filter.getValue()));
                         return;
                     }
@@ -380,7 +381,6 @@ public class BaseBuildInMeasureDialog extends DialogFragment implements SurfaceH
             public void onAzimuthChanged(float newValueArg) {
                 //convert to Grads if necessary
                 azimuthFilter.addMeasurement(newValueArg);
-
                 float processedValue = azimuthFilter.getValue();
                 if (!isInDegrees) {
                     processedValue = processedValue * Constants.DEC_TO_GRAD;
@@ -415,12 +415,19 @@ public class BaseBuildInMeasureDialog extends DialogFragment implements SurfaceH
              */
             @Override
             public void onSlopeChanged(float newValueArg) {
-                //convert to Grads if necessary
+
                 slopeFilter.addMeasurement(newValueArg);
 
                 float processedValue = slopeFilter.getValue();
+
+                //convert to Grads if necessary
                 if (!isInDegrees){
                     processedValue = processedValue * Constants.DEC_TO_GRAD;
+                }
+
+                if (cameraMode) {
+                    // phone upwards
+                    processedValue -= MAX_VALUE_SLOPE_DEGREES;
                 }
 
                 aSlopeView.setText(formater.format(processedValue) + unitsString);

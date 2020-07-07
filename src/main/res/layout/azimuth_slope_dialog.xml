@@ -1,5 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:layout_width="match_parent"
     android:orientation="vertical"
     android:layout_gravity="bottom">
@@ -11,17 +11,20 @@
         <SurfaceView
             android:id="@+id/cameraPreview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:visibility="gone"/>
 
- <!--       <com.astoev.cave.survey.activity.dialog.CameraDialogOverlay android:id="@+id/cameraOverlay"
+        <com.astoev.cave.survey.activity.dialog.CameraDialogOverlay
+            android:id="@+id/cameraOverlay"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:visibility="gone"/>-->
+            android:visibility="gone"/>
 
-        <LinearLayout android:layout_height="wrap_content"
+
+        <LinearLayout
+            android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:orientation="vertical"
             android:layout_gravity="bottom|center_horizontal">
@@ -54,7 +57,7 @@
 
             <!-- azimuth -->
             <LinearLayout android:layout_height="wrap_content"
-                          android:layout_width="wrap_content"
+                          android:layout_width="match_parent"
                           android:weightSum="3"
                           android:layout_margin="10dp">
 

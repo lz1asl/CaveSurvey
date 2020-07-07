@@ -45,10 +45,12 @@ public class SlopeDialog extends BaseBuildInMeasureDialog {
         progressBar = view.findViewById(R.id.slope_progress);
         progressBar.setMax(progressMaxValue);
 
+        initCameraPreview(view);
+
         /** Slope value view*/
         TextView slopeView = view.findViewById(R.id.slope_value);
         TextView slopeAccuracyView = view.findViewById(R.id.slope_accuracy);
-        
+
         // create the Dialog
         AlertDialog alertDialg = builder.create();
         
@@ -56,7 +58,7 @@ public class SlopeDialog extends BaseBuildInMeasureDialog {
         
         return alertDialg;
     }
-    
+
 
 
 }
