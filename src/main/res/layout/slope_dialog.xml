@@ -1,82 +1,77 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="wrap_content"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent"
+    android:layout_gravity="bottom">
 
-    <FrameLayout
+    <SurfaceView
+        android:id="@+id/cameraPreview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
 
-        <SurfaceView
-            android:id="@+id/cameraPreview"
+    <com.astoev.cave.survey.activity.dialog.CameraDialogOverlay
+        android:id="@+id/cameraOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:orientation="vertical"
+        android:layout_marginBottom="20dp">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:visibility="gone"/>
+            android:layout_margin="10dp"
+            android:weightSum="2">
 
-        <com.astoev.cave.survey.activity.dialog.CameraDialogOverlay
-            android:id="@+id/cameraOverlay"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:visibility="gone"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/slope_column" />
+
+            <TextView
+                android:id="@+id/slope_value"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/no_value_label"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center_horizontal"
-            android:orientation="vertical">
+            android:layout_margin="10dp"
+            android:weightSum="2">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="10dp"
-                android:weightSum="2">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/slope_column" />
-
-                <TextView
-                    android:id="@+id/slope_value"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/no_value_label"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:weightSum="2">
+                android:layout_weight="1"
+                android:text="@string/accuracy_column" />
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/accuracy_column" />
-
-                <TextView
-                    android:id="@+id/slope_accuracy"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/no_value_label"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
-            </LinearLayout>
+            <TextView
+                android:id="@+id/slope_accuracy"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/no_value_label"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
         </LinearLayout>
-    </FrameLayout>
-
+    </LinearLayout>
     <ProgressBar android:id="@+id/slope_progress"
         android:progress="0"
         android:layout_height="5dp"
         android:layout_width="fill_parent"
         android:maxHeight="2dp"
         style="@android:style/Widget.ProgressBar.Horizontal"
-        android:layout_margin="10dp"/>
-
-</LinearLayout>
+        android:layout_margin="10dp"
+        android:layout_gravity="bottom"/>
+</FrameLayout>
