@@ -26,9 +26,6 @@ public class MagneticOrientationProcessor extends OrientationProcessor {
     private int accelerometerAccuracy;
     
     private float[] R = new float[9];
-//    private float[] I = new float[16];
-//    private float[] R = new float[16];
-//    private float[] I = new float[16];
     private float[] aData = new float[3];
     private float[] mData = new float[3];
     private float[] oData = new float[3];
@@ -71,19 +68,15 @@ public class MagneticOrientationProcessor extends OrientationProcessor {
 		int sensorType = event.sensor.getType();
 		
 		switch (sensorType) {
-		case Sensor.TYPE_MAGNETIC_FIELD:
-		{
-			System.arraycopy(event.values, 0, mData, 0, 3);
-		}
-		break;
-		case Sensor.TYPE_ACCELEROMETER:
-		{
-			System.arraycopy(event.values, 0, aData, 0, 3);
-		}
-		break;			
+			case Sensor.TYPE_MAGNETIC_FIELD:
+				System.arraycopy(event.values, 0, mData, 0, 3);
+				break;
+			case Sensor.TYPE_ACCELEROMETER:
+				System.arraycopy(event.values, 0, aData, 0, 3);
+				break;
 
-		default:
-			break;
+			default:
+				break;
 		}
 		
 		int rotation = getRotation();

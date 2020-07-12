@@ -44,34 +44,34 @@ public class OrientationDeprecatedProcessor extends OrientationProcessor {
 		// handle device rotation
 		int rotation = getRotation();
 		switch (rotation) {
-		case Surface.ROTATION_0:
-			break;
-		case Surface.ROTATION_90:
-			currentValue = currentValue + 90;
-			if (currentValue > 360){
-				currentValue %= 360;
-			}
-			pitch = -data[2];
-			roll = data[1];
-			break;
-		case Surface.ROTATION_180:
-			currentValue += 180;
-			if (currentValue > 360){
-				currentValue %= 360;
-			}
-			pitch = -data[1];
-			roll = -data[2];
-			break;
-		case Surface.ROTATION_270:
-			currentValue += 270;
-			if (currentValue > 360){
-				currentValue %= 360;
-			}
-			pitch = data[2];
-			roll = data[1];
-			break;
-		default:
-			break;
+			case Surface.ROTATION_0:
+				break;
+			case Surface.ROTATION_90:
+				currentValue = currentValue + 90;
+				if (currentValue > 360){
+					currentValue %= 360;
+				}
+				pitch = -data[2];
+				roll = data[1];
+				break;
+			case Surface.ROTATION_180:
+				currentValue += 180;
+				if (currentValue > 360){
+					currentValue %= 360;
+				}
+				pitch = -data[1];
+				roll = -data[2];
+				break;
+			case Surface.ROTATION_270:
+				currentValue += 270;
+				if (currentValue > 360){
+					currentValue %= 360;
+				}
+				pitch = data[2];
+				roll = data[1];
+				break;
+			default:
+				break;
 		}
 
 		lastValue = currentValue;

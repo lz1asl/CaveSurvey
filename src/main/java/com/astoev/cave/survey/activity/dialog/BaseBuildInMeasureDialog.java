@@ -24,6 +24,7 @@ import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.model.Option;
 import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.service.orientation.AzimuthChangedAdapter;
+import com.astoev.cave.survey.service.orientation.MagneticOrientationProcessor;
 import com.astoev.cave.survey.service.orientation.MeasurementsFilter;
 import com.astoev.cave.survey.service.orientation.OrientationProcessor;
 import com.astoev.cave.survey.service.orientation.OrientationProcessorFactory;
@@ -318,7 +319,7 @@ public class BaseBuildInMeasureDialog extends DialogFragment implements SurfaceH
 
 
                         float value = filter.getValue();
-                        value = postProcessSensorValue(value, isSlope);
+                        value = postProcessSensorValue(value, isSlope, processor);
 
                         targetTextBox.setText(String.valueOf(value));
                         return;
@@ -389,7 +390,7 @@ public class BaseBuildInMeasureDialog extends DialogFragment implements SurfaceH
                 //convert to Grads if necessary
                 azimuthFilter.addMeasurement(newValueArg);
                 float processedValue = azimuthFilter.getValue();
-                processedValue = postProcessSensorValue(processedValue, false);
+                processedValue = postProcessSensorValue(processedValue, false, orientationAzimuthProcessor);
 
                 aAzimuthView.setText(formater.format(processedValue) + unitsString);
                 aAccuracyView.setText(orientationAzimuthProcessor.getAccuracyAsString(lastAzimuthAccuracy) + azimuthFilter.getAccuracyString());
@@ -424,7 +425,7 @@ public class BaseBuildInMeasureDialog extends DialogFragment implements SurfaceH
                 slopeFilter.addMeasurement(newValueArg);
 
                 float processedValue = slopeFilter.getValue();
-                processedValue = postProcessSensorValue(processedValue, true);
+                processedValue = postProcessSensorValue(processedValue, true, orientationSlopeProcessor);
 
                 aSlopeView.setText(formater.format(processedValue) + unitsString);
                 aSlopeAccuracyView.setText(orientationSlopeProcessor.getAccuracyAsString(lastSlopeAccuracy) + slopeFilter.getAccuracyString());
@@ -487,13 +488,17 @@ public class BaseBuildInMeasureDialog extends DialogFragment implements SurfaceH
         }
     }
 
-    private float postProcessSensorValue(float value, boolean isSlope) {
+    private float postProcessSensorValue(float value, boolean isSlope, OrientationProcessor orientationSlopeProcessor) {
 
         float processedValue = value;
 
         if (isSlope && cameraMode) {
             // phone upwards
-            processedValue -= MAX_VALUE_SLOPE_DEGREES;
+            if (orientationSlopeProcessor instanceof MagneticOrientationProcessor) {
+                // handled properly
+            } else {
+                processedValue -= MAX_VALUE_SLOPE_DEGREES;
+            }
         }
 
         //convert to Grads if necessary
