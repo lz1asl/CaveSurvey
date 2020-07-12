@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- common -->
+    <string name="app_name">CaveSurvey</string>
+    <string name="button_yes">Да</string>
+    <string name="button_no">Нет</string>
+    <string name="required">Обезательно</string>
+    <string name="invalid">Недействительно</string>
+    <string name="success">Успешно</string>
+
+    <string name="sk_paldin">Пълдин</string>
+
+    <!-- welcome screen -->
+    <string name="home_no_projects">Создать исследование</string>
+    <string name="home_new_project">Новое исследование</string>
+    <string name="home_button_new_exists">Исследование %1$s уже созданное!</string>
+    <string name="home_delete_project">Удалить исследование %1$s?</string>
+    <string name="home_lang"><u>Язык</u></string>
+
+    <!-- new project screen -->
+    <string name="new_title">Новое исследование</string>
+    <string name="new_button_create">Создать</string>
+
+    <string name="project_header">Название исследования</string>
+    <string name="project_name">Название</string>
+    <string name="project_name_required">Ввод названия</string>
+    <string name="project_name_characters">Содержит недопустимые символы</string>
+    <string name="project_import">Импорт</string>
+    <string name="import_success">Импорт успешны</string>
+
+    <!-- survey screen -->
+    <string name="main_leg">Текущий отрезок</string>
+    <string name="main_button_change">Выбери</string>
+    <string name="main_button_change_title">Выбор отрезка</string>
+    <string name="main_button_add">Добавь</string>
+    <string name="main_button_data">Данные</string>
+    <string name="main_button_about">Чего то</string>
+    <string name="main_button_settings">Настройки</string>
+    <string name="main_button_map">Карта</string>
+
+    <string name="map_plan">План</string>
+    <string name="map_section">Разрез</string>
+
+    <string name="main_table_header_from">От</string>
+    <string name="main_table_header_to">До</string>
+<!--
+    <string name="main_table_header_distance_from_start">From start</string>
+ -->
+    <string name="main_table_header_more">Още</string>
+    <string name="main_table_header_note">Заметка</string>
+    <string name="main_table_header_drawing">Наброс</string>
+<!--
+    <string name="main_table_header_gps">GPS</string>
+ -->
+    <string name="main_table_header_photo">Съемка</string>
+
+    <string name="leg">Отрезок</string>
+    <string name="left">Левое</string>
+    <string name="right">Правое</string>
+    <string name="up">Вверх</string>
+    <string name="down">Вниз</string>
+    <string name="distance">Длинна</string>
+    <string name="azimuth">Азимут</string>
+    <string name="slope">Наклон</string>
+
+    <string name="slope_column">Наклон:</string>
+
+    <string name="sensor">Датчик</string>
+    <string name="accuracy">Точность</string>
+    <string name="value">Данные</string>
+
+    <!-- add popup -->
+    <string name="main_add_title">Добавь данные</string>
+    <string name="main_add_leg">Следующий отрезок</string>
+    <string name="main_add_gallery">Следующая галерея</string>
+    <string name="main_add_middlepoint">Временная точка</string>
+    <string name="main_add_note">Заметка</string>
+    <string name="main_add_sketch">Наброс</string>
+    <string name="main_add_photo">Съемка</string>
+    <string name="main_add_gps">Координат</string>
+    <string name="main_add_vector">Новы луч</string>
+    <string name="main_reverse">Поверни</string>
+    <string name="main_reverse_message">Изменение направления и уклона отрезка %1$s!</string>
+    <string name="table_sketch_prefix">S</string>
+    <string name="table_note_prefix">N</string>
+    <string name="table_photo_prefix">P</string>
+    <string name="table_location_prefix">L</string>
+    <string name="table_vector_prefix">V</string>
+
+    <string name="point_photos_header">Съемки</string>
+    <string name="point_photo_label">Съемки %1$s</string>
+
+    <string name="point_vectors_header">Лучи</string>
+    <string name="point_vectors_counter">Луч #</string>
+    <string name="point_vectors_delete">Удаление луча %1$s?</string>
+    <string name="point_swipe_not_possible">Достигнут конец галереи</string>
+
+    <string name="gallery_after_first_point">Недостъпно для первого отрезка</string>
+
+    <!-- survey menu -->
+    <string name="menu_exit">Выход</string>
+
+    <string name="menu_exit_confirmation_question">Конец исследования?</string>
+
+    <!-- point -->
+    <string name="point_save">Сохранить</string>
+    <string name="point_delete">Удалить</string>
+<!--
+    <string name="point_read">Read</string>
+ -->
+
+    <!-- note screen -->
+    <string name="note_title">Заметка для</string>
+    <string name="note_save">Сохранить</string>
+    <string name="note_saved">Сохранено</string>
+
+    <!--vector screen -->
+    <string name="vector_button_add_again">Save + New</string>
+
+
+    <string name="sketch_pick_color">Выбрать цвет</string>
+    <string name="sketch_pick_size">Выбрать размера</string>
+    <string name="sketch_pick_style">Выбрать стиля</string>
+    <string name="sketch_pick_style_thick">Плотно</string>
+    <string name="sketch_pick_style_fill">Заполнено</string>
+    <string name="sketch_pick_style_dash">Пунктир</string>
+    <string name="sketch_saved">Сохранено</string>
+
+    <string name="sketch_undo">Назад</string>
+    <string name="sketch_redo">Вернуть</string>
+    <string name="sketch_save">Сохранить</string>
+    <string name="sketch_colorpicker">Выбрать цвет</string>
+    <string name="sketch_style">Стиль</string>
+    <string name="sketch_size">Размер</string>
+
+
+    <string name="map_edit">Редактировать</string>
+
+    <!-- info screen -->
+    <string name="update_project">Сохранить</string>
+    <string name="message_project_udpated">Проект сохранен</string>
+    <string name="statistics">Статистика</string>
+    <string name="info_created">Создано</string>
+    <string name="info_galleries"># галереи</string>
+    <string name="info_legs"># отрезки</string>
+    <string name="info_total_distance">Общая длина</string>
+    <string name="info_chooser_open_folder">Открыть папку</string>
+
+    <string name="info_num_notes"># заметки</string>
+    <string name="info_num_drawings"># набросы</string>
+    <string name="info_num_coordinates"># координаты</string>
+    <string name="info_num_photos"># съемки</string>
+    <string name="info_num_vectors"># лучи</string>
+
+
+    <string name="export_xls">Excel eкспорт</string>
+    <string name="export_vtopo">Visual Topo eкспорт</string>
+    <string name="export_view_files">Файлы</string>
+    <string name="export_done">Експорт в %1$s</string>
+    <string name="export_io_error">Неуспешное сохранение на SD карт</string>
+    <string name="io_error">Доступ запрещен SD карт</string>
+
+    <!-- options -->
+    <string name="measures_title">Измерения</string>
+    <string name="data_input_units">Единица измерения</string>
+    <string name="data_input_source">Источник</string>
+
+<!--
+    <string-array name="options_modes">
+        <item>Manual enter</item>
+        <item>Build-in sensors</item>
+        <item>Bluetooth sensors</item>
+    </string-array>
+ -->
+
+    <string name="options_units_distance">Расстояние:</string>
+    <string-array name="distance_units">
+        <item>Метры</item>
+    </string-array>
+    <string-array name="distance_read_type">
+        <item>Ручной</item>
+        <item>Через Bluetooth</item>
+    </string-array>
+
+    <string name="options_units_azimuth">Азимут:</string>
+    <string-array name="azimuth_units">
+        <item>Градусы</item>
+        <item>Грады </item>
+    </string-array>
+
+    <string-array name="azimuth_read_type_manually">
+        <item>Ручной</item>
+        <item>Через Bluetooth</item>
+    </string-array>
+
+    <string-array name="azimuth_read_type_all">
+        <item>Ручной</item>
+        <item>Встроенный датчик</item>
+        <item>Через Bluetooth</item>
+    </string-array>
+
+    <string name="options_units_slope">Наклон:</string>
+    <string-array name="slope_units">
+        <item>Градусы</item>
+        <item>Грады</item>
+    </string-array>
+
+    <string-array name="slope_read_type">
+        <item>Ручнойчно</item>
+        <item>Через Bluetooth</item>
+    </string-array>
+
+    <string-array name="slope_read_type_all">
+        <item>Ручной</item>
+        <item>Через Bluetooth</item>
+        <item>Встроенный датчик</item>
+    </string-array>
+
+    <!-- about screen -->
+    <string name="about_title">К CaveSurvey</string>
+    <string name="about_user_guide">Помощь &amp; руководство</string>
+    <string name="about_paldin">http://sk-paldin.eu</string>
+
+    <!-- info -->
+    <string name="info_distance_in">Расстояние в</string>
+    <string name="info_azimuth_in">Азимут в</string>
+    <string name="info_slope_in">Наклон в</string>
+    <string name="info_azimuth_build_in_sensor">Выбран встроенный датчик</string>
+
+    <string name="sensor_none">-</string>
+    <string name="rotation_sensor">Вращение</string>
+    <string name="magnetic_sensor">Магнитный/Ускорение</string>
+    <string name="orientation_sensor">Ориентировка</string>
+
+
+    <!-- popup -->
+    <string name="middle_leg_add">Добавь временное измерение</string>
+    <string name="middle_leg_info">Отрезок  %1$s</string>
+    <string name="middle_leg_distance">от %1$s %2$s</string>
+    <string name="middle_split_at">На расстояние</string>
+    <string name="middle_create">Создать</string>
+    <string name="middle_bad_value">Недопускаемая стоимость</string>
+    <string name="middle_leg_shorter">Слишком коротко</string>
+    <string name="middle_leg_bigger">Слишком длинная</string>
+    <string name="middle_no_value">Требуется расстояние</string>
+
+    <string name="error">Произошла ошибка</string>
+    <string name="error_no_space">Нехватка места</string>
+    <string name="busy">Подаждите&#8230;</string>
+
+    <string name="todo">Предстоит</string>
+
+    <string name="permission_required">Необходимо разрешение для: %1$s</string>
+
+
+    <!-- bluetooth -->
+    <string name="bt_devices">Устройств</string>
+    <string name="bt_devices_info">Сопряжение съвместимые устройства:</string>
+    <string name="bt_new_device">Добавь устройство</string>
+    <string name="bt_paired">Сопряжение</string>
+    <string name="bt_connected">Связь установлена </string>
+    <string name="bt_not_paired">Не сопряженны</string>
+    <string name="bt_pair_failed">Устройство несовместимое или отсуствует</string>
+    <string name="bt_state_unknown">Нераспознанное состояние</string>
+    <string name="bt_state_bonded">Сопряжение</string>
+    <string name="bt_state_bonding">Процесс сопряжения</string>
+    <string name="bt_state_none">Нераспознанное состояние</string>
+    <string name="bt_state_connecting">Подключение...</string>
+    <string name="bt_state_connected">Подключено</string>
+    <string name="bt_not_on">Bluetooth не поключен</string>
+    <string name="bt_not_selected">Устройство не выбрано</string>
+    <string name="bt_device_connecting">Подключение с: %1$s</string>
+    <string name="bt_supported_devices">Съвместимые устройства:</string>
+    <string name="bt_device_connected">Подключен с: %1$s</string>
+    <string name="bt_device_lost">Потеря связи: %1$s</string>
+    <string name="bt_devices_help"><u>Информация об устройствах</u></string>
+    <string name="bt_scan_failed">Неуспешное сканирование наличии устройств. Перезагрузите</string>
+
+    <!-- device mode validation -->
+    <string name="bt_device_mode">Используете режим: %1$s измерение</string>
+    <string name="bt_device_mode_single">единично</string>
+    <string name="bt_device_mode_single_or_indirect">косвенное расстояние или единично</string>
+
+    <string name="action_saved">Сохранено</string>
+    <string name="action_deleted">Нет данных</string>
+
+    <string name="azimuth_column">Азимут:</string>
+    <string name="accuracy_column">Точность:</string>
+    <string name="no_value_label">Отсуствующие данные</string>
+    <string name="azimuth_accuracy_no_value">-1</string>
+    <string name="azimuth_orination">Ориентировка:</string>
+    <string name="azimuth_magnetic">Магнитный:</string>
+    <string name="azimuth_rotation">Вращение:</string>
+    <string name="azimuth_start">Старт</string>
+    <string name="azimuth_stop">Стоп</string>
+    <string name="sensors_title"><u>Встроенные датчики</u></string>
+    <string name="sensor_test_title"><u>Тест датчика</u></string>
+    <string name="sensor_test_header">Тест встроенных датчиков</string>
+    <string name="sensor_choose_timeout">Время нацеливания (секунды)</string>
+    <string name="sensor_choose_simultaneously">Отчет</string>
+    <string-array name="sensors_reading_types">
+        <item>Незовисимое</item>
+        <item>Одновременно</item>
+    </string-array>
+    <string name="sensor_noise_reduction">Усреднения измерений</string>
+    <string-array name="sensor_noise_reduction_types">
+        <item>Выключить</item>
+        <item>Включить</item>
+    </string-array>
+    <string name="sensor_num_measurements">Измерения</string>
+    <string-array name="sensor_num_measurements">
+        <item>5</item>
+        <item>10</item>
+        <item>20</item>
+    </string-array>
+    <string name="sensor_choose_header">Выбор встроенного датчика</string>
+    <string name="no_sensors">Отсуствуют встроенного датчика</string>
+    <string name="sensor_choose_tooltip">Выберите самый подходящий встроенны датчик, отвечающий всем требованием </string>
+    <string name="sensor_test_tooltip">Вы можете тестировать встроенные датчики. Имейте в виду, что они не могут быть надежным измерительным инструментом, даже когда сообщают о высокой точности работы. \n\n
+        Датчики:\n
+        * Ориентация - Программный нерекомендованный датчик, который определяет местоположение устройства в пространстве.\n
+        * Магнитный - магнитометр и акселерометр на основе датчиков харудера. Они обычно предлагают высокую точность. Они предоставляют 2 значения для точности. Один для каждого датчика.\n
+        * Вращение - Программный датчик движения. Использует гироскоп устройства (в дополнение к другим датчикам) для улучшения стабильности и производительности. \n\n
+        Точность:\n
+        -1 – Нельзя доверять стоимости, возвращаемой этим датчиком, потому что датчик не имеет контакта с тем, что он измеряет.\n
+        0 -  Нельзя доверять стоимости, возвращаемой этим датчиком. Требуется калибровка или ситуация не позволяет проводить измерения\n
+        1 – Датчик считывает данные с низкой точностью и нуждается в калибровке с окружающей средой.\n
+        2 – Датчик считывает данные со средним уровнем точности. Калибровка с окружающей средой может улучшить отчетность.\n
+        3 – Датчик считывает данные с максимальной точностью.</string>
+
+    <string name="SENSOR_STATUS_UNRELIABLE">Ненадеждный</string>
+    <string name="SENSOR_STATUS_ACCURACY_LOW">Низкая точность</string>
+    <string name="SENSOR_STATUS_ACCURACY_MEDIUM">Средняя точность</string>
+    <string name="SENSOR_STATUS_ACCURACY_HIGH">Высокая точность</string>
+    <string name="SENSOR_STATUS_ACCURACY_UNKNOWN">Невозможно вычислить</string>
+
+    <string name="degrees">\u00B0</string>
+    <string name="grads">грады</string>
+<!--
+    <string name="meters">m</string>
+ -->
+<!--
+    <string name="lat_lon_template">%f\u00B0%s</string>
+ -->
+    <string name="gps_title">GPS позиционирование</string>
+    <string name="gps_altitude">Высота над уровнем моря (м)</string>
+    <string name="gps_latitude">Latitude</string>
+    <string name="gps_longitude">Longitude</string>
+    <string name="gps_accuracy">Точность (м)</string>
+    <string name="gps_no_value">Нет стоимость</string>
+    <string name="gps_save">Сохранить</string>
+    <string name="gps_disabled">GPS запрещен</string>
+    <string name="gps_no_signal">Поиск позиции GPS ....</string>
+    <string name="gps_saved_location">Позиция сохранена</string>
+    <string name="gps_current_location">Текущая позиция</string>
+
+    <string name="gps_error_no_location">GPS позиция отсуствует!</string>
+    <string name="gps_db_error">Сохранение пропало!</string>
+
+    <string name="gps_enable_question">GPS запрещен! Хотите разрешить?</string>
+
+    <string name="gps_type_title">Выберите GPS метода</string>
+    <string name="gps_type_auto">Автоматичны ввод</string>
+    <string name="gps_type_manual">Ручной ввод</string>
+
+    <string name="unit_meters">метры</string>
+    <string name="unit_degrees">градусы</string>
+    <string name="unit_grads">грады</string>
+
+    <string name="title_warning">Внимание</string>
+    <string name="error_list_legs">Ошибка при создание списка с отрезками</string>
+
+    <string name="lang_title">Выбрать язык</string>
+    <string-array name="lang_array">
+        <item>English</item>
+        <item>Български</item>
+        <item>简体中文</item>
+        <item>Русский</item>
+    </string-array>
+
+    <!-- error reporter -->
+    <string name="error_reporter_title">Сообщить об ошибки</string>
+    <string name="error_reporter_report">Отправь</string>
+    <string name="error_reporter_info">Используйте, чтобы сообщить нам о проблеме: \n
+ 1) активируйте \n
+ 2) воспроизвести проблему\n
+ 3) деактивировать\n\n
+ Собранные ошибки и ваше описание будут отправлены на анализ (может занять некоторое время).\n\n
+ Требуется подключение к сети.</string>
+    <string name="error_reporter_message">Опишите проблему</string>
+    <string name="error_reporter_message_empty">Опишите проблему, пожалуйста</string>
+    <string name="network_unavailable">Нет доступа к сети</string>
+    <string name="network_error">Ошибка сети</string>
+    <string name="error_not_sent">Отказано</string>
+
+    <!-- auto backup -->
+    <string name="settings_auto_backup">Автоматичны експорт</string>
+    <string name="settings_auto_backup_info">Автоматичное сохранение текущего проекта на каждые 5 минут</string>
+    <string name="settings_import_title">Импорт (Экспериментальный)</string>
+    <string name="settings_import_source">Импорт из:</string>
+    <string name="settings_import_error">Ошибка импорта строки %1d: %2s:%3s</string>
+    <string name="settings_import_target_name">Создать как:</string>
+    <string name="settings_import_no_files">Не найден экспортный файл</string>
+    <string name="settings_import_info">Создание нового исследование от уже соществующего.\nПросьба пользуетесь файлами сгенерированные после версии v1.27.\nССъемки и набросы будут отброшены.</string>
+
+    <!--opens topo -->
+    <string name="export_openstopo_title">OpensTopo</string>
+    <string name="information">Информация</string>
+    <string name="info_project_home">Проектные файлы</string>
+
+    <!-- splash -->
+    <string name="splash_loading">Подготовка ...</string>
+    <string name="splash_error">Ошибка: %1$s</string>
+    <string name="splash_error_database">Ошибка базы данных!</string>
+    <string name="splash_error_storage">Ошибка место хранение файла!!</string>
+    <string name="splash_internal_storage_warning">Не найдено внешнея память, файлы не будут доступны!</string>
+    <string name="splash_internal_storage_anyway">Использование внутренней памяти в любом случае</string>
+
+
+</resources>

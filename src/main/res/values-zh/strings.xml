@@ -401,6 +401,7 @@
         <item>English</item>
         <item>Български</item>
         <item>简体中文</item>
+        <item>Русский</item>
     </string-array>
 
     <!-- error reporter -->

@@ -25,6 +25,7 @@ public class LanguageDialog extends DialogFragment {
     private static final int LANG_ENGLISH = 0;
     private static final int LANG_BULGARIAN = 1;
     private static final int LANG_CHINESE = 2;
+    private static final int LANG_RUSSIAN = 3;
 
     /**
      * @see DialogFragment#onCreateDialog(android.os.Bundle)
@@ -50,6 +51,9 @@ public class LanguageDialog extends DialogFragment {
                 break;
             case LANG_CHINESE:
                 locale = Locale.SIMPLIFIED_CHINESE;
+                break;
+            case LANG_RUSSIAN:
+                locale = new Locale("ru","RU");
                 break;
 
             default:
