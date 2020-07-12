@@ -8,21 +8,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <com.astoev.cave.survey.activity.dialog.CameraDialogOverlay
         android:id="@+id/cameraOverlay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:visibility="gone"/>
+        android:alpha="0.8"
+        android:visibility="gone" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
-        android:orientation="vertical"
-        android:layout_marginBottom="20dp">
+        android:layout_marginBottom="20dp"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -66,12 +67,14 @@
                 android:textAppearance="?android:attr/textAppearanceLarge" />
         </LinearLayout>
     </LinearLayout>
-    <ProgressBar android:id="@+id/slope_progress"
-        android:progress="0"
-        android:layout_height="5dp"
-        android:layout_width="fill_parent"
-        android:maxHeight="2dp"
+
+    <ProgressBar
+        android:id="@+id/slope_progress"
         style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="5dp"
+        android:layout_gravity="bottom"
         android:layout_margin="10dp"
-        android:layout_gravity="bottom"/>
+        android:maxHeight="2dp"
+        android:progress="0" />
 </FrameLayout>
