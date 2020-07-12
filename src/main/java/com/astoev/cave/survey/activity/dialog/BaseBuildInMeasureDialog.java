@@ -271,8 +271,8 @@ public class BaseBuildInMeasureDialog extends DialogFragment implements SurfaceH
 
             // await results and stop processors
             ExecutorService executor = Executors.newFixedThreadPool(3);
-            executor.submit(new FutureTask(new AwaitFilterRunnable(orientationAzimuthProcessor, azimuthFilter, targetAzimuthTextBox), null));
-            executor.submit(new FutureTask(new AwaitFilterRunnable(orientationSlopeProcessor, slopeFilter, targetSlopeTextBox), null));
+            executor.submit(new FutureTask(new AwaitFilterRunnable(orientationAzimuthProcessor, azimuthFilter, targetAzimuthTextBox, false), null));
+            executor.submit(new FutureTask(new AwaitFilterRunnable(orientationSlopeProcessor, slopeFilter, targetSlopeTextBox, true), null));
             try {
                 sleep(100);
                 executor.shutdown();
@@ -285,17 +285,19 @@ public class BaseBuildInMeasureDialog extends DialogFragment implements SurfaceH
         dismiss();
     }
 
-    static class AwaitFilterRunnable implements Runnable {
+    class AwaitFilterRunnable implements Runnable {
 
-        public AwaitFilterRunnable(OrientationProcessor processor, MeasurementsFilter filter, EditText targetTextBox) {
+        public AwaitFilterRunnable(OrientationProcessor processor, MeasurementsFilter filter, EditText targetTextBox, boolean isSlope) {
             this.processor = processor;
             this.filter = filter;
             this.targetTextBox = targetTextBox;
+            this.isSlope = isSlope;
         }
 
         OrientationProcessor processor;
         MeasurementsFilter filter;
         EditText targetTextBox;
+        boolean isSlope;
 
         @Override
         public void run() {
@@ -313,7 +315,12 @@ public class BaseBuildInMeasureDialog extends DialogFragment implements SurfaceH
                         processor.stopListening();
                         // averaged value
                         // TODO the value is without camera offset and proper units
-                        targetTextBox.setText(String.valueOf(filter.getValue()));
+
+
+                        float value = filter.getValue();
+                        value = postProcessSensorValue(value, isSlope);
+
+                        targetTextBox.setText(String.valueOf(value));
                         return;
                     }
                 }
@@ -382,9 +389,7 @@ public class BaseBuildInMeasureDialog extends DialogFragment implements SurfaceH
                 //convert to Grads if necessary
                 azimuthFilter.addMeasurement(newValueArg);
                 float processedValue = azimuthFilter.getValue();
-                if (!isInDegrees) {
-                    processedValue = processedValue * Constants.DEC_TO_GRAD;
-                }
+                processedValue = postProcessSensorValue(processedValue, false);
 
                 aAzimuthView.setText(formater.format(processedValue) + unitsString);
                 aAccuracyView.setText(orientationAzimuthProcessor.getAccuracyAsString(lastAzimuthAccuracy) + azimuthFilter.getAccuracyString());
@@ -419,16 +424,7 @@ public class BaseBuildInMeasureDialog extends DialogFragment implements SurfaceH
                 slopeFilter.addMeasurement(newValueArg);
 
                 float processedValue = slopeFilter.getValue();
-
-                //convert to Grads if necessary
-                if (!isInDegrees){
-                    processedValue = processedValue * Constants.DEC_TO_GRAD;
-                }
-
-                if (cameraMode) {
-                    // phone upwards
-                    processedValue -= MAX_VALUE_SLOPE_DEGREES;
-                }
+                processedValue = postProcessSensorValue(processedValue, true);
 
                 aSlopeView.setText(formater.format(processedValue) + unitsString);
                 aSlopeAccuracyView.setText(orientationSlopeProcessor.getAccuracyAsString(lastSlopeAccuracy) + slopeFilter.getAccuracyString());
@@ -475,15 +471,38 @@ public class BaseBuildInMeasureDialog extends DialogFragment implements SurfaceH
             camera = Camera.open();
             camera.setDisplayOrientation(90);
 
-            //set camera to continually auto-focus
             Camera.Parameters params = camera.getParameters();
+            // TODO size ?
+
+            //set camera to continually auto-focus
             if (params.getSupportedFocusModes().contains(FOCUS_MODE_CONTINUOUS_VIDEO)) {
                 params.setFocusMode(FOCUS_MODE_CONTINUOUS_VIDEO);
             }
+
+            // zoom
+            // TODO
+//            params.setZoom(2);
+
             camera.setParameters(params);
         }
     }
 
+    private float postProcessSensorValue(float value, boolean isSlope) {
+
+        float processedValue = value;
+
+        if (isSlope && cameraMode) {
+            // phone upwards
+            processedValue -= MAX_VALUE_SLOPE_DEGREES;
+        }
+
+        //convert to Grads if necessary
+        if (!isInDegrees){
+            processedValue = processedValue * Constants.DEC_TO_GRAD;
+        }
+
+        return processedValue;
+    }
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
