@@ -318,7 +318,9 @@
     <string name="sensor_device_heading">Насочване</string>
     <string-array name="sensor_device_headings">
         <item>С устройството</item>
+<!--
         <item>С камерата</item>
+-->
     </string-array>
     <string name="no_sensors">Няма налични вградени сензори</string>
     <string name="sensor_choose_tooltip">Може да изберете най - подходящия вграден сензор, който да отговаря на нуждите ви за точност</string>

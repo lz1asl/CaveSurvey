@@ -336,7 +336,9 @@
     <string name="sensor_device_heading">Heading</string>
     <string-array name="sensor_device_headings">
         <item>Point with the device</item>
+<!--
         <item>Use the camera</item>
+-->
     </string-array>
     <string name="no_sensors">No available Build-in sensors</string>
     <string name="sensor_choose_tooltip">You can choose the most appropriate build in sensor that fits your need of accuracy</string>
