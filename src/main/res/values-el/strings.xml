@@ -1,0 +1,441 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- common -->
+    <string name="app_name">CaveSurvey</string>
+    <string name="button_yes">Ναι</string>
+    <string name="button_no">Όχι</string>
+    <string name="required">Απαιτείται</string>
+    <string name="invalid">Μη έγκυρο</string>
+    <string name="success">Επιτυχώς</string>
+    
+    <string name="sk_paldin">Paldin</string>
+
+    <!-- welcome screen -->
+    <string name="home_no_projects">Δημιουργία χαρτογράφησης</string>
+    <string name="home_new_project">Νέα χαρτογράφηση</string>
+    <string name="home_button_new_exists">Ο χάρτης %1$s υπάρχει!</string>
+    <string name="home_delete_project">Διαγραφή χάρτη %1$s?</string>
+    <string name="home_lang"><u>Γλώσσα</u></string>
+
+    <!-- new project screen -->
+    <string name="new_title">Νέα χαρτογράφηση</string>
+    <string name="new_button_create">Δημιουργία</string>
+
+    <string name="project_header">Όνομα χαρτογράφησης</string>
+    <string name="project_name">Όνομα</string>
+    <string name="project_name_required">Εισαγωγή ονόματος</string>
+    <string name="project_name_characters">Μη επιτρεπτοί χαρακτήρες</string>
+    <string name="project_import">Εισαγωγή</string>
+    <string name="import_success">Επιτυχής εισαγωγή</string>
+
+
+
+    <!-- survey screen -->
+    <string name="main_leg">Μέτρηση</string>
+    <string name="main_button_change">Επιλογή</string>
+    <string name="main_button_change_title">Επιλογή μέτρησης</string>
+    <string name="main_button_add">Προσθήκη</string>
+    <string name="main_button_data">Δεδομένα</string>
+    <string name="main_button_about">Σχετικά</string>
+    <string name="main_button_settings">Ρυθμήσεις</string>
+    <string name="main_button_map">Χάρτης</string>
+
+    <string name="map_plan">Κάτοψη</string>
+    <string name="map_section">Τομή</string>
+
+    <string name="main_table_header_from">Από</string>
+    <string name="main_table_header_to">Έως</string>
+<!--     
+    <string name="main_table_header_distance_from_start">Από την εκκίνηση</string>
+ -->    
+    <string name="main_table_header_more">Επιπλέων</string>
+    <string name="main_table_header_note">Σημειώσεις</string>
+    <string name="main_table_header_drawing">Σκαρίφημα</string>
+<!--     
+    <string name="main_table_header_gps">GPS</string>
+ -->    
+    <string name="main_table_header_photo">Φωτογραφία</string>
+    
+    <string name="leg">Μέτρηση</string>
+    <string name="left">Αριστερά</string>
+    <string name="right">Δεξιά</string>
+    <string name="up">Πάνω</string>
+    <string name="down">Κάτω</string>
+    <string name="distance">Μήκος</string>
+    <string name="azimuth">Αζιμούθιο</string>
+    <string name="slope">Κλίση</string>
+
+    <string name="point_photos_header">Φωτογραφίες</string>
+    <string name="point_photo_label">Φωτο %1$s</string>
+
+    <string name="point_vectors_header">Διανύσματα</string>
+    <string name="point_vectors_counter">Διάνυσμα #</string>
+    <string name="point_vectors_delete">Διαγραφή διανύσματος %1$s?</string>
+    <string name="point_swipe_not_possible">Τέλος τομέα</string>
+
+    <string name="slope_column">Κλισίμετρο:</string>
+    
+    <string name="sensor">Αισθητήρας</string>
+    <string name="accuracy">Ακρίβεια</string>
+    <string name="value">Τιμή</string>
+
+    <!-- add popup -->
+    <string name="main_add_title">Προσθήκη</string>
+    <string name="main_add_leg">Επόμενη μέτρηση</string>
+    <string name="main_add_gallery">Επόμενος τομέας</string>
+    <string name="main_add_middlepoint">Ενδιάμεσο σημείο</string>
+    <string name="main_add_note">Σημειώσεις</string>
+    <string name="main_add_sketch">Σκαρίφημα</string>
+    <string name="main_add_photo">Φωτογραφία</string>
+    <string name="main_add_gps">GPS</string>
+    <string name="main_add_vector">Διάνυσμα</string>
+    <string name="main_reverse">Αντιστροφή</string>
+    <string name="main_reverse_message">Αντιστροφή διεύθυνσης και κλίσης του %1$s;</string>
+    <string name="table_sketch_prefix">Χ</string>
+    <string name="table_note_prefix">Σ</string>
+    <string name="table_photo_prefix">Φ</string>
+    <string name="table_location_prefix">G</string>
+    <string name="table_vector_prefix">Δ</string>
+
+    <string name="gallery_after_first_point">Μη επιτρεπτό για την πρώτη μέτρηση</string>
+
+    <!-- survey menu -->
+<!--     
+    <string name="menu_help">Βοήθεια</string>
+ -->    
+    <string name="menu_exit">Έξοδος</string>
+
+    <string name="menu_exit_confirmation_question">Τέλος μετρήσεων;</string>
+
+    <!-- point -->
+    <string name="point_save">Αποθήκευση</string>
+    <string name="point_delete">Διαγραφή</string>
+<!--     
+    <string name="point_read">Ανάγνωση</string>
+ -->
+ 
+    <!-- note screen -->
+    <string name="note_title">Σημείωση για</string>
+    <string name="note_save">Αποθήκευση</string>
+    <string name="note_saved">Αποθηκεύτηκε</string>
+
+    <!--vector screen -->
+    <string name="vector_button_add_again">Αποθήκευση+Νέο</string>
+
+    
+
+    <string name="sketch_pick_color">Χρώμα</string>
+    <string name="sketch_pick_size">Μέγεθος</string>
+    <string name="sketch_pick_style">Τεχνοτροπία</string>
+    <string name="sketch_pick_style_thick">Απλή</string>
+    <string name="sketch_pick_style_fill">Με γέμισμα</string>
+    <string name="sketch_pick_style_dash">Διακεκομμένη</string>
+    <string name="sketch_saved">Αποθηκεύτηκε</string>
+    
+    <string name="sketch_undo">Αναίρεση</string>
+    <string name="sketch_redo">Επαναφορά</string>
+    <string name="sketch_save">Αποθήκευση</string>
+    <string name="sketch_colorpicker">Χρώμα</string>
+    <string name="sketch_style">Τεχνοτροπία</string>
+    <string name="sketch_size">Πάχος</string>
+    
+    
+    <string name="map_edit">Επεξεργασία</string>
+
+    <!-- info screen -->
+    <string name="update_project">Ενημέρωση</string>
+    <string name="message_project_udpated">Ενημερώθηκε</string>
+    <string name="statistics">Στατιστικά</string>
+    <string name="info_created">Δημιουργήθηκε</string>
+    <string name="info_galleries"># Άλμπουμ</string>
+    <string name="info_legs"># Μετρήσεις</string>
+    <string name="info_total_distance">Ολικό μήκος</string>
+    <string name="info_chooser_open_folder">Άνοιγμα φακέλου</string>
+
+    <string name="info_num_notes"># Σημειώσεις</string>
+    <string name="info_num_drawings"># Σκαριφήματα</string>
+    <string name="info_num_coordinates"># Συντεταγμένες</string>
+    <string name="info_num_photos"># Φωτογραφίες</string>
+    <string name="info_num_vectors"># Διανύσματα</string>
+
+
+    <string name="export_xls">Εξαγωγή στο Excel</string>
+    <string name="export_vtopo">Εξαγωγή στο Visual Topo</string>
+    <string name="export_view_files">Αρχεία δεδομένων</string>
+    <string name="export_done">Εξήχθη στο %1$s</string>
+    <string name="export_io_error">Αποτυχία εγγραφής στην κάρτα SD</string>
+    <string name="io_error">Αδυναμία πρόσβασης στην κάρτα SD</string>
+    
+    <!-- options -->
+    <string name="measures_title">Εισαγωγή δεδομένων</string>
+    <string name="data_input_units">Μονάδες</string>
+    <string name="data_input_source">Πηγή</string>
+<!-- 
+    <string-array name="options_modes">
+        <item>Μη αυτόματη εισαγωγή</item>
+        <item>Ενσωματωμένοι αισθητήρες</item>
+        <item>Από Bluetooth</item>
+    </string-array>
+ -->
+ 
+    <string name="options_units_distance">Απόσταση:</string>
+    <string-array name="distance_units">
+        <item>Μέτρα</item>
+    </string-array>
+    <string-array name="distance_read_type">
+        <item>Μη αυτόματα</item>
+        <item>Από Bluetooth</item>
+    </string-array>
+
+    <string name="options_units_azimuth">Αζιμούθιο:</string>
+    <string-array name="azimuth_units">
+        <item>Μοίρες</item>
+        <item>Βαθμοί</item>
+    </string-array>
+
+    <string-array name="azimuth_read_type_manually">
+        <item>Μη αυτόματα</item>
+        <item>Από Bluetooth</item>
+    </string-array>
+    
+    <string-array name="azimuth_read_type_all">
+        <item>Μη αυτόματα</item>
+        <item>Ενσωματωμένοι αισθητήρες</item>
+        <item>Από Bluetooth</item>
+    </string-array>
+
+    <string name="options_units_slope">Slope:</string>
+    <string-array name="slope_units">
+        <item>Μοίρες</item>
+        <item>Βαθμοί</item>
+    </string-array>
+
+    <string-array name="slope_read_type">
+        <item>Manually</item>
+        <item>From Bluetooth</item>
+    </string-array>
+    
+    <string-array name="slope_read_type_all">
+        <item>Μη αυτόματα</item>
+        <item>Από Bluetooth</item>
+        <item>Ενσωματωμένοι αισθητήρες</item>
+    </string-array>
+
+    <string-array name="latitude_types">
+        <item>N</item>
+        <item>S</item>
+    </string-array>
+    <string-array name="longitude_types">
+        <item>E</item>
+        <item>W</item>
+    </string-array>
+
+
+    <!-- about screen -->
+    <string name="about_title">Σχετικά με το CaveSurvey</string>
+    <string name="about_user_guide">Βοήθεια &amp; Εγχειρίδιο</string>
+    <string name="about_paldin">http://sk-paldin.eu</string>
+    <string name="about_help">https://github.com/lz1asl/CaveSurvey/wiki/User-Guide</string>
+
+
+    <!-- info -->
+    <string name="info_distance_in">Απόσταση</string>
+    <string name="info_azimuth_in">Αζιμούθιο</string>
+    <string name="info_slope_in">Κλίση</string>
+    <string name="info_azimuth_build_in_sensor">Ρύθμηση ενσωματωμένου αισθητήρα</string>
+    
+    <string name="sensor_none">-</string>
+    <string name="rotation_sensor">Περιστροφή</string>
+    <string name="magnetic_sensor">Μαγνητικός/Επιταχυνσιόμετρο</string>
+    <string name="orientation_sensor">Προσανατολισμός</string>
+
+
+    <!-- popup -->
+    <string name="middle_leg_add">Ενδιάμεσο σημείο</string>
+    <string name="middle_leg_info">Μέτρηση %1$s</string>
+    <string name="middle_leg_distance">από τα %1$s %2$s</string>
+    <string name="middle_split_at">Στα</string>
+    <string name="middle_create">Δημιουργία</string>
+    <string name="middle_bad_value">Μη έγκυρη τιμή</string>
+    <string name="middle_leg_shorter">Πολύ μικρή</string>
+    <string name="middle_leg_bigger">Πολύ μεγάλη</string>
+    <string name="middle_no_value">Απαιτείται η απόσταση</string>
+
+    <string name="error">Προέκυψε σφάλμα</string>
+    <string name="error_no_space">Δεν υπάρχει χώρος στην συσκευή</string>
+    <string name="busy">Παρακαλώ περιμένετε&#8230;</string>
+
+    <string name="todo">Εκκρεμότητες</string>
+
+    <string name="permission_required">Παρακαλώ εξουσιοδοτήστε το CaveSurvey για: %1$s</string>
+
+
+    <!-- bluetooth -->
+    <string name="bt_devices">Συσκευές</string>
+    <string name="bt_devices_info">Συζευγμένες συμβατές συσκευές:</string>
+    <string name="bt_new_device">Νέα συσκευή</string>
+    <string name="bt_paired">Συζευγμένη</string>
+    <string name="bt_connected">Επιτυχής σύνδεση</string>
+    <string name="bt_not_paired">Μη συζευγμένη</string>
+    <string name="bt_pair_failed">Συσκευή εκτός σύνδεσης ή μη συμβατή</string>
+    <string name="bt_state_unknown">Άγνωστη κατάσταση</string>
+    <string name="bt_state_bonded">Συζευγμένη</string>
+    <string name="bt_state_bonding">Σε σύζευξη...</string>
+    <string name="bt_state_none">Άγνωστη κατάσταση</string>
+    <string name="bt_state_connecting">Σε σύνδεση...</string>
+    <string name="bt_state_connected">Συνδεδεμένη</string>
+    <string name="bt_not_on">Κλειστό Bluetooth</string>
+    <string name="bt_not_selected">Δεν έχει επιλεχθεί συσκευή</string>
+    <string name="bt_device_connecting">Σε σύνδεση με: %1$s</string>
+    <string name="bt_supported_devices">Συμβατές συσκευές:</string>
+    <string name="bt_device_connected">Συνδέθηκε με: %1$s</string>
+    <string name="bt_device_lost">Αποσυνδέθηκε: %1$s</string>
+    <string name="bt_devices_help"><u>Πληροφορίες για τις συσκευές</u></string>
+    <string name="bt_devices_help_url">https://github.com/lz1asl/CaveSurvey/wiki/Measurement-Devices</string>
+    <string name="bt_scan_failed">Η σάρωση απέτυχε, παρακαλώ επανεκκινήστε</string>
+
+    <!-- device mode validation -->
+    <string name="bt_device_mode">Χρησιμοποιήστε τη λειτουργία μέτρησης: %1$s</string>
+    <string name="bt_device_mode_single">μονό</string>
+    <string name="bt_device_mode_single_or_indirect">έμμεσο μήκος ή μονό </string>
+
+    <string name="action_saved">Αποθηκεύτηκε</string>
+    <string name="action_deleted">Διαγράφηκε</string>
+    
+    <string name="azimuth_column">Αζιμούθιο:</string>
+    <string name="accuracy_column">Ακρίβεια:</string>
+    <string name="no_value_label">Χωρίς τιμή</string>
+    <string name="azimuth_accuracy_no_value">-1</string>
+    <string name="azimuth_orination">Προσανατολισμός:</string>
+    <string name="azimuth_magnetic">Μαγνητικό:</string>
+    <string name="azimuth_rotation">Περιστροφή:</string>
+    <string name="azimuth_start">Εκκίνηση</string>
+    <string name="azimuth_stop">Τέλος</string>
+    <string name="sensors_title"><u>Ενσωματωμένοι αισθητήρες</u></string>
+    <string name="sensor_test_title"><u>Δοκιμή αισθητήρων</u></string>
+    <string name="sensor_test_header">Δοκιμή ενσωματωμένων αισθητήρωνs</string>
+    <string name="sensor_choose_header">Επιλογή ενσωματωμένου αισθητήρα</string>
+    <string name="sensor_choose_timeout">Χρόνος στόχευσης (δευτερόλεπτα)</string>
+    <string name="sensor_choose_simultaneously">Χρόνος ανάγνωσης</string>
+    <string-array name="sensors_reading_types">
+        <item>Ανεξάρτητα</item>
+        <item>Ταυτόχρονα</item>
+    </string-array>
+    <string name="sensor_noise_reduction">Μέσος όρος μετρήσεων</string>
+    <string-array name="sensor_noise_reduction_types">
+        <item>Απενεργοποιημένο</item>
+        <item>Ενεργοποιημένο</item>
+    </string-array>
+    <string name="sensor_num_measurements">Μετρήσεις</string>
+    <string-array name="sensor_num_measurements">
+        <item>5</item>
+        <item>10</item>
+        <item>20</item>
+    </string-array>
+    <string name="no_sensors">Δεν υπάρχουν διαθέσιμοι ενσωματωμένοι αισθητήρες</string>
+    <string name="sensor_choose_tooltip">Μπορείτε να επιλέξετε τον καταλληλότερο ενσωματωμένο αισθητήρα που ταιριάζει στην ανάγκη σας για ακρίβεια.</string>
+    <string name="sensor_test_tooltip">Μπορείτε να δοκιμάσετε ενσωματωμένους αισθητήρες. Λάβετε υπόψη ότι μπορεί να μην είναι αξιόπιστα όργανα για τη λήψη μετρήσεων, ακόμη και αν αναφέρουν μέγιστη ακρίβεια.\n\n
+        Αισθητήρες:\n
+        * Προσανατολισμός - Αισθητήρας βασισμένος σε λογισμικό που καθορίζει τη θέση της συσκευής (δεν συνιστάται).\n
+        * Μαγνητικό – Ενσωματωμένο μαγνητόμετρο και επιταχυνσιόμετρο που συνήθως προσφέρουν υψηλή ακρίβεια. Εμφανίζονται δύο τιμές, μία για κάθε αισθητήρα.\n
+        * Περιστροφή - Αισθητήρας κίνησης βάσει λογισμικού. Χρησιμοποιεί το γυροσκόπιο της συσκευής (επιπρόσθετα των άλλων αισθητήρων) για τη βελτίωση της σταθερότητας και της απόδοσης.\n\n
+        Ακρίβεια:\n
+        -1 - Η τιμές που δίνει αυτός ο αισθητήρας δεν είναι αξιόπιστες, καθώς δεν έχει επαφή με αυτό που μετρά.\n
+        0 - Η τιμές που δίνει αυτός ο αισθητήρας δεν είναι αξιόπιστες. Απαιτείται βαθμονόμηση ή το περιβάλλον δεν επιτρέπει τη μέτρηση.\n
+        1 - Ο αισθητήρας αναφέρει δεδομένα με χαμηλή ακρίβεια και χρειάζεται βαθμονόμηση.\n
+        2 - Ο αισθητήρας αναφέρει δεδομένα με μέσο επίπεδο ακρίβειας. Η βαθμονόμηση μπορεί να βελτιώσει τις ενδείξεις.\n
+        3 - Ο αισθητήρας αναφέρει δεδομένα με μέγιστη ακρίβεια.</string>
+
+    <string name="SENSOR_STATUS_UNRELIABLE">Αναξιόπιστος</string>
+    <string name="SENSOR_STATUS_ACCURACY_LOW">Χαμηλή ακρίβεια</string>
+    <string name="SENSOR_STATUS_ACCURACY_MEDIUM">Μέση ακρίβεια</string>
+    <string name="SENSOR_STATUS_ACCURACY_HIGH">Υψηλή ακρίβεια</string>
+    <string name="SENSOR_STATUS_ACCURACY_UNKNOWN">Δεν μπορεί να καθοριστεί</string>
+    
+    <string name="degrees">\u00B0</string>
+    <string name="grads">Βαθμοί</string>
+<!--     
+    <string name="meters">μ</string>
+ -->
+<!--  
+    <string name="lat_lon_template">%f\u00B0%s</string>
+ -->     
+    <string name="gps_title">Θέση GPS</string>
+    <string name="gps_altitude">Υψόμετρο (μ)</string>
+    <string name="gps_latitude">Γεωγραφικό πλάτος</string>
+    <string name="gps_longitude">Γεωγραφικό μήκος</string>
+    <string name="gps_accuracy">Ακρίβεια (μ)</string>
+    <string name="gps_no_value">Χωρίς τιμή</string>
+    <string name="gps_no_value_format">dd.dddddd</string>
+    <string name="gps_save">Αποθήκευση</string>
+    <string name="gps_disabled">Απενεργοποιημένο GPS</string>
+    <string name="gps_no_signal">Έλεγχος τοποθεσίας...</string>
+    <string name="gps_saved_location">Αποθηκευμένη τοποθεσία</string>
+    <string name="gps_current_location">Τρέχουσα θέση</string>
+    
+    <string name="gps_error_no_location">Χωρίς τοποθεσία GPS!</string>
+    <string name="gps_db_error">Δεν είναι δυνατή η αποθήκευση της τοποθεσίας!</string>
+    
+    <string name="gps_enable_question">Το GPS είναι απενεργοποιημένο! Θέλετε να το ενεργοποιήσετε;</string>
+
+    <string name="gps_type_title">Επιλογή μεθόδου GPS</string>
+    <string name="gps_type_auto">Αυτόματα</string>
+    <string name="gps_type_manual">Μη αυτόματα</string>
+
+    <string name="unit_meters">μέτρα</string>
+    <string name="unit_degrees">μοίρες</string>
+    <string name="unit_grads">βαθμοί</string>
+
+    <string name="title_warning">Προειδοποίηση</string>
+    <string name="error_list_legs">Δεν είναι δυνατή η δημιουργία λίστας μετρήσεων</string>
+
+    <string name="lang_title">Επιλογή γλώσσας</string>
+    <string-array name="lang_array">
+        <item>English</item>
+        <item>Български</item>
+        <item>简体中文</item>
+        <item>Русский</item>
+        <item>Ελληνικά</item>
+    </string-array>
+
+    <!-- error reporter -->
+    <string name="error_reporter_title">Αναφορά σφάλματος</string>
+    <string name="error_reporter_report">Αποστολή</string>
+    <string name="error_reporter_info">Για αναφορά προβλήματος χρησιμοποιήστε:\n
+ 1) ενεργοποίηση\n
+ 2) επανάληψη βημάτων\n
+ 3) απενεργοποίηση\n\n
+Τα αρχεία καταγραφής και η περιγραφή σας θα σταλούν για ανάλυση (ενδέχεται να χρειαστεί χρόνος).\n\n
+Απαιτείται σύνδεση δικτύου.</string>
+    <string name="error_reporter_message">Περιγραφή προβλήματος</string>
+    <string name="error_reporter_message_empty">Παρακαλώ περιγράψτε το πρόβλημα</string>
+    <string name="network_unavailable">Η σύνδεση δικτύου δεν είναι διαθέσιμη</string>
+    <string name="network_error">Σφάλμα δικτύου</string>
+    <string name="error_not_sent">Η αναφορά ακυρώθηκε</string>
+
+    <!-- auto backup -->
+    <string name="settings_auto_backup">Αυτόματο αντίγραφο ασφαλείας</string>
+    <string name="settings_auto_backup_info">Αυτόματη δημιουργεία αντιγράφου ασφαλείας της ενεργής χαρτογράφησης κάθε 5 λεπτά</string>
+    <string name="settings_import_title">Εισαγωγή (πειραματικά)</string>
+    <string name="settings_import_source">Εισαγωγή από:</string>
+    <string name="settings_import_error">Αποτυχία εισαγωγής στη σειρά %1d: %2s:%3s</string>
+    <string name="settings_import_target_name">Δημιουργία ως:</string>
+    <string name="settings_import_no_files">Το εξαγόμενο αρχείο δεν βρέθηκε</string>
+    <string name="settings_import_info">Δημιουργεία νέας χαρτογράφισης από υπάρχον αρχείο.\nΠαρακαλώ χρησιμοποιήστε αρχεία που δημιουργήθηκαν μετά την έκδοση v1.27.\nΟι φωτογραφίες ή τα σχέδια θα αγνοηθούν.</string>
+
+    <!--opens topo -->
+    <string name="export_openstopo_title">OpensTopo</string>
+    <string name="information">Πληροφορίες</string>
+    <string name="info_project_home">Φάκελος έργου</string>
+
+    <!-- splash -->
+    <string name="splash_loading">Προετοιμασία ...</string>
+    <string name="splash_error">Αποτυχία: %1$s</string>
+    <string name="splash_error_database">Σφάλμα στη βάση δεδομένων!</string>
+    <string name="splash_error_storage">Ο χώρος αποθήκευσης δεν είναι διαθέσιμος!</string>
+    <string name="splash_internal_storage_warning">Ο εξωτερικός χώρος αποθήκευσης δεν είναι διαθέσιμος. Τα αρχεία δεν θα είναι προσβάσιμα από τον εξερευνητή αρχείων!</string>
+    <string name="splash_internal_storage_anyway">Επιτακτική χρήση εσωτερικού χώρου αποθήκευσης.</string>
+
+
+</resources>

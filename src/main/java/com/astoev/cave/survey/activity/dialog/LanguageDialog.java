@@ -26,6 +26,7 @@ public class LanguageDialog extends DialogFragment {
     private static final int LANG_BULGARIAN = 1;
     private static final int LANG_CHINESE = 2;
     private static final int LANG_RUSSIAN = 3;
+    private static final int LANG_GREEK = 4;
 
     /**
      * @see DialogFragment#onCreateDialog(android.os.Bundle)
@@ -43,22 +44,25 @@ public class LanguageDialog extends DialogFragment {
 
             Locale locale;
             switch (whichArg) {
-            case LANG_ENGLISH:
-                locale = Locale.ENGLISH;
-                break;
-            case LANG_BULGARIAN:
-                locale = new Locale("bg");
-                break;
-            case LANG_CHINESE:
-                locale = Locale.SIMPLIFIED_CHINESE;
-                break;
-            case LANG_RUSSIAN:
-                locale = new Locale("ru","RU");
-                break;
+                case LANG_ENGLISH:
+                    locale = Locale.ENGLISH;
+                    break;
+                case LANG_BULGARIAN:
+                    locale = new Locale("bg");
+                    break;
+                case LANG_CHINESE:
+                    locale = Locale.SIMPLIFIED_CHINESE;
+                    break;
+                case LANG_RUSSIAN:
+                    locale = new Locale("ru","RU");
+                    break;
+                case LANG_GREEK:
+                    locale = new Locale("el", "GR");
+                    break;
 
-            default:
-                locale = Locale.ENGLISH;
-                break;
+                default:
+                    locale = Locale.ENGLISH;
+                    break;
             }
 
             // change locale only if it is different
