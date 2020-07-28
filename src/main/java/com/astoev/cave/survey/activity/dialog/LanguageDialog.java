@@ -27,6 +27,7 @@ public class LanguageDialog extends DialogFragment {
     private static final int LANG_CHINESE = 2;
     private static final int LANG_RUSSIAN = 3;
     private static final int LANG_GREEK = 4;
+    private static final int LANG_POLISH = 5;
 
     /**
      * @see DialogFragment#onCreateDialog(android.os.Bundle)
@@ -39,7 +40,7 @@ public class LanguageDialog extends DialogFragment {
                 new ArrayAdapter<>(this.getActivity(),
                         android.R.layout.simple_list_item_1,
                         getResources().getStringArray(R.array.lang_array));
-        
+
         builder.setAdapter(langAdapter, (dialogArg, whichArg) -> {
 
             Locale locale;
@@ -58,6 +59,9 @@ public class LanguageDialog extends DialogFragment {
                     break;
                 case LANG_GREEK:
                     locale = new Locale("el", "GR");
+                    break;
+                case LANG_POLISH:
+                    locale = new Locale("pl", "PL");
                     break;
 
                 default:
@@ -86,12 +90,12 @@ public class LanguageDialog extends DialogFragment {
                 startActivity(intent);
             }
         });
-        
+
         builder.setNegativeButton(android.R.string.cancel, (dialogArg, whichArg) -> {
             // cancel
             LanguageDialog.this.getDialog().cancel();
         });
-        
+
         return builder.create();
     }
 
