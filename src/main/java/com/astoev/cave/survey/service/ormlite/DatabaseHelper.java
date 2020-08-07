@@ -41,7 +41,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static final int DATABASE_VERSION_1 = 1;
     private static final int DATABASE_VERSION_2 = 2;
     private static final int DATABASE_VERSION_3 = 3;
-    private static final int DATABASE_VERSION_LATEST = 4;
+    private static final int DATABASE_VERSION_4 = 4;
+    private static final int DATABASE_VERSION_5 = 5;
+    private static final int DATABASE_VERSION_LATEST = DATABASE_VERSION_5;
     public static final String DATABASE_NAME = "CaveSurvey";
 
     private Dao<Leg, Integer> mLegDao;
@@ -131,47 +133,53 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                     aSqLiteDatabase.execSQL("update notes set gallery_id = " +
                             "(select min(gallery_id) from legs where from_point_id = id)");
 
-                    aSqLiteDatabase.setTransactionSuccessful();
-
                     Log.i(Constants.LOG_TAG_DB, "Upgrade success");
                 }
 
-                if (aOldVersion < DATABASE_VERSION_3) {
+                if (aOldVersion < DATABASE_VERSION_4) {
                     Log.i(Constants.LOG_TAG_DB, "Upgrading DB to V4");
 
                     // auto backup by default
-                    Boolean autoBackup = ConfigUtil.getBooleanProperty(PREF_AUTO_BACKUP, null);
-                    if (autoBackup == null) {
+                    Boolean autoBackup = ConfigUtil.getBooleanProperty(PREF_AUTO_BACKUP, false);
+                    if (!autoBackup) {
                         Log.i(Constants.LOG_TAG_DB, "Enable auto backup");
                         ConfigUtil.setBooleanProperty(PREF_AUTO_BACKUP, true);
                     }
 
                     // read sensors simultaneously by default
-                    Boolean simultaneousSensorsReading = ConfigUtil.getBooleanProperty(PREF_SENSOR_SIMULTANEOUSLY, null);
-                    if (simultaneousSensorsReading == null) {
+                    Boolean simultaneousSensorsReading = ConfigUtil.getBooleanProperty(PREF_SENSOR_SIMULTANEOUSLY, false);
+                    if (!simultaneousSensorsReading) {
                         Log.i(Constants.LOG_TAG_DB, "Enable simultaneous sensors reading");
                         ConfigUtil.setBooleanProperty(PREF_SENSOR_SIMULTANEOUSLY, true);
                     }
 
                     // averaging enabled by default
-                    Boolean averagingEnabled = ConfigUtil.getBooleanProperty(PREF_SENSOR_NOISE_REDUCTION, null);
-                    if (averagingEnabled == null) {
+                    Boolean averagingEnabled = ConfigUtil.getBooleanProperty(PREF_SENSOR_NOISE_REDUCTION, false);
+                    if (!averagingEnabled) {
                         Log.i(Constants.LOG_TAG_DB, "Enable sensors averaging");
                         ConfigUtil.setBooleanProperty(PREF_SENSOR_NOISE_REDUCTION, true);
                     }
 
                     // averaging over 20 measurements by default
-                    Integer numMeasurementsAveraged = ConfigUtil.getIntProperty(PREF_SENSOR_NOISE_REDUCTION_NUM_MEASUREMENTS, null);
-                    if (numMeasurementsAveraged == null || numMeasurementsAveraged == 5) {
+                    Integer numMeasurementsAveraged = ConfigUtil.getIntProperty(PREF_SENSOR_NOISE_REDUCTION_NUM_MEASUREMENTS, 5);
+                    if (numMeasurementsAveraged == 5) {
                         Log.i(Constants.LOG_TAG_DB, "20 measurements averaged");
                         ConfigUtil.setIntProperty(PREF_SENSOR_NOISE_REDUCTION_NUM_MEASUREMENTS, 20);
                     }
 
-                    aSqLiteDatabase.setTransactionSuccessful();
                     Log.i(Constants.LOG_TAG_DB, "Upgrade success");
                 }
 
-                } finally {
+                if (aOldVersion < DATABASE_VERSION_5) {
+                    Log.i(Constants.LOG_TAG_DB, "Upgrading DB to V5");
+                    aSqLiteDatabase.execSQL("alter table galleries add column type VARCHAR(20) NOT NULL default 'CLASSIC'");
+                    aSqLiteDatabase.execSQL("alter table galleries add column color decimal NOT NULL default -256");
+                    Log.i(Constants.LOG_TAG_DB, "Upgrade success");
+                }
+
+                aSqLiteDatabase.setTransactionSuccessful();
+
+            } finally {
                 aSqLiteDatabase.endTransaction();
             }
 

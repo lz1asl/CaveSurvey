@@ -254,6 +254,15 @@ foreignAutoRefresh=true
 fieldName=mName
 columnName=name
 # --field-end--
+# --field-start--
+fieldName=mColor
+columnName=color
+# --field-end--
+# --field-start--
+fieldName=mType
+columnName=type
+canBeNull=false
+# --field-end--
 # --table-fields-end--
 # --table-end--
 #################################

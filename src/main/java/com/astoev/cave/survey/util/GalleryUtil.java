@@ -1,6 +1,7 @@
 package com.astoev.cave.survey.util;
 
 import com.astoev.cave.survey.model.Gallery;
+import com.astoev.cave.survey.model.GalleryType;
 import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.service.Workspace;
 
@@ -79,10 +80,11 @@ public class GalleryUtil {
         return createGallery(currProject, name);
     }
 
-    public static Gallery createGallery(Project aProject, String aName) throws SQLException {
+    public static Gallery createGallery(Project aProject, String aName, GalleryType aGalleryType) throws SQLException {
         Gallery gallery = new Gallery();
         gallery.setName(aName);
         gallery.setProject(aProject);
+        gallery.setType(aGalleryType);
         Workspace.getCurrentInstance().getDBHelper().getGalleryDao().create(gallery);
         return gallery;
     }
