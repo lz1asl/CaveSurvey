@@ -42,6 +42,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
 
+import static com.astoev.cave.survey.model.GalleryType.CLASSIC;
 import static com.astoev.cave.survey.model.Option.CODE_AZIMUTH_UNITS;
 import static com.astoev.cave.survey.model.Option.CODE_DISTANCE_UNITS;
 import static com.astoev.cave.survey.model.Option.CODE_SLOPE_UNITS;
@@ -234,7 +235,7 @@ public class ExcelImport {
                             Log.i(Constants.LOG_TAG_SERVICE, "Got gallery " + gallery);
                     if (gallery == null) {
                         Log.i(Constants.LOG_TAG_SERVICE, "Creating gallery " + aGalleryName);
-                        gallery = GalleryUtil.createGallery(aProject, aGalleryName);
+                        gallery = GalleryUtil.createGallery(aProject, aGalleryName, CLASSIC);
                     }
                 }
                 return gallery;

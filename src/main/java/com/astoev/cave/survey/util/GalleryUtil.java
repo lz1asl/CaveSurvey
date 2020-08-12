@@ -4,10 +4,14 @@ import com.astoev.cave.survey.model.Gallery;
 import com.astoev.cave.survey.model.GalleryType;
 import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.service.Workspace;
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.QueryBuilder;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.astoev.cave.survey.model.GalleryType.CLASSIC;
 
 /**
  * Gallery related logic.
@@ -77,7 +81,7 @@ public class GalleryUtil {
         } else {
             name = generateNextGalleryName();
         }
-        return createGallery(currProject, name);
+        return createGallery(currProject, name, CLASSIC);
     }
 
     public static Gallery createGallery(Project aProject, String aName, GalleryType aGalleryType) throws SQLException {
@@ -87,6 +91,14 @@ public class GalleryUtil {
         gallery.setType(aGalleryType);
         Workspace.getCurrentInstance().getDBHelper().getGalleryDao().create(gallery);
         return gallery;
+    }
+
+    public static long getGalleriesCount(Integer aProjectId) throws SQLException {
+        Dao<Gallery, Integer> galleryDao = Workspace.getCurrentInstance().getDBHelper().getGalleryDao();
+        QueryBuilder countOfSurveyGalleries = galleryDao.queryBuilder();
+        countOfSurveyGalleries.setCountOf(true);
+        countOfSurveyGalleries.setWhere(countOfSurveyGalleries.where().eq(Gallery.COLUMN_PROJECT_ID, aProjectId));
+        return galleryDao.countOf(countOfSurveyGalleries.prepare());
     }
 
 }

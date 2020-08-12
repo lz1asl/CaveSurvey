@@ -295,7 +295,10 @@ public class SurveyMainActivity extends MainMenuActivity implements AddNewSelect
                     UIUtilities.showNotification(R.string.gallery_after_first_point);
                 } else {
                     // next gallery
-                    addLeg(true);
+//                    addLeg(true);
+                    Intent intent = new Intent(SurveyMainActivity.this, NewGalleryActivity.class);
+//                    intent.putExtra(Constants.GALLERY_NEW, isDeviation);
+                    startActivity(intent);
                 }
             } else if (2 == itemArg) {
                 // middle point

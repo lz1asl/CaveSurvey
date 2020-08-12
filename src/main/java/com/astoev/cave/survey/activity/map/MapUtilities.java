@@ -10,6 +10,7 @@ import com.astoev.cave.survey.service.Options;
  * Created by astoev on 12/31/13.
  */
 public class MapUtilities {
+
     private static final int[] COLORS = new int[]{
             Color.YELLOW, Color.RED, Color.GREEN, Color.CYAN, Color.LTGRAY, Color.WHITE, Color.MAGENTA, Color.GRAY,  Color.BLUE
     };

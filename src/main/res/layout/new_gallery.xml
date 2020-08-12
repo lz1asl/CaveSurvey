@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_gravity="center"
+    android:layout_margin="20dp">
+
+    <TableLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <TableRow android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:text="@string/new_gallery_name"/>
+            <EditText android:id="@+id/new_gallery_name"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:enabled="false"/>
+        </TableRow>
+        <TableRow android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:text="@string/new_gallery_color"/>
+            <View android:id="@+id/new_gallery_color"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:gravity="center"/>
+        </TableRow>
+        <TableRow android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:text="@string/new_gallery_type"/>
+            <Spinner android:id="@+id/new_gallery_type"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"/>
+        </TableRow>
+    </TableLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/new_gallery_create"
+        android:layout_gravity="center"
+        android:layout_margin="30dp"
+        android:id="@+id/new_gallery_create"/>
+
+</LinearLayout>

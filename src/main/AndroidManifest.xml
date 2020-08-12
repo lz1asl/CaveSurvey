@@ -63,6 +63,11 @@
 	            android:name="android.support.PARENT_ACTIVITY"
 	            android:value="com.astoev.cave.survey.activity.main.SurveyMainActivity" />
         </activity>
+        <activity android:name=".activity.main.NewGalleryActivity" android:windowSoftInputMode="stateHidden">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.astoev.cave.survey.activity.main.SurveyMainActivity" />
+        </activity>
 
         <activity android:name="com.astoev.cave.survey.activity.main.BTActivity">
             <meta-data

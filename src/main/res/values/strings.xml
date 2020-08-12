@@ -262,6 +262,17 @@
     <string name="middle_leg_bigger">Too big</string>
     <string name="middle_no_value">Distance required</string>
 
+    <!-- gallery -->
+    <string name="new_gallery_title">New gallery</string>
+    <string name="new_gallery_name">Name</string>
+    <string name="new_gallery_color">Color</string>
+    <string name="new_gallery_type">Type</string>
+    <string name="new_gallery_create">Create</string>
+    <string-array name="gallery_types">
+        <item>Geolocation</item>
+        <item>Gallery</item>
+    </string-array>
+
     <string name="error">Error occurred</string>
     <string name="error_no_space">No space left on device</string>
     <string name="busy">Please wait&#8230;</string>

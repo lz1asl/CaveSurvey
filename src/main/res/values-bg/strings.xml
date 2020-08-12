@@ -245,6 +245,17 @@
     <string name="middle_leg_bigger">Твърде голяма</string>
     <string name="middle_no_value">Изисква се разстояние</string>
 
+    <!-- gallery -->
+    <string name="new_gallery_title">Нова галерия</string>
+    <string name="new_gallery_name">Име</string>
+    <string name="new_gallery_color">Цвят</string>
+    <string name="new_gallery_type">Тип</string>
+    <string name="new_gallery_create">Създай</string>
+    <string-array name="gallery_types">
+        <item>Geolocation</item>
+        <item>Gallery</item>
+    </string-array>
+
     <string name="error">Възникна грешка</string>
     <string name="error_no_space">Недостатъчно място</string>
     <string name="busy">Моля изчакайте&#8230;</string>
