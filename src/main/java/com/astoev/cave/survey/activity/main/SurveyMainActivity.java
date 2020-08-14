@@ -39,7 +39,6 @@ import com.astoev.cave.survey.service.Workspace;
 import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.util.StringUtils;
 
-import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -54,8 +53,6 @@ public class SurveyMainActivity extends MainMenuActivity implements AddNewSelect
 
     private SparseIntArray mGalleryColors = new SparseIntArray();
     private SparseArray<String> mGalleryNames = new SparseArray<>();
-    
-    private static boolean isDebug = false;
     
     private String sketchPrefix;
     private String notePrefix;
@@ -152,11 +149,6 @@ public class SurveyMainActivity extends MainMenuActivity implements AddNewSelect
 
                 lastGalleryId = l.getGalleryId();
                 
-                if (isDebug){
-                	fromPointString = fromPointString +"(" + fromPoint.getId() + ")";
-                	toPointString = toPointString + "("+toPoint.getId()+")";
-                }
-
                 if (l.isMiddle()) {
                     row.addView(createTextView("", currLegFlag, false, mGalleryColors.get(prevGalleryId)));
                     row.addView(createTextView("", currLegFlag, false, mGalleryColors.get(l.getGalleryId())));
@@ -171,10 +163,6 @@ public class SurveyMainActivity extends MainMenuActivity implements AddNewSelect
 
                 StringBuilder moreText = new StringBuilder();
                 
-                if (isDebug){
-                	moreText.append(l.getGalleryId()).append(" ");
-                }
-
                 if (!l.isMiddle()) {
                     Sketch sketch = DaoUtil.getScetchByLeg(l);
                     if (sketch != null){
@@ -286,7 +274,7 @@ public class SurveyMainActivity extends MainMenuActivity implements AddNewSelect
         try {
             if (0 == itemArg) {
                 // next leg
-                addLeg(false);
+                addLeg();
             } else if (1 == itemArg) {
                 // next gallery
                 Leg prevLeg = DaoUtil.getLegByToPoint(Workspace.getCurrentInstance().getActiveLeg().getFromPoint());
@@ -310,16 +298,14 @@ public class SurveyMainActivity extends MainMenuActivity implements AddNewSelect
         }
     }
 
-    private void requestLengthAndAddMiddle() throws SQLException {
+    private void requestLengthAndAddMiddle() {
         new MiddlePointDialog().show(getSupportFragmentManager(), "middle_point_dialog");
     }
 
-    private void addLeg(final boolean isDeviation) throws SQLException {
+    private void addLeg() {
         Log.i(Constants.LOG_TAG_UI, "Creating leg");
 
         Intent intent = new Intent(SurveyMainActivity.this, PointActivity.class);
-        intent.putExtra(Constants.GALLERY_NEW, isDeviation);
-
         startActivity(intent);
     }
 

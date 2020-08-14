@@ -13,7 +13,7 @@ import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.MainMenuActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
-import com.astoev.cave.survey.activity.main.PointActivity;
+import com.astoev.cave.survey.activity.main.NewGalleryActivity;
 import com.astoev.cave.survey.activity.main.SurveyMainActivity;
 import com.astoev.cave.survey.dto.ProjectConfig;
 import com.astoev.cave.survey.fragment.InfoDialogFragment;
@@ -145,14 +145,15 @@ public class NewProjectActivity extends MainMenuActivity {
 
             if (project != null) {
                 getWorkspace().setActiveProject(project);
-                getWorkspace().setActiveLeg(getWorkspace().getActiveOrFirstLeg());
 
                 Intent intent;
                 if (projectImported) {
+                    // snow the imported project
                     intent = new Intent(NewProjectActivity.this, SurveyMainActivity.class);
+                    getWorkspace().setActiveLeg(getWorkspace().getActiveOrFirstLeg());
                 } else {
-                    intent = new Intent(NewProjectActivity.this, PointActivity.class);
-                    intent.putExtra(Constants.LEG_SELECTED, getWorkspace().getActiveLegId());
+                    // proceed with the first gallery creation
+                    intent = new Intent(NewProjectActivity.this, NewGalleryActivity.class);
                 }
                 startActivity(intent);
                 finish();

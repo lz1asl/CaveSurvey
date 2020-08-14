@@ -4,15 +4,10 @@ import android.util.Log;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.dto.ProjectConfig;
-import com.astoev.cave.survey.model.Gallery;
-import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Option;
-import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.service.Workspace;
-import com.astoev.cave.survey.util.GalleryUtil;
-import com.astoev.cave.survey.util.PointUtil;
 import com.j256.ormlite.misc.TransactionManager;
 
 import java.sql.SQLException;
@@ -54,7 +49,7 @@ public class ProjectManager {
                     getWorkspace().getDBHelper().getProjectDao().create(newProject);
                     getWorkspace().setActiveProject(newProject);
 
-                    // gallery
+               /*     // gallery
                     Gallery firstGallery = GalleryUtil.createGallery(true);
 
                     // points
@@ -66,7 +61,7 @@ public class ProjectManager {
                     // first leg
                     Leg firstLeg = new Leg(startPoint, secondPoint, newProject, firstGallery.getId());
                     getWorkspace().getDBHelper().getLegDao().create(firstLeg);
-                    getWorkspace().setActiveLeg(firstLeg);
+                    getWorkspace().setActiveLeg(firstLeg);*/
 
                     // project units
                     Log.i(Constants.LOG_TAG_UI, projectConfig.toString());

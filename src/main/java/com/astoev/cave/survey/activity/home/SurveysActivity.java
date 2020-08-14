@@ -17,10 +17,11 @@ import com.astoev.cave.survey.activity.dialog.AboutDialog;
 import com.astoev.cave.survey.activity.dialog.ConfirmDeleteDialog;
 import com.astoev.cave.survey.activity.dialog.DeleteHandler;
 import com.astoev.cave.survey.activity.main.BTActivity;
+import com.astoev.cave.survey.activity.main.NewGalleryActivity;
 import com.astoev.cave.survey.activity.main.SurveyMainActivity;
-import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.util.DaoUtil;
+import com.astoev.cave.survey.util.GalleryUtil;
 import com.astoev.cave.survey.util.PermissionUtil;
 
 import java.io.Serializable;
@@ -30,6 +31,7 @@ import java.util.List;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.Manifest.permission.BLUETOOTH;
 import static android.Manifest.permission.BLUETOOTH_ADMIN;
+import static com.astoev.cave.survey.activity.UIUtilities.logException;
 
 /**
  * Home activity for managing projects and general settings.
@@ -122,15 +124,26 @@ public class SurveysActivity extends MainMenuActivity implements DeleteHandler {
 
                     Object selectedObject = parent.getAdapter().getItem(position);
                     if (selectedObject != null && selectedObject instanceof Project) {
-                        Project project = (Project) selectedObject;
+                        try {
+                            Project project = (Project) selectedObject;
 
-                        Log.i(Constants.LOG_TAG_UI, "Selected survey " + project.getId());
-                        getWorkspace().setActiveProject(project);
-                        Leg lastProjectLeg = getWorkspace().getLastLeg();
-                        getWorkspace().setActiveLeg(lastProjectLeg);
+                            Log.i(Constants.LOG_TAG_UI, "Selected survey " + project.getId());
+                            getWorkspace().setActiveProject(project);
 
-                        Intent intent = new Intent(SurveysActivity.this, SurveyMainActivity.class);
-                        startActivity(intent);
+                            long numGalleries = GalleryUtil.getGalleriesCount(project.getId());
+                            Intent intent;
+                            if (numGalleries > 0) {
+                                // open the project
+                                intent = new Intent(this, SurveyMainActivity.class);
+                                getWorkspace().setActiveLeg(getWorkspace().getActiveOrFirstLeg());
+                            } else {
+                                // proceed with the first gallery creation
+                                intent = new Intent(this, NewGalleryActivity.class);
+                            }
+                            startActivity(intent);
+                        } catch (Exception e) {
+                            logException(e, "Failed to open survey");
+                        }
                     }
                 });
 

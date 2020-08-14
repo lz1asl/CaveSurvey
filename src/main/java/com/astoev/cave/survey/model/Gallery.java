@@ -59,6 +59,14 @@ public class Gallery implements Serializable {
         mName = aName;
     }
 
+    public Integer getColor() {
+        return mColor;
+    }
+
+    public void setColor(Integer aColor) {
+        mColor = aColor;
+    }
+
     public Project getProject() {
         return mProject;
     }

@@ -33,7 +33,6 @@ import com.astoev.cave.survey.activity.dialog.GpsTypeHandler;
 import com.astoev.cave.survey.activity.dialog.VectorDialog;
 import com.astoev.cave.survey.activity.draw.DrawingActivity;
 import com.astoev.cave.survey.activity.map.MapUtilities;
-import com.astoev.cave.survey.model.Gallery;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Note;
 import com.astoev.cave.survey.model.Option;
@@ -49,7 +48,6 @@ import com.astoev.cave.survey.service.orientation.SlopeChangedListener;
 import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.util.FileStorageUtil;
 import com.astoev.cave.survey.util.FileUtils;
-import com.astoev.cave.survey.util.GalleryUtil;
 import com.astoev.cave.survey.util.PermissionUtil;
 import com.astoev.cave.survey.util.PointUtil;
 import com.astoev.cave.survey.util.StringUtils;
@@ -73,7 +71,7 @@ import static android.Manifest.permission.CAMERA;
 public class PointActivity extends MainMenuActivity implements AzimuthChangedListener, SlopeChangedListener, BTResultAware, View.OnTouchListener, DeleteHandler, GpsTypeHandler {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
-    private static final int REQIEST_EDIT_NOTE = 2;
+    private static final int REQUEST_EDIT_NOTE = 2;
 
     private static final String VECTOR_DIALOG = "vector_dialog";
     private static final String STATE_PHOTO_PATH = "STATE_PHOTO_PATH";
@@ -292,10 +290,10 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 
                         Leg legEdited = getCurrentLeg();
 
-                        if (getIntent().getBooleanExtra(Constants.GALLERY_NEW, false)) {
-                            Gallery newGallery = GalleryUtil.createGallery(false);
-                            legEdited.setGalleryId(newGallery.getId());
-                        }
+//                        if (getIntent().getBooleanExtra(Constants.GALLERY_NEW, false)) {
+//                            Gallery newGallery = GalleryUtil.createGallery(false);
+//                            legEdited.setGalleryId(newGallery.getId());
+//                        }
 
                         if (legEdited.isNew()) {
                             getWorkspace().getDBHelper().getPointDao().create(legEdited.getToPoint());
@@ -345,7 +343,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         Intent intent = new Intent(this, NoteActivity.class);
         intent.putExtra(Constants.LEG_SELECTED, getCurrentLeg().getId());
         intent.putExtra(Constants.LEG_NOTE, mNewNote);
-        startActivityForResult(intent, REQIEST_EDIT_NOTE);
+        startActivityForResult(intent, REQUEST_EDIT_NOTE);
     }
 
     public void saveButton() {
@@ -488,7 +486,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                     }
                 }
                 break;
-                case REQIEST_EDIT_NOTE:
+                case REQUEST_EDIT_NOTE:
                     mNewNote = aData.getStringExtra("note");
                     TextView textView = findViewById(R.id.point_note_text);
                     textView.setText(mNewNote);
@@ -636,19 +634,11 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                 Integer currGalleryId = getWorkspace().getActiveGalleryId();
 
                 // another leg, starting from the latest in the gallery
-                boolean newGalleryFlag = extras != null && extras.getBoolean(Constants.GALLERY_NEW, false);
-                Point newFrom, newTo;
-                if (newGalleryFlag) {
-                    newFrom = getWorkspace().getActiveLeg().getFromPoint();
-                    newTo = PointUtil.createSecondPoint();
-                    currGalleryId = null;
-                } else {
-                    newFrom = getWorkspace().getLastGalleryPoint(currGalleryId);
-                    newTo = PointUtil.generateNextPoint(currGalleryId);
-                }
+                Point from = getWorkspace().getLastGalleryPoint(currGalleryId);
+                Point to = PointUtil.generateNextPoint(currGalleryId);
 
                 Log.i(Constants.LOG_TAG_UI, "PointView for new point");
-                mCurrentLeg = new Leg(newFrom, newTo, getWorkspace().getActiveProject(), currGalleryId);
+                mCurrentLeg = new Leg(from, to, getWorkspace().getActiveProject(), currGalleryId);
             } catch (SQLException sqle) {
                 throw new RuntimeException(sqle);
             }

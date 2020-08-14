@@ -9,12 +9,14 @@ import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.TaskStackBuilder;
 
+import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.main.BTActivity;
 import com.astoev.cave.survey.activity.map.MapUtilities;
@@ -86,6 +88,11 @@ public class UIUtilities {
         e.printStackTrace(new PrintWriter(sw));
         builder.setMessage(sw.toString());
         builder.show();
+    }
+
+    public static void logException(Exception e, String message) {
+        Log.e(Constants.LOG_TAG_UI, message, e);
+        UIUtilities.showNotification(R.string.error);
     }
 
     public static void showBusy(Context aContext) {

@@ -61,6 +61,7 @@
         android:text="@string/new_gallery_create"
         android:layout_gravity="center"
         android:layout_margin="30dp"
-        android:id="@+id/new_gallery_create"/>
+        android:id="@+id/new_gallery_create"
+        android:onClick="createButton"/>
 
 </LinearLayout>

@@ -23,8 +23,6 @@ public class Constants {
     public static final String LEG_SELECTED = "leg";
     public static final String LEG_NOTE = "legNote";
 
-    public static final String GALLERY_NEW = "new_gallery";
-    
     public static Locale DEFAULT_LOCALE = Locale.US;
     
     public static final int NOT_FOUND = -1;

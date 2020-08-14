@@ -5,6 +5,7 @@ import android.util.Log;
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.UIUtilities;
+import com.astoev.cave.survey.activity.map.MapUtilities;
 import com.astoev.cave.survey.model.Gallery;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Location;
@@ -235,7 +236,8 @@ public class ExcelImport {
                             Log.i(Constants.LOG_TAG_SERVICE, "Got gallery " + gallery);
                     if (gallery == null) {
                         Log.i(Constants.LOG_TAG_SERVICE, "Creating gallery " + aGalleryName);
-                        gallery = GalleryUtil.createGallery(aProject, aGalleryName, CLASSIC);
+                        // TODO poper gallery initialization
+                        gallery = GalleryUtil.createGallery(aProject, aGalleryName, MapUtilities.getNextGalleryColor(0), CLASSIC);
                     }
                 }
                 return gallery;

@@ -1,5 +1,6 @@
 package com.astoev.cave.survey.util;
 
+import com.astoev.cave.survey.activity.map.MapUtilities;
 import com.astoev.cave.survey.model.Gallery;
 import com.astoev.cave.survey.model.GalleryType;
 import com.astoev.cave.survey.model.Project;
@@ -73,21 +74,16 @@ public class GalleryUtil {
         return "A";
     }
 
-    public static Gallery createGallery(boolean isFirst) throws SQLException {
+    public static Gallery createFirstGallery() throws SQLException {
         Project currProject = Workspace.getCurrentInstance().getActiveProject();
-        String name;
-        if (isFirst) {
-            name = getFirstGalleryName();
-        } else {
-            name = generateNextGalleryName();
-        }
-        return createGallery(currProject, name, CLASSIC);
+        return createGallery(currProject, getFirstGalleryName(), MapUtilities.getNextGalleryColor(0), CLASSIC);
     }
 
-    public static Gallery createGallery(Project aProject, String aName, GalleryType aGalleryType) throws SQLException {
+    public static Gallery createGallery(Project aProject, String aName, int aColor, GalleryType aGalleryType) throws SQLException {
         Gallery gallery = new Gallery();
         gallery.setName(aName);
         gallery.setProject(aProject);
+        gallery.setColor(aColor);
         gallery.setType(aGalleryType);
         Workspace.getCurrentInstance().getDBHelper().getGalleryDao().create(gallery);
         return gallery;
