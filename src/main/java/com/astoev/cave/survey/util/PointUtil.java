@@ -34,12 +34,14 @@ public class PointUtil {
     }
 
     public static Point generateNextPoint(Integer aGalleryId) throws SQLException {
-
         Point lastGalleryPoint = Workspace.getCurrentInstance().getLastGalleryPoint(aGalleryId);
+        return generateNextPoint(lastGalleryPoint);
+    }
+
+    public static Point generateNextPoint(Point previousPoint) {
 
         Point newPoint = new Point();
-
-        String pointName = lastGalleryPoint.getName();
+        String pointName = previousPoint.getName();
 
         // TODO no middle point support
         if (pointName.indexOf(DELIMITER) != -1) {
@@ -66,7 +68,7 @@ public class PointUtil {
                 newPoint.setName(newName.toUpperCase(Constants.DEFAULT_LOCALE));
             } else {
                 // increase the index 2 -> 3
-                newPoint.setName(String.valueOf(Long.parseLong(lastGalleryPoint.getName()) + 1));
+                newPoint.setName(String.valueOf(Long.parseLong(previousPoint.getName()) + 1));
             }
         }
 

@@ -160,6 +160,18 @@ public class DaoUtil {
         return Workspace.getCurrentInstance().getDBHelper().getLegDao().query(query.prepare());
     }
 
+    public static Leg getProjectFirstLeg(Integer aProjectId) throws SQLException {
+        QueryBuilder<Leg, Integer> query = Workspace.getCurrentInstance().getDBHelper().getLegDao().queryBuilder();
+        Where<Leg, Integer> where = query.where().eq(Leg.COLUMN_PROJECT_ID, aProjectId);
+        where.and().isNull(Leg.COLUMN_MIDDLE_POINT_AT_DISTANCE);
+        query.orderBy(Leg.COLUMN_GALLERY_ID, true);
+        query.orderBy(Leg.COLUMN_FROM_POINT, true);
+        query.orderBy(Leg.COLUMN_TO_POINT, true);
+        query.limit(1L);
+
+        return Workspace.getCurrentInstance().getDBHelper().getLegDao().queryForFirst(query.prepare());
+    }
+
     public static void refreshPoint(Point aPoint) throws SQLException {
         Workspace.getCurrentInstance().getDBHelper().getPointDao().refresh(aPoint);
     }

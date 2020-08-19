@@ -69,6 +69,12 @@ public class SplashActivity extends AppCompatActivity {
             return;
         }
 
+        // reset current working settings
+        Workspace workspace = Workspace.getCurrentInstance();
+        workspace.clearActiveProject();
+        workspace.clearActiveLeg();
+        workspace.clearActiveGallery();
+
         // TODO - prepare language and configuration for later usage
 
         // continue

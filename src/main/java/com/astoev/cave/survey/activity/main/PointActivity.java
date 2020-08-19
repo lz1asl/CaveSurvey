@@ -635,7 +635,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 
                 // another leg, starting from the latest in the gallery
                 Point from = getWorkspace().getLastGalleryPoint(currGalleryId);
-                Point to = PointUtil.generateNextPoint(currGalleryId);
+                Point to = PointUtil.generateNextPoint(from);
 
                 Log.i(Constants.LOG_TAG_UI, "PointView for new point");
                 mCurrentLeg = new Leg(from, to, getWorkspace().getActiveProject(), currGalleryId);

@@ -269,7 +269,7 @@
     <string name="new_gallery_type">Type</string>
     <string name="new_gallery_create">Create</string>
     <string-array name="gallery_types">
-        <item>Geolocation</item>
+        <item>Georeference</item>
         <item>Gallery</item>
     </string-array>
 

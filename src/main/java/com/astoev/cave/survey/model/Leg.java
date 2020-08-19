@@ -69,8 +69,8 @@ public class Leg implements Serializable {
         mGalleryId = aGalleryId;
     }
 
-    public Leg createNextLeg() throws SQLException {
-        Point nextPoint = PointUtil.generateNextPoint(mGalleryId);
+    public Leg createNextLeg() {
+        Point nextPoint = PointUtil.generateNextPoint(getFromPoint());
         return new Leg(mToPoint, nextPoint, mProject, mGalleryId);
     }
 

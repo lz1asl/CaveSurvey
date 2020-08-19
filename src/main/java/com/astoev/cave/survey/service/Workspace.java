@@ -64,6 +64,11 @@ public class Workspace {
         ConfigUtil.setIntProperty(ConfigUtil.PROP_CURR_PROJECT, aProject.getId());
     }
 
+    public void clearActiveProject() {
+        ConfigUtil.removeProperty(ConfigUtil.PROP_CURR_PROJECT);
+    }
+
+
     public void setActiveLeg(Leg aLeg) {
         setActiveLegId(aLeg.getId());
         setActiveGalleryId(aLeg.getGalleryId());

@@ -19,7 +19,9 @@ import com.astoev.cave.survey.activity.dialog.DeleteHandler;
 import com.astoev.cave.survey.activity.main.BTActivity;
 import com.astoev.cave.survey.activity.main.NewGalleryActivity;
 import com.astoev.cave.survey.activity.main.SurveyMainActivity;
+import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Project;
+import com.astoev.cave.survey.service.Workspace;
 import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.util.GalleryUtil;
 import com.astoev.cave.survey.util.PermissionUtil;
@@ -135,7 +137,11 @@ public class SurveysActivity extends MainMenuActivity implements DeleteHandler {
                             if (numGalleries > 0) {
                                 // open the project
                                 intent = new Intent(this, SurveyMainActivity.class);
-                                getWorkspace().setActiveLeg(getWorkspace().getActiveOrFirstLeg());
+                                Workspace workspace = getWorkspace();
+                                workspace.setActiveProject(project);
+                                Leg firstProjectLeg = DaoUtil.getProjectFirstLeg(project.getId());
+                                workspace.setActiveLeg(firstProjectLeg);
+                                workspace.setActiveGalleryId(firstProjectLeg.getGalleryId());
                             } else {
                                 // proceed with the first gallery creation
                                 intent = new Intent(this, NewGalleryActivity.class);

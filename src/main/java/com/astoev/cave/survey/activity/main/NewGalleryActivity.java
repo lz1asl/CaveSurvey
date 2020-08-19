@@ -12,7 +12,6 @@ import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.MainMenuActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
-import com.astoev.cave.survey.model.Gallery;
 import com.astoev.cave.survey.model.GalleryType;
 import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.service.Workspace;
@@ -98,11 +97,11 @@ public class NewGalleryActivity extends MainMenuActivity {
                     type = CLASSIC;
             }
 
-            Gallery gallery = GalleryUtil.createGallery(project, nameTextView.getText().toString(), color, type);
-            Workspace.getCurrentInstance().setActiveGalleryId(gallery.getId());
+            GalleryUtil.createGallery(project, nameTextView.getText().toString(), color, type);
 
             // start editing the first leg
             Intent intent = new Intent(this, PointActivity.class);
+            intent.putExtra(Constants.LEG_SELECTED, getWorkspace().getActiveLegId());
             startActivity(intent);
             finish();
         } catch (Exception e) {

@@ -3,6 +3,8 @@ package com.astoev.cave.survey.util;
 import com.astoev.cave.survey.activity.map.MapUtilities;
 import com.astoev.cave.survey.model.Gallery;
 import com.astoev.cave.survey.model.GalleryType;
+import com.astoev.cave.survey.model.Leg;
+import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.service.Workspace;
 import com.j256.ormlite.dao.Dao;
@@ -80,12 +82,32 @@ public class GalleryUtil {
     }
 
     public static Gallery createGallery(Project aProject, String aName, int aColor, GalleryType aGalleryType) throws SQLException {
+
+        // new gallery
+        Workspace workspace = Workspace.getCurrentInstance();
         Gallery gallery = new Gallery();
         gallery.setName(aName);
         gallery.setProject(aProject);
         gallery.setColor(aColor);
         gallery.setType(aGalleryType);
-        Workspace.getCurrentInstance().getDBHelper().getGalleryDao().create(gallery);
+        workspace.getDBHelper().getGalleryDao().create(gallery);
+        workspace.setActiveGalleryId(gallery.getId());
+
+        // and first leg
+        Leg lastLeg = workspace.getActiveLeg();
+        Point from;
+        if (lastLeg == null) {
+            from = PointUtil.createFirstPoint();
+            workspace.getDBHelper().getPointDao().create(from);
+        } else {
+            from = lastLeg.getToPoint();
+        }
+        Point to = PointUtil.generateNextPoint(from);
+        workspace.getDBHelper().getPointDao().create(to);
+        Leg firstLeg = new Leg(from, to,workspace.getActiveProject(), gallery.getId());
+        workspace.getDBHelper().getLegDao().create(firstLeg);
+        workspace.setActiveLeg(firstLeg);
+
         return gallery;
     }
 

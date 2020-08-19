@@ -252,8 +252,8 @@
     <string name="new_gallery_type">Тип</string>
     <string name="new_gallery_create">Създай</string>
     <string-array name="gallery_types">
-        <item>Geolocation</item>
-        <item>Gallery</item>
+        <item>Геолокация</item>
+        <item>Галерия</item>
     </string-array>
 
     <string name="error">Възникна грешка</string>
