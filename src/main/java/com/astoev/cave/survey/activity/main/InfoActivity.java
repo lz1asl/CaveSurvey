@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.MainMenuActivity;
-import com.astoev.cave.survey.activity.UIUtilities;
+import com.astoev.cave.survey.activity.util.UIUtilities;
 import com.astoev.cave.survey.dto.ProjectConfig;
 import com.astoev.cave.survey.fragment.ProjectFragment;
 import com.astoev.cave.survey.manager.ProjectManager;

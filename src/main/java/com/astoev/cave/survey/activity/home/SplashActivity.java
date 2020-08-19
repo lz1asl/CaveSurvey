@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
-import com.astoev.cave.survey.activity.UIUtilities;
+import com.astoev.cave.survey.activity.util.UIUtilities;
 import com.astoev.cave.survey.service.Workspace;
 import com.astoev.cave.survey.util.ConfigUtil;
 import com.astoev.cave.survey.util.FileStorageUtil;

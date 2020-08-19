@@ -9,7 +9,7 @@ import android.widget.TextView;
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.MainMenuActivity;
-import com.astoev.cave.survey.activity.UIUtilities;
+import com.astoev.cave.survey.activity.util.UIUtilities;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Note;
 import com.astoev.cave.survey.util.DaoUtil;

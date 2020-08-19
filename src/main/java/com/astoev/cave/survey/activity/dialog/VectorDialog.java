@@ -17,8 +17,8 @@ import androidx.fragment.app.FragmentManager;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
-import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.activity.main.PointActivity;
+import com.astoev.cave.survey.activity.util.UIUtilities;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Vector;
 import com.astoev.cave.survey.service.bluetooth.BTMeasureResultReceiver;

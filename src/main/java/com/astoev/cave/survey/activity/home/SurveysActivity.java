@@ -12,13 +12,13 @@ import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.MainMenuActivity;
 import com.astoev.cave.survey.activity.SettingsActivity;
-import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.activity.dialog.AboutDialog;
 import com.astoev.cave.survey.activity.dialog.ConfirmDeleteDialog;
 import com.astoev.cave.survey.activity.dialog.DeleteHandler;
 import com.astoev.cave.survey.activity.main.BTActivity;
 import com.astoev.cave.survey.activity.main.NewGalleryActivity;
 import com.astoev.cave.survey.activity.main.SurveyMainActivity;
+import com.astoev.cave.survey.activity.util.UIUtilities;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.service.Workspace;
@@ -33,7 +33,7 @@ import java.util.List;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.Manifest.permission.BLUETOOTH;
 import static android.Manifest.permission.BLUETOOTH_ADMIN;
-import static com.astoev.cave.survey.activity.UIUtilities.logException;
+import static com.astoev.cave.survey.activity.util.UIUtilities.logException;
 
 /**
  * Home activity for managing projects and general settings.

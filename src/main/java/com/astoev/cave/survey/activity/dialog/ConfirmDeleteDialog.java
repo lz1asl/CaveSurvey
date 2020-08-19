@@ -11,7 +11,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
-import com.astoev.cave.survey.activity.UIUtilities;
+import com.astoev.cave.survey.activity.util.UIUtilities;
 
 import java.io.Serializable;
 

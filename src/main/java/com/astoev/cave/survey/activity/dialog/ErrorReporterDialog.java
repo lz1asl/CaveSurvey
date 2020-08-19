@@ -11,7 +11,7 @@ import android.widget.EditText;
 import androidx.fragment.app.DialogFragment;
 
 import com.astoev.cave.survey.R;
-import com.astoev.cave.survey.activity.UIUtilities;
+import com.astoev.cave.survey.activity.util.UIUtilities;
 import com.astoev.cave.survey.service.reports.ErrorReporter;
 import com.astoev.cave.survey.util.StringUtils;
 

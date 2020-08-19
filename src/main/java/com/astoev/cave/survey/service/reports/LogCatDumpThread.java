@@ -3,7 +3,7 @@ package com.astoev.cave.survey.service.reports;
 import android.util.Log;
 
 import com.astoev.cave.survey.Constants;
-import com.astoev.cave.survey.activity.UIUtilities;
+import com.astoev.cave.survey.activity.util.UIUtilities;
 import com.astoev.cave.survey.util.FileStorageUtil;
 import com.astoev.cave.survey.util.StreamUtil;
 

@@ -10,7 +10,7 @@ import android.view.View;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
-import com.astoev.cave.survey.activity.UIUtilities;
+import com.astoev.cave.survey.activity.util.UIUtilities;
 
 /**
  * Created by IntelliJ IDEA.

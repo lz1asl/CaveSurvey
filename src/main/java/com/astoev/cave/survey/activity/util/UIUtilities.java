@@ -1,4 +1,4 @@
-package com.astoev.cave.survey.activity;
+package com.astoev.cave.survey.activity.util;
 
 import android.app.Activity;
 import android.app.AlertDialog;

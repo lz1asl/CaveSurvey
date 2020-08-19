@@ -6,7 +6,7 @@ import android.bluetooth.BluetoothGattDescriptor;
 import android.os.Build;
 import android.util.Log;
 
-import com.astoev.cave.survey.activity.UIUtilities;
+import com.astoev.cave.survey.activity.util.UIUtilities;
 import com.astoev.cave.survey.service.bluetooth.device.ble.AbstractBluetoothLEDevice;
 
 import static com.astoev.cave.survey.Constants.LOG_TAG_BT;

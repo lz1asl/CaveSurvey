@@ -11,6 +11,7 @@ import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.dialog.ConfirmationDialog;
 import com.astoev.cave.survey.activity.dialog.ConfirmationHandler;
 import com.astoev.cave.survey.activity.dialog.ConfirmationOperation;
+import com.astoev.cave.survey.activity.util.UIUtilities;
 import com.astoev.cave.survey.service.bluetooth.BluetoothService;
 
 /**

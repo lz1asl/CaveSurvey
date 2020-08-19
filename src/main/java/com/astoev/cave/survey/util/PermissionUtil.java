@@ -11,7 +11,7 @@ import androidx.core.app.ActivityCompat;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
-import com.astoev.cave.survey.activity.UIUtilities;
+import com.astoev.cave.survey.activity.util.UIUtilities;
 
 public class PermissionUtil {
 

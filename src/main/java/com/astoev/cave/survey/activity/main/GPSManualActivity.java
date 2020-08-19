@@ -9,7 +9,7 @@ import android.widget.Spinner;
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.MainMenuActivity;
-import com.astoev.cave.survey.activity.UIUtilities;
+import com.astoev.cave.survey.activity.util.UIUtilities;
 import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.util.StringUtils;

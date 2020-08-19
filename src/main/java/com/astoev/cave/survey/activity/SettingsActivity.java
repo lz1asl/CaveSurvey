@@ -13,6 +13,7 @@ import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.dialog.ErrorReporterDialog;
 import com.astoev.cave.survey.activity.dialog.LanguageDialog;
 import com.astoev.cave.survey.activity.poc.SensorsActivity;
+import com.astoev.cave.survey.activity.util.UIUtilities;
 import com.astoev.cave.survey.fragment.InfoDialogFragment;
 import com.astoev.cave.survey.service.reports.ErrorReporter;
 import com.astoev.cave.survey.util.ConfigUtil;

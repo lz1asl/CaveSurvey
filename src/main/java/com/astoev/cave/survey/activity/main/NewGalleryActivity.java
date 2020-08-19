@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.MainMenuActivity;
-import com.astoev.cave.survey.activity.UIUtilities;
+import com.astoev.cave.survey.activity.util.UIUtilities;
 import com.astoev.cave.survey.model.GalleryType;
 import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.service.Workspace;

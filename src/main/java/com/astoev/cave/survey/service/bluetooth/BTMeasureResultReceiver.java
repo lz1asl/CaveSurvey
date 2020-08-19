@@ -8,7 +8,7 @@ import android.util.Log;
 import android.widget.EditText;
 
 import com.astoev.cave.survey.Constants;
-import com.astoev.cave.survey.activity.UIUtilities;
+import com.astoev.cave.survey.activity.util.UIUtilities;
 import com.astoev.cave.survey.model.Option;
 import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.util.StringUtils;

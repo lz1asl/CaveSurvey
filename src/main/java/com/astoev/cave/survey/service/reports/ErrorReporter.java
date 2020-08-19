@@ -8,7 +8,7 @@ import android.util.Log;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
-import com.astoev.cave.survey.activity.UIUtilities;
+import com.astoev.cave.survey.activity.util.UIUtilities;
 import com.astoev.cave.survey.util.ConfigUtil;
 import com.astoev.cave.survey.util.NetworkUnil;
 import com.astoev.cave.survey.util.StreamUtil;

@@ -20,13 +20,13 @@ import androidx.fragment.app.Fragment;
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.MainMenuActivity;
-import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.activity.dialog.AddNewDialog;
 import com.astoev.cave.survey.activity.dialog.AddNewSelectedHandler;
 import com.astoev.cave.survey.activity.dialog.ChangeLegDialog;
 import com.astoev.cave.survey.activity.dialog.MiddlePointDialog;
 import com.astoev.cave.survey.activity.map.MapActivity;
 import com.astoev.cave.survey.activity.map.MapUtilities;
+import com.astoev.cave.survey.activity.util.UIUtilities;
 import com.astoev.cave.survey.model.Gallery;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Location;
@@ -54,21 +54,9 @@ public class SurveyMainActivity extends MainMenuActivity implements AddNewSelect
     private SparseIntArray mGalleryColors = new SparseIntArray();
     private SparseArray<String> mGalleryNames = new SparseArray<>();
     
-    private String sketchPrefix;
-    private String notePrefix;
-    private String photoPrefix;
-    private String locationPrefix;
-    private String vectorsPrefix;
-
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.survey);
-        
-        sketchPrefix   = getString(R.string.table_sketch_prefix);
-        notePrefix     = getString(R.string.table_note_prefix);
-        photoPrefix    = getString(R.string.table_photo_prefix);
-        locationPrefix = getString(R.string.table_location_prefix);
-        vectorsPrefix = getString(R.string.table_vector_prefix);
     }
 
     @Override
@@ -102,6 +90,13 @@ public class SurveyMainActivity extends MainMenuActivity implements AddNewSelect
             boolean currLegFlag;
             Integer lastGalleryId = null, prevGalleryId;
             TableRow activeRow = null;
+
+            // prepare leg attributes
+            String sketchPrefix = getString(R.string.table_sketch_prefix);
+            String notePrefix = getString(R.string.table_note_prefix);
+            String photoPrefix = getString(R.string.table_photo_prefix);
+            String locationPrefix = getString(R.string.table_location_prefix);
+            String vectorsPrefix = getString(R.string.table_vector_prefix);
 
             for (final Leg l : legs) {
                 TableRow row = new TableRow(this);
@@ -320,11 +315,6 @@ public class SurveyMainActivity extends MainMenuActivity implements AddNewSelect
         Intent intent = new Intent(this, MapActivity.class);
         startActivity(intent);
     }
-
-   /* public void plot3dButton() {
-        Intent intent = new Intent(this, Map3DActivity.class);
-        startActivity(intent);
-    }*/
 
     public void infoButton() {
         Intent intent = new Intent(this, InfoActivity.class);
