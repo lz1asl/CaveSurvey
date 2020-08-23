@@ -13,7 +13,13 @@ import androidx.fragment.app.DialogFragment;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
-import com.astoev.cave.survey.activity.UIUtilities;
+import com.astoev.cave.survey.activity.util.DisabledItemsArrayAdapter;
+import com.astoev.cave.survey.activity.util.UIUtilities;
+import com.astoev.cave.survey.model.Gallery;
+import com.astoev.cave.survey.model.GalleryType;
+import com.astoev.cave.survey.service.Workspace;
+
+import static com.astoev.cave.survey.model.GalleryType.GEOLOCATION;
 
 /**
  * Creates dialog for adding next leg, gallery or middle point. It will notify back the activity for
@@ -44,7 +50,12 @@ public class AddNewDialog extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.main_add_title);
 
-        ListAdapter adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, labels);
+        DisabledItemsArrayAdapter adapter = new DisabledItemsArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, labels);
+        // disable items that are not relevant
+        Gallery currGallery = Workspace.getCurrentInstance().getActiveGallery();
+        if (GEOLOCATION.equals(currGallery.getType())) {
+            adapter.disableItem(2);
+        }
 
         builder.setSingleChoiceItems(adapter, -1, (dialog, item) -> {
             Activity activity = getActivity();
