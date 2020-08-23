@@ -28,6 +28,7 @@ public class LanguageDialog extends DialogFragment {
     private static final int LANG_RUSSIAN = 3;
     private static final int LANG_GREEK = 4;
     private static final int LANG_POLISH = 5;
+    private static final int LANG_SPANISH = 6;
 
     /**
      * @see DialogFragment#onCreateDialog(android.os.Bundle)
@@ -62,6 +63,9 @@ public class LanguageDialog extends DialogFragment {
                     break;
                 case LANG_POLISH:
                     locale = new Locale("pl", "PL");
+                    break;
+                case LANG_SPANISH:
+                    locale = new Locale("es", "ES");
                     break;
 
                 default:
