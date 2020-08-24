@@ -379,15 +379,6 @@
     <string name="error_list_legs">Грешка при създаване на списъка с отсечки</string>
 
     <string name="lang_title">Избери език</string>
-    <string-array name="lang_array">
-        <item>English</item>
-        <item>Български</item>
-        <item>简体中文</item>
-        <item>Русский</item>
-        <item>Ελληνικά</item>
-        <item>Polski</item>
-        <item>Español</item>
-    </string-array>
 
     <!-- error reporter -->
     <string name="error_reporter_title">Съобщи за грешка</string>
