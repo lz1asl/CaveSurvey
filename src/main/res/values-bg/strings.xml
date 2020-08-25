@@ -177,6 +177,7 @@
     <string name="options_units_distance">Разстояние:</string>
     <string-array name="distance_units">
         <item>Метри</item>
+        <item>Футове</item>
     </string-array>
     <string-array name="distance_read_type">
         <item>Ръчно</item>
@@ -372,6 +373,7 @@
     <string name="gps_type_manual">Ръчно въвеждане</string>
 
     <string name="unit_meters">метри</string>
+    <string name="unit_feets">футове</string>
     <string name="unit_degrees">градуси</string>
     <string name="unit_grads">гради</string>
 

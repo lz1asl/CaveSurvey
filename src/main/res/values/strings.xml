@@ -182,6 +182,7 @@
     <string name="options_units_distance">Distance:</string>
     <string-array name="distance_units">
         <item>Meters</item>
+        <item>Feet</item>
     </string-array>
     <string-array name="distance_read_type">
         <item>Manually</item>
@@ -391,6 +392,7 @@
     <string name="gps_type_manual">GPS Manual</string>
 
     <string name="unit_meters">meters</string>
+    <string name="unit_feets">feet</string>
     <string name="unit_degrees">degrees</string>
     <string name="unit_grads">grads</string>
 

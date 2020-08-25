@@ -30,7 +30,7 @@ public class ProjectFragment extends Fragment {
 
     private static String PROJECT_KEY = "project";
 
-    private final String[] DISTANCE_UNIT = {Option.UNIT_METERS};
+    private final String[] DISTANCE_UNIT = {Option.UNIT_METERS, Option.UNIT_FEET};
     private final String[] DISTANCE_SENSOR = {Option.CODE_SENSOR_NONE, Option.CODE_SENSOR_BLUETOOTH};
     private final String[] AZIMUTH_UNIT = {Option.UNIT_DEGREES, Option.UNIT_GRADS};
     private final String[] AZIMUTH_SENSOR = {Option.CODE_SENSOR_NONE, Option.CODE_SENSOR_INTERNAL, Option.CODE_SENSOR_BLUETOOTH};
