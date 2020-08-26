@@ -9,14 +9,14 @@ CaveSurvey tries to help you collect measurements data underground. See our [Use
 Why
 ===
 
-There are several approaches for digital surveying and most of them rely on the famous DistoX. There are not many choises if you don't have it. We have started CaveSurvey as a classic digital sheet. Later we started to leverage the Android build-in features and Bluetooth connected measurement devices. CaveSurvey will help you by:
+There are several approaches for digital surveying and most of them rely on the famous DistoX. There are not many choices if you don't have it. We started the CaveSurvey project as a classic digital sheet. Later we started to leverage the Android build-in features and Bluetooth connected measurement devices. CaveSurvey will help you:
  - keeping the measurements sheet in digital format during the survey process (thus reducing typo errors)
- - aiding measurements collection (reducing the number of measurement instruments needed and/or the need to manually type the value):
-   - by using built-in sensors (such as compass and clinometer) and tools (camera, GPS locations of the entrances, text notes, etc) if available
-   - by using Bluetooth enabled devices (to read distance and depending on the device also compass and clinometer)
- - allowing you to export the collected data for further processing (like final map creation) with other apps
- - showing a simple map of the main line (allowing the detection of big measurement erros on site)
- - allowing the creation of simple sketches
+ - aid in measurement collection (reducing the number of measurement instruments needed and/or the need to manually type the value) by:
+   - using built-in sensors (such as compass and clinometer) and tools (camera, GPS locations of the entrances, text notes, etc) if available
+   - using Bluetooth enabled devices (to read distance and depending on the device also compass and clinometer)
+ - allow you to export the collected data for further processing (like final map creation) with other apps
+ - show a simple map of the main line (allowing the detection of big measurement errors on site)
+ - allow the creation of simple sketches
 
 
 Where are we now
