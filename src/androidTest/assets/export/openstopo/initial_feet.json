@@ -1,0 +1,67 @@
+{
+  "name": "$PROJECT_NAME",
+  "northdeclination": "0",
+  "data": [
+    {
+      "len": "ft",
+      "compass": "grad",
+      "clino": "grad",
+      "top": "ft",
+      "left": "ft",
+      "right": "ft",
+      "bottom": "ft"
+    },
+    {
+      "from": "0",
+      "to": "A0",
+      "len": 0,
+      "compass": 0,
+      "clino": 0,
+      "top": "",
+      "left": "",
+      "right": "",
+      "bottom": "",
+      "r": ""
+    },
+    {
+      "from": "A0",
+      "to": "A1",
+      "len": "1.0",
+      "compass": "2.0",
+      "clino": "",
+      "top": "",
+      "left": "",
+      "right": "",
+      "bottom": "",
+      "r": ""
+    },
+    {
+      "from": "A1",
+      "to": "A2",
+      "len": "1.2",
+      "compass": "2.2",
+      "clino": "1.3",
+      "top": "1.1",
+      "left": "1.3",
+      "right": "1.4",
+      "bottom": "1.2",
+      "r": ""
+    },
+    {
+      "from": "A2",
+      "to": "A3",
+      "len": "2.3",
+      "compass": "3.4",
+      "clino": "4.5",
+      "top": "",
+      "left": "",
+      "right": "",
+      "bottom": "",
+      "r": ""
+    }
+  ],
+  "geoPoint": "A0",
+  "altitude": "123",
+  "latitude": "42.811523",
+  "longitude": "23.378906"
+}

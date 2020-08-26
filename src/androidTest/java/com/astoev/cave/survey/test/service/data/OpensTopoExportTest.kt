@@ -1,6 +1,7 @@
 package com.astoev.cave.survey.test.service.data
 
 import com.astoev.cave.survey.model.Option.UNIT_FEET
+import com.astoev.cave.survey.model.Option.UNIT_GRADS
 import com.astoev.cave.survey.test.helper.Common.goBack
 import com.astoev.cave.survey.test.helper.Data.dataScreen
 import com.astoev.cave.survey.test.helper.Data.opensTopoExport
@@ -43,12 +44,12 @@ class OpensTopoExportTest() : AbstractExportTest() {
     }
 
     @Test
-    fun opensTopoExportFeetTest() {
+    fun opensTopoExportNonStandardUnitsTest() {
 
-        // create survey
-        var surveyName = createAndOpenSurvey(false, UNIT_FEET, null, null)
+        // create survey with non default units
+        var surveyName = createAndOpenSurvey(false, UNIT_FEET, UNIT_GRADS, UNIT_GRADS)
 
-        // first test legs
+        // first test legs - data is the same
         selectFirstSurveyLeg()
         setLegData(1f, 2f, null)
         openLegWithText("A1")

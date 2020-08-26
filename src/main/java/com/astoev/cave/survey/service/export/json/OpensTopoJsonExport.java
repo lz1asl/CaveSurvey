@@ -6,7 +6,6 @@ import android.util.Log;
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.model.Location;
-import com.astoev.cave.survey.model.Option;
 import com.astoev.cave.survey.model.Photo;
 import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.model.Sketch;
@@ -23,6 +22,13 @@ import org.json.JSONObject;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
+import static com.astoev.cave.survey.model.Option.CODE_AZIMUTH_UNITS;
+import static com.astoev.cave.survey.model.Option.CODE_DISTANCE_UNITS;
+import static com.astoev.cave.survey.model.Option.CODE_SLOPE_UNITS;
+import static com.astoev.cave.survey.model.Option.UNIT_DEGREES;
+import static com.astoev.cave.survey.model.Option.UNIT_FEET;
+import static com.astoev.cave.survey.model.Option.UNIT_GRADS;
+import static com.astoev.cave.survey.model.Option.UNIT_METERS;
 import static com.astoev.cave.survey.service.export.ExportEntityType.LEG;
 
 /**
@@ -56,20 +62,50 @@ public class OpensTopoJsonExport extends AbstractExport {
 
             headerRow.put("from", null);
             headerRow.put("to", null);
-            headerRow.put("len", "m"); // currently only meters supported
-            if (Option.UNIT_GRADS.equals(Options.getOptionValue(Option.CODE_AZIMUTH_UNITS))
-                    || Option.UNIT_GRADS.equals(Options.getOptionValue(Option.CODE_SLOPE_UNITS))) {
-                // opens topo does not support grads, may implement conversion in the future
-                Log.i(Constants.LOG_TAG_SERVICE, "OpensTopo - conversion to grads not implemented");
-                UIUtilities.showRawMessage(ConfigUtil.getContext(), "Grads not supported in OpensTopo");
-                throw new RuntimeException("Unable to convert to grads");
+
+            String distanceUnits = "m";
+            switch (Options.getOptionValue(CODE_DISTANCE_UNITS)) {
+                case UNIT_METERS:
+                    distanceUnits = "m";
+                    break;
+                case UNIT_FEET:
+                    distanceUnits = "ft";
+                    break;
+                default:
+                    failExport();
             }
-            headerRow.put("compass", "deg");
-            headerRow.put("clino", "deg");
-            headerRow.put("top", "m");
-            headerRow.put("left", "m");
-            headerRow.put("right", "m");
-            headerRow.put("bottom", "m");
+
+            String azimuthUnits = "deg";
+            switch (Options.getOptionValue(CODE_AZIMUTH_UNITS)) {
+                case UNIT_DEGREES:
+                    azimuthUnits = "deg";
+                    break;
+                case UNIT_GRADS:
+                    azimuthUnits = "grad";
+                    break;
+                default:
+                    failExport();
+            }
+
+            String slopeUnits = "deg";
+            switch (Options.getOptionValue(CODE_SLOPE_UNITS)) {
+                case UNIT_DEGREES:
+                    slopeUnits = "deg";
+                    break;
+                case UNIT_GRADS:
+                    slopeUnits = "grad";
+                    break;
+                default:
+                    failExport();
+            }
+
+            headerRow.put("len", distanceUnits);
+            headerRow.put("compass", azimuthUnits);
+            headerRow.put("clino", slopeUnits);
+            headerRow.put("top", distanceUnits);
+            headerRow.put("left", distanceUnits);
+            headerRow.put("right", distanceUnits);
+            headerRow.put("bottom", distanceUnits);
             headerRow.put("r", null);
 
             rows.put(headerRow);
@@ -87,6 +123,12 @@ public class OpensTopoJsonExport extends AbstractExport {
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void failExport() {
+        Log.i(Constants.LOG_TAG_SERVICE, "OpensTopo export failed");
+        UIUtilities.showRawMessage(ConfigUtil.getContext(), "OpensTopo export failed");
+        throw new RuntimeException("Check missing unit conversion");
     }
 
     @Override
