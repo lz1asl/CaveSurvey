@@ -1,5 +1,6 @@
 package com.astoev.cave.survey.test.service.data
 
+import com.astoev.cave.survey.model.Option.UNIT_FEET
 import com.astoev.cave.survey.test.helper.Common.goBack
 import com.astoev.cave.survey.test.helper.Data.dataScreen
 import com.astoev.cave.survey.test.helper.Data.opensTopoExport
@@ -39,6 +40,24 @@ class OpensTopoExportTest() : AbstractExportTest() {
 
         // compare
         exportAndCompare(surveyName, "full");
+    }
+
+    @Test
+    fun opensTopoExportFeetTest() {
+
+        // create survey
+        var surveyName = createAndOpenSurvey(false, UNIT_FEET, null, null)
+
+        // first test legs
+        selectFirstSurveyLeg()
+        setLegData(1f, 2f, null)
+        openLegWithText("A1")
+        addCoordinate(42.811522f, 23.378906f, 123, 5);
+        addLeg(1.2f, 2.2f, 1.3f)
+        addLeg(2.3f, 3.4f, 4.5f, 1.1f, 1.2f, 1.3f, 1.4f)
+
+        // compare
+        exportAndCompare(surveyName, "initial_feet");
     }
 
     private fun exportAndCompare(surveyName: String, expected: String) {
