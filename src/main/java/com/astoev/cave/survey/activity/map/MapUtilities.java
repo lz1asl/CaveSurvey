@@ -6,6 +6,8 @@ import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.model.Option;
 import com.astoev.cave.survey.service.Options;
 
+import static com.astoev.cave.survey.Constants.FEETS_TO_METERS;
+
 /**
  * Created by astoev on 12/31/13.
  */
@@ -93,6 +95,22 @@ public class MapUtilities {
             return aDistance;
         }
         return Double.valueOf(aDistance * Math.cos(Math.toRadians(aSlope))).floatValue();
+    }
+
+    public static Float getFeetsInMeters(Float aDistance) {
+        if (aDistance == null) {
+            return null;
+        } else {
+            return aDistance * FEETS_TO_METERS;
+        }
+    }
+
+    public static Float getMetersInFeet(Float aDistance) {
+        if (aDistance == null) {
+            return null;
+        } else {
+            return aDistance / FEETS_TO_METERS;
+        }
     }
 
     public static Float add90Degrees(Float anAzimuth) {

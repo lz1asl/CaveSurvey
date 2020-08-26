@@ -41,6 +41,7 @@ public class Constants {
     
     public static final float GRAD_TO_DEC = (Option.MAX_VALUE_AZIMUTH_DEGREES / (float)Option.MAX_VALUE_AZIMUTH_GRADS);
     public static final float DEC_TO_GRAD = (Option.MAX_VALUE_AZIMUTH_GRADS / (float)Option.MAX_VALUE_AZIMUTH_DEGREES);
+    public static final float FEETS_TO_METERS = 0.3048F;
 
     public static final String FROM_TO_POINT_DELIMITER = "-";
     public static final String FROM_TO_POINT_DELIMITER_UI = "->";

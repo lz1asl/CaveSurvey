@@ -123,4 +123,15 @@ public class MapUtilitiesTest {
         assertEquals(400f, MapUtilities.degreesToGrads(360f), 0.001);
     }
 
+    @Test
+    public void testFeetsConversion() {
+        assertEquals(null, MapUtilities.getFeetsInMeters(null));
+        assertEquals(0.3048f, MapUtilities.getFeetsInMeters(1f), 0.0001);
+        assertEquals(3.6951f, MapUtilities.getFeetsInMeters(12.123f), 0.0001);
+
+        assertEquals(null, MapUtilities.getMetersInFeet(null));
+        assertEquals(1, MapUtilities.getMetersInFeet(0.3048f), 0.0001f);
+        assertEquals(10, MapUtilities.getMetersInFeet(3.048f), 0.0001f);
+    }
+
 }
