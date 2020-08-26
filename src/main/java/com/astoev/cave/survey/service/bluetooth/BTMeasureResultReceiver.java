@@ -9,6 +9,7 @@ import android.widget.EditText;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.activity.UIUtilities;
+import com.astoev.cave.survey.activity.map.MapUtilities;
 import com.astoev.cave.survey.model.Option;
 import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.util.StringUtils;
@@ -51,7 +52,23 @@ public class BTMeasureResultReceiver extends ResultReceiver {
                         return;
                     }
 
-                    final float measure = measuresArray[i];
+                    float measure = measuresArray[i];
+
+                    switch (type) {
+                        case up:
+                        case down:
+                        case left:
+                        case right:
+                        case distance:
+                            // communicaiton to Bluetooth devices in meters, convert to feet if needed
+                            if (Option.UNIT_FEET.equals(Options.getOptionValue(Option.CODE_DISTANCE_UNITS))) {
+                                measure = MapUtilities.getMetersInFeet(measure);
+                            }
+                            break;
+
+                        default:
+                            // no conversion needed
+                    }
 
                     // screen specific population of the measures
                     mTarget.onReceiveMeasures(type, measure);
