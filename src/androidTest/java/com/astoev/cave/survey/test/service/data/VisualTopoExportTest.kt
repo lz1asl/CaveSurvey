@@ -6,6 +6,7 @@ import com.astoev.cave.survey.test.helper.Common.goBack
 import com.astoev.cave.survey.test.helper.Data.dataScreen
 import com.astoev.cave.survey.test.helper.Data.visualTopoExport
 import com.astoev.cave.survey.test.helper.Survey.*
+import com.astoev.cave.survey.util.AndroidUtil
 import org.junit.Assert.fail
 import org.junit.Test
 import java.util.*
@@ -75,7 +76,8 @@ class VisualTopoExportTest() : AbstractExportTest() {
     private fun compare(projectName: String, expected: String) {
         val expectedStream = findAsset("export/vtopo/$expected.tro")
         val params = mapOf(PARAM_PROJECT_NAME to projectName,
-                PARAM_TODAY to VisualTopoExport.formatDate(Date()))
+                PARAM_TODAY to VisualTopoExport.formatDate(Date()),
+                PARAM_CAVESURVEY_VERSION to AndroidUtil.getAppVersion())
         compareContents(expectedStream, params, projectName, ".tro");
     }
 }
