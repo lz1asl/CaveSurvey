@@ -64,7 +64,7 @@ public class ExcelImport {
             public Object call() throws Exception {
 
                 // project config
-                updateProjectConfig(data, aProject);
+                updateProjectConfig(data);
 
                 // project data
                 Set<Leg> lastMiddleLegs = new HashSet<>();
@@ -340,12 +340,12 @@ public class ExcelImport {
         options.put(CODE_SLOPE_UNITS, getUnitFromHeaderCell(aRow, ExcelExport.CELL_SLOPE));
     }
 
-    public static void updateProjectConfig(ProjectData aProjectData, Project aProject) throws SQLException {
+    public static void updateProjectConfig(ProjectData aProjectData) throws SQLException {
 
         Map<String, String> options = aProjectData.getOptions();
-        Options.createOption(CODE_DISTANCE_UNITS, options.get(CODE_DISTANCE_UNITS), aProject);
-        Options.createOption(CODE_AZIMUTH_UNITS, options.get(CODE_AZIMUTH_UNITS), aProject);
-        Options.createOption(CODE_SLOPE_UNITS, options.get(CODE_SLOPE_UNITS), aProject);
+        Options.updateOption(CODE_DISTANCE_UNITS, options.get(CODE_DISTANCE_UNITS));
+        Options.updateOption(CODE_AZIMUTH_UNITS, options.get(CODE_AZIMUTH_UNITS));
+        Options.updateOption(CODE_SLOPE_UNITS, options.get(CODE_SLOPE_UNITS));
     }
 
     private static String getUnitFromHeaderCell(Row aRow, int aCellIndex) {
