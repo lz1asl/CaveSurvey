@@ -4,8 +4,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
+import com.astoev.cave.survey.activity.map.MapUtilities;
 import com.astoev.cave.survey.model.Gallery;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Location;
@@ -17,17 +17,23 @@ import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.model.Sketch;
 import com.astoev.cave.survey.model.Vector;
 import com.astoev.cave.survey.util.ConfigUtil;
+import com.astoev.cave.survey.util.GalleryUtil;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
 import java.sql.SQLException;
+import java.util.List;
 
+import static com.astoev.cave.survey.Constants.LOG_TAG_DB;
+import static com.astoev.cave.survey.model.GalleryType.CLASSIC;
+import static com.astoev.cave.survey.model.GalleryType.GEOLOCATION;
 import static com.astoev.cave.survey.util.ConfigUtil.PREF_AUTO_BACKUP;
 import static com.astoev.cave.survey.util.ConfigUtil.PREF_SENSOR_NOISE_REDUCTION;
 import static com.astoev.cave.survey.util.ConfigUtil.PREF_SENSOR_NOISE_REDUCTION_NUM_MEASUREMENTS;
 import static com.astoev.cave.survey.util.ConfigUtil.PREF_SENSOR_SIMULTANEOUSLY;
+import static com.astoev.cave.survey.util.GalleryUtil.generateNextGalleryName;
 
 /**
  * Created by IntelliJ IDEA.
@@ -59,7 +65,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION_LATEST, R.raw.ormlite_config);
-        Log.i(Constants.LOG_TAG_DB, "Initialize DatabaseHelper");
+        Log.i(LOG_TAG_DB, "Initialize DatabaseHelper");
         try {
             mLegDao = getDao(Leg.class);
             mLocationDao = getDao(Location.class);
@@ -72,16 +78,16 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             mOptionsDao = getDao(Option.class);
             mVectorsDao = getDao(Vector.class);
 
-            Log.i(Constants.LOG_TAG_DB, "Dao's created");
+            Log.i(LOG_TAG_DB, "Dao's created");
         } catch (SQLException e) {
-            Log.e(Constants.LOG_TAG_DB, "Failed to initialize DatabaseHelper", e);
+            Log.e(LOG_TAG_DB, "Failed to initialize DatabaseHelper", e);
         }
     }
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase, ConnectionSource connectionSource) {
         try {
-            Log.i(Constants.LOG_TAG_DB, "Create DB tables");
+            Log.i(LOG_TAG_DB, "Create DB tables");
             TableUtils.createTableIfNotExists(connectionSource, Project.class);
             TableUtils.createTableIfNotExists(connectionSource, Note.class);
             TableUtils.createTableIfNotExists(connectionSource, Photo.class);
@@ -92,9 +98,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTableIfNotExists(connectionSource, Gallery.class);
             TableUtils.createTableIfNotExists(connectionSource, Option.class);
             TableUtils.createTableIfNotExists(connectionSource, Vector.class);
-            Log.i(Constants.LOG_TAG_DB, "Tables created");
+            Log.i(LOG_TAG_DB, "Tables created");
         } catch (SQLException e) {
-            Log.e(Constants.LOG_TAG_DB, "Failed to create DB tables", e);
+            Log.e(LOG_TAG_DB, "Failed to create DB tables", e);
             throw new RuntimeException(e);
         }
     }
@@ -104,19 +110,19 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
         if (aOldVersion < DATABASE_VERSION_LATEST) {
 
-            Log.i(Constants.LOG_TAG_DB, "Performing DB update...");
+            Log.i(LOG_TAG_DB, "Performing DB update...");
 
             try {
                 aSqLiteDatabase.beginTransaction();
 
                 if (aOldVersion < DATABASE_VERSION_2) {
-                    Log.i(Constants.LOG_TAG_DB, "Upgrading DB to V2");
+                    Log.i(LOG_TAG_DB, "Upgrading DB to V2");
                     aSqLiteDatabase.execSQL("alter table legs add column middle_point_distance decimal default null");
-                    Log.i(Constants.LOG_TAG_DB, "Upgrade success");
+                    Log.i(LOG_TAG_DB, "Upgrade success");
                 }
 
                 if (aOldVersion < DATABASE_VERSION_3) {
-                    Log.i(Constants.LOG_TAG_DB, "Upgrading DB to V3");
+                    Log.i(LOG_TAG_DB, "Upgrading DB to V3");
                     aSqLiteDatabase.execSQL("alter table vectors add column gallery_id decimal default null");
                     aSqLiteDatabase.execSQL("update vectors set gallery_id = " +
                             "(select min(gallery_id) from legs where from_point_id = id)");
@@ -133,59 +139,87 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                     aSqLiteDatabase.execSQL("update notes set gallery_id = " +
                             "(select min(gallery_id) from legs where from_point_id = id)");
 
-                    Log.i(Constants.LOG_TAG_DB, "Upgrade success");
+                    Log.i(LOG_TAG_DB, "Upgrade success");
                 }
 
                 if (aOldVersion < DATABASE_VERSION_4) {
-                    Log.i(Constants.LOG_TAG_DB, "Upgrading DB to V4");
+                    Log.i(LOG_TAG_DB, "Upgrading DB to V4");
 
                     // auto backup by default
                     Boolean autoBackup = ConfigUtil.getBooleanProperty(PREF_AUTO_BACKUP, false);
                     if (!autoBackup) {
-                        Log.i(Constants.LOG_TAG_DB, "Enable auto backup");
+                        Log.i(LOG_TAG_DB, "Enable auto backup");
                         ConfigUtil.setBooleanProperty(PREF_AUTO_BACKUP, true);
                     }
 
                     // read sensors simultaneously by default
                     Boolean simultaneousSensorsReading = ConfigUtil.getBooleanProperty(PREF_SENSOR_SIMULTANEOUSLY, false);
                     if (!simultaneousSensorsReading) {
-                        Log.i(Constants.LOG_TAG_DB, "Enable simultaneous sensors reading");
+                        Log.i(LOG_TAG_DB, "Enable simultaneous sensors reading");
                         ConfigUtil.setBooleanProperty(PREF_SENSOR_SIMULTANEOUSLY, true);
                     }
 
                     // averaging enabled by default
                     Boolean averagingEnabled = ConfigUtil.getBooleanProperty(PREF_SENSOR_NOISE_REDUCTION, false);
                     if (!averagingEnabled) {
-                        Log.i(Constants.LOG_TAG_DB, "Enable sensors averaging");
+                        Log.i(LOG_TAG_DB, "Enable sensors averaging");
                         ConfigUtil.setBooleanProperty(PREF_SENSOR_NOISE_REDUCTION, true);
                     }
 
                     // averaging over 20 measurements by default
                     Integer numMeasurementsAveraged = ConfigUtil.getIntProperty(PREF_SENSOR_NOISE_REDUCTION_NUM_MEASUREMENTS, 5);
                     if (numMeasurementsAveraged == 5) {
-                        Log.i(Constants.LOG_TAG_DB, "20 measurements averaged");
+                        Log.i(LOG_TAG_DB, "20 measurements averaged");
                         ConfigUtil.setIntProperty(PREF_SENSOR_NOISE_REDUCTION_NUM_MEASUREMENTS, 20);
                     }
 
-                    Log.i(Constants.LOG_TAG_DB, "Upgrade success");
+                    Log.i(LOG_TAG_DB, "Upgrade success");
                 }
 
                 if (aOldVersion < DATABASE_VERSION_5) {
-                    Log.i(Constants.LOG_TAG_DB, "Upgrading DB to V5");
+                    Log.i(LOG_TAG_DB, "Upgrading DB to V5");
                     aSqLiteDatabase.execSQL("alter table galleries add column type VARCHAR(20) NOT NULL default 'CLASSIC'");
                     aSqLiteDatabase.execSQL("alter table galleries add column color decimal NOT NULL default -256");
-                    Log.i(Constants.LOG_TAG_DB, "Upgrade success");
+
+                    Log.i(LOG_TAG_DB, "Migrating existing surveys");
+                    List<Project> projects = getDao(Project.class).queryForAll();
+                    Dao<Gallery, Integer> galleryDao = getDao(Gallery.class);
+                    for (Project project : projects) {
+                        List<Gallery> projectGalleries = galleryDao.queryBuilder()
+                            .where().eq(Gallery.COLUMN_PROJECT_ID, project.getId()).query();
+                        int counter = 0;
+                        Gallery lastGallery = null;
+                        for (Gallery gallery : projectGalleries) {
+                            gallery.setColor(MapUtilities.getNextGalleryColor(counter));
+                            if (counter == 0) {
+                                gallery.setType(GEOLOCATION);
+                                gallery.setName(GalleryUtil.getFirstGalleryName());
+                            } else {
+                                gallery.setType(CLASSIC);
+                                gallery.setName(generateNextGalleryName(lastGallery.getName()));
+                            }
+
+                            counter++;
+                            lastGallery = gallery;
+                            galleryDao.update(gallery);
+                        }
+                    }
+
+                    Log.i(LOG_TAG_DB, "Upgrade success");
                 }
 
                 aSqLiteDatabase.setTransactionSuccessful();
 
+            } catch (Exception e) {
+                Log.e(LOG_TAG_DB, "Update failed: " + e.getMessage(), e);
+                throw new RuntimeException(e);
             } finally {
                 aSqLiteDatabase.endTransaction();
             }
 
-            Log.i(Constants.LOG_TAG_DB, "End DB update...");
+            Log.i(LOG_TAG_DB, "End DB update...");
         } else {
-            Log.i(Constants.LOG_TAG_DB, "DB up to update");
+            Log.i(LOG_TAG_DB, "DB up to update");
         }
     }
 
