@@ -30,6 +30,7 @@ public class Option implements Serializable {
     public static final String CODE_SENSOR_NONE = "sensor_none";
 
     public static final String UNIT_METERS = "meters";
+    public static final String UNIT_FEET = "feet";
     public static final String UNIT_DEGREES = "degrees";
     public static final String UNIT_GRADS = "grads";
 

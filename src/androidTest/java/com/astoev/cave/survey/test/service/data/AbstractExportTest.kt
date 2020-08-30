@@ -21,6 +21,7 @@ abstract class AbstractExportTest {
 
     var PARAM_PROJECT_NAME = "PROJECT_NAME"
     var PARAM_TODAY = "TODAY"
+    var PARAM_CAVESURVEY_VERSION = "CAVESURVEY_VERSION"
 
     @get:Rule
     var activityRule: ActivityTestRule<SplashActivity> = ActivityTestRule(SplashActivity::class.java)

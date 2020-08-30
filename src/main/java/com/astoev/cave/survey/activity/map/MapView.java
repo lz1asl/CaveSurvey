@@ -29,6 +29,10 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.astoev.cave.survey.model.Option.CODE_DISTANCE_UNITS;
+import static com.astoev.cave.survey.model.Option.UNIT_FEET;
+import static com.astoev.cave.survey.model.Option.UNIT_METERS;
+
 /**
  * Created by IntelliJ IDEA.
  * User: astoev
@@ -71,6 +75,7 @@ public class MapView extends View {
     private boolean horizontalPlan = true;
 
     private static float screenScale;
+    private static String distanceUnits;
 
 
     public MapView(Context context, AttributeSet attrs) {
@@ -118,6 +123,18 @@ public class MapView extends View {
         vectorsPaint.setAlpha(50);
         vectorPointPaint.setStrokeWidth(1);
         vectorPointPaint.setAlpha(50);
+
+        distanceUnits = "m";
+        switch (Options.getOptionValue(CODE_DISTANCE_UNITS)) {
+            case UNIT_METERS:
+                distanceUnits = "m";
+                break;
+            case UNIT_FEET:
+                distanceUnits = "ft";
+                break;
+            default:
+                throw new RuntimeException("Unit not implemented");
+        }
 
         // need to instruct that changes to the canvas will be made, otherwise the screen might become blank
         // see http://stackoverflow.com/questions/12261435/canvas-does-not-draw-in-custom-view
@@ -406,7 +423,7 @@ public class MapView extends View {
             canvas.drawLine(scaled30, 25 * screenScale, scaled30, 35 * screenScale, overlayPaint);
             canvas.drawLine(scaled30, scaled30, scaled30 + gridStep, scaled30, overlayPaint);
             canvas.drawLine(scaled30 + gridStep, 25 * screenScale, scaled30 + gridStep, 35 * screenScale, overlayPaint);
-            canvas.drawText(GRID_STEPS[gridStepIndex]  + " m" , 15 * screenScale + gridStep/2, 25 * screenScale, overlayPaint);
+            canvas.drawText(GRID_STEPS[gridStepIndex]  + " " + distanceUnits , 15 * screenScale + gridStep/2, 25 * screenScale, overlayPaint);
 
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to draw map activity", e);

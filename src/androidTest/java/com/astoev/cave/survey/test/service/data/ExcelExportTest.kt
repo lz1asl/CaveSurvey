@@ -1,7 +1,6 @@
 package com.astoev.cave.survey.test.service.data
 
-import com.astoev.cave.survey.model.Option.UNIT_DEGREES
-import com.astoev.cave.survey.model.Option.UNIT_METERS
+import com.astoev.cave.survey.model.Option.*
 import com.astoev.cave.survey.service.imp.ExcelImport.loadProjectData
 import com.astoev.cave.survey.service.imp.LegData
 import com.astoev.cave.survey.test.helper.Common.goBack
@@ -80,7 +79,7 @@ class ExcelExportTest() : AbstractExportTest() {
 
         // now try to import it back and check the data
         goBack()
-        surveyName = createAndOpenSurvey(true)
+        surveyName = createAndOpenSurvey(true, null, null, null)
         legs = exportAndRead(surveyName, 10)
         assertFirstLegNoSlope(legs)
         assertSecondSimpleLeg(legs)
@@ -90,8 +89,37 @@ class ExcelExportTest() : AbstractExportTest() {
         assertSeventhLegNextGallery(legs)
     }
 
+    @Test
+    @Throws(IOException::class)
+    fun excelExportInNonDefaultUnitsTest() {
+
+        // create survey
+        var surveyName = createAndOpenSurvey(false, UNIT_FEET, UNIT_GRADS, UNIT_GRADS);
+
+        // empty first leg, units preserved
+        var legs = exportAndRead(surveyName, 1, UNIT_FEET, UNIT_GRADS, UNIT_GRADS)
+        assertLeg(legs[0], null, null, null)
+        assertLeg(legs[0], "A", "0", "A", "1", false, false)
+
+        // measurements as they are
+        selectFirstSurveyLeg()
+        setLegData(1f, 2f, null)
+        openLegWithText("A1")
+        addCoordinate(42.811522f, 23.378906f, 123, 5);
+        addLeg(1.2f, 2.2f, 1.3f)
+        legs = exportAndRead(surveyName, 2, UNIT_FEET, UNIT_GRADS, UNIT_GRADS)
+        assertFirstLegNoSlope(legs)
+        assertSecondSimpleLeg(legs)
+    }
+
     @Throws(IOException::class)
     private fun exportAndRead(aSurveyName: String, aLegsCount: Int): List<LegData> {
+        return exportAndRead(aSurveyName, aLegsCount, UNIT_METERS, UNIT_DEGREES, UNIT_DEGREES);
+    }
+
+    @Throws(IOException::class)
+    private fun exportAndRead(aSurveyName: String, aLegsCount: Int,
+                              aDistanceUnits: String, anAzimuthUnits: String, aSlopeUnits: String): List<LegData> {
         // export
         dataScreen()
         xlsExport()
@@ -102,7 +130,7 @@ class ExcelExportTest() : AbstractExportTest() {
         val data = loadProjectData(exportFile)
 
         // default units
-        assertConfigUnits(data, UNIT_METERS, UNIT_DEGREES, UNIT_DEGREES) // expected number of legs
+        assertConfigUnits(data, aDistanceUnits, anAzimuthUnits, aSlopeUnits) // expected number of legs
 
         // expected number of legs
         val legs = data.legs

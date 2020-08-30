@@ -6,7 +6,6 @@ import android.util.Log;
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.model.Location;
-import com.astoev.cave.survey.model.Option;
 import com.astoev.cave.survey.model.Photo;
 import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.model.Sketch;
@@ -31,6 +30,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+
+import static com.astoev.cave.survey.model.Option.CODE_AZIMUTH_UNITS;
+import static com.astoev.cave.survey.model.Option.CODE_DISTANCE_UNITS;
+import static com.astoev.cave.survey.model.Option.CODE_SLOPE_UNITS;
 
 /**
  * Exports the project's data as xsl file  
@@ -213,13 +216,13 @@ public class ExcelExport extends AbstractExport {
         Cell headerTo = headerRow.createCell(CELL_TO);
         headerTo.setCellValue(mContext.getString(R.string.main_table_header_to));
         Cell headerLength = headerRow.createCell(CELL_LENGHT);
-        String distanceTitle = mContext.getString(R.string.distance) + MEASUREMENT_UNIT_DELIMITER + Options.getOptionValue(Option.CODE_DISTANCE_UNITS);
+        String distanceTitle = mContext.getString(R.string.distance) + MEASUREMENT_UNIT_DELIMITER + Options.getOptionValue(CODE_DISTANCE_UNITS);
         headerLength.setCellValue(distanceTitle);
         Cell headerCompass = headerRow.createCell(CELL_AZIMUTH);
-        String azimuthTitle = mContext.getString(R.string.azimuth) + MEASUREMENT_UNIT_DELIMITER + Options.getOptionValue(Option.CODE_AZIMUTH_UNITS);
+        String azimuthTitle = mContext.getString(R.string.azimuth) + MEASUREMENT_UNIT_DELIMITER + Options.getOptionValue(CODE_AZIMUTH_UNITS);
         headerCompass.setCellValue(azimuthTitle);
         Cell headerClinometer = headerRow.createCell(CELL_SLOPE);
-        String clinometerTitle = mContext.getString(R.string.slope) + MEASUREMENT_UNIT_DELIMITER + Options.getOptionValue(Option.CODE_SLOPE_UNITS);
+        String clinometerTitle = mContext.getString(R.string.slope) + MEASUREMENT_UNIT_DELIMITER + Options.getOptionValue(CODE_SLOPE_UNITS);
         headerClinometer.setCellValue(clinometerTitle);
         Cell headerLeft = headerRow.createCell(CELL_LEFT);
         headerLeft.setCellValue(mContext.getString(R.string.left));

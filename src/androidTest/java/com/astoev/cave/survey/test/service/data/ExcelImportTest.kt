@@ -2,7 +2,7 @@ package com.astoev.cave.survey.test.service.data
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
-import com.astoev.cave.survey.model.Option
+import com.astoev.cave.survey.model.Option.*
 import com.astoev.cave.survey.service.imp.ExcelImport
 import com.astoev.cave.survey.service.imp.ProjectData
 import com.astoev.cave.survey.test.helper.ExcelTestUtils
@@ -23,7 +23,24 @@ class ExcelImportTest : AbstractExportTest() {
         val data = loadExcel("simple_20190220_1")
 
         // proper units
-        ExcelTestUtils.assertConfigUnits(data, Option.UNIT_METERS, Option.UNIT_GRADS, Option.UNIT_GRADS)
+        ExcelTestUtils.assertConfigUnits(data, UNIT_METERS, UNIT_DEGREES, UNIT_DEGREES)
+
+        // check some data
+        val legs = data.legs
+        Assert.assertEquals(1, legs.size.toLong())
+        ExcelTestUtils.assertLeg(legs[0], 1f, 2f, 3f, 1f, 3f, 4f, 2f)
+        ExcelTestUtils.assertLegLocation(legs[0], null, null, null, null)
+    }
+
+    @Test
+    @Throws(IOException::class)
+    fun testSimpleFileNonDefaultUnits() {
+
+        // file properly loaded
+        val data = loadExcel("simple_20190220_non_default_units")
+
+        // proper units
+        ExcelTestUtils.assertConfigUnits(data, UNIT_FEET, UNIT_GRADS, UNIT_GRADS)
 
         // check some data
         val legs = data.legs

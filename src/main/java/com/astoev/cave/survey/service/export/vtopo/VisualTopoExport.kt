@@ -3,6 +3,7 @@ package com.astoev.cave.survey.service.export.vtopo
 import android.content.Context
 import android.util.Log
 import com.astoev.cave.survey.Constants
+import com.astoev.cave.survey.activity.map.MapUtilities
 import com.astoev.cave.survey.model.Location
 import com.astoev.cave.survey.model.Option.*
 import com.astoev.cave.survey.model.Photo
@@ -32,6 +33,7 @@ class VisualTopoExport(aContext: Context?) : AbstractExport(aContext) {
     private var location: String = COORDINATE_PLACEHOLDER
     private var legFrom: String = "A0"
     private var entrance: String = ENTRANCE
+    private var distanceInMeters = UNIT_METERS.equals(getOptionValue(CODE_DISTANCE_UNITS))
 
     init {
         mUseUniqueName = true;
@@ -55,8 +57,9 @@ class VisualTopoExport(aContext: Context?) : AbstractExport(aContext) {
 
     override fun setValue(entityType: Entities?, aValue: Float?) {
         val entry = when (entityType) {
-            DISTANCE, COMPASS, INCLINATION -> leftPad(ensureNotEmpty(aValue, "0.00"), 8)
-            LEFT, RIGHT, UP, DOWN -> leftPad(ensureNotEmpty(aValue), 7)
+            DISTANCE -> leftPad(ensureNotEmpty(distanceInMeters(aValue), "0.00"), 8)
+            COMPASS, INCLINATION -> leftPad(ensureNotEmpty(aValue, "0.00"), 8)
+            LEFT, RIGHT, UP, DOWN -> leftPad(ensureNotEmpty(distanceInMeters(aValue)), 7)
             else -> ""
         }
         body.append(entry)
@@ -166,6 +169,11 @@ class VisualTopoExport(aContext: Context?) : AbstractExport(aContext) {
 
     private fun ensureNotEmpty(value: Float?): String {
         return ensureNotEmpty(value, PLACEHOLDER)
+    }
+
+    private fun distanceInMeters(value: Float?): Float? {
+        // Visual Topo supports only meters
+        return if (distanceInMeters) value else MapUtilities.getFeetsInMeters(value);
     }
 
     private fun ensureNotEmpty(value: Float?, placeholder: String): String {
