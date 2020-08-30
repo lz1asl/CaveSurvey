@@ -30,6 +30,7 @@ import java.util.List;
 
 import static com.astoev.cave.survey.R.string.map_units_feet;
 import static com.astoev.cave.survey.R.string.map_units_meters;
+import static com.astoev.cave.survey.model.GalleryType.GEOLOCATION;
 import static com.astoev.cave.survey.model.Option.CODE_DISTANCE_UNITS;
 import static com.astoev.cave.survey.model.Option.UNIT_FEET;
 import static com.astoev.cave.survey.model.Option.UNIT_METERS;
@@ -246,6 +247,10 @@ public class MapView extends View {
                                 vectorsPaint.setColor(gallery.getColor());
                                 vectorPointPaint.setColor(gallery.getColor());
 
+                                if (GEOLOCATION.equals(gallery.getType())) {
+                                    polygonPaint.setAlpha(50);
+                                }
+
                                 DaoUtil.refreshPoint(l.getFromPoint());
                                 pointLabel = gallery.getName() + l.getFromPoint().getName();
                                 if (scale >= 3) {
@@ -301,6 +306,10 @@ public class MapView extends View {
                             vectorsPaint.setColor(gallery.getColor());
                             vectorPointPaint.setColor(gallery.getColor());
 
+                            if (GEOLOCATION.equals(gallery.getType())) {
+                                polygonPaint.setAlpha(50);
+                            }
+
                             if (Workspace.getCurrentInstance().getActiveLegId().equals(l.getId())) {
                                 // you are here
                                 if (l.isMiddle()) {
@@ -321,7 +330,6 @@ public class MapView extends View {
                                 }
                                 canvas.drawCircle(mapCenterMoveX + second.getX(), mapCenterMoveY + second.getY(), pointRadius, polygonPaint);
                             }
-
                         }
 
                         // leg
@@ -369,7 +377,6 @@ public class MapView extends View {
 
                         processedLegs.add(l.getId());
                     }
-
                 }
             }
 
