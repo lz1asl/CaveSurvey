@@ -11,7 +11,6 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.SparseArray;
-import android.util.SparseIntArray;
 import android.view.View;
 
 import com.astoev.cave.survey.Constants;
@@ -29,6 +28,8 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.astoev.cave.survey.R.string.map_units_feet;
+import static com.astoev.cave.survey.R.string.map_units_meters;
 import static com.astoev.cave.survey.model.Option.CODE_DISTANCE_UNITS;
 import static com.astoev.cave.survey.model.Option.UNIT_FEET;
 import static com.astoev.cave.survey.model.Option.UNIT_METERS;
@@ -69,13 +70,13 @@ public class MapView extends View {
     private List<Integer> processedLegs = new ArrayList<>();
     
     private SparseArray<Point2D> mapPoints = new SparseArray<>();
-    private SparseIntArray galleryColors = new SparseIntArray();
-    private SparseArray<String> galleryNames = new SparseArray<>();
 
     private boolean horizontalPlan = true;
 
     private static float screenScale;
-    private static String distanceUnits;
+    private static String distanceUnitsLabel;
+    private static String azimuthUnits;
+    private static String slopeUnits;
 
 
     public MapView(Context context, AttributeSet attrs) {
@@ -124,22 +125,23 @@ public class MapView extends View {
         vectorPointPaint.setStrokeWidth(1);
         vectorPointPaint.setAlpha(50);
 
-        distanceUnits = "m";
         switch (Options.getOptionValue(CODE_DISTANCE_UNITS)) {
             case UNIT_METERS:
-                distanceUnits = "m";
+                distanceUnitsLabel = context.getString(map_units_meters);
                 break;
             case UNIT_FEET:
-                distanceUnits = "ft";
+                distanceUnitsLabel = context.getString(map_units_feet);
                 break;
             default:
                 throw new RuntimeException("Unit not implemented");
         }
+        azimuthUnits = Options.getOptionValue(Option.CODE_AZIMUTH_UNITS);
+        slopeUnits = Options.getOptionValue(Option.CODE_SLOPE_UNITS);
+
 
         // need to instruct that changes to the canvas will be made, otherwise the screen might become blank
         // see http://stackoverflow.com/questions/12261435/canvas-does-not-draw-in-custom-view
         setWillNotDraw(false);
-
     }
 
     @Override
@@ -151,8 +153,6 @@ public class MapView extends View {
         try {
             processedLegs.clear();
             mapPoints.clear();
-            galleryColors.clear();
-            galleryNames.clear();
 
             // prepare map surface
             int maxX = canvas.getWidth();
@@ -170,9 +170,6 @@ public class MapView extends View {
                 centerX = maxX / 4;
                 centerY = maxY / 2;
             }
-
-            String azimuthUnits = Options.getOptionValue(Option.CODE_AZIMUTH_UNITS);
-            String slopeUnits = Options.getOptionValue(Option.CODE_SLOPE_UNITS);
 
             int gridStepIndex = scale/5;
 
@@ -243,19 +240,14 @@ public class MapView extends View {
                             // draw first point
                             if (!l.isMiddle()) {
                                 //color
-                                if (galleryColors.get(l.getGalleryId(), Constants.NOT_FOUND) == Constants.NOT_FOUND) {
-                                    galleryColors.put(l.getGalleryId(), MapUtilities.getNextGalleryColor(galleryColors.size()));
-                                    Gallery gallery = DaoUtil.getGallery(l.getGalleryId());
-                                    galleryNames.put(l.getGalleryId(), gallery.getName());
-                                }
-                                polygonPaint.setColor(galleryColors.get(l.getGalleryId()));
-                                polygonWidthPaint.setColor(galleryColors.get(l.getGalleryId()));
-                                vectorsPaint.setColor(galleryColors.get(l.getGalleryId()));
-                                vectorPointPaint.setColor(galleryColors.get(l.getGalleryId()));
+                                Gallery gallery = DaoUtil.getGallery(l.getGalleryId());
+                                polygonPaint.setColor(gallery.getColor());
+                                polygonWidthPaint.setColor(gallery.getColor());
+                                vectorsPaint.setColor(gallery.getColor());
+                                vectorPointPaint.setColor(gallery.getColor());
 
                                 DaoUtil.refreshPoint(l.getFromPoint());
-
-                                pointLabel = galleryNames.get(l.getGalleryId()) + l.getFromPoint().getName();
+                                pointLabel = gallery.getName() + l.getFromPoint().getName();
                                 if (scale >= 3) {
                                     canvas.drawText(pointLabel, mapCenterMoveX + first.getX() + labelDeviationX, mapCenterMoveY + first.getY() + labelDeviationY, polygonPaint);
                                 }
@@ -303,17 +295,11 @@ public class MapView extends View {
                             }
 
                             // color
-                            if (galleryColors.get(l.getGalleryId(), Constants.NOT_FOUND) == Constants.NOT_FOUND) {
-                                galleryColors.put(l.getGalleryId(), MapUtilities.getNextGalleryColor(galleryColors.size()));
-                                Gallery gallery = DaoUtil.getGallery(l.getGalleryId());
-                                galleryNames.put(l.getGalleryId(), gallery.getName());
-                            }
-                            polygonPaint.setColor(galleryColors.get(l.getGalleryId()));
-                            polygonWidthPaint.setColor(galleryColors.get(l.getGalleryId()));
-                            vectorsPaint.setColor(galleryColors.get(l.getGalleryId()));
-                            vectorPointPaint.setColor(galleryColors.get(l.getGalleryId()));
-
-//                            Log.i(Constants.LOG_TAG_UI, "Drawing leg " + l.getFromPoint().getName() + ":" + l.getToPoint().getName() + "-" + l.getGalleryId());
+                            Gallery gallery = DaoUtil.getGallery(l.getGalleryId());
+                            polygonPaint.setColor(gallery.getColor());
+                            polygonWidthPaint.setColor(gallery.getColor());
+                            vectorsPaint.setColor(gallery.getColor());
+                            vectorPointPaint.setColor(gallery.getColor());
 
                             if (Workspace.getCurrentInstance().getActiveLegId().equals(l.getId())) {
                                 // you are here
@@ -329,7 +315,7 @@ public class MapView extends View {
                             if (l.isMiddle()) {
                                 canvas.drawCircle(mapCenterMoveX + second.getX(), mapCenterMoveY + second.getY(), middlePointRadius, polygonPaint);
                             } else {
-                                pointLabel = galleryNames.get(l.getGalleryId()) + l.getToPoint().getName();
+                                pointLabel = gallery.getName() + l.getToPoint().getName();
                                 if (scale >= 3) {
                                     canvas.drawText(pointLabel, mapCenterMoveX + second.getX() + labelDeviationX, mapCenterMoveY + second.getY() + labelDeviationY, polygonPaint);
                                 }
@@ -423,7 +409,7 @@ public class MapView extends View {
             canvas.drawLine(scaled30, 25 * screenScale, scaled30, 35 * screenScale, overlayPaint);
             canvas.drawLine(scaled30, scaled30, scaled30 + gridStep, scaled30, overlayPaint);
             canvas.drawLine(scaled30 + gridStep, 25 * screenScale, scaled30 + gridStep, 35 * screenScale, overlayPaint);
-            canvas.drawText(GRID_STEPS[gridStepIndex]  + " " + distanceUnits , 15 * screenScale + gridStep/2, 25 * screenScale, overlayPaint);
+            canvas.drawText(GRID_STEPS[gridStepIndex]  + " " + distanceUnitsLabel, 15 * screenScale + gridStep/2, 25 * screenScale, overlayPaint);
 
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to draw map activity", e);

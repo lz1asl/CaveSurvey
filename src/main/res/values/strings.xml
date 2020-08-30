@@ -43,6 +43,8 @@
 
     <string name="map_plan">Plan</string>
     <string name="map_section">Section</string>
+    <string name="map_units_meters">m</string>
+    <string name="map_units_feet">ft</string>
 
     <string name="main_table_header_from">From</string>
     <string name="main_table_header_to">To</string>
