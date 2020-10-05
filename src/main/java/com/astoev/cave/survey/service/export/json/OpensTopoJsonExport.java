@@ -29,7 +29,12 @@ import static com.astoev.cave.survey.model.Option.UNIT_DEGREES;
 import static com.astoev.cave.survey.model.Option.UNIT_FEET;
 import static com.astoev.cave.survey.model.Option.UNIT_GRADS;
 import static com.astoev.cave.survey.model.Option.UNIT_METERS;
-import static com.astoev.cave.survey.service.export.ExportEntityType.LEG;
+import static com.astoev.cave.survey.service.export.AbstractExport.Entities.COMPASS;
+import static com.astoev.cave.survey.service.export.AbstractExport.Entities.DISTANCE;
+import static com.astoev.cave.survey.service.export.AbstractExport.Entities.FROM;
+import static com.astoev.cave.survey.service.export.AbstractExport.Entities.INCLINATION;
+import static com.astoev.cave.survey.service.export.AbstractExport.Entities.TO;
+import static com.astoev.cave.survey.service.export.ExportEntityType.GEOREFERENCING;
 
 /**
  * Created by astoev on 8/28/14.
@@ -40,6 +45,7 @@ public class OpensTopoJsonExport extends AbstractExport {
     private JSONObject project;
     private JSONObject row;
     private JSONObject prevRow;
+    private int rowCount = 0;
 
     public OpensTopoJsonExport(Context aContext) {
         super(aContext);
@@ -110,15 +116,6 @@ public class OpensTopoJsonExport extends AbstractExport {
 
             rows.put(headerRow);
 
-            // empty initial row to shift the side measurements
-            prepareEntity(0, LEG);
-            prevRow = row;
-            populateValue(Entities.FROM, "0");
-            populateValue(Entities.TO, "A0");
-            populateValue(Entities.DISTANCE, 0);
-            populateValue(Entities.COMPASS, 0);
-            populateValue(Entities.INCLINATION, 0);
-
             project.put("data", rows);
         } catch (JSONException e) {
             throw new RuntimeException(e);
@@ -135,6 +132,7 @@ public class OpensTopoJsonExport extends AbstractExport {
     protected void prepareEntity(int rowCounter, ExportEntityType type) {
 
         try {
+
             prevRow = row;
             row = new JSONObject();
             row.put("from", "");
@@ -149,6 +147,21 @@ public class OpensTopoJsonExport extends AbstractExport {
             row.put("r", "");
 
             rows.put(row);
+
+
+            // empty initial row to shift the side measurements when georeferencing initial gallery is missing
+            if (rowCounter == 0 && !GEOREFERENCING.equals(type)) {
+//                prepareEntity(0, LEG);
+//                prevRow = row;
+                populateValue(FROM, "0");
+                populateValue(TO, "A0");
+                populateValue(DISTANCE, 0);
+                populateValue(COMPASS, 0);
+                populateValue(INCLINATION, 0);
+
+            }
+            rowCounter++;
+
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }

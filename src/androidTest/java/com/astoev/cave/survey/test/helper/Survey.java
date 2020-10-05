@@ -46,6 +46,7 @@ import static com.astoev.cave.survey.test.helper.Common.clickDialogSpinnerAtPosi
 import static com.astoev.cave.survey.test.helper.Common.openContextMenu;
 import static com.astoev.cave.survey.test.helper.Common.type;
 import static com.astoev.cave.survey.test.helper.Data.getXlsExportFilesCount;
+import static com.astoev.cave.survey.test.helper.Gallery.createDefaultGallery;
 import static com.astoev.cave.survey.test.helper.Home.goHome;
 import static org.hamcrest.Matchers.anything;
 
@@ -150,6 +151,7 @@ public class Survey {
         final String surveyName = "" + System.currentTimeMillis();
         goHome();
         createSurvey(surveyName, importFile, distanceUnits, azimuthUnits, slopeUnits);
+        createDefaultGallery();
         openSurvey(surveyName);
         return surveyName;
     }

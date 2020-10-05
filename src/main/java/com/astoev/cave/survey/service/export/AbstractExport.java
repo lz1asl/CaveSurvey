@@ -37,7 +37,7 @@ public abstract class AbstractExport {
     protected Context mContext;
     protected String mExtension;
     protected boolean mUseUniqueName;
-    protected enum Entities { FROM, TO, DISTANCE, COMPASS, INCLINATION, UP, DOWN, LEFT, RIGHT, NOTE}
+    public enum Entities { FROM, TO, DISTANCE, COMPASS, INCLINATION, UP, DOWN, LEFT, RIGHT, NOTE}
 
     public AbstractExport(Context aContext) {
         mContext = aContext;
