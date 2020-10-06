@@ -102,7 +102,7 @@ class OpensTopoExportTest() : AbstractExportTest() {
     }
 
     private fun compare(projectName: String, expected: String) {
-        compare(projectName, expected, ".json")
+        compare(projectName, expected, "json")
     }
 
     private fun compare(projectName: String, expected: String, extension: String) {

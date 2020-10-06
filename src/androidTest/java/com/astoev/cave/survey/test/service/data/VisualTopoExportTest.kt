@@ -16,7 +16,6 @@ import com.astoev.cave.survey.test.helper.Survey.saveLeg
 import com.astoev.cave.survey.test.helper.Survey.selectFirstSurveyLeg
 import com.astoev.cave.survey.test.helper.Survey.setLegData
 import com.astoev.cave.survey.util.AndroidUtil
-import org.junit.Assert.fail
 import org.junit.Test
 import java.util.*
 
@@ -71,7 +70,6 @@ class VisualTopoExportTest() : AbstractExportTest() {
 
         // compare
         exportAndCompare(surveyName, "initial_feet");
-        fail("Fix import file")
     }
 
     private fun exportAndCompare(surveyName: String, expected: String) {
