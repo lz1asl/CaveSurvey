@@ -27,7 +27,7 @@ public class Data {
         click("Visual Topo export");
     }
 
-    public static void opensTopoExport() {
+    public static void opensTopo() {
         click(info_action_openstopo);
     }
 

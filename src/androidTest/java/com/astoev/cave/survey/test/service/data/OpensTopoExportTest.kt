@@ -4,7 +4,8 @@ import com.astoev.cave.survey.model.Option.UNIT_FEET
 import com.astoev.cave.survey.model.Option.UNIT_GRADS
 import com.astoev.cave.survey.test.helper.Common.goBack
 import com.astoev.cave.survey.test.helper.Data.dataScreen
-import com.astoev.cave.survey.test.helper.Data.opensTopoExport
+import com.astoev.cave.survey.test.helper.Data.opensTopo
+import com.astoev.cave.survey.test.helper.OpensTopo.exportCSV
 import com.astoev.cave.survey.test.helper.Survey.*
 import org.junit.Test
 
@@ -61,17 +62,43 @@ class OpensTopoExportTest() : AbstractExportTest() {
         exportAndCompare(surveyName, "initial_feet");
     }
 
+    @Test
+    fun opensTopoIntegration() {
+        // create survey
+        var surveyName = createAndOpenSurvey()
+
+        // first test legs
+        selectFirstSurveyLeg()
+        setLegData(1f, 2f, null)
+        addLeg(1.2f, 2.2f, 1.3f)
+        addLeg(2.3f, 3.4f, 4.5f, 1.1f, 1.2f, 1.3f, 1.4f)
+
+        // open OpensTopo UI
+        dataScreen()
+        opensTopo()
+
+        // export from within OpensTopo
+        exportCSV()
+
+        // compare output
+        compare(surveyName, "opensTopoExport", "csv")
+    }
+
     private fun exportAndCompare(surveyName: String, expected: String) {
         dataScreen()
-        opensTopoExport()
+        opensTopo()
         compare(surveyName, expected)
         goBack()
         goBack()
     }
 
     private fun compare(projectName: String, expected: String) {
-        val expectedStream = findAsset("export/openstopo/$expected.json")
+        compare(projectName, expected, ".json")
+    }
+
+    private fun compare(projectName: String, expected: String, extension: String) {
+        val expectedStream = findAsset("export/openstopo/$expected.$extension")
         val params = mapOf(PARAM_PROJECT_NAME to projectName)
-        compareContents(expectedStream, params, projectName, ".json");
+        compareContents(expectedStream, params, projectName, ".$extension");
     }
 }

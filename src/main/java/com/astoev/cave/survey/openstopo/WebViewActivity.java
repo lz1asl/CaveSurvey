@@ -2,11 +2,9 @@ package com.astoev.cave.survey.openstopo;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.webkit.JavascriptInterface;
-import android.webkit.ValueCallback;
 import android.webkit.WebView;
 
 import com.astoev.cave.survey.Constants;
@@ -26,7 +24,6 @@ import java.io.InputStream;
 public class WebViewActivity extends Activity {
 
     private WebView webView;
-    private ValueCallback<Uri> mUploadMessage;
 
 
     @SuppressLint("SetJavaScriptEnabled")

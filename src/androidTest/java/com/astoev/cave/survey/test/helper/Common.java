@@ -4,6 +4,7 @@ import android.content.Context;
 
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.action.ViewActions;
+import androidx.test.espresso.web.webdriver.Locator;
 
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onIdle;
@@ -15,6 +16,9 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static androidx.test.espresso.web.sugar.Web.onWebView;
+import static androidx.test.espresso.web.webdriver.DriverAtoms.findElement;
+import static androidx.test.espresso.web.webdriver.DriverAtoms.webClick;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static org.hamcrest.CoreMatchers.anything;
 
@@ -36,6 +40,10 @@ public class Common {
     public static void click(String text) {
         onView(withText(text)).perform(ViewActions.click());
         onIdle();
+    }
+
+    public static void webViewClick(String target) {
+        onWebView().withElement(findElement(Locator.LINK_TEXT, target)).perform(webClick());
     }
 
     public static void scrollAndClick(String text) {
