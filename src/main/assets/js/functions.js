@@ -596,7 +596,7 @@ function handleOpenFileAddSelect(evt) {
 function ops_import(filename, str, append)
 {
     var tmpcaveObj = new CaveObject();
-    if (str.indexOf("{\"") === 0)
+    if (str.indexOf("{\n  \"") === 0)
     {
         tmpcaveObj = jQuery.parseJSON(str.replace(/lenght/g, "len"));
     }
