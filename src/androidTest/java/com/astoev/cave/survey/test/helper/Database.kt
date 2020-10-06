@@ -1,15 +1,12 @@
-package com.astoev.cave.survey.test.helper;
+package com.astoev.cave.survey.test.helper
 
-import android.content.Context;
+import androidx.test.InstrumentationRegistry.getTargetContext
+import com.astoev.cave.survey.service.ormlite.DatabaseHelper
 
-import static com.astoev.cave.survey.service.ormlite.DatabaseHelper.DATABASE_NAME;
-import static com.astoev.cave.survey.test.helper.Common.getTargetContext;
-
-public class Database {
-
-    public static void clearDatabase() {
-        Context ctx = getTargetContext();
-        ctx.deleteDatabase(DATABASE_NAME);
-//        new DatabaseHelper(ctx);
+object Database {
+    fun clearDatabase() {
+        val ctx = getTargetContext()
+        ctx!!.deleteDatabase(DatabaseHelper.DATABASE_NAME)
+        //        new DatabaseHelper(ctx);
     }
 }

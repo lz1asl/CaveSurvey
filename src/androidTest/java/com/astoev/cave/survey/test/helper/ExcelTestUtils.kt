@@ -1,66 +1,54 @@
-package com.astoev.cave.survey.test.helper;
+package com.astoev.cave.survey.test.helper
 
-import com.astoev.cave.survey.service.imp.LegData;
-import com.astoev.cave.survey.service.imp.ProjectData;
+import com.astoev.cave.survey.model.Option
+import com.astoev.cave.survey.service.imp.LegData
+import com.astoev.cave.survey.service.imp.ProjectData
+import org.junit.Assert
 
-import static com.astoev.cave.survey.model.Option.CODE_AZIMUTH_UNITS;
-import static com.astoev.cave.survey.model.Option.CODE_DISTANCE_UNITS;
-import static com.astoev.cave.survey.model.Option.CODE_SLOPE_UNITS;
-import static com.astoev.cave.survey.model.Option.UNIT_DEGREES;
-import static com.astoev.cave.survey.model.Option.UNIT_METERS;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
-public class ExcelTestUtils {
-
-
-    public static void assertLegLocation(LegData aLeg, Float aLat, Float aLon, Float anAlt, Float anAccuracy) {
-        assertNotNull(aLeg);
-        assertEquals(aLat, aLeg.getLat());
-        assertEquals(aLon, aLeg.getLon());
-        assertEquals(anAlt, aLeg.getAlt());
-        assertEquals(anAccuracy, aLeg.getAccuracy());
+object ExcelTestUtils {
+    fun assertLegLocation(aLeg: LegData, aLat: Float?, aLon: Float?, anAlt: Float?, anAccuracy: Float?) {
+        Assert.assertNotNull(aLeg)
+        Assert.assertEquals(aLat, aLeg.lat)
+        Assert.assertEquals(aLon, aLeg.lon)
+        Assert.assertEquals(anAlt, aLeg.alt)
+        Assert.assertEquals(anAccuracy, aLeg.accuracy)
     }
 
-    public static void assertLeg(LegData aLeg, Float aDistance, Float anAzimuth, Float aSlope) {
-        assertLeg(aLeg, aDistance, anAzimuth, aSlope, null, null, null, null);
+    @JvmOverloads
+    fun assertLeg(aLeg: LegData, aDistance: Float?, anAzimuth: Float?, aSlope: Float?,
+                  up: Float? = null, down: Float? = null, left: Float? = null, right: Float? = null) {
+        Assert.assertNotNull(aLeg)
+        Assert.assertEquals(aDistance, aLeg.length)
+        Assert.assertEquals(anAzimuth, aLeg.azimuth)
+        Assert.assertEquals(aSlope, aLeg.slope)
+        Assert.assertEquals(up, aLeg.up)
+        Assert.assertEquals(down, aLeg.down)
+        Assert.assertEquals(left, aLeg.left)
+        Assert.assertEquals(right, aLeg.right)
     }
 
-    public static void assertLeg(LegData aLeg, Float aDistance, Float anAzimuth, Float aSlope,
-                                 Float up, Float down, Float left, Float right) {
-        assertNotNull(aLeg);
-        assertEquals(aDistance, aLeg.getLength());
-        assertEquals(anAzimuth, aLeg.getAzimuth());
-        assertEquals(aSlope, aLeg.getSlope());
-        assertEquals(up, aLeg.getUp());
-        assertEquals(down, aLeg.getDown());
-        assertEquals(left, aLeg.getLeft());
-        assertEquals(right, aLeg.getRight());
+    fun assertLeg(aLeg: LegData, aGaleryFrom: String?, aPointFrom: String?, aGalleryTo: String?,
+                  aPointTo: String?, isMiddle: Boolean, isVector: Boolean) {
+        Assert.assertEquals(aGaleryFrom, aLeg.fromGallery)
+        Assert.assertEquals(aPointFrom, aLeg.fromPoint)
+        Assert.assertEquals(aGalleryTo, aLeg.toGallery)
+        Assert.assertEquals(aPointTo, aLeg.toPoint)
+        Assert.assertEquals(isMiddle, aLeg.isMiddlePoint)
+        Assert.assertEquals(isVector, aLeg.isVector)
     }
 
-    public static void assertLeg(LegData aLeg, String aGaleryFrom, String aPointFrom, String aGalleryTo,
-                                 String aPointTo, boolean isMiddle, boolean isVector) {
-        assertEquals(aGaleryFrom, aLeg.getFromGallery());
-        assertEquals(aPointFrom, aLeg.getFromPoint());
-        assertEquals(aGalleryTo, aLeg.getToGallery());
-        assertEquals(aPointTo, aLeg.getToPoint());
-        assertEquals(isMiddle, aLeg.isMiddlePoint());
-        assertEquals(isVector, aLeg.isVector());
+    fun assertDefaultUnits(aData: ProjectData) {
+        assertConfigUnits(aData, Option.UNIT_METERS, Option.UNIT_DEGREES, Option.UNIT_DEGREES)
     }
 
-    public static void assertDefaultUnits(ProjectData aData) {
-        assertConfigUnits(aData, UNIT_METERS, UNIT_DEGREES, UNIT_DEGREES);
+    fun assertConfigUnits(aData: ProjectData, distanceUnit: String?, azimuthUni: String?, slopeUnit: String?) {
+        assertConfig(aData, Option.CODE_DISTANCE_UNITS, distanceUnit)
+        assertConfig(aData, Option.CODE_AZIMUTH_UNITS, azimuthUni)
+        assertConfig(aData, Option.CODE_SLOPE_UNITS, slopeUnit)
     }
 
-    public static void assertConfigUnits(ProjectData aData, String distanceUnit, String azimuthUni, String slopeUnit) {
-        assertConfig(aData, CODE_DISTANCE_UNITS, distanceUnit);
-        assertConfig(aData, CODE_AZIMUTH_UNITS, azimuthUni);
-        assertConfig(aData, CODE_SLOPE_UNITS, slopeUnit);
-
-    }
-
-    public static void assertConfig(ProjectData aData, String aProperty, String anExpectedValue) {
-        String actualValue = aData.getOptions().get(aProperty);
-        assertEquals(anExpectedValue, actualValue);
+    fun assertConfig(aData: ProjectData, aProperty: String?, anExpectedValue: String?) {
+        val actualValue = aData.options[aProperty]
+        Assert.assertEquals(anExpectedValue, actualValue)
     }
 }

@@ -1,257 +1,196 @@
-package com.astoev.cave.survey.test.helper;
+package com.astoev.cave.survey.test.helper
 
-import androidx.test.espresso.action.ViewActions;
+import androidx.test.espresso.Espresso
+import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.matcher.ViewMatchers
+import com.astoev.cave.survey.R.id
+import com.astoev.cave.survey.model.Option
+import org.hamcrest.Matchers
 
-import static androidx.test.espresso.Espresso.onData;
-import static androidx.test.espresso.Espresso.onIdle;
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.pressBack;
-import static androidx.test.espresso.action.ViewActions.scrollTo;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static com.astoev.cave.survey.R.id.action_new_project;
-import static com.astoev.cave.survey.R.id.gps_action_save;
-import static com.astoev.cave.survey.R.id.gps_manual_accuracy;
-import static com.astoev.cave.survey.R.id.gps_manual_altitude;
-import static com.astoev.cave.survey.R.id.gps_manual_latitude;
-import static com.astoev.cave.survey.R.id.gps_manual_longitude;
-import static com.astoev.cave.survey.R.id.import_files;
-import static com.astoev.cave.survey.R.id.main_action_add;
-import static com.astoev.cave.survey.R.id.middle_create;
-import static com.astoev.cave.survey.R.id.middle_distance;
-import static com.astoev.cave.survey.R.id.new_action_create;
-import static com.astoev.cave.survey.R.id.new_projectname;
-import static com.astoev.cave.survey.R.id.options_units_azimuth;
-import static com.astoev.cave.survey.R.id.options_units_distance;
-import static com.astoev.cave.survey.R.id.options_units_slope;
-import static com.astoev.cave.survey.R.id.point_action_save;
-import static com.astoev.cave.survey.R.id.point_azimuth;
-import static com.astoev.cave.survey.R.id.point_distance;
-import static com.astoev.cave.survey.R.id.point_down;
-import static com.astoev.cave.survey.R.id.point_left;
-import static com.astoev.cave.survey.R.id.point_main_view;
-import static com.astoev.cave.survey.R.id.point_right;
-import static com.astoev.cave.survey.R.id.point_slope;
-import static com.astoev.cave.survey.R.id.point_up;
-import static com.astoev.cave.survey.R.id.vector_add;
-import static com.astoev.cave.survey.R.id.vector_azimuth;
-import static com.astoev.cave.survey.R.id.vector_distance;
-import static com.astoev.cave.survey.R.id.vector_slope;
-import static com.astoev.cave.survey.model.Option.UNIT_DEGREES;
-import static com.astoev.cave.survey.model.Option.UNIT_FEET;
-import static com.astoev.cave.survey.model.Option.UNIT_GRADS;
-import static com.astoev.cave.survey.model.Option.UNIT_METERS;
-import static com.astoev.cave.survey.test.helper.Common.click;
-import static com.astoev.cave.survey.test.helper.Common.clickDialogSpinnerAtPosition;
-import static com.astoev.cave.survey.test.helper.Common.openContextMenu;
-import static com.astoev.cave.survey.test.helper.Common.type;
-import static com.astoev.cave.survey.test.helper.Data.getXlsExportFilesCount;
-import static com.astoev.cave.survey.test.helper.Home.goHome;
-import static org.hamcrest.Matchers.anything;
-
-public class Survey {
-
-    public static void createSurvey(String aName) {
-        createSurvey(aName, false, null, null, null);
-    }
-
-    public static void createSurvey(String aName, boolean importFile,
-                                    String distanceUnits, String azimuthUnits, String slopeUnits) {
+object Survey {
+    @JvmOverloads
+    fun createSurvey(aName: String?, importFile: Boolean = false,
+                     distanceUnits: String? = null, azimuthUnits: String? = null, slopeUnits: String? = null) {
         // open new survey screen
-        click(action_new_project);
-
+        Common.click(id.action_new_project)
         if (importFile) {
-            selectLastImport();
+            selectLastImport()
         }
 
         // enter name
-        type(new_projectname, aName);
-
+        Common.type(id.new_projectname, aName)
         if (distanceUnits != null) {
-            selectDistanceUnits(distanceUnits);
+            selectDistanceUnits(distanceUnits)
         }
         if (azimuthUnits != null) {
-            selectAzimuthUnits(azimuthUnits);
+            selectAzimuthUnits(azimuthUnits)
         }
         if (slopeUnits != null) {
-            selectSlopeUnits(slopeUnits);
+            selectSlopeUnits(slopeUnits)
         }
 
 
         // save & go back
-        click(new_action_create);
-
+        Common.click(id.new_action_create)
         if (!importFile) {
-            onView(withId(point_main_view)).perform(pressBack());
+            Espresso.onView(ViewMatchers.withId(id.point_main_view)).perform(ViewActions.pressBack())
         }
     }
 
-    private static void selectSlopeUnits(String aSlopeUnits) {
-        click(options_units_slope);
-
-        switch (aSlopeUnits) {
-            case UNIT_DEGREES:
-                clickDialogSpinnerAtPosition(0);
-                return;
-            case UNIT_GRADS:
-                clickDialogSpinnerAtPosition(1);
-                return;
-            default:
-                throw new RuntimeException();
+    private fun selectSlopeUnits(aSlopeUnits: String) {
+        Common.click(id.options_units_slope)
+        when (aSlopeUnits) {
+            Option.UNIT_DEGREES -> {
+                Common.clickDialogSpinnerAtPosition(0)
+                return
+            }
+            Option.UNIT_GRADS -> {
+                Common.clickDialogSpinnerAtPosition(1)
+                return
+            }
+            else -> throw RuntimeException()
         }
     }
 
-    private static void selectAzimuthUnits(String aAzimuthUnits) {
-        click(options_units_azimuth);
-
-        switch (aAzimuthUnits) {
-            case UNIT_DEGREES:
-                clickDialogSpinnerAtPosition(0);
-                return;
-            case UNIT_GRADS:
-                clickDialogSpinnerAtPosition(1);
-                return;
-            default:
-                throw new RuntimeException();
+    private fun selectAzimuthUnits(aAzimuthUnits: String) {
+        Common.click(id.options_units_azimuth)
+        when (aAzimuthUnits) {
+            Option.UNIT_DEGREES -> {
+                Common.clickDialogSpinnerAtPosition(0)
+                return
+            }
+            Option.UNIT_GRADS -> {
+                Common.clickDialogSpinnerAtPosition(1)
+                return
+            }
+            else -> throw RuntimeException()
         }
     }
 
-    private static void selectDistanceUnits(String aDistanceUnits) {
-        click(options_units_distance);
-
-        switch (aDistanceUnits) {
-            case UNIT_METERS:
-                clickDialogSpinnerAtPosition(0);
-                return;
-            case UNIT_FEET:
-                clickDialogSpinnerAtPosition(1);
-                return;
-            default:
-                throw new RuntimeException();
+    private fun selectDistanceUnits(aDistanceUnits: String) {
+        Common.click(id.options_units_distance)
+        when (aDistanceUnits) {
+            Option.UNIT_METERS -> {
+                Common.clickDialogSpinnerAtPosition(0)
+                return
+            }
+            Option.UNIT_FEET -> {
+                Common.clickDialogSpinnerAtPosition(1)
+                return
+            }
+            else -> throw RuntimeException()
         }
     }
 
-    public static void selectLastImport() {
-        click(import_files);
-        onData(anything()).atPosition(getXlsExportFilesCount())
-                .perform(scrollTo(), ViewActions.click());
-        onIdle();
+    fun selectLastImport() {
+        Common.click(id.import_files)
+        Espresso.onData(Matchers.anything()).atPosition(Data.xlsExportFilesCount)
+                .perform(ViewActions.scrollTo(), ViewActions.click())
+        Espresso.onIdle()
     }
 
-    public static void openSurvey(String aName) {
-        click(aName);
+    fun openSurvey(aName: String?) {
+        Common.click(aName)
     }
 
-    public static String createAndOpenSurvey() {
-        return createAndOpenSurvey(false, null, null, null);
+    @JvmOverloads
+    fun createAndOpenSurvey(importFile: Boolean = false, distanceUnits: String? = null, azimuthUnits: String? = null, slopeUnits: String? = null): String {
+        val surveyName = "" + System.currentTimeMillis()
+        Home.goHome()
+        createSurvey(surveyName, importFile, distanceUnits, azimuthUnits, slopeUnits)
+        openSurvey(surveyName)
+        return surveyName
     }
 
-    public static String createAndOpenSurvey(boolean importFile, String distanceUnits, String azimuthUnits, String slopeUnits) {
-        final String surveyName = "" + System.currentTimeMillis();
-        goHome();
-        createSurvey(surveyName, importFile, distanceUnits, azimuthUnits, slopeUnits);
-        openSurvey(surveyName);
-        return surveyName;
-    }
-
-    public static void addLeg(float length, float azimuth, Float slope) {
-        addLeg(length, azimuth, slope, null, null, null, null);
-    }
-
-    public static void addLeg(float length, float azimuth, Float slope, Float up, Float down, Float left, Float rigt) {
+    @JvmOverloads
+    fun addLeg(length: Float, azimuth: Float, slope: Float?, up: Float? = null, down: Float? = null, left: Float? = null, rigt: Float? = null) {
         // press new
-        click(main_action_add);
+        Common.click(id.main_action_add)
 
         // select the leg option
-        clickDialogSpinnerAtPosition(0);
-
-        setLegData(length, azimuth, slope, up, down, left, rigt);
+        Common.clickDialogSpinnerAtPosition(0)
+        setLegData(length, azimuth, slope, up, down, left, rigt)
     }
 
-    public static void addLegMiddle(float distance, float up, float down, float left, float right) {
+    fun addLegMiddle(distance: Float, up: Float, down: Float, left: Float, right: Float) {
         // press new
-        click(main_action_add);
+        Common.click(id.main_action_add)
 
         // select leg
-        clickDialogSpinnerAtPosition(2);
+        Common.clickDialogSpinnerAtPosition(2)
 
         // middle at
-        type(middle_distance, distance);
+        Common.type(id.middle_distance, distance)
 
         // save
-        click(middle_create);
+        Common.click(id.middle_create)
 
         // populate
-        setLegData(null, null, null, up, down, left, right);
+        setLegData(null, null, null, up, down, left, right)
     }
 
-    public static void selectFirstSurveyLeg() {
-        click(main_action_add);
+    fun selectFirstSurveyLeg() {
+        Common.click(id.main_action_add)
     }
 
-    public static void setLegData(Float length, Float azimuth, Float slope) {
-        setLegData(length, azimuth, slope, null, null, null, null);
+    fun setLegData(length: Float?, azimuth: Float?, slope: Float?) {
+        setLegData(length, azimuth, slope, null, null, null, null)
     }
 
-    public static void setLegData(Float length, Float azimuth, Float slope, Float up, Float down, Float left, Float right) {
+    fun setLegData(length: Float?, azimuth: Float?, slope: Float?, up: Float?, down: Float?, left: Float?, right: Float?) {
         // populate
-        type(point_distance, length);
-        type(point_azimuth, azimuth);
-        type(point_slope, slope);
-
-        type(point_up, up);
-        type(point_down, down);
-        type(point_left, left);
-        type(point_right, right);
+        Common.type(id.point_distance, length)
+        Common.type(id.point_azimuth, azimuth)
+        Common.type(id.point_slope, slope)
+        Common.type(id.point_up, up)
+        Common.type(id.point_down, down)
+        Common.type(id.point_left, left)
+        Common.type(id.point_right, right)
 
         // save
-        saveLeg();
+        saveLeg()
     }
 
-    public static void addVector(float aDistance, float anAzimuth, float aSlope) {
-        openContextMenu();
+    fun addVector(aDistance: Float, anAzimuth: Float, aSlope: Float) {
+        Common.openContextMenu()
 
         // select leg
-        click("Add Vector");
+        Common.click("Add Vector")
 
         // set data
-        type(vector_distance, aDistance);
-        type(vector_azimuth, anAzimuth);
-        type(vector_slope, aSlope);
+        Common.type(id.vector_distance, aDistance)
+        Common.type(id.vector_azimuth, anAzimuth)
+        Common.type(id.vector_slope, aSlope)
 
         // save
-        click(vector_add);
+        Common.click(id.vector_add)
     }
 
-    public static void addCoordinate(float lat, float lon, int altitude, int precision) {
-        openContextMenu();
-
-        click("GPS");
-        click("GPS Manual");
-
-        type(gps_manual_latitude, lat);
-        type(gps_manual_longitude, lon);
-        type(gps_manual_altitude, altitude);
-        type(gps_manual_accuracy, precision);
-
-        click(gps_action_save);
-        saveLeg();
+    fun addCoordinate(lat: Float, lon: Float, altitude: Int, precision: Int) {
+        Common.openContextMenu()
+        Common.click("GPS")
+        Common.click("GPS Manual")
+        Common.type(id.gps_manual_latitude, lat)
+        Common.type(id.gps_manual_longitude, lon)
+        Common.type(id.gps_manual_altitude, altitude)
+        Common.type(id.gps_manual_accuracy, precision)
+        Common.click(id.gps_action_save)
+        saveLeg()
     }
 
-    public static void nextGallery() {
+    fun nextGallery() {
         // press new
-        click(main_action_add);
+        Common.click(id.main_action_add)
 
         // select gallery
-        clickDialogSpinnerAtPosition(1);
+        Common.clickDialogSpinnerAtPosition(1)
     }
 
-    public static void openLegWithText(String text) {
-        onView(withText(text)).perform(ViewActions.click());
+    fun openLegWithText(text: String?) {
+        Espresso.onView(ViewMatchers.withText(text)).perform(ViewActions.click())
     }
 
-    public static void saveLeg() {
-        click(point_action_save);
+    fun saveLeg() {
+        Common.click(id.point_action_save)
     }
-
 }

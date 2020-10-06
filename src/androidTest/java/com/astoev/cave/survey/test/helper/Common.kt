@@ -1,85 +1,70 @@
-package com.astoev.cave.survey.test.helper;
+package com.astoev.cave.survey.test.helper
 
-import android.content.Context;
+import android.content.Context
+import androidx.test.espresso.Espresso
+import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.web.sugar.Web
+import androidx.test.espresso.web.webdriver.DriverAtoms
+import androidx.test.espresso.web.webdriver.Locator
+import androidx.test.platform.app.InstrumentationRegistry
+import org.hamcrest.CoreMatchers
 
-import androidx.test.espresso.Espresso;
-import androidx.test.espresso.action.ViewActions;
-import androidx.test.espresso.web.webdriver.Locator;
+object Common {
+    val targetContext: Context
+        get() = InstrumentationRegistry.getInstrumentation().targetContext
+    val context: Context
+        get() = InstrumentationRegistry.getInstrumentation().context
 
-import static androidx.test.espresso.Espresso.onData;
-import static androidx.test.espresso.Espresso.onIdle;
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
-import static androidx.test.espresso.action.ViewActions.scrollTo;
-import static androidx.test.espresso.action.ViewActions.typeText;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static androidx.test.espresso.web.sugar.Web.onWebView;
-import static androidx.test.espresso.web.webdriver.DriverAtoms.findElement;
-import static androidx.test.espresso.web.webdriver.DriverAtoms.webClick;
-import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
-import static org.hamcrest.CoreMatchers.anything;
-
-public class Common {
-
-    public static Context getTargetContext() {
-        return getInstrumentation().getTargetContext();
+    fun click(id: Int) {
+        Espresso.onView(ViewMatchers.withId(id)).perform(ViewActions.click())
+        Espresso.onIdle()
     }
 
-    public static Context getContext() {
-        return getInstrumentation().getContext();
+    fun click(text: String?) {
+        Espresso.onView(ViewMatchers.withText(text)).perform(ViewActions.click())
+        Espresso.onIdle()
     }
 
-    public static void click(int id) {
-        onView(withId(id)).perform(ViewActions.click());
-        onIdle();
+    fun webViewClick(target: String?) {
+        Web.onWebView().withElement(DriverAtoms.findElement(Locator.LINK_TEXT, target)).perform(DriverAtoms.webClick())
     }
 
-    public static void click(String text) {
-        onView(withText(text)).perform(ViewActions.click());
-        onIdle();
+    fun scrollAndClick(text: String?) {
+        Espresso.onView(ViewMatchers.withText(text)).perform(ViewActions.scrollTo(), ViewActions.click())
+        Espresso.onIdle()
     }
 
-    public static void webViewClick(String target) {
-        onWebView().withElement(findElement(Locator.LINK_TEXT, target)).perform(webClick());
+    fun clickDialogSpinnerAtPosition(position: Int) {
+        Espresso.onData(CoreMatchers.anything()).atPosition(position).perform(ViewActions.click())
+        Espresso.onIdle()
     }
 
-    public static void scrollAndClick(String text) {
-        onView(withText(text)).perform(scrollTo(), ViewActions.click());
-        onIdle();
-    }
-
-    public static void clickDialogSpinnerAtPosition(int position) {
-        onData(anything()).atPosition(position).perform(ViewActions.click());
-        onIdle();
-    }
-
-    public static void type(int id, Number value) {
+    fun type(id: Int, value: Number?) {
         if (value != null) {
-            onView(withId(id)).perform(typeText("" + value));
-            onIdle();
+            Espresso.onView(ViewMatchers.withId(id)).perform(ViewActions.typeText("" + value))
+            Espresso.onIdle()
         }
     }
 
-    public static void type(int id, String value) {
+    fun type(id: Int, value: String?) {
         if (value != null) {
-            onIdle();
-            onView(withId(id)).perform(typeText(value));
-            onIdle();
+            Espresso.onIdle()
+            Espresso.onView(ViewMatchers.withId(id)).perform(ViewActions.typeText(value))
+            Espresso.onIdle()
         }
     }
 
-    public static void checkVisible(int id) {
-        onView(withId(id)).check(matches(isDisplayed()));
+    fun checkVisible(id: Int) {
+        Espresso.onView(ViewMatchers.withId(id)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
     }
 
-    public static void goBack() {
-        Espresso.pressBack();
+    fun goBack() {
+        Espresso.pressBack()
     }
 
-    public static void openContextMenu() {
-        openActionBarOverflowOrOptionsMenu(getContext());
+    fun openContextMenu() {
+        Espresso.openActionBarOverflowOrOptionsMenu(context)
     }
 }

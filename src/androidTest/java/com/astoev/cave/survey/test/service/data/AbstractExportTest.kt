@@ -31,7 +31,7 @@ abstract class AbstractExportTest {
 
 
     fun findAsset(path: String): InputStream {
-        return Common.getContext().assets.open(path)
+        return Common.context.assets.open(path)
     }
 
     fun compareContents(expected: InputStream, differences: Map<String, String>, projectName: String, extension: String) {

@@ -6,7 +6,16 @@ import com.astoev.cave.survey.test.helper.Common.goBack
 import com.astoev.cave.survey.test.helper.Data.dataScreen
 import com.astoev.cave.survey.test.helper.Data.opensTopo
 import com.astoev.cave.survey.test.helper.OpensTopo.exportCSV
-import com.astoev.cave.survey.test.helper.Survey.*
+import com.astoev.cave.survey.test.helper.Survey.addCoordinate
+import com.astoev.cave.survey.test.helper.Survey.addLeg
+import com.astoev.cave.survey.test.helper.Survey.addLegMiddle
+import com.astoev.cave.survey.test.helper.Survey.addVector
+import com.astoev.cave.survey.test.helper.Survey.createAndOpenSurvey
+import com.astoev.cave.survey.test.helper.Survey.nextGallery
+import com.astoev.cave.survey.test.helper.Survey.openLegWithText
+import com.astoev.cave.survey.test.helper.Survey.saveLeg
+import com.astoev.cave.survey.test.helper.Survey.selectFirstSurveyLeg
+import com.astoev.cave.survey.test.helper.Survey.setLegData
 import org.junit.Test
 
 class OpensTopoExportTest() : AbstractExportTest() {

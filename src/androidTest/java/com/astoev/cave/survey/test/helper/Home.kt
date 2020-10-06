@@ -1,15 +1,10 @@
-package com.astoev.cave.survey.test.helper;
+package com.astoev.cave.survey.test.helper
 
-import static com.astoev.cave.survey.R.id.surveysList;
-import static com.astoev.cave.survey.test.helper.Common.checkVisible;
+import com.astoev.cave.survey.R.id
 
-public class Home {
-
-    public static void goHome() {
+object Home {
+    fun goHome() {
         // goes directly to the surveys screen
-        checkVisible(surveysList);
+        Common.checkVisible(id.surveysList)
     }
-
-
-
 }
