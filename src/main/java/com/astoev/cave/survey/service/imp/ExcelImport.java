@@ -268,10 +268,14 @@ public class ExcelImport {
                 LegData leg = new LegData();
                 Cell cellFrom = row.getCell(ExcelExport.CELL_FROM);
                 if (cellFrom == null) {
-                    Log.i(Constants.LOG_TAG_SERVICE, "End of file");
+                    Log.i(Constants.LOG_TAG_SERVICE, "End of cells");
                     break;
                 }
                 String from = cellFrom.getStringCellValue();
+                if (StringUtils.isEmpty(from)) {
+                    Log.i(Constants.LOG_TAG_SERVICE, "End of non-empty rows");
+                    break;
+                }
                 leg.setFromGallery(PointUtil.getPointGalleryName(from));
                 leg.setFromPoint(PointUtil.getPointName(from));
 
@@ -281,7 +285,6 @@ public class ExcelImport {
                 leg.setToPoint(PointUtil.getPointName(to));
                 leg.setVector(PointUtil.isVector(to));
                 leg.setMiddlePoint(PointUtil.isMiddlePoint(from, to));
-
                 leg.setLength(getNotNullFloatCellValue(row, ExcelExport.CELL_LENGHT));
                 leg.setAzimuth(getNotNullFloatCellValue(row, ExcelExport.CELL_AZIMUTH));
                 leg.setSlope(getNotNullFloatCellValue(row, ExcelExport.CELL_SLOPE));
@@ -298,11 +301,11 @@ public class ExcelImport {
 
                 Cell latCell = row.getCell(ExcelExport.CELL_LATITUDE);
                 if (latCell != null) {
-                    leg.setLat(LocationUtil.descriptionToValue(latCell.getStringCellValue()));
+                    leg.setLat(LocationUtil.descriptionToValue(latCell));
                 }
                 Cell lonCell = row.getCell(ExcelExport.CELL_LONGITUDE);
                 if (lonCell != null) {
-                    leg.setLon(LocationUtil.descriptionToValue(lonCell.getStringCellValue()));
+                    leg.setLon(LocationUtil.descriptionToValue(lonCell));
                 }
                 Cell altCell = row.getCell(ExcelExport.CELL_ALTTITUDE);
                 if (altCell != null) {
