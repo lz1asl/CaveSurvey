@@ -1,5 +1,7 @@
 package com.astoev.cave.survey.util;
 
+import org.apache.poi.ss.usermodel.Cell;
+
 /**
  * @author jivko
  *
@@ -33,20 +35,26 @@ public class LocationUtil {
         }
     }
 
-    public static Float descriptionToValue(String aCoordinateDescription) {
-        // present
-        if (StringUtils.isNotEmpty(aCoordinateDescription) && aCoordinateDescription.contains(DEGREE)) {
-            // without suffix
-            String numberPart = aCoordinateDescription.substring(0, aCoordinateDescription.indexOf(DEGREE));
-            // proper number in default format
-            numberPart = numberPart.replace(",", ".");
+    public static Float descriptionToValue(Cell aCell) {
 
-            float coordinate = Float.parseFloat(numberPart);
-            if (aCoordinateDescription.endsWith(S) || aCoordinateDescription.endsWith(W)) {
-                coordinate = -coordinate;
+        try {
+            String aCoordinateDescription = aCell.getStringCellValue();
+            // present
+            if (StringUtils.isNotEmpty(aCoordinateDescription) && aCoordinateDescription.contains(DEGREE)) {
+                // without suffix
+                String numberPart = aCoordinateDescription.substring(0, aCoordinateDescription.indexOf(DEGREE));
+                // proper number in default format
+                numberPart = numberPart.replace(",", ".");
+
+                float coordinate = Float.parseFloat(numberPart);
+                if (aCoordinateDescription.endsWith(S) || aCoordinateDescription.endsWith(W)) {
+                    coordinate = -coordinate;
+                }
+                return coordinate;
             }
-            return coordinate;
+            return null;
+        } catch (IllegalStateException e) {
+            return (float) aCell.getNumericCellValue();
         }
-        return null;
     }
 }

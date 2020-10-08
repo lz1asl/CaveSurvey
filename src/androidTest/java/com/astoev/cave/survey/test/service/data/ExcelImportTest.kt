@@ -92,4 +92,24 @@ class ExcelImportTest : AbstractExportTest() {
         val resourceStream = findAsset("export/xls/$aFile.xls")
         return ExcelImport.loadProjectData(resourceStream)
     }
+
+    @Test
+    @Throws(IOException::class)
+    fun testImportEmptyRowsAndNumericCoordinates() {
+
+        // file properly loaded
+        val data = loadExcel("numeric_coordinate_cells_and_empty_rows")
+
+        // proper units
+        ExcelTestUtils.assertConfigUnits(data, UNIT_METERS, UNIT_GRADS, UNIT_GRADS)
+        // check some data
+        val legs = data.legs
+        Assert.assertEquals(3, legs.size.toLong())
+        ExcelTestUtils.assertLeg(legs[0], 4.73f, 235f, -3f, 5f, 1f, 4f, 6f)
+        ExcelTestUtils.assertLegLocation(legs[0], 41.945457f, 24.022383f, null, null)
+        ExcelTestUtils.assertLeg(legs[1], 5.22f, 135f, -85f)
+        ExcelTestUtils.assertLegLocation(legs[1], null, null, null, null)
+        ExcelTestUtils.assertLeg(legs[2], 3.1f, 0f, -90f)
+        ExcelTestUtils.assertLegLocation(legs[2], null, null, null, null)
+    }
 }

@@ -4,10 +4,21 @@ import com.astoev.cave.survey.model.Option.*
 import com.astoev.cave.survey.service.imp.ExcelImport.loadProjectData
 import com.astoev.cave.survey.service.imp.LegData
 import com.astoev.cave.survey.test.helper.Common.goBack
-import com.astoev.cave.survey.test.helper.Data.*
+import com.astoev.cave.survey.test.helper.Data.dataScreen
+import com.astoev.cave.survey.test.helper.Data.getLastXlsExport
+import com.astoev.cave.survey.test.helper.Data.xlsExport
 import com.astoev.cave.survey.test.helper.ExcelTestUtils.assertConfigUnits
 import com.astoev.cave.survey.test.helper.ExcelTestUtils.assertLeg
-import com.astoev.cave.survey.test.helper.Survey.*
+import com.astoev.cave.survey.test.helper.Survey.addCoordinate
+import com.astoev.cave.survey.test.helper.Survey.addLeg
+import com.astoev.cave.survey.test.helper.Survey.addLegMiddle
+import com.astoev.cave.survey.test.helper.Survey.addVector
+import com.astoev.cave.survey.test.helper.Survey.createAndOpenSurvey
+import com.astoev.cave.survey.test.helper.Survey.nextGallery
+import com.astoev.cave.survey.test.helper.Survey.openLegWithText
+import com.astoev.cave.survey.test.helper.Survey.saveLeg
+import com.astoev.cave.survey.test.helper.Survey.selectFirstSurveyLeg
+import com.astoev.cave.survey.test.helper.Survey.setLegData
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.io.IOException
@@ -151,24 +162,24 @@ class ExcelExportTest() : AbstractExportTest() {
         assertEquals(accuracy, legData.accuracy.toInt())
     }
 
-    private fun assertSecondSimpleLeg(legs: List<LegData?>) {
+    private fun assertSecondSimpleLeg(legs: List<LegData>) {
         assertLeg(legs[1], 1.2f, 2.2f, 1.3f)
         assertLeg(legs[1], "A", "1", "A", "2", false, false)
     }
 
-    private fun assertThirdWithSidesLeg(legs: List<LegData?>) {
+    private fun assertThirdWithSidesLeg(legs: List<LegData>) {
         assertLeg(legs[2], 2.3f, 3.4f, 4.5f, 1.1f, 1.2f, 1.3f, 1.4f)
         assertLeg(legs[2], "A", "2", "A", "3", false, false)
     }
 
-    private fun assertFifthLegWithMiddlePoint(legs: List<LegData?>) {
+    private fun assertFifthLegWithMiddlePoint(legs: List<LegData>) {
         assertLeg(legs[3], 3.1f, 4.4f, 5.5f, 2.1f, 2.2f, 2.3f, 2.4f)
         assertLeg(legs[3], "A", "3", "A", "3-4@3.1", true, false)
         assertLeg(legs[4], 2.4f, 4.4f, 5.5f, 3.1f, 3.2f, 3.3f, 3.4f)
         assertLeg(legs[4], "A", "3-4@3.1", "A", "4", true, false)
     }
 
-    private fun assertSixthLegWithVectors(legs: List<LegData?>) {
+    private fun assertSixthLegWithVectors(legs: List<LegData>) {
         assertLeg(legs[5], 3.4f, 3.5f, 3.6f, 6.1f, 6.2f, 6.3f, 6.4f)
         assertLeg(legs[5], "A", "4", "A", "5", false, false)
         assertLeg(legs[6], 1.1f, 1.2f, 1.3f)
@@ -179,7 +190,7 @@ class ExcelExportTest() : AbstractExportTest() {
         assertLeg(legs[8], "A", "4", null, null, false, true)
     }
 
-    private fun assertSeventhLegNextGallery(legs: List<LegData?>) {
+    private fun assertSeventhLegNextGallery(legs: List<LegData>) {
         assertLeg(legs[9], 4.4f, 4.5f, 4.6f, 0.1f, 0.2f, 0.3f, 0.4f)
         assertLeg(legs[9], "A", "4", "B", "1", false, false)
     }
