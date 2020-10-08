@@ -13,12 +13,16 @@ import androidx.fragment.app.DialogFragment;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
-import com.astoev.cave.survey.activity.util.DisabledItemsArrayAdapter;
 import com.astoev.cave.survey.activity.util.UIUtilities;
 import com.astoev.cave.survey.model.Gallery;
-import com.astoev.cave.survey.model.GalleryType;
 import com.astoev.cave.survey.service.Workspace;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.astoev.cave.survey.R.string.main_add_gallery;
+import static com.astoev.cave.survey.R.string.main_add_leg;
+import static com.astoev.cave.survey.R.string.main_add_middlepoint;
 import static com.astoev.cave.survey.model.GalleryType.GEOLOCATION;
 
 /**
@@ -33,30 +37,34 @@ public class AddNewDialog extends DialogFragment {
     /** Dialog name to enable choose sensors tooltip dialog */
     public static final String ADD_NEW_DIALOG = "ADD_NEW_DIALOG";
 
-    private static final int[] ADD_ITEM_LABELS = {R.string.main_add_leg,
-            R.string.main_add_gallery,
-            R.string.main_add_middlepoint
-    };
 
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        final String[] labels = new String[ADD_ITEM_LABELS.length];
-        for (int i = 0; i < ADD_ITEM_LABELS.length; i++) {
-            labels[i] = getString(ADD_ITEM_LABELS[i]);
+        List<String> labelsList = new ArrayList<>();
+        // disable items that are not relevant
+        boolean georeferenceGallery = false;
+        Gallery currGallery = Workspace.getCurrentInstance().getActiveGallery();
+        if (GEOLOCATION.equals(currGallery.getType())) {
+            georeferenceGallery = true;
         }
+
+        labelsList.add(getString(main_add_leg));
+        labelsList.add(getString(main_add_gallery));
+        if (!georeferenceGallery) {
+            // middle point makes no sense for georeference leg
+            labelsList.add(getString(main_add_middlepoint));
+        }
+
+        String[] labels = new String[labelsList.size()];
+        labels = labelsList.toArray(labels);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.main_add_title);
 
-        DisabledItemsArrayAdapter adapter = new DisabledItemsArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, labels);
-        // disable items that are not relevant
-        Gallery currGallery = Workspace.getCurrentInstance().getActiveGallery();
-        if (GEOLOCATION.equals(currGallery.getType())) {
-            adapter.disableItem(2);
-        }
-
+        ListAdapter adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, labels);
+        
         builder.setSingleChoiceItems(adapter, -1, (dialog, item) -> {
             Activity activity = getActivity();
             if (activity instanceof AddNewSelectedHandler) {
