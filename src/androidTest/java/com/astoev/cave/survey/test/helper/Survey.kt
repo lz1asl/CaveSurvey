@@ -5,6 +5,7 @@ import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.matcher.ViewMatchers
 import com.astoev.cave.survey.R.id
 import com.astoev.cave.survey.model.Option
+import com.astoev.cave.survey.test.helper.Gallery.createDefaultGallery
 import org.hamcrest.Matchers
 
 object Survey {
@@ -98,6 +99,7 @@ object Survey {
         val surveyName = "" + System.currentTimeMillis()
         Home.goHome()
         createSurvey(surveyName, importFile, distanceUnits, azimuthUnits, slopeUnits)
+        createDefaultGallery()
         openSurvey(surveyName)
         return surveyName
     }

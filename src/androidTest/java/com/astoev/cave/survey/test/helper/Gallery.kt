@@ -1,12 +1,12 @@
-package com.astoev.cave.survey.test.helper;
+package com.astoev.cave.survey.test.helper
 
-import static com.astoev.cave.survey.R.string.new_gallery_create;
-import static com.astoev.cave.survey.test.helper.Common.click;
+import com.astoev.cave.survey.R.string
+import com.astoev.cave.survey.test.helper.Common.click
 
-public class Gallery {
+object Gallery {
 
-    public static void createDefaultGallery() {
+    fun createDefaultGallery() {
         // first georeferencing leg
-        click(new_gallery_create);
+        click(string.new_gallery_create)
     }
 }
