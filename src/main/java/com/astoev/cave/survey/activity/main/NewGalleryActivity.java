@@ -31,13 +31,13 @@ public class NewGalleryActivity extends MainMenuActivity {
             long currProjectGalleriesCount = GalleryUtil.getGalleriesCount(Workspace.getCurrentInstance().getActiveProjectId());
 
             // name
-            TextView nameTextView = findViewById(R.id.new_gallery_name);
             String name;
             if (currProjectGalleriesCount == 0) {
                 name = GalleryUtil.getFirstGalleryName();
             } else {
                 name = GalleryUtil.generateNextGalleryName();
             }
+            TextView nameTextView = findViewById(R.id.new_gallery_name);
             nameTextView.setText(name);
 
             // color
@@ -45,17 +45,22 @@ public class NewGalleryActivity extends MainMenuActivity {
             colorView.setBackgroundColor(getNextGalleryColor((int) currProjectGalleriesCount));
 
             // types
+            String[] galleryTypes = getResources().getStringArray(R.array.gallery_types);
+            if (currProjectGalleriesCount > 0) {
+                // only the first gallery can be geolocation
+                String[] typesWithoutFirst = new String[galleryTypes.length - 1];
+                for (int i=1; i<galleryTypes.length; i++) {
+                    typesWithoutFirst[i-1] = galleryTypes[i];
+                }
+                galleryTypes = typesWithoutFirst;
+            }
             Spinner typesSpinner = findViewById(R.id.new_gallery_type);
             final ArrayAdapter<String> typesAdapter =
                     new ArrayAdapter<>(this,
                             android.R.layout.simple_list_item_1,
-                            getResources().getStringArray(R.array.gallery_types));
+                            galleryTypes);
             typesSpinner.setAdapter(typesAdapter);
 
-            // classic gallery by default after the first geolocation
-            if (currProjectGalleriesCount > 0) {
-                typesSpinner.setSelection(1);
-            }
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to render gallery activity", e);
             UIUtilities.showNotification(R.string.error);
@@ -78,25 +83,24 @@ public class NewGalleryActivity extends MainMenuActivity {
         try {
             // create next gallery
             Project project = Workspace.getCurrentInstance().getActiveProject();
-            TextView nameTextView = findViewById(R.id.new_gallery_name);
 
             // TODO get the color from the actual view
             long currProjectGalleriesCount = GalleryUtil.getGalleriesCount(Workspace.getCurrentInstance().getActiveProjectId());
             int color = getNextGalleryColor((int) currProjectGalleriesCount);
 
+            String[] galleryTypes = getResources().getStringArray(R.array.gallery_types);
             Spinner typesSpinner = findViewById(R.id.new_gallery_type);
             GalleryType type;
-            switch (typesSpinner.getSelectedItemPosition()) {
-                case 0:
-                    type = GEOLOCATION;
-                    break;
-                case 1:
-                    type = CLASSIC;
-                    break;
-                default:
-                    type = CLASSIC;
+            String selectedGalleyType = (String) typesSpinner.getSelectedItem();
+            if (galleryTypes[0].equals(selectedGalleyType)) {
+                type = GEOLOCATION;
+            } else if (galleryTypes[1].equals(selectedGalleyType)) {
+                type = CLASSIC;
+            } else {
+                type = CLASSIC;
             }
 
+            TextView nameTextView = findViewById(R.id.new_gallery_name);
             GalleryUtil.createGallery(project, nameTextView.getText().toString(), color, type);
 
             // start editing the first leg

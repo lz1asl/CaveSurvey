@@ -96,7 +96,7 @@
     <string name="point_vectors_delete">Изтриване на лъч %1$s?</string>
     <string name="point_swipe_not_possible">Достигнат край на галерията</string>
 
-    <string name="gallery_after_first_point">Недостъпно за първата отсечка</string>
+    <string name="leg_not_complete">Недовършена отсечка</string>
 
     <!-- survey menu -->
     <string name="menu_exit">Изход</string>

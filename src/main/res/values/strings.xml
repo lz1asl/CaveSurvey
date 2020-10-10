@@ -100,7 +100,7 @@
     <string name="table_location_prefix">L</string>
     <string name="table_vector_prefix">V</string>
 
-    <string name="gallery_after_first_point">Not available for first leg</string>
+    <string name="leg_not_complete">Leg not complete</string>
 
     <!-- survey menu -->
 <!--     

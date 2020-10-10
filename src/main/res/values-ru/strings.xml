@@ -96,7 +96,7 @@
     <string name="point_vectors_delete">Удаление луча %1$s?</string>
     <string name="point_swipe_not_possible">Достигнут конец галереи</string>
 
-    <string name="gallery_after_first_point">Недостъпно для первого отрезка</string>
+    <string name="leg_not_complete">Нога не завершена</string>
 
     <!-- survey menu -->
     <string name="menu_exit">Выход</string>

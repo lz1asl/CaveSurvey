@@ -98,7 +98,7 @@
   <string name="table_location_prefix">L</string>
   <string name="table_vector_prefix">V</string>
 
-  <string name="gallery_after_first_point">No disponible para el primer tramo</string>
+  <string name="leg_not_complete">Pierna no completa</string>
 
     <!-- survey menu -->
 <!--

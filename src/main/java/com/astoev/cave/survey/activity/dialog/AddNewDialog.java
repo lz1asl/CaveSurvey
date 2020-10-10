@@ -42,6 +42,7 @@ public class AddNewDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
+        List<Integer> labelIds = new ArrayList<>();
         List<String> labelsList = new ArrayList<>();
         // disable items that are not relevant
         boolean georeferenceGallery = false;
@@ -50,15 +51,20 @@ public class AddNewDialog extends DialogFragment {
             georeferenceGallery = true;
         }
 
-        labelsList.add(getString(main_add_leg));
+        if (!georeferenceGallery) {
+            // only one georeference leg
+            labelIds.add(main_add_leg);
+            labelsList.add(getString(main_add_leg));
+        }
+        labelIds.add(main_add_gallery);
         labelsList.add(getString(main_add_gallery));
         if (!georeferenceGallery) {
             // middle point makes no sense for georeference leg
+            labelIds.add(main_add_middlepoint);
             labelsList.add(getString(main_add_middlepoint));
         }
 
-        String[] labels = new String[labelsList.size()];
-        labels = labelsList.toArray(labels);
+        final String[] labels = labelsList.toArray(new String[labelsList.size()]);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.main_add_title);
@@ -68,7 +74,7 @@ public class AddNewDialog extends DialogFragment {
         builder.setSingleChoiceItems(adapter, -1, (dialog, item) -> {
             Activity activity = getActivity();
             if (activity instanceof AddNewSelectedHandler) {
-                ((AddNewSelectedHandler) activity).addNewSelected(item);
+                ((AddNewSelectedHandler) activity).addNewSelected(labelIds.get(item));
             } else {
                 Log.e(Constants.LOG_TAG_UI, "Parent activity not instance of AddNewSelectedHandler");
                 UIUtilities.showNotification(R.string.error);

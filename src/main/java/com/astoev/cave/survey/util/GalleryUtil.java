@@ -101,8 +101,9 @@ public class GalleryUtil {
             workspace.getDBHelper().getPointDao().create(from);
         } else {
             from = lastLeg.getToPoint();
+            DaoUtil.refreshPoint(from);
         }
-        Point to = PointUtil.generateNextPoint(from);
+        Point to = PointUtil.createFirstPoint();
         workspace.getDBHelper().getPointDao().create(to);
         Leg firstLeg = new Leg(from, to,workspace.getActiveProject(), gallery.getId());
         workspace.getDBHelper().getLegDao().create(firstLeg);

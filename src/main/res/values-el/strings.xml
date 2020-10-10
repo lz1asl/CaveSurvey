@@ -98,7 +98,7 @@
     <string name="table_location_prefix">G</string>
     <string name="table_vector_prefix">Δ</string>
 
-    <string name="gallery_after_first_point">Μη επιτρεπτό για την πρώτη μέτρηση</string>
+    <string name="leg_not_complete">το πόδι δεν έχει ολοκληρωθεί</string>
 
     <!-- survey menu -->
 <!--     

@@ -99,7 +99,7 @@
     <string name="table_location_prefix">L</string>
     <string name="table_vector_prefix">V</string>
 
-    <string name="gallery_after_first_point">对第一条测量段无效</string>
+    <string name="leg_not_complete">腿不完整</string>
 
     <!-- survey menu -->
 <!--     

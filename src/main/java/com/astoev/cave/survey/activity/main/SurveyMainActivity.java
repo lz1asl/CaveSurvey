@@ -41,6 +41,11 @@ import com.astoev.cave.survey.util.StringUtils;
 
 import java.util.List;
 
+import static com.astoev.cave.survey.R.string.main_add_gallery;
+import static com.astoev.cave.survey.R.string.main_add_leg;
+import static com.astoev.cave.survey.R.string.main_add_middlepoint;
+import static com.astoev.cave.survey.model.GalleryType.GEOLOCATION;
+
 /**
  * User: astoev
  * Date: 1/23/12
@@ -233,7 +238,7 @@ public class SurveyMainActivity extends MainMenuActivity implements AddNewSelect
             Leg activeLeg = Workspace.getCurrentInstance().getActiveLeg();
             if (activeLeg.getDistance() == null) {
                 Log.i(Constants.LOG_TAG_UI, "Go straight to the first leg, unable to create next");
-                UIUtilities.showNotification(R.string.gallery_after_first_point);
+                UIUtilities.showNotification(R.string.leg_not_complete);
                 Intent intent = new Intent(this, PointActivity.class);
                 intent.putExtra(Constants.LEG_SELECTED, activeLeg.getId());
                 Workspace.getCurrentInstance().setActiveLeg(activeLeg);
@@ -267,23 +272,22 @@ public class SurveyMainActivity extends MainMenuActivity implements AddNewSelect
         }
 
         try {
-            if (0 == itemArg) {
+            if (main_add_leg == itemArg) {
                 // next leg
                 addLeg();
-            } else if (1 == itemArg) {
+            } else if (main_add_gallery == itemArg) {
                 // next gallery
                 Leg prevLeg = DaoUtil.getLegByToPoint(Workspace.getCurrentInstance().getActiveLeg().getFromPoint());
-                if (prevLeg == null) {
+                Gallery currGallery = Workspace.getCurrentInstance().getActiveGallery();
+                if (prevLeg == null && !GEOLOCATION.equals(currGallery.getType())) {
                     // not supported
-                    UIUtilities.showNotification(R.string.gallery_after_first_point);
+                    UIUtilities.showNotification(R.string.leg_not_complete);
                 } else {
                     // next gallery
-//                    addLeg(true);
                     Intent intent = new Intent(SurveyMainActivity.this, NewGalleryActivity.class);
-//                    intent.putExtra(Constants.GALLERY_NEW, isDeviation);
                     startActivity(intent);
                 }
-            } else if (2 == itemArg) {
+            } else if (main_add_middlepoint == itemArg) {
                 // middle point
                 requestLengthAndAddMiddle();
             }
