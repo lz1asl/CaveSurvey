@@ -5,7 +5,8 @@ import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.matcher.ViewMatchers
 import com.astoev.cave.survey.R.id
 import com.astoev.cave.survey.model.Option
-import com.astoev.cave.survey.test.helper.Gallery.createDefaultGallery
+import com.astoev.cave.survey.test.helper.Gallery.createClassicGallery
+import com.astoev.cave.survey.test.helper.Gallery.createGallery
 import org.hamcrest.Matchers
 
 object Survey {
@@ -30,12 +31,8 @@ object Survey {
             selectSlopeUnits(slopeUnits)
         }
 
-
-        // save & go back
+        // save
         Common.click(id.new_action_create)
-        if (!importFile) {
-            Espresso.onView(ViewMatchers.withId(id.point_main_view)).perform(ViewActions.pressBack())
-        }
     }
 
     private fun selectSlopeUnits(aSlopeUnits: String) {
@@ -99,8 +96,18 @@ object Survey {
         val surveyName = "" + System.currentTimeMillis()
         Home.goHome()
         createSurvey(surveyName, importFile, distanceUnits, azimuthUnits, slopeUnits)
-        createDefaultGallery()
+        createClassicGallery()
+        Common.goBack()
         openSurvey(surveyName)
+        return surveyName
+    }
+
+    @JvmOverloads
+    fun createAndOpenGeolocationSurvey(importFile: Boolean = false, distanceUnits: String? = null, azimuthUnits: String? = null, slopeUnits: String? = null): String {
+        val surveyName = "" + System.currentTimeMillis()
+        Home.goHome()
+        createSurvey(surveyName, importFile, distanceUnits, azimuthUnits, slopeUnits)
+        createGallery()
         return surveyName
     }
 
@@ -185,7 +192,7 @@ object Survey {
         Common.click(id.main_action_add)
 
         // select gallery
-        Common.clickDialogSpinnerAtPosition(1)
+        Common.clickDialogSpinnerAtPosition(0)
     }
 
     fun openLegWithText(text: String?) {

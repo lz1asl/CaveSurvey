@@ -9,14 +9,15 @@ import com.astoev.cave.survey.test.helper.Data.getLastXlsExport
 import com.astoev.cave.survey.test.helper.Data.xlsExport
 import com.astoev.cave.survey.test.helper.ExcelTestUtils.assertConfigUnits
 import com.astoev.cave.survey.test.helper.ExcelTestUtils.assertLeg
+import com.astoev.cave.survey.test.helper.Gallery
 import com.astoev.cave.survey.test.helper.Survey.addCoordinate
 import com.astoev.cave.survey.test.helper.Survey.addLeg
 import com.astoev.cave.survey.test.helper.Survey.addLegMiddle
 import com.astoev.cave.survey.test.helper.Survey.addVector
+import com.astoev.cave.survey.test.helper.Survey.createAndOpenGeolocationSurvey
 import com.astoev.cave.survey.test.helper.Survey.createAndOpenSurvey
 import com.astoev.cave.survey.test.helper.Survey.nextGallery
 import com.astoev.cave.survey.test.helper.Survey.openLegWithText
-import com.astoev.cave.survey.test.helper.Survey.saveLeg
 import com.astoev.cave.survey.test.helper.Survey.selectFirstSurveyLeg
 import com.astoev.cave.survey.test.helper.Survey.setLegData
 import org.junit.Assert.assertEquals
@@ -69,7 +70,7 @@ class ExcelExportTest() : AbstractExportTest() {
         addVector(1.1f, 1.2f, 1.3f)
         addVector(1.4f, 1.5f, 1.6f)
         addVector(1.7f, 1.8f, 1.9f)
-        saveLeg()
+        goBack()
         legs = exportAndRead(surveyName, 9)
         assertFirstLegNoSlope(legs)
         assertSecondSimpleLeg(legs)
@@ -122,6 +123,37 @@ class ExcelExportTest() : AbstractExportTest() {
         assertFirstLegNoSlope(legs)
         assertSecondSimpleLeg(legs)
     }
+
+    @Test
+    @Throws(IOException::class)
+    fun excelExportGeolocationGaleryTest() {
+
+        // create survey
+        var surveyName = createAndOpenGeolocationSurvey()
+
+        // geolocation leg
+        setLegData(1f, 2f, null)
+        openLegWithText("A1")
+        addCoordinate(42.811522f, 23.378906f, 123, 5);
+
+        // classic galleries
+        Gallery.createClassicGallery()
+        addLeg(2.3f, 3.4f, 4.5f, 1.1f, 1.2f, 1.3f, 1.4f)
+        addLeg(3.4f, 3.5f, 3.6f, 6.1f, 6.2f, 6.3f, 6.4f)
+        nextGallery()
+        setLegData(4.4f, 4.5f, 4.6f, 0.1f, 0.2f, 0.3f, 0.4f)
+
+        // properly exported
+        var legs = exportAndRead(surveyName, 4)
+        assertFirstLegNoSlope(legs)
+        assertLeg(legs[1], 2.3f, 3.4f, 4.5f, 1.1f, 1.2f, 1.3f, 1.4f)
+        assertLeg(legs[1], "A", "1", "B", "0", false, false)
+        assertLeg(legs[2], 3.4f, 3.5f, 3.6f, 6.1f, 6.2f, 6.3f, 6.4f)
+        assertLeg(legs[2], "B", "0", "B", "1", false, false)
+        assertLeg(legs[3], 4.4f, 4.5f, 4.6f, 0.1f, 0.2f, 0.3f, 0.4f)
+        assertLeg(legs[4], "B", "0", "C", "0", false, false)
+    }
+
 
     @Throws(IOException::class)
     private fun exportAndRead(aSurveyName: String, aLegsCount: Int): List<LegData> {

@@ -10,6 +10,7 @@ import com.astoev.cave.survey.test.helper.Survey.addCoordinate
 import com.astoev.cave.survey.test.helper.Survey.addLeg
 import com.astoev.cave.survey.test.helper.Survey.addLegMiddle
 import com.astoev.cave.survey.test.helper.Survey.addVector
+import com.astoev.cave.survey.test.helper.Survey.createAndOpenGeolocationSurvey
 import com.astoev.cave.survey.test.helper.Survey.createAndOpenSurvey
 import com.astoev.cave.survey.test.helper.Survey.nextGallery
 import com.astoev.cave.survey.test.helper.Survey.openLegWithText
@@ -69,6 +70,25 @@ class OpensTopoExportTest() : AbstractExportTest() {
 
         // compare
         exportAndCompare(surveyName, "initial_feet");
+    }
+
+    @Test
+    fun opensTopoExportWithGeolocationTest() {
+
+        // create survey with non default units
+        var surveyName = createAndOpenGeolocationSurvey()
+
+        // first test legs - data is the same
+        selectFirstSurveyLeg()
+        setLegData(1f, 2f, null)
+        openLegWithText("A1")
+        addCoordinate(42.811522f, 23.378906f, 123, 5);
+        nextGallery()
+        addLeg(1.2f, 2.2f, 1.3f)
+        addLeg(2.3f, 3.4f, 4.5f, 1.1f, 1.2f, 1.3f, 1.4f)
+
+        // compare
+        exportAndCompare(surveyName, "initial");
     }
 
     @Test
