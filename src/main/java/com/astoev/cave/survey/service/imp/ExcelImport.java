@@ -7,6 +7,7 @@ import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.map.MapUtilities;
 import com.astoev.cave.survey.activity.util.UIUtilities;
 import com.astoev.cave.survey.model.Gallery;
+import com.astoev.cave.survey.model.GalleryType;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Location;
 import com.astoev.cave.survey.model.Note;
@@ -36,6 +37,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -47,6 +49,9 @@ import static com.astoev.cave.survey.model.GalleryType.CLASSIC;
 import static com.astoev.cave.survey.model.Option.CODE_AZIMUTH_UNITS;
 import static com.astoev.cave.survey.model.Option.CODE_DISTANCE_UNITS;
 import static com.astoev.cave.survey.model.Option.CODE_SLOPE_UNITS;
+import static com.astoev.cave.survey.service.export.excel.ExcelExport.CELL_GALLERY_COLOR;
+import static com.astoev.cave.survey.service.export.excel.ExcelExport.CELL_GALLERY_NAME;
+import static com.astoev.cave.survey.service.export.excel.ExcelExport.CELL_GALLERY_TYPE;
 
 /**
  * Created by astoev on 6/15/16.
@@ -322,6 +327,61 @@ public class ExcelImport {
 
             Log.i(Constants.LOG_TAG_SERVICE, legs.size() + " records found");
             return data;
+        } catch (Exception e) {
+            Log.e(Constants.LOG_TAG_SERVICE, "Error during import", e);
+            String errorMessage = ConfigUtil.getContext().getString(R.string.settings_import_error,
+                    rowNum, e.getClass().getSimpleName(), e.getMessage());
+            UIUtilities.showNotification(errorMessage);
+        } finally {
+            StreamUtil.closeQuietly(stream);
+            if (workbook != null) {
+                workbook.close();
+            }
+        }
+        return null;
+    }
+
+    public static List<GalleryData> loadGalleries(File aPath) throws IOException {
+        return loadGalleries(new FileInputStream(aPath));
+    }
+
+    public static List<GalleryData>  loadGalleries(InputStream stream) throws IOException {
+        // locate and open
+        HSSFWorkbook workbook = null;
+        List<GalleryData>  galleries = new ArrayList<GalleryData>();
+        int rowNum = 1;
+        try {
+            workbook = new HSSFWorkbook(stream);
+            HSSFSheet sheet = workbook.getSheetAt(1);
+            Iterator<Row> rowIterator = sheet.iterator();
+
+            // skip header
+            rowIterator.next();
+
+            while (rowIterator.hasNext()) {
+                Row row = rowIterator.next();
+                rowNum++;
+                GalleryData gallery = new GalleryData();
+                Cell nameCell = row.getCell(CELL_GALLERY_NAME);
+                if (nameCell == null) {
+                    Log.i(Constants.LOG_TAG_SERVICE, "End of cells");
+                    break;
+                }
+                String name = nameCell.getStringCellValue();
+                if (StringUtils.isEmpty(name)) {
+                    Log.i(Constants.LOG_TAG_SERVICE, "End of non-empty rows");
+                    break;
+                }
+                gallery.setName(name);
+                Cell typeCell = row.getCell(CELL_GALLERY_TYPE);
+                gallery.setType(GalleryType.valueOf(typeCell.getStringCellValue()));
+                Cell colorCell = row.getCell(CELL_GALLERY_COLOR);
+                gallery.setColor((int) colorCell.getNumericCellValue());
+                galleries.add(gallery);
+            }
+
+            Log.i(Constants.LOG_TAG_SERVICE, galleries.size() + " records found");
+            return galleries;
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_SERVICE, "Error during import", e);
             String errorMessage = ConfigUtil.getContext().getString(R.string.settings_import_error,

@@ -1,7 +1,11 @@
 package com.astoev.cave.survey.test.service.data
 
+import android.graphics.Color.*
+import com.astoev.cave.survey.model.GalleryType
 import com.astoev.cave.survey.model.Option.*
+import com.astoev.cave.survey.service.imp.ExcelImport.loadGalleries
 import com.astoev.cave.survey.service.imp.ExcelImport.loadProjectData
+import com.astoev.cave.survey.service.imp.GalleryData
 import com.astoev.cave.survey.service.imp.LegData
 import com.astoev.cave.survey.test.helper.Common.goBack
 import com.astoev.cave.survey.test.helper.Data.dataScreen
@@ -50,6 +54,7 @@ class ExcelExportTest() : AbstractExportTest() {
         legs = exportAndRead(surveyName, 2)
         assertFirstLegNoSlope(legs)
         assertSecondSimpleLeg(legs)
+        assertGalleries(surveyName, "A", "CLASSIC", YELLOW.toString());
 
         // with side measurements
         addLeg(2.3f, 3.4f, 4.5f, 1.1f, 1.2f, 1.3f, 1.4f)
@@ -91,6 +96,7 @@ class ExcelExportTest() : AbstractExportTest() {
         assertFifthLegWithMiddlePoint(legs)
         assertSixthLegWithVectors(legs)
         assertSeventhLegNextGallery(legs)
+        assertGalleries(surveyName, "A", "CLASSIC", YELLOW.toString(), "B", "CLASSIC", RED.toString());
 
         // now try to import it back and check the data
         goBack()
@@ -102,6 +108,7 @@ class ExcelExportTest() : AbstractExportTest() {
         assertFifthLegWithMiddlePoint(legs)
         assertSixthLegWithVectors(legs)
         assertSeventhLegNextGallery(legs)
+        assertGalleries(surveyName, "A", "CLASSIC", YELLOW.toString(), "B", "CLASSIC", RED.toString(), "C", "CLASSIC", GREEN.toString())
     }
 
     @Test
@@ -125,6 +132,7 @@ class ExcelExportTest() : AbstractExportTest() {
         legs = exportAndRead(surveyName, 2, UNIT_FEET, UNIT_GRADS, UNIT_GRADS)
         assertFirstLegNoSlope(legs)
         assertSecondSimpleLeg(legs)
+        assertGalleries(surveyName, "A", "CLASSIC", YELLOW.toString())
     }
 
     @Test
@@ -156,6 +164,7 @@ class ExcelExportTest() : AbstractExportTest() {
         assertLeg(legs[2], "B", "0", "B", "1", false, false)
         assertLeg(legs[3], 4.4f, 4.5f, 4.6f, 0.1f, 0.2f, 0.3f, 0.4f)
         assertLeg(legs[3], "B", "1", "C", "0", false, false)
+        assertGalleries(surveyName, "A", "GEOLOCATION", YELLOW as String, "B", "CLASSIC", RED as String)
     }
 
 
@@ -230,4 +239,34 @@ class ExcelExportTest() : AbstractExportTest() {
         assertLeg(legs[9], 4.4f, 4.5f, 4.6f, 0.1f, 0.2f, 0.3f, 0.4f)
         assertLeg(legs[9], "A", "5", "B", "0", false, false)
     }
+
+    private fun assertGalleries(aSurveyName: String, vararg rawArgs: String) {
+        val galleries = ArrayList<GalleryData>()
+
+        for (i in 0 until rawArgs.size step 3) {
+            val gallery = GalleryData()
+            gallery.name = rawArgs[i]
+            gallery.type = GalleryType.valueOf(rawArgs[i + 1])
+            gallery.color = Integer.parseInt(rawArgs[i + 2])
+            galleries.add(gallery)
+        }
+
+        assertGalleries(aSurveyName, galleries)
+    }
+
+    private fun assertGalleries(aSurveyName: String, galleries: List<GalleryData>) {
+        val exportFile = getLastXlsExport(aSurveyName)
+        val data = loadGalleries(exportFile)
+
+        assertEquals(galleries.size, data.size)
+        for (i in 0 until data.size) {
+            val expected = galleries.get(i);
+            val actual = data.get(i);
+
+            assertEquals(expected.name, actual.name)
+            assertEquals(expected.type, actual.type)
+            assertEquals(expected.color, actual.color)
+        }
+    }
+
 }

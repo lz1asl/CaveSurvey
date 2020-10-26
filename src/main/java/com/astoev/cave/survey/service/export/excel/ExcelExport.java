@@ -5,6 +5,8 @@ import android.util.Log;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
+import com.astoev.cave.survey.model.Gallery;
+import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Location;
 import com.astoev.cave.survey.model.Photo;
 import com.astoev.cave.survey.model.Project;
@@ -12,6 +14,7 @@ import com.astoev.cave.survey.model.Sketch;
 import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.service.export.AbstractExport;
 import com.astoev.cave.survey.service.export.ExportEntityType;
+import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.util.LocationUtil;
 import com.astoev.cave.survey.util.StringUtils;
 
@@ -30,6 +33,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.SQLException;
+import java.util.HashSet;
+import java.util.Set;
 
 import static com.astoev.cave.survey.model.Option.CODE_AZIMUTH_UNITS;
 import static com.astoev.cave.survey.model.Option.CODE_DISTANCE_UNITS;
@@ -66,8 +72,14 @@ public class ExcelExport extends AbstractExport {
     private static int CELL_DRAWING = 14;
     private static int CELL_PHOTO = 15;
 
+    public static final String SHEET_GALLERIES = "Galleries";
+    public static final int CELL_GALLERY_NAME = 0;
+    public static final int CELL_GALLERY_TYPE = 1;
+    public static final int CELL_GALLERY_COLOR = 2;
+
     private Workbook wb;
-    private Sheet sheet;
+    private Sheet dataSheet;
+    private Sheet galleriesSheet;
     private CreationHelper helper;
 
     private Row legRow;
@@ -82,13 +94,14 @@ public class ExcelExport extends AbstractExport {
     protected void prepare(Project aProject) {
         Log.i(Constants.LOG_TAG_SERVICE, "Start excel export ");
         wb = new HSSFWorkbook();
-        sheet = createHeader(aProject.getName(), wb);
+        dataSheet = createHeader(aProject.getName(), wb);
+        galleriesSheet = exportGalleries(aProject);
         helper = wb.getCreationHelper();
     }
 
     @Override
     protected void prepareEntity(int rowCounter, ExportEntityType type) {
-        legRow = sheet.createRow(rowCounter);
+        legRow = dataSheet.createRow(rowCounter);
     }
 
     @Override
@@ -248,6 +261,61 @@ public class ExcelExport extends AbstractExport {
         headerDrawing.setCellValue(mContext.getString(R.string.main_table_header_drawing));
         Cell headerPhoto = headerRow.createCell(CELL_PHOTO);
         headerPhoto.setCellValue(mContext.getString(R.string.main_table_header_photo));
+        return sheet;
+    }
+
+    private Sheet exportGalleries(Project aProject) {
+
+        Log.i(Constants.LOG_TAG_SERVICE, "Exporting galleries");
+
+        Sheet sheet;
+        try {
+            sheet = wb.createSheet(SHEET_GALLERIES);
+        } catch (IllegalArgumentException iae) {
+            Log.i(Constants.LOG_TAG_SERVICE, "Failed to create sheet Galleries");
+            sheet = wb.createSheet();
+        }
+
+        // find unique galleries
+        Set<Integer> galleryIds = new HashSet<>();
+        for (Leg leg : aProject.getLegs()) {
+            galleryIds.add(leg.getGalleryId());
+        }
+
+        Log.i(Constants.LOG_TAG_SERVICE, galleryIds.size() + " galleries found");
+
+        // header cells
+        Row headerRow = sheet.createRow(0);
+        Cell headerName = headerRow.createCell(CELL_GALLERY_NAME);
+        headerName.setCellValue(mContext.getString(R.string.new_gallery_name));
+        Cell headerType = headerRow.createCell(CELL_GALLERY_TYPE);
+        headerType.setCellValue(mContext.getString(R.string.new_gallery_type));
+        Cell headerColor = headerRow.createCell(CELL_GALLERY_COLOR);
+        headerColor.setCellValue(mContext.getString(R.string.new_gallery_color));
+
+        // data
+        int rowNum = 1;
+        for (Integer galleryId : galleryIds) {
+            Gallery gallery = null;
+            try {
+                gallery = DaoUtil.getGallery(galleryId);
+            } catch (SQLException e) {
+               throw new RuntimeException(e);
+            }
+            Row galleryRow = sheet.createRow(rowNum);
+
+            Cell name = galleryRow.createCell(CELL_GALLERY_NAME);
+            name.setCellValue(gallery.getName());
+            Cell type = galleryRow.createCell(CELL_GALLERY_TYPE);
+            type.setCellValue(gallery.getType().name());
+            Cell color = galleryRow.createCell(CELL_GALLERY_COLOR);
+            color.setCellValue(gallery.getColor());
+
+            rowNum++;
+        }
+
+        Log.i(Constants.LOG_TAG_SERVICE, "Galleries exported");
+
         return sheet;
     }
 
