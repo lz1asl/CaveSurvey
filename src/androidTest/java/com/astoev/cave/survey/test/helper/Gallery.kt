@@ -16,6 +16,12 @@ object Gallery {
         create()
     }
 
+    fun createDefaultGallery() {
+        click(R.id.main_action_add)
+        click("Next Gallery")
+        create()
+    }
+
     private fun create() {
         click("CREATE")
     }

@@ -19,12 +19,12 @@ object Common {
 
     fun click(id: Int) {
         Espresso.onView(ViewMatchers.withId(id)).perform(ViewActions.click())
-        Espresso.onIdle()
+//        Espresso.onIdle()
     }
 
     fun click(text: String?) {
         Espresso.onView(ViewMatchers.withText(text)).perform(ViewActions.click())
-        Espresso.onIdle()
+//        Espresso.onIdle()
     }
 
     fun webViewClick(target: String?) {
@@ -38,21 +38,21 @@ object Common {
 
     fun clickDialogSpinnerAtPosition(position: Int) {
         Espresso.onData(CoreMatchers.anything()).atPosition(position).perform(ViewActions.click())
-        Espresso.onIdle()
+//        Espresso.onIdle()
     }
 
     fun type(id: Int, value: Number?) {
         if (value != null) {
             Espresso.onView(ViewMatchers.withId(id)).perform(ViewActions.typeText("" + value))
-            Espresso.onIdle()
+//            Espresso.onIdle()
         }
     }
 
     fun type(id: Int, value: String?) {
         if (value != null) {
-            Espresso.onIdle()
+//            Espresso.onIdle()
             Espresso.onView(ViewMatchers.withId(id)).perform(ViewActions.typeText(value))
-            Espresso.onIdle()
+//            Espresso.onIdle()
         }
     }
 

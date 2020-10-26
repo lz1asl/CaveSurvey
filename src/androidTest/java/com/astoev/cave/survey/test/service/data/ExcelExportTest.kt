@@ -10,6 +10,7 @@ import com.astoev.cave.survey.test.helper.Data.xlsExport
 import com.astoev.cave.survey.test.helper.ExcelTestUtils.assertConfigUnits
 import com.astoev.cave.survey.test.helper.ExcelTestUtils.assertLeg
 import com.astoev.cave.survey.test.helper.Gallery
+import com.astoev.cave.survey.test.helper.Gallery.createDefaultGallery
 import com.astoev.cave.survey.test.helper.Survey.addCoordinate
 import com.astoev.cave.survey.test.helper.Survey.addLeg
 import com.astoev.cave.survey.test.helper.Survey.addLegMiddle
@@ -18,6 +19,8 @@ import com.astoev.cave.survey.test.helper.Survey.createAndOpenGeolocationSurvey
 import com.astoev.cave.survey.test.helper.Survey.createAndOpenSurvey
 import com.astoev.cave.survey.test.helper.Survey.nextGallery
 import com.astoev.cave.survey.test.helper.Survey.openLegWithText
+import com.astoev.cave.survey.test.helper.Survey.openSurvey
+import com.astoev.cave.survey.test.helper.Survey.saveLeg
 import com.astoev.cave.survey.test.helper.Survey.selectFirstSurveyLeg
 import com.astoev.cave.survey.test.helper.Survey.setLegData
 import org.junit.Assert.assertEquals
@@ -70,7 +73,7 @@ class ExcelExportTest() : AbstractExportTest() {
         addVector(1.1f, 1.2f, 1.3f)
         addVector(1.4f, 1.5f, 1.6f)
         addVector(1.7f, 1.8f, 1.9f)
-        goBack()
+        saveLeg()
         legs = exportAndRead(surveyName, 9)
         assertFirstLegNoSlope(legs)
         assertSecondSimpleLeg(legs)
@@ -131,16 +134,17 @@ class ExcelExportTest() : AbstractExportTest() {
         // create survey
         var surveyName = createAndOpenGeolocationSurvey()
 
-        // geolocation leg
+        // geolocation legExcelExportTest
         setLegData(1f, 2f, null)
+        openSurvey(surveyName)
         openLegWithText("A1")
         addCoordinate(42.811522f, 23.378906f, 123, 5);
 
         // classic galleries
-        Gallery.createClassicGallery()
-        addLeg(2.3f, 3.4f, 4.5f, 1.1f, 1.2f, 1.3f, 1.4f)
+        Gallery.createDefaultGallery()
+        setLegData(2.3f, 3.4f, 4.5f, 1.1f, 1.2f, 1.3f, 1.4f)
         addLeg(3.4f, 3.5f, 3.6f, 6.1f, 6.2f, 6.3f, 6.4f)
-        nextGallery()
+        createDefaultGallery()
         setLegData(4.4f, 4.5f, 4.6f, 0.1f, 0.2f, 0.3f, 0.4f)
 
         // properly exported
@@ -151,7 +155,7 @@ class ExcelExportTest() : AbstractExportTest() {
         assertLeg(legs[2], 3.4f, 3.5f, 3.6f, 6.1f, 6.2f, 6.3f, 6.4f)
         assertLeg(legs[2], "B", "0", "B", "1", false, false)
         assertLeg(legs[3], 4.4f, 4.5f, 4.6f, 0.1f, 0.2f, 0.3f, 0.4f)
-        assertLeg(legs[4], "B", "0", "C", "0", false, false)
+        assertLeg(legs[3], "B", "1", "C", "0", false, false)
     }
 
 
@@ -224,6 +228,6 @@ class ExcelExportTest() : AbstractExportTest() {
 
     private fun assertSeventhLegNextGallery(legs: List<LegData>) {
         assertLeg(legs[9], 4.4f, 4.5f, 4.6f, 0.1f, 0.2f, 0.3f, 0.4f)
-        assertLeg(legs[9], "A", "4", "B", "1", false, false)
+        assertLeg(legs[9], "A", "5", "B", "0", false, false)
     }
 }

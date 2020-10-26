@@ -170,9 +170,9 @@ public class ExcelImport {
 
                         Leg dbLeg = DaoUtil.getLegByFromToPointId(toGallery, from, to);
                         if (dbLeg == null) {
-                            // not the first leg already created with the project
+                            // not the first, leg already created with the project
                             Log.i(Constants.LOG_TAG_SERVICE, "Creating leg");
-                            dbLeg = new Leg(from, to, aProject, toGallery.getId());
+                            dbLeg = new Leg(from, to, aProject, fromGallery.getId());
                         }
                         dbLeg.setDistance(leg.getLength());
                         dbLeg.setAzimuth(leg.getAzimuth());
@@ -236,7 +236,6 @@ public class ExcelImport {
                             Log.i(Constants.LOG_TAG_SERVICE, "Got gallery " + gallery);
                     if (gallery == null) {
                         Log.i(Constants.LOG_TAG_SERVICE, "Creating gallery " + aGalleryName);
-                        // TODO poper gallery initialization
                         gallery = GalleryUtil.createGallery(aProject, aGalleryName, MapUtilities.getNextGalleryColor(0), CLASSIC);
                     }
                 }
