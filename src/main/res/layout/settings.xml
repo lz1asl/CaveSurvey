@@ -55,26 +55,5 @@
                 android:layout_alignParentRight="true" />
         </RelativeLayout>
 
-        <!-- error reporter -->
-        <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp">
-
-            <TextView
-                android:id="@+id/settingsDebugText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:text="@string/error_reporter_title"
-                android:textAppearance="?android:attr/textAppearanceMedium"/>
-            <ToggleButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/settingsDebugToggle"
-                android:layout_alignParentRight="true" />
-        </RelativeLayout>
-
     </LinearLayout>
 </ScrollView>

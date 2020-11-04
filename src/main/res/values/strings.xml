@@ -410,21 +410,6 @@
         <item>Español</item>
     </string-array>
 
-    <!-- error reporter -->
-    <string name="error_reporter_title">Error reporter</string>
-    <string name="error_reporter_report">Send</string>
-    <string name="error_reporter_info">Use to report issue:\n
- 1) activate\n
- 2) repeat the steps\n
- 3) deactivate\n\n
-Logs and your description will be sent for analysis (could take time).\n\n
-Network connection is required.</string>
-    <string name="error_reporter_message">Describe the issue</string>
-    <string name="error_reporter_message_empty">Please describe the issue</string>
-    <string name="network_unavailable">Network connectivity unavailable</string>
-    <string name="network_error">Network error</string>
-    <string name="error_not_sent">Report canceled</string>
-
     <!-- auto backup -->
     <string name="settings_auto_backup">Auto backup</string>
     <string name="settings_auto_backup_info">Exports your active project to the SD card every 5 minutes</string>

@@ -373,20 +373,6 @@
 
     <string name="lang_title">Выбрать язык</string>
 
-    <!-- error reporter -->
-    <string name="error_reporter_title">Сообщить об ошибки</string>
-    <string name="error_reporter_report">Отправь</string>
-    <string name="error_reporter_info">Используйте, чтобы сообщить нам о проблеме: \n
- 1) активируйте \n
- 2) воспроизвести проблему\n
- 3) деактивировать\n\n
- Собранные ошибки и ваше описание будут отправлены на анализ (может занять некоторое время).\n\n
- Требуется подключение к сети.</string>
-    <string name="error_reporter_message">Опишите проблему</string>
-    <string name="error_reporter_message_empty">Опишите проблему, пожалуйста</string>
-    <string name="network_unavailable">Нет доступа к сети</string>
-    <string name="network_error">Ошибка сети</string>
-    <string name="error_not_sent">Отказано</string>
 
     <!-- auto backup -->
     <string name="settings_auto_backup">Автоматичны експорт</string>
