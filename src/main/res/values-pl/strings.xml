@@ -399,20 +399,6 @@
 
     <string name="lang_title">Wybierz język</string>
 
-    <!-- error reporter -->
-    <string name="error_reporter_title">Zgłoś błąd</string>
-    <string name="error_reporter_report">Wyślij</string>
-    <string name="error_reporter_info">Wyślij zgłoszenie błędu:\n
- 1) aktywacja\n
- 2) powtórz kroki do wystąpienia błędu\n
- 3) deaktywacja\n\n
-Logi oraz opis błędu zostaną wysłane do analizy (to może zająć chwilę).\n\n
-Wymagane jest połączenie internetowe.</string>
-    <string name="error_reporter_message">Opisz problem</string>
-    <string name="error_reporter_message_empty">Proszę opisać problem</string>
-    <string name="network_unavailable">Brak połączenia z internetem</string>
-    <string name="network_error">Problem sieci</string>
-    <string name="error_not_sent">Report anulowany</string>
 
     <!-- auto backup -->
     <string name="settings_auto_backup">Automatyczna kopia zapasowa</string>

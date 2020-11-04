@@ -399,20 +399,6 @@
 
     <string name="lang_title">Seleccionar idioma</string>
 
-    <!-- error reporter -->
-    <string name="error_reporter_title">Reporte de error</string>
-    <string name="error_reporter_report">Enviar</string>
-    <string name="error_reporter_info">Usálo para reportar el problema:\n
- 1) active\n
- 2) repita los pasos\n
- 3) desactive\n
-Los registros y su descripción serán enviados para su análisis (podría tomar tiempo).\n\n
-Se requiere una conexión de red.</string>
-    <string name="error_reporter_message">Describe el problema</string>
-    <string name="error_reporter_message_empty">Por favor, describe el asunto</string>
-    <string name="network_unavailable">Conectividad de red no disponible</string>
-    <string name="network_error">Error de red</string>
-    <string name="error_not_sent">Reporte cancelado</string>
 
     <!-- auto backup -->
     <string name="settings_auto_backup">Respaldo auomático</string>

@@ -400,20 +400,6 @@
 
     <string name="lang_title">选择语言</string>
 
-    <!-- error reporter -->
-    <string name="error_reporter_title">错误报告</string>
-    <string name="error_reporter_report">发送</string>
-    <string name="error_reporter_info">用于报告问题：\n
- 1) 启用\n
- 2) 重复这些步骤\n
- 3) 停用\n\n
-日志和您的描述将被发送以进行分析（可能需要一些时间）。\n\n
-需要网络连接。</string>
-    <string name="error_reporter_message">描述问题</string>
-    <string name="error_reporter_message_empty">请描述报告的问题</string>
-    <string name="network_unavailable">网络连接不可用</string>
-    <string name="network_error">网络错误</string>
-    <string name="error_not_sent">已取消报告</string>
 
     <!-- auto backup -->
     <string name="settings_auto_backup">自动备份</string>

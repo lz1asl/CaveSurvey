@@ -60,7 +60,7 @@ Related Projects
 
 [CaveSurveyBTEmulator](https://github.com/lz1asl/CaveSurveyBTEmulator) can emulate Bluetooth measurement devices.
 
-[CaveSurveyReports](https://github.com/lz1asl/CaveSurveyReports) collects error reports for CaveSurvey.
+[~CaveSurveyReports~](https://github.com/lz1asl/CaveSurveyReports) collects error reports for CaveSurvey until 1.51.
 
 [OpensTopo](http://www.openspeleo.org/openspeleo/openstopo.en.html)'s export is used.
 

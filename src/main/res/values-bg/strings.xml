@@ -393,20 +393,6 @@
 
     <string name="lang_title">Избери език</string>
 
-    <!-- error reporter -->
-    <string name="error_reporter_title">Съобщи за грешка</string>
-    <string name="error_reporter_report">Изпрати</string>
-    <string name="error_reporter_info">Използвайте за да ни уведомите за проблем: \n
- 1) активирайте \n
- 2) репродуцирайте проблема\n
- 3) деактивирайте\n\n
- Събраните грешки и Вашето описание ще бъдат изпратени за анализ (може да отнеме време).\n\n
- Необходима е мрежова връзка.</string>
-    <string name="error_reporter_message">Опишете проблема</string>
-    <string name="error_reporter_message_empty">Моля опишете проблема</string>
-    <string name="network_unavailable">Не е налична мрежова връзка</string>
-    <string name="network_error">Мрежова грешка</string>
-    <string name="error_not_sent">Отказано</string>
 
     <!-- auto backup -->
     <string name="settings_auto_backup">Автоматичен експорт</string>

@@ -392,21 +392,6 @@
 
     <string name="lang_title">Επιλογή γλώσσας</string>
 
-    <!-- error reporter -->
-    <string name="error_reporter_title">Αναφορά σφάλματος</string>
-    <string name="error_reporter_report">Αποστολή</string>
-    <string name="error_reporter_info">Για αναφορά προβλήματος χρησιμοποιήστε:\n
- 1) ενεργοποίηση\n
- 2) επανάληψη βημάτων\n
- 3) απενεργοποίηση\n\n
-Τα αρχεία καταγραφής και η περιγραφή σας θα σταλούν για ανάλυση (ενδέχεται να χρειαστεί χρόνος).\n\n
-Απαιτείται σύνδεση δικτύου.</string>
-    <string name="error_reporter_message">Περιγραφή προβλήματος</string>
-    <string name="error_reporter_message_empty">Παρακαλώ περιγράψτε το πρόβλημα</string>
-    <string name="network_unavailable">Η σύνδεση δικτύου δεν είναι διαθέσιμη</string>
-    <string name="network_error">Σφάλμα δικτύου</string>
-    <string name="error_not_sent">Η αναφορά ακυρώθηκε</string>
-
     <!-- auto backup -->
     <string name="settings_auto_backup">Αυτόματο αντίγραφο ασφαλείας</string>
     <string name="settings_auto_backup_info">Αυτόματη δημιουργεία αντιγράφου ασφαλείας της ενεργής χαρτογράφησης κάθε 5 λεπτά</string>
