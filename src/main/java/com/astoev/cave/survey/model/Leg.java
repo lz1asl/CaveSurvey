@@ -106,7 +106,7 @@ public class Leg implements Serializable {
         }
         
 
-        StringBuilder builder = new StringBuilder(StringUtils.SPACE);
+        StringBuilder builder = new StringBuilder();
         builder.append(PointUtil.getGalleryNameForFromPoint(mFromPoint, mGalleryId));
         DaoUtil.refreshPoint(startPoint);
         builder.append(startPoint.getName());

@@ -177,10 +177,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
     @Override
     protected String getScreenTitle() {
         try {
-            StringBuilder builder = new StringBuilder(getString(R.string.leg));
-            builder.append(getCurrentLeg().buildLegDescription(true));
-
-            return builder.toString();
+            return getCurrentLeg().buildLegDescription(true);
         } catch (SQLException e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to create activity's name", e);
         }
