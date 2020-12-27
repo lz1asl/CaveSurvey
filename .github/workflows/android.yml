@@ -51,9 +51,9 @@ jobs:
 #           arch: x86
 #           profile: Nexus 6
 #           script: ./gradlew connectedCheck
-#       - name: Test reports
-#         uses: actions/upload-artifact@v2
-#         if: failure()
-#         with:
-#           name: test-reports
-#           path: build/reports/
+      - name: Test reports
+        uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: test-reports
+          path: build/reports/
