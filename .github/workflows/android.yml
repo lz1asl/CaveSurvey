@@ -21,8 +21,7 @@ jobs:
         name: CaveSurvey-debug.apk
         path: build/outputs/apk/defaultFlavor/debug
 
-  test:
-#    runs-on: macos-latest
+  unit-tests:
     runs-on: ubuntu-latest
     steps:
     - name: checkout
@@ -31,18 +30,36 @@ jobs:
       run: git apply --ignore-space-change --ignore-whitespace no_bosch_library.patch
     - name: Unit tests
       run: ./gradlew test
-#    - name: Connected tests
-#      uses: reactivecircus/android-emulator-runner@v2
-#      with:
-#        api-level: 29
-#        arch: x86_64
-#        script: |
-#          adb logcat -c
-#          adb logcat &
-#          ./gradlew connectedAndroidTest
     - name: Test reports
       uses: actions/upload-artifact@v2
       if: failure()
       with:
         name: test-reports
         path: build/reports/
+
+  espresso-tests:
+    runs-on: macos-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: Patch No Bosch Library
+        run: git apply --ignore-space-change --ignore-whitespace no_bosch_library.patch
+      - name: Espresso tests
+      #      uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 29
+          target: default
+          arch: x86
+          profile: Nexus 6
+          script: ./gradlew connectedCheck
+      #        arch: x86_64
+      #        script: |
+      #          adb logcat -c
+      #          adb logcat &
+      #          ./gradlew connectedAndroidTest
+      - name: Test reports
+        uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: test-reports
+          path: build/reports/
