@@ -37,23 +37,23 @@ jobs:
         name: test-reports
         path: build/reports/
 
-  espresso-tests:
-    runs-on: macos-latest
-    steps:
-      - name: checkout
-        uses: actions/checkout@v2
-      - name: Patch No Bosch Library
-        run: git apply --ignore-space-change --ignore-whitespace no_bosch_library.patch
-      - name: Espresso tests
-        with:
-          api-level: 29
-          target: default
-          arch: x86
-          profile: Nexus 6
-          script: ./gradlew connectedCheck
-      - name: Test reports
-        uses: actions/upload-artifact@v2
-        if: failure()
-        with:
-          name: test-reports
-          path: build/reports/
+#   espresso-tests:
+#     runs-on: macos-latest
+#     steps:
+#       - name: checkout
+#         uses: actions/checkout@v2
+#       - name: Patch No Bosch Library
+#         run: git apply --ignore-space-change --ignore-whitespace no_bosch_library.patch
+#       - name: Espresso tests
+#         with:
+#           api-level: 29
+#           target: default
+#           arch: x86
+#           profile: Nexus 6
+#           script: ./gradlew connectedCheck
+#       - name: Test reports
+#         uses: actions/upload-artifact@v2
+#         if: failure()
+#         with:
+#           name: test-reports
+#           path: build/reports/
