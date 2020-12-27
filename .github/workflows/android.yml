@@ -51,6 +51,7 @@ jobs:
           target: default
           arch: x86
           profile: Nexus 6
+          sdcard-path-or-size: 100M 
           script: ./gradlew connectedCheck
       - name: Test reports
         uses: actions/upload-artifact@v2
