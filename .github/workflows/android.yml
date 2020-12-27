@@ -45,18 +45,12 @@ jobs:
       - name: Patch No Bosch Library
         run: git apply --ignore-space-change --ignore-whitespace no_bosch_library.patch
       - name: Espresso tests
-      #      uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
           target: default
           arch: x86
           profile: Nexus 6
           script: ./gradlew connectedCheck
-      #        arch: x86_64
-      #        script: |
-      #          adb logcat -c
-      #          adb logcat &
-      #          ./gradlew connectedAndroidTest
       - name: Test reports
         uses: actions/upload-artifact@v2
         if: failure()
