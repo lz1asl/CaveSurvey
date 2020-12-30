@@ -388,7 +388,7 @@
     <string name="settings_auto_backup_info">Създава автоматично резервно копие на активния проект всеки 5 минути</string>
     <string name="settings_import_title">Импорт (Експериментален)</string>
     <string name="settings_import_source">Импорт от:</string>
-    <string name="settings_import_error">Грешка в импорта на ред %1d: %2s:%3s</string>
+    <string name="settings_import_error">Грешка в импорта на ред %1$d: %2$s:%3$s</string>
     <string name="settings_import_target_name">Създай като:</string>
     <string name="settings_import_no_files">Не е намерен експортен файл</string>
     <string name="settings_import_info">Създава ново проучване от съществуващ файл.\nМоля използвайте файлове генерирани след версия v1.27.\nСнимки и скици ще бъдат игнорирани.</string>

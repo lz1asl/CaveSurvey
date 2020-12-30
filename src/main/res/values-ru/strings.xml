@@ -379,7 +379,7 @@
     <string name="settings_auto_backup_info">Автоматичное сохранение текущего проекта на каждые 5 минут</string>
     <string name="settings_import_title">Импорт (Экспериментальный)</string>
     <string name="settings_import_source">Импорт из:</string>
-    <string name="settings_import_error">Ошибка импорта строки %1d: %2s:%3s</string>
+    <string name="settings_import_error">Ошибка импорта строки %1$d: %2$s:%3$s</string>
     <string name="settings_import_target_name">Создать как:</string>
     <string name="settings_import_no_files">Не найден экспортный файл</string>
     <string name="settings_import_info">Создание нового исследование от уже соществующего.\nПросьба пользуетесь файлами сгенерированные после версии v1.27.\nССъемки и набросы будут отброшены.</string>

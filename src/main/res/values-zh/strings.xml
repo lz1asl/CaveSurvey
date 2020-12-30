@@ -406,7 +406,7 @@
     <string name="settings_auto_backup_info">每5分钟将您的活动项目导出到SD卡</string>
     <string name="settings_import_title">导入（实验）</string>
     <string name="settings_import_source">导入自：</string>
-    <string name="settings_import_error">Import error on row %1d: %2s:%3s</string>
+    <string name="settings_import_error">Import error on row %1$d: %2$s:%3$s</string>
     <string name="settings_import_target_name">创建为：</string>
     <string name="settings_import_no_files">未找到导出的测量</string>
     <string name="settings_import_info">从现有文件创建测量。\n请使用v1.27之后创建的导出文件。\n照片或草图将被忽略。</string>

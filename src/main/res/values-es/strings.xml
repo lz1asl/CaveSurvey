@@ -405,7 +405,7 @@
     <string name="settings_auto_backup_info">Exporta su proyecto activo a la tarjeta SD cada 5 minutos</string>
     <string name="settings_import_title">Importación (experimental)</string>
     <string name="settings_import_source">Importar desde:</string>
-    <string name="settings_import_error">Error de importación en la fila %1d: %2s:%3s</string>
+    <string name="settings_import_error">Error de importación en la fila %1$d: %2$s:%3$s</string>
     <string name="settings_import_target_name">Crear como:</string>
     <string name="settings_import_no_files">No se encontró la inspección exportada</string>
     <string name="settings_import_info">Crea la inspección a partir de un archivo existente.\nPor favor, use los archivos de exportación creados después de la v1.27.\nLas fotos o dibujos serán ignorados.</string>

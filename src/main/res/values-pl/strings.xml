@@ -405,7 +405,7 @@
     <string name="settings_auto_backup_info">Eksportuj swoje aktywne projekty na kartę SD co 5 minut</string>
     <string name="settings_import_title">Import (eksperymentalne)</string>
     <string name="settings_import_source">Importuj z:</string>
-    <string name="settings_import_error">Import nie powiódł się na wierszu %1d: %2s:%3s</string>
+    <string name="settings_import_error">Import nie powiódł się na wierszu %1$d: %2$s:%3$s</string>
     <string name="settings_import_target_name">Utwórz jako:</string>
     <string name="settings_import_no_files">Wyeksportowany pomiar nie istnieje</string>
     <string name="settings_import_info">Tworzy pomiary z istniejącego pliku.\nProszę używać plików wyeksportowanych z wersji v1.27 lub wyższej.\nZdjęcia oraz szkice zostaną pominięte.</string>

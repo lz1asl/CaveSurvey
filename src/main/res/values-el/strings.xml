@@ -397,7 +397,7 @@
     <string name="settings_auto_backup_info">Αυτόματη δημιουργεία αντιγράφου ασφαλείας της ενεργής χαρτογράφησης κάθε 5 λεπτά</string>
     <string name="settings_import_title">Εισαγωγή (πειραματικά)</string>
     <string name="settings_import_source">Εισαγωγή από:</string>
-    <string name="settings_import_error">Αποτυχία εισαγωγής στη σειρά %1d: %2s:%3s</string>
+    <string name="settings_import_error">Αποτυχία εισαγωγής στη σειρά %1$d: %2$s:%3$s</string>
     <string name="settings_import_target_name">Δημιουργία ως:</string>
     <string name="settings_import_no_files">Το εξαγόμενο αρχείο δεν βρέθηκε</string>
     <string name="settings_import_info">Δημιουργεία νέας χαρτογράφισης από υπάρχον αρχείο.\nΠαρακαλώ χρησιμοποιήστε αρχεία που δημιουργήθηκαν μετά την έκδοση v1.27.\nΟι φωτογραφίες ή τα σχέδια θα αγνοηθούν.</string>
