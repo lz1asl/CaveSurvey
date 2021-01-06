@@ -233,7 +233,10 @@ public class FileStorageUtil {
         File storageHome = null;
 
         // try to find writable folder
-        if (isExternalStorageWritable()) { // external storage
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            storageHome = new File(Environment.getExternalStoragePublicDirectory(
+                    Environment.DIRECTORY_DOCUMENTS), FOLDER_CAVE_SURVEY);
+        } else if (isExternalStorageWritable()) { // external storage
             storageHome = Environment.getExternalStoragePublicDirectory(FOLDER_CAVE_SURVEY);
         } else { // internal storage
             storageHome = new File(ConfigUtil.getContext().getFilesDir(), FOLDER_CAVE_SURVEY);
