@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- common -->
+    <string name="app_name">CaveSurvey</string>
+    <string name="button_yes">Ja</string>
+    <string name="button_no">Nein</string>
+    <string name="required">Notwendig</string>
+    <string name="invalid">Ungültig</string>
+    <string name="success">Erfolg</string>
+    
+    <string name="sk_paldin">Paldin</string>
+
+    <!-- welcome screen -->
+    <string name="home_no_projects">Vermessung erstellen</string>
+    <string name="home_new_project">Neue Vermessung</string>
+    <string name="home_button_new_exists">Vermessung %1$s existiert!</string>
+    <string name="home_delete_project">Vermessung %1$s löschen??</string>
+    <string name="home_lang"><u>Sprache</u></string>
+
+    <!-- new project screen -->
+    <string name="new_title">Neue Vermessung</string>
+    <string name="new_button_create">Erstellen</string>
+
+    <string name="project_header">Vermessungs Name</string>
+    <string name="project_name">Name</string>
+    <string name="project_name_required">Name eingeben</string>
+    <string name="project_name_characters">Enthält ungültige Zeichen</string>
+    <string name="project_import">Importieren</string>
+    <string name="import_success">Import erfolgreich</string>
+
+
+
+    <!-- survey screen -->
+    <string name="main_leg">Aktuelle Strecke</string>
+    <string name="main_button_change">Auswählen</string>
+    <string name="main_button_change_title">Strecke auswählen</string>
+    <string name="main_button_add">Hinzufügen</string>
+    <string name="main_button_data">Daten</string>
+    <string name="main_button_about">Über</string>
+    <string name="main_button_settings">Einstellungen</string>
+    <string name="main_button_map">Karte</string>
+
+    <string name="map_plan">Plan</string>
+    <string name="map_section">Abschnitt</string>
+
+    <string name="main_table_header_from">Bis</string>
+    <string name="main_table_header_to">Zu</string>
+    <string name="main_table_header_more">Mehr</string>
+    <string name="main_table_header_note">Vermerk</string>
+    <string name="main_table_header_drawing">Zeichnung</string>
+    <string name="main_table_header_photo">Photo</string>
+    
+    <string name="leg">Strecke</string>
+    <string name="left">Links</string>
+    <string name="right">Rechts</string>
+    <string name="up">Hoch</string>
+    <string name="down">Runter</string>
+    <string name="distance">Länge</string>
+    <string name="azimuth">Kompass</string>
+    <string name="slope">Klinometer</string>
+
+    <string name="point_photos_header">Photos</string>
+    <string name="point_photo_label">Photo %1$s</string>
+
+    <string name="point_vectors_header">Veckoren</string>
+    <string name="point_vectors_counter">Vektor #</string>
+    <string name="point_vectors_delete">Vektor %1$s löschen?</string>
+    <string name="point_swipe_not_possible">Galerierand erreicht</string>
+
+    <string name="slope_column">Klinometer:</string>
+    
+    <string name="sensor">Sensoren</string>
+    <string name="accuracy">Genauigkeit</string>
+    <string name="value">Wert</string>
+
+    <!-- add popup -->
+    <string name="main_add_title">Neu hinzufügen</string>
+    <string name="main_add_leg">Neue Strecke</string>
+    <string name="main_add_gallery">Nächste Gallerie</string>
+    <string name="main_add_middlepoint">Mittlepunkt</string>
+    <string name="main_add_note">Vermerk</string>
+    <string name="main_add_sketch">Zeichnen</string>
+    <string name="main_add_photo">Bild</string>
+    <string name="main_add_gps">GPS</string>
+    <string name="main_add_vector">Add Vektor</string>
+    <string name="main_reverse">umkehren</string>
+    <string name="main_reverse_message">Richtung und Steigung der Strecke %1$s wird umgedreht!</string>
+    <string name="table_sketch_prefix">S</string>
+    <string name="table_note_prefix">N</string>
+    <string name="table_photo_prefix">P</string>
+    <string name="table_location_prefix">L</string>
+    <string name="table_vector_prefix">V</string>
+
+    <string name="gallery_after_first_point">Nicht verfügbar für erste Strecke</string>
+
+    <!-- survey menu -->
+    <string name="menu_exit">Verlassen</string>
+
+    <string name="menu_exit_confirmation_question">Vermessung beenden?</string>
+
+    <!-- point -->
+    <string name="point_save">Speichern</string>
+    <string name="point_delete">Löschen</string>
+
+    <!-- note screen -->
+    <string name="note_title">Vermerk für</string>
+    <string name="note_save">Speichern</string>
+    <string name="note_saved">Gespeichert</string>
+
+    <!--vector screen -->
+    <string name="vector_button_add_again">Speichern + Neu</string>
+
+    
+
+    <string name="sketch_pick_color">Farbe auswählen</string>
+    <string name="sketch_pick_size">Größe auswählen</string>
+    <string name="sketch_pick_style">Stil auswählen</string>
+    <string name="sketch_pick_style_thick">Dick</string>
+    <string name="sketch_pick_style_fill">Füllen</string>
+    <string name="sketch_pick_style_dash">Strich</string>
+    <string name="sketch_saved">Gespeichert</string>
+    
+    <string name="sketch_undo">Rückgängig </string>
+    <string name="sketch_redo">Wiederholen</string>
+    <string name="sketch_save">Speichern</string>
+    <string name="sketch_colorpicker">Farbwähler</string>
+    <string name="sketch_style">Stil</string>
+    <string name="sketch_size">Größe</string>
+    
+    
+    <string name="map_edit">Bearbeiten</string>
+
+    <!-- info screen -->
+    <string name="update_project">Aktualisieren</string>
+    <string name="message_project_udpated">Projekt aktualisiert</string>
+    <string name="statistics">Statistiken</string>
+    <string name="info_created">Erstellt</string>
+    <string name="info_galleries"># Galerien</string>
+    <string name="info_legs"># Strecken</string>
+    <string name="info_total_distance">Reine Distanz</string>
+    <string name="info_chooser_open_folder">Ordner öffnen</string>
+
+    <string name="info_num_notes"># Vermerkungen</string>
+    <string name="info_num_drawings"># Zeichnungen</string>
+    <string name="info_num_coordinates"># Koordinaten</string>
+    <string name="info_num_photos"># Bilder</string>
+    <string name="info_num_vectors"># Vektoren</string>
+
+
+    <string name="export_xls">Als .xls exportieren</string>
+    <string name="export_vtopo">Für Visual Topo exportieren </string>
+    <string name="export_view_files">Dateien</string>
+    <string name="export_done">Exportiert nach %1$s</string>
+    <string name="export_io_error">Schreiben zur SD-Karte gescheitert</string>
+    <string name="io_error">Zugriff auf die SD-Karte nicht möglich</string>
+    
+    <!-- options -->
+    <string name="measures_title">Dateneingabe</string>
+    <string name="data_input_units">Einheiten</string>
+    <string name="data_input_source">Quelle</string>
+
+    <string name="options_units_distance">Entfernung:</string>
+    <string-array name="distance_units">
+        <item>Meter</item>
+        <item>Fuß</item>
+    </string-array>
+    <string-array name="distance_read_type">
+        <item>Manuell</item>
+        <item>Über Bluetooth</item>
+    </string-array>
+
+    <string name="options_units_azimuth">Azimut:</string>
+    <string-array name="azimuth_units">
+        <item>Degrees</item>
+        <item>Grad</item>
+    </string-array>
+
+    <string-array name="azimuth_read_type_manually">
+        <item>Manuell</item>
+        <item>Über Bluetooth</item>
+    </string-array>
+    
+    <string-array name="azimuth_read_type_all">
+        <item>Manuell</item>
+        <item>Über integrierte Sensoren</item>
+        <item>Über Bluetooth</item>
+    </string-array>
+
+    <string name="options_units_slope">Steigung:</string>
+    <string-array name="slope_units">
+        <item>Degrees</item>
+        <item>Grad</item>
+    </string-array>
+
+    <string-array name="slope_read_type">
+        <item>Manuell</item>
+        <item>Über Bluetooth</item>
+    </string-array>
+    
+    <string-array name="slope_read_type_all">
+        <item>Manuell</item>
+        <item>Über Bluetooth</item>
+        <item>Über integrierte Sensoren</item>
+    </string-array>
+
+    <string-array name="latitude_types">
+        <item>N</item>
+        <item>S</item>
+    </string-array>
+    <string-array name="longitude_types">
+        <item>E</item>
+        <item>W</item>
+    </string-array>
+
+
+    <!-- about screen -->
+    <string name="about_title">Über CaveSurvey</string>
+    <string name="about_user_guide">Hilfe &amp; Benutzerhandbuch</string>
+    <string name="about_paldin">http://sk-paldin.eu</string>
+    <string name="about_help">https://github.com/lz1asl/CaveSurvey/wiki/User-Guide</string>
+
+
+    <!-- info -->
+    <string name="info_distance_in">Entfernung in</string>
+    <string name="info_azimuth_in">Azimut in</string>
+    <string name="info_slope_in">Steigung in</string>
+    <string name="info_azimuth_build_in_sensor">Integrierte Sensoren konfiguriert</string>
+    
+    <string name="sensor_none">-</string>
+    <string name="rotation_sensor">Drehung</string>
+    <string name="magnetic_sensor">Magnetischer Beschleunigungsmesser</string>
+    <string name="orientation_sensor">Orientierung</string>
+
+
+    <!-- popup -->
+    <string name="middle_leg_add">Mittlepunkt hinzufügen</string>
+    <string name="middle_leg_info">Strecke  %1$s</string>
+    <string name="middle_leg_distance">out of %1$s %2$s</string> ?? Don't understand kontext
+    <string name="middle_split_at">Bei</string>
+    <string name="middle_create">Erstellen</string>
+    <string name="middle_bad_value">Schlechter Wert</string>
+    <string name="middle_leg_shorter">Zu kurz </string>
+    <string name="middle_leg_bigger">Zu Lang</string>
+    <string name="middle_no_value">Entfernung benötigt</string>
+
+    <string name="error">Ein Fehler ist aufgetreten</string>
+    <string name="error_no_space">Speicherplatz voll</string>
+    <string name="busy">Bitte warten&#8230;</string>
+
+    <string name="todo">Zu erledigen</string>
+
+    <string name="permission_required">Bitte autorisieren Sie CaveSurvey für: %1$s</string>
+
+
+    <!-- bluetooth -->
+    <string name="bt_devices">Geräte</string>
+    <string name="bt_devices_info">Kompatible Geräte verbunden:</string>
+    <string name="bt_new_device">Neues Geräte</string>
+    <string name="bt_paired">Gekoppelt</string>
+    <string name="bt_connected">Verbindung erfolgreich</string>
+    <string name="bt_not_paired">Nicht gekoppelt</string>
+    <string name="bt_pair_failed">Gerät offline oder nicht kompatibel</string>
+    <string name="bt_state_unknown">Unbekannter Zustand</string>
+    <string name="bt_state_bonded">Verbundener Zustand</string>
+    <string name="bt_state_bonding">Verbindender Zustand </string>
+    <string name="bt_state_none">Unbekannter Zustand</string>
+    <string name="bt_state_connecting">Verbinden...</string>
+    <string name="bt_state_connected">Verbunden</string>
+    <string name="bt_not_on">Bluetooth nicht eingeschaltet</string>
+    <string name="bt_not_selected">Gerät nicht ausgewählt.</string>
+    <string name="bt_device_connecting">Verbinden mit: %1$s</string>
+    <string name="bt_supported_devices">Kompatibel mit:</string>
+    <string name="bt_device_connected">Verbunden mit: %1$s</string>
+    <string name="bt_device_lost">Gerät verloren: %1$s</string>
+    <string name="bt_devices_help"><u>Geräteinfo</u></string>
+    <string name="bt_devices_help_url">https://github.com/lz1asl/CaveSurvey/wiki/Measurement-Devices</string>
+    <string name="bt_scan_failed">LE Geräte scan geschweitert, bitte Gerät neustarten</string>
+
+    <!-- device mode validation -->
+    <string name="bt_device_mode">Verwende: %1$s Messmodus</string>
+    <string name="bt_device_mode_single">single</string>
+    <string name="bt_device_mode_single_or_indirect">indirect length or single </string> ?? Don't understand the context.
+
+    <string name="action_saved">Gespeichert</string>
+    <string name="action_deleted">Gelöscht</string>
+    
+    <string name="azimuth_column">Azimut:</string>
+    <string name="accuracy_column">Genauigkeit:</string>
+    <string name="no_value_label">Kein Wert</string>
+    <string name="azimuth_accuracy_no_value">-1</string>
+    <string name="azimuth_orination">Orientierung:</string>
+    <string name="azimuth_magnetic">Magnetisch:</string>
+    <string name="azimuth_rotation">Drehung:</string>
+    <string name="azimuth_start">Start</string>
+    <string name="azimuth_stop">Stop</string>
+    <string name="sensors_title"><u>Eingebaute Sensoren</u></string>
+    <string name="sensor_test_title"><u>Sensoren testen</u></string>
+    <string name="sensor_test_header">Eingebaute Sensoren testen</string>
+    <string name="sensor_choose_header">Eingebaute Sensoren auswählen</string>
+    <string name="sensor_choose_timeout">Heading Zeit (Sekunden)</string>   Heading? Heading is "Überschrift" in german: ie: Title, caption, headline. Does not seem right.
+    <string name="sensor_choose_simultaneously">Sensoren lesen</string>
+    <string-array name="sensors_reading_types">
+        <item>Unabhängig</item>
+        <item>Gleichzeitig</item>
+    </string-array>
+    <string name="sensor_noise_reduction">Lesen Durchschnittswert</string>
+    <string-array name="sensor_noise_reduction_types">
+        <item>Deaktiviert</item>
+        <item>Aktiviert</item>
+    </string-array>
+    <string name="sensor_num_measurements">Durchschnittliche Messwerte</string>
+    <string-array name="sensor_num_measurements">
+        <item>10</item>
+        <item>20</item>
+        <item>50</item>
+    </string-array>
+    <string name="sensor_device_heading">Heading</string>
+    <string-array name="sensor_device_headings">
+        <item>Mit dem Gerät zeigen</item>
+    </string-array>
+    <string name="no_sensors">Keine verfügbaren integrierten Sensoren</string>
+    <string name="sensor_choose_tooltip"> Man kann den integrierten Sensor wählen, dessen Genauigkeit am besten passt.</string>
+    <string name="sensor_test_tooltip">Man kann integrierte Sensoren testen. Nur sollte man darauf achten, dass diese nicht immer zuverlässig messen.:\n
+        * Orientierung – Softwarebasierter debrecated = old? if yes : (veralteter) Sensor, der die Position des Geräts\der Geräte ermittelt.\n
+        * Magnetisch – Gemessen durch Magnetismus und Beschleunigungssensoren. Normalerweiße ziemlicg genau. Es wird ein Wert für jeden Sensor ausgegeben.\n
+        * Drehung - Softwarebasierter Bewegungssensor.Verwendet das Gyroskop eines Geräts (zusätzlich zu anderen Sensoren), um die Stabilität und Leistung zu verbessern.\n\n
+        Accuracy:\n
+        -1 - Die Werte, die dieser Sensor liefert sind nicht vertrauenswürdig, da der Sensor keine verbindung mit dem gemessenen Medium hatte.\n
+        0 - Die Werte, die dieser Sensor liefert sind nicht vertrauenswürdig. Der Sensor muss kallibriert werden, oder das Umfeld verhindert die Messung.\n
+        1 - Dieser Sensor liefert ungenaue Werte, eine Kallibrierung mit dieser Umgebung ist nötig\n
+        2 - Dieser Sensor liefert durschnittlich genaue Werte, eine Kallibrierung mit dieser Umgebung könnte die Genauigkeit erhöhen\n
+        3 - yDieser Sensor liefert Werte mit höchster Genauigkeit</string>
+                                                                                                    Not happy with this, not enough data availible for good translation.
+                                                                                                
+    <string name="SENSOR_STATUS_UNRELIABLE">Nicht vertrauenswürdig</string>
+    <string name="SENSOR_STATUS_ACCURACY_LOW">Niedrig</string>
+    <string name="SENSOR_STATUS_ACCURACY_MEDIUM">Mittel</string>
+    <string name="SENSOR_STATUS_ACCURACY_HIGH">Hoch</string>
+    <string name="SENSOR_STATUS_ACCURACY_UNKNOWN">Unbekannt</string>
+    
+    <string name="degrees">\u00B0</string>
+    <string name="grads">grads</string> ??
+    <string name="gps_title">GPS Position</string>
+    <string name="gps_altitude">Höhe (m)</string>
+    <string name="gps_latitude">Längengrad</string>
+    <string name="gps_longitude">Breitengrad</string>
+    <string name="gps_accuracy">Genauigkeit (m)</string>
+    <string name="gps_no_value">Kein Wert</string>
+    <string name="gps_no_value_format">dd.dddddd</string>
+    <string name="gps_save">Speichern</string>
+    <string name="gps_disabled">GPS Ausgeschaltet</string>
+    <string name="gps_no_signal">GPS Position wird gesucht ....</string>
+    <string name="gps_saved_location">Position gespeichert</string>
+    <string name="gps_current_location">Aktuelle Position</string>
+    
+    <string name="gps_error_no_location">Keine GPS Position!</string>
+    <string name="gps_db_error">Position speichern nicht möglich</string>
+    
+    <string name="gps_enable_question">GPS ist deaktiviert. Wollen Sie es in den Einstellungen aus aktivieren?</string>
+
+    <string name="gps_type_title">GPS Typ auswählen</string>
+    <string name="gps_type_auto">GPS Auto</string>
+    <string name="gps_type_manual">GPS Manuell</string>
+
+    <string name="unit_meters">Meter</string>
+    <string name="unit_feets">Fuß</string>
+    <string name="unit_degrees">degrees</string>  ??
+    <string name="unit_grads">grads</string>  ??
+
+    <string name="title_warning">Warnung</string>
+    <string name="error_list_legs">Unable to create list of legs</string>  Leg as a segment or round?  -> ... konnte nicht erstellt werden
+
+
+    <!-- auto backup -->
+    <string name="settings_auto_backup">Auto Backup</string>
+    <string name="settings_auto_backup_info">Exportiert das aktive Projekt alle 5 Minuten zur SD Karte.</string>
+    <string name="settings_import_title">Importieren (experimentell)</string>
+    <string name="settings_import_source">Importieren von:</string>
+    <string name="settings_import_error">Importieren gescheitert bei Reihe %1$d: %2$s:%3$s</string>
+    <string name="settings_import_target_name">Erstelle als:</string>
+    <string name="settings_import_no_files">Exportierte MEssung nicht gefunden</string>
+    <string name="settings_import_info">Generiert Messung aus vorhandener Datei\nBitte nur Datein verwendet, die nach v.1.27 erstellt wurden.\nBilder oder Zeichnungen werden ignoriert.</string>
+
+    <!--opens topo -->
+    <string name="export_openstopo_title">ÖffnetTopo</string>
+    <string name="information">Informationen</string>
+    <string name="info_project_home">Projektordner</string>
+
+    <!-- splash -->
+    <string name="splash_loading">Wird vorbereitet ...</string>
+    <string name="splash_error">Gescheitert: %1$s</string>
+    <string name="splash_error_database">Interne Datenbank nicht verfügbar!</string>
+    <string name="splash_error_storage">Speicher nicht verfügbar!</string>
+    <string name="splash_internal_storage_warning">Externer Speicher nicht verfügbar, auf Projekt Dateien kann nicht mit dem Dateinmanager zugegriffen werden.!</string>
+    <string name="splash_internal_storage_anyway">Internen Speicher trotzdem verwenden</string>
+
+
+</resources>
