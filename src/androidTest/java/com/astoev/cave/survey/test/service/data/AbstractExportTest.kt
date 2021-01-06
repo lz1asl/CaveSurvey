@@ -1,6 +1,5 @@
 package com.astoev.cave.survey.test.service.data
 
-import android.Manifest
 import android.util.Log
 import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
@@ -11,11 +10,9 @@ import com.astoev.cave.survey.test.helper.Common
 import com.astoev.cave.survey.util.FileStorageUtil
 import org.junit.Assert.assertEquals
 import org.junit.Rule
-import org.junit.rules.TestRule
 import java.io.BufferedReader
 import java.io.InputStream
 
-//@RunWith(AndroidJUnit4::class)
 @LargeTest
 abstract class AbstractExportTest {
 
@@ -26,9 +23,8 @@ abstract class AbstractExportTest {
     @get:Rule
     var activityRule: ActivityTestRule<SplashActivity> = ActivityTestRule(SplashActivity::class.java)
 
-    @get:Rule
-    var permissionRule: TestRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-
+    @Rule @JvmField
+    val grantPermissionRule: GrantPermissionRule = GrantPermissionRule.grant(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
     fun findAsset(path: String): InputStream {
         return Common.context.assets.open(path)
