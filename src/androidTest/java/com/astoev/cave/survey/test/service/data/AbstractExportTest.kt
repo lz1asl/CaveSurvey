@@ -1,18 +1,21 @@
 package com.astoev.cave.survey.test.service.data
 
 import android.util.Log
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
 import com.astoev.cave.survey.Constants
-import com.astoev.cave.survey.activity.home.SplashActivity
+import com.astoev.cave.survey.activity.home.SurveysActivity
 import com.astoev.cave.survey.test.helper.Common
 import com.astoev.cave.survey.util.FileStorageUtil
 import org.junit.Assert.assertEquals
 import org.junit.Rule
+import org.junit.runner.RunWith
 import java.io.BufferedReader
 import java.io.InputStream
 
+@RunWith(AndroidJUnit4::class)
 @LargeTest
 abstract class AbstractExportTest {
 
@@ -20,8 +23,8 @@ abstract class AbstractExportTest {
     var PARAM_TODAY = "TODAY"
     var PARAM_CAVESURVEY_VERSION = "CAVESURVEY_VERSION"
 
-    @get:Rule
-    var activityRule: ActivityTestRule<SplashActivity> = ActivityTestRule(SplashActivity::class.java)
+    @Rule @JvmField
+    var activityRule = ActivityTestRule(SurveysActivity::class.java)
 
     @Rule @JvmField
     val grantPermissionRule: GrantPermissionRule = GrantPermissionRule.grant(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
