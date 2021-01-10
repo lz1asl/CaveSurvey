@@ -1,11 +1,12 @@
 package com.astoev.cave.survey.test.helper
 
-import androidx.test.InstrumentationRegistry.getTargetContext
+import android.content.Context
+import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import com.astoev.cave.survey.service.ormlite.DatabaseHelper
 
 object Database {
     fun clearDatabase() {
-        val ctx = getTargetContext()
+        val ctx = getApplicationContext<Context>()
         ctx!!.deleteDatabase(DatabaseHelper.DATABASE_NAME)
         //        new DatabaseHelper(ctx);
     }
