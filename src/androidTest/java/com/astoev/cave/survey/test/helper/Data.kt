@@ -30,6 +30,4 @@ object Data {
                 .filter { file: File -> file.name.startsWith(aSurveyName!!) }.min { f1: File, f2: File -> -f1.name.compareTo(f2.name) }.get()
     }
 
-    val xlsExportFilesCount: Int
-        get() = FileStorageUtil.listProjectFiles(null, ExcelExport.EXCEL_FILE_EXTENSION).size
 }

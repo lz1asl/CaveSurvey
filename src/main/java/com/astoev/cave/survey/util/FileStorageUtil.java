@@ -45,8 +45,9 @@ public class FileStorageUtil {
 
     private static final String FOLDER_DOCUMENTS = "Documents";
     private static final String FOLDER_CAVE_SURVEY = "CaveSurvey";
-    private static final String TIME_PATTERN = "yyyyMMdd";
     private static final int MIN_REQUIRED_STORAGE = 50 * 1024;
+    private static final SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("yyyyMMdd");
+
 
 
     @SuppressLint("SimpleDateFormat")
@@ -63,13 +64,12 @@ public class FileStorageUtil {
             int index = 1;
             String exportName;
             File exportFile;
-            SimpleDateFormat dateFormat = new SimpleDateFormat(TIME_PATTERN);
 
             if (unique) {
 
                 // ensure unique name
                 while (true) {
-                    exportName = getNormalizedProjectName(aProject.getName()) + NAME_DELIMITER + dateFormat.format(new Date()) + NAME_DELIMITER + index;
+                    exportName = getUniqueExportName(aProject.getName(), index);
                     exportFile = new File(projectHome, exportName + anExtension);
                     if (exportFile.exists()) {
                         index++;
@@ -95,6 +95,10 @@ public class FileStorageUtil {
             StreamUtil.closeQuietly(out);
             StreamUtil.closeQuietly(aStream);
         }
+    }
+
+    public static String getUniqueExportName(String aProjectName, int aIndex) {
+        return getNormalizedProjectName(aProjectName) + NAME_DELIMITER + DATE_FORMATTER.format(new Date()) + NAME_DELIMITER + aIndex;
     }
 
     /**

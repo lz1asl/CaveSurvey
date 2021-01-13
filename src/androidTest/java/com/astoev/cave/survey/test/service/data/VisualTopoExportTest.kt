@@ -58,7 +58,7 @@ class VisualTopoExportTest() : AbstractExportTest() {
     fun visualTopoExportNonDefaultUnitsTest() {
 
         // create survey
-        var surveyName = createAndOpenSurvey(false, Option.UNIT_FEET, Option.UNIT_GRADS, Option.UNIT_GRADS)
+        var surveyName = createAndOpenSurvey(null, Option.UNIT_FEET, Option.UNIT_GRADS, Option.UNIT_GRADS)
 
         // first test legs
         selectFirstSurveyLeg()

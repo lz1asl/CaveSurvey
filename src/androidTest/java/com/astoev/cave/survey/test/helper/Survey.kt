@@ -1,20 +1,37 @@
 package com.astoev.cave.survey.test.helper
 
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.matcher.ViewMatchers
 import com.astoev.cave.survey.R.id
+import com.astoev.cave.survey.activity.home.NewProjectActivity
 import com.astoev.cave.survey.model.Option
+import org.hamcrest.BaseMatcher
+import org.hamcrest.Description
 import org.hamcrest.Matchers
+import org.hamcrest.Matchers.allOf
+import org.hamcrest.Matchers.instanceOf
+
 
 object Survey {
     @JvmOverloads
-    fun createSurvey(aName: String?, importFile: Boolean = false,
+    fun createSurvey(aName: String?, importFile: String? = null,
                      distanceUnits: String? = null, azimuthUnits: String? = null, slopeUnits: String? = null) {
         // open new survey screen
         Common.click(id.action_new_project)
-        if (importFile) {
-            selectLastImport()
+        if (importFile != null) {
+            Common.click(id.import_files)
+            onData(allOf(Matchers.`is`(instanceOf(NewProjectActivity.ImportFile::class.java)),
+                    object : BaseMatcher<NewProjectActivity.ImportFile>() {
+                        override fun matches(item: Any?): Boolean {
+                            return item.toString().startsWith(importFile)
+                        }
+
+                        override fun describeTo(description: Description?) {}
+                    }))
+                    .perform(ViewActions.click())
+
         }
 
         // enter name
@@ -32,7 +49,7 @@ object Survey {
 
         // save & go back
         Common.click(id.new_action_create)
-        if (!importFile) {
+        if (importFile == null) {
             Espresso.onView(ViewMatchers.withId(id.point_main_view)).perform(ViewActions.pressBack())
         }
     }
@@ -82,19 +99,12 @@ object Survey {
         }
     }
 
-    fun selectLastImport() {
-        Common.click(id.import_files)
-        Espresso.onData(Matchers.anything()).atPosition(Data.xlsExportFilesCount)
-                .perform(ViewActions.scrollTo(), ViewActions.click())
-        Espresso.onIdle()
-    }
-
     fun openSurvey(aName: String?) {
         Common.click(aName)
     }
 
     @JvmOverloads
-    fun createAndOpenSurvey(importFile: Boolean = false, distanceUnits: String? = null, azimuthUnits: String? = null, slopeUnits: String? = null): String {
+    fun createAndOpenSurvey(importFile: String? = null, distanceUnits: String? = null, azimuthUnits: String? = null, slopeUnits: String? = null): String {
         val surveyName = "" + System.currentTimeMillis()
         Home.goHome()
         createSurvey(surveyName, importFile, distanceUnits, azimuthUnits, slopeUnits)

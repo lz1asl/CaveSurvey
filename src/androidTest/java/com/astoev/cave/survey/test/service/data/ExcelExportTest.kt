@@ -19,6 +19,7 @@ import com.astoev.cave.survey.test.helper.Survey.openLegWithText
 import com.astoev.cave.survey.test.helper.Survey.saveLeg
 import com.astoev.cave.survey.test.helper.Survey.selectFirstSurveyLeg
 import com.astoev.cave.survey.test.helper.Survey.setLegData
+import com.astoev.cave.survey.util.FileStorageUtil.getUniqueExportName
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.io.IOException
@@ -47,7 +48,7 @@ class ExcelExportTest() : AbstractExportTest() {
         assertFirstLegNoSlope(legs)
         assertSecondSimpleLeg(legs)
 
-        // with side measurements
+       // with side measurements
         addLeg(2.3f, 3.4f, 4.5f, 1.1f, 1.2f, 1.3f, 1.4f)
         legs = exportAndRead(surveyName, 3)
         assertFirstLegNoSlope(legs)
@@ -90,7 +91,8 @@ class ExcelExportTest() : AbstractExportTest() {
 
         // now try to import it back and check the data
         goBack()
-        surveyName = createAndOpenSurvey(true, null, null, null)
+        val lastExportName = getUniqueExportName(surveyName, 6)
+        surveyName = createAndOpenSurvey(lastExportName, null, null, null)
         legs = exportAndRead(surveyName, 10)
         assertFirstLegNoSlope(legs)
         assertSecondSimpleLeg(legs)
@@ -105,7 +107,7 @@ class ExcelExportTest() : AbstractExportTest() {
     fun excelExportInNonDefaultUnitsTest() {
 
         // create survey
-        var surveyName = createAndOpenSurvey(false, UNIT_FEET, UNIT_GRADS, UNIT_GRADS);
+        var surveyName = createAndOpenSurvey(null, UNIT_FEET, UNIT_GRADS, UNIT_GRADS);
 
         // empty first leg, units preserved
         var legs = exportAndRead(surveyName, 1, UNIT_FEET, UNIT_GRADS, UNIT_GRADS)

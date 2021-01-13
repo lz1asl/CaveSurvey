@@ -57,7 +57,7 @@ class OpensTopoExportTest() : AbstractExportTest() {
     fun opensTopoExportNonStandardUnitsTest() {
 
         // create survey with non default units
-        var surveyName = createAndOpenSurvey(false, UNIT_FEET, UNIT_GRADS, UNIT_GRADS)
+        var surveyName = createAndOpenSurvey(null, UNIT_FEET, UNIT_GRADS, UNIT_GRADS)
 
         // first test legs - data is the same
         selectFirstSurveyLeg()

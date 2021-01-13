@@ -212,7 +212,7 @@ public class NewProjectActivity extends MainMenuActivity {
         infoDialog.show(getSupportFragmentManager(), IMPORT_TOOLTIP_DIALOG);
     }
 
-    static class ImportFile implements Comparable {
+    public static class ImportFile implements Comparable {
         public static final String NO_FILE_SELECTED = " --- ";
         File file;
 
