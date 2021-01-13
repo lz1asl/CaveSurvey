@@ -12,8 +12,6 @@ import androidx.test.platform.app.InstrumentationRegistry
 import org.hamcrest.CoreMatchers
 
 object Common {
-    val targetContext: Context
-        get() = InstrumentationRegistry.getInstrumentation().targetContext
     val context: Context
         get() = InstrumentationRegistry.getInstrumentation().context
 
@@ -43,16 +41,17 @@ object Common {
 
     fun type(id: Int, value: Number?) {
         if (value != null) {
-            Espresso.onView(ViewMatchers.withId(id)).perform(ViewActions.typeText("" + value))
-            Espresso.onIdle()
+            Espresso.onView(ViewMatchers.withId(id))
+                    .perform(ViewActions.typeText("" + value))
+                    .perform(ViewActions.closeSoftKeyboard())
         }
     }
 
     fun type(id: Int, value: String?) {
         if (value != null) {
-            Espresso.onIdle()
-            Espresso.onView(ViewMatchers.withId(id)).perform(ViewActions.typeText(value))
-            Espresso.onIdle()
+            Espresso.onView(ViewMatchers.withId(id))
+                    .perform(ViewActions.typeText(value))
+                    .perform(ViewActions.closeSoftKeyboard())
         }
     }
 
