@@ -32,7 +32,6 @@ jobs:
       run: ./gradlew test
     - name: Test reports
       uses: actions/upload-artifact@v2
-      if: failure()
       with:
         name: test-reports
         path: build/reports/
@@ -55,7 +54,6 @@ jobs:
           script: ./gradlew connectedCheck
       - name: Test reports
         uses: actions/upload-artifact@v2
-        if: failure()
         with:
           name: test-reports
           path: build/reports/
