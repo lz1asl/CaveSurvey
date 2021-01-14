@@ -34,7 +34,7 @@ index bd8a7d7..2af64a2 100644
 -    implementation files('../CaveSurveyBoschGLM/binary/CaveSurveyBoschGLM.jar')
 -
      // kotlin
-     implementation "androidx.core:core-ktx:+"
+     implementation 'androidx.core:core-ktx:1.3.2'
      implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 diff --git a/src/main/java/com/astoev/cave/survey/service/bluetooth/BluetoothService.java b/src/main/java/com/astoev/cave/survey/service/bluetooth/BluetoothService.java
 index 967a35a..52d109c 100644
