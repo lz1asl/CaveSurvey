@@ -202,5 +202,6 @@ object Survey {
 
     fun saveLeg() {
         Common.click(id.point_action_save)
+        Espresso.onIdle()
     }
 }
