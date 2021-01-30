@@ -22,6 +22,7 @@ jobs:
         path: build/outputs/apk/defaultFlavor/debug
 
   unit-tests:
+    needs: build
     runs-on: ubuntu-latest
     steps:
     - name: checkout
@@ -37,6 +38,7 @@ jobs:
         path: build/reports/
 
   espresso-tests:
+    needs: unit-tests
     runs-on: macos-latest
     strategy:
       matrix:
