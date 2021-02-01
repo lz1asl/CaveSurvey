@@ -56,6 +56,7 @@ jobs:
           script: ./gradlew connectedCheck
       - name: Test reports
         uses: actions/upload-artifact@v2
+        if: always()
         with:
           name: test-reports
           path: build/reports/
@@ -79,6 +80,7 @@ jobs:
           script: ./gradlew connectedCheck
       - name: Test reports
         uses: actions/upload-artifact@v2
+        if: always()
         with:
           name: test-reports
           path: build/reports/
