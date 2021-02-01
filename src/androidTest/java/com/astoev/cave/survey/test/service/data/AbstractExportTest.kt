@@ -1,9 +1,9 @@
 package com.astoev.cave.survey.test.service.data
 
 import android.util.Log
+import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
-import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
 import com.astoev.cave.survey.Constants
 import com.astoev.cave.survey.activity.home.SurveysActivity
@@ -24,7 +24,7 @@ abstract class AbstractExportTest {
     var PARAM_CAVESURVEY_VERSION = "CAVESURVEY_VERSION"
 
     @Rule @JvmField
-    var activityRule = ActivityTestRule(SurveysActivity::class.java)
+    var activityRule = ActivityScenarioRule(SurveysActivity::class.java)
 
     @Rule @JvmField
     val grantPermissionRule: GrantPermissionRule = GrantPermissionRule.grant(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
