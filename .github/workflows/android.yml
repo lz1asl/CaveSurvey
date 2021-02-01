@@ -61,7 +61,7 @@ jobs:
           path: build/reports/
 
   espresso-tests-29:
-    needs: unit-tests
+    needs: espresso-tests-28
     runs-on: macos-latest
     steps:
       - name: checkout
