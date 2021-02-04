@@ -43,7 +43,14 @@ public class VectorDialog extends DialogFragment implements BTResultAware, Azimu
     private Leg mLeg;
     private View mView;
 
-    FragmentManager mSupportFragmentManager;
+    private FragmentManager mSupportFragmentManager;
+
+    // fields
+    private EditText mDistanceField;
+    private EditText mAzimuthField;
+    private EditText mSlopeField;
+
+    private AddVectorListener saveButtonListener;
 
     public VectorDialog() {
     }
@@ -69,7 +76,8 @@ public class VectorDialog extends DialogFragment implements BTResultAware, Azimu
         mLeg = getArguments() != null ? (Leg)getArguments().getSerializable(LEG) : null;
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(getString(R.string.main_add_vector));
+        int vectorsCount = refreshVectors();
+        builder.setTitle(buildTitle(vectorsCount));
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
         final View view = inflater.inflate(R.layout.vector_dialog, null);
@@ -78,47 +86,60 @@ public class VectorDialog extends DialogFragment implements BTResultAware, Azimu
 
         // Bluetooth registrations
         mReceiver = new BTMeasureResultReceiver(this);
-        EditText distanceField = mView.findViewById(R.id.vector_distance);
-        mReceiver.bindBTMeasures(distanceField, Constants.Measures.distance, false, new Constants.Measures[] {Constants.Measures.angle, Constants.Measures.slope});
+        mDistanceField = mView.findViewById(R.id.vector_distance);
+        mReceiver.bindBTMeasures(mDistanceField, Constants.Measures.distance, false, new Constants.Measures[] {Constants.Measures.angle, Constants.Measures.slope});
 
-        EditText angleField = mView.findViewById(R.id.vector_azimuth);
-        mReceiver.bindBTMeasures(angleField, Constants.Measures.angle, false, new Constants.Measures[] {Constants.Measures.distance, Constants.Measures.slope});
+        mAzimuthField = mView.findViewById(R.id.vector_azimuth);
+        mReceiver.bindBTMeasures(mAzimuthField, Constants.Measures.angle, false, new Constants.Measures[] {Constants.Measures.distance, Constants.Measures.slope});
 
-        EditText slopeField = mView.findViewById(R.id.vector_slope);
-        mReceiver.bindBTMeasures(slopeField, Constants.Measures.slope, false, new Constants.Measures[] {Constants.Measures.angle, Constants.Measures.distance});
+        mSlopeField = mView.findViewById(R.id.vector_slope);
+        mReceiver.bindBTMeasures(mSlopeField, Constants.Measures.slope, false, new Constants.Measures[] {Constants.Measures.angle, Constants.Measures.distance});
 
-        MeasurementsUtil.bindSensorsAwareFields(angleField, slopeField, mSupportFragmentManager);
+        MeasurementsUtil.bindSensorsAwareFields(mAzimuthField, mSlopeField, mSupportFragmentManager);
 
         final Dialog dialog = builder.create();
 
         Button addButton = view.findViewById(R.id.vector_add);
         addButton.setOnClickListener(new AddVectorListener(mView, dialog, false));
         Button addAgainButton = view.findViewById(R.id.vector_add_again);
-        addAgainButton.setOnClickListener(new AddVectorListener(mView, dialog, true));
+        saveButtonListener = new AddVectorListener(mView, dialog, true);
+        addAgainButton.setOnClickListener(saveButtonListener);
 
         return dialog;
     }
 
+    private String buildTitle(int aVectorsCount) {
+        return getString(R.string.main_add_vector) + " " + (aVectorsCount + 1);
+    }
+
     @Override
     public void onReceiveMeasures(Constants.Measures aMeasureTarget, float aMeasureValue) {
+        // populate
         switch (aMeasureTarget) {
             case distance:
                 Log.i(Constants.LOG_TAG_UI, "Got vector distance " + aMeasureValue);
-                populateMeasure(aMeasureValue, R.id.vector_distance);
+                populateMeasure(aMeasureValue, mDistanceField);
                 break;
 
             case angle:
                 Log.i(Constants.LOG_TAG_UI, "Got vector angle " + aMeasureValue);
-                populateMeasure(aMeasureValue, R.id.vector_azimuth);
+                populateMeasure(aMeasureValue, mAzimuthField);
                 break;
 
             case slope:
                 Log.i(Constants.LOG_TAG_UI, "Got vector slope " + aMeasureValue);
-                populateMeasure(aMeasureValue, R.id.vector_slope);
+                populateMeasure(aMeasureValue, mSlopeField);
                 break;
 
             default:
                 Log.i(Constants.LOG_TAG_UI, "Ignore type " + aMeasureTarget);
+        }
+
+        // if last measurement for the vector try to save
+        if (!StringUtils.isEmpty(mDistanceField)
+                && !StringUtils.isEmpty(mAzimuthField) && !StringUtils.isEmpty(mSlopeField)) {
+            Log.i(Constants.LOG_TAG_SERVICE, "Auto save vecotr");
+            saveButtonListener.onClick(null);
         }
     }
 
@@ -127,13 +148,12 @@ public class VectorDialog extends DialogFragment implements BTResultAware, Azimu
      */
     @Override
     public void onAzimuthChanged(float newValueArg) {
-        EditText angleField = mView.findViewById(R.id.vector_azimuth);
-        angleField.setText(String.valueOf(newValueArg));
+        mAzimuthField.setText(String.valueOf(newValueArg));
     }
 
-    private void populateMeasure(float aMeasure, int anEditTextId) {
-        EditText field = mView.findViewById(anEditTextId);
-        StringUtils.setNotNull(field, aMeasure);
+    private void populateMeasure(float aMeasure, EditText aField) {
+        StringUtils.setNotNull(aField, aMeasure);
+        mAzimuthField.invalidate();
     }
 
     private class AddVectorListener implements View.OnClickListener {
@@ -148,59 +168,60 @@ public class VectorDialog extends DialogFragment implements BTResultAware, Azimu
             mPrepareNewVector = aPrepareNewVector;
         }
 
-            @Override
-            public void onClick(View v) {
+        @Override
+        public void onClick(View v) {
 
-                // get values
-                EditText distanceEdit = mView.findViewById(R.id.vector_distance);
-                EditText azimuthEdit = mView.findViewById(R.id.vector_azimuth);
-                EditText slopeEdit = mView.findViewById(R.id.vector_slope);
+            // validate
+            boolean valid = true;
+            valid = valid && UIUtilities.validateNumber(mDistanceField, true);
+            valid = valid && UIUtilities.validateNumber(mAzimuthField, true) && UIUtilities.checkAzimuth(mAzimuthField);
+            valid = valid && UIUtilities.validateNumber(mSlopeField, false) && UIUtilities.checkSlope(mSlopeField);
 
-                // validate
-                boolean valid = true;
-                valid = valid && UIUtilities.validateNumber(distanceEdit, true);
-                valid = valid && UIUtilities.validateNumber(azimuthEdit, true) && UIUtilities.checkAzimuth(azimuthEdit);
-                valid = valid && UIUtilities.validateNumber(slopeEdit, false) && UIUtilities.checkSlope(slopeEdit);
-
-                if (!valid) {
-                    return;
-                }
-
-                // persist
-                try {
-                    Vector vector = new Vector();
-                    vector.setDistance(StringUtils.getFromEditTextNotNull(distanceEdit));
-                    vector.setAzimuth(StringUtils.getFromEditTextNotNull(azimuthEdit));
-                    vector.setSlope(StringUtils.getFromEditTextNotNull(slopeEdit));
-                    vector.setPoint(mLeg.getFromPoint());
-                    vector.setGalleryId(mLeg.getGalleryId());
-
-                    DaoUtil.saveVector(vector);
-                } catch (SQLException e) {
-                    Log.e(Constants.LOG_TAG_UI, "Failed to add vector", e);
-                    UIUtilities.showNotification(R.string.error);
-                }
-
-                // refresh parent
-                Activity parent = getActivity();
-                if (parent instanceof PointActivity) {
-                    ((PointActivity) parent).loadLegVectors(mLeg);
-                }
-
-                if (mPrepareNewVector) {
-                    // notify saved
-                    Log.i(Constants.LOG_TAG_UI, "Vector saved, cleaning");
-                    UIUtilities.showNotification(R.string.action_saved);
-
-                    // reset values and stay here
-                    distanceEdit.setText(null);
-                    azimuthEdit.setText(null);
-                    slopeEdit.setText(null);
-                } else {
-                    // go back
-                    Log.i(Constants.LOG_TAG_UI, "Vector saved, going back");
-                    mDialog.dismiss();
-                }
+            if (!valid) {
+                return;
             }
+
+            // persist
+            try {
+                Vector vector = new Vector();
+                vector.setDistance(StringUtils.getFromEditTextNotNull(mDistanceField));
+                vector.setAzimuth(StringUtils.getFromEditTextNotNull(mAzimuthField));
+                vector.setSlope(StringUtils.getFromEditTextNotNull(mSlopeField));
+                vector.setPoint(mLeg.getFromPoint());
+                vector.setGalleryId(mLeg.getGalleryId());
+
+                DaoUtil.saveVector(vector);
+            } catch (SQLException e) {
+                Log.e(Constants.LOG_TAG_UI, "Failed to add vector", e);
+                UIUtilities.showNotification(R.string.error);
+            }
+
+            // refresh parent
+            int numVectors = refreshVectors();
+
+            if (mPrepareNewVector) {
+                // notify saved
+                Log.i(Constants.LOG_TAG_UI, "Vector saved, cleaning");
+                UIUtilities.showNotification(R.string.action_saved);
+
+                // reset values and stay here
+                mDistanceField.setText(null);
+                mAzimuthField.setText(null);
+                mSlopeField.setText(null);
+                mDialog.setTitle(buildTitle(numVectors));
+            } else {
+                // go back
+                Log.i(Constants.LOG_TAG_UI, "Vector saved, going back");
+                mDialog.dismiss();
+            }
+        }
+    }
+
+    private int refreshVectors() {
+        Activity parent = getActivity();
+        if (parent instanceof PointActivity) {
+            return ((PointActivity) parent).loadLegVectors(mLeg);
+        }
+        return 0;
     }
 }
