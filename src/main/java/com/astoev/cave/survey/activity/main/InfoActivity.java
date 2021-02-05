@@ -62,15 +62,20 @@ public class InfoActivity extends MainMenuActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.info);
 
-        try {
-            if (findViewById(R.id.projectInfoContainer) != null){
-                if (savedInstanceState == null){
-                    ProjectConfig projectConfig = DaoUtil.getProjectConfig();
-                    ProjectFragment projectFragment = ProjectFragment.newInstance(projectConfig);
+        if (findViewById(R.id.projectInfoContainer) != null){
+            if (savedInstanceState == null){
+                ProjectConfig projectConfig = DaoUtil.getProjectConfig();
+                ProjectFragment projectFragment = ProjectFragment.newInstance(projectConfig);
 
-                    getSupportFragmentManager().beginTransaction().add(R.id.projectInfoContainer, projectFragment).commit();
-                }
+                getSupportFragmentManager().beginTransaction().add(R.id.projectInfoContainer, projectFragment).commit();
             }
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        try {
 
             ProjectInfo projectInfo = DaoUtil.getProjectInfo();
 
