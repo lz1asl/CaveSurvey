@@ -1,6 +1,5 @@
 package com.astoev.cave.survey.service.bluetooth;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -8,7 +7,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.ResultReceiver;
 import android.util.Log;
@@ -63,7 +61,6 @@ public class CommDeviceCommunicationThread extends Thread {
         registerListeners(ConfigUtil.getContext());
     }
 
-    @TargetApi(Build.VERSION_CODES.GINGERBREAD_MR1)
     private BluetoothSocket createSocketApi10Plus() throws IOException {
         return mDevice.createInsecureRfcommSocketToServiceRecord(mDeviceSpec.getSPPUUID());
     }

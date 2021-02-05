@@ -11,12 +11,10 @@ import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
-import android.bluetooth.BluetoothSocket;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanResult;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.ResultReceiver;
 import android.util.Log;
@@ -55,7 +53,6 @@ import com.astoev.cave.survey.service.bluetooth.lecommands.WriteDescriptorComman
 import com.astoev.cave.survey.util.ConfigUtil;
 import com.astoev.cave.survey.util.StringUtils;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -69,7 +66,6 @@ import java.util.concurrent.Semaphore;
 import static android.bluetooth.BluetoothGatt.GATT_SUCCESS;
 import static android.content.Context.BLUETOOTH_SERVICE;
 import static android.os.Build.VERSION.SDK_INT;
-import static android.os.Build.VERSION_CODES.GINGERBREAD;
 import static android.os.Build.VERSION_CODES.JELLY_BEAN_MR2;
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static com.astoev.cave.survey.Constants.LOG_TAG_BT;
@@ -284,11 +280,6 @@ public class BluetoothService {
                 UIUtilities.showNotification("Unsupported Android version for BLE");
             }
         }
-    }
-
-    @TargetApi(Build.VERSION_CODES.GINGERBREAD_MR1)
-    public static BluetoothSocket callSafeCreateInsecureRfcommSocketToServiceRecord(BluetoothDevice deviceaArg) throws IOException {
-        return deviceaArg.createInsecureRfcommSocketToServiceRecord(((AbstractBluetoothRFCOMMDevice) mSelectedDeviceSpec).getSPPUUID());
     }
 
     public static boolean isPaired() {
@@ -530,7 +521,6 @@ public class BluetoothService {
         expectingMeasurement = false;
     }
 
-    @TargetApi(GINGERBREAD)
     public static void dequeueCommand(){
         Log.d(LOG_TAG_BT, "Dequeue command");
         if (!mCommandQueue.isEmpty()) {
