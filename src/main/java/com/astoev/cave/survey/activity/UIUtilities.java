@@ -98,6 +98,7 @@ public class UIUtilities {
         if (StringUtils.isEmpty(aEditField)) {
             if (isRequired) {
                 aEditField.setError(aEditField.getContext().getString(R.string.required));
+                aEditField.requestFocus();
                 return false;
             }
             return true;
@@ -106,6 +107,7 @@ public class UIUtilities {
                 return true;
             } else {
                 aEditField.setError(aEditField.getContext().getString(R.string.invalid));
+                aEditField.requestFocus();
                 return false;
             }
         }
@@ -116,6 +118,7 @@ public class UIUtilities {
 
         if (!valid) {
             aEditText.setError(aEditText.getContext().getString(R.string.invalid));
+            aEditText.requestFocus();
         }
 
         return valid;

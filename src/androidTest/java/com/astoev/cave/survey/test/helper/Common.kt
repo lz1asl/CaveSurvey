@@ -42,16 +42,16 @@ object Common {
     fun type(id: Int, value: Number?) {
         if (value != null) {
             Espresso.onView(ViewMatchers.withId(id))
-                    .perform(ViewActions.typeText("" + value))
-                    .perform(ViewActions.closeSoftKeyboard())
+                    .perform(ViewActions.typeText("" + value),
+                            ViewActions.closeSoftKeyboard())
         }
     }
 
     fun type(id: Int, value: String?) {
         if (value != null) {
             Espresso.onView(ViewMatchers.withId(id))
-                    .perform(ViewActions.typeText(value))
-                    .perform(ViewActions.closeSoftKeyboard())
+                    .perform(ViewActions.typeText(value),
+                            ViewActions.closeSoftKeyboard())
         }
     }
 

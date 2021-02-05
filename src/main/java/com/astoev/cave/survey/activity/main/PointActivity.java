@@ -671,16 +671,16 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         slope.setText(String.valueOf(newValueArg));
     }
 
-    public void loadLegVectors(Leg aLegEdited) {
+    public int loadLegVectors(Leg aLegEdited) {
 
         if (aLegEdited.isNew()) {
             // no vectors anyway
-            return;
+            return 0;
         }
 
         if (aLegEdited.isMiddle()) {
             // no need to proceed
-            return;
+            return 0;
         }
 
         try {
@@ -758,9 +758,11 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
             } else {
                 vectorsTable.setVisibility(View.INVISIBLE);
             }
+            return vectorsList.size();
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to load vectors", e);
             UIUtilities.showNotification(R.string.error);
+            return 0;
         }
     }
 

@@ -167,13 +167,14 @@ object Survey {
         // select leg
         Common.click("Add Vector")
 
-        // set data
-        Common.type(id.vector_distance, aDistance)
-        Common.type(id.vector_azimuth, anAzimuth)
-        Common.type(id.vector_slope, aSlope)
+        Espresso.onView(ViewMatchers.withText("Add Vector"))
+                .apply { // set data
+                    Common.type(id.vector_distance, aDistance)
+                    Common.type(id.vector_azimuth, anAzimuth)
+                    Common.type(id.vector_slope, aSlope)
 
-        // save
-        Common.click(id.vector_add)
+                    // save
+                    Common.click(id.vector_add) }
     }
 
     fun addCoordinate(lat: Float, lon: Float, altitude: Int, precision: Int) {
@@ -202,6 +203,7 @@ object Survey {
 
     fun saveLeg() {
         Common.click(id.point_action_save)
+        Espresso.onView(ViewMatchers.withText("Current leg"))
         Espresso.onIdle()
     }
 }
