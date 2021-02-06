@@ -37,9 +37,12 @@ jobs:
         name: test-reports
         path: build/reports/
 
-  espresso-tests-28:
+  espresso-tests:
     needs: unit-tests
     runs-on: macos-latest
+    strategy:
+      matrix:
+        api-level: [15, 28, 29, 30]
     steps:
       - name: checkout
         uses: actions/checkout@v2
@@ -48,7 +51,7 @@ jobs:
       - name: Espresso tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 28
+          api-level: ${{ matrix.api-level }}
           target: default
           arch: x86
           profile: Nexus 6
@@ -60,28 +63,3 @@ jobs:
         with:
           name: test-reports
           path: build/reports/
-
-  espresso-tests-29:
-    needs: espresso-tests-28
-    runs-on: macos-latest
-    steps:
-      - name: checkout
-        uses: actions/checkout@v2
-      - name: Patch No Bosch Library
-        run: git apply --ignore-space-change --ignore-whitespace no_bosch_library.patch
-      - name: Espresso tests
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: 29
-          target: default
-          arch: x86
-          profile: Nexus 6
-          sdcard-path-or-size: 100M
-          script: ./gradlew connectedCheck
-      - name: Test reports
-        uses: actions/upload-artifact@v2
-        if: always()
-        with:
-          name: test-reports
-          path: build/reports/
-
