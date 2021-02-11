@@ -30,6 +30,7 @@ import com.astoev.cave.survey.activity.main.Refresheable;
 import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.device.AbstractBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.ble.AbstractBluetoothLEDevice;
+import com.astoev.cave.survey.service.bluetooth.device.ble.Bric4BluetoothLEDevice;
 import com.astoev.cave.survey.service.bluetooth.device.ble.LeicaDistoBluetoothLEDevice;
 import com.astoev.cave.survey.service.bluetooth.device.ble.StanleyBluetoothLeDevice;
 import com.astoev.cave.survey.service.bluetooth.device.ble.mileseey.HerschLEM50BluetoothLeDevice;
@@ -110,6 +111,8 @@ public class BluetoothService {
         SUPPORTED_BLUETOOTH_LE_DEVICES.add(new StanleyBluetoothLeDevice());
         SUPPORTED_BLUETOOTH_LE_DEVICES.add(new SuaokiP7BluetoothLeDevice());
         SUPPORTED_BLUETOOTH_LE_DEVICES.add(new HerschLEM50BluetoothLeDevice());
+        SUPPORTED_BLUETOOTH_LE_DEVICES.add(new Bric4BluetoothLEDevice());
+
     }
 
     // generic
@@ -480,8 +483,6 @@ public class BluetoothService {
         AbstractBluetoothDevice deviceParent = BluetoothService.getSupportedDevice(device);
 
         if (deviceParent != null && deviceParent instanceof AbstractBluetoothLEDevice) {
-            AbstractBluetoothLEDevice deviceSpec = (AbstractBluetoothLEDevice) deviceParent;
-
             Log.i(LOG_TAG_BT, "Discovered LE device " + rssi + " : " + device.getName());
 
             mLastLEDevice = device;
@@ -653,10 +654,12 @@ public class BluetoothService {
                 if (mReceiver != null) {
                     Log.d(LOG_TAG_BT, "processing " + characteristic.getUuid());
                     // decode
-                    Measure measure = ((AbstractBluetoothLEDevice) mSelectedDeviceSpec).characteristicToMeasure(characteristic, mMeasureTypes);
+                    List<Measure> measures = ((AbstractBluetoothLEDevice) mSelectedDeviceSpec).characteristicToMeasures(characteristic, mMeasureTypes);
 
                     // consume
-                    sendMeasureToUI(measure);
+                    for (Measure measure : measures) {
+                        sendMeasureToUI(measure);
+                    }
                 } else {
                     Log.d(LOG_TAG_BT, "No receiver");
                 }
