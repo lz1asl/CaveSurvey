@@ -36,6 +36,7 @@ public class VectorsModeDialog extends DialogFragment {
         builder.setAdapter(modesAdaptor, (dialogArg, mode) -> {
             Log.i(Constants.LOG_TAG_SERVICE, "Update vectors mode to " + mode);
             ConfigUtil.setIntProperty(ConfigUtil.PREF_VECTORS_MODE, mode);
+            dismiss();
         });
 
         builder.setNegativeButton(android.R.string.cancel, (dialogArg, whichArg) -> {
