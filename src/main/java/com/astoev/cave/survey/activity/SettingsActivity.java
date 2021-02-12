@@ -10,6 +10,7 @@ import android.widget.ToggleButton;
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.dialog.LanguageDialog;
+import com.astoev.cave.survey.activity.dialog.VectorsModeDialog;
 import com.astoev.cave.survey.activity.poc.SensorsActivity;
 import com.astoev.cave.survey.fragment.InfoDialogFragment;
 import com.astoev.cave.survey.util.ConfigUtil;
@@ -21,6 +22,7 @@ public class SettingsActivity extends MainMenuActivity {
 
     private static final String LANGUAGE_DIALOG = "LANGUAGE_DIALOG";
     private static final String AUTO_BACKUP_TOOLTIP_DIALOG = "AUTO_BACKUP_TOOLTIP_DIALOG";
+    private static final String VECTORS_DIALOG = "VECTORS_DIALOG";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -29,6 +31,7 @@ public class SettingsActivity extends MainMenuActivity {
 
         prepareLanguage();
         prepareSensors();
+        prepareVectors();
         prepareAutoBackup();
     }
 
@@ -49,6 +52,16 @@ public class SettingsActivity extends MainMenuActivity {
             languageDialog.show(getSupportFragmentManager(), LANGUAGE_DIALOG);
         });
     }
+
+    private void prepareVectors() {
+
+        TextView vectors = findViewById(R.id.settingsVectors);
+        vectors.setOnClickListener(v -> {
+            VectorsModeDialog vectorsDialog = new VectorsModeDialog();
+            vectorsDialog.show(getSupportFragmentManager(), VECTORS_DIALOG);
+        });
+    }
+
 
     private void prepareAutoBackup() {
         ToggleButton autoBackupToggle = findViewById(R.id.settingsBackupToggle);

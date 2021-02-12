@@ -25,6 +25,7 @@ public class ConfigUtil {
     public static final String PREF_SENSOR_SIMULTANEOUSLY = "sensor_simulateneously";
     public static final String PREF_SENSOR_NOISE_REDUCTION = "sensor_noise_reduction";
     public static final String PREF_SENSOR_NOISE_REDUCTION_NUM_MEASUREMENTS = "sensor_noise_reduction_measurements";
+    public static final String PREF_VECTORS_MODE = "vectors_mode";
 
     private static Activity mAppContext;
 
