@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,10 +26,14 @@ import com.astoev.cave.survey.service.bluetooth.BTMeasureResultReceiver;
 import com.astoev.cave.survey.service.bluetooth.BTResultAware;
 import com.astoev.cave.survey.service.bluetooth.util.MeasurementsUtil;
 import com.astoev.cave.survey.service.orientation.AzimuthChangedListener;
+import com.astoev.cave.survey.util.ConfigUtil;
 import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.util.StringUtils;
 
 import java.sql.SQLException;
+
+import static com.astoev.cave.survey.activity.dialog.VectorsModeDialog.MODE_SAVE_ON_RECEIVE;
+import static com.astoev.cave.survey.activity.dialog.VectorsModeDialog.MODE_SCAN;
 
 /**
  *
@@ -52,6 +57,8 @@ public class VectorDialog extends DialogFragment implements BTResultAware, Azimu
 
     private AddVectorListener saveButtonListener;
 
+    private int mode;
+
     public VectorDialog() {
     }
 
@@ -72,6 +79,12 @@ public class VectorDialog extends DialogFragment implements BTResultAware, Azimu
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceStateArg) {
+
+        mode = ConfigUtil.getIntProperty(ConfigUtil.PREF_VECTORS_MODE, VectorsModeDialog.MODE_SINGLE);
+        if (MODE_SCAN == mode) {
+            Log.i(Constants.LOG_TAG_BT, "Start scanning mode");
+            // TODO
+        }
 
         mLeg = getArguments() != null ? (Leg)getArguments().getSerializable(LEG) : null;
 
@@ -135,11 +148,15 @@ public class VectorDialog extends DialogFragment implements BTResultAware, Azimu
                 Log.i(Constants.LOG_TAG_UI, "Ignore type " + aMeasureTarget);
         }
 
-        // if last measurement for the vector try to save
-        if (!StringUtils.isEmpty(mDistanceField)
-                && !StringUtils.isEmpty(mAzimuthField) && !StringUtils.isEmpty(mSlopeField)) {
-            Log.i(Constants.LOG_TAG_SERVICE, "Auto save vecotr");
-            saveButtonListener.onClick(null);
+        // configured to continue
+        if (MODE_SCAN == mode || MODE_SAVE_ON_RECEIVE == mode) {
+
+            // if last measurement for the vector try to save
+            if (!StringUtils.isEmpty(mDistanceField)
+                    && !StringUtils.isEmpty(mAzimuthField) && !StringUtils.isEmpty(mSlopeField)) {
+                Log.i(Constants.LOG_TAG_SERVICE, "Auto save vecotr");
+                saveButtonListener.onClick(null);
+            }
         }
     }
 
@@ -223,5 +240,13 @@ public class VectorDialog extends DialogFragment implements BTResultAware, Azimu
             return ((PointActivity) parent).loadLegVectors(mLeg);
         }
         return 0;
+    }
+
+    @Override
+    public void onDismiss(@NonNull DialogInterface dialog) {
+        super.onDismiss(dialog);
+        if (MODE_SCAN == mode) {
+            // TODO stop the scanning mode
+        }
     }
 }

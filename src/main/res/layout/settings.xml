@@ -24,6 +24,14 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_margin="10dp"/>
 
+        <TextView
+            android:id="@+id/settingsVectors"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_vectors"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_margin="10dp"/>
+
         <!-- auto backup -->
         <RelativeLayout
             android:layout_width="fill_parent"
