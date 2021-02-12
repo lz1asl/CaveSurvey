@@ -191,9 +191,15 @@ public class BluetoothService {
             AbstractBluetoothLEDevice leDevice = (AbstractBluetoothLEDevice) mSelectedDeviceSpec;
             if (leDevice.needCharacteristicPull() && SDK_INT >= JELLY_BEAN_MR2) {
                 Log.i(LOG_TAG_BT, "Request LE pull");
+                // device specific
                 Constants.MeasureTypes type = getMeasureTypeFromTarget(aMeasure);
-                BluetoothGattCharacteristic c = mBluetoothGatt.getService(leDevice.getService(type)).getCharacteristic(leDevice.getCharacteristic(type));
-                enqueueCommand(new PullCharacteristicCommand(c, leDevice));
+                AbstractBluetoothCommand deviceCommand = leDevice.getReadCharacteristicCommand(type);
+                if (deviceCommand == null) {
+                    // generic pull command
+                    BluetoothGattCharacteristic c = mBluetoothGatt.getService(leDevice.getService(type)).getCharacteristic(leDevice.getCharacteristic(type));
+                    deviceCommand = new PullCharacteristicCommand(c, leDevice);
+                }
+                enqueueCommand(deviceCommand);
             }
 
         } else {

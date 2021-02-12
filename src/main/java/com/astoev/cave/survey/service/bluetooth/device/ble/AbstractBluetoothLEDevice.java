@@ -9,6 +9,7 @@ import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.Measure;
 import com.astoev.cave.survey.service.bluetooth.device.AbstractBluetoothDevice;
+import com.astoev.cave.survey.service.bluetooth.lecommands.AbstractBluetoothCommand;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -81,5 +82,13 @@ public abstract class AbstractBluetoothLEDevice extends AbstractBluetoothDevice 
     @Override
     public int getDeviceType() {
         return DEVICE_TYPE_LE;
+    }
+
+    public AbstractBluetoothCommand getReadCharacteristicCommand(Constants.MeasureTypes aType) {
+        return null;
+    }
+
+    public AbstractBluetoothCommand getScanCommand() {
+        return null;
     }
 }
