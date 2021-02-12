@@ -367,13 +367,15 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
     }
 
     private void vectorButton() {
-        VectorDialog dialog = new VectorDialog(getSupportFragmentManager());
-        Bundle bundle = new Bundle();
-        Leg leg = getCurrentLeg();
-        bundle.putSerializable(VectorDialog.LEG, leg);
-        dialog.setCancelable(true);
-        dialog.setArguments(bundle);
-        dialog.show(getSupportFragmentManager(), VECTOR_DIALOG);
+        if (saveLeg()) {
+            VectorDialog dialog = new VectorDialog(getSupportFragmentManager());
+            Bundle bundle = new Bundle();
+            Leg leg = getCurrentLeg();
+            bundle.putSerializable(VectorDialog.LEG, leg);
+            dialog.setCancelable(true);
+            dialog.setArguments(bundle);
+            dialog.show(getSupportFragmentManager(), VECTOR_DIALOG);
+        }
     }
 
     public void deleteButton() {
@@ -584,12 +586,6 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
             // if there is no camera remove the photo button
             MenuItem photoMenuItem = menu.findItem(R.id.point_action_photo);
             photoMenuItem.setVisible(false);
-        }
-
-        // allow vectors for saved legs
-        if (mCurrentLeg != null && !mCurrentLeg.isNew() && !currLeg.isMiddle()) {
-            MenuItem photoMenuItem = menu.findItem(R.id.point_action_add_vector);
-            photoMenuItem.setVisible(true);
         }
 
         try {
