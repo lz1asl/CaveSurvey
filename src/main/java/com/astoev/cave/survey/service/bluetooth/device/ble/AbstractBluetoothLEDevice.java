@@ -88,7 +88,9 @@ public abstract class AbstractBluetoothLEDevice extends AbstractBluetoothDevice 
         return null;
     }
 
-    public AbstractBluetoothCommand getScanCommand() {
+    public AbstractBluetoothCommand getStartScanCommand() {
         return null;
     }
+
+    public AbstractBluetoothCommand getStopScanCommand() { return null; };
 }

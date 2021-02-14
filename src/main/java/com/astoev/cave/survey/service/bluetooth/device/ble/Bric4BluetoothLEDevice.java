@@ -128,9 +128,15 @@ public class Bric4BluetoothLEDevice extends AbstractBluetoothLEDevice {
     }
 
     @Override
-    public AbstractBluetoothCommand getScanCommand() {
+    public AbstractBluetoothCommand getStartScanCommand() {
         // turn the laser on or take measurement if on
         return new WriteCharacteristicCommand(DEVICE_CONTROL_SERVICE_UUID, DEVICE_COMMAND_CHARACTERISTIC_UUID, COMMAND_SCAN);
+    }
+
+    @Override
+    public AbstractBluetoothCommand getStopScanCommand() {
+        // any other command will interrupt the scan
+       return getReadCharacteristicCommand(null);
     }
 
     private Float asFloat(byte[] message, int start) {

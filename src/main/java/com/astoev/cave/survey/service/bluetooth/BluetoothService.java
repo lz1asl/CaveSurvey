@@ -207,6 +207,40 @@ public class BluetoothService {
         }
     }
 
+    public static void startScanning() {
+
+        if (mBluetoothGatt != null) {
+            AbstractBluetoothLEDevice leDevice = (AbstractBluetoothLEDevice) mSelectedDeviceSpec;
+            AbstractBluetoothCommand startScanCommand = leDevice.getStartScanCommand();
+            if (startScanCommand != null) {
+                Log.i(LOG_TAG_BT, "Request LE stop scan");
+                expectingMeasurement = false;
+                enqueueCommand(startScanCommand);
+            } else {
+                Log.d(LOG_TAG_BT, "Device don't support scanning");
+            }
+        } else {
+            Log.d(LOG_TAG_BT, "Drop BT command : inactive communication : ");
+        }
+    }
+
+    public static void stopScanning() {
+        expectingMeasurement = false;
+
+        if (mBluetoothGatt != null) {
+            AbstractBluetoothLEDevice leDevice = (AbstractBluetoothLEDevice) mSelectedDeviceSpec;
+            AbstractBluetoothCommand stopScanCommand = leDevice.getStopScanCommand();
+            if (stopScanCommand != null) {
+                Log.i(LOG_TAG_BT, "Request LE stop scan");
+                enqueueCommand(stopScanCommand);
+            } else {
+                Log.d(LOG_TAG_BT, "Device don't support scanning");
+            }
+        } else {
+            Log.d(LOG_TAG_BT, "Drop BT command : inactive communication : ");
+        }
+    }
+
     public static Constants.MeasureTypes getMeasureTypeFromTarget(Constants.Measures aMeasure) {
         switch (aMeasure) {
             case distance:

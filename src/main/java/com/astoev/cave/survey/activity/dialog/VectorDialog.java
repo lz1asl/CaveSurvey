@@ -24,6 +24,7 @@ import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Vector;
 import com.astoev.cave.survey.service.bluetooth.BTMeasureResultReceiver;
 import com.astoev.cave.survey.service.bluetooth.BTResultAware;
+import com.astoev.cave.survey.service.bluetooth.BluetoothService;
 import com.astoev.cave.survey.service.bluetooth.util.MeasurementsUtil;
 import com.astoev.cave.survey.service.orientation.AzimuthChangedListener;
 import com.astoev.cave.survey.util.ConfigUtil;
@@ -83,7 +84,7 @@ public class VectorDialog extends DialogFragment implements BTResultAware, Azimu
         mode = ConfigUtil.getIntProperty(ConfigUtil.PREF_VECTORS_MODE, VectorsModeDialog.MODE_SINGLE);
         if (MODE_SCAN == mode) {
             Log.i(Constants.LOG_TAG_BT, "Start scanning mode");
-            // TODO
+            BluetoothService.startScanning();
         }
 
         mLeg = getArguments() != null ? (Leg)getArguments().getSerializable(LEG) : null;
@@ -154,7 +155,7 @@ public class VectorDialog extends DialogFragment implements BTResultAware, Azimu
             // if last measurement for the vector try to save
             if (!StringUtils.isEmpty(mDistanceField)
                     && !StringUtils.isEmpty(mAzimuthField) && !StringUtils.isEmpty(mSlopeField)) {
-                Log.i(Constants.LOG_TAG_SERVICE, "Auto save vecotr");
+                Log.i(Constants.LOG_TAG_SERVICE, "Auto save vector");
                 saveButtonListener.onClick(null);
             }
         }
@@ -246,7 +247,8 @@ public class VectorDialog extends DialogFragment implements BTResultAware, Azimu
     public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);
         if (MODE_SCAN == mode) {
-            // TODO stop the scanning mode
+            Log.i(Constants.LOG_TAG_UI, "Stop scanning");
+            BluetoothService.stopScanning();
         }
     }
 }
