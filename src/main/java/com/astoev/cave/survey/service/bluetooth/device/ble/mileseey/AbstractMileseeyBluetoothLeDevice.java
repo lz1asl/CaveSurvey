@@ -71,7 +71,7 @@ public abstract class AbstractMileseeyBluetoothLeDevice extends AbstractBluetoot
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     @Override
-    public Measure characteristicToMeasure(BluetoothGattCharacteristic aCharacteristic, List<Constants.MeasureTypes> aMeasureTypes) throws DataException {
+    public List<Measure> characteristicToMeasures(BluetoothGattCharacteristic aCharacteristic, List<Constants.MeasureTypes> aMeasureTypes) throws DataException {
 
 
         if (CHAR_DATA_UUID.equals(aCharacteristic.getUuid())) {
@@ -93,7 +93,7 @@ public abstract class AbstractMileseeyBluetoothLeDevice extends AbstractBluetoot
             measure.setMeasureUnit(Constants.MeasureUnits.meters);
             measure.setMeasureType(Constants.MeasureTypes.distance);
             measure.setValue(distance);
-            return measure;
+            return Arrays.asList(measure);
         } else {
             Log.d(Constants.LOG_TAG_BT, "Unnone characteristic received " + aCharacteristic.getUuid());
         }

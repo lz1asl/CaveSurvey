@@ -25,15 +25,16 @@ public class ConfigUtil {
     public static final String PREF_SENSOR_SIMULTANEOUSLY = "sensor_simulateneously";
     public static final String PREF_SENSOR_NOISE_REDUCTION = "sensor_noise_reduction";
     public static final String PREF_SENSOR_NOISE_REDUCTION_NUM_MEASUREMENTS = "sensor_noise_reduction_measurements";
+    public static final String PREF_VECTORS_MODE = "vectors_mode";
 
-    private static Activity mAppContext;
+    private static Context mAppContext;
 
-    public static void setContext(Activity aContext) {
+    public static void setContext(Context aContext) {
         mAppContext = aContext;
     }
 
     public static Activity getContext() {
-        return mAppContext;
+        return (Activity) mAppContext;
     }
 
     public static Integer getIntProperty(String aName) {

@@ -94,7 +94,7 @@ public class LeicaDistoBluetoothLEDevice extends AbstractBluetoothLEDevice {
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     @Override
-    public Measure characteristicToMeasure(BluetoothGattCharacteristic aCharacteristic, List<Constants.MeasureTypes> aMeasureTypes) throws DataException {
+    public List<Measure> characteristicToMeasures(BluetoothGattCharacteristic aCharacteristic, List<Constants.MeasureTypes> aMeasureTypes) throws DataException {
 
         if (CHARACTERISTIC_DISTANCE_UUID.equals(aCharacteristic.getUuid())) {
             Float distanceValue = asFloat(aCharacteristic, ByteOrder.LITTLE_ENDIAN);
@@ -104,7 +104,7 @@ public class LeicaDistoBluetoothLEDevice extends AbstractBluetoothLEDevice {
             measure.setMeasureUnit(Constants.MeasureUnits.meters);
             measure.setMeasureType(distance);
             measure.setValue(distanceValue);
-            return measure;
+            return Arrays.asList(measure);
         } else if (CHARACTERISTIC_ANGLE_UUID.equals(aCharacteristic.getUuid())) {
 
             Float slopeInRadians = asFloat(aCharacteristic, ByteOrder.LITTLE_ENDIAN);
@@ -116,7 +116,7 @@ public class LeicaDistoBluetoothLEDevice extends AbstractBluetoothLEDevice {
                 measure.setMeasureUnit(Constants.MeasureUnits.degrees);
                 measure.setMeasureType(slope);
                 measure.setValue(slopeValue);
-                return measure;
+                return Arrays.asList(measure);
             }
         } else if (CHARACTERISTIC_DISTANCE_UNIT_UUID.equals(aCharacteristic.getUuid())) {
             // only check the unit

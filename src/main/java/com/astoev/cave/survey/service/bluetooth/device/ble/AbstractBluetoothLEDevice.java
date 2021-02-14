@@ -9,6 +9,7 @@ import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.Measure;
 import com.astoev.cave.survey.service.bluetooth.device.AbstractBluetoothDevice;
+import com.astoev.cave.survey.service.bluetooth.lecommands.AbstractBluetoothCommand;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -30,7 +31,7 @@ public abstract class AbstractBluetoothLEDevice extends AbstractBluetoothDevice 
     public abstract List<UUID> getDescriptors();
     public abstract UUID getService(Constants.MeasureTypes aMeasureType);
     public abstract UUID getCharacteristic(Constants.MeasureTypes aMeasureType);
-    public abstract Measure characteristicToMeasure(BluetoothGattCharacteristic aCharacteristic, List<Constants.MeasureTypes> aMeasureTypes) throws DataException;
+    public abstract List<Measure> characteristicToMeasures(BluetoothGattCharacteristic aCharacteristic, List<Constants.MeasureTypes> aMeasureTypes) throws DataException;
 
     // not sure why, some devices use notifications (e.g. Mileseey) and others indication (e.g. Leica)
     public boolean needCharacteristicNotification() {
@@ -82,4 +83,14 @@ public abstract class AbstractBluetoothLEDevice extends AbstractBluetoothDevice 
     public int getDeviceType() {
         return DEVICE_TYPE_LE;
     }
+
+    public AbstractBluetoothCommand getReadCharacteristicCommand(Constants.MeasureTypes aType) {
+        return null;
+    }
+
+    public AbstractBluetoothCommand getStartScanCommand() {
+        return null;
+    }
+
+    public AbstractBluetoothCommand getStopScanCommand() { return null; };
 }

@@ -31,9 +31,9 @@ public abstract class AbstractLeDeviceProtocolTest {
             List<Constants.MeasureTypes> types = Arrays.asList(Constants.MeasureTypes.distance,
                     Constants.MeasureTypes.angle, Constants.MeasureTypes.slope);
 
-            Measure measure = ((AbstractBluetoothLEDevice) getDeviceSpec()).characteristicToMeasure(aCharacteristic, types);
-            if (measure != null || aDistance != null || anAzimuth != null || anAngle != null) {
-                assertMeasurements(aDistance, anAzimuth, anAngle, Arrays.asList(measure));
+            List<Measure> measures = ((AbstractBluetoothLEDevice) getDeviceSpec()).characteristicToMeasures(aCharacteristic, types);
+            if (measures != null || aDistance != null || anAzimuth != null || anAngle != null) {
+                assertMeasurements(aDistance, anAzimuth, anAngle, measures);
             }
 
         } catch (DataException de) {
@@ -46,7 +46,7 @@ public abstract class AbstractLeDeviceProtocolTest {
             List<Constants.MeasureTypes> types = Arrays.asList(Constants.MeasureTypes.distance,
                     Constants.MeasureTypes.angle, Constants.MeasureTypes.slope);
 
-            Measure measure = ((AbstractBluetoothLEDevice) getDeviceSpec()).characteristicToMeasure(aCharacteristic, types);
+            ((AbstractBluetoothLEDevice) getDeviceSpec()).characteristicToMeasures(aCharacteristic, types);
             fail("Not expected to return value");
 
         } catch (DataException de) {
