@@ -126,7 +126,7 @@ public class VectorDialog extends DialogFragment implements BTResultAware, Azimu
     }
 
     private String buildTitle(int aVectorsCount) {
-        return getString(R.string.main_add_vector) + " " + (aVectorsCount + 1);
+        return getString(R.string.vectors_title) + " " + (aVectorsCount + 1);
     }
 
     @Override

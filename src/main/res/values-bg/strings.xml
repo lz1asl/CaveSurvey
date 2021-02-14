@@ -79,7 +79,7 @@
     <string name="main_add_sketch">Скица</string>
     <string name="main_add_photo">Снимка</string>
     <string name="main_add_gps">Координат</string>
-    <string name="main_add_vector">Нов лъч</string>
+    <string name="main_add_vector">Нови лъчи</string>
     <string name="main_reverse">Обърни</string>
     <string name="main_reverse_message">Обръщане посоката и наклона на отсечка %1$s!</string>
     <string name="table_sketch_prefix">S</string>
@@ -116,6 +116,7 @@
     <string name="note_saved">Запазено</string>
 
     <!--vector screen -->
+    <string name="vectors_title">Лъч</string>
     <string name="vector_button_add_again">Save + New</string>
 
 
