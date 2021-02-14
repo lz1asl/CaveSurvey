@@ -194,30 +194,44 @@ public class BTMeasureResultReceiver extends ResultReceiver {
 
     private boolean ensureDeviceSelected(boolean showBTOptions) {
         return BluetoothService.isDeviceSelected();
-
-       /* if (showBTOptions) {
-            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(mParentView.getContext());
-            dialogBuilder.setMessage(R.string.bt_not_selected)
-                    .setCancelable(false)
-                    .setPositiveButton(R.string.button_yes, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            Intent intent = new Intent(mParentActivity, BTActivity.class);
-                            mParentActivity.startActivity(intent);
-                        }
-                    })
-                    .setNegativeButton(R.string.button_no, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.cancel();
-                        }
-                    });
-            AlertDialog alert = dialogBuilder.create();
-            alert.show();
-        }*/
     }
 
     private void triggerBluetoothMeasure(Constants.Measures aMeasure, Constants.Measures[] otherMeasuresWelcome) {
         // register listeners & send command
         BluetoothService.sendReadMeasureCommand(this, aMeasure, otherMeasuresWelcome);
         Log.i(Constants.LOG_TAG_UI, "Command scheduled for " + aMeasure);
+    }
+
+    public void startScanning(EditText aDistanceField, EditText aAzimuthField, EditText aSlopeField) {
+
+        // checks
+        if (!BluetoothService.isBluetoothSupported() || !ensureDeviceSelected(false)) {
+            Log.i(Constants.LOG_TAG_UI, "BT not ready");
+        }
+
+
+        if (!BluetoothService.isMeasureSupported(Constants.MeasureTypes.distance)) {
+            Log.i(Constants.LOG_TAG_UI, "Distance measure not supported by device");
+            return;
+        }
+
+        if (!Option.CODE_SENSOR_BLUETOOTH.equals(Options.getOptionValue(Option.CODE_AZIMUTH_SENSOR))
+                || !BluetoothService.isMeasureSupported(Constants.MeasureTypes.angle)) {
+            Log.i(Constants.LOG_TAG_UI, "Angle measure not supported by device");
+            return;
+        }
+
+        if (!Option.CODE_SENSOR_BLUETOOTH.equals(Options.getOptionValue(Option.CODE_SLOPE_SENSOR))
+                || !BluetoothService.isMeasureSupported(Constants.MeasureTypes.slope)) {
+            Log.i(Constants.LOG_TAG_UI, "Slope measure not supported by device");
+            return;
+        }
+
+
+        Log.i(Constants.LOG_TAG_UI, "Allow scanning");
+        resetMeasureExpectations();
+        awaitMeasure(Constants.Measures.distance);
+        awaitMeasures(new Constants.Measures[] {Constants.Measures.angle, Constants.Measures.slope});
+        BluetoothService.startScanning(this);
     }
 }

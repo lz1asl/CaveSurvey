@@ -58,6 +58,7 @@ import com.astoev.cave.survey.util.StringUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -207,14 +208,17 @@ public class BluetoothService {
         }
     }
 
-    public static void startScanning() {
+    public static void startScanning(BTMeasureResultReceiver receiver) {
 
         if (mBluetoothGatt != null) {
             AbstractBluetoothLEDevice leDevice = (AbstractBluetoothLEDevice) mSelectedDeviceSpec;
             AbstractBluetoothCommand startScanCommand = leDevice.getStartScanCommand();
             if (startScanCommand != null) {
                 Log.i(LOG_TAG_BT, "Request LE stop scan");
-                expectingMeasurement = false;
+                expectingMeasurement = true;
+                List<Constants.MeasureTypes> measureTypes = Arrays.asList(Constants.MeasureTypes.distance, Constants.MeasureTypes.angle, Constants.MeasureTypes.slope);
+                List<Constants.Measures> measureTargets = Arrays.asList(Constants.Measures.distance, Constants.Measures.angle, Constants.Measures.slope);
+                leDataCallback.awaitMeasures(measureTypes, measureTargets, receiver);
                 enqueueCommand(startScanCommand);
             } else {
                 Log.d(LOG_TAG_BT, "Device don't support scanning");

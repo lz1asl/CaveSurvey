@@ -81,12 +81,6 @@ public class VectorDialog extends DialogFragment implements BTResultAware, Azimu
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceStateArg) {
 
-        mode = ConfigUtil.getIntProperty(ConfigUtil.PREF_VECTORS_MODE, VectorsModeDialog.MODE_SINGLE);
-        if (MODE_SCAN == mode) {
-            Log.i(Constants.LOG_TAG_BT, "Start scanning mode");
-            BluetoothService.startScanning();
-        }
-
         mLeg = getArguments() != null ? (Leg)getArguments().getSerializable(LEG) : null;
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -110,6 +104,15 @@ public class VectorDialog extends DialogFragment implements BTResultAware, Azimu
         mReceiver.bindBTMeasures(mSlopeField, Constants.Measures.slope, false, new Constants.Measures[] {Constants.Measures.angle, Constants.Measures.distance});
 
         MeasurementsUtil.bindSensorsAwareFields(mAzimuthField, mSlopeField, mSupportFragmentManager);
+
+        mode = ConfigUtil.getIntProperty(ConfigUtil.PREF_VECTORS_MODE, VectorsModeDialog.MODE_SINGLE);
+        if (MODE_SCAN == mode) {
+            Log.i(Constants.LOG_TAG_BT, "Start scanning mode");
+            mReceiver.startScanning(mDistanceField, mAzimuthField, mSlopeField);
+        } else {
+            // focused field is ready to receive single measurements or to be typed
+            mDistanceField.requestFocus();
+        }
 
         final Dialog dialog = builder.create();
 
