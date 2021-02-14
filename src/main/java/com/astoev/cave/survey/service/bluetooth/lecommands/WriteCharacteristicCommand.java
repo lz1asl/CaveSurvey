@@ -2,6 +2,7 @@ package com.astoev.cave.survey.service.bluetooth.lecommands;
 
 import android.annotation.TargetApi;
 import android.bluetooth.BluetoothGatt;
+import android.bluetooth.BluetoothGattCharacteristic;
 import android.os.Build;
 import android.util.Log;
 
@@ -32,9 +33,14 @@ public class WriteCharacteristicCommand extends AbstractBluetoothCommand {
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     public void execute(BluetoothGatt aBluetoothGatt) {
         Log.d(LOG_TAG_BT, "Send to " + service + ":" + characteristic + " : "  + new String(value));
-        boolean success = aBluetoothGatt.getService(service).getCharacteristic(characteristic).setValue(value);
-        if (!success) {
-            Log.e(LOG_TAG_BT, "Failed to set characteristic value");
+        BluetoothGattCharacteristic targetChar = aBluetoothGatt.getService(service).getCharacteristic(characteristic);
+        if (targetChar != null) {
+            boolean success = targetChar.setValue(value) && aBluetoothGatt.writeCharacteristic(targetChar);
+            if (!success) {
+                Log.e(LOG_TAG_BT, "Failed to set characteristic value");
+            }
+        } else {
+            Log.e(LOG_TAG_BT, "Not found");
         }
     }
 }
