@@ -2,8 +2,9 @@ package com.astoev.cave.survey.service.bluetooth.device.ble;
 
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.os.Build;
-import androidx.annotation.RequiresApi;
 import android.util.Log;
+
+import androidx.annotation.RequiresApi;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.exception.DataException;
@@ -65,7 +66,7 @@ public class StanleyBluetoothLeDevice extends AbstractBluetoothLEDevice {
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     @Override
-    public Measure characteristicToMeasure(BluetoothGattCharacteristic aCharacteristic, List<Constants.MeasureTypes> aMeasureTypes) throws DataException {
+    public List<Measure> characteristicToMeasures(BluetoothGattCharacteristic aCharacteristic, List<Constants.MeasureTypes> aMeasureTypes) throws DataException {
 
         if (CHARACTERISTIC_DISTANCE_UUID.equals(aCharacteristic.getUuid())) {
 
@@ -106,7 +107,7 @@ public class StanleyBluetoothLeDevice extends AbstractBluetoothLEDevice {
             measure.setMeasureUnit(Constants.MeasureUnits.meters);
             measure.setMeasureType(Constants.MeasureTypes.distance);
             measure.setValue(distance);
-            return measure;
+            return Arrays.asList(measure);
         } else {
             Log.d(LOG_TAG_BT, "Unnone characteristic received " + aCharacteristic.getUuid());
             return null;

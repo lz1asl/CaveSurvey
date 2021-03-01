@@ -89,7 +89,7 @@
     <string name="main_add_sketch">Draw</string>
     <string name="main_add_photo">Photo</string>
     <string name="main_add_gps">GPS</string>
-    <string name="main_add_vector">Add Vector</string>
+    <string name="main_add_vector">Add Vectors</string>
     <string name="main_reverse">Reverse</string>
     <string name="main_reverse_message">Direction and slope of leg %1$s will be reversed!</string>
     <string name="table_sketch_prefix">S</string>
@@ -121,6 +121,7 @@
     <string name="note_saved">Saved</string>
 
     <!--vector screen -->
+    <string name="vectors_title">Vector</string>
     <string name="vector_button_add_again">Save + New</string>
 
     
@@ -420,6 +421,15 @@
     <string name="settings_import_target_name">Create as:</string>
     <string name="settings_import_no_files">Exported survey not found</string>
     <string name="settings_import_info">Creates survey from existing file.\nPlease use export files created after v1.27.\nPhotos or drawings will be ignored.</string>
+    <string name="settings_vectors"><u>Vectors</u></string>
+
+    <!-- vectors -->
+    <string name="settings_vectors_mode">Vectors reading mode</string>
+    <string-array name="settings_vectors_modes">
+        <item>Single</item>
+        <item>Save on receive</item>
+        <item>Scan</item>
+    </string-array>
 
     <!--opens topo -->
     <string name="export_openstopo_title">OpensTopo</string>

@@ -28,6 +28,7 @@ import com.astoev.cave.survey.activity.main.Refresheable;
 import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.device.AbstractBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.ble.AbstractBluetoothLEDevice;
+import com.astoev.cave.survey.service.bluetooth.device.ble.Bric4BluetoothLEDevice;
 import com.astoev.cave.survey.service.bluetooth.device.ble.LeicaDistoBluetoothLEDevice;
 import com.astoev.cave.survey.service.bluetooth.device.ble.StanleyBluetoothLeDevice;
 import com.astoev.cave.survey.service.bluetooth.device.ble.mileseey.HerschLEM50BluetoothLeDevice;
@@ -54,6 +55,7 @@ import com.astoev.cave.survey.util.ConfigUtil;
 import com.astoev.cave.survey.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -106,6 +108,8 @@ public class BluetoothService {
         SUPPORTED_BLUETOOTH_LE_DEVICES.add(new StanleyBluetoothLeDevice());
         SUPPORTED_BLUETOOTH_LE_DEVICES.add(new SuaokiP7BluetoothLeDevice());
         SUPPORTED_BLUETOOTH_LE_DEVICES.add(new HerschLEM50BluetoothLeDevice());
+        SUPPORTED_BLUETOOTH_LE_DEVICES.add(new Bric4BluetoothLEDevice());
+
     }
 
     // generic
@@ -184,13 +188,56 @@ public class BluetoothService {
             AbstractBluetoothLEDevice leDevice = (AbstractBluetoothLEDevice) mSelectedDeviceSpec;
             if (leDevice.needCharacteristicPull() && SDK_INT >= JELLY_BEAN_MR2) {
                 Log.i(LOG_TAG_BT, "Request LE pull");
+                // device specific
                 Constants.MeasureTypes type = getMeasureTypeFromTarget(aMeasure);
-                BluetoothGattCharacteristic c = mBluetoothGatt.getService(leDevice.getService(type)).getCharacteristic(leDevice.getCharacteristic(type));
-                enqueueCommand(new PullCharacteristicCommand(c, leDevice));
+                AbstractBluetoothCommand deviceCommand = leDevice.getReadCharacteristicCommand(type);
+                if (deviceCommand == null) {
+                    // generic pull command
+                    BluetoothGattCharacteristic c = mBluetoothGatt.getService(leDevice.getService(type)).getCharacteristic(leDevice.getCharacteristic(type));
+                    deviceCommand = new PullCharacteristicCommand(c, leDevice);
+                }
+                enqueueCommand(deviceCommand);
             }
 
         } else {
             Log.d(LOG_TAG_BT, "Drop BT command : inactive communication : " + aMeasure);
+        }
+    }
+
+    public static void startScanning(BTMeasureResultReceiver receiver) {
+
+        if (mBluetoothGatt != null) {
+            AbstractBluetoothLEDevice leDevice = (AbstractBluetoothLEDevice) mSelectedDeviceSpec;
+            AbstractBluetoothCommand startScanCommand = leDevice.getStartScanCommand();
+            if (startScanCommand != null) {
+                Log.i(LOG_TAG_BT, "Request LE stop scan");
+                expectingMeasurement = true;
+                List<Constants.MeasureTypes> measureTypes = Arrays.asList(Constants.MeasureTypes.distance, Constants.MeasureTypes.angle, Constants.MeasureTypes.slope);
+                List<Constants.Measures> measureTargets = Arrays.asList(Constants.Measures.distance, Constants.Measures.angle, Constants.Measures.slope);
+                leDataCallback.awaitMeasures(measureTypes, measureTargets, receiver);
+                enqueueCommand(startScanCommand);
+            } else {
+                Log.d(LOG_TAG_BT, "Device don't support scanning");
+            }
+        } else {
+            Log.d(LOG_TAG_BT, "Drop BT command : inactive communication : ");
+        }
+    }
+
+    public static void stopScanning() {
+        expectingMeasurement = false;
+
+        if (mBluetoothGatt != null) {
+            AbstractBluetoothLEDevice leDevice = (AbstractBluetoothLEDevice) mSelectedDeviceSpec;
+            AbstractBluetoothCommand stopScanCommand = leDevice.getStopScanCommand();
+            if (stopScanCommand != null) {
+                Log.i(LOG_TAG_BT, "Request LE stop scan");
+                enqueueCommand(stopScanCommand);
+            } else {
+                Log.d(LOG_TAG_BT, "Device don't support scanning");
+            }
+        } else {
+            Log.d(LOG_TAG_BT, "Drop BT command : inactive communication : ");
         }
     }
 
@@ -471,8 +518,6 @@ public class BluetoothService {
         AbstractBluetoothDevice deviceParent = BluetoothService.getSupportedDevice(device);
 
         if (deviceParent != null && deviceParent instanceof AbstractBluetoothLEDevice) {
-            AbstractBluetoothLEDevice deviceSpec = (AbstractBluetoothLEDevice) deviceParent;
-
             Log.i(LOG_TAG_BT, "Discovered LE device " + rssi + " : " + device.getName());
 
             mLastLEDevice = device;
@@ -643,10 +688,12 @@ public class BluetoothService {
                 if (mReceiver != null) {
                     Log.d(LOG_TAG_BT, "processing " + characteristic.getUuid());
                     // decode
-                    Measure measure = ((AbstractBluetoothLEDevice) mSelectedDeviceSpec).characteristicToMeasure(characteristic, mMeasureTypes);
+                    List<Measure> measures = ((AbstractBluetoothLEDevice) mSelectedDeviceSpec).characteristicToMeasures(characteristic, mMeasureTypes);
 
                     // consume
-                    sendMeasureToUI(measure);
+                    for (Measure measure : measures) {
+                        sendMeasureToUI(measure);
+                    }
                 } else {
                     Log.d(LOG_TAG_BT, "No receiver");
                 }

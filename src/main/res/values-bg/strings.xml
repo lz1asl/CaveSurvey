@@ -79,7 +79,7 @@
     <string name="main_add_sketch">Скица</string>
     <string name="main_add_photo">Снимка</string>
     <string name="main_add_gps">Координат</string>
-    <string name="main_add_vector">Нов лъч</string>
+    <string name="main_add_vector">Нови лъчи</string>
     <string name="main_reverse">Обърни</string>
     <string name="main_reverse_message">Обръщане посоката и наклона на отсечка %1$s!</string>
     <string name="table_sketch_prefix">S</string>
@@ -116,6 +116,7 @@
     <string name="note_saved">Запазено</string>
 
     <!--vector screen -->
+    <string name="vectors_title">Лъч</string>
     <string name="vector_button_add_again">Save + New</string>
 
 
@@ -392,6 +393,15 @@
     <string name="settings_import_target_name">Създай като:</string>
     <string name="settings_import_no_files">Не е намерен експортен файл</string>
     <string name="settings_import_info">Създава ново проучване от съществуващ файл.\nМоля използвайте файлове генерирани след версия v1.27.\nСнимки и скици ще бъдат игнорирани.</string>
+    <string name="settings_vectors"><u>Vectors</u></string>
+
+    <!-- vectors -->
+    <string name="settings_vectors_mode">Режим добавяне на лъчи</string>
+    <string-array name="settings_vectors_modes">
+        <item>Единичен</item>
+        <item>Нов при готовност</item>
+        <item>Сканиране</item>
+    </string-array>
 
     <!--opens topo -->
     <string name="export_openstopo_title">OpensTopo</string>
