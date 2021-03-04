@@ -393,7 +393,7 @@
     <string name="settings_import_target_name">Създай като:</string>
     <string name="settings_import_no_files">Не е намерен експортен файл</string>
     <string name="settings_import_info">Създава ново проучване от съществуващ файл.\nМоля използвайте файлове генерирани след версия v1.27.\nСнимки и скици ще бъдат игнорирани.</string>
-    <string name="settings_vectors"><u>Vectors</u></string>
+    <string name="settings_vectors"><u>Лъчи</u></string>
 
     <!-- vectors -->
     <string name="settings_vectors_mode">Режим добавяне на лъчи</string>
