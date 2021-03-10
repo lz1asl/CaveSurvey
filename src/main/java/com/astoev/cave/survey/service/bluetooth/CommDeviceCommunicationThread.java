@@ -16,6 +16,7 @@ import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.exception.DataException;
+import com.astoev.cave.survey.service.bluetooth.device.AbstractBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.comm.AbstractBluetoothRFCOMMDevice;
 import com.astoev.cave.survey.util.ByteUtils;
 import com.astoev.cave.survey.util.ConfigUtil;
@@ -40,6 +41,7 @@ public class CommDeviceCommunicationThread extends Thread {
     private static final int KEEP_ALIVE_INTERVAL = 1000 * 60; // 1 minute
 
     private BluetoothDevice mDevice;
+    private AbstractBluetoothDevice mDeviceFilter;
     private AbstractBluetoothRFCOMMDevice mDeviceSpec;
     private List<Constants.MeasureTypes> mMeasureTypes = null;
     private List<Constants.Measures> mTargets = null;
@@ -70,7 +72,7 @@ public class CommDeviceCommunicationThread extends Thread {
         public void onReceive(Context context, Intent intent) {
             try {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                if (!BluetoothService.isSupported(device)) {
+                if (!BluetoothService.isSupported(device, mDeviceFilter)) {
                     // ignore other devices
                     Log.i(Constants.LOG_TAG_BT, "Bonded unsupported device");
                     return;
@@ -86,7 +88,7 @@ public class CommDeviceCommunicationThread extends Thread {
                 Log.i(Constants.LOG_TAG_BT, "Paired with " + device.getName());
                 mPaired = true;
                 mDevice = device;
-                mDeviceSpec = (AbstractBluetoothRFCOMMDevice) BluetoothService.getSupportedDevice(device);
+                mDeviceSpec = (AbstractBluetoothRFCOMMDevice) BluetoothService.getSupportedDevice(device, mDeviceFilter);
 
                 TextView status = ConfigUtil.getContext().findViewById(R.id.bt_status);
                 status.setText(BluetoothService.getCurrDeviceStatusLabel(ConfigUtil.getContext()));
@@ -108,7 +110,7 @@ public class CommDeviceCommunicationThread extends Thread {
                 }
 
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                if (!BluetoothService.isSupported(device)) {
+                if (!BluetoothService.isSupported(device, mDeviceFilter)) {
                     // ignore other devices
                     Log.i(Constants.LOG_TAG_BT, "Ignore disconnect, device not supported");
                     return;
@@ -386,5 +388,9 @@ public class CommDeviceCommunicationThread extends Thread {
 
     public boolean ismPaired() {
         return mPaired;
+    }
+
+    public void setDeviceFilter(AbstractBluetoothDevice aDeviceFilter) {
+        mDeviceFilter = aDeviceFilter;
     }
 }

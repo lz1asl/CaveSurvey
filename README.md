@@ -27,7 +27,7 @@ We have started with an old Android 2.1 phone (cheap and small) and have tested 
 Currently with CaveSurvey you can:
   - make multiple surveys
   - split a survey into galleries
-  - add stations and middle points
+  - add stations with classic LRUD and middle points
   - create notes, pictures, drawings, GPS coordinates and vectors at any station
   - input measurements:
     - manually
