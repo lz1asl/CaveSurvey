@@ -260,8 +260,7 @@ public class BTActivity extends MainMenuActivity implements Refresheable {
         runOnUiThread(() -> updateDeviceStatus());
     }
 
-    public static class SupportedDevice {
-        public static final String NO_DEVICE_SELECTED = " --- ";
+    public class SupportedDevice {
         AbstractBluetoothDevice device;
 
         public SupportedDevice(AbstractBluetoothDevice aDevice) {
@@ -270,7 +269,7 @@ public class BTActivity extends MainMenuActivity implements Refresheable {
 
         @Override
         public String toString() {
-            return device != null ? device.getDescription() : NO_DEVICE_SELECTED;
+            return device != null ? device.getDescription() : getString(R.string.any);
         }
     }
 }

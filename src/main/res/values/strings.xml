@@ -8,7 +8,8 @@
     <string name="required">Required</string>
     <string name="invalid">Invalid</string>
     <string name="success">Success</string>
-    
+    <string name="any">Any</string>
+
     <string name="sk_paldin">Paldin</string>
 
     <!-- welcome screen -->
