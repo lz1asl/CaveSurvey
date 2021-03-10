@@ -70,4 +70,8 @@ public abstract class AbstractBluetoothDevice implements Comparable {
     public int compareTo(Object another) {
         return getDescription().compareTo(((AbstractBluetoothDevice) another).getDescription());
     }
+
+    public boolean matchesDeviceFilter(AbstractBluetoothDevice filter) {
+        return filter == null || filter.getClass().equals(getClass());
+    }
 }

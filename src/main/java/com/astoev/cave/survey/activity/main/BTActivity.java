@@ -1,9 +1,7 @@
 package com.astoev.cave.survey.activity.main;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
@@ -11,7 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -39,7 +36,8 @@ import static com.astoev.cave.survey.Constants.LOG_TAG_UI;
  */
 public class BTActivity extends MainMenuActivity implements Refresheable {
 
-    Set<Pair<String, String>> devices = new HashSet<>();
+    private AbstractBluetoothDevice deviceFilter;
+    private Set<Pair<String, String>> devices = new HashSet<>();
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,11 +57,14 @@ public class BTActivity extends MainMenuActivity implements Refresheable {
                 return;
             }
 
+            displaySupportedDevices();
+
             Spinner devicesChooser = findViewById(R.id.bt_devices);
             devicesChooser.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     selectDevice();
+                    refreshDevicesList();
                 }
 
                 @Override
@@ -73,8 +74,6 @@ public class BTActivity extends MainMenuActivity implements Refresheable {
             });
 
             refreshDevicesList();
-
-            displaySupportedDevices();
 
         } catch (Exception e) {
             Log.e(LOG_TAG_UI, "Failed during create", e);
@@ -91,20 +90,41 @@ public class BTActivity extends MainMenuActivity implements Refresheable {
     }
 
     private void displaySupportedDevices() {
-        LinearLayout devicesList = findViewById(R.id.bt_container);
 
-        if (devicesList.getChildCount() <= 3) { // don't duplicate
-
-            TextView preparing = findViewById(R.id.bt_preparing);
-            preparing.setVisibility(View.INVISIBLE);
-
-            for (AbstractBluetoothDevice device : BluetoothService.getSupportedDevices()) {
-                TextView deviceLabel = new TextView(getApplicationContext());
-                deviceLabel.setText("\t\u2022 " + device.getDescription());
-                deviceLabel.setTextColor(Color.WHITE);
-                devicesList.addView(deviceLabel);
-            }
+        List<SupportedDevice> supportedDevices = new ArrayList<>();
+        supportedDevices.add(new SupportedDevice(null));
+        for (AbstractBluetoothDevice device : BluetoothService.getSupportedDevices()) {
+            supportedDevices.add(new SupportedDevice(device));
         }
+
+        ArrayAdapter<SupportedDevice> spinnerArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, supportedDevices);
+        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        Spinner devicesChooser = findViewById(R.id.bt_supportd_devices);
+        devicesChooser.setAdapter(spinnerArrayAdapter);
+
+        devicesChooser.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                // mark selection
+                SupportedDevice device = (SupportedDevice) devicesChooser.getSelectedItem();
+                deviceFilter = device.device;
+
+                // need new LE discovery
+                BluetoothService.stop();
+                BluetoothService.discoverBluetoothLEDevices(deviceFilter);
+
+                // filter the active devices
+                refreshDevicesList();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        deviceFilter = null;
     }
 
     @Override
@@ -113,9 +133,8 @@ public class BTActivity extends MainMenuActivity implements Refresheable {
 
         BluetoothService.registerListeners(this);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            BluetoothService.discoverBluetoothLEDevices();
-        }
+        BluetoothService.stop();
+        BluetoothService.discoverBluetoothLEDevices(deviceFilter);
 
         prepareUI();
     }
@@ -138,7 +157,7 @@ public class BTActivity extends MainMenuActivity implements Refresheable {
 
     private void refreshDevicesList() {
 
-        devices = BluetoothService.getPairedCompatibleDevices();
+        devices = BluetoothService.getPairedCompatibleDevices(deviceFilter);
 
         String selectedDeviceName = null;
         String selectedBtDeviceAddress = ConfigUtil.getStringProperty(ConfigUtil.PROP_CURR_BT_DEVICE_ADDRESS);
@@ -198,7 +217,7 @@ public class BTActivity extends MainMenuActivity implements Refresheable {
         // store & propagate
         ConfigUtil.setStringProperty(ConfigUtil.PROP_CURR_BT_DEVICE_NAME, device.first);
         ConfigUtil.setStringProperty(ConfigUtil.PROP_CURR_BT_DEVICE_ADDRESS, device.second);
-        BluetoothService.selectDevice(device.second);
+        BluetoothService.selectDevice(device.second, deviceFilter);
     }
 
     /**
@@ -239,5 +258,19 @@ public class BTActivity extends MainMenuActivity implements Refresheable {
     @Override
     public void refresh() {
         runOnUiThread(() -> updateDeviceStatus());
+    }
+
+    public static class SupportedDevice {
+        public static final String NO_DEVICE_SELECTED = " --- ";
+        AbstractBluetoothDevice device;
+
+        public SupportedDevice(AbstractBluetoothDevice aDevice) {
+            device = aDevice;
+        }
+
+        @Override
+        public String toString() {
+            return device != null ? device.getDescription() : NO_DEVICE_SELECTED;
+        }
     }
 }
