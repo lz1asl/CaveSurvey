@@ -84,7 +84,7 @@ public class VectorDialog extends DialogFragment implements BTResultAware, Azimu
         mLeg = getArguments() != null ? (Leg)getArguments().getSerializable(LEG) : null;
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        int vectorsCount = refreshVectors();
+        long vectorsCount = getVectorsCount();
         builder.setTitle(buildTitle(vectorsCount));
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -125,7 +125,7 @@ public class VectorDialog extends DialogFragment implements BTResultAware, Azimu
         return dialog;
     }
 
-    private String buildTitle(int aVectorsCount) {
+    private String buildTitle(long aVectorsCount) {
         return getString(R.string.vectors_title) + " " + (aVectorsCount + 1);
     }
 
@@ -212,24 +212,22 @@ public class VectorDialog extends DialogFragment implements BTResultAware, Azimu
                 vector.setGalleryId(mLeg.getGalleryId());
 
                 DaoUtil.saveVector(vector);
+
             } catch (SQLException e) {
                 Log.e(Constants.LOG_TAG_UI, "Failed to add vector", e);
                 UIUtilities.showNotification(R.string.error);
             }
 
-            // refresh parent
-            int numVectors = refreshVectors();
-
             if (mPrepareNewVector) {
                 // notify saved
                 Log.i(Constants.LOG_TAG_UI, "Vector saved, cleaning");
-                UIUtilities.showNotification(R.string.action_saved);
+//                UIUtilities.showNotification(R.string.action_saved);
 
                 // reset values and stay here
                 mDistanceField.setText(null);
                 mAzimuthField.setText(null);
                 mSlopeField.setText(null);
-                mDialog.setTitle(buildTitle(numVectors));
+                mDialog.setTitle(buildTitle(getVectorsCount()));
             } else {
                 // go back
                 Log.i(Constants.LOG_TAG_UI, "Vector saved, going back");
@@ -238,12 +236,13 @@ public class VectorDialog extends DialogFragment implements BTResultAware, Azimu
         }
     }
 
-    private int refreshVectors() {
-        Activity parent = getActivity();
-        if (parent instanceof PointActivity) {
-            return ((PointActivity) parent).loadLegVectors(mLeg);
+    private long getVectorsCount() {
+        try {
+            return DaoUtil.getLegVectorsCount(mLeg);
+        } catch (SQLException exception) {
+            Log.e(Constants.LOG_TAG_DB, "Failed to load legs count", exception);
+            return 0;
         }
-        return 0;
     }
 
     @Override
@@ -252,6 +251,12 @@ public class VectorDialog extends DialogFragment implements BTResultAware, Azimu
         if (MODE_SCAN == mode) {
             Log.i(Constants.LOG_TAG_UI, "Stop scanning");
             BluetoothService.stopScanning();
+        }
+
+        // refresh parent
+        Activity parent = getActivity();
+        if (parent instanceof PointActivity) {
+            ((PointActivity) parent).loadLegVectors(mLeg);
         }
     }
 }
