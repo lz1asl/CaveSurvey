@@ -139,7 +139,7 @@ public class BluetoothService {
     private static boolean expectingMeasurement = false;
 
     // compile time switch to allow processing of all device characteristics
-    private static final boolean DEVELOPMENT_MODE = false;
+    private static final boolean DEVELOPMENT_MODE = true;
 
     public static boolean isBluetoothSupported() {
         return mCurrContext != null
@@ -696,13 +696,20 @@ public class BluetoothService {
 
             try {
                 if (mReceiver != null) {
-                    Log.d(LOG_TAG_BT, "processing " + characteristic.getUuid());
-                    // decode
-                    List<Measure> measures = ((AbstractBluetoothLEDevice) mSelectedDeviceSpec).characteristicToMeasures(characteristic, mMeasureTypes);
 
-                    // consume
-                    for (Measure measure : measures) {
-                        sendMeasureToUI(measure);
+                    AbstractBluetoothLEDevice leDevice = (AbstractBluetoothLEDevice) mSelectedDeviceSpec;
+                    if (leDevice.getCharacteristics().contains(characteristic.getUuid())) {
+
+                        Log.d(LOG_TAG_BT, "processing " + characteristic.getUuid());
+                        // decode
+                        List<Measure> measures = (leDevice.characteristicToMeasures(characteristic, mMeasureTypes));
+
+                        // consume
+                        for (Measure measure : measures) {
+                            sendMeasureToUI(measure);
+                        }
+                    } else {
+                        Log.i(LOG_TAG_BT, "Ignore characteristic update: " + characteristic.getUuid() + " : " + new String(characteristic.getValue()));
                     }
                 } else {
                     Log.d(LOG_TAG_BT, "No receiver");
