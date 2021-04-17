@@ -35,17 +35,18 @@ public class MapActivity extends MainMenuActivity implements View.OnTouchListene
         final ZoomControls zoom = findViewById(R.id.mapZoom);
         zoom.setOnZoomInClickListener(aView -> {
             map.zoomIn();
-            zoom.setIsZoomOutEnabled(map.canZoomOut());
-            zoom.setIsZoomInEnabled(map.canZoomIn());
+            enableDisableZoomControls(zoom);
         });
         zoom.setOnZoomOutClickListener(aView -> {
             map.zoomOut();
-            zoom.setIsZoomOutEnabled(map.canZoomOut());
-            zoom.setIsZoomInEnabled(map.canZoomIn());
+            enableDisableZoomControls(zoom);
         });
 
         final ToggleButton viewSelector = findViewById(R.id.mapHorizonatalToggle);
-        viewSelector.setOnCheckedChangeListener((buttonView, isChecked) -> map.setHorizontalPlan(!isChecked));
+        viewSelector.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            map.setHorizontalPlan(!isChecked);
+            enableDisableZoomControls(zoom);
+        });
     }
 
     @Override
@@ -73,5 +74,10 @@ public class MapActivity extends MainMenuActivity implements View.OnTouchListene
         intent.putExtra(DrawingActivity.SKETCH_BASE, map.getPngDump());
         intent.putExtra(DrawingActivity.MAP_FLAG, true);
         startActivity(intent);
+    }
+
+    private void enableDisableZoomControls(ZoomControls zoom) {
+        zoom.setIsZoomOutEnabled(map.canZoomOut());
+        zoom.setIsZoomInEnabled(map.canZoomIn());
     }
 }
