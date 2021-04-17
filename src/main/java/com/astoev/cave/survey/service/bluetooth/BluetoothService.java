@@ -139,7 +139,7 @@ public class BluetoothService {
     private static boolean expectingMeasurement = false;
 
     // compile time switch to allow processing of all device characteristics
-    private static final boolean DEVELOPMENT_MODE = true;
+    private static final boolean DEVELOPMENT_MODE = false;
 
     public static boolean isBluetoothSupported() {
         return mCurrContext != null
