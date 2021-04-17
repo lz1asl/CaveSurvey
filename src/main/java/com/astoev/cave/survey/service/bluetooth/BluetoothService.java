@@ -89,7 +89,6 @@ public class BluetoothService {
 
     private static final Set<AbstractBluetoothRFCOMMDevice> SUPPORTED_BLUETOOTH_COM_DEVICES = new HashSet<>();
     private static final Set<AbstractBluetoothLEDevice> SUPPORTED_BLUETOOTH_LE_DEVICES = new HashSet<>();
-    private static final Set<AbstractBluetoothDevice> SUPPORTED_BLUETOOTH_DEVICES = new HashSet<>();
 
     static {
 
@@ -115,8 +114,6 @@ public class BluetoothService {
         SUPPORTED_BLUETOOTH_LE_DEVICES.add(new HerschLEM50BluetoothLeDevice());
         SUPPORTED_BLUETOOTH_LE_DEVICES.add(new Bric4BluetoothLEDevice());
 
-        SUPPORTED_BLUETOOTH_DEVICES.addAll(SUPPORTED_BLUETOOTH_COM_DEVICES);
-        SUPPORTED_BLUETOOTH_DEVICES.addAll(SUPPORTED_BLUETOOTH_LE_DEVICES);
     }
 
     // generic
@@ -284,13 +281,13 @@ public class BluetoothService {
         }
     }
 
-    public static synchronized void selectDevice(final String aDeviceAddress, AbstractBluetoothDevice aFilter) {
+    public static synchronized void selectDevice(final String aDeviceAddress) {
         if (StringUtils.isEmpty(aDeviceAddress)) {
             Log.i(LOG_TAG_BT, "No device selected");
             return;
         }
         mSelectedDevice = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(aDeviceAddress);
-        mSelectedDeviceSpec = getSupportedDevice(mSelectedDevice, aFilter);
+        mSelectedDeviceSpec = getSupportedDevice(mSelectedDevice);
         if (mSelectedDeviceSpec == null) {
             Log.i(LOG_TAG_BT, "No spec found");
             return;
@@ -309,7 +306,6 @@ public class BluetoothService {
             }
 
             mCommunicationThread = new CommDeviceCommunicationThread(mSelectedDevice, (AbstractBluetoothRFCOMMDevice) mSelectedDeviceSpec);
-            mCommunicationThread.setDeviceFilter(aFilter);
             mCommunicationThread.start();
         } else {
             // require newer android to work with LE devices
@@ -346,10 +342,15 @@ public class BluetoothService {
         return mCommunicationThread != null && mCommunicationThread.ismPaired();
     }
 
-    public static AbstractBluetoothDevice getSupportedDevice(BluetoothDevice aDevice, AbstractBluetoothDevice filter) {
+    public static AbstractBluetoothDevice getSupportedDevice(BluetoothDevice aDevice) {
         Log.d(LOG_TAG_BT, "Search supported device for " + aDevice.getName());
-        for (AbstractBluetoothDevice device : SUPPORTED_BLUETOOTH_DEVICES) {
-            if (device.matchesDeviceFilter(filter) && device.isTypeCompatible(aDevice) && device.isNameSupported(aDevice.getName())) {
+        for (AbstractBluetoothRFCOMMDevice device : SUPPORTED_BLUETOOTH_COM_DEVICES) {
+            if (device.isTypeCompatible(aDevice) && device.isNameSupported(aDevice.getName())) {
+                return device;
+            }
+        }
+        for (AbstractBluetoothLEDevice device : SUPPORTED_BLUETOOTH_LE_DEVICES) {
+            if (device.isTypeCompatible(aDevice) && device.isNameSupported(aDevice.getName())) {
                 return device;
             }
         }
@@ -363,21 +364,21 @@ public class BluetoothService {
         return devicesByDescription;
     }
 
-    public static boolean isSupported(BluetoothDevice aDevice, AbstractBluetoothDevice filter) {
-        return aDevice != null && getSupportedDevice(aDevice, filter) != null;
+    public static boolean isSupported(BluetoothDevice aDevice) {
+        return aDevice != null && getSupportedDevice(aDevice) != null;
     }
 
-    public static Set<Pair<String, String>> getPairedCompatibleDevices(AbstractBluetoothDevice filter) {
+    public static Set<Pair<String, String>> getPairedCompatibleDevices() {
         Set<Pair<String, String>> result = new HashSet<>();
         Set<BluetoothDevice> devices = BluetoothAdapter.getDefaultAdapter().getBondedDevices();
         for (BluetoothDevice d : devices) {
-            if (isSupported(d, filter)) {
+            if (isSupported(d)) {
                 result.add(new Pair<>(d.getName(), d.getAddress()));
             }
         }
         if (mLastLEDevice != null) {
             Pair<String, String> lastLeDevice = new Pair<>(mLastLEDevice.getName(), mLastLEDevice.getAddress());
-            if (getSupportedDevice(mLastLEDevice, filter) != null && !devices.contains(lastLeDevice)) {
+            if (!devices.contains(lastLeDevice)) {
                 result.add(lastLeDevice);
             }
         }
@@ -455,17 +456,12 @@ public class BluetoothService {
 
 
     @TargetApi(18)
-    public static void discoverBluetoothLEDevices(AbstractBluetoothDevice aDeviceFilter) {
+    public static void discoverBluetoothLEDevices() {
 
-        // only if supported by the required device
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            if (aDeviceFilter == null || aDeviceFilter.getClass().isAssignableFrom(AbstractBluetoothLEDevice.class)) {
-                if (SDK_INT >= LOLLIPOP) {
-                    leCallbackLollipop = startLEScanCallbackLollipop(aDeviceFilter);
-                } else {
-                    leCallback = startLEScanCallback(aDeviceFilter);
-                }
-            }
+        if (SDK_INT >= LOLLIPOP) {
+            leCallbackLollipop = startLEScanCallbackLollipop();
+        } else {
+            leCallback = startLEScanCallback();
         }
     }
 
@@ -485,28 +481,28 @@ public class BluetoothService {
     }
 
     @TargetApi(JELLY_BEAN_MR2)
-    public static BluetoothAdapter.LeScanCallback startLEScanCallback(AbstractBluetoothDevice aDeviceFilter)  {
+    public static BluetoothAdapter.LeScanCallback startLEScanCallback()  {
 
         Log.i(LOG_TAG_BT, "Start discovery for Bluetooth LE devices");
-        BluetoothAdapter.LeScanCallback callback = (device, rssi, scanRecord) -> handleDeviceDiscovered(device, aDeviceFilter, rssi);
+        BluetoothAdapter.LeScanCallback callback = (device, rssi, scanRecord) -> handleDeviceDiscovered(device, rssi);
         BluetoothAdapter.getDefaultAdapter().startLeScan(leCallback);
         return callback;
     }
 
     @TargetApi(LOLLIPOP)
-    private static ScanCallback startLEScanCallbackLollipop(AbstractBluetoothDevice aDeviceFilter) {
+    private static ScanCallback startLEScanCallbackLollipop() {
         Log.i(LOG_TAG_BT, "Start discovery for Lollipop+ Bluetooth LE devices");
 
         ScanCallback callback = new ScanCallback() {
             @Override
             public void onScanResult(int callbackType, ScanResult result) {
-                handleDeviceDiscovered(result.getDevice(), aDeviceFilter, result.getRssi());
+                handleDeviceDiscovered(result.getDevice(), result.getRssi());
             }
 
             @Override
             public void onBatchScanResults(List<ScanResult> results) {
                 for (ScanResult result : results) {
-                    handleDeviceDiscovered(result.getDevice(), aDeviceFilter, result.getRssi());
+                    handleDeviceDiscovered(result.getDevice(), result.getRssi());
                 }
             }
 
@@ -526,9 +522,9 @@ public class BluetoothService {
         return callback;
     }
 
-    private static void handleDeviceDiscovered(BluetoothDevice device, AbstractBluetoothDevice aDeviceFilter, int rssi) {
+    private static void handleDeviceDiscovered(BluetoothDevice device, int rssi) {
         Log.d(LOG_TAG_BT, "Discovered: " + device.getName());
-        AbstractBluetoothDevice deviceParent = BluetoothService.getSupportedDevice(device, aDeviceFilter);
+        AbstractBluetoothDevice deviceParent = BluetoothService.getSupportedDevice(device);
 
         if (deviceParent != null && deviceParent instanceof AbstractBluetoothLEDevice) {
             Log.i(LOG_TAG_BT, "Discovered LE device " + rssi + " : " + device.getName());
