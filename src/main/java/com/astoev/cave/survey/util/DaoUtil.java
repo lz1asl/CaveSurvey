@@ -480,6 +480,12 @@ public class DaoUtil {
         return vectorsQuery.query();
     }
 
+    public static Long getLegVectorsCount(Leg aLeg) throws SQLException {
+        QueryBuilder<Vector, Integer> vectorsQuery = Workspace.getCurrentInstance().getDBHelper().getVectorsDao().queryBuilder();
+        vectorsQuery.where().eq(Vector.COLUMN_POINT, aLeg.getFromPoint().getId()).and().eq(Vector.COLUMN_GALLERY_ID, aLeg.getGalleryId());
+        return vectorsQuery.countOf();
+    }
+
     public static boolean hasVectorsByLeg(Leg aLeg) throws SQLException {
         QueryBuilder<Vector, Integer> vectorsQuery = Workspace.getCurrentInstance().getDBHelper().getVectorsDao().queryBuilder();
         vectorsQuery.where().eq(Vector.COLUMN_POINT, aLeg.getFromPoint().getId()).and().eq(Vector.COLUMN_GALLERY_ID, aLeg.getGalleryId());

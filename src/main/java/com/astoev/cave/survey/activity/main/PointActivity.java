@@ -62,6 +62,7 @@ import java.util.List;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.Manifest.permission.CAMERA;
+import static android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
 
 /**
  * Created by IntelliJ IDEA.
@@ -100,6 +101,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.point);
+        getWindow().addFlags(FLAG_KEEP_SCREEN_ON);
         mNewNote = null;
 
         // initialize the view with leg data only if the activity is new

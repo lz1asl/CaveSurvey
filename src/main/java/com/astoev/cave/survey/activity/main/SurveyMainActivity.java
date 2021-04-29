@@ -42,6 +42,8 @@ import com.astoev.cave.survey.util.StringUtils;
 import java.sql.SQLException;
 import java.util.List;
 
+import static android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
+
 /**
  * User: astoev
  * Date: 1/23/12
@@ -66,6 +68,7 @@ public class SurveyMainActivity extends MainMenuActivity implements AddNewSelect
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.survey);
+        getWindow().addFlags(FLAG_KEEP_SCREEN_ON);
         
         sketchPrefix   = getString(R.string.table_sketch_prefix);
         notePrefix     = getString(R.string.table_note_prefix);

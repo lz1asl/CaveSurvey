@@ -52,8 +52,8 @@ public abstract class AbstractBluetoothDevice implements Comparable {
         return StringUtils.isNotEmpty(aDeviceName) && aDeviceName.startsWith(aStart);
     }
 
-    protected boolean deviceNameEquals(String aDeviceName, String aStart) {
-        return StringUtils.isNotEmpty(aDeviceName) && aDeviceName.equals(aStart);
+    protected boolean deviceNameEquals(String aDeviceName, String aName) {
+        return StringUtils.isNotEmpty(aDeviceName) && aDeviceName.equals(aName);
     }
 
     public boolean isTypeCompatible(BluetoothDevice device) {
@@ -69,9 +69,5 @@ public abstract class AbstractBluetoothDevice implements Comparable {
     @Override
     public int compareTo(Object another) {
         return getDescription().compareTo(((AbstractBluetoothDevice) another).getDescription());
-    }
-
-    public boolean matchesDeviceFilter(AbstractBluetoothDevice filter) {
-        return filter == null || filter.getClass().equals(getClass());
     }
 }

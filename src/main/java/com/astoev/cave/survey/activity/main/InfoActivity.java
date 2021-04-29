@@ -18,6 +18,7 @@ import com.astoev.cave.survey.dto.ProjectConfig;
 import com.astoev.cave.survey.fragment.ProjectFragment;
 import com.astoev.cave.survey.manager.ProjectManager;
 import com.astoev.cave.survey.model.Option;
+import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.openstopo.WebViewActivity;
 import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.service.export.excel.ExcelExport;
@@ -365,5 +366,15 @@ public class InfoActivity extends MainMenuActivity {
             UIUtilities.showNotification(R.string.error);
         }
 
+    }
+
+    @Override
+    protected String getScreenTitle() {
+        // set the name of the chosen project as title in the action bar
+        Project activeProject = getWorkspace().getActiveProject();
+        if (activeProject != null){
+            return activeProject.getName();
+        }
+        return null;
     }
 }
