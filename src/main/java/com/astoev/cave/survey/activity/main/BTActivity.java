@@ -28,6 +28,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
 import static com.astoev.cave.survey.Constants.LOG_TAG_UI;
 
 /**
@@ -44,6 +45,7 @@ public class BTActivity extends MainMenuActivity implements Refresheable {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.bluetooth);
+        getWindow().addFlags(FLAG_KEEP_SCREEN_ON);
 
         BluetoothService.registerListeners(this);
         prepareUI();
