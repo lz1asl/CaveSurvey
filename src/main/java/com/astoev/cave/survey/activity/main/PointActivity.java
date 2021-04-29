@@ -95,13 +95,14 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 
     // swipe detection variables
     private float x1, x2;
-    private static final int MIN_SWIPE_DISTANCE = 150;
+    private static int MIN_SWIPE_DISTANCE;
 
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.point);
         getWindow().addFlags(FLAG_KEEP_SCREEN_ON);
+        MIN_SWIPE_DISTANCE = (int) (250 * getApplicationContext().getResources().getDisplayMetrics().density);
         mNewNote = null;
 
         // initialize the view with leg data only if the activity is new
