@@ -23,11 +23,6 @@ public abstract class AbstractDistoXBluetoothDevice extends AbstractBluetoothRFC
 
 
     @Override
-    public void triggerMeasures(OutputStream aStream, List<Constants.MeasureTypes> aMeasures) throws IOException {
-        // not needed, measures sent automatically
-    }
-
-    @Override
     public void configure(InputStream anInput, OutputStream anOutput) throws IOException {
         // not needed
     }
