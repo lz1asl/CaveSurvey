@@ -9,6 +9,8 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import androidx.documentfile.provider.DocumentFile;
+
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.MainMenuActivity;
@@ -49,7 +51,7 @@ public class NewProjectActivity extends MainMenuActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.newproject);
 
-        prepareImportFiles();
+//        prepareImportFiles();
     }
 
     private void prepareImportFiles() {
@@ -108,7 +110,7 @@ public class NewProjectActivity extends MainMenuActivity {
             }
 
             // name should be simple enough to be presented on the FS
-            File projectHome = FileStorageUtil.getProjectHome(newProjectName);
+            DocumentFile projectHome = FileStorageUtil.getProjectHome(newProjectName);
             if (projectHome == null) {
                 projectNameField.setError(getString(R.string.project_name_characters));
                 return;
