@@ -56,6 +56,10 @@ public abstract class AbstractBluetoothDevice implements Comparable {
         return StringUtils.isNotEmpty(aDeviceName) && aDeviceName.equals(aName);
     }
 
+    protected boolean hasLength(String aDeviceName, int length) {
+        return StringUtils.isNotEmpty(aDeviceName) && aDeviceName.length() == length;
+    }
+
     public boolean isTypeCompatible(BluetoothDevice device) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
             // newer devices with LE support of the same type
