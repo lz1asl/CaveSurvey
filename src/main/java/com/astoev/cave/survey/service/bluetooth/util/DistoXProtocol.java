@@ -86,15 +86,6 @@ public class DistoXProtocol {
             inclination = (65536 - c) * (-90.0) / 16384.0;
         }
 
-        int r7 = dataPacket[7];
-        if (r7 < 0) {
-            r7 += 256;
-        }
-        double r = r7;
-        double roll = r * 180.0 / 128.0;
-
-
-
         Measure angleMeasure = new Measure(Constants.MeasureTypes.angle, Constants.MeasureUnits.degrees, bearing.floatValue());
         measures.add(angleMeasure);
         Log.i(Constants.LOG_TAG_BT, "Got angle " + angleMeasure);
