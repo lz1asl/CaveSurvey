@@ -1,10 +1,11 @@
-package com.astoev.cave.survey.service.bluetooth.device.comm;
+package com.astoev.cave.survey.service.bluetooth.device.comm.distox;
 
 import android.util.Log;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.Measure;
+import com.astoev.cave.survey.service.bluetooth.device.comm.AbstractBluetoothRFCOMMDevice;
 import com.astoev.cave.survey.service.bluetooth.util.DistoXProtocol;
 
 import java.io.IOException;
@@ -14,27 +15,12 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * DistoX v1 or v2 device.
+ * DistoX v1 or v2 common implementation.
  *
  * Created by astoev on 3/26/15.
  */
-public class DistoXBluetoothDevice extends AbstractBluetoothRFCOMMDevice {
+public abstract class AbstractDistoXBluetoothDevice extends AbstractBluetoothRFCOMMDevice {
 
-
-    @Override
-    public boolean isNameSupported(String aName) {
-        return deviceNameStartsWith(aName, "DistoX");
-    }
-
-    @Override
-    public String getDescription() {
-        return "DistoX and DistoX2";
-    }
-
-    @Override
-    public void triggerMeasures(OutputStream aStream, List<Constants.MeasureTypes> aMeasures) throws IOException {
-        // not needed, measures sent automatically
-    }
 
     @Override
     public void configure(InputStream anInput, OutputStream anOutput) throws IOException {
