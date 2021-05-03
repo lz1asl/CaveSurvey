@@ -1,6 +1,6 @@
 package com.astoev.cave.survey.service.export.vtopo
 
-import android.content.Context
+import android.content.res.Resources
 import android.util.Log
 import com.astoev.cave.survey.Constants
 import com.astoev.cave.survey.activity.map.MapUtilities
@@ -21,7 +21,7 @@ import java.io.InputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
-class VisualTopoExport(aContext: Context?) : AbstractExport(aContext) {
+class VisualTopoExport(aResources: Resources?) : AbstractExport(aResources) {
 
     val SEPARATOR = ","
     val COORDINATE_PLACEHOLDER = ",,,,LT93";
@@ -36,8 +36,6 @@ class VisualTopoExport(aContext: Context?) : AbstractExport(aContext) {
     private var distanceInMeters = UNIT_METERS.equals(getOptionValue(CODE_DISTANCE_UNITS))
 
     init {
-        mUseUniqueName = true;
-        mExtension = ".tro";
         body.clear()
     }
 
@@ -88,6 +86,10 @@ class VisualTopoExport(aContext: Context?) : AbstractExport(aContext) {
                 .replace(ENTRANCE, entrance)
         // result
         return ByteArrayInputStream(troContents.toByteArray());
+    }
+
+    override fun getExtension(): String {
+        return ".tro";
     }
 
     override fun prepare(aProject: Project) {

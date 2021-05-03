@@ -1,6 +1,6 @@
 package com.astoev.cave.survey.service.export;
 
-import android.content.Context;
+import android.content.res.Resources;
 import android.util.Log;
 import android.util.SparseArray;
 
@@ -34,14 +34,21 @@ import static com.astoev.cave.survey.service.export.ExportEntityType.VECTOR;
  */
 public abstract class AbstractExport {
 
-    protected Context mContext;
-    protected String mExtension;
-    protected boolean mUseUniqueName;
+    protected Resources mResources;
     protected enum Entities { FROM, TO, DISTANCE, COMPASS, INCLINATION, UP, DOWN, LEFT, RIGHT, NOTE}
 
-    public AbstractExport(Context aContext) {
-        mContext = aContext;
+    public AbstractExport(Resources aResources) {
+        mResources = aResources;
     }
+
+    // exported file info
+    protected abstract String getExtension();
+
+    protected String getMimeType() {
+        // default implementation
+        return "application/octet-stream";
+    }
+
 
     // implementation details, methods called in the same order
     protected abstract void prepare(Project aProject);
@@ -55,7 +62,7 @@ public abstract class AbstractExport {
     protected abstract InputStream getContent() throws IOException;
 
     // public method for starting export
-    public String runExport(Project aProject) throws Exception {
+    public String runExport(Project aProject, String suffix, boolean unique) throws Exception {
 
         try {
             prepare(aProject);
@@ -221,8 +228,10 @@ public abstract class AbstractExport {
 
                 lastGalleryId = l.getGalleryId();
             }
+
+            String exportSuffix = suffix == null ? getExtension() : FileStorageUtil.NAME_DELIMITER + suffix + getExtension();
             InputStream in = getContent();
-            return FileStorageUtil.addProjectExport(aProject, in, getExtension(), isUseUniqueName());
+            return FileStorageUtil.addProjectExport(aProject, in, exportSuffix, unique);
         } catch (Exception t) {
             Log.e(Constants.LOG_TAG_SERVICE, "Failed with export", t);
             throw t;
@@ -286,19 +295,4 @@ public abstract class AbstractExport {
         }
     }
 
-    public String getExtension() {
-        return mExtension;
-    }
-
-    public void setExtension(String extension) {
-        mExtension = extension;
-    }
-
-    public boolean isUseUniqueName() {
-        return mUseUniqueName;
-    }
-
-    public void setUseUniqueName(boolean useUniqueName) {
-        mUseUniqueName = useUniqueName;
-    }
 }

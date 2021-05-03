@@ -8,7 +8,6 @@ import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.service.Workspace;
 import com.astoev.cave.survey.service.export.excel.ExcelExport;
 import com.astoev.cave.survey.util.ConfigUtil;
-import com.astoev.cave.survey.util.FileStorageUtil;
 import com.astoev.cave.survey.util.StringUtils;
 
 /**
@@ -49,10 +48,8 @@ public class AutoExport {
         try {
             if (ConfigUtil.getBooleanProperty(ConfigUtil.PREF_AUTO_BACKUP)) {
                 Log.i(Constants.LOG_TAG_SERVICE, "Start auto export");
-                ExcelExport export = new ExcelExport(ConfigUtil.getContext());
-                export.setUseUniqueName(false);
-                export.setExtension(FileStorageUtil.NAME_DELIMITER + "auto" + export.getExtension());
-                String exportPath = export.runExport(Workspace.getCurrentInstance().getActiveProject());
+                ExcelExport export = new ExcelExport(ConfigUtil.getContext().getResources());
+                String exportPath = export.runExport(Workspace.getCurrentInstance().getActiveProject(), "auto", false);
                 if (StringUtils.isEmpty(exportPath)) {
                     UIUtilities.showNotification(ConfigUtil.getContext(), R.string.export_io_error, exportPath);
                 }

@@ -1,6 +1,6 @@
 package com.astoev.cave.survey.service.export.excel;
 
-import android.content.Context;
+import android.content.res.Resources;
 import android.util.Log;
 
 import com.astoev.cave.survey.Constants;
@@ -49,22 +49,23 @@ public class ExcelExport extends AbstractExport {
 
     public static final String MEASUREMENT_UNIT_DELIMITER = " - ";
     public static final String EXCEL_FILE_EXTENSION = ".xls";
-    public static int CELL_FROM = 0;
-    public static int CELL_TO = 1;
-    public static int CELL_LENGHT = 2;
-    public static int CELL_AZIMUTH = 3;
-    public static int CELL_SLOPE = 4;
-    public static int CELL_LEFT = 5;
-    public static int CELL_RIGHT = 6;
-    public static int CELL_UP = 7;
-    public static int CELL_DOWN = 8;
-    public static int CELL_NOTE = 9;
-    public static int CELL_LATITUDE = 10;
-    public static int CELL_LONGITUDE = 11;
-    public static int CELL_ALTTITUDE = 12;
-    public static int CELL_ACCURACY = 13;
-    private static int CELL_DRAWING = 14;
-    private static int CELL_PHOTO = 15;
+    public static final String EXCEL_MIME_TYPE = "application/vnd.ms-excel";
+    public static final int CELL_FROM = 0;
+    public static final int CELL_TO = 1;
+    public static final int CELL_LENGHT = 2;
+    public static final int CELL_AZIMUTH = 3;
+    public static final int CELL_SLOPE = 4;
+    public static final int CELL_LEFT = 5;
+    public static final int CELL_RIGHT = 6;
+    public static final int CELL_UP = 7;
+    public static final int CELL_DOWN = 8;
+    public static final int CELL_NOTE = 9;
+    public static final int CELL_LATITUDE = 10;
+    public static final int CELL_LONGITUDE = 11;
+    public static final int CELL_ALTTITUDE = 12;
+    public static final int CELL_ACCURACY = 13;
+    private static final int CELL_DRAWING = 14;
+    private static final int CELL_PHOTO = 15;
 
     private Workbook wb;
     private Sheet sheet;
@@ -72,15 +73,23 @@ public class ExcelExport extends AbstractExport {
 
     private Row legRow;
 
-    public ExcelExport(Context aContext) {
-        super(aContext);
-        mUseUniqueName = true;
-        mExtension = EXCEL_FILE_EXTENSION;
+    public ExcelExport(Resources aResources) {
+        super(aResources);
+    }
+
+    @Override
+    public String getExtension() {
+        return EXCEL_FILE_EXTENSION;
+    }
+
+    @Override
+    protected String getMimeType() {
+        return EXCEL_MIME_TYPE;
     }
 
     @Override
     protected void prepare(Project aProject) {
-        Log.i(Constants.LOG_TAG_SERVICE, "Start excel export ");
+        Log.i(Constants.LOG_TAG_SERVICE, "Excel export preparing");
         wb = new HSSFWorkbook();
         sheet = createHeader(aProject.getName(), wb);
         helper = wb.getCreationHelper();
@@ -212,42 +221,42 @@ public class ExcelExport extends AbstractExport {
         Row headerRow = sheet.createRow(0);
         // header cells
         Cell headerFrom = headerRow.createCell(CELL_FROM);
-        headerFrom.setCellValue(mContext.getString(R.string.main_table_header_from));
+        headerFrom.setCellValue(mResources.getString(R.string.main_table_header_from));
         Cell headerTo = headerRow.createCell(CELL_TO);
-        headerTo.setCellValue(mContext.getString(R.string.main_table_header_to));
+        headerTo.setCellValue(mResources.getString(R.string.main_table_header_to));
         Cell headerLength = headerRow.createCell(CELL_LENGHT);
-        String distanceTitle = mContext.getString(R.string.distance) + MEASUREMENT_UNIT_DELIMITER + Options.getOptionValue(CODE_DISTANCE_UNITS);
+        String distanceTitle = mResources.getString(R.string.distance) + MEASUREMENT_UNIT_DELIMITER + Options.getOptionValue(CODE_DISTANCE_UNITS);
         headerLength.setCellValue(distanceTitle);
         Cell headerCompass = headerRow.createCell(CELL_AZIMUTH);
-        String azimuthTitle = mContext.getString(R.string.azimuth) + MEASUREMENT_UNIT_DELIMITER + Options.getOptionValue(CODE_AZIMUTH_UNITS);
+        String azimuthTitle = mResources.getString(R.string.azimuth) + MEASUREMENT_UNIT_DELIMITER + Options.getOptionValue(CODE_AZIMUTH_UNITS);
         headerCompass.setCellValue(azimuthTitle);
         Cell headerClinometer = headerRow.createCell(CELL_SLOPE);
-        String clinometerTitle = mContext.getString(R.string.slope) + MEASUREMENT_UNIT_DELIMITER + Options.getOptionValue(CODE_SLOPE_UNITS);
+        String clinometerTitle = mResources.getString(R.string.slope) + MEASUREMENT_UNIT_DELIMITER + Options.getOptionValue(CODE_SLOPE_UNITS);
         headerClinometer.setCellValue(clinometerTitle);
         Cell headerLeft = headerRow.createCell(CELL_LEFT);
-        headerLeft.setCellValue(mContext.getString(R.string.left));
+        headerLeft.setCellValue(mResources.getString(R.string.left));
         Cell headerRight = headerRow.createCell(CELL_RIGHT);
-        headerRight.setCellValue(mContext.getString(R.string.right));
+        headerRight.setCellValue(mResources.getString(R.string.right));
         Cell headerUp = headerRow.createCell(CELL_UP);
-        headerUp.setCellValue(mContext.getString(R.string.up));
+        headerUp.setCellValue(mResources.getString(R.string.up));
         Cell headerDown = headerRow.createCell(CELL_DOWN);
-        headerDown.setCellValue(mContext.getString(R.string.down));
+        headerDown.setCellValue(mResources.getString(R.string.down));
         Cell headerNote = headerRow.createCell(CELL_NOTE);
-        headerNote.setCellValue(mContext.getString(R.string.main_table_header_note));
+        headerNote.setCellValue(mResources.getString(R.string.main_table_header_note));
 
         Cell gpsLatitude = headerRow.createCell(CELL_LATITUDE);//gps_latitude
-        gpsLatitude.setCellValue(mContext.getString(R.string.gps_latitude));
+        gpsLatitude.setCellValue(mResources.getString(R.string.gps_latitude));
         Cell gpsLongitude = headerRow.createCell(CELL_LONGITUDE);
-        gpsLongitude.setCellValue(mContext.getString(R.string.gps_longitude));
+        gpsLongitude.setCellValue(mResources.getString(R.string.gps_longitude));
         Cell gpsAltitude = headerRow.createCell(CELL_ALTTITUDE);
-        gpsAltitude.setCellValue(mContext.getString(R.string.gps_altitude));
+        gpsAltitude.setCellValue(mResources.getString(R.string.gps_altitude));
         Cell gpsAccuracy = headerRow.createCell(CELL_ACCURACY);
-        gpsAccuracy.setCellValue(mContext.getString(R.string.gps_accuracy));
+        gpsAccuracy.setCellValue(mResources.getString(R.string.gps_accuracy));
 
         Cell headerDrawing = headerRow.createCell(CELL_DRAWING);
-        headerDrawing.setCellValue(mContext.getString(R.string.main_table_header_drawing));
+        headerDrawing.setCellValue(mResources.getString(R.string.main_table_header_drawing));
         Cell headerPhoto = headerRow.createCell(CELL_PHOTO);
-        headerPhoto.setCellValue(mContext.getString(R.string.main_table_header_photo));
+        headerPhoto.setCellValue(mResources.getString(R.string.main_table_header_photo));
         return sheet;
     }
 
