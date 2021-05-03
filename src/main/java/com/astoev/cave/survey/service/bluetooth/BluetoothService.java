@@ -41,7 +41,6 @@ import com.astoev.cave.survey.service.bluetooth.device.ble.mileseey.MileseeydM12
 import com.astoev.cave.survey.service.bluetooth.device.ble.mileseey.SuaokiP7BluetoothLeDevice;
 import com.astoev.cave.survey.service.bluetooth.device.comm.AbstractBluetoothRFCOMMDevice;
 import com.astoev.cave.survey.service.bluetooth.device.comm.CEMILDMBluetoothDevice;
-import com.astoev.cave.survey.service.bluetooth.device.comm.DistoXBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.comm.LaserAceBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.comm.LeicaDistoD3aBtBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.comm.TruPulse360BluetoothDevice;
@@ -50,6 +49,8 @@ import com.astoev.cave.survey.service.bluetooth.device.comm.bosch.glm.BoschGLM50
 import com.astoev.cave.survey.service.bluetooth.device.comm.bosch.glm.BoschPLR30CBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.comm.bosch.glm.BoschPLR40CBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.comm.bosch.glm.BoschPLR50CBluetoothDevice;
+import com.astoev.cave.survey.service.bluetooth.device.comm.distox.DistoXv1BluetoothDevice;
+import com.astoev.cave.survey.service.bluetooth.device.comm.distox.DistoXv2BluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.lecommands.AbstractBluetoothCommand;
 import com.astoev.cave.survey.service.bluetooth.lecommands.EnableNotificationCommand;
 import com.astoev.cave.survey.service.bluetooth.lecommands.PullCharacteristicCommand;
@@ -97,7 +98,8 @@ public class BluetoothService {
         SUPPORTED_BLUETOOTH_COM_DEVICES.add(new CEMILDMBluetoothDevice());
         SUPPORTED_BLUETOOTH_COM_DEVICES.add(new LaserAceBluetoothDevice());
         SUPPORTED_BLUETOOTH_COM_DEVICES.add(new TruPulse360BluetoothDevice());
-        SUPPORTED_BLUETOOTH_COM_DEVICES.add(new DistoXBluetoothDevice());
+        SUPPORTED_BLUETOOTH_COM_DEVICES.add(new DistoXv1BluetoothDevice());
+        SUPPORTED_BLUETOOTH_COM_DEVICES.add(new DistoXv2BluetoothDevice());
         SUPPORTED_BLUETOOTH_COM_DEVICES.add(new BoschGLM50CBluetoothDevice());
         SUPPORTED_BLUETOOTH_COM_DEVICES.add(new BoschGLM100CBluetoothDevice());
         SUPPORTED_BLUETOOTH_COM_DEVICES.add(new BoschPLR30CBluetoothDevice());
