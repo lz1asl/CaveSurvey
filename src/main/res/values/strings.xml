@@ -69,6 +69,9 @@
     <string name="point_photos_header">Photos</string>
     <string name="point_photo_label">Photo %1$s</string>
 
+    <string name="point_sketches_header">Sketches</string>
+    <string name="point_sketch_label">Sketch %1$s</string>
+
     <string name="point_vectors_header">Vectors</string>
     <string name="point_vectors_counter">Vector #</string>
     <string name="point_vectors_delete">Delete vector %1$s?</string>

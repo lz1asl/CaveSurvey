@@ -147,5 +147,15 @@
 			android:layout_below="@id/point_vectors_table">
 		</TableLayout>
 
+		<TableLayout
+			android:id="@+id/point_sketches_table"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:visibility="invisible"
+			android:layout_margin="10dp"
+			android:stretchColumns="*"
+			android:layout_below="@id/point_photos_table">
+		</TableLayout>
+
 	</RelativeLayout>
 </ScrollView>

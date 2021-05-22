@@ -91,6 +91,9 @@
     <string name="point_photos_header">Снимки</string>
     <string name="point_photo_label">Снимка %1$s</string>
 
+    <string name="point_sketches_header">Скици</string>
+    <string name="point_sketch_label">Скица %1$s</string>
+
     <string name="point_vectors_header">Лъчи</string>
     <string name="point_vectors_counter">Лъч #</string>
     <string name="point_vectors_delete">Изтриване на лъч %1$s?</string>
