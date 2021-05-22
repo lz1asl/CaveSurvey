@@ -315,6 +315,11 @@ public class ExcelImport {
                 if (accuracyCell != null) {
                     leg.setAccuracy((float) accuracyCell.getNumericCellValue());
                 }
+                Cell sketcesCell = row.getCell(ExcelExport.CELL_DRAWING);
+                if (sketcesCell != null) {
+                    leg.setSketch(getStringCellValue(sketcesCell));
+                }
+
                 legs.add(leg);
             }
 
