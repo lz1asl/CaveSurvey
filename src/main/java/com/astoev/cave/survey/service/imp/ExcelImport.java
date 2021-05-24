@@ -271,7 +271,7 @@ public class ExcelImport {
                     Log.i(Constants.LOG_TAG_SERVICE, "End of cells");
                     break;
                 }
-                String from = cellFrom.getStringCellValue();
+                String from = getStringCellValue(cellFrom);
                 if (StringUtils.isEmpty(from)) {
                     Log.i(Constants.LOG_TAG_SERVICE, "End of non-empty rows");
                     break;
@@ -280,7 +280,7 @@ public class ExcelImport {
                 leg.setFromPoint(PointUtil.getPointName(from));
 
                 Cell cellTo = row.getCell(ExcelExport.CELL_TO);
-                String to = cellTo == null ? null : cellTo.getStringCellValue();
+                String to = cellTo == null ? null : getStringCellValue(cellTo);
                 leg.setToGallery(PointUtil.getPointGalleryName(to));
                 leg.setToPoint(PointUtil.getPointName(to));
                 leg.setVector(PointUtil.isVector(to));
@@ -296,7 +296,7 @@ public class ExcelImport {
 
                 Cell noteCell = row.getCell(ExcelExport.CELL_NOTE);
                 if (noteCell != null) {
-                    leg.setNote(noteCell.getStringCellValue());
+                    leg.setNote(getStringCellValue(noteCell));
                 }
 
                 Cell latCell = row.getCell(ExcelExport.CELL_LATITUDE);
@@ -321,7 +321,7 @@ public class ExcelImport {
             Log.i(Constants.LOG_TAG_SERVICE, legs.size() + " records found");
             return data;
         } catch (Exception e) {
-            Log.e(Constants.LOG_TAG_SERVICE, "Error during import", e);
+            Log.e(Constants.LOG_TAG_SERVICE, "Error during import on row " + rowNum, e);
             String errorMessage = ConfigUtil.getContext().getString(R.string.settings_import_error,
                     rowNum, e.getClass().getSimpleName(), e.getMessage());
             UIUtilities.showNotification(errorMessage);
@@ -363,11 +363,18 @@ public class ExcelImport {
     private static Float getNotNullFloatCellValue(Row row, int index) {
         Cell cell = row.getCell(index);
         if (cell != null) {
-            DataFormatter formatter = new DataFormatter();
-            String val = formatter.formatCellValue(cell);
+            String val = getStringCellValue(cell);
             if (StringUtils.isNotEmpty(val)) {
-                return Float.parseFloat(val);
+                return Float.parseFloat(val.replace(',', '.'));
             }
+        }
+        return  null;
+    }
+
+    private static String getStringCellValue(Cell cell) {
+        if (cell != null) {
+            DataFormatter formatter = new DataFormatter();
+            return formatter.formatCellValue(cell);
         }
         return  null;
     }
