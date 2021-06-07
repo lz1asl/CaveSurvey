@@ -39,6 +39,7 @@ import com.astoev.cave.survey.model.Note;
 import com.astoev.cave.survey.model.Option;
 import com.astoev.cave.survey.model.Photo;
 import com.astoev.cave.survey.model.Point;
+import com.astoev.cave.survey.model.Sketch;
 import com.astoev.cave.survey.model.Vector;
 import com.astoev.cave.survey.service.Options;
 import com.astoev.cave.survey.service.bluetooth.BTMeasureResultReceiver;
@@ -121,7 +122,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         }
 
         loadLegPhotos(legEdited);
-
+        loadLegSketches(legEdited);
         loadLegVectors(legEdited);
 
         // make swipe work
@@ -154,6 +155,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         Leg legEdited = getCurrentLeg();
         GPSActivity.initSavedLocationContainer(legEdited.getFromPoint(), this, null);
 
+        loadLegSketches(getCurrentLeg());
         loadLegVectors(getCurrentLeg());
     }
 
@@ -768,7 +770,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
     public void loadLegPhotos(Leg aLegEdited) {
 
         if (aLegEdited.isNew()) {
-            // no vectors anyway
+            // no photos anyway
             return;
         }
 
@@ -829,6 +831,73 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
             }
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to load photos", e);
+            UIUtilities.showNotification(R.string.error);
+        }
+    }
+
+    public void loadLegSketches(Leg aLegEdited) {
+
+        if (aLegEdited.isNew()) {
+            // no sketches anyway
+            return;
+        }
+
+        if (aLegEdited.isMiddle()) {
+            // no need to proceed
+            return;
+        }
+
+        try {
+            TableLayout sketchesTable = findViewById(R.id.point_sketches_table);
+
+            // data
+            List<Sketch> sketchesList = DaoUtil.getAllSketchesByPoint(aLegEdited.getFromPoint());
+            if (sketchesList != null && sketchesList.size() > 0) {
+
+                // remove old data
+                sketchesTable.removeAllViews();
+
+                // set headers
+                TableRow header = new TableRow(this);
+                TextView counterHeader = new TextView(this);
+                counterHeader.setText(getString(R.string.point_sketches_header));
+                header.addView(counterHeader);
+                sketchesTable.addView(header);
+
+                // populate data
+                int index = 1;
+                for (final Sketch sketch : sketchesList) {
+                    TableRow row = new TableRow(this);
+                    TextView id = new TextView(this);
+                    String rowLabel = getString(R.string.point_sketch_label, String.valueOf(index));
+                    id.setText(rowLabel);
+                    id.setGravity(Gravity.CENTER);
+                    row.addView(id);
+
+                    final int sketchIndex = index;
+                    final String sketchPath = sketch.getFSPath();
+
+                    row.setOnClickListener(v -> {
+
+                        // show the sketch
+                        Intent intent = new Intent();
+                        intent.setAction(Intent.ACTION_VIEW);
+                        Uri fileUri =  FileUtils.getFileUri(new File(sketchPath));
+                        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        intent.setDataAndType(fileUri, "image/*");
+                        startActivity(intent);
+                    });
+
+                    sketchesTable.addView(row);
+                    index++;
+                }
+
+                sketchesTable.setVisibility(View.VISIBLE);
+            } else {
+                sketchesTable.setVisibility(View.INVISIBLE);
+            }
+        } catch (Exception e) {
+            Log.e(Constants.LOG_TAG_UI, "Failed to load sketches", e);
             UIUtilities.showNotification(R.string.error);
         }
     }

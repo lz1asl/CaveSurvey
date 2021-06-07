@@ -3,12 +3,15 @@ package com.astoev.cave.survey.test.service.data
 import com.astoev.cave.survey.model.Option.*
 import com.astoev.cave.survey.service.imp.ExcelImport.loadProjectData
 import com.astoev.cave.survey.service.imp.LegData
+import com.astoev.cave.survey.test.helper.Common.checkNotVisible
+import com.astoev.cave.survey.test.helper.Common.checkVisible
 import com.astoev.cave.survey.test.helper.Common.goBack
 import com.astoev.cave.survey.test.helper.Data.dataScreen
 import com.astoev.cave.survey.test.helper.Data.getLastXlsExport
 import com.astoev.cave.survey.test.helper.Data.xlsExport
 import com.astoev.cave.survey.test.helper.ExcelTestUtils.assertConfigUnits
 import com.astoev.cave.survey.test.helper.ExcelTestUtils.assertLeg
+import com.astoev.cave.survey.test.helper.Survey
 import com.astoev.cave.survey.test.helper.Survey.addCoordinate
 import com.astoev.cave.survey.test.helper.Survey.addLeg
 import com.astoev.cave.survey.test.helper.Survey.addLegMiddle
@@ -21,6 +24,7 @@ import com.astoev.cave.survey.test.helper.Survey.selectFirstSurveyLeg
 import com.astoev.cave.survey.test.helper.Survey.setLegData
 import com.astoev.cave.survey.util.FileStorageUtil.getUniqueExportName
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
 import org.junit.Test
 import java.io.IOException
 
@@ -48,7 +52,7 @@ class ExcelExportTest() : AbstractExportTest() {
         assertFirstLegNoSlope(legs)
         assertSecondSimpleLeg(legs)
 
-       // with side measurements
+        // with side measurements
         addLeg(2.3f, 3.4f, 4.5f, 1.1f, 1.2f, 1.3f, 1.4f)
         legs = exportAndRead(surveyName, 3)
         assertFirstLegNoSlope(legs)
@@ -123,6 +127,37 @@ class ExcelExportTest() : AbstractExportTest() {
         legs = exportAndRead(surveyName, 2, UNIT_FEET, UNIT_GRADS, UNIT_GRADS)
         assertFirstLegNoSlope(legs)
         assertSecondSimpleLeg(legs)
+    }
+
+    @Test
+    @Throws(IOException::class)
+    fun excelExportSketces() {
+        // create survey
+        var surveyName = createAndOpenSurvey()
+
+        // fist minimal leg
+        selectFirstSurveyLeg()
+        setLegData(1f, 2f, null)
+        openLegWithText("A1")
+
+        // no sketches
+        checkNotVisible("Sketches")
+        checkNotVisible("Sketch 1")
+
+        // create sketch
+        Survey.addSketch()
+        checkVisible("Sketches")
+        checkVisible("Sketch 1")
+
+        // create sketch
+        Survey.addSketch()
+        checkVisible("Sketches")
+        checkVisible("Sketch 1")
+        checkVisible("Sketch 2")
+
+        // sketch data exported
+        var legs = exportAndRead(surveyName, 1)
+        assertNotNull(legs[0].sketch)
     }
 
     @Throws(IOException::class)

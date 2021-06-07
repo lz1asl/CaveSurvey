@@ -59,6 +59,14 @@ object Common {
         Espresso.onView(ViewMatchers.withId(id)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
     }
 
+    fun checkVisible(text: String) {
+        Espresso.onView(ViewMatchers.withText(text)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+    }
+
+    fun checkNotVisible(text: String) {
+        Espresso.onView(ViewMatchers.withText(text)).check(ViewAssertions.doesNotExist());
+    }
+
     fun goBack() {
         Espresso.pressBack()
     }
