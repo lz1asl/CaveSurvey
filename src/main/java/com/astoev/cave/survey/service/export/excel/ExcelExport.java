@@ -64,8 +64,8 @@ public class ExcelExport extends AbstractExport {
     public static final int CELL_LONGITUDE = 11;
     public static final int CELL_ALTTITUDE = 12;
     public static final int CELL_ACCURACY = 13;
-    private static final int CELL_DRAWING = 14;
-    private static final int CELL_PHOTO = 15;
+    public static final int CELL_DRAWING = 14;
+    public static final int CELL_PHOTO = 15;
 
     private Workbook wb;
     private Sheet sheet;
