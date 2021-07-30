@@ -369,30 +369,37 @@ public class FileStorageUtil {
         return file.exists();
     }
 
-    public static List<File> listProjectFiles(Project aProject, String anExtension) {
-        // TODO
-        return null;
-        /*if (aProject != null) {
+    public static List<DocumentFile> listProjectFiles(Project aProject, String anExtension) {
+        if (aProject != null) {
             return getFolderFiles(getProjectHome(aProject.getName()), anExtension);
         } else {
-            File root = getStorageHome();
+            DocumentFile root = getStorageHome();
             if (root == null) {
                 return null;
             }
-            List<File> files = new ArrayList<>();
-            for (File projectHome : root.listFiles()) {
+            List<DocumentFile> files = new ArrayList<>();
+            for (DocumentFile projectHome : root.listFiles()) {
                 files.addAll(getFolderFiles(projectHome, anExtension));
             }
             return files;
-        }*/
+        }
     }
 
-    public static List<File> getFolderFiles(File aFolder, final String anExtension) {
+    public static List<DocumentFile> getFolderFiles(DocumentFile aFolder, final String anExtension) {
         if (aFolder == null || !aFolder.isDirectory()) {
             return new ArrayList();
         } else {
             if (StringUtils.isNotEmpty(anExtension)) {
-                return Arrays.asList(aFolder.listFiles((dir, filename) -> filename.endsWith(anExtension)));
+                DocumentFile[] files = aFolder.listFiles();
+                List<DocumentFile> filesWithExtension = new ArrayList<>();
+                if (files != null) {
+                    for (DocumentFile file : files) {
+                        if (file.getName().endsWith(anExtension)) {
+                            filesWithExtension.add(file);
+                        }
+                    }
+                }
+                return filesWithExtension;
             } else {
                 return Arrays.asList(aFolder.listFiles());
             }

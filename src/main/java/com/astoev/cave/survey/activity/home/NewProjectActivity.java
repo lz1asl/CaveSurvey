@@ -1,6 +1,7 @@
 package com.astoev.cave.survey.activity.home;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -26,7 +27,6 @@ import com.astoev.cave.survey.service.imp.ExcelImport;
 import com.astoev.cave.survey.util.FileStorageUtil;
 import com.astoev.cave.survey.util.StringUtils;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -51,7 +51,7 @@ public class NewProjectActivity extends MainMenuActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.newproject);
 
-//        prepareImportFiles();
+        prepareImportFiles();
     }
 
     private void prepareImportFiles() {
@@ -60,13 +60,13 @@ public class NewProjectActivity extends MainMenuActivity {
             Spinner spinner = findViewById(R.id.import_files);
 
             // locate excel files
-            List<File> excelExportFiles = FileStorageUtil.listProjectFiles(null, EXCEL_FILE_EXTENSION);
+            List<DocumentFile> excelExportFiles = FileStorageUtil.listProjectFiles(null, EXCEL_FILE_EXTENSION);
             if (excelExportFiles == null || excelExportFiles.isEmpty()) {
                 Log.i(Constants.LOG_TAG_UI, "No files to import");
             }
 
             List<NewProjectActivity.ImportFile> importFiles = new ArrayList<>();
-            for (File file : excelExportFiles) {
+            for (DocumentFile file : excelExportFiles) {
                 importFiles.add(new ImportFile(file));
             }
             Collections.sort(importFiles);
@@ -138,7 +138,7 @@ public class NewProjectActivity extends MainMenuActivity {
                 // import selected file
                 Log.v(Constants.LOG_TAG_UI, "Importing project");
 
-                File file = ((NewProjectActivity.ImportFile) spinner.getSelectedItem()).file;
+                Uri file = ((ImportFile) spinner.getSelectedItem()).uri;
 
                 ExcelImport.importExcelFile(file, project);
                 projectImported = true;
@@ -214,22 +214,30 @@ public class NewProjectActivity extends MainMenuActivity {
         infoDialog.show(getSupportFragmentManager(), IMPORT_TOOLTIP_DIALOG);
     }
 
-    public static class ImportFile implements Comparable {
+    public static class ImportFile implements Comparable<ImportFile> {
         public static final String NO_FILE_SELECTED = " --- ";
-        File file;
+        String name;
+        Uri uri;
 
-        public ImportFile(File aFile) {
-            file = aFile;
+        public ImportFile(DocumentFile aFile) {
+
+            if (aFile != null) {
+                name = aFile.getName();
+                uri = aFile.getUri();
+            } else {
+                name = NO_FILE_SELECTED;
+                uri = null;
+            }
         }
 
         @Override
         public String toString() {
-            return file != null ? file.getName() : NO_FILE_SELECTED;
+            return name != null ? name : NO_FILE_SELECTED;
         }
 
         @Override
-        public int compareTo(Object another) {
-            return file.getName().compareTo(((NewProjectActivity.ImportFile)another).file.getName());
+        public int compareTo(ImportFile another) {
+            return name.compareTo(another.name);
         }
     }
     

@@ -1,8 +1,6 @@
 package com.astoev.cave.survey.activity.main;
 
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -30,12 +28,11 @@ import com.astoev.cave.survey.service.orientation.OrientationProcessor;
 import com.astoev.cave.survey.service.orientation.OrientationProcessorFactory;
 import com.astoev.cave.survey.service.orientation.RotationOrientationProcessor;
 import com.astoev.cave.survey.util.DaoUtil;
-import com.astoev.cave.survey.util.FileStorageUtil;
-import com.astoev.cave.survey.util.FileUtils;
 import com.astoev.cave.survey.util.ProjectInfo;
 import com.astoev.cave.survey.util.StringUtils;
 
-import java.io.File;
+import static com.astoev.cave.survey.service.export.excel.ExcelExport.EXCEL_FILE_EXTENSION;
+import static com.astoev.cave.survey.service.export.json.OpensTopoJsonExport.OPENSTOPO_FILE_EXTENSION;
 
 /**
  * Created by IntelliJ IDEA.
@@ -125,8 +122,9 @@ public class InfoActivity extends MainMenuActivity {
             }
 
             TextView projectHome = findViewById(R.id.info_project_home);
-            String projectHomeFolder = FileStorageUtil.getProjectHome(projectInfo.getName()).getAbsolutePath();
-            projectHome.setText(projectHomeFolder);
+//         TODO   String projectHomeFolder = FileStorageUtil.getProjectHome(projectInfo.getName()).getAbsolutePath();
+//            projectHome.setText(projectHomeFolder);
+            projectHome.setText("TODO");
 
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to render info activity", e);
@@ -140,8 +138,8 @@ public class InfoActivity extends MainMenuActivity {
 
             // export legs
 
-            ExcelExport export = new ExcelExport(this);
-            String exportPath = export.runExport(getWorkspace().getActiveProject());
+            ExcelExport export = new ExcelExport(this.getResources());
+            String exportPath = export.runExport(getWorkspace().getActiveProject(), EXCEL_FILE_EXTENSION, true);
             if (StringUtils.isEmpty(exportPath)) {
                 UIUtilities.showNotification(this, R.string.export_io_error, exportPath);
             } else {
@@ -160,8 +158,8 @@ public class InfoActivity extends MainMenuActivity {
 
             // export legs
 
-            VisualTopoExport export = new VisualTopoExport(this);
-            String exportPath = export.runExport(getWorkspace().getActiveProject());
+            VisualTopoExport export = new VisualTopoExport(this.getResources());
+            String exportPath = export.runExport(getWorkspace().getActiveProject(), VisualTopoExport.Companion.getVISUAL_TOPO_FILE_EXTENSION(), true);
             if (StringUtils.isEmpty(exportPath)) {
                 UIUtilities.showNotification(this, R.string.export_io_error, exportPath);
             } else {
@@ -185,77 +183,77 @@ public class InfoActivity extends MainMenuActivity {
 
         Log.i(Constants.LOG_TAG_SERVICE, "View files selected for project:" + projectName);
 
-        File projectHome = FileStorageUtil.getProjectHome(projectName);
+//      TODO  File projectHome = FileStorageUtil.getProjectHome(projectName);
 
-        if (projectHome != null) {
-            Uri contentUri = FileUtils.getFileUri(projectHome);
-
-            Log.i(Constants.LOG_TAG_SERVICE, "Uri:" + contentUri);
-
-            String chooserTitle = getResources().getString(R.string.info_chooser_open_folder);
-
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-
-            PackageManager packageManager = getPackageManager();
-
-            // Works with ES file manager
-            intent.setDataAndType(contentUri, MIME_RESOURCE_FOLDER);
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            if (intent.resolveActivity(packageManager) != null) {
-                Log.i(Constants.LOG_TAG_SERVICE, "ACTION_VIEW with resource/folder resolved");
-
-                startActivity(Intent.createChooser(intent, chooserTitle));
-                return;
-            }
-
-            // works with OI File manager
-            intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(contentUri);
-            if (intent.resolveActivity(packageManager) != null) {
-                Log.i(Constants.LOG_TAG_SERVICE, "ACTION_VIEW resolved");
-
-                startActivity(Intent.createChooser(intent, chooserTitle));
-                return;
-            }
-
-            // another test
-            intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(contentUri);
-            intent.putExtra("org.openintents.extra.ABSOLUTE_PATH", projectHome.getPath());
-            if (intent.resolveActivity(packageManager) != null) {
-                Log.i(Constants.LOG_TAG_SERVICE, "ACTION_VIEW with extra resolved");
-                startActivity(Intent.createChooser(intent, chooserTitle));
-                return;
-            }
-
-            // generic folder
-            intent = new Intent(Intent.ACTION_VIEW);
-            intent.setDataAndType(contentUri, MIME_RESOURCE_FOLDER);
-            if (intent.resolveActivity(packageManager) != null) {
-                Log.i(Constants.LOG_TAG_SERVICE, "ACTION_VIEW with folder resolved");
-                startActivity(Intent.createChooser(intent, chooserTitle));
-                return;
-            }
-
-            // open intent
-            intent = new Intent(Intent.ACTION_VIEW);
-            intent.setDataAndType(contentUri, MIME_OPEN_DIRECTORY);
-            if (intent.resolveActivity(packageManager) != null) {
-                Log.i(Constants.LOG_TAG_SERVICE, "ACTION_VIEW with directory resolved");
-                startActivity(Intent.createChooser(intent, chooserTitle));
-                return;
-            }
-
-            // brute force to choose a file manager
-            intent = new Intent(Intent.ACTION_VIEW);
-            Log.i(Constants.LOG_TAG_SERVICE, "ACTION_VIEW with */* resolved");
-            intent.setDataAndType(contentUri, MIME_TYPE_ANY);
-            startActivity(Intent.createChooser(intent, chooserTitle));
-
-        } else {
-            Log.e(Constants.LOG_TAG_SERVICE, "No project folder for project:" + projectName);
-            UIUtilities.showNotification(R.string.io_error);
-        }
+//        if (projectHome != null) {
+//            Uri contentUri = FileUtils.getFileUri(projectHome);
+//
+//            Log.i(Constants.LOG_TAG_SERVICE, "Uri:" + contentUri);
+//
+//            String chooserTitle = getResources().getString(R.string.info_chooser_open_folder);
+//
+//            Intent intent = new Intent(Intent.ACTION_VIEW);
+//
+//            PackageManager packageManager = getPackageManager();
+//
+//            // Works with ES file manager
+//            intent.setDataAndType(contentUri, MIME_RESOURCE_FOLDER);
+//            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+//            if (intent.resolveActivity(packageManager) != null) {
+//                Log.i(Constants.LOG_TAG_SERVICE, "ACTION_VIEW with resource/folder resolved");
+//
+//                startActivity(Intent.createChooser(intent, chooserTitle));
+//                return;
+//            }
+//
+//            // works with OI File manager
+//            intent = new Intent(Intent.ACTION_VIEW);
+//            intent.setData(contentUri);
+//            if (intent.resolveActivity(packageManager) != null) {
+//                Log.i(Constants.LOG_TAG_SERVICE, "ACTION_VIEW resolved");
+//
+//                startActivity(Intent.createChooser(intent, chooserTitle));
+//                return;
+//            }
+//
+//            // another test
+//            intent = new Intent(Intent.ACTION_VIEW);
+//            intent.setData(contentUri);
+//            intent.putExtra("org.openintents.extra.ABSOLUTE_PATH", projectHome.getPath());
+//            if (intent.resolveActivity(packageManager) != null) {
+//                Log.i(Constants.LOG_TAG_SERVICE, "ACTION_VIEW with extra resolved");
+//                startActivity(Intent.createChooser(intent, chooserTitle));
+//                return;
+//            }
+//
+//            // generic folder
+//            intent = new Intent(Intent.ACTION_VIEW);
+//            intent.setDataAndType(contentUri, MIME_RESOURCE_FOLDER);
+//            if (intent.resolveActivity(packageManager) != null) {
+//                Log.i(Constants.LOG_TAG_SERVICE, "ACTION_VIEW with folder resolved");
+//                startActivity(Intent.createChooser(intent, chooserTitle));
+//                return;
+//            }
+//
+//            // open intent
+//            intent = new Intent(Intent.ACTION_VIEW);
+//            intent.setDataAndType(contentUri, MIME_OPEN_DIRECTORY);
+//            if (intent.resolveActivity(packageManager) != null) {
+//                Log.i(Constants.LOG_TAG_SERVICE, "ACTION_VIEW with directory resolved");
+//                startActivity(Intent.createChooser(intent, chooserTitle));
+//                return;
+//            }
+//
+//            // brute force to choose a file manager
+//            intent = new Intent(Intent.ACTION_VIEW);
+//            Log.i(Constants.LOG_TAG_SERVICE, "ACTION_VIEW with */* resolved");
+//            intent.setDataAndType(contentUri, MIME_TYPE_ANY);
+//            startActivity(Intent.createChooser(intent, chooserTitle));
+//
+//        } else {
+//            Log.e(Constants.LOG_TAG_SERVICE, "No project folder for project:" + projectName);
+//            UIUtilities.showNotification(R.string.io_error);
+//        }
     }//end of onViewFiles
 
     /**
@@ -305,8 +303,8 @@ public class InfoActivity extends MainMenuActivity {
                 try {
                     // export
                     Log.i(Constants.LOG_TAG_SERVICE, "Start json export");
-                    OpensTopoJsonExport export = new OpensTopoJsonExport(this);
-                    String exportPath = export.runExport(getWorkspace().getActiveProject());
+                    OpensTopoJsonExport export = new OpensTopoJsonExport(this.getResources());
+                    String exportPath = export.runExport(getWorkspace().getActiveProject(), OPENSTOPO_FILE_EXTENSION, false);
                     if (StringUtils.isEmpty(exportPath)) {
                         UIUtilities.showNotification(this, R.string.export_io_error, exportPath);
                     } else {

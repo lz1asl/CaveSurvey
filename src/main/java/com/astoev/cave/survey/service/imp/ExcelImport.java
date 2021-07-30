@@ -1,5 +1,6 @@
 package com.astoev.cave.survey.service.imp;
 
+import android.net.Uri;
 import android.util.Log;
 
 import com.astoev.cave.survey.Constants;
@@ -30,8 +31,6 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
@@ -51,7 +50,7 @@ import static com.astoev.cave.survey.model.Option.CODE_SLOPE_UNITS;
  */
 public class ExcelImport {
 
-    public static Object importExcelFile(File aPath, final Project aProject) throws SQLException, IOException {
+    public static Object importExcelFile(Uri aPath, final Project aProject) throws SQLException, IOException {
 
         Log.i(Constants.LOG_TAG_SERVICE, "Requested to import " + aPath + " as " + aProject.getName());
 
@@ -242,8 +241,8 @@ public class ExcelImport {
         });
     }
 
-    public static ProjectData loadProjectData(File aPath) throws IOException {
-        return loadProjectData(new FileInputStream(aPath));
+    public static ProjectData loadProjectData(Uri aPath) throws IOException {
+        return loadProjectData(ConfigUtil.getContext().getContentResolver().openInputStream(aPath));
     }
 
     public static ProjectData loadProjectData(InputStream stream) throws IOException {

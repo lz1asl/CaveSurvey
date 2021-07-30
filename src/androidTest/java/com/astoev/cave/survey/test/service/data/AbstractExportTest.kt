@@ -8,7 +8,9 @@ import androidx.test.rule.GrantPermissionRule
 import com.astoev.cave.survey.Constants
 import com.astoev.cave.survey.activity.home.SurveysActivity
 import com.astoev.cave.survey.test.helper.Common
+import com.astoev.cave.survey.util.ConfigUtil
 import com.astoev.cave.survey.util.FileStorageUtil
+import com.astoev.cave.survey.util.StreamUtil
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.runner.RunWith
@@ -48,7 +50,8 @@ abstract class AbstractExportTest {
         val files = FileStorageUtil.getFolderFiles(home, extension)
         Log.i(Constants.LOG_TAG_SERVICE, "" + files.size + " exported files")
 
-        val actual = files.get(files.size - 1).readText(Charsets.UTF_8)
+        val exportFile = files.get(files.size - 1)
+        val actual = StreamUtil.read(ConfigUtil.getContext().contentResolver.openInputStream(exportFile.uri))
 
         // must match
         assertEquals(content, actual);
