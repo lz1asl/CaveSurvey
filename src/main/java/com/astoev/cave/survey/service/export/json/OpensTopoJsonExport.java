@@ -36,6 +36,7 @@ import static com.astoev.cave.survey.service.export.ExportEntityType.LEG;
  */
 public class OpensTopoJsonExport extends AbstractExport {
 
+    public static final String OPENSTOPO_FILE_EXTENSION = "_openstopo.json";
     private JSONArray rows;
     private JSONObject project;
     private JSONObject row;
@@ -47,7 +48,7 @@ public class OpensTopoJsonExport extends AbstractExport {
 
     @Override
     protected String getExtension() {
-        return "_openstopo.json";
+        return OPENSTOPO_FILE_EXTENSION;
     }
 
     @Override

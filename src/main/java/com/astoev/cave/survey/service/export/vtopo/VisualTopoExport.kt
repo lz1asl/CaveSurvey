@@ -89,7 +89,7 @@ class VisualTopoExport(aResources: Resources?) : AbstractExport(aResources) {
     }
 
     override fun getExtension(): String {
-        return ".tro";
+        return VISUAL_TOPO_FILE_EXTENSION;
     }
 
     override fun prepare(aProject: Project) {
@@ -186,6 +186,7 @@ class VisualTopoExport(aResources: Resources?) : AbstractExport(aResources) {
     }
 
     companion object {
+        val VISUAL_TOPO_FILE_EXTENSION = ".tro"
         val HEADER_DATE_FORMAT = "dd/MM/yyyy"
 
         fun formatDate(date: Date): String {
