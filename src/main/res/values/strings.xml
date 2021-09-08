@@ -9,6 +9,8 @@
     <string name="invalid">Invalid</string>
     <string name="success">Success</string>
     <string name="any">Any</string>
+    <string name="ok">OK</string>
+    <string name="retry">Retry</string>
 
     <string name="sk_paldin">Paldin</string>
 
@@ -447,6 +449,8 @@
     <string name="splash_error_storage">Storage unavailable!</string>
     <string name="splash_internal_storage_warning">External storage is not available, project files cannot be accessed with file manager!</string>
     <string name="splash_internal_storage_anyway">Use internal storage anyway</string>
+    <string name="splash_storage_warning_title">New storage permissions</string>
+    <string name="splash_storage_warning_text">Please pick CaveSurvey working directory.</string>
 
 
 </resources>

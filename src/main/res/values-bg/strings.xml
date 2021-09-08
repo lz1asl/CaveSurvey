@@ -420,6 +420,8 @@
     <string name="splash_error_storage">Грешка във файловото хранилище!</string>
     <string name="splash_internal_storage_warning">Не е налично външно хранилище, файловете няма да са достъпни с файлов мениджър!</string>
     <string name="splash_internal_storage_anyway">Използвай вътрешното хранилище въпреки това</string>
+    <string name="splash_storage_warning_title">Нов достъп до хранилището</string>
+    <string name="splash_storage_warning_text">Моля изберете работна папка за CaveSurvey.</string>
 
 
 </resources>

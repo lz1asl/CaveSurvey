@@ -1,5 +1,7 @@
 package com.astoev.cave.survey.activity.home;
 
+import static com.astoev.cave.survey.service.export.excel.ExcelExport.EXCEL_FILE_EXTENSION;
+
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -31,8 +33,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static com.astoev.cave.survey.service.export.excel.ExcelExport.EXCEL_FILE_EXTENSION;
-
 /**
  * Created by IntelliJ IDEA.
  * User: astoev
@@ -51,6 +51,7 @@ public class NewProjectActivity extends MainMenuActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.newproject);
 
+        // TODO only when needed
         prepareImportFiles();
     }
 
