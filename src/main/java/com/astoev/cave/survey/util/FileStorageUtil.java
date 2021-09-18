@@ -42,7 +42,7 @@ public class FileStorageUtil {
     public static final String MAP_PREFIX = "Map";
 
     private static final String FOLDER_DOCUMENTS = "Documents";
-    private static final String FOLDER_CAVE_SURVEY = "CaveSurvey";
+    public static final String FOLDER_CAVE_SURVEY = "CaveSurvey";
     private static final int MIN_REQUIRED_STORAGE = 50 * 1024;
     private static final SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("yyyyMMdd");
 
