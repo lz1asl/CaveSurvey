@@ -1,5 +1,9 @@
 package com.astoev.cave.survey.activity.main;
 
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static android.Manifest.permission.CAMERA;
+import static android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
+
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -60,10 +64,6 @@ import java.io.File;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.List;
-
-import static android.Manifest.permission.ACCESS_FINE_LOCATION;
-import static android.Manifest.permission.CAMERA;
-import static android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
 
 /**
  * Created by IntelliJ IDEA.
@@ -471,7 +471,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                         File pictureFile = new File(mCurrentPhotoPath);
 
                         // broadcast that the file is added
-                        FileStorageUtil.notifyPictureAddedToGalery(this, pictureFile);
+                        FileStorageUtil.notifyPictureAddedToGallery(this, pictureFile);
 
                         Log.i(Constants.LOG_TAG_SERVICE, "Image captured in: " + mCurrentPhotoPath);
                         Photo photo = new Photo();

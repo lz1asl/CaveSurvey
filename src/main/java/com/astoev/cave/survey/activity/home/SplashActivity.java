@@ -59,7 +59,7 @@ public class SplashActivity extends AppCompatActivity {
             languageDialog.show(getSupportFragmentManager(), LANGUAGE_DIALOG);
             return;
         } else {
-            Log.i(LOG_TAG_SERVICE, "Use " + savedLanguage);
+            Log.i(LOG_TAG_SERVICE, "Use locale " + savedLanguage);
         }
 
         // db initialization
@@ -94,9 +94,6 @@ public class SplashActivity extends AppCompatActivity {
             }
         } else {
             Log.i(LOG_TAG_SERVICE, "Configured home: " + storageHome);
-
-
-            // TODO - prepare language and configuration for later usage
 
             // continue
             Log.i(Constants.LOG_TAG_UI, "Loading surveys");

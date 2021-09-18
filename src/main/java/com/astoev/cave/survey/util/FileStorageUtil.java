@@ -151,7 +151,7 @@ public class FileStorageUtil {
         File pictureFile = addProjectFile(contextArg, aProject, filePrefixArg, PNG_FILE_EXTENSION, byteArrayArg, true);
 
         // broadcast that picture was added to the project
-        notifyPictureAddedToGalery(contextArg, pictureFile);
+        notifyPictureAddedToGallery(contextArg, pictureFile);
 
         return pictureFile.getAbsolutePath();
     }
@@ -246,6 +246,12 @@ public class FileStorageUtil {
         if (storedHome != null) {
             Log.i(Constants.LOG_TAG_SERVICE, "Using predefined home " + storedHome);
             home = DocumentFile.fromTreeUri(ConfigUtil.getContext(), Uri.parse(storedHome));
+
+            if (home == null || !home.isDirectory() || !home.exists()) {
+                Log.i(Constants.LOG_TAG_SERVICE, "Home folder is missing");
+                return null;
+            }
+
             return home;
         }
         return null;
@@ -255,9 +261,9 @@ public class FileStorageUtil {
         String storedHome = ConfigUtil.getStringProperty(ConfigUtil.PROP_STORAGE_PATH);
         if (storedHome != null) {
             Log.i(Constants.LOG_TAG_SERVICE, "Using predefined home " + storedHome);
-            DocumentFile home =  DocumentFile.fromTreeUri(ConfigUtil.getContext(), Uri.parse(storedHome));
+            DocumentFile home = DocumentFile.fromTreeUri(ConfigUtil.getContext(), Uri.parse(storedHome));
             DocumentFile projectHome = home.findFile(path);
-            if (projectHome== null || !projectHome.exists()) {
+            if (projectHome == null || !projectHome.exists()) {
                 Log.i(Constants.LOG_TAG_SERVICE, "Creating project home " + path);
                 projectHome = home.createDirectory(path);
             }
@@ -331,12 +337,12 @@ public class FileStorageUtil {
      * @param contextArg   - context to use to send a broadcast
      * @param addedFileArg - the newly created file to notify for
      */
-    public static void notifyPictureAddedToGalery(Context contextArg, File addedFileArg) {
+    public static void notifyPictureAddedToGallery(Context contextArg, File addedFileArg) {
         if (addedFileArg == null) {
             return;
         }
         Uri contentUri = FileUtils.getFileUri(addedFileArg);
-        notifyPictureAddedToGalery(contextArg, contentUri);
+        notifyPictureAddedToGallery(contextArg, contentUri);
     }
 
     /**
@@ -345,7 +351,7 @@ public class FileStorageUtil {
      * @param contextArg      - context to use
      * @param addedFileUriArg - uri to picture
      */
-    public static void notifyPictureAddedToGalery(Context contextArg, Uri addedFileUriArg) {
+    public static void notifyPictureAddedToGallery(Context contextArg, Uri addedFileUriArg) {
         if (addedFileUriArg == null) {
             return;
         }
