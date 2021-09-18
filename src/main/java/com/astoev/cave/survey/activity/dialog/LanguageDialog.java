@@ -98,7 +98,7 @@ public class LanguageDialog extends DialogFragment {
             String savedLanguage = ConfigUtil.getStringProperty(ConfigUtil.PREF_LOCALE);
             if (!locale.getLanguage().equals(savedLanguage)){
 
-                // create prefurred locale
+                // create preferred locale
                 setLocale(locale);
 
                 // restart parent activity
@@ -132,10 +132,12 @@ public class LanguageDialog extends DialogFragment {
     public void onCancel(@NonNull DialogInterface dialog) {
         super.onCancel(dialog);
 
-        // user cancelled, use default language
-        Log.i(LOG_TAG_SERVICE, "Use english");
-        setLocale(ENGLISH);
+        if (parent != null) {
+            // user cancelled during initialization, use default language
+            Log.i(LOG_TAG_SERVICE, "Use english");
+            setLocale(ENGLISH);
 
-        parent.retry(null);
+            parent.retry(null);
+        }
     }
 }
