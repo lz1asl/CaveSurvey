@@ -410,7 +410,8 @@ public class FileStorageUtil {
 
         DocumentFile newHome = DocumentFile.fromTreeUri(ConfigUtil.getContext(), aUserSelectedHome);
         if (!FOLDER_CAVE_SURVEY.equals(newHome.getName())) {
-            newHome = newHome.createDirectory(FOLDER_CAVE_SURVEY);
+            DocumentFile caveSurveyFolder = newHome.findFile(FOLDER_CAVE_SURVEY);
+            newHome = caveSurveyFolder == null ? newHome.createDirectory(FOLDER_CAVE_SURVEY) : caveSurveyFolder;
         }
 
         if (!newHome.canRead() || !newHome.canWrite()) {
