@@ -6,6 +6,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.rule.GrantPermissionRule
 import com.astoev.cave.survey.Constants
+import com.astoev.cave.survey.activity.home.SplashActivity
 import com.astoev.cave.survey.activity.home.SurveysActivity
 import com.astoev.cave.survey.test.helper.Common
 import com.astoev.cave.survey.util.ConfigUtil
@@ -26,10 +27,10 @@ abstract class AbstractExportTest {
     var PARAM_CAVESURVEY_VERSION = "CAVESURVEY_VERSION"
 
     @Rule @JvmField
-    var activityRule = ActivityScenarioRule(SurveysActivity::class.java)
+    var activityRule = ActivityScenarioRule(SplashActivity::class.java)
 
-    @Rule @JvmField
-    val grantPermissionRule: GrantPermissionRule = GrantPermissionRule.grant(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+//    @Rule @JvmField
+//    val grantPermissionRule: GrantPermissionRule = GrantPermissionRule.grant(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
     fun findAsset(path: String): InputStream {
         return Common.context.assets.open(path)

@@ -1,13 +1,25 @@
 package com.astoev.cave.survey.test.helper
 
+import android.app.Activity
+import android.app.Instrumentation
+import android.content.Intent
+import android.util.Log
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onData
+import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.Intents.intending
+import androidx.test.espresso.intent.matcher.IntentMatchers.hasAction
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withText
+import com.astoev.cave.survey.Constants
 import com.astoev.cave.survey.R
 import com.astoev.cave.survey.R.id
 import com.astoev.cave.survey.activity.home.NewProjectActivity
 import com.astoev.cave.survey.model.Option
+import com.astoev.cave.survey.test.helper.Common.click
 import org.hamcrest.BaseMatcher
 import org.hamcrest.Description
 import org.hamcrest.Matchers
@@ -107,11 +119,37 @@ object Survey {
 
     @JvmOverloads
     fun createAndOpenSurvey(importFile: String? = null, distanceUnits: String? = null, azimuthUnits: String? = null, slopeUnits: String? = null): String {
-        val surveyName = "" + System.currentTimeMillis()
+        initApp();
         Home.goHome()
+        val surveyName = "" + System.currentTimeMillis()
         createSurvey(surveyName, importFile, distanceUnits, azimuthUnits, slopeUnits)
         openSurvey(surveyName)
         return surveyName
+    }
+
+    private fun initApp() {
+
+        // language dialog
+        try {
+            onView(withText("English")).perform(ViewActions.click());
+        } catch (e: Exception) {
+            // language already selected
+            Log.i(Constants.LOG_TAG_SERVICE, "Language already initialized");
+        }
+
+        // storage permissions
+      /*  Intents.init()
+        val openDocumentTreeResult = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
+        openDocumentTreeResult.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION and Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+        val result = Instrumentation.ActivityResult(Activity.RESULT_OK, openDocumentTreeResult)
+        intending(hasAction(Intent.ACTION_OPEN_DOCUMENT_TREE)).respondWith(result)*/
+
+        try {
+            onView(withText(R.string.ok)).perform(ViewActions.click())
+        } catch (e: Exception) {
+            // storage already initialized
+            Log.i(Constants.LOG_TAG_SERVICE, "Storage already initialized");
+        }
     }
 
     @JvmOverloads
