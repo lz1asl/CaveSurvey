@@ -1,30 +1,21 @@
 package com.astoev.cave.survey.test.helper
 
-import android.app.Activity
-import android.app.Instrumentation
-import android.content.Intent
 import android.util.Log
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
-import androidx.test.espresso.intent.Intents
-import androidx.test.espresso.intent.Intents.intending
-import androidx.test.espresso.intent.matcher.IntentMatchers.hasAction
 import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.astoev.cave.survey.Constants
 import com.astoev.cave.survey.R
 import com.astoev.cave.survey.R.id
 import com.astoev.cave.survey.activity.home.NewProjectActivity
 import com.astoev.cave.survey.model.Option
-import com.astoev.cave.survey.test.helper.Common.click
 import org.hamcrest.BaseMatcher
 import org.hamcrest.Description
 import org.hamcrest.Matchers
-import org.hamcrest.Matchers.allOf
-import org.hamcrest.Matchers.instanceOf
+import org.hamcrest.Matchers.*
 import java.lang.Thread.sleep
 
 
@@ -205,9 +196,9 @@ object Survey {
         Common.openContextMenu()
 
         // select leg
-        Common.click("Add Vector")
+        Common.click("Add Vectors")
 
-        Espresso.onView(ViewMatchers.withText("Add Vector"))
+        Espresso.onView(ViewMatchers.withText(containsString("Vector")))
                 .apply { // set data
                     Common.type(id.vector_distance, aDistance)
                     Common.type(id.vector_azimuth, anAzimuth)
