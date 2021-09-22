@@ -31,9 +31,6 @@ import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.util.ProjectInfo;
 import com.astoev.cave.survey.util.StringUtils;
 
-import static com.astoev.cave.survey.service.export.excel.ExcelExport.EXCEL_FILE_EXTENSION;
-import static com.astoev.cave.survey.service.export.json.OpensTopoJsonExport.OPENSTOPO_FILE_EXTENSION;
-
 /**
  * Created by IntelliJ IDEA.
  * User: astoev
@@ -139,7 +136,7 @@ public class InfoActivity extends MainMenuActivity {
             // export legs
 
             ExcelExport export = new ExcelExport(this.getResources());
-            String exportPath = export.runExport(getWorkspace().getActiveProject(), EXCEL_FILE_EXTENSION, true);
+            String exportPath = export.runExport(getWorkspace().getActiveProject(), null, true);
             if (StringUtils.isEmpty(exportPath)) {
                 UIUtilities.showNotification(this, R.string.export_io_error, exportPath);
             } else {
@@ -157,7 +154,6 @@ public class InfoActivity extends MainMenuActivity {
             Log.i(Constants.LOG_TAG_SERVICE, "Start vtopo_logo export");
 
             // export legs
-
             VisualTopoExport export = new VisualTopoExport(this.getResources());
             String exportPath = export.runExport(getWorkspace().getActiveProject(), VisualTopoExport.Companion.getVISUAL_TOPO_FILE_EXTENSION(), true);
             if (StringUtils.isEmpty(exportPath)) {
@@ -304,7 +300,7 @@ public class InfoActivity extends MainMenuActivity {
                     // export
                     Log.i(Constants.LOG_TAG_SERVICE, "Start json export");
                     OpensTopoJsonExport export = new OpensTopoJsonExport(this.getResources());
-                    String exportPath = export.runExport(getWorkspace().getActiveProject(), OPENSTOPO_FILE_EXTENSION, false);
+                    String exportPath = export.runExport(getWorkspace().getActiveProject(), null, false);
                     if (StringUtils.isEmpty(exportPath)) {
                         UIUtilities.showNotification(this, R.string.export_io_error, exportPath);
                     } else {

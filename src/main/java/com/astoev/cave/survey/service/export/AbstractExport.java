@@ -1,5 +1,9 @@
 package com.astoev.cave.survey.service.export;
 
+import static com.astoev.cave.survey.service.export.ExportEntityType.LEG;
+import static com.astoev.cave.survey.service.export.ExportEntityType.MIDDLE;
+import static com.astoev.cave.survey.service.export.ExportEntityType.VECTOR;
+
 import android.content.res.Resources;
 import android.util.Log;
 import android.util.SparseArray;
@@ -22,10 +26,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.List;
-
-import static com.astoev.cave.survey.service.export.ExportEntityType.LEG;
-import static com.astoev.cave.survey.service.export.ExportEntityType.MIDDLE;
-import static com.astoev.cave.survey.service.export.ExportEntityType.VECTOR;
 
 /**
  * Created by astoev on 8/28/14.
@@ -231,7 +231,7 @@ public abstract class AbstractExport {
 
             String exportSuffix = suffix == null ? getExtension() : FileStorageUtil.NAME_DELIMITER + suffix + getExtension();
             InputStream in = getContent();
-            return FileStorageUtil.addProjectExport(aProject, in, exportSuffix, unique);
+            return FileStorageUtil.addProjectExport(aProject, in, getMimeType(), exportSuffix, unique);
         } catch (Exception t) {
             Log.e(Constants.LOG_TAG_SERVICE, "Failed with export", t);
             throw t;

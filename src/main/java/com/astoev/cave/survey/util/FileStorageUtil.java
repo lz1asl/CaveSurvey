@@ -1,5 +1,7 @@
 package com.astoev.cave.survey.util;
 
+import static com.astoev.cave.survey.Constants.LOG_TAG_SERVICE;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -51,40 +53,21 @@ public class FileStorageUtil {
 
 
     @SuppressLint("SimpleDateFormat")
-    public static String addProjectExport(Project aProject, InputStream aStream, String anExtension, boolean unique) {
+    public static String addProjectExport(Project aProject, InputStream aStream, String aMimeType, String anExtension, boolean unique) {
 
         DocumentFile projectHome = getProjectHome(aProject.getName());
         if (projectHome == null) {
             return null;
         }
 
-
-        OutputStream out = null;
-        try {
-
-            DocumentFile exportFile = projectHome.createFile("wnd/excel", aProject.getName() + anExtension);
-            out = ConfigUtil.getContext().getContentResolver().openOutputStream(exportFile.getUri());
-            out.write(("Overwritten at " + System.currentTimeMillis() + "\n").getBytes());
-        } catch (Exception e) {
-            Log.e(Constants.LOG_TAG_UI, "Failed to store export", e);
-            return null;
-        } finally {
-            StreamUtil.closeQuietly(out);
-            StreamUtil.closeQuietly(aStream);
-        }
-
-      /*  int index = 1;
+        int index = 1;
         String exportName;
-        File exportFile;
 
         if (unique) {
-
             // ensure unique name
             while (true) {
-//                projectHome.
-                exportName = getUniqueExportName(aProject.getName(), index);
-                exportFile = new File(projectHome, exportName + anExtension);
-                if (exportFile.exists()) {
+                exportName = getUniqueExportName(aProject.getName(), index) + anExtension;
+                if (projectHome.findFile(exportName) != null ) {
                     index++;
                 } else {
                     break;
@@ -92,16 +75,20 @@ public class FileStorageUtil {
             }
         } else {
             // export file might get overriden
-            exportName = getNormalizedProjectName(aProject.getName());
-            exportFile = new File(projectHome, exportName + anExtension);
-        }*/
-      /*  try {
-            DocumentFile exportFile = projectHome.createFile("wnd/excel", getUniqueExportName(aProject.getName(), index) + anExtension);
-            Log.i(Constants.LOG_TAG_SERVICE, "Store to " + exportFile.getUri());
+            exportName = getNormalizedProjectName(aProject.getName()) + anExtension;
+            DocumentFile existingExport = projectHome.findFile(exportName);
+            if (existingExport != null) {
+                Log.i(LOG_TAG_SERVICE, "Overriding " + existingExport.getUri());
+                existingExport.delete();
+            }
+        }
 
-            exportFile. = new FileOutputStream(exportFile);
+        OutputStream out = null;
+        try {
+            DocumentFile exportFile = projectHome.createFile(aMimeType, exportName);
+            Log.i(LOG_TAG_SERVICE, "Store to " + exportFile.getUri());
+            out = ConfigUtil.getContext().getContentResolver().openOutputStream(exportFile.getUri());
             StreamUtil.copy(aStream, out);
-            return exportFile.getAbsolutePath();
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to store export", e);
             return null;
@@ -109,8 +96,8 @@ public class FileStorageUtil {
             StreamUtil.closeQuietly(out);
             StreamUtil.closeQuietly(aStream);
         }
-*/
-        return null;
+
+        return exportName;
     }
 
     public static String getUniqueExportName(String aProjectName, int aIndex) {
@@ -126,13 +113,13 @@ public class FileStorageUtil {
             os = new FileOutputStream(pictureFile);
             os.write(byteArrayArg);
         } catch (Exception e) {
-            Log.e(Constants.LOG_TAG_SERVICE, "Unable to write file: " + pictureFile.getAbsolutePath(), e);
+            Log.e(LOG_TAG_SERVICE, "Unable to write file: " + pictureFile.getAbsolutePath(), e);
             throw e;
         } finally {
             StreamUtil.closeQuietly(os);
         }
 
-        Log.i(Constants.LOG_TAG_SERVICE, "Just wrote: " + pictureFile.getAbsolutePath());
+        Log.i(LOG_TAG_SERVICE, "Just wrote: " + pictureFile.getAbsolutePath());
 
         return pictureFile;
     }
@@ -224,7 +211,7 @@ public class FileStorageUtil {
         DocumentFile projectHome = getStorageHome(normalizedName);
         if (!projectHome.exists()) {
             projectHome = projectHome.createDirectory(projectName);
-            Log.i(Constants.LOG_TAG_SERVICE, "Project folder created: " + projectName);
+            Log.i(LOG_TAG_SERVICE, "Project folder created: " + projectName);
         }
         return projectHome;
     }
@@ -244,11 +231,11 @@ public class FileStorageUtil {
 
         String storedHome = ConfigUtil.getStringProperty(ConfigUtil.PROP_STORAGE_PATH);
         if (storedHome != null) {
-            Log.i(Constants.LOG_TAG_SERVICE, "Using predefined home " + storedHome);
+            Log.i(LOG_TAG_SERVICE, "Using predefined home " + storedHome);
             home = DocumentFile.fromTreeUri(ConfigUtil.getContext(), Uri.parse(storedHome));
 
             if (home == null || !home.isDirectory() || !home.exists()) {
-                Log.i(Constants.LOG_TAG_SERVICE, "Home folder is missing");
+                Log.i(LOG_TAG_SERVICE, "Home folder is missing");
                 return null;
             }
 
@@ -260,11 +247,11 @@ public class FileStorageUtil {
     public static DocumentFile getStorageHome(String path) {
         String storedHome = ConfigUtil.getStringProperty(ConfigUtil.PROP_STORAGE_PATH);
         if (storedHome != null) {
-            Log.i(Constants.LOG_TAG_SERVICE, "Using predefined home " + storedHome);
+            Log.i(LOG_TAG_SERVICE, "Using predefined home " + storedHome);
             DocumentFile home = DocumentFile.fromTreeUri(ConfigUtil.getContext(), Uri.parse(storedHome));
             DocumentFile projectHome = home.findFile(path);
             if (projectHome == null || !projectHome.exists()) {
-                Log.i(Constants.LOG_TAG_SERVICE, "Creating project home " + path);
+                Log.i(LOG_TAG_SERVICE, "Creating project home " + path);
                 projectHome = home.createDirectory(path);
             }
             return projectHome;
@@ -278,9 +265,9 @@ public class FileStorageUtil {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             boolean legacyStorage = Environment.isExternalStorageLegacy();
-            Log.i(Constants.LOG_TAG_SERVICE, "Legacy storage: " + legacyStorage);
+            Log.i(LOG_TAG_SERVICE, "Legacy storage: " + legacyStorage);
             if (legacyStorage) {
-                Log.i(Constants.LOG_TAG_SERVICE, "Legacy storage, migrating ... TODO ");
+                Log.i(LOG_TAG_SERVICE, "Legacy storage, migrating ... TODO ");
 //                UIUtilities.showBusy();
                 // TODO migrate
             }
@@ -300,7 +287,7 @@ public class FileStorageUtil {
 
         File storageHome = new File(root, FOLDER_CAVE_SURVEY);
 
-        Log.i(Constants.LOG_TAG_SERVICE, "Using as home: " + storageHome.getAbsolutePath());
+        Log.i(LOG_TAG_SERVICE, "Using as home: " + storageHome.getAbsolutePath());
 
         // create folder for CaveSurvey if missing
         if (!storageHome.exists()) {
@@ -308,7 +295,7 @@ public class FileStorageUtil {
                 Log.e(Constants.LOG_TAG_UI, "Failed to create surveys folder: " + storageHome.getAbsolutePath());
                 return null;
             }
-            Log.i(Constants.LOG_TAG_SERVICE, "Home folder created: " + storageHome.getAbsolutePath());
+            Log.i(LOG_TAG_SERVICE, "Home folder created: " + storageHome.getAbsolutePath());
         }
 
         if (storageHome == null || !storageHome.exists()) {
