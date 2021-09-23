@@ -124,9 +124,10 @@ public class InfoActivity extends MainMenuActivity {
             }
 
             TextView projectHome = findViewById(R.id.info_project_home);
-//         TODO   String projectHomeFolder = FileStorageUtil.getProjectHome(projectInfo.getName()).getAbsolutePath();
-//            projectHome.setText(projectHomeFolder);
-            projectHome.setText("TODO");
+            DocumentFile projectHomeFolder = FileStorageUtil.getProjectHome(projectInfo.getName());
+            String fullPath = projectHomeFolder.getUri().getPath();
+            String relativePath = fullPath.substring(fullPath.lastIndexOf(":") + 1);
+            projectHome.setText(relativePath);
 
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to render info activity", e);
