@@ -155,7 +155,7 @@ public class InfoActivity extends MainMenuActivity {
 
             // export legs
             VisualTopoExport export = new VisualTopoExport(this.getResources());
-            String exportPath = export.runExport(getWorkspace().getActiveProject(), VisualTopoExport.Companion.getVISUAL_TOPO_FILE_EXTENSION(), true);
+            String exportPath = export.runExport(getWorkspace().getActiveProject(), null, true);
             if (StringUtils.isEmpty(exportPath)) {
                 UIUtilities.showNotification(this, R.string.export_io_error, exportPath);
             } else {

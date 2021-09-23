@@ -45,8 +45,7 @@ public abstract class AbstractExport {
     protected abstract String getExtension();
 
     protected String getMimeType() {
-        // default implementation
-        return "application/octet-stream";
+        return null;
     }
 
 

@@ -4,10 +4,8 @@ import android.util.Log
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
-import androidx.test.rule.GrantPermissionRule
 import com.astoev.cave.survey.Constants
 import com.astoev.cave.survey.activity.home.SplashActivity
-import com.astoev.cave.survey.activity.home.SurveysActivity
 import com.astoev.cave.survey.test.helper.Common
 import com.astoev.cave.survey.util.ConfigUtil
 import com.astoev.cave.survey.util.FileStorageUtil
@@ -55,7 +53,7 @@ abstract class AbstractExportTest {
         val actual = StreamUtil.read(ConfigUtil.getContext().contentResolver.openInputStream(exportFile.uri))
 
         // must match
-        assertEquals(content, actual);
+        assertEquals(content, String(actual));
     }
 }
 
