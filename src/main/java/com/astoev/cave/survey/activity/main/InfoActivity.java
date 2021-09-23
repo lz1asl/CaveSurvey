@@ -1,12 +1,16 @@
 package com.astoev.cave.survey.activity.main;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.documentfile.provider.DocumentFile;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
@@ -28,6 +32,7 @@ import com.astoev.cave.survey.service.orientation.OrientationProcessor;
 import com.astoev.cave.survey.service.orientation.OrientationProcessorFactory;
 import com.astoev.cave.survey.service.orientation.RotationOrientationProcessor;
 import com.astoev.cave.survey.util.DaoUtil;
+import com.astoev.cave.survey.util.FileStorageUtil;
 import com.astoev.cave.survey.util.ProjectInfo;
 import com.astoev.cave.survey.util.StringUtils;
 
@@ -179,78 +184,78 @@ public class InfoActivity extends MainMenuActivity {
 
         Log.i(Constants.LOG_TAG_SERVICE, "View files selected for project:" + projectName);
 
-//      TODO  File projectHome = FileStorageUtil.getProjectHome(projectName);
+        DocumentFile projectHome = FileStorageUtil.getProjectHome(projectName);
 
-//        if (projectHome != null) {
-//            Uri contentUri = FileUtils.getFileUri(projectHome);
-//
-//            Log.i(Constants.LOG_TAG_SERVICE, "Uri:" + contentUri);
-//
-//            String chooserTitle = getResources().getString(R.string.info_chooser_open_folder);
-//
-//            Intent intent = new Intent(Intent.ACTION_VIEW);
-//
-//            PackageManager packageManager = getPackageManager();
-//
-//            // Works with ES file manager
-//            intent.setDataAndType(contentUri, MIME_RESOURCE_FOLDER);
-//            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-//            if (intent.resolveActivity(packageManager) != null) {
-//                Log.i(Constants.LOG_TAG_SERVICE, "ACTION_VIEW with resource/folder resolved");
-//
-//                startActivity(Intent.createChooser(intent, chooserTitle));
-//                return;
-//            }
-//
-//            // works with OI File manager
-//            intent = new Intent(Intent.ACTION_VIEW);
-//            intent.setData(contentUri);
-//            if (intent.resolveActivity(packageManager) != null) {
-//                Log.i(Constants.LOG_TAG_SERVICE, "ACTION_VIEW resolved");
-//
-//                startActivity(Intent.createChooser(intent, chooserTitle));
-//                return;
-//            }
-//
-//            // another test
-//            intent = new Intent(Intent.ACTION_VIEW);
-//            intent.setData(contentUri);
-//            intent.putExtra("org.openintents.extra.ABSOLUTE_PATH", projectHome.getPath());
-//            if (intent.resolveActivity(packageManager) != null) {
-//                Log.i(Constants.LOG_TAG_SERVICE, "ACTION_VIEW with extra resolved");
-//                startActivity(Intent.createChooser(intent, chooserTitle));
-//                return;
-//            }
-//
-//            // generic folder
-//            intent = new Intent(Intent.ACTION_VIEW);
-//            intent.setDataAndType(contentUri, MIME_RESOURCE_FOLDER);
-//            if (intent.resolveActivity(packageManager) != null) {
-//                Log.i(Constants.LOG_TAG_SERVICE, "ACTION_VIEW with folder resolved");
-//                startActivity(Intent.createChooser(intent, chooserTitle));
-//                return;
-//            }
-//
-//            // open intent
-//            intent = new Intent(Intent.ACTION_VIEW);
-//            intent.setDataAndType(contentUri, MIME_OPEN_DIRECTORY);
-//            if (intent.resolveActivity(packageManager) != null) {
-//                Log.i(Constants.LOG_TAG_SERVICE, "ACTION_VIEW with directory resolved");
-//                startActivity(Intent.createChooser(intent, chooserTitle));
-//                return;
-//            }
-//
-//            // brute force to choose a file manager
-//            intent = new Intent(Intent.ACTION_VIEW);
-//            Log.i(Constants.LOG_TAG_SERVICE, "ACTION_VIEW with */* resolved");
-//            intent.setDataAndType(contentUri, MIME_TYPE_ANY);
-//            startActivity(Intent.createChooser(intent, chooserTitle));
-//
-//        } else {
-//            Log.e(Constants.LOG_TAG_SERVICE, "No project folder for project:" + projectName);
-//            UIUtilities.showNotification(R.string.io_error);
-//        }
-    }//end of onViewFiles
+        if (projectHome != null) {
+            Uri contentUri = projectHome.getUri();
+
+            Log.i(Constants.LOG_TAG_SERVICE, "Uri:" + contentUri);
+
+            String chooserTitle = getResources().getString(R.string.info_chooser_open_folder);
+
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+
+            PackageManager packageManager = getPackageManager();
+
+            // Works with ES file manager
+            intent.setDataAndType(contentUri, MIME_RESOURCE_FOLDER);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            if (intent.resolveActivity(packageManager) != null) {
+                Log.i(Constants.LOG_TAG_SERVICE, "ACTION_VIEW with resource/folder resolved");
+
+                startActivity(Intent.createChooser(intent, chooserTitle));
+                return;
+            }
+
+            // works with OI File manager
+            intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(contentUri);
+            if (intent.resolveActivity(packageManager) != null) {
+                Log.i(Constants.LOG_TAG_SERVICE, "ACTION_VIEW resolved");
+
+                startActivity(Intent.createChooser(intent, chooserTitle));
+                return;
+            }
+
+            // another test
+            intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(contentUri);
+            intent.putExtra("org.openintents.extra.ABSOLUTE_PATH", contentUri.getPath());
+            if (intent.resolveActivity(packageManager) != null) {
+                Log.i(Constants.LOG_TAG_SERVICE, "ACTION_VIEW with extra resolved");
+                startActivity(Intent.createChooser(intent, chooserTitle));
+                return;
+            }
+
+            // generic folder
+            intent = new Intent(Intent.ACTION_VIEW);
+            intent.setDataAndType(contentUri, MIME_RESOURCE_FOLDER);
+            if (intent.resolveActivity(packageManager) != null) {
+                Log.i(Constants.LOG_TAG_SERVICE, "ACTION_VIEW with folder resolved");
+                startActivity(Intent.createChooser(intent, chooserTitle));
+                return;
+            }
+
+            // open intent
+            intent = new Intent(Intent.ACTION_VIEW);
+            intent.setDataAndType(contentUri, MIME_OPEN_DIRECTORY);
+            if (intent.resolveActivity(packageManager) != null) {
+                Log.i(Constants.LOG_TAG_SERVICE, "ACTION_VIEW with directory resolved");
+                startActivity(Intent.createChooser(intent, chooserTitle));
+                return;
+            }
+
+            // brute force to choose a file manager
+            intent = new Intent(Intent.ACTION_VIEW);
+            Log.i(Constants.LOG_TAG_SERVICE, "ACTION_VIEW with */* resolved");
+            intent.setDataAndType(contentUri, MIME_TYPE_ANY);
+            startActivity(Intent.createChooser(intent, chooserTitle));
+
+        } else {
+            Log.e(Constants.LOG_TAG_SERVICE, "No project folder for project:" + projectName);
+            UIUtilities.showNotification(R.string.io_error);
+        }
+    }
 
     /**
      * @see com.astoev.cave.survey.activity.MainMenuActivity#getChildsOptionsMenu()
@@ -265,14 +270,10 @@ public class InfoActivity extends MainMenuActivity {
 
         boolean flag = super.onCreateOptionsMenu(menu);
 
-        // disable openstopo for older devices that will not render the data properly
-        // and HONEYCOMB for the content access property ...
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            MenuItem opensTopoItem = menu.findItem(R.id.info_action_openstopo);
-            if (opensTopoItem != null) {
-                opensTopoItem.setVisible(true);
-            }
-//        }
+        MenuItem opensTopoItem = menu.findItem(R.id.info_action_openstopo);
+        if (opensTopoItem != null) {
+            opensTopoItem.setVisible(true);
+        }
 
         return flag;
     }
