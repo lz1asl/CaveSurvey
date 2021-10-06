@@ -8,6 +8,8 @@ import android.content.res.Resources;
 import android.util.Log;
 import android.util.SparseArray;
 
+import androidx.documentfile.provider.DocumentFile;
+
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.model.Gallery;
 import com.astoev.cave.survey.model.Leg;
@@ -61,7 +63,7 @@ public abstract class AbstractExport {
     protected abstract InputStream getContent() throws IOException;
 
     // public method for starting export
-    public String runExport(Project aProject, String suffix, boolean unique) throws Exception {
+    public DocumentFile runExport(Project aProject, String suffix, boolean unique) throws Exception {
 
         try {
             prepare(aProject);

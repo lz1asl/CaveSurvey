@@ -3,6 +3,8 @@ package com.astoev.cave.survey.activity.main;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.Manifest.permission.CAMERA;
 import static android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
+import static com.astoev.cave.survey.util.FileStorageUtil.JPG_FILE_EXTENSION;
+import static com.astoev.cave.survey.util.FileStorageUtil.MIME_TYPE_JPG;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -20,6 +22,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import androidx.documentfile.provider.DocumentFile;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -51,6 +54,7 @@ import com.astoev.cave.survey.service.bluetooth.BTResultAware;
 import com.astoev.cave.survey.service.bluetooth.util.MeasurementsUtil;
 import com.astoev.cave.survey.service.orientation.AzimuthChangedListener;
 import com.astoev.cave.survey.service.orientation.SlopeChangedListener;
+import com.astoev.cave.survey.util.ConfigUtil;
 import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.util.FileStorageUtil;
 import com.astoev.cave.survey.util.FileUtils;
@@ -85,7 +89,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 
     private String mNewNote = null;
 
-    private String mCurrentPhotoPath;
+    private DocumentFile mCurrentPhotoFile;
 
     /**
      * Current leg to work with
@@ -133,8 +137,8 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (mCurrentPhotoPath != null) {
-            outState.putString(STATE_PHOTO_PATH, mCurrentPhotoPath);
+        if (mCurrentPhotoFile != null) {
+            outState.putString(STATE_PHOTO_PATH, mCurrentPhotoFile.getUri().toString());
             // save photo path if available
         }
     }
@@ -142,7 +146,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        mCurrentPhotoPath = savedInstanceState.getString(STATE_PHOTO_PATH);
+        mCurrentPhotoFile = DocumentFile.fromTreeUri(ConfigUtil.getContext(), Uri.parse(savedInstanceState.getString(STATE_PHOTO_PATH)));
     }
 
     @Override
@@ -409,7 +413,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
             return;
         }
 
-        File photoFile;
+        DocumentFile photoFile;
         try {
             String projectName = getWorkspace().getActiveProject().getName();
             Leg workingLeg = getCurrentLeg();
@@ -419,7 +423,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
             // create file where to capture the image
             String galleryName = PointUtil.getGalleryNameForFromPoint(pointFrom, workingLeg.getGalleryId());
             String filePrefix = FileStorageUtil.getFilePrefixForPicture(pointFrom, galleryName);
-            photoFile = FileStorageUtil.createPictureFile(this, projectName, filePrefix, FileStorageUtil.JPG_FILE_EXTENSION, true);
+            photoFile = FileStorageUtil.createPictureFile(this, projectName, filePrefix, JPG_FILE_EXTENSION, MIME_TYPE_JPG, true);
 
         } catch (SQLException e) {
             UIUtilities.showNotification(R.string.error);
@@ -433,11 +437,9 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         // call capture image
         if (photoFile != null) {
 
-            mCurrentPhotoPath = photoFile.getAbsolutePath();
-
-            Log.i(Constants.LOG_TAG_SERVICE, "Going to capture image in: " + photoFile.getAbsolutePath());
+            Log.i(Constants.LOG_TAG_SERVICE, "Going to capture image in: " + photoFile.getUri());
             final Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileUtils.getFileUri(photoFile));
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoFile.getUri());
             if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
@@ -455,27 +457,25 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                     try {
 
                         // check if the photo path is available
-                        if (mCurrentPhotoPath == null) {
+                        if (mCurrentPhotoFile == null) {
                             UIUtilities.showNotification(R.string.export_io_error);
-                            Log.e(Constants.LOG_TAG_UI, "Photo file url is not available:" + mCurrentPhotoPath);
+                            Log.e(Constants.LOG_TAG_UI, "Photo file url is not available");
                             break;
                         }
 
                         // check if the file really exists
-                        if (!FileStorageUtil.isFileExists(mCurrentPhotoPath)) {
+                        if (!mCurrentPhotoFile.exists()) {
                             UIUtilities.showNotification(R.string.export_io_error);
-                            Log.e(Constants.LOG_TAG_UI, "Photo file not available:" + mCurrentPhotoPath);
+                            Log.e(Constants.LOG_TAG_UI, "Photo file not available:" + mCurrentPhotoFile);
                             break;
                         }
 
-                        File pictureFile = new File(mCurrentPhotoPath);
-
                         // broadcast that the file is added
-                        FileStorageUtil.notifyPictureAddedToGallery(this, pictureFile);
+                        FileStorageUtil.notifyPictureAddedToGallery(this, mCurrentPhotoFile);
 
-                        Log.i(Constants.LOG_TAG_SERVICE, "Image captured in: " + mCurrentPhotoPath);
+                        Log.i(Constants.LOG_TAG_SERVICE, "Image captured in: " + mCurrentPhotoFile);
                         Photo photo = new Photo();
-                        photo.setFSPath(mCurrentPhotoPath);
+                        photo.setFSPath(mCurrentPhotoFile.getName());
 
                         Leg legEdited = getCurrentLeg();
                         Point currPoint = DaoUtil.getPoint(legEdited.getFromPoint().getId());

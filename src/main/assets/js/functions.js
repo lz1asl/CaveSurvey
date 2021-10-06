@@ -107,7 +107,7 @@ function ops_SaveAs()
     var filename = $("#filenameopened").val();
     filename = trim_extension(filename);
     filename = filename + ".ops.txt";
-    Download.save(str, filename);
+    Download.save(str, filename, "text/plain");
 }
 
 
@@ -150,7 +150,7 @@ function ops_SaveToCSV()
     var filename = $("#filenameopened").val();
     filename = trim_extension(filename);
     filename = filename + ".ops.csv";
-    Download.save(strCSV, filename);
+    Download.save(strCSV, filename, "text/csv");
 }
 
 function csvencode(str)
@@ -178,7 +178,7 @@ function trim_extension(str)
 function ops_SaveToDXF(shape) {
     var str = ops_ShapeToDXFGEO3d(shape, 0, 0, 0);
     var filename = $("#filenameopened").val() + "_3d.dxf";
-    Download.save(str, filename);
+    Download.save(str, filename, "application/dxf");
 }
 
 
@@ -325,7 +325,7 @@ function ops_SaveToDXFAll() {
 
     var str = ops_ShapeToDXF(shapeAll);
     var filename = $("#filenameopened").val() + "_" + _i18n("plan") + "_" + _i18n("section") + ".dxf";
-    Download.save(str, filename);
+    Download.save(str, filename, "application/dxf");
 }
 
 
@@ -449,7 +449,7 @@ function ops_SaveToSVGAll() {
 
     var str = ops_ShapeToSVG(shapeAll, 180, 0, 0);
     var filename = $("#filenameopened").val() + "_" + _i18n("plan") + "_" + _i18n("section") + ".svg";
-    Download.save(str, filename);
+    Download.save(str, filename, "image/svg+xml");
     ops_compile();
 
 }
@@ -462,7 +462,7 @@ function ops_SaveToSVGAll() {
 function ops_SaveToDXFPlan(shape) {
     var str = ops_ShapeToDXFPlan(shape, 0, 0, 0);
     var filename = $("#filenameopened").val() + "_" + _i18n("plan") + ".dxf";
-    Download.save(str, filename);
+    Download.save(str, filename, "application/dxf");
 }
 
 /**
@@ -509,7 +509,7 @@ function ops_SaveToDXFSection(shape) {
     shapeAll.points.push(point);
     var str = ops_ShapeToDXF(shapeAll);
     var filename = $("#filenameopened").val() + "_" + _i18n("section") + ".dxf";
-    Download.save(str, filename);
+    Download.save(str, filename, "application/dxf");
 }
 
 /**
@@ -520,7 +520,7 @@ function ops_SaveToKML()
 {
     var str = ops_CaveToKML();
     var filename = $("#filenameopened").val() + ".kml";
-    Download.save(str, filename);
+    Download.save(str, filename, "application/vnd.google-earth.kml+xml");
 }
 
 /**
@@ -1993,9 +1993,9 @@ TranslateHtml();
 
 
 var Download = {
-    save: function(data, name) {
+    save: function(data, name, mime) {
 
-        CaveSurveyJSInterface.downloadFile(name, data);
+        CaveSurveyJSInterface.downloadFile(name, data, mime);
 
     }
 };

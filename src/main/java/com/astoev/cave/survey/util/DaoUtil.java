@@ -2,6 +2,8 @@ package com.astoev.cave.survey.util;
 
 import android.util.Log;
 
+import androidx.documentfile.provider.DocumentFile;
+
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.dto.ProjectConfig;
 import com.astoev.cave.survey.model.Gallery;
@@ -503,8 +505,9 @@ public class DaoUtil {
 
         Log.i(Constants.LOG_TAG_DB, "Delete project " + aProjectId);
 
-
         try {
+            DocumentFile projectHome = FileStorageUtil.getProjectHome(aProjectId);
+
             TransactionManager.callInTransaction(Workspace.getCurrentInstance().getDBHelper().getConnectionSource(), () -> {
                 List<Leg> legs = getProjectLegs(aProjectId, false);
                 if (legs != null) {
@@ -513,7 +516,7 @@ public class DaoUtil {
                         List<Photo> photos = getAllPhotosByPoint(l.getFromPoint());
                         if (photos != null && photos.size() > 0) {
                             for (Photo p : photos) {
-//                              TODO  FileUtils.deleteQuietly(p.getnew File(p.getFSPath()));
+                                FileUtils.deleteQuietly(projectHome, p.getFSPath());
                                 Workspace.getCurrentInstance().getDBHelper().getPhotoDao().delete(p);
                             }
                         }
@@ -522,7 +525,7 @@ public class DaoUtil {
                         List<Sketch> sketches = getAllSketchesByPoint(l.getFromPoint());
                         if (sketches != null && sketches.size() > 0) {
                             for (Sketch s : sketches) {
-//                             TODO   FileUtils.deleteQuietly(new File(s.getFSPath()));
+                                FileUtils.deleteQuietly(projectHome, s.getFSPath());
                                 Workspace.getCurrentInstance().getDBHelper().getSketchDao().delete(s);
                             }
                         }

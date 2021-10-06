@@ -11,16 +11,18 @@ import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.documentfile.provider.DocumentFile;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.model.Project;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,6 +42,8 @@ public class FileStorageUtil {
     private static final Character NAME_DELIMITER_CHAR = '_';
 
     public static final String JPG_FILE_EXTENSION = ".jpg";
+    public static final String MIME_TYPE_JPG = "image/jpeg";
+    public static final String MIME_TYPE_PNG = "image/png";
     public static final String POINT_PREFIX = "Point";
     public static final String MAP_PREFIX = "Map";
 
@@ -53,7 +57,7 @@ public class FileStorageUtil {
 
 
     @SuppressLint("SimpleDateFormat")
-    public static String addProjectExport(Project aProject, InputStream aStream, String aMimeType, String anExtension, boolean unique) {
+    public static DocumentFile addProjectExport(Project aProject, InputStream aStream, String aMimeType, String anExtension, boolean unique) {
 
         DocumentFile projectHome = getProjectHome(aProject.getName());
         if (projectHome == null) {
@@ -83,43 +87,38 @@ public class FileStorageUtil {
             }
         }
 
+        DocumentFile exportFile = projectHome.createFile(aMimeType, exportName);
+        boolean success = writeStreamToFile(aStream, exportFile);
+        return success ? exportFile : null;
+    }
+
+    private static boolean writeStreamToFile(InputStream aStream, DocumentFile aExportFile) {
         OutputStream out = null;
         try {
-            DocumentFile exportFile = projectHome.createFile(aMimeType, exportName);
-            Log.i(LOG_TAG_SERVICE, "Store to " + exportFile.getUri());
-            out = ConfigUtil.getContext().getContentResolver().openOutputStream(exportFile.getUri());
+            Log.i(LOG_TAG_SERVICE, "Store to " + aExportFile.getUri());
+            out = ConfigUtil.getContext().getContentResolver().openOutputStream(aExportFile.getUri());
             StreamUtil.copy(aStream, out);
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to store export", e);
-            return null;
+            return false;
         } finally {
             StreamUtil.closeQuietly(out);
             StreamUtil.closeQuietly(aStream);
         }
-
-        return exportName;
+        return true;
     }
 
     public static String getUniqueExportName(String aProjectName, int aIndex) {
         return getNormalizedProjectName(aProjectName) + NAME_DELIMITER + DATE_FORMATTER.format(new Date()) + NAME_DELIMITER + aIndex;
     }
 
-    public static File addProjectFile(Activity contextArg, Project aProject, String filePrefixArg, String fileSuffixArg, byte[] byteArrayArg, boolean unique) throws Exception {
+    public static DocumentFile addProjectFile(Activity contextArg, Project aProject, String filePrefixArg, String fileSuffixArg, String mimeType, byte[] byteArrayArg, boolean unique) throws Exception {
 
-        File pictureFile = createPictureFile(contextArg, getNormalizedProjectName(aProject.getName()), filePrefixArg, fileSuffixArg, unique);
+        DocumentFile pictureFile = createPictureFile(contextArg, getNormalizedProjectName(aProject.getName()), filePrefixArg, fileSuffixArg, mimeType, unique);
 
-        OutputStream os = null;
-        try {
-            os = new FileOutputStream(pictureFile);
-            os.write(byteArrayArg);
-        } catch (Exception e) {
-            Log.e(LOG_TAG_SERVICE, "Unable to write file: " + pictureFile.getAbsolutePath(), e);
-            throw e;
-        } finally {
-            StreamUtil.closeQuietly(os);
-        }
+        writeStreamToFile(new ByteArrayInputStream(byteArrayArg), pictureFile);
 
-        Log.i(LOG_TAG_SERVICE, "Just wrote: " + pictureFile.getAbsolutePath());
+        Log.i(LOG_TAG_SERVICE, "Just wrote: " + pictureFile.getUri());
 
         return pictureFile;
     }
@@ -134,18 +133,14 @@ public class FileStorageUtil {
      * @return String for the file name created
      * @throws Exception
      */
-    public static String addProjectMedia(Activity contextArg, Project aProject, String filePrefixArg, byte[] byteArrayArg) throws Exception {
-        File pictureFile = addProjectFile(contextArg, aProject, filePrefixArg, PNG_FILE_EXTENSION, byteArrayArg, true);
+    public static DocumentFile addProjectMedia(Activity contextArg, Project aProject, String filePrefixArg, String mimeType, byte[] byteArrayArg) throws Exception {
+        DocumentFile pictureFile = addProjectFile(contextArg, aProject, filePrefixArg, PNG_FILE_EXTENSION, mimeType, byteArrayArg, true);
 
         // broadcast that picture was added to the project
         notifyPictureAddedToGallery(contextArg, pictureFile);
 
-        return pictureFile.getAbsolutePath();
+        return pictureFile;
     }
-
-    //    public static boolean isPublicFolder(){
-//    	return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO);
-//    }
 
     /**
      * Helper method that creates a prefix name for picture files based on Point objects
@@ -171,24 +166,15 @@ public class FileStorageUtil {
      * @throws Exception
      */
     @SuppressLint("SimpleDateFormat")
-    public static File createPictureFile(Context contextArg, String projectName, String filePrefix, String fileExtensionArg, boolean unique)
+    public static DocumentFile createPictureFile(Context contextArg, String projectName, String filePrefix, String fileExtensionArg, String mimeType, boolean unique)
             throws Exception {
 
-        if (true) {
-            return null;
-        }
+        // Store in file system
+        DocumentFile destinationDir = getProjectHome(projectName);
 
-       /* // Store in file system
-        File destinationDir = getProjectHome(projectName);
-        if (destinationDir == null) {
-            Log.e(Constants.LOG_TAG_SERVICE, "Directory not created");
-            throw new Exception();
-        }
-
-        Log.i(Constants.LOG_TAG_SERVICE, "Will write at: " + destinationDir.getAbsolutePath());
+        Log.i(Constants.LOG_TAG_SERVICE, "Will write at: " + destinationDir.getUri());
 
         // build filename
-
         StringBuilder fileName = new StringBuilder();
         if (filePrefix != null) {
             fileName.append(filePrefix);
@@ -201,8 +187,7 @@ public class FileStorageUtil {
         }
         fileName.append(fileExtensionArg);
 
-        return new File(destinationDir, fileName.toString());*/
-        return null;
+        return destinationDir.createFile(mimeType, fileName.toString());
     }
 
     public static DocumentFile getProjectHome(String projectName) {
@@ -214,6 +199,12 @@ public class FileStorageUtil {
             Log.i(LOG_TAG_SERVICE, "Project folder created: " + projectName);
         }
         return projectHome;
+    }
+
+    public static DocumentFile getProjectHome(Integer projectId) throws SQLException {
+
+        Project project = DaoUtil.getProject(projectId);
+        return getProjectHome(project.getName());
     }
 
     public static String getNormalizedProjectName(String projectName) {
@@ -257,6 +248,12 @@ public class FileStorageUtil {
             return projectHome;
         }
         return null;
+    }
+
+    @NonNull
+    public static String getFullRelativePath(DocumentFile projectFile) {
+        String fullPath = projectFile.getUri().getPath();
+        return fullPath.substring(fullPath.lastIndexOf(":") + 1);
     }
 
     public static DocumentFile searchLegacyHome() {
@@ -319,47 +316,18 @@ public class FileStorageUtil {
     }
 
     /**
-     * Helper method that invokes system's media scanner to add a picture to Media Provider's database
-     *
-     * @param contextArg   - context to use to send a broadcast
-     * @param addedFileArg - the newly created file to notify for
-     */
-    public static void notifyPictureAddedToGallery(Context contextArg, File addedFileArg) {
-        if (addedFileArg == null) {
-            return;
-        }
-        Uri contentUri = FileUtils.getFileUri(addedFileArg);
-        notifyPictureAddedToGallery(contextArg, contentUri);
-    }
-
-    /**
      * Helper method to broadcast a message that a picture is added
      *
      * @param contextArg      - context to use
-     * @param addedFileUriArg - uri to picture
+     * @param addedFile - uri to picture
      */
-    public static void notifyPictureAddedToGallery(Context contextArg, Uri addedFileUriArg) {
-        if (addedFileUriArg == null) {
+    public static void notifyPictureAddedToGallery(Context contextArg, DocumentFile addedFile) {
+        if (addedFile == null) {
             return;
         }
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        mediaScanIntent.setData(addedFileUriArg);
+        mediaScanIntent.setData(addedFile.getUri());
         contextArg.sendBroadcast(mediaScanIntent);
-    }
-
-    /**
-     * Helper method to check if file exists
-     *
-     * @param fileNameArg - file name
-     * @return true if the file exists, otherwise false
-     */
-    public static boolean isFileExists(String fileNameArg) {
-        if (fileNameArg == null) {
-            return false;
-        }
-
-        File file = new File(fileNameArg);
-        return file.exists();
     }
 
     public static List<DocumentFile> listProjectFiles(Project aProject, String anExtension) {

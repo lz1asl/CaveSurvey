@@ -2,15 +2,19 @@ package com.astoev.cave.survey.openstopo;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 
+import androidx.documentfile.provider.DocumentFile;
+
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.service.Workspace;
+import com.astoev.cave.survey.util.ConfigUtil;
 import com.astoev.cave.survey.util.FileStorageUtil;
 import com.astoev.cave.survey.util.StreamUtil;
 
@@ -91,18 +95,18 @@ public class WebViewActivity extends Activity {
     // json interface
     class CaveSurveyJSInterface {
 
-        private String caveSurveyFilePath;
+        private Uri caveSurveyFilePath;
         private String projectName;
 
         public CaveSurveyJSInterface(String aPath, String aProjectName) {
-            caveSurveyFilePath = aPath;
+            caveSurveyFilePath = Uri.parse(aPath);
             projectName = aProjectName;
         }
 
         @JavascriptInterface
         public String getProjectFile() {
             Log.i(Constants.LOG_TAG_UI, "Loading in OpensTopo : " + caveSurveyFilePath);
-            return caveSurveyFilePath;
+            return caveSurveyFilePath.getLastPathSegment();
         }
 
         @JavascriptInterface
@@ -110,7 +114,7 @@ public class WebViewActivity extends Activity {
             Log.i(Constants.LOG_TAG_UI, "Loading data");
             InputStream in = null;
             try {
-                in = new FileInputStream(caveSurveyFilePath);
+                in = ConfigUtil.getContext().getContentResolver().openInputStream(caveSurveyFilePath);
                 return new String(StreamUtil.read(in));
             } catch (Exception e) {
                 Log.e(Constants.LOG_TAG_UI, "Failed to load json", e);
@@ -121,10 +125,10 @@ public class WebViewActivity extends Activity {
         }
 
         @JavascriptInterface
-        public void downloadFile(String fileName, String content) throws Exception {
+        public void downloadFile(String fileName, String content, String mimeType) throws Exception {
             Log.i(Constants.LOG_TAG_SERVICE, "Downloading " + fileName);
-            File exportFile = FileStorageUtil.addProjectFile(WebViewActivity.this, Workspace.getCurrentInstance().getActiveProject(), null, fileName, content.getBytes(), false);
-            UIUtilities.showNotification(WebViewActivity.this, R.string.export_done, exportFile.getAbsolutePath());
+            DocumentFile exportFile = FileStorageUtil.addProjectFile(WebViewActivity.this, Workspace.getCurrentInstance().getActiveProject(), null, fileName, mimeType, content.getBytes(), false);
+            UIUtilities.showNotification(WebViewActivity.this, R.string.export_done, FileStorageUtil.getFullRelativePath(exportFile));
         }
 
         @JavascriptInterface

@@ -125,8 +125,7 @@ public class InfoActivity extends MainMenuActivity {
 
             TextView projectHome = findViewById(R.id.info_project_home);
             DocumentFile projectHomeFolder = FileStorageUtil.getProjectHome(projectInfo.getName());
-            String fullPath = projectHomeFolder.getUri().getPath();
-            String relativePath = fullPath.substring(fullPath.lastIndexOf(":") + 1);
+            String relativePath = FileStorageUtil.getFullRelativePath(projectHomeFolder);
             projectHome.setText(relativePath);
 
         } catch (Exception e) {
@@ -142,11 +141,11 @@ public class InfoActivity extends MainMenuActivity {
             // export legs
 
             ExcelExport export = new ExcelExport(this.getResources());
-            String exportPath = export.runExport(getWorkspace().getActiveProject(), null, true);
-            if (StringUtils.isEmpty(exportPath)) {
-                UIUtilities.showNotification(this, R.string.export_io_error, exportPath);
+            DocumentFile exportFile = export.runExport(getWorkspace().getActiveProject(), null, true);
+            if (exportFile == null) {
+                UIUtilities.showNotification(this, R.string.export_io_error, FileStorageUtil.getFullRelativePath(exportFile));
             } else {
-                UIUtilities.showNotification(this, R.string.export_done, exportPath);
+                UIUtilities.showNotification(this, R.string.export_done, FileStorageUtil.getFullRelativePath(exportFile));
             }
 
         } catch (Exception e) {
@@ -161,11 +160,11 @@ public class InfoActivity extends MainMenuActivity {
 
             // export legs
             VisualTopoExport export = new VisualTopoExport(this.getResources());
-            String exportPath = export.runExport(getWorkspace().getActiveProject(), null, true);
-            if (StringUtils.isEmpty(exportPath)) {
-                UIUtilities.showNotification(this, R.string.export_io_error, exportPath);
+            DocumentFile exportFile = export.runExport(getWorkspace().getActiveProject(), null, true);
+            if (exportFile == null) {
+                UIUtilities.showNotification(this, R.string.export_io_error, FileStorageUtil.getFullRelativePath(exportFile));
             } else {
-                UIUtilities.showNotification(this, R.string.export_done, exportPath);
+                UIUtilities.showNotification(this, R.string.export_done, FileStorageUtil.getFullRelativePath(exportFile));
             }
 
         } catch (Exception e) {
@@ -302,14 +301,14 @@ public class InfoActivity extends MainMenuActivity {
                     // export
                     Log.i(Constants.LOG_TAG_SERVICE, "Start json export");
                     OpensTopoJsonExport export = new OpensTopoJsonExport(this.getResources());
-                    String exportPath = export.runExport(getWorkspace().getActiveProject(), null, false);
-                    if (StringUtils.isEmpty(exportPath)) {
-                        UIUtilities.showNotification(this, R.string.export_io_error, exportPath);
+                    DocumentFile exportFile = export.runExport(getWorkspace().getActiveProject(), null, false);
+                    if (exportFile == null) {
+                        UIUtilities.showNotification(this, R.string.export_io_error, FileStorageUtil.getFullRelativePath(exportFile));
                     } else {
                         // load ui
-                        Log.i(Constants.LOG_TAG_SERVICE, "exported to " + exportPath);
+                        Log.i(Constants.LOG_TAG_SERVICE, "exported to " + FileStorageUtil.getFullRelativePath(exportFile));
                         Intent intent = new Intent(InfoActivity.this, WebViewActivity.class);
-                        intent.putExtra("path", exportPath);
+                        intent.putExtra("path", exportFile.getUri().toString());
                         intent.putExtra("projectName", getWorkspace().getActiveProject().getName());
                         startActivity(intent);
                     }
