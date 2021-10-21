@@ -156,6 +156,7 @@ class ExcelExportTest() : AbstractExportTest() {
         checkVisible("Sketch 2")
 
         // sketch data exported
+        goBack()
         var legs = exportAndRead(surveyName, 1)
         assertNotNull(legs[0].sketch)
     }

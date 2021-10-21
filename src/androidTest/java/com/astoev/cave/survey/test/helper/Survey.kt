@@ -6,6 +6,7 @@ import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.astoev.cave.survey.Constants
 import com.astoev.cave.survey.R
@@ -16,7 +17,6 @@ import org.hamcrest.BaseMatcher
 import org.hamcrest.Description
 import org.hamcrest.Matchers
 import org.hamcrest.Matchers.*
-import java.lang.Thread.sleep
 
 
 object Survey {
@@ -210,10 +210,14 @@ object Survey {
 
     fun addSketch() {
         Common.openContextMenu()
-
         Common.click("Draw");
-        Common.click(R.id.saveDrawingBtn)
-        sleep(10000)
+
+        onView(withId(R.id.drawingSurface))
+            .perform(ViewActions.longClick())
+            .perform(ViewActions.swipeRight())
+            .perform(ViewActions.click());
+
+        Common.clickWithDescription("Save")
     }
 
     fun addCoordinate(lat: Float, lon: Float, altitude: Int, precision: Int) {

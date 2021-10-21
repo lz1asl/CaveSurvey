@@ -2,11 +2,8 @@ package com.astoev.cave.survey.test.helper
 
 import android.content.Context
 import androidx.test.espresso.Espresso
-import androidx.test.espresso.NoMatchingViewException
-import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions
-import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.web.sugar.Web
 import androidx.test.espresso.web.webdriver.DriverAtoms
@@ -25,6 +22,11 @@ object Common {
 
     fun click(text: String?) {
         Espresso.onView(ViewMatchers.withText(text)).perform(ViewActions.click())
+        Espresso.onIdle()
+    }
+
+    fun clickWithDescription(description: String?) {
+        Espresso.onView(ViewMatchers.withContentDescription(description)).perform(ViewActions.click())
         Espresso.onIdle()
     }
 
