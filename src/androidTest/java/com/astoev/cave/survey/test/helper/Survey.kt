@@ -1,10 +1,19 @@
 package com.astoev.cave.survey.test.helper
 
+import android.app.Activity
+import android.app.Instrumentation.ActivityResult
+import android.content.Intent
+import android.graphics.BitmapFactory
+import android.provider.MediaStore
 import android.util.Log
+import androidx.test.InstrumentationRegistry
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.Intents.intending
+import androidx.test.espresso.intent.matcher.IntentMatchers.hasAction
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
@@ -13,6 +22,7 @@ import com.astoev.cave.survey.R
 import com.astoev.cave.survey.R.id
 import com.astoev.cave.survey.activity.home.NewProjectActivity
 import com.astoev.cave.survey.model.Option
+import com.astoev.cave.survey.test.helper.Common.checkVisible
 import org.hamcrest.BaseMatcher
 import org.hamcrest.Description
 import org.hamcrest.Matchers
@@ -136,7 +146,7 @@ object Survey {
         intending(hasAction(Intent.ACTION_OPEN_DOCUMENT_TREE)).respondWith(result)*/
 
         try {
-            onView(withText(R.string.ok)).perform(ViewActions.click())
+            onView(withText(com.astoev.cave.survey.R.string.ok)).perform(ViewActions.click())
         } catch (e: Exception) {
             // storage already initialized
             Log.i(Constants.LOG_TAG_SERVICE, "Storage already initialized");
@@ -218,6 +228,25 @@ object Survey {
             .perform(ViewActions.click());
 
         Common.clickWithDescription("Save")
+    }
+
+    fun addPhoto() {
+
+        // mock the camera
+        Intents.init()
+
+        val icon = BitmapFactory.decodeResource(
+            InstrumentationRegistry.getTargetContext().resources, R.drawable.logo
+        )
+        val resultData = Intent()
+        resultData.putExtra("data", icon)
+        val result = ActivityResult(Activity.RESULT_OK, resultData)
+        intending(hasAction(MediaStore.ACTION_IMAGE_CAPTURE)).respondWith(result)
+
+        // request photo
+        Common.openContextMenu()
+        Common.click("Photo");
+        checkVisible(R.id.point_photos_table)
     }
 
     fun addCoordinate(lat: Float, lon: Float, altitude: Int, precision: Int) {

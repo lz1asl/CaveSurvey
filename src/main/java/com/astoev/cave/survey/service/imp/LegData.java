@@ -14,6 +14,7 @@ public class LegData {
     private String note;
 
     private String sketch;
+    private String photo;
 
 
     public String getFromGallery() {
@@ -166,5 +167,13 @@ public class LegData {
 
     public void setSketch(String aSketch) {
         sketch = aSketch;
+    }
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String aPhoto) {
+        photo = aPhoto;
     }
 }
