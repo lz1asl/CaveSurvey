@@ -57,14 +57,12 @@ import com.astoev.cave.survey.service.orientation.SlopeChangedListener;
 import com.astoev.cave.survey.util.ConfigUtil;
 import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.util.FileStorageUtil;
-import com.astoev.cave.survey.util.FileUtils;
 import com.astoev.cave.survey.util.GalleryUtil;
 import com.astoev.cave.survey.util.PermissionUtil;
 import com.astoev.cave.survey.util.PointUtil;
 import com.astoev.cave.survey.util.StringUtils;
 import com.j256.ormlite.misc.TransactionManager;
 
-import java.io.File;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.List;
@@ -807,15 +805,11 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                     id.setGravity(Gravity.CENTER);
                     row.addView(id);
 
-                    final int photoIndex = index;
-                    final String photoPath = photo.getFSPath();
-
                     row.setOnClickListener(v -> {
-
                         // show the picture
                         Intent intent = new Intent();
                         intent.setAction(Intent.ACTION_VIEW);
-                        Uri fileUri =  FileUtils.getFileUri(new File(photoPath));
+                        Uri fileUri =  FileStorageUtil.toFullRelativePath(photo.getFSPath()).getUri();
                         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                         intent.setDataAndType(fileUri, "image/*");
                         startActivity(intent);
@@ -874,15 +868,11 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                     id.setGravity(Gravity.CENTER);
                     row.addView(id);
 
-                    final int sketchIndex = index;
-                    final String sketchPath = sketch.getFSPath();
-
                     row.setOnClickListener(v -> {
-
                         // show the sketch
                         Intent intent = new Intent();
                         intent.setAction(Intent.ACTION_VIEW);
-                        Uri fileUri =  FileUtils.getFileUri(new File(sketchPath));
+                        Uri fileUri =  FileStorageUtil.toFullRelativePath(sketch.getFSPath()).getUri();
                         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                         intent.setDataAndType(fileUri, "image/*");
                         startActivity(intent);

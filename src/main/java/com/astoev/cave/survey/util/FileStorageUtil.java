@@ -17,6 +17,7 @@ import androidx.documentfile.provider.DocumentFile;
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.model.Project;
+import com.astoev.cave.survey.service.Workspace;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -254,6 +255,11 @@ public class FileStorageUtil {
     public static String getFullRelativePath(DocumentFile projectFile) {
         String fullPath = projectFile.getUri().getPath();
         return fullPath.substring(fullPath.lastIndexOf(":") + 1);
+    }
+
+    public static DocumentFile toFullRelativePath(String exportFile) {
+        DocumentFile projectHome = getProjectHome(Workspace.getCurrentInstance().getActiveProject().getName());
+        return projectHome.findFile(exportFile);
     }
 
     public static DocumentFile searchLegacyHome() {
