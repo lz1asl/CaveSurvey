@@ -14,7 +14,6 @@ import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.Intents.intending
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasAction
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.astoev.cave.survey.Constants
@@ -65,7 +64,7 @@ object Survey {
         // save & go back
         Common.click(id.new_action_create)
         if (importFile == null) {
-            Espresso.onView(ViewMatchers.withId(id.point_main_view)).perform(ViewActions.pressBack())
+            onView(withId(id.point_main_view)).perform(ViewActions.pressBack())
         }
     }
 
@@ -208,7 +207,7 @@ object Survey {
         // select leg
         Common.click("Add Vectors")
 
-        Espresso.onView(ViewMatchers.withText(containsString("Vector")))
+        onView(withText(containsString("Vector")))
                 .apply { // set data
                     Common.type(id.vector_distance, aDistance)
                     Common.type(id.vector_azimuth, anAzimuth)
@@ -270,12 +269,12 @@ object Survey {
     }
 
     fun openLegWithText(text: String?) {
-        Espresso.onView(ViewMatchers.withText(text)).perform(ViewActions.click())
+        onView(withText(text)).perform(ViewActions.click())
     }
 
     fun saveLeg() {
         Common.click(id.point_action_save)
-        Espresso.onView(ViewMatchers.withText("Current leg"))
+        onView(withText("Current leg"))
         Espresso.onIdle()
     }
 }
