@@ -436,6 +436,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         if (photoFile != null) {
 
             Log.i(Constants.LOG_TAG_SERVICE, "Going to capture image in: " + photoFile.getUri());
+            mCurrentPhotoFile = photoFile;
             final Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoFile.getUri());
             if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
@@ -447,6 +448,8 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
     // photo is captured
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent aData) {
+
+        super.onActivityResult(requestCode, resultCode, aData);
 
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
