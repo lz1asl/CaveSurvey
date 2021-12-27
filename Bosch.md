@@ -25,7 +25,9 @@ git checkout -b fix_patch
 # remove the reference to the library in build.gradle
 # commit the above changes
 
-# generate new patch
+# A) generate new patch in console
 git format-patch master --stdout > no_bosch_library.patch
-
 ```
+
+# or B) generate new patch in Android studio:
+# Git -> Patch -> Create Patch from Local Changes
