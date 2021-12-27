@@ -6,7 +6,7 @@ import com.astoev.cave.survey.service.imp.ProjectData
 import org.junit.Assert
 
 object ExcelTestUtils {
-    fun assertLegLocation(aLeg: LegData, aLat: Float?, aLon: Float?, anAlt: Float?, anAccuracy: Float?) {
+    fun assertLegLocation(aLeg: LegData, aLat: Double?, aLon: Double?, anAlt: Double?, anAccuracy: Double?) {
         Assert.assertNotNull(aLeg)
         Assert.assertEquals(aLat, aLeg.lat)
         Assert.assertEquals(aLon, aLeg.lon)
