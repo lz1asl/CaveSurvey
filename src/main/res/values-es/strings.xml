@@ -190,8 +190,8 @@
 
     <string name="options_units_azimuth">Azimut:</string>
     <string-array name="azimuth_units">
-        <item>Pasos</item>
         <item>Grados</item>
+        <item>Pasos</item>
     </string-array>
 
     <string-array name="azimuth_read_type_manually">
@@ -207,8 +207,8 @@
 
     <string name="options_units_slope">Pochylenie:</string>
     <string-array name="slope_units">
-        <item>Pasos</item>
         <item>Grados</item>
+        <item>Pasos</item>
     </string-array>
 
     <string-array name="slope_read_type">
