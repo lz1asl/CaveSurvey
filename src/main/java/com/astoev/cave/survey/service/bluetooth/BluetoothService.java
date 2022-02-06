@@ -1,5 +1,13 @@
 package com.astoev.cave.survey.service.bluetooth;
 
+import static android.bluetooth.BluetoothGatt.GATT_SUCCESS;
+import static android.content.Context.BLUETOOTH_SERVICE;
+import static android.os.Build.VERSION.SDK_INT;
+import static android.os.Build.VERSION_CODES.JELLY_BEAN_MR2;
+import static android.os.Build.VERSION_CODES.LOLLIPOP;
+import static com.astoev.cave.survey.Constants.LOG_TAG_BT;
+import static java.lang.Thread.sleep;
+
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -66,14 +74,6 @@ import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
-
-import static android.bluetooth.BluetoothGatt.GATT_SUCCESS;
-import static android.content.Context.BLUETOOTH_SERVICE;
-import static android.os.Build.VERSION.SDK_INT;
-import static android.os.Build.VERSION_CODES.JELLY_BEAN_MR2;
-import static android.os.Build.VERSION_CODES.LOLLIPOP;
-import static com.astoev.cave.survey.Constants.LOG_TAG_BT;
-import static java.lang.Thread.sleep;
 
 /**
  * Created with IntelliJ IDEA.
@@ -699,8 +699,10 @@ public class BluetoothService {
                         List<Measure> measures = (leDevice.characteristicToMeasures(characteristic, mMeasureTypes));
 
                         // consume
-                        for (Measure measure : measures) {
-                            sendMeasureToUI(measure);
+                        if (measures != null) {
+                            for (Measure measure : measures) {
+                                sendMeasureToUI(measure);
+                            }
                         }
                     } else {
                         Log.i(LOG_TAG_BT, "Ignore characteristic update: " + characteristic.getUuid() + " : " + new String(characteristic.getValue()));
