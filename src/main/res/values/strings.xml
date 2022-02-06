@@ -451,6 +451,7 @@
     <string name="splash_internal_storage_anyway">Use internal storage anyway</string>
     <string name="splash_storage_warning_title">New storage permissions</string>
     <string name="splash_storage_warning_text">Please pick CaveSurvey working directory.</string>
+    <string name="splash_storage_warning_details"><u>Details</u></string>
 
 
 </resources>

@@ -17,12 +17,19 @@
         android:textColor="#FFF"/>
 
     <TextView
-        android:id="@+id/splashStorageText"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0.00"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:text="@string/splash_storage_warning_text"
+        android:gravity="center_horizontal"/>
+    <TextView
+        android:id="@+id/splashStorageDetails"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.00"
+        android:layout_margin="10dp"
+        android:text="@string/splash_storage_warning_details"
         android:gravity="center_horizontal"/>
 
     <Button
