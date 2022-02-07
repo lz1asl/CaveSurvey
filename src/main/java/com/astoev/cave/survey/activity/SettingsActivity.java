@@ -20,7 +20,7 @@ import com.astoev.cave.survey.util.ConfigUtil;
  */
 public class SettingsActivity extends MainMenuActivity {
 
-    private static final String LANGUAGE_DIALOG = "LANGUAGE_DIALOG";
+     public static final String LANGUAGE_DIALOG = "LANGUAGE_DIALOG";
     private static final String AUTO_BACKUP_TOOLTIP_DIALOG = "AUTO_BACKUP_TOOLTIP_DIALOG";
     private static final String VECTORS_DIALOG = "VECTORS_DIALOG";
 

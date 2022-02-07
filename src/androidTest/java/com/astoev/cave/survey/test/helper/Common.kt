@@ -4,7 +4,9 @@ import android.content.Context
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.espresso.web.sugar.Web
 import androidx.test.espresso.web.webdriver.DriverAtoms
 import androidx.test.espresso.web.webdriver.Locator
@@ -21,7 +23,12 @@ object Common {
     }
 
     fun click(text: String?) {
-        Espresso.onView(ViewMatchers.withText(text)).perform(ViewActions.click())
+        Espresso.onView(withText(text)).perform(ViewActions.click())
+        Espresso.onIdle()
+    }
+
+    fun clickWithDescription(description: String?) {
+        Espresso.onView(ViewMatchers.withContentDescription(description)).perform(ViewActions.click())
         Espresso.onIdle()
     }
 
@@ -30,7 +37,7 @@ object Common {
     }
 
     fun scrollAndClick(text: String?) {
-        Espresso.onView(ViewMatchers.withText(text)).perform(ViewActions.scrollTo(), ViewActions.click())
+        Espresso.onView(withText(text)).perform(ViewActions.scrollTo(), ViewActions.click())
         Espresso.onIdle()
     }
 
@@ -42,29 +49,39 @@ object Common {
     fun type(id: Int, value: Number?) {
         if (value != null) {
             Espresso.onView(ViewMatchers.withId(id))
-                    .perform(ViewActions.typeText("" + value),
-                            ViewActions.closeSoftKeyboard())
+                .perform(ViewActions.click())
+                .perform(ViewActions.typeText("" + value))
+                .perform(ViewActions.closeSoftKeyboard())
+            checkValue(id, "" + value);
         }
     }
 
     fun type(id: Int, value: String?) {
         if (value != null) {
             Espresso.onView(ViewMatchers.withId(id))
-                    .perform(ViewActions.typeText(value),
-                            ViewActions.closeSoftKeyboard())
+                    .perform(
+                        ViewActions.click(),
+                        ViewActions.typeText(value),
+                        ViewActions.closeSoftKeyboard())
+            checkValue(id, value);
         }
     }
 
+    private fun checkValue(id: Int, value: String) {
+        Espresso.onView(ViewMatchers.withId(id))
+            .check(matches(withText(value)));
+    }
+
     fun checkVisible(id: Int) {
-        Espresso.onView(ViewMatchers.withId(id)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        Espresso.onView(ViewMatchers.withId(id)).check(matches(ViewMatchers.isDisplayed()))
     }
 
     fun checkVisible(text: String) {
-        Espresso.onView(ViewMatchers.withText(text)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        Espresso.onView(withText(text)).check(matches(ViewMatchers.isDisplayed()))
     }
 
     fun checkNotVisible(text: String) {
-        Espresso.onView(ViewMatchers.withText(text)).check(ViewAssertions.doesNotExist());
+        Espresso.onView(withText(text)).check(ViewAssertions.doesNotExist());
     }
 
     fun goBack() {

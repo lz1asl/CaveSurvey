@@ -519,7 +519,7 @@ function ops_SaveToTherion() {
     filename = filename.replace(/(.*)\.(.*?)$/, "$1");
     filename = tmp[0] + ".th";
     //console.log(filename);
-    Download.save(str, filename);
+    Download.save(str, filename, "text/plain");
 
     str = "";
     str += "\nencoding  utf-8";
@@ -544,7 +544,7 @@ function ops_SaveToTherion() {
     str += "\n";
     str += "\n";
     var filename = "thconfig";
-    Download.save(str, filename);
+    Download.save(str, filename, "text/plain");
 }
 
 

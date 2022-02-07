@@ -1,5 +1,6 @@
 package com.astoev.cave.survey.activity;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -112,7 +113,10 @@ public abstract class MainMenuActivity extends BaseActivity implements Confirmat
         getWorkspace().clean();
         BluetoothService.stop();
         UIUtilities.cleanStatusBarMessages(MainMenuActivity.this);
-        MainMenuActivity.this.moveTaskToBack(true);
-//        System.exit(0);
+        MainMenuActivity.this.finish();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            finishAffinity();
+        }
+        System.exit(0);
     }
 }

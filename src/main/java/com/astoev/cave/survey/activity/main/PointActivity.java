@@ -1,5 +1,11 @@
 package com.astoev.cave.survey.activity.main;
 
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static android.Manifest.permission.CAMERA;
+import static android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
+import static com.astoev.cave.survey.util.FileStorageUtil.JPG_FILE_EXTENSION;
+import static com.astoev.cave.survey.util.FileStorageUtil.MIME_TYPE_JPG;
+
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -16,6 +22,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import androidx.documentfile.provider.DocumentFile;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -47,23 +54,18 @@ import com.astoev.cave.survey.service.bluetooth.BTResultAware;
 import com.astoev.cave.survey.service.bluetooth.util.MeasurementsUtil;
 import com.astoev.cave.survey.service.orientation.AzimuthChangedListener;
 import com.astoev.cave.survey.service.orientation.SlopeChangedListener;
+import com.astoev.cave.survey.util.ConfigUtil;
 import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.util.FileStorageUtil;
-import com.astoev.cave.survey.util.FileUtils;
 import com.astoev.cave.survey.util.GalleryUtil;
 import com.astoev.cave.survey.util.PermissionUtil;
 import com.astoev.cave.survey.util.PointUtil;
 import com.astoev.cave.survey.util.StringUtils;
 import com.j256.ormlite.misc.TransactionManager;
 
-import java.io.File;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.List;
-
-import static android.Manifest.permission.ACCESS_FINE_LOCATION;
-import static android.Manifest.permission.CAMERA;
-import static android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
 
 /**
  * Created by IntelliJ IDEA.
@@ -85,7 +87,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 
     private String mNewNote = null;
 
-    private String mCurrentPhotoPath;
+    private DocumentFile mCurrentPhotoFile;
 
     /**
      * Current leg to work with
@@ -96,13 +98,14 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 
     // swipe detection variables
     private float x1, x2;
-    private static final int MIN_SWIPE_DISTANCE = 150;
+    private static int MIN_SWIPE_DISTANCE;
 
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.point);
         getWindow().addFlags(FLAG_KEEP_SCREEN_ON);
+        MIN_SWIPE_DISTANCE = (int) (250 * getApplicationContext().getResources().getDisplayMetrics().density);
         mNewNote = null;
 
         // initialize the view with leg data only if the activity is new
@@ -132,8 +135,8 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (mCurrentPhotoPath != null) {
-            outState.putString(STATE_PHOTO_PATH, mCurrentPhotoPath);
+        if (mCurrentPhotoFile != null) {
+            outState.putString(STATE_PHOTO_PATH, mCurrentPhotoFile.getUri().toString());
             // save photo path if available
         }
     }
@@ -141,7 +144,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        mCurrentPhotoPath = savedInstanceState.getString(STATE_PHOTO_PATH);
+        mCurrentPhotoFile = DocumentFile.fromTreeUri(ConfigUtil.getContext(), Uri.parse(savedInstanceState.getString(STATE_PHOTO_PATH)));
     }
 
     @Override
@@ -408,7 +411,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
             return;
         }
 
-        File photoFile;
+        DocumentFile photoFile;
         try {
             String projectName = getWorkspace().getActiveProject().getName();
             Leg workingLeg = getCurrentLeg();
@@ -418,7 +421,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
             // create file where to capture the image
             String galleryName = PointUtil.getGalleryNameForFromPoint(pointFrom, workingLeg.getGalleryId());
             String filePrefix = FileStorageUtil.getFilePrefixForPicture(pointFrom, galleryName);
-            photoFile = FileStorageUtil.createPictureFile(this, projectName, filePrefix, FileStorageUtil.JPG_FILE_EXTENSION, true);
+            photoFile = FileStorageUtil.createPictureFile(this, projectName, filePrefix, JPG_FILE_EXTENSION, MIME_TYPE_JPG, true);
 
         } catch (SQLException e) {
             UIUtilities.showNotification(R.string.error);
@@ -432,11 +435,10 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         // call capture image
         if (photoFile != null) {
 
-            mCurrentPhotoPath = photoFile.getAbsolutePath();
-
-            Log.i(Constants.LOG_TAG_SERVICE, "Going to capture image in: " + photoFile.getAbsolutePath());
+            Log.i(Constants.LOG_TAG_SERVICE, "Going to capture image in: " + photoFile.getUri());
+            mCurrentPhotoFile = photoFile;
             final Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileUtils.getFileUri(photoFile));
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoFile.getUri());
             if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
@@ -447,6 +449,8 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent aData) {
 
+        super.onActivityResult(requestCode, resultCode, aData);
+
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case REQUEST_IMAGE_CAPTURE: {
@@ -454,27 +458,25 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                     try {
 
                         // check if the photo path is available
-                        if (mCurrentPhotoPath == null) {
+                        if (mCurrentPhotoFile == null) {
                             UIUtilities.showNotification(R.string.export_io_error);
-                            Log.e(Constants.LOG_TAG_UI, "Photo file url is not available:" + mCurrentPhotoPath);
+                            Log.e(Constants.LOG_TAG_UI, "Photo file url is not available");
                             break;
                         }
 
                         // check if the file really exists
-                        if (!FileStorageUtil.isFileExists(mCurrentPhotoPath)) {
+                        if (!mCurrentPhotoFile.exists()) {
                             UIUtilities.showNotification(R.string.export_io_error);
-                            Log.e(Constants.LOG_TAG_UI, "Photo file not available:" + mCurrentPhotoPath);
+                            Log.e(Constants.LOG_TAG_UI, "Photo file not available:" + mCurrentPhotoFile);
                             break;
                         }
 
-                        File pictureFile = new File(mCurrentPhotoPath);
-
                         // broadcast that the file is added
-                        FileStorageUtil.notifyPictureAddedToGalery(this, pictureFile);
+                        FileStorageUtil.notifyPictureAddedToGallery(this, mCurrentPhotoFile);
 
-                        Log.i(Constants.LOG_TAG_SERVICE, "Image captured in: " + mCurrentPhotoPath);
+                        Log.i(Constants.LOG_TAG_SERVICE, "Image captured in: " + mCurrentPhotoFile);
                         Photo photo = new Photo();
-                        photo.setFSPath(mCurrentPhotoPath);
+                        photo.setFSPath(mCurrentPhotoFile.getName());
 
                         Leg legEdited = getCurrentLeg();
                         Point currPoint = DaoUtil.getPoint(legEdited.getFromPoint().getId());
@@ -806,15 +808,11 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                     id.setGravity(Gravity.CENTER);
                     row.addView(id);
 
-                    final int photoIndex = index;
-                    final String photoPath = photo.getFSPath();
-
                     row.setOnClickListener(v -> {
-
                         // show the picture
                         Intent intent = new Intent();
                         intent.setAction(Intent.ACTION_VIEW);
-                        Uri fileUri =  FileUtils.getFileUri(new File(photoPath));
+                        Uri fileUri =  FileStorageUtil.toFullRelativePath(photo.getFSPath()).getUri();
                         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                         intent.setDataAndType(fileUri, "image/*");
                         startActivity(intent);
@@ -873,15 +871,11 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                     id.setGravity(Gravity.CENTER);
                     row.addView(id);
 
-                    final int sketchIndex = index;
-                    final String sketchPath = sketch.getFSPath();
-
                     row.setOnClickListener(v -> {
-
                         // show the sketch
                         Intent intent = new Intent();
                         intent.setAction(Intent.ACTION_VIEW);
-                        Uri fileUri =  FileUtils.getFileUri(new File(sketchPath));
+                        Uri fileUri =  FileStorageUtil.toFullRelativePath(sketch.getFSPath()).getUri();
                         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                         intent.setDataAndType(fileUri, "image/*");
                         startActivity(intent);
@@ -1129,6 +1123,8 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String[] permissions, int[] grantResults) {
+
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         switch (requestCode) {
             case PERM_REQ_CODE_CAMERA:

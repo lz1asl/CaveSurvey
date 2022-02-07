@@ -1,5 +1,13 @@
 package com.astoev.cave.survey.service.bluetooth;
 
+import static android.bluetooth.BluetoothGatt.GATT_SUCCESS;
+import static android.content.Context.BLUETOOTH_SERVICE;
+import static android.os.Build.VERSION.SDK_INT;
+import static android.os.Build.VERSION_CODES.JELLY_BEAN_MR2;
+import static android.os.Build.VERSION_CODES.LOLLIPOP;
+import static com.astoev.cave.survey.Constants.LOG_TAG_BT;
+import static java.lang.Thread.sleep;
+
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -11,12 +19,10 @@ import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
-import android.bluetooth.BluetoothSocket;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanResult;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.ResultReceiver;
 import android.util.Log;
@@ -58,7 +64,6 @@ import com.astoev.cave.survey.service.bluetooth.lecommands.WriteDescriptorComman
 import com.astoev.cave.survey.util.ConfigUtil;
 import com.astoev.cave.survey.util.StringUtils;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -69,15 +74,6 @@ import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
-
-import static android.bluetooth.BluetoothGatt.GATT_SUCCESS;
-import static android.content.Context.BLUETOOTH_SERVICE;
-import static android.os.Build.VERSION.SDK_INT;
-import static android.os.Build.VERSION_CODES.GINGERBREAD;
-import static android.os.Build.VERSION_CODES.JELLY_BEAN_MR2;
-import static android.os.Build.VERSION_CODES.LOLLIPOP;
-import static com.astoev.cave.survey.Constants.LOG_TAG_BT;
-import static java.lang.Thread.sleep;
 
 /**
  * Created with IntelliJ IDEA.
@@ -337,11 +333,6 @@ public class BluetoothService {
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.GINGERBREAD_MR1)
-    public static BluetoothSocket callSafeCreateInsecureRfcommSocketToServiceRecord(BluetoothDevice deviceaArg) throws IOException {
-        return deviceaArg.createInsecureRfcommSocketToServiceRecord(((AbstractBluetoothRFCOMMDevice) mSelectedDeviceSpec).getSPPUUID());
-    }
-
     public static boolean isPaired() {
         return mCommunicationThread != null && mCommunicationThread.ismPaired();
     }
@@ -579,7 +570,6 @@ public class BluetoothService {
         expectingMeasurement = false;
     }
 
-    @TargetApi(GINGERBREAD)
     public static void dequeueCommand(){
         Log.d(LOG_TAG_BT, "Dequeue command");
         if (!mCommandQueue.isEmpty()) {
@@ -709,8 +699,10 @@ public class BluetoothService {
                         List<Measure> measures = (leDevice.characteristicToMeasures(characteristic, mMeasureTypes));
 
                         // consume
-                        for (Measure measure : measures) {
-                            sendMeasureToUI(measure);
+                        if (measures != null) {
+                            for (Measure measure : measures) {
+                                sendMeasureToUI(measure);
+                            }
                         }
                     } else {
                         Log.i(LOG_TAG_BT, "Ignore characteristic update: " + characteristic.getUuid() + " : " + new String(characteristic.getValue()));

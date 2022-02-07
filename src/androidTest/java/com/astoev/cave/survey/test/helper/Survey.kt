@@ -1,19 +1,31 @@
 package com.astoev.cave.survey.test.helper
 
+import android.app.Activity
+import android.app.Instrumentation.ActivityResult
+import android.content.Intent
+import android.graphics.BitmapFactory
+import android.provider.MediaStore
+import android.util.Log
+import androidx.test.InstrumentationRegistry
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onData
+import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
-import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.Intents.intending
+import androidx.test.espresso.intent.matcher.IntentMatchers.hasAction
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withText
+import com.astoev.cave.survey.Constants
 import com.astoev.cave.survey.R
 import com.astoev.cave.survey.R.id
 import com.astoev.cave.survey.activity.home.NewProjectActivity
 import com.astoev.cave.survey.model.Option
+import com.astoev.cave.survey.test.helper.Common.checkVisible
 import org.hamcrest.BaseMatcher
 import org.hamcrest.Description
 import org.hamcrest.Matchers
-import org.hamcrest.Matchers.allOf
-import org.hamcrest.Matchers.instanceOf
-import java.lang.Thread.sleep
+import org.hamcrest.Matchers.*
 
 
 object Survey {
@@ -52,7 +64,7 @@ object Survey {
         // save & go back
         Common.click(id.new_action_create)
         if (importFile == null) {
-            Espresso.onView(ViewMatchers.withId(id.point_main_view)).perform(ViewActions.pressBack())
+            onView(withId(id.point_main_view)).perform(ViewActions.pressBack())
         }
     }
 
@@ -107,11 +119,37 @@ object Survey {
 
     @JvmOverloads
     fun createAndOpenSurvey(importFile: String? = null, distanceUnits: String? = null, azimuthUnits: String? = null, slopeUnits: String? = null): String {
-        val surveyName = "" + System.currentTimeMillis()
+        initApp();
         Home.goHome()
+        val surveyName = "" + System.currentTimeMillis()
         createSurvey(surveyName, importFile, distanceUnits, azimuthUnits, slopeUnits)
         openSurvey(surveyName)
         return surveyName
+    }
+
+    private fun initApp() {
+
+        // language dialog
+        try {
+            onView(withText("English")).perform(ViewActions.click());
+        } catch (e: Exception) {
+            // language already selected
+            Log.i(Constants.LOG_TAG_SERVICE, "Language already initialized");
+        }
+
+        // storage permissions
+      /*  Intents.init()
+        val openDocumentTreeResult = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
+        openDocumentTreeResult.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION and Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+        val result = Instrumentation.ActivityResult(Activity.RESULT_OK, openDocumentTreeResult)
+        intending(hasAction(Intent.ACTION_OPEN_DOCUMENT_TREE)).respondWith(result)*/
+
+        try {
+            onView(withText(com.astoev.cave.survey.R.string.ok)).perform(ViewActions.click())
+        } catch (e: Exception) {
+            // storage already initialized
+            Log.i(Constants.LOG_TAG_SERVICE, "Storage already initialized");
+        }
     }
 
     @JvmOverloads
@@ -167,9 +205,9 @@ object Survey {
         Common.openContextMenu()
 
         // select leg
-        Common.click("Add Vector")
+        Common.click("Add Vectors")
 
-        Espresso.onView(ViewMatchers.withText("Add Vector"))
+        onView(withText(containsString("Vector")))
                 .apply { // set data
                     Common.type(id.vector_distance, aDistance)
                     Common.type(id.vector_azimuth, anAzimuth)
@@ -181,10 +219,33 @@ object Survey {
 
     fun addSketch() {
         Common.openContextMenu()
-
         Common.click("Draw");
-        Common.click(R.id.saveDrawingBtn)
-        sleep(10000)
+
+        onView(withId(R.id.drawingSurface))
+            .perform(ViewActions.longClick())
+            .perform(ViewActions.swipeRight())
+            .perform(ViewActions.click());
+
+        Common.clickWithDescription("Save")
+    }
+
+    fun addPhoto() {
+
+        // mock the camera
+        Intents.init()
+
+        val icon = BitmapFactory.decodeResource(
+            InstrumentationRegistry.getTargetContext().resources, R.drawable.logo
+        )
+        val resultData = Intent()
+        resultData.putExtra("data", icon)
+        val result = ActivityResult(Activity.RESULT_OK, resultData)
+        intending(hasAction(MediaStore.ACTION_IMAGE_CAPTURE)).respondWith(result)
+
+        // request photo
+        Common.openContextMenu()
+        Common.click("Photo");
+        checkVisible(R.id.point_photos_table)
     }
 
     fun addCoordinate(lat: Float, lon: Float, altitude: Int, precision: Int) {
@@ -208,12 +269,12 @@ object Survey {
     }
 
     fun openLegWithText(text: String?) {
-        Espresso.onView(ViewMatchers.withText(text)).perform(ViewActions.click())
+        onView(withText(text)).perform(ViewActions.click())
     }
 
     fun saveLeg() {
         Common.click(id.point_action_save)
-        Espresso.onView(ViewMatchers.withText("Current leg"))
+        onView(withText("Current leg"))
         Espresso.onIdle()
     }
 }

@@ -1,6 +1,6 @@
 package com.astoev.cave.survey.service.export.json;
 
-import android.content.Context;
+import android.content.res.Resources;
 import android.util.Log;
 
 import com.astoev.cave.survey.Constants;
@@ -36,15 +36,24 @@ import static com.astoev.cave.survey.service.export.ExportEntityType.LEG;
  */
 public class OpensTopoJsonExport extends AbstractExport {
 
+    public static final String OPENSTOPO_FILE_EXTENSION = "_openstopo.json";
     private JSONArray rows;
     private JSONObject project;
     private JSONObject row;
     private JSONObject prevRow;
 
-    public OpensTopoJsonExport(Context aContext) {
-        super(aContext);
-        mExtension = "_openstopo.json";
-        mUseUniqueName = false;
+    public OpensTopoJsonExport(Resources aResources) {
+        super(aResources);
+    }
+
+    @Override
+    protected String getExtension() {
+        return OPENSTOPO_FILE_EXTENSION;
+    }
+
+    @Override
+    protected String getMimeType() {
+        return "application/json";
     }
 
     @Override

@@ -6,11 +6,13 @@ import com.astoev.cave.survey.service.imp.LegData
 import com.astoev.cave.survey.test.helper.Common.checkNotVisible
 import com.astoev.cave.survey.test.helper.Common.checkVisible
 import com.astoev.cave.survey.test.helper.Common.goBack
+import com.astoev.cave.survey.test.helper.Data
 import com.astoev.cave.survey.test.helper.Data.dataScreen
 import com.astoev.cave.survey.test.helper.Data.getLastXlsExport
 import com.astoev.cave.survey.test.helper.Data.xlsExport
 import com.astoev.cave.survey.test.helper.ExcelTestUtils.assertConfigUnits
 import com.astoev.cave.survey.test.helper.ExcelTestUtils.assertLeg
+import com.astoev.cave.survey.test.helper.ExcelTestUtils.assertLegLocation
 import com.astoev.cave.survey.test.helper.Survey
 import com.astoev.cave.survey.test.helper.Survey.addCoordinate
 import com.astoev.cave.survey.test.helper.Survey.addLeg
@@ -25,8 +27,10 @@ import com.astoev.cave.survey.test.helper.Survey.setLegData
 import com.astoev.cave.survey.util.FileStorageUtil.getUniqueExportName
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
+import org.junit.Ignore
 import org.junit.Test
 import java.io.IOException
+
 
 class ExcelExportTest() : AbstractExportTest() {
 
@@ -131,7 +135,7 @@ class ExcelExportTest() : AbstractExportTest() {
 
     @Test
     @Throws(IOException::class)
-    fun excelExportSketces() {
+    fun excelExportSketches() {
         // create survey
         var surveyName = createAndOpenSurvey()
 
@@ -156,9 +160,48 @@ class ExcelExportTest() : AbstractExportTest() {
         checkVisible("Sketch 2")
 
         // sketch data exported
+        goBack()
         var legs = exportAndRead(surveyName, 1)
         assertNotNull(legs[0].sketch)
+        var sketch = Data.getExportFile(surveyName, legs[0].sketch)
+        assert(sketch.exists());
     }
+
+    @Ignore
+    @Test
+    @Throws(IOException::class)
+    fun excelExportPhotos() {
+        // create survey
+        var surveyName = createAndOpenSurvey()
+
+        // fist minimal leg
+        selectFirstSurveyLeg()
+        setLegData(1f, 2f, null)
+        openLegWithText("A1")
+
+        // no sketches
+        checkNotVisible("Photos")
+        checkNotVisible("Photo 1")
+
+        // create sketch
+        Survey.addPhoto()
+        checkVisible("Photos")
+        checkVisible("Photo 1")
+
+        // create sketch
+        Survey.addPhoto()
+        checkVisible("Photos")
+        checkVisible("Photo 1")
+        checkVisible("Photo 2")
+
+        // sketch data exported
+        goBack()
+        var legs = exportAndRead(surveyName, 1)
+        assertNotNull(legs[0].photo)
+        var photo = Data.getExportFile(surveyName, legs[0].photo)
+        assert(photo.exists());
+    }
+
 
     @Throws(IOException::class)
     private fun exportAndRead(aSurveyName: String, aLegsCount: Int): List<LegData> {
@@ -189,14 +232,7 @@ class ExcelExportTest() : AbstractExportTest() {
     private fun assertFirstLegNoSlope(legs: List<LegData>) {
         assertLeg(legs[0], 1f, 2f, null)
         assertLeg(legs[0], "A", "0", "A", "1", false, false)
-        assertLegCoordinate(legs[0], 42.811522f, 23.378906f, 123, 5);
-    }
-
-    private fun assertLegCoordinate(legData: LegData, lat: Float, lon: Float, alt: Int, accuracy: Int) {
-        assertEquals(lat, legData.lat)
-        assertEquals(lon, legData.lon)
-        assertEquals(alt, legData.alt.toInt())
-        assertEquals(accuracy, legData.accuracy.toInt())
+        assertLegLocation(legs[0], 42.811522, 23.378906, 123.0, 5.0);
     }
 
     private fun assertSecondSimpleLeg(legs: List<LegData>) {

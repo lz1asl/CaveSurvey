@@ -1,11 +1,9 @@
 package com.astoev.cave.survey.service.orientation;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
-import android.os.Build;
 import android.view.Surface;
 
 /**
@@ -66,7 +64,6 @@ public class RotationOrientationProcessor extends OrientationProcessor {
 	/**
 	 * Helper method to process safely the date for implementations newer then api 9
 	 */
-	@TargetApi(Build.VERSION_CODES.GINGERBREAD)
 	private void processSafeData(){
 		SensorManager.getRotationMatrixFromVector(R, rData);
 	}
@@ -96,7 +93,6 @@ public class RotationOrientationProcessor extends OrientationProcessor {
 	 * Helper method that instantiates safely the sensor for os newer the api 9
 	 * @return
 	 */
-	@TargetApi(Build.VERSION_CODES.GINGERBREAD)
 	private Sensor getSafeRotationSensor(){
 		if (rotationSensor == null){
 			rotationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);

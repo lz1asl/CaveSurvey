@@ -1,5 +1,10 @@
 package com.astoev.cave.survey.service.imp;
 
+import static com.astoev.cave.survey.model.Option.CODE_AZIMUTH_UNITS;
+import static com.astoev.cave.survey.model.Option.CODE_DISTANCE_UNITS;
+import static com.astoev.cave.survey.model.Option.CODE_SLOPE_UNITS;
+
+import android.net.Uri;
 import android.util.Log;
 
 import com.astoev.cave.survey.Constants;
@@ -30,8 +35,6 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
@@ -42,16 +45,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
 
-import static com.astoev.cave.survey.model.Option.CODE_AZIMUTH_UNITS;
-import static com.astoev.cave.survey.model.Option.CODE_DISTANCE_UNITS;
-import static com.astoev.cave.survey.model.Option.CODE_SLOPE_UNITS;
-
 /**
  * Created by astoev on 6/15/16.
  */
 public class ExcelImport {
 
-    public static Object importExcelFile(File aPath, final Project aProject) throws SQLException, IOException {
+    public static Object importExcelFile(Uri aPath, final Project aProject) throws SQLException, IOException {
 
         Log.i(Constants.LOG_TAG_SERVICE, "Requested to import " + aPath + " as " + aProject.getName());
 
@@ -242,8 +241,8 @@ public class ExcelImport {
         });
     }
 
-    public static ProjectData loadProjectData(File aPath) throws IOException {
-        return loadProjectData(new FileInputStream(aPath));
+    public static ProjectData loadProjectData(Uri aPath) throws IOException {
+        return loadProjectData(ConfigUtil.getContext().getContentResolver().openInputStream(aPath));
     }
 
     public static ProjectData loadProjectData(InputStream stream) throws IOException {
@@ -309,11 +308,11 @@ public class ExcelImport {
                 }
                 Cell altCell = row.getCell(ExcelExport.CELL_ALTTITUDE);
                 if (altCell != null) {
-                    leg.setAlt((float) altCell.getNumericCellValue());
+                    leg.setAlt(altCell.getNumericCellValue());
                 }
                 Cell accuracyCell = row.getCell(ExcelExport.CELL_ACCURACY);
                 if (accuracyCell != null) {
-                    leg.setAccuracy((float) accuracyCell.getNumericCellValue());
+                    leg.setAccuracy(accuracyCell.getNumericCellValue());
                 }
                 Cell sketcesCell = row.getCell(ExcelExport.CELL_DRAWING);
                 if (sketcesCell != null) {

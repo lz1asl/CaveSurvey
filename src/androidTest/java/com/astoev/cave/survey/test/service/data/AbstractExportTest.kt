@@ -1,14 +1,15 @@
 package com.astoev.cave.survey.test.service.data
 
 import android.util.Log
+import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
-import androidx.test.rule.ActivityTestRule
-import androidx.test.rule.GrantPermissionRule
 import com.astoev.cave.survey.Constants
-import com.astoev.cave.survey.activity.home.SurveysActivity
+import com.astoev.cave.survey.activity.home.SplashActivity
 import com.astoev.cave.survey.test.helper.Common
+import com.astoev.cave.survey.util.ConfigUtil
 import com.astoev.cave.survey.util.FileStorageUtil
+import com.astoev.cave.survey.util.StreamUtil
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.runner.RunWith
@@ -24,10 +25,10 @@ abstract class AbstractExportTest {
     var PARAM_CAVESURVEY_VERSION = "CAVESURVEY_VERSION"
 
     @Rule @JvmField
-    var activityRule = ActivityTestRule(SurveysActivity::class.java)
+    var activityRule = ActivityScenarioRule(SplashActivity::class.java)
 
-    @Rule @JvmField
-    val grantPermissionRule: GrantPermissionRule = GrantPermissionRule.grant(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+//    @Rule @JvmField
+//    val grantPermissionRule: GrantPermissionRule = GrantPermissionRule.grant(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
     fun findAsset(path: String): InputStream {
         return Common.context.assets.open(path)
@@ -48,10 +49,11 @@ abstract class AbstractExportTest {
         val files = FileStorageUtil.getFolderFiles(home, extension)
         Log.i(Constants.LOG_TAG_SERVICE, "" + files.size + " exported files")
 
-        val actual = files.get(files.size - 1).readText(Charsets.UTF_8)
+        val exportFile = files.get(files.size - 1)
+        val actual = StreamUtil.read(ConfigUtil.getContext().contentResolver.openInputStream(exportFile.uri))
 
         // must match
-        assertEquals(content, actual);
+        assertEquals(content, String(actual));
     }
 }
 

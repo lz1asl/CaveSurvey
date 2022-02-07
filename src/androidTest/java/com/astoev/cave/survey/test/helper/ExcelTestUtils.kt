@@ -3,15 +3,32 @@ package com.astoev.cave.survey.test.helper
 import com.astoev.cave.survey.model.Option
 import com.astoev.cave.survey.service.imp.LegData
 import com.astoev.cave.survey.service.imp.ProjectData
+import junit.framework.Assert.assertNull
 import org.junit.Assert
 
 object ExcelTestUtils {
-    fun assertLegLocation(aLeg: LegData, aLat: Float?, aLon: Float?, anAlt: Float?, anAccuracy: Float?) {
+    fun assertLegLocation(aLeg: LegData, aLat: Double?, aLon: Double?, anAlt: Double?, anAccuracy: Double?) {
         Assert.assertNotNull(aLeg)
-        Assert.assertEquals(aLat, aLeg.lat)
-        Assert.assertEquals(aLon, aLeg.lon)
-        Assert.assertEquals(anAlt, aLeg.alt)
-        Assert.assertEquals(anAccuracy, aLeg.accuracy)
+        if (aLat == null) {
+            assertNull(aLeg.alt)
+        } else {
+            Assert.assertEquals(aLat, aLeg.lat, 0.000002)
+        }
+        if (aLon == null) {
+            assertNull(aLeg.lon)
+        } else {
+            Assert.assertEquals(aLon, aLeg.lon, 0.000002)
+        }
+        if (anAlt == null) {
+            assertNull(aLeg.alt)
+        } else {
+            Assert.assertEquals(anAlt, aLeg.alt, 0.01)
+        }
+        if (anAccuracy == null) {
+            assertNull(aLeg.accuracy)
+        } else {
+            Assert.assertEquals(anAccuracy, aLeg.accuracy, 0.1)
+        }
     }
 
     @JvmOverloads

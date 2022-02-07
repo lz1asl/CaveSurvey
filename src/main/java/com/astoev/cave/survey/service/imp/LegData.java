@@ -9,11 +9,12 @@ public class LegData {
     private Float length, azimuth, slope;
     private Float up, down, left, right;
 
-    private Float lat, lon, alt, accuracy;
+    private Double lat, lon, alt, accuracy;
 
     private String note;
 
     private String sketch;
+    private String photo;
 
 
     public String getFromGallery() {
@@ -120,35 +121,35 @@ public class LegData {
         right = aRight;
     }
 
-    public Float getLat() {
+    public Double getLat() {
         return lat;
     }
 
-    public void setLat(Float aLat) {
+    public void setLat(Double aLat) {
         lat = aLat;
     }
 
-    public Float getLon() {
+    public Double getLon() {
         return lon;
     }
 
-    public void setLon(Float aLon) {
+    public void setLon(Double aLon) {
         lon = aLon;
     }
 
-    public Float getAlt() {
+    public Double getAlt() {
         return alt;
     }
 
-    public void setAlt(Float aAlt) {
+    public void setAlt(Double aAlt) {
         alt = aAlt;
     }
 
-    public Float getAccuracy() {
+    public Double getAccuracy() {
         return accuracy;
     }
 
-    public void setAccuracy(Float aAccuracy) {
+    public void setAccuracy(Double aAccuracy) {
         accuracy = aAccuracy;
     }
 
@@ -166,5 +167,13 @@ public class LegData {
 
     public void setSketch(String aSketch) {
         sketch = aSketch;
+    }
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String aPhoto) {
+        photo = aPhoto;
     }
 }

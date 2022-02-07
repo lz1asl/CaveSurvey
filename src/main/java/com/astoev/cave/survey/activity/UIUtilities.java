@@ -88,10 +88,11 @@ public class UIUtilities {
         builder.show();
     }
 
-    public static void showBusy(Context aContext) {
-        ProgressDialog dialog = ProgressDialog.show(aContext, "",
+    public static ProgressDialog showBusy(Context aContext, String title) {
+        ProgressDialog dialog = ProgressDialog.show(aContext, title,
                 aContext.getString(R.string.busy), true);
         dialog.show();
+        return dialog;
     }
 
     public static boolean validateNumber(EditText aEditField, boolean isRequired) {

@@ -1,16 +1,23 @@
 package com.astoev.cave.survey.activity.dialog;
 
+import static com.astoev.cave.survey.Constants.LOG_TAG_SERVICE;
+import static java.util.Locale.ENGLISH;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
 import com.astoev.cave.survey.R;
+import com.astoev.cave.survey.activity.home.SplashActivity;
 import com.astoev.cave.survey.util.ConfigUtil;
 
 import java.util.Locale;
@@ -31,6 +38,16 @@ public class LanguageDialog extends DialogFragment {
     private static final int LANG_SPANISH = 6;
     private static final int LANG_GERMAN = 7;
 
+    private SplashActivity parent;
+
+
+    public LanguageDialog() {
+    }
+
+    public LanguageDialog(SplashActivity aParent) {
+        parent = aParent;
+    }
+
     /**
      * @see DialogFragment#onCreateDialog(android.os.Bundle)
      */
@@ -48,7 +65,7 @@ public class LanguageDialog extends DialogFragment {
             Locale locale;
             switch (whichArg) {
                 case LANG_ENGLISH:
-                    locale = Locale.ENGLISH;
+                    locale = ENGLISH;
                     break;
                 case LANG_BULGARIAN:
                     locale = new Locale("bg");
@@ -73,7 +90,7 @@ public class LanguageDialog extends DialogFragment {
                     break;
 
                 default:
-                    locale = Locale.ENGLISH;
+                    locale = ENGLISH;
                     break;
             }
 
@@ -81,16 +98,8 @@ public class LanguageDialog extends DialogFragment {
             String savedLanguage = ConfigUtil.getStringProperty(ConfigUtil.PREF_LOCALE);
             if (!locale.getLanguage().equals(savedLanguage)){
 
-                // create prefurred locale
-                Locale.setDefault(locale);
-                Configuration config = new Configuration();
-                config.locale = locale;
-
-                Resources resources = ((Dialog)dialogArg).getOwnerActivity().getBaseContext().getResources();
-                resources.updateConfiguration(config, resources.getDisplayMetrics());
-
-                // save settings
-                ConfigUtil.setStringProperty(ConfigUtil.PREF_LOCALE, locale.getLanguage());
+                // create preferred locale
+                setLocale(locale);
 
                 // restart parent activity
                 Intent intent = getActivity().getIntent();
@@ -107,4 +116,28 @@ public class LanguageDialog extends DialogFragment {
         return builder.create();
     }
 
+    private void setLocale(Locale locale) {
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.locale = locale;
+
+        Resources resources = getResources();
+        resources.updateConfiguration(config, resources.getDisplayMetrics());
+
+        // save settings
+        ConfigUtil.setStringProperty(ConfigUtil.PREF_LOCALE, locale.getLanguage());
+    }
+
+    @Override
+    public void onCancel(@NonNull DialogInterface dialog) {
+        super.onCancel(dialog);
+
+        if (parent != null) {
+            // user cancelled during initialization, use default language
+            Log.i(LOG_TAG_SERVICE, "Use english");
+            setLocale(ENGLISH);
+
+            parent.retry(null);
+        }
+    }
 }

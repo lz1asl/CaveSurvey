@@ -10,6 +10,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.documentfile.provider.DocumentFile;
+
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.MainMenuActivity;
@@ -31,11 +33,8 @@ import com.astoev.cave.survey.service.orientation.OrientationProcessorFactory;
 import com.astoev.cave.survey.service.orientation.RotationOrientationProcessor;
 import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.util.FileStorageUtil;
-import com.astoev.cave.survey.util.FileUtils;
 import com.astoev.cave.survey.util.ProjectInfo;
 import com.astoev.cave.survey.util.StringUtils;
-
-import java.io.File;
 
 /**
  * Created by IntelliJ IDEA.
@@ -125,8 +124,9 @@ public class InfoActivity extends MainMenuActivity {
             }
 
             TextView projectHome = findViewById(R.id.info_project_home);
-            String projectHomeFolder = FileStorageUtil.getProjectHome(projectInfo.getName()).getAbsolutePath();
-            projectHome.setText(projectHomeFolder);
+            DocumentFile projectHomeFolder = FileStorageUtil.getProjectHome(projectInfo.getName());
+            String relativePath = FileStorageUtil.getFullRelativePath(projectHomeFolder);
+            projectHome.setText(relativePath);
 
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to render info activity", e);
@@ -140,12 +140,12 @@ public class InfoActivity extends MainMenuActivity {
 
             // export legs
 
-            ExcelExport export = new ExcelExport(this);
-            String exportPath = export.runExport(getWorkspace().getActiveProject());
-            if (StringUtils.isEmpty(exportPath)) {
-                UIUtilities.showNotification(this, R.string.export_io_error, exportPath);
+            ExcelExport export = new ExcelExport(this.getResources());
+            DocumentFile exportFile = export.runExport(getWorkspace().getActiveProject(), null, true);
+            if (exportFile == null) {
+                UIUtilities.showNotification(this, R.string.export_io_error, FileStorageUtil.getFullRelativePath(exportFile));
             } else {
-                UIUtilities.showNotification(this, R.string.export_done, exportPath);
+                UIUtilities.showNotification(this, R.string.export_done, FileStorageUtil.getFullRelativePath(exportFile));
             }
 
         } catch (Exception e) {
@@ -159,13 +159,12 @@ public class InfoActivity extends MainMenuActivity {
             Log.i(Constants.LOG_TAG_SERVICE, "Start vtopo_logo export");
 
             // export legs
-
-            VisualTopoExport export = new VisualTopoExport(this);
-            String exportPath = export.runExport(getWorkspace().getActiveProject());
-            if (StringUtils.isEmpty(exportPath)) {
-                UIUtilities.showNotification(this, R.string.export_io_error, exportPath);
+            VisualTopoExport export = new VisualTopoExport(this.getResources());
+            DocumentFile exportFile = export.runExport(getWorkspace().getActiveProject(), null, true);
+            if (exportFile == null) {
+                UIUtilities.showNotification(this, R.string.export_io_error, FileStorageUtil.getFullRelativePath(exportFile));
             } else {
-                UIUtilities.showNotification(this, R.string.export_done, exportPath);
+                UIUtilities.showNotification(this, R.string.export_done, FileStorageUtil.getFullRelativePath(exportFile));
             }
 
         } catch (Exception e) {
@@ -185,10 +184,10 @@ public class InfoActivity extends MainMenuActivity {
 
         Log.i(Constants.LOG_TAG_SERVICE, "View files selected for project:" + projectName);
 
-        File projectHome = FileStorageUtil.getProjectHome(projectName);
+        DocumentFile projectHome = FileStorageUtil.getProjectHome(projectName);
 
         if (projectHome != null) {
-            Uri contentUri = FileUtils.getFileUri(projectHome);
+            Uri contentUri = projectHome.getUri();
 
             Log.i(Constants.LOG_TAG_SERVICE, "Uri:" + contentUri);
 
@@ -221,7 +220,7 @@ public class InfoActivity extends MainMenuActivity {
             // another test
             intent = new Intent(Intent.ACTION_VIEW);
             intent.setData(contentUri);
-            intent.putExtra("org.openintents.extra.ABSOLUTE_PATH", projectHome.getPath());
+            intent.putExtra("org.openintents.extra.ABSOLUTE_PATH", contentUri.getPath());
             if (intent.resolveActivity(packageManager) != null) {
                 Log.i(Constants.LOG_TAG_SERVICE, "ACTION_VIEW with extra resolved");
                 startActivity(Intent.createChooser(intent, chooserTitle));
@@ -256,7 +255,7 @@ public class InfoActivity extends MainMenuActivity {
             Log.e(Constants.LOG_TAG_SERVICE, "No project folder for project:" + projectName);
             UIUtilities.showNotification(R.string.io_error);
         }
-    }//end of onViewFiles
+    }
 
     /**
      * @see com.astoev.cave.survey.activity.MainMenuActivity#getChildsOptionsMenu()
@@ -271,14 +270,10 @@ public class InfoActivity extends MainMenuActivity {
 
         boolean flag = super.onCreateOptionsMenu(menu);
 
-        // disable openstopo for older devices that will not render the data properly
-        // and HONEYCOMB for the content access property ...
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            MenuItem opensTopoItem = menu.findItem(R.id.info_action_openstopo);
-            if (opensTopoItem != null) {
-                opensTopoItem.setVisible(true);
-            }
-//        }
+        MenuItem opensTopoItem = menu.findItem(R.id.info_action_openstopo);
+        if (opensTopoItem != null) {
+            opensTopoItem.setVisible(true);
+        }
 
         return flag;
     }
@@ -305,15 +300,15 @@ public class InfoActivity extends MainMenuActivity {
                 try {
                     // export
                     Log.i(Constants.LOG_TAG_SERVICE, "Start json export");
-                    OpensTopoJsonExport export = new OpensTopoJsonExport(this);
-                    String exportPath = export.runExport(getWorkspace().getActiveProject());
-                    if (StringUtils.isEmpty(exportPath)) {
-                        UIUtilities.showNotification(this, R.string.export_io_error, exportPath);
+                    OpensTopoJsonExport export = new OpensTopoJsonExport(this.getResources());
+                    DocumentFile exportFile = export.runExport(getWorkspace().getActiveProject(), null, false);
+                    if (exportFile == null) {
+                        UIUtilities.showNotification(this, R.string.export_io_error, FileStorageUtil.getFullRelativePath(exportFile));
                     } else {
                         // load ui
-                        Log.i(Constants.LOG_TAG_SERVICE, "exported to " + exportPath);
+                        Log.i(Constants.LOG_TAG_SERVICE, "exported to " + FileStorageUtil.getFullRelativePath(exportFile));
                         Intent intent = new Intent(InfoActivity.this, WebViewActivity.class);
-                        intent.putExtra("path", exportPath);
+                        intent.putExtra("path", exportFile.getUri().toString());
                         intent.putExtra("projectName", getWorkspace().getActiveProject().getName());
                         startActivity(intent);
                     }

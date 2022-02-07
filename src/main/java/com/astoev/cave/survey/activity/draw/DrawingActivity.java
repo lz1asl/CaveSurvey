@@ -1,5 +1,7 @@
 package com.astoev.cave.survey.activity.draw;
 
+import static com.astoev.cave.survey.util.FileStorageUtil.MIME_TYPE_PNG;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
@@ -15,6 +17,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+
+import androidx.documentfile.provider.DocumentFile;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
@@ -199,13 +203,13 @@ public class DrawingActivity extends BaseActivity implements View.OnTouchListene
                 String galleryName = PointUtil.getGalleryNameForFromPoint(activePoint, activeLeg.getGalleryId());
             	filePrefix = FileStorageUtil.getFilePrefixForPicture(activePoint, galleryName);
             }
-			String path = FileStorageUtil.addProjectMedia(this, getWorkspace().getActiveProject(), filePrefix, buff.toByteArray());
+			DocumentFile file = FileStorageUtil.addProjectMedia(this, getWorkspace().getActiveProject(), filePrefix, MIME_TYPE_PNG, buff.toByteArray());
 
             // create DB record
             Sketch drawing = new Sketch();
             drawing.setPoint(activePoint);
             drawing.setGalleryId(activeLeg.getGalleryId());
-            drawing.setFSPath(path);
+            drawing.setFSPath(file.getName());
             getWorkspace().getDBHelper().getSketchDao().create(drawing);
 
             UIUtilities.showNotification(R.string.sketch_saved);
