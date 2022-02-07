@@ -1124,6 +1124,8 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
     public void onRequestPermissionsResult(int requestCode,
                                            String[] permissions, int[] grantResults) {
 
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
         switch (requestCode) {
             case PERM_REQ_CODE_CAMERA:
                 if (PermissionUtil.isGranted(permissions, grantResults)) {
