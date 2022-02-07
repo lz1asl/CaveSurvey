@@ -1,5 +1,9 @@
 package com.astoev.cave.survey.service.imp;
 
+import static com.astoev.cave.survey.model.Option.CODE_AZIMUTH_UNITS;
+import static com.astoev.cave.survey.model.Option.CODE_DISTANCE_UNITS;
+import static com.astoev.cave.survey.model.Option.CODE_SLOPE_UNITS;
+
 import android.net.Uri;
 import android.util.Log;
 
@@ -40,10 +44,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
-
-import static com.astoev.cave.survey.model.Option.CODE_AZIMUTH_UNITS;
-import static com.astoev.cave.survey.model.Option.CODE_DISTANCE_UNITS;
-import static com.astoev.cave.survey.model.Option.CODE_SLOPE_UNITS;
 
 /**
  * Created by astoev on 6/15/16.
@@ -308,11 +308,11 @@ public class ExcelImport {
                 }
                 Cell altCell = row.getCell(ExcelExport.CELL_ALTTITUDE);
                 if (altCell != null) {
-                    leg.setAlt((float) altCell.getNumericCellValue());
+                    leg.setAlt(altCell.getNumericCellValue());
                 }
                 Cell accuracyCell = row.getCell(ExcelExport.CELL_ACCURACY);
                 if (accuracyCell != null) {
-                    leg.setAccuracy((float) accuracyCell.getNumericCellValue());
+                    leg.setAccuracy(accuracyCell.getNumericCellValue());
                 }
                 Cell sketcesCell = row.getCell(ExcelExport.CELL_DRAWING);
                 if (sketcesCell != null) {

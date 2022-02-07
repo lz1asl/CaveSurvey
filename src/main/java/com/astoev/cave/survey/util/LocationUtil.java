@@ -35,7 +35,7 @@ public class LocationUtil {
         }
     }
 
-    public static Float descriptionToValue(Cell aCell) {
+    public static Double descriptionToValue(Cell aCell) {
 
         try {
             String aCoordinateDescription = aCell.getStringCellValue();
@@ -46,7 +46,7 @@ public class LocationUtil {
                 // proper number in default format
                 numberPart = numberPart.replace(",", ".");
 
-                float coordinate = Float.parseFloat(numberPart);
+                double coordinate = Double.parseDouble(numberPart);
                 if (aCoordinateDescription.endsWith(S) || aCoordinateDescription.endsWith(W)) {
                     coordinate = -coordinate;
                 }
@@ -54,7 +54,7 @@ public class LocationUtil {
             }
             return null;
         } catch (IllegalStateException e) {
-            return (float) aCell.getNumericCellValue();
+            return aCell.getNumericCellValue();
         }
     }
 }

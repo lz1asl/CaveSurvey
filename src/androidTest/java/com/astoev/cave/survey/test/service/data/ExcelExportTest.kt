@@ -12,6 +12,7 @@ import com.astoev.cave.survey.test.helper.Data.getLastXlsExport
 import com.astoev.cave.survey.test.helper.Data.xlsExport
 import com.astoev.cave.survey.test.helper.ExcelTestUtils.assertConfigUnits
 import com.astoev.cave.survey.test.helper.ExcelTestUtils.assertLeg
+import com.astoev.cave.survey.test.helper.ExcelTestUtils.assertLegLocation
 import com.astoev.cave.survey.test.helper.Survey
 import com.astoev.cave.survey.test.helper.Survey.addCoordinate
 import com.astoev.cave.survey.test.helper.Survey.addLeg
@@ -231,14 +232,7 @@ class ExcelExportTest() : AbstractExportTest() {
     private fun assertFirstLegNoSlope(legs: List<LegData>) {
         assertLeg(legs[0], 1f, 2f, null)
         assertLeg(legs[0], "A", "0", "A", "1", false, false)
-        assertLegCoordinate(legs[0], 42.811522f, 23.378906f, 123, 5);
-    }
-
-    private fun assertLegCoordinate(legData: LegData, lat: Float, lon: Float, alt: Int, accuracy: Int) {
-        assertEquals(lat, legData.lat)
-        assertEquals(lon, legData.lon)
-        assertEquals(alt, legData.alt.toInt())
-        assertEquals(accuracy, legData.accuracy.toInt())
+        assertLegLocation(legs[0], 42.811522, 23.378906, 123.0, 5.0);
     }
 
     private fun assertSecondSimpleLeg(legs: List<LegData>) {
