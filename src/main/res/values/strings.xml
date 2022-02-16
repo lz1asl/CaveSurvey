@@ -170,6 +170,7 @@
     <string name="export_xls">Excel export</string>
     <string name="export_vtopo">Visual Topo export</string>
     <string name="export_view_files">Data Files</string>
+    <string name="export_cavear">CaveAR</string>
     <string name="export_done">Exported to %1$s</string>
     <string name="export_io_error">Failed to write to SD card</string>
     <string name="io_error">Unable to access SD card</string>

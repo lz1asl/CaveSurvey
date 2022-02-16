@@ -23,6 +23,7 @@ import com.astoev.cave.survey.model.Option;
 import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.openstopo.WebViewActivity;
 import com.astoev.cave.survey.service.Options;
+import com.astoev.cave.survey.service.export.csv.CsvExport;
 import com.astoev.cave.survey.service.export.excel.ExcelExport;
 import com.astoev.cave.survey.service.export.json.OpensTopoJsonExport;
 import com.astoev.cave.survey.service.export.vtopo.VisualTopoExport;
@@ -326,8 +327,38 @@ public class InfoActivity extends MainMenuActivity {
                 onViewFiles();
                 return true;
             }
+
+            case R.id.info_action_cavear: {
+                onCaveAr();
+                return true;
+            }
+
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void onCaveAr() {
+        try {
+            Log.i(Constants.LOG_TAG_SERVICE, "Start CaveAR export");
+
+            // export legs
+            CsvExport export = new CsvExport(this.getResources());
+            DocumentFile exportFile = export.runExport(getWorkspace().getActiveProject(), null, true);
+            if (exportFile == null) {
+                UIUtilities.showNotification(this, R.string.export_io_error, FileStorageUtil.getFullRelativePath(exportFile));
+            } else {
+                UIUtilities.showNotification(this, R.string.export_done, FileStorageUtil.getFullRelativePath(exportFile));
+            }
+
+            // open
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setDataAndType(exportFile.getUri(), "app/CaveAR");
+            startActivity(intent);
+
+        } catch (Exception e) {
+            Log.e(Constants.LOG_TAG_UI, "Failed to open CaveAR", e);
+            UIUtilities.showNotification(R.string.error);
         }
     }
 

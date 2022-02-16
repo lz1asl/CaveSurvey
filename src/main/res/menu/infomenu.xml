@@ -26,4 +26,10 @@
         android:title="@string/export_view_files"
         android:visible="true"
         myapp:showAsAction="ifRoom|withText" />
+    <item
+        android:id="@+id/info_action_cavear"
+        android:icon="@drawable/ic_action_import_export"
+        android:title="@string/export_cavear"
+        android:visible="true"
+        myapp:showAsAction="ifRoom|withText" />
 </menu>    

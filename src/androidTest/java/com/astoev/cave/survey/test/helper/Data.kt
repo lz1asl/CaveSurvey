@@ -25,6 +25,11 @@ object Data {
         Common.click(id.info_action_openstopo)
     }
 
+    fun caveAR() {
+        Common.openContextMenu()
+        Common.click("CaveAR")
+    }
+
     fun getLastXlsExport(aSurveyName: String?): Uri {
         val excelExportFiles = FileStorageUtil.listProjectFiles(null, ExcelExport.EXCEL_FILE_EXTENSION)
         return excelExportFiles.stream()
@@ -36,7 +41,7 @@ object Data {
     fun getExportFile(aSurveyName: String, aFilename: String): DocumentFile {
         val excelExportFiles = FileStorageUtil.listProjectFiles(null, null)
         return excelExportFiles.stream()
-            .filter { file: DocumentFile -> file.parentFile?.name.toString().equals(aSurveyName!!) }
+            .filter { file: DocumentFile -> file.parentFile?.name.toString().equals(aSurveyName) }
             .filter { file: DocumentFile -> file.name.equals(aFilename)}
             .min { f1: DocumentFile, f2: DocumentFile -> f2.name.toString().compareTo(f1.name.toString()) }
             .get()

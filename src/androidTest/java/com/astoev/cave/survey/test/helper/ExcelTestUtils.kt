@@ -3,8 +3,8 @@ package com.astoev.cave.survey.test.helper
 import com.astoev.cave.survey.model.Option
 import com.astoev.cave.survey.service.imp.LegData
 import com.astoev.cave.survey.service.imp.ProjectData
-import junit.framework.Assert.assertNull
 import org.junit.Assert
+import org.junit.Assert.assertNull
 
 object ExcelTestUtils {
     fun assertLegLocation(aLeg: LegData, aLat: Double?, aLon: Double?, anAlt: Double?, anAccuracy: Double?) {
