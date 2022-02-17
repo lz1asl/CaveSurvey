@@ -150,7 +150,7 @@ class VisualTopoExport(aResources: Resources?) : AbstractExport(aResources) {
     }
 
     private fun format(value: Float): String {
-        return "%.2f".format(value)
+        return "%.2f".format(Locale.ENGLISH, value)
     }
 
     private fun leftPad(value: String, length: Int): String {
