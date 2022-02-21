@@ -3,10 +3,8 @@ package com.astoev.cave.survey.service.export.csv
 import android.content.res.Resources
 import android.util.Log
 import com.astoev.cave.survey.Constants
-import com.astoev.cave.survey.model.Location
-import com.astoev.cave.survey.model.Photo
-import com.astoev.cave.survey.model.Project
-import com.astoev.cave.survey.model.Sketch
+import com.astoev.cave.survey.model.*
+import com.astoev.cave.survey.service.Options.getOptionValue
 import com.astoev.cave.survey.service.export.AbstractExport
 import com.astoev.cave.survey.service.export.ExportEntityType
 import org.apache.commons.csv.CSVFormat
@@ -97,11 +95,9 @@ class CsvExport(aResources: Resources?) : AbstractExport(aResources) {
 
             csvPrinter.print(null)
             csvPrinter.print(null)
-            // TODO use the actual units
-//            val distanceUnits = Options.getOptionValue(Option.CODE_DISTANCE_UNITS)
-            csvPrinter.print("m")
-            csvPrinter.print("deg")
-            csvPrinter.print("deg")
+            csvPrinter.print(getOptionValue(Option.CODE_DISTANCE_UNITS))
+            csvPrinter.print(getOptionValue(Option.CODE_AZIMUTH_UNITS))
+            csvPrinter.print(getOptionValue(Option.CODE_SLOPE_UNITS))
             csvPrinter.print("m")
             csvPrinter.print("m")
             csvPrinter.print("m")
