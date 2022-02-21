@@ -32,9 +32,11 @@ import com.astoev.cave.survey.service.orientation.OrientationDeprecatedProcessor
 import com.astoev.cave.survey.service.orientation.OrientationProcessor;
 import com.astoev.cave.survey.service.orientation.OrientationProcessorFactory;
 import com.astoev.cave.survey.service.orientation.RotationOrientationProcessor;
+import com.astoev.cave.survey.util.ConfigUtil;
 import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.util.FileStorageUtil;
 import com.astoev.cave.survey.util.ProjectInfo;
+import com.astoev.cave.survey.util.StreamUtil;
 import com.astoev.cave.survey.util.StringUtils;
 
 /**
@@ -354,6 +356,9 @@ public class InfoActivity extends MainMenuActivity {
             // open
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setDataAndType(exportFile.getUri(), "app/CaveAR");
+            byte[] csv = StreamUtil.read(
+                    ConfigUtil.getContext().getContentResolver().openInputStream(exportFile.getUri()));
+            intent.putExtra("csv", csv);
             startActivity(intent);
 
         } catch (Exception e) {
