@@ -356,6 +356,7 @@ public class InfoActivity extends MainMenuActivity {
             // open
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setDataAndType(exportFile.getUri(), "app/CaveAR");
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             byte[] csv = StreamUtil.read(
                     ConfigUtil.getContext().getContentResolver().openInputStream(exportFile.getUri()));
             intent.putExtra("csv", csv);
