@@ -21,15 +21,15 @@
         android:visible="true"
         myapp:showAsAction="ifRoom|withText" />
     <item
+        android:id="@+id/info_action_cavear"
+        android:icon="@drawable/cavear_logo"
+        android:title="@string/export_cavear"
+        android:visible="true"
+        myapp:showAsAction="ifRoom|withText" />
+    <item
         android:id="@+id/info_action_view_files"
         android:icon="@drawable/ic_action_collection"
         android:title="@string/export_view_files"
         android:visible="true"
         myapp:showAsAction="ifRoom|withText" />
-    <item
-        android:id="@+id/info_action_cavear"
-        android:icon="@drawable/ic_action_import_export"
-        android:title="@string/export_cavear"
-        android:visible="true"
-        myapp:showAsAction="ifRoom|withText" />
-</menu>    
+</menu>
