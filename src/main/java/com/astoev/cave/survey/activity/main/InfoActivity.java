@@ -60,6 +60,7 @@ public class InfoActivity extends MainMenuActivity {
     public static final String MIME_RESOURCE_FOLDER = "resource/folder";
     public static final String MIME_RESOURCE_FILE = "file/*";
     public static final String MIME_TYPE_ANY = "*/*";
+    public static final String MIME_CAVEAR = "app/CaveAR";
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -353,14 +354,23 @@ public class InfoActivity extends MainMenuActivity {
                 UIUtilities.showNotification(this, R.string.export_done, FileStorageUtil.getFullRelativePath(exportFile));
             }
 
-            // open
+            // prepare intent
             Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setDataAndType(exportFile.getUri(), "app/CaveAR");
+            intent.setDataAndType(exportFile.getUri(), MIME_CAVEAR);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             byte[] csv = StreamUtil.read(
                     ConfigUtil.getContext().getContentResolver().openInputStream(exportFile.getUri()));
             intent.putExtra("csv", csv);
-            startActivity(intent);
+
+            // check for CaveAR
+            if (intent.resolveActivity(getPackageManager()) != null) {
+                // open
+                Log.i(Constants.LOG_TAG_SERVICE, "Open CaveAR");
+                startActivity(intent);
+            } else {
+                Log.i(Constants.LOG_TAG_SERVICE, "CaveAR not present");
+                UIUtilities.showNotification(R.string.export_cavear_missing);
+            }
 
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to open CaveAR", e);
