@@ -361,6 +361,7 @@ public class InfoActivity extends MainMenuActivity {
             byte[] csv = StreamUtil.read(
                     ConfigUtil.getContext().getContentResolver().openInputStream(exportFile.getUri()));
             intent.putExtra("csv", csv);
+            intent.putExtra("lang", ConfigUtil.getStringProperty(ConfigUtil.PREF_LOCALE));
 
             // check for CaveAR
             if (intent.resolveActivity(getPackageManager()) != null) {
