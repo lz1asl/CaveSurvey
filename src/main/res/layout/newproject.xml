@@ -15,31 +15,50 @@
                  android:layout_height="wrap_content"
                  tools:layout="@layout/project_fragment"/>
 
-           <TextView
-                android:id="@+id/project_import"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/import_toggle_layout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/settings_import_source"
                 android:layout_below="@id/project_container"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:layout_marginTop="20dp"/>
+                android:layout_marginTop="40dp">
 
-           <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@id/import_files"
-                android:layout_alignParentRight="true"
-                android:clickable="true"
-                android:layout_marginRight="5dp"
-                android:src="@drawable/ic_info_white"
-                android:contentDescription="@string/information"
-                android:onClick="onChooseInfo" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:clickable="true"
+                    android:contentDescription="@string/information"
+                    android:onClick="onChooseInfo"
+                    android:src="@drawable/ic_info_white" />
 
-            <androidx.appcompat.widget.AppCompatSpinner
-                android:id="@+id/import_files"
-                android:layout_width="fill_parent"
+                <Switch
+                    android:id="@+id/import_toggle"
+                    android:layout_width="match_parent"
+                    android:text="@string/project_import"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/import_layout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/project_import"/>
+                android:layout_marginTop="0dp"
+                android:layout_below="@id/import_toggle_layout">
+
+                <TextView
+                    android:id="@+id/project_import"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_import_source"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <androidx.appcompat.widget.AppCompatSpinner
+                    android:id="@+id/import_files"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/project_import" />
+
+            </LinearLayout>
 
         </RelativeLayout>
 

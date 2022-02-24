@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Switch;
 
 import androidx.documentfile.provider.DocumentFile;
 
@@ -51,8 +52,19 @@ public class NewProjectActivity extends MainMenuActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.newproject);
 
-        // TODO only when needed
-        prepareImportFiles();
+        // load import section when needed
+        Switch toggle = findViewById(R.id.import_toggle);
+        View importContainer = findViewById(R.id.import_layout);
+        importContainer.setVisibility(View.GONE);
+
+        toggle.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                prepareImportFiles();
+                importContainer.setVisibility(View.VISIBLE);
+            } else {
+                importContainer.setVisibility(View.GONE);
+            }
+        });
     }
 
     private void prepareImportFiles() {
