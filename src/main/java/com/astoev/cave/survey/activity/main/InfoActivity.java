@@ -23,6 +23,7 @@ import com.astoev.cave.survey.model.Option;
 import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.openstopo.WebViewActivity;
 import com.astoev.cave.survey.service.Options;
+import com.astoev.cave.survey.service.export.csv.CsvExport;
 import com.astoev.cave.survey.service.export.excel.ExcelExport;
 import com.astoev.cave.survey.service.export.json.OpensTopoJsonExport;
 import com.astoev.cave.survey.service.export.vtopo.VisualTopoExport;
@@ -31,9 +32,11 @@ import com.astoev.cave.survey.service.orientation.OrientationDeprecatedProcessor
 import com.astoev.cave.survey.service.orientation.OrientationProcessor;
 import com.astoev.cave.survey.service.orientation.OrientationProcessorFactory;
 import com.astoev.cave.survey.service.orientation.RotationOrientationProcessor;
+import com.astoev.cave.survey.util.ConfigUtil;
 import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.util.FileStorageUtil;
 import com.astoev.cave.survey.util.ProjectInfo;
+import com.astoev.cave.survey.util.StreamUtil;
 import com.astoev.cave.survey.util.StringUtils;
 
 /**
@@ -57,6 +60,7 @@ public class InfoActivity extends MainMenuActivity {
     public static final String MIME_RESOURCE_FOLDER = "resource/folder";
     public static final String MIME_RESOURCE_FILE = "file/*";
     public static final String MIME_TYPE_ANY = "*/*";
+    public static final String MIME_CAVEAR = "app/CaveAR";
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -326,8 +330,52 @@ public class InfoActivity extends MainMenuActivity {
                 onViewFiles();
                 return true;
             }
+
+            case R.id.info_action_cavear: {
+                onCaveAr();
+                return true;
+            }
+
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void onCaveAr() {
+        try {
+            Log.i(Constants.LOG_TAG_SERVICE, "Start CaveAR export");
+
+            // export legs
+            CsvExport export = new CsvExport(this.getResources());
+            DocumentFile exportFile = export.runExport(getWorkspace().getActiveProject(), null, true);
+            if (exportFile == null) {
+                UIUtilities.showNotification(this, R.string.export_io_error, FileStorageUtil.getFullRelativePath(exportFile));
+            } else {
+                UIUtilities.showNotification(this, R.string.export_done, FileStorageUtil.getFullRelativePath(exportFile));
+            }
+
+            // prepare intent
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setDataAndType(exportFile.getUri(), MIME_CAVEAR);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            byte[] csv = StreamUtil.read(
+                    ConfigUtil.getContext().getContentResolver().openInputStream(exportFile.getUri()));
+            intent.putExtra("csv", csv);
+            intent.putExtra("lang", ConfigUtil.getStringProperty(ConfigUtil.PREF_LOCALE));
+
+            // check for CaveAR
+            if (intent.resolveActivity(getPackageManager()) != null) {
+                // open
+                Log.i(Constants.LOG_TAG_SERVICE, "Open CaveAR");
+                startActivity(intent);
+            } else {
+                Log.i(Constants.LOG_TAG_SERVICE, "CaveAR not present");
+                UIUtilities.showNotification(R.string.export_cavear_missing);
+            }
+
+        } catch (Exception e) {
+            Log.e(Constants.LOG_TAG_UI, "Failed to open CaveAR", e);
+            UIUtilities.showNotification(R.string.error);
         }
     }
 

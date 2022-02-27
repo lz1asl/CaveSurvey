@@ -2,8 +2,8 @@ Index: src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/
 ===================================================================
 diff --git a/src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/AbstractBoschGLMBluetoothDevice.java b/src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/AbstractBoschGLMBluetoothDevice.java
 deleted file mode 100644
---- a/src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/AbstractBoschGLMBluetoothDevice.java	(revision 8babaf7e74d66e2c718be7dc8994d43bafc9c7d3)
-+++ /dev/null	(revision 8babaf7e74d66e2c718be7dc8994d43bafc9c7d3)
+--- a/src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/AbstractBoschGLMBluetoothDevice.java	(revision fb7599b49c0a0930fb3c441c77be047e73f39a12)
++++ /dev/null	(revision fb7599b49c0a0930fb3c441c77be047e73f39a12)
 @@ -1,208 +0,0 @@
 -package com.astoev.cave.survey.service.bluetooth.device.comm.bosch.glm;
 -
@@ -217,8 +217,8 @@ Index: src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/
 ===================================================================
 diff --git a/src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschGLM50CBluetoothDevice.java b/src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschGLM50CBluetoothDevice.java
 deleted file mode 100644
---- a/src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschGLM50CBluetoothDevice.java	(revision 8babaf7e74d66e2c718be7dc8994d43bafc9c7d3)
-+++ /dev/null	(revision 8babaf7e74d66e2c718be7dc8994d43bafc9c7d3)
+--- a/src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschGLM50CBluetoothDevice.java	(revision fb7599b49c0a0930fb3c441c77be047e73f39a12)
++++ /dev/null	(revision fb7599b49c0a0930fb3c441c77be047e73f39a12)
 @@ -1,59 +0,0 @@
 -package com.astoev.cave.survey.service.bluetooth.device.comm.bosch.glm;
 -
@@ -283,8 +283,8 @@ Index: src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/
 ===================================================================
 diff --git a/src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschGLM100CBluetoothDevice.java b/src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschGLM100CBluetoothDevice.java
 deleted file mode 100644
---- a/src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschGLM100CBluetoothDevice.java	(revision 8babaf7e74d66e2c718be7dc8994d43bafc9c7d3)
-+++ /dev/null	(revision 8babaf7e74d66e2c718be7dc8994d43bafc9c7d3)
+--- a/src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschGLM100CBluetoothDevice.java	(revision fb7599b49c0a0930fb3c441c77be047e73f39a12)
++++ /dev/null	(revision fb7599b49c0a0930fb3c441c77be047e73f39a12)
 @@ -1,58 +0,0 @@
 -package com.astoev.cave.survey.service.bluetooth.device.comm.bosch.glm;
 -
@@ -348,8 +348,8 @@ Index: src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/
 ===================================================================
 diff --git a/src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschPLR30CBluetoothDevice.java b/src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschPLR30CBluetoothDevice.java
 deleted file mode 100644
---- a/src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschPLR30CBluetoothDevice.java	(revision 8babaf7e74d66e2c718be7dc8994d43bafc9c7d3)
-+++ /dev/null	(revision 8babaf7e74d66e2c718be7dc8994d43bafc9c7d3)
+--- a/src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschPLR30CBluetoothDevice.java	(revision fb7599b49c0a0930fb3c441c77be047e73f39a12)
++++ /dev/null	(revision fb7599b49c0a0930fb3c441c77be047e73f39a12)
 @@ -1,54 +0,0 @@
 -package com.astoev.cave.survey.service.bluetooth.device.comm.bosch.glm;
 -
@@ -409,8 +409,8 @@ Index: src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/
 ===================================================================
 diff --git a/src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschPLR40CBluetoothDevice.java b/src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschPLR40CBluetoothDevice.java
 deleted file mode 100644
---- a/src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschPLR40CBluetoothDevice.java	(revision 8babaf7e74d66e2c718be7dc8994d43bafc9c7d3)
-+++ /dev/null	(revision 8babaf7e74d66e2c718be7dc8994d43bafc9c7d3)
+--- a/src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschPLR40CBluetoothDevice.java	(revision fb7599b49c0a0930fb3c441c77be047e73f39a12)
++++ /dev/null	(revision fb7599b49c0a0930fb3c441c77be047e73f39a12)
 @@ -1,55 +0,0 @@
 -package com.astoev.cave.survey.service.bluetooth.device.comm.bosch.glm;
 -
@@ -471,8 +471,8 @@ Index: src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/
 ===================================================================
 diff --git a/src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschPLR50CBluetoothDevice.java b/src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschPLR50CBluetoothDevice.java
 deleted file mode 100644
---- a/src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschPLR50CBluetoothDevice.java	(revision 8babaf7e74d66e2c718be7dc8994d43bafc9c7d3)
-+++ /dev/null	(revision 8babaf7e74d66e2c718be7dc8994d43bafc9c7d3)
+--- a/src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschPLR50CBluetoothDevice.java	(revision fb7599b49c0a0930fb3c441c77be047e73f39a12)
++++ /dev/null	(revision fb7599b49c0a0930fb3c441c77be047e73f39a12)
 @@ -1,57 +0,0 @@
 -package com.astoev.cave.survey.service.bluetooth.device.comm.bosch.glm;
 -
@@ -535,8 +535,8 @@ Index: src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/
 ===================================================================
 diff --git a/src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/GLMBluetoothConnectionWrapper.java b/src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/GLMBluetoothConnectionWrapper.java
 deleted file mode 100644
---- a/src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/GLMBluetoothConnectionWrapper.java	(revision 8babaf7e74d66e2c718be7dc8994d43bafc9c7d3)
-+++ /dev/null	(revision 8babaf7e74d66e2c718be7dc8994d43bafc9c7d3)
+--- a/src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/GLMBluetoothConnectionWrapper.java	(revision fb7599b49c0a0930fb3c441c77be047e73f39a12)
++++ /dev/null	(revision fb7599b49c0a0930fb3c441c77be047e73f39a12)
 @@ -1,75 +0,0 @@
 -package com.astoev.cave.survey.service.bluetooth.device.comm.bosch.glm;
 -
@@ -619,26 +619,25 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 <+>UTF-8
 ===================================================================
 diff --git a/build.gradle b/build.gradle
---- a/build.gradle	(revision 8babaf7e74d66e2c718be7dc8994d43bafc9c7d3)
-+++ b/build.gradle	(date 1644264577441)
-@@ -24,9 +24,6 @@
-     implementation 'com.j256.ormlite:ormlite-android:4.48'
-     implementation 'org.apache.poi:poi:3.15'
+--- a/build.gradle	(revision fb7599b49c0a0930fb3c441c77be047e73f39a12)
++++ b/build.gradle	(date 1645047819207)
+@@ -26,7 +26,7 @@
+     implementation 'org.apache.commons:commons-csv:1.9.0'
  
--    // Bosch internal protocol
+     // Bosch internal protocol
 -    implementation files('../CaveSurveyBoschGLM/binary/CaveSurveyBoschGLM.jar')
--
++//    implementation files('../CaveSurveyBoschGLM/binary/CaveSurveyBoschGLM.jar')
+ 
      // kotlin
      implementation 'androidx.core:core-ktx:1.7.0'
-     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.6.10"
 Index: src/main/java/com/astoev/cave/survey/service/bluetooth/BluetoothService.java
 IDEA additional info:
 Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 <+>UTF-8
 ===================================================================
 diff --git a/src/main/java/com/astoev/cave/survey/service/bluetooth/BluetoothService.java b/src/main/java/com/astoev/cave/survey/service/bluetooth/BluetoothService.java
---- a/src/main/java/com/astoev/cave/survey/service/bluetooth/BluetoothService.java	(revision 8babaf7e74d66e2c718be7dc8994d43bafc9c7d3)
-+++ b/src/main/java/com/astoev/cave/survey/service/bluetooth/BluetoothService.java	(date 1644264577421)
+--- a/src/main/java/com/astoev/cave/survey/service/bluetooth/BluetoothService.java	(revision fb7599b49c0a0930fb3c441c77be047e73f39a12)
++++ b/src/main/java/com/astoev/cave/survey/service/bluetooth/BluetoothService.java	(date 1645047819191)
 @@ -50,11 +50,6 @@
  import com.astoev.cave.survey.service.bluetooth.device.comm.LaserAceBluetoothDevice;
  import com.astoev.cave.survey.service.bluetooth.device.comm.LeicaDistoD3aBtBluetoothDevice;
