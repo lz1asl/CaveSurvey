@@ -364,14 +364,14 @@ public class InfoActivity extends MainMenuActivity {
             intent.putExtra("lang", ConfigUtil.getStringProperty(ConfigUtil.PREF_LOCALE));
 
             // check for CaveAR
-            if (intent.resolveActivity(getPackageManager()) != null) {
+//            if (intent.resolveActivity(getPackageManager()) != null) {
                 // open
                 Log.i(Constants.LOG_TAG_SERVICE, "Open CaveAR");
                 startActivity(intent);
-            } else {
-                Log.i(Constants.LOG_TAG_SERVICE, "CaveAR not present");
-                UIUtilities.showNotification(R.string.export_cavear_missing);
-            }
+//            } else {
+//                Log.i(Constants.LOG_TAG_SERVICE, "CaveAR not present");
+//                UIUtilities.showNotification(R.string.export_cavear_missing);
+//            }
 
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to open CaveAR", e);
