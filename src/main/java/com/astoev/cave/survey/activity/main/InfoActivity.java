@@ -36,7 +36,6 @@ import com.astoev.cave.survey.util.ConfigUtil;
 import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.util.FileStorageUtil;
 import com.astoev.cave.survey.util.ProjectInfo;
-import com.astoev.cave.survey.util.StreamUtil;
 import com.astoev.cave.survey.util.StringUtils;
 
 /**
@@ -358,9 +357,6 @@ public class InfoActivity extends MainMenuActivity {
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setDataAndType(exportFile.getUri(), MIME_CAVEAR);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            byte[] csv = StreamUtil.read(
-                    ConfigUtil.getContext().getContentResolver().openInputStream(exportFile.getUri()));
-            intent.putExtra("csv", csv);
             intent.putExtra("lang", ConfigUtil.getStringProperty(ConfigUtil.PREF_LOCALE));
 
             // check for CaveAR
