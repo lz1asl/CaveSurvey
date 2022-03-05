@@ -171,10 +171,17 @@
     <string name="export_vtopo">Visual Topo export</string>
     <string name="export_view_files">Data Files</string>
     <string name="export_cavear">CaveAR</string>
+    <string name="export_share">Share</string>
     <string name="export_cavear_missing">CaveAR is not installed</string>
     <string name="export_done">Exported to %1$s</string>
     <string name="export_io_error">Failed to write to SD card</string>
     <string name="io_error">Unable to access SD card</string>
+
+    <string name="share_title">Survey data folder</string>
+    <array name="share_type">
+        <item>Data</item>
+        <item>Everything</item>
+    </array>
     
     <!-- options -->
     <string name="measures_title">Data Input</string>

@@ -20,7 +20,6 @@ import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.service.Workspace;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.sql.SQLException;
@@ -38,7 +37,7 @@ import java.util.List;
  */
 public class FileStorageUtil {
 
-    private static final String PNG_FILE_EXTENSION = ".png";
+    public static final String PNG_FILE_EXTENSION = ".png";
     public static final String NAME_DELIMITER = "_";
     private static final Character NAME_DELIMITER_CHAR = '_';
 
@@ -58,7 +57,7 @@ public class FileStorageUtil {
 
 
     @SuppressLint("SimpleDateFormat")
-    public static DocumentFile addProjectExport(Project aProject, InputStream aStream, String aMimeType, String anExtension, boolean unique) {
+    public static DocumentFile prepareProjectExport(Project aProject, String aMimeType, String anExtension, boolean unique) {
 
         DocumentFile projectHome = getProjectHome(aProject.getName());
         if (projectHome == null) {
@@ -88,9 +87,7 @@ public class FileStorageUtil {
             }
         }
 
-        DocumentFile exportFile = projectHome.createFile(aMimeType, exportName);
-        boolean success = writeStreamToFile(aStream, exportFile);
-        return success ? exportFile : null;
+        return projectHome.createFile(aMimeType, exportName);
     }
 
     private static boolean writeStreamToFile(InputStream aStream, DocumentFile aExportFile) {
@@ -262,54 +259,6 @@ public class FileStorageUtil {
         return projectHome.findFile(exportFile);
     }
 
-    public static DocumentFile searchLegacyHome() {
-        // try to find writable folder <= version 28
-        File root;
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            boolean legacyStorage = Environment.isExternalStorageLegacy();
-            Log.i(LOG_TAG_SERVICE, "Legacy storage: " + legacyStorage);
-            if (legacyStorage) {
-                Log.i(LOG_TAG_SERVICE, "Legacy storage, migrating ... TODO ");
-//                UIUtilities.showBusy();
-                // TODO migrate
-            }
-        }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            // API 30 way to work with Files is deprecated and internally translates to the MediaStore API, will need full rewrite for higher API
-            root = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
-        } else {
-            // API <=28 or API29 with the requestLegacyExternalStorage flag
-            if (isExternalStorageWritable()) { // external storage
-                root = Environment.getExternalStorageDirectory();
-            } else { // internal storage
-                root = ConfigUtil.getContext().getFilesDir();
-            }
-        }
-
-        File storageHome = new File(root, FOLDER_CAVE_SURVEY);
-
-        Log.i(LOG_TAG_SERVICE, "Using as home: " + storageHome.getAbsolutePath());
-
-        // create folder for CaveSurvey if missing
-        if (!storageHome.exists()) {
-            if (!storageHome.mkdirs()) {
-                Log.e(Constants.LOG_TAG_UI, "Failed to create surveys folder: " + storageHome.getAbsolutePath());
-                return null;
-            }
-            Log.i(LOG_TAG_SERVICE, "Home folder created: " + storageHome.getAbsolutePath());
-        }
-
-        if (storageHome == null || !storageHome.exists()) {
-            Log.e(Constants.LOG_TAG_UI, "Storage unavailable: " + storageHome);
-            return null;
-        }
-
-        setNewHome(Uri.fromFile(storageHome));
-
-        return DocumentFile.fromFile(storageHome);
-    }
 
     /**
      * Helper method that checks if the external storage is available for writing

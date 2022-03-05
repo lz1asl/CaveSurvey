@@ -18,6 +18,7 @@ import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.MainMenuActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
+import com.astoev.cave.survey.activity.dialog.ShareDialog;
 import com.astoev.cave.survey.dto.ProjectConfig;
 import com.astoev.cave.survey.fragment.ProjectFragment;
 import com.astoev.cave.survey.manager.ProjectManager;
@@ -53,6 +54,8 @@ public class InfoActivity extends MainMenuActivity {
 
     public static final String MIME_OPEN_DIRECTORY = "vnd.android.document/directory";
     private static final String CAVEAR_APP_ID = "com.pawczak.cavear";
+    private static final String SHARE_DIALOG = "share_dialog";
+
 
     @Override
     protected boolean showBaseOptionsMenu() {
@@ -338,6 +341,11 @@ public class InfoActivity extends MainMenuActivity {
                 return true;
             }
 
+            case R.id.info_action_share: {
+                onShare();
+                return true;
+            }
+
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -376,6 +384,13 @@ public class InfoActivity extends MainMenuActivity {
             Log.e(Constants.LOG_TAG_UI, "Failed to open CaveAR", e);
             UIUtilities.showNotification(R.string.error);
         }
+    }
+
+    private void onShare() {
+        Log.i(Constants.LOG_TAG_SERVICE, "Sharing ... ");
+
+        ShareDialog shareDialog = new ShareDialog();
+        shareDialog.show(getSupportFragmentManager(), SHARE_DIALOG);
     }
 
     /**
