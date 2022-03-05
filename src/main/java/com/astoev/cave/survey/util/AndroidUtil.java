@@ -17,4 +17,13 @@ public class AndroidUtil {
             return "";
         }
     }
+
+    public static boolean isAppPresent(String name) {
+        try {
+            ConfigUtil.getContext().getPackageManager().getPackageInfo(name, 0);
+            return true;
+        } catch (PackageManager.NameNotFoundException e) {
+            return false;
+        }
+    }
 }
