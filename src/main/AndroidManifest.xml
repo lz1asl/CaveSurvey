@@ -112,4 +112,8 @@
         </provider>
 
     </application>
+
+    <queries>
+        <package android:name="com.pawczak.cavear"/>
+    </queries>
 </manifest>

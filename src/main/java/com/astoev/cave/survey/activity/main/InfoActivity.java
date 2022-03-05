@@ -1,5 +1,7 @@
 package com.astoev.cave.survey.activity.main;
 
+import static com.astoev.cave.survey.util.AndroidUtil.isAppPresent;
+
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -50,6 +52,7 @@ import com.astoev.cave.survey.util.StringUtils;
 public class InfoActivity extends MainMenuActivity {
 
     public static final String MIME_OPEN_DIRECTORY = "vnd.android.document/directory";
+    private static final String CAVEAR_APP_ID = "com.pawczak.cavear";
 
     @Override
     protected boolean showBaseOptionsMenu() {
@@ -360,14 +363,14 @@ public class InfoActivity extends MainMenuActivity {
             intent.putExtra("lang", ConfigUtil.getStringProperty(ConfigUtil.PREF_LOCALE));
 
             // check for CaveAR
-//            if (intent.resolveActivity(getPackageManager()) != null) {
+            if (isAppPresent(CAVEAR_APP_ID)) {
                 // open
                 Log.i(Constants.LOG_TAG_SERVICE, "Open CaveAR");
                 startActivity(intent);
-//            } else {
-//                Log.i(Constants.LOG_TAG_SERVICE, "CaveAR not present");
-//                UIUtilities.showNotification(R.string.export_cavear_missing);
-//            }
+            } else {
+                Log.i(Constants.LOG_TAG_SERVICE, "CaveAR not present");
+                UIUtilities.showNotification(R.string.export_cavear_missing);
+            }
 
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Failed to open CaveAR", e);
