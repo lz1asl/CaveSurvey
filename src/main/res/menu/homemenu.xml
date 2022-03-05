@@ -17,6 +17,7 @@
     <item android:id="@+id/main_action_settings"
           android:title="@string/main_button_settings"
           android:visible="true"
+		  android:icon="@drawable/ic_baseline_settings_24"
           myapp:showAsAction="ifRoom|withText"/>
 
     <item android:id="@+id/main_action_about"

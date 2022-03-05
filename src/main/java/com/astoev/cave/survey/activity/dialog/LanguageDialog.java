@@ -55,6 +55,7 @@ public class LanguageDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceStateArg) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.lang_title);
+        builder.setIcon(R.drawable.ic_baseline_language_24);
         ArrayAdapter<String> langAdapter =
                 new ArrayAdapter<>(this.getActivity(),
                         android.R.layout.simple_list_item_1,
