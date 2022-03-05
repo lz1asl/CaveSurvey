@@ -1,5 +1,9 @@
 package com.astoev.cave.survey.service.export.excel;
 
+import static com.astoev.cave.survey.model.Option.CODE_AZIMUTH_UNITS;
+import static com.astoev.cave.survey.model.Option.CODE_DISTANCE_UNITS;
+import static com.astoev.cave.survey.model.Option.CODE_SLOPE_UNITS;
+
 import android.content.res.Resources;
 import android.util.Log;
 
@@ -10,7 +14,7 @@ import com.astoev.cave.survey.model.Photo;
 import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.model.Sketch;
 import com.astoev.cave.survey.service.Options;
-import com.astoev.cave.survey.service.export.AbstractExport;
+import com.astoev.cave.survey.service.export.AbstractDataExport;
 import com.astoev.cave.survey.service.export.ExportEntityType;
 import com.astoev.cave.survey.util.LocationUtil;
 import com.astoev.cave.survey.util.StringUtils;
@@ -25,15 +29,8 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-
-import static com.astoev.cave.survey.model.Option.CODE_AZIMUTH_UNITS;
-import static com.astoev.cave.survey.model.Option.CODE_DISTANCE_UNITS;
-import static com.astoev.cave.survey.model.Option.CODE_SLOPE_UNITS;
+import java.io.OutputStream;
 
 /**
  * Exports the project's data as xsl file  
@@ -45,7 +42,7 @@ import static com.astoev.cave.survey.model.Option.CODE_SLOPE_UNITS;
  * @author astoev
  * @author jmitrev
  */
-public class ExcelExport extends AbstractExport {
+public class ExcelExport extends AbstractDataExport {
 
     public static final String MEASUREMENT_UNIT_DELIMITER = " - ";
     public static final String EXCEL_FILE_EXTENSION = ".xls";
@@ -101,10 +98,8 @@ public class ExcelExport extends AbstractExport {
     }
 
     @Override
-    protected InputStream getContent() throws IOException {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        wb.write(out);
-        return new ByteArrayInputStream(out.toByteArray());
+    protected void writeTo(Project aProject, OutputStream aStream) throws Exception {
+        wb.write(aStream);
     }
 
     @Override

@@ -5,13 +5,13 @@ import android.util.Log
 import com.astoev.cave.survey.Constants
 import com.astoev.cave.survey.model.*
 import com.astoev.cave.survey.service.Options.getOptionValue
-import com.astoev.cave.survey.service.export.AbstractExport
+import com.astoev.cave.survey.service.export.AbstractDataExport
 import com.astoev.cave.survey.service.export.ExportEntityType
+import com.astoev.cave.survey.util.StreamUtil
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVPrinter
-import java.io.ByteArrayInputStream
 import java.io.IOException
-import java.io.InputStream
+import java.io.OutputStream
 import java.io.StringWriter
 
 /**
@@ -19,7 +19,7 @@ import java.io.StringWriter
  *
  * @author astoev
  */
-class CsvExport(aResources: Resources?) : AbstractExport(aResources) {
+class CsvExport(aResources: Resources?) : AbstractDataExport(aResources) {
     private var buff = StringWriter()
     private var csvPrinter = CSVPrinter(buff, CSVFormat.DEFAULT)
 
@@ -55,11 +55,10 @@ class CsvExport(aResources: Resources?) : AbstractExport(aResources) {
         }
     }
 
-    @Throws(IOException::class)
-    override fun getContent(): InputStream {
+    override fun writeTo(aProject: Project?, aStream: OutputStream?) {
         csvPrinter.println()
         csvPrinter.close(true)
-        return ByteArrayInputStream(buff.toString().toByteArray())
+        StreamUtil.write(buff.toString().toByteArray(), aStream)
     }
 
     override fun setValue(entityType: Entities, aLabel: String?) {

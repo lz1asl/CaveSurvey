@@ -1,5 +1,14 @@
 package com.astoev.cave.survey.service.export.json;
 
+import static com.astoev.cave.survey.model.Option.CODE_AZIMUTH_UNITS;
+import static com.astoev.cave.survey.model.Option.CODE_DISTANCE_UNITS;
+import static com.astoev.cave.survey.model.Option.CODE_SLOPE_UNITS;
+import static com.astoev.cave.survey.model.Option.UNIT_DEGREES;
+import static com.astoev.cave.survey.model.Option.UNIT_FEET;
+import static com.astoev.cave.survey.model.Option.UNIT_GRADS;
+import static com.astoev.cave.survey.model.Option.UNIT_METERS;
+import static com.astoev.cave.survey.service.export.ExportEntityType.LEG;
+
 import android.content.res.Resources;
 import android.util.Log;
 
@@ -10,31 +19,22 @@ import com.astoev.cave.survey.model.Photo;
 import com.astoev.cave.survey.model.Project;
 import com.astoev.cave.survey.model.Sketch;
 import com.astoev.cave.survey.service.Options;
-import com.astoev.cave.survey.service.export.AbstractExport;
+import com.astoev.cave.survey.service.export.AbstractDataExport;
 import com.astoev.cave.survey.service.export.ExportEntityType;
 import com.astoev.cave.survey.util.ConfigUtil;
 import com.astoev.cave.survey.util.FileStorageUtil;
+import com.astoev.cave.survey.util.StreamUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-
-import static com.astoev.cave.survey.model.Option.CODE_AZIMUTH_UNITS;
-import static com.astoev.cave.survey.model.Option.CODE_DISTANCE_UNITS;
-import static com.astoev.cave.survey.model.Option.CODE_SLOPE_UNITS;
-import static com.astoev.cave.survey.model.Option.UNIT_DEGREES;
-import static com.astoev.cave.survey.model.Option.UNIT_FEET;
-import static com.astoev.cave.survey.model.Option.UNIT_GRADS;
-import static com.astoev.cave.survey.model.Option.UNIT_METERS;
-import static com.astoev.cave.survey.service.export.ExportEntityType.LEG;
+import java.io.OutputStream;
 
 /**
  * Created by astoev on 8/28/14.
  */
-public class OpensTopoJsonExport extends AbstractExport {
+public class OpensTopoJsonExport extends AbstractDataExport {
 
     public static final String OPENSTOPO_FILE_EXTENSION = "_openstopo.json";
     private JSONArray rows;
@@ -164,12 +164,8 @@ public class OpensTopoJsonExport extends AbstractExport {
     }
 
     @Override
-    protected InputStream getContent() {
-        try {
-            return new ByteArrayInputStream(project.toString(2).getBytes());
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
+    protected void writeTo(Project aProject, OutputStream aStream) throws Exception {
+        StreamUtil.write(project.toString(2).getBytes(), aStream);
     }
 
     @Override

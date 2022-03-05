@@ -10,21 +10,21 @@ import com.astoev.cave.survey.model.Photo
 import com.astoev.cave.survey.model.Project
 import com.astoev.cave.survey.model.Sketch
 import com.astoev.cave.survey.service.Options.getOptionValue
-import com.astoev.cave.survey.service.export.AbstractExport
-import com.astoev.cave.survey.service.export.AbstractExport.Entities.*
+import com.astoev.cave.survey.service.export.AbstractDataExport
+import com.astoev.cave.survey.service.export.AbstractDataExport.Entities.*
 import com.astoev.cave.survey.service.export.ExportEntityType
 import com.astoev.cave.survey.service.export.ExportEntityType.*
 import com.astoev.cave.survey.service.gps.UtmCoordinate
 import com.astoev.cave.survey.util.AndroidUtil
-import java.io.ByteArrayInputStream
-import java.io.InputStream
+import com.astoev.cave.survey.util.StreamUtil
+import java.io.OutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
-class VisualTopoExport(aResources: Resources?) : AbstractExport(aResources) {
+class VisualTopoExport(aResources: Resources?) : AbstractDataExport(aResources) {
 
     val SEPARATOR = ","
-    val COORDINATE_PLACEHOLDER = ",,,,LT93";
+    val COORDINATE_PLACEHOLDER = ",,,,LT93"
     val ENTRANCE = "Entree A0"
     val PLACEHOLDER = "*"
 
@@ -79,17 +79,21 @@ class VisualTopoExport(aResources: Resources?) : AbstractExport(aResources) {
         }
     }
 
-    override fun getContent(): InputStream {
+    override fun writeTo(aProject: Project, aStream: OutputStream) {
         // apply the location
         val troContents = body.toString()
                 .replace(COORDINATE_PLACEHOLDER, location)
                 .replace(ENTRANCE, entrance)
         // result
-        return ByteArrayInputStream(troContents.toByteArray());
+        StreamUtil.write(troContents.toByteArray(), aStream)
     }
 
     override fun getExtension(): String {
         return VISUAL_TOPO_FILE_EXTENSION;
+    }
+
+    override fun getMimeType(): String {
+        return "application/visualtopo"
     }
 
     override fun prepare(aProject: Project) {
