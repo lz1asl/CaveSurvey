@@ -164,9 +164,16 @@
     <string name="export_vtopo">Visual Topo eкспорт</string>
     <string name="export_cavear_missing">CaveAR не е инсталиран</string>
     <string name="export_view_files">Файлове</string>
+    <string name="export_share">Споделяне</string>
     <string name="export_done">Експортирано в %1$s</string>
     <string name="export_io_error">Неуспешно писане на SD картата</string>
     <string name="io_error">Неуспешен достъп до SD картата</string>
+
+    <string name="share_title">Файлове от проучването</string>
+    <array name="share_type">
+        <item>Данни</item>
+        <item>Всички</item>
+    </array>
     
     <!-- options -->
     <string name="measures_title">Измервания</string>

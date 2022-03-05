@@ -32,4 +32,11 @@
         android:title="@string/export_view_files"
         android:visible="true"
         myapp:showAsAction="ifRoom|withText" />
+
+    <item
+        android:id="@+id/info_action_share"
+        android:icon="@drawable/ic_baseline_share_24"
+        android:title="@string/export_share"
+        android:visible="true"
+        myapp:showAsAction="ifRoom|withText" />
 </menu>

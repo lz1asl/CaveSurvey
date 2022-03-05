@@ -42,4 +42,9 @@ public class StreamUtil {
         anOutput.flush();
     }
 
+    public static void write(byte[] buff, OutputStream aStream) throws IOException {
+        aStream.write(buff);
+        aStream.flush();
+    }
+
 }
