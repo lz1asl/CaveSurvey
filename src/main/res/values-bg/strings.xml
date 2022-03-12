@@ -28,7 +28,7 @@
     <string name="project_name">Име</string>
     <string name="project_name_required">Въведи име</string>
     <string name="project_name_characters">Съдържа непозволени символи</string>
-    <string name="project_import">Импорт</string>
+    <string name="project_import">Импорт на данни</string>
     <string name="import_success">Успешен импорт</string>
 
     <!-- survey screen -->
@@ -407,6 +407,7 @@
     <string name="settings_import_no_files">Не е намерен експортен файл</string>
     <string name="settings_import_info">Създава ново проучване от съществуващ файл.\nМоля използвайте файлове генерирани след версия v1.27.\nСнимки и скици ще бъдат игнорирани.</string>
     <string name="settings_vectors"><u>Лъчи</u></string>
+    <string name="settings_measurements"><u>Измервания</u></string>
 
     <!-- vectors -->
     <string name="settings_vectors_mode">Режим добавяне на лъчи</string>
@@ -414,6 +415,15 @@
         <item>Единичен</item>
         <item>Нов при готовност</item>
         <item>Сканиране</item>
+    </string-array>
+
+    <!-- leg measurements -->
+    <string name="measurements_title">Измервания</string>
+    <string name="measurements_use_backshots">Обратни измервания</string>
+    <string name="measurements_export">Експорт:</string>
+    <string-array name="measurements_export_types">
+        <item>Прави измервания</item>
+        <item>Усреднени стойности</item>
     </string-array>
 
     <!--opens topo -->

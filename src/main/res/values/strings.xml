@@ -29,7 +29,7 @@
     <string name="project_name">Name</string>
     <string name="project_name_required">Enter name</string>
     <string name="project_name_characters">Contains bad characters</string>
-    <string name="project_import">Import</string>
+    <string name="project_import">Import data</string>
     <string name="import_success">Import successful</string>
 
 
@@ -437,6 +437,7 @@
     <string name="settings_import_no_files">Exported survey not found</string>
     <string name="settings_import_info">Creates survey from existing file.\nPlease use export files created after v1.27.\nPhotos or drawings will be ignored.</string>
     <string name="settings_vectors"><u>Vectors</u></string>
+    <string name="settings_measurements"><u>Measurements</u></string>
 
     <!-- vectors -->
     <string name="settings_vectors_mode">Vectors reading mode</string>
@@ -445,6 +446,17 @@
         <item>Save on receive</item>
         <item>Scan</item>
     </string-array>
+
+    <!-- leg measurements -->
+    <string name="measurements_title">Measurements</string>
+    <string name="measurements_use_backshots">Use back-shots</string>
+    <string name="measurements_export">Export:</string>
+    <string-array name="measurements_export_types">
+        <item>Straight measurements</item>
+        <item>Averaged values</item>
+    </string-array>
+    <string name="measurements_error">Error tolerance</string>
+
 
     <!--opens topo -->
     <string name="export_openstopo_title">OpensTopo</string>

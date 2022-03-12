@@ -1,5 +1,9 @@
 package com.astoev.cave.survey.activity.home;
 
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static android.Manifest.permission.BLUETOOTH;
+import static android.Manifest.permission.BLUETOOTH_ADMIN;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,8 +15,8 @@ import android.widget.ListView;
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.MainMenuActivity;
-import com.astoev.cave.survey.activity.SettingsActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
+import com.astoev.cave.survey.activity.config.SettingsActivity;
 import com.astoev.cave.survey.activity.dialog.AboutDialog;
 import com.astoev.cave.survey.activity.dialog.ConfirmDeleteDialog;
 import com.astoev.cave.survey.activity.dialog.DeleteHandler;
@@ -26,10 +30,6 @@ import com.astoev.cave.survey.util.PermissionUtil;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
-
-import static android.Manifest.permission.ACCESS_FINE_LOCATION;
-import static android.Manifest.permission.BLUETOOTH;
-import static android.Manifest.permission.BLUETOOTH_ADMIN;
 
 /**
  * Home activity for managing projects and general settings.

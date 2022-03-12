@@ -2,7 +2,7 @@ package com.astoev.cave.survey.activity.home;
 
 import static android.view.View.VISIBLE;
 import static com.astoev.cave.survey.Constants.LOG_TAG_SERVICE;
-import static com.astoev.cave.survey.activity.SettingsActivity.LANGUAGE_DIALOG;
+import static com.astoev.cave.survey.activity.config.SettingsActivity.LANGUAGE_DIALOG;
 
 import android.content.Intent;
 import android.net.Uri;
