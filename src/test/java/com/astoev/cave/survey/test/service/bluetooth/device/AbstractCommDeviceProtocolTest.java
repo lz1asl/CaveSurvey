@@ -1,5 +1,9 @@
 package com.astoev.cave.survey.test.service.bluetooth.device;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.Measure;
@@ -12,9 +16,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
 
 /**
  * Created by astoev on 7/19/15.
@@ -42,7 +43,7 @@ public abstract class AbstractCommDeviceProtocolTest {
 
     private void assertMeasurements(Float aDistance, Float anAzimuth, Float anAngle, List<Measure> measures) {
         if (measures != null && measures.size() > 0) {
-            assertNotNull("Measurements expected", measures);
+            assertNotNull(measures, "Measurements expected");
         }
 
         // 3 minus the nulls passed results expected

@@ -3,7 +3,7 @@ package com.astoev.cave.survey.test.service.bluetooth.device;
 import com.astoev.cave.survey.service.bluetooth.device.comm.AbstractBluetoothRFCOMMDevice;
 import com.astoev.cave.survey.service.bluetooth.device.comm.distox.DistoXv1BluetoothDevice;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Created by astoev on 7/19/15.
