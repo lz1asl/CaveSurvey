@@ -36,7 +36,7 @@ class CsvExport(aResources: Resources?) : AbstractDataExport(aResources) {
         try {
             Log.i(Constants.LOG_TAG_SERVICE, "CSV export preparing")
             buff = StringWriter()
-            var format = CSVFormat.DEFAULT.builder()
+            val format = CSVFormat.DEFAULT.builder()
                 .setHeader("From", "To", "Length", "Compass", "Clino", "Left",
                         "Right", "Top", "Bottom", "I", "Note")
                 .build()

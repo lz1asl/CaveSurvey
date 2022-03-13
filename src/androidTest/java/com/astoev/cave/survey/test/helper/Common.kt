@@ -52,7 +52,7 @@ object Common {
                 .perform(ViewActions.click())
                 .perform(ViewActions.typeText("" + value))
                 .perform(ViewActions.closeSoftKeyboard())
-            checkValue(id, "" + value);
+            checkValue(id, "" + value)
         }
     }
 
@@ -63,13 +63,13 @@ object Common {
                         ViewActions.click(),
                         ViewActions.typeText(value),
                         ViewActions.closeSoftKeyboard())
-            checkValue(id, value);
+            checkValue(id, value)
         }
     }
 
     private fun checkValue(id: Int, value: String) {
         Espresso.onView(ViewMatchers.withId(id))
-            .check(matches(withText(value)));
+            .check(matches(withText(value)))
     }
 
     fun checkVisible(id: Int) {
@@ -81,7 +81,7 @@ object Common {
     }
 
     fun checkNotVisible(text: String) {
-        Espresso.onView(withText(text)).check(ViewAssertions.doesNotExist());
+        Espresso.onView(withText(text)).check(ViewAssertions.doesNotExist())
     }
 
     fun goBack() {

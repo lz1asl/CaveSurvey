@@ -19,24 +19,24 @@ import com.astoev.cave.survey.util.AndroidUtil
 import org.junit.Test
 import java.util.*
 
-class VisualTopoExportTest() : AbstractExportTest() {
+class VisualTopoExportTest : AbstractExportTest() {
 
     @Test
     fun visualTopoExportTest() {
 
         // create survey
-        var surveyName = createAndOpenSurvey()
+        val surveyName = createAndOpenSurvey()
 
         // first test legs
         selectFirstSurveyLeg()
         setLegData(1f, 2f, null)
         openLegWithText("A1")
-        addCoordinate(42.811522f, 23.378906f, 123, 5);
+        addCoordinate(42.811522f, 23.378906f, 123, 5)
         addLeg(1.2f, 2.2f, 1.3f)
         addLeg(2.3f, 3.4f, 4.5f, 1.1f, 1.2f, 1.3f, 1.4f)
 
         // compare
-        exportAndCompare(surveyName, "initial");
+        exportAndCompare(surveyName, "initial")
 
         // rest of the test data
         addLeg(5.5f, 4.4f, 5.5f, 2.1f, 2.2f, 2.3f, 2.4f)
@@ -51,25 +51,25 @@ class VisualTopoExportTest() : AbstractExportTest() {
         setLegData(4.4f, 4.5f, 4.6f, 0.1f, 0.2f, 0.3f, 0.4f)
 
         // compare
-        exportAndCompare(surveyName, "full");
+        exportAndCompare(surveyName, "full")
     }
 
     @Test
     fun visualTopoExportNonDefaultUnitsTest() {
 
         // create survey
-        var surveyName = createAndOpenSurvey(null, Option.UNIT_FEET, Option.UNIT_GRADS, Option.UNIT_GRADS)
+        val surveyName = createAndOpenSurvey(null, Option.UNIT_FEET, Option.UNIT_GRADS, Option.UNIT_GRADS)
 
         // first test legs
         selectFirstSurveyLeg()
         setLegData(1f, 2f, null)
         openLegWithText("A1")
-        addCoordinate(42.811522f, 23.378906f, 123, 5);
+        addCoordinate(42.811522f, 23.378906f, 123, 5)
         addLeg(1.2f, 2.2f, 1.3f)
         addLeg(2.3f, 3.4f, 4.5f, 1.1f, 1.2f, 1.3f, 1.4f)
 
         // compare
-        exportAndCompare(surveyName, "initial_feet");
+        exportAndCompare(surveyName, "initial_feet")
     }
 
     private fun exportAndCompare(surveyName: String, expected: String) {
@@ -85,6 +85,6 @@ class VisualTopoExportTest() : AbstractExportTest() {
         val params = mapOf(PARAM_PROJECT_NAME to projectName,
                 PARAM_TODAY to VisualTopoExport.formatDate(Date()),
                 PARAM_CAVESURVEY_VERSION to AndroidUtil.getAppVersion())
-        compareContents(expectedStream, params, projectName, ".tro");
+        compareContents(expectedStream, params, projectName, ".tro")
     }
 }

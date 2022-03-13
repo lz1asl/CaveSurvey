@@ -24,7 +24,6 @@ import com.astoev.cave.survey.model.Option
 import com.astoev.cave.survey.test.helper.Common.checkVisible
 import org.hamcrest.BaseMatcher
 import org.hamcrest.Description
-import org.hamcrest.Matchers
 import org.hamcrest.Matchers.*
 
 
@@ -36,7 +35,8 @@ object Survey {
         Common.click(id.action_new_project)
         if (importFile != null) {
             Common.click(id.import_files)
-            onData(allOf(Matchers.`is`(instanceOf(NewProjectActivity.ImportFile::class.java)),
+            onData(allOf(
+                `is`(instanceOf(NewProjectActivity.ImportFile::class.java)),
                     object : BaseMatcher<NewProjectActivity.ImportFile>() {
                         override fun matches(item: Any?): Boolean {
                             return item.toString().startsWith(importFile)
@@ -119,7 +119,7 @@ object Survey {
 
     @JvmOverloads
     fun createAndOpenSurvey(importFile: String? = null, distanceUnits: String? = null, azimuthUnits: String? = null, slopeUnits: String? = null): String {
-        initApp();
+        initApp()
         Home.goHome()
         val surveyName = "" + System.currentTimeMillis()
         createSurvey(surveyName, importFile, distanceUnits, azimuthUnits, slopeUnits)
@@ -131,10 +131,10 @@ object Survey {
 
         // language dialog
         try {
-            onView(withText("English")).perform(ViewActions.click());
+            onView(withText("English")).perform(ViewActions.click())
         } catch (e: Exception) {
             // language already selected
-            Log.i(Constants.LOG_TAG_SERVICE, "Language already initialized");
+            Log.i(Constants.LOG_TAG_SERVICE, "Language already initialized")
         }
 
         // storage permissions
@@ -145,10 +145,10 @@ object Survey {
         intending(hasAction(Intent.ACTION_OPEN_DOCUMENT_TREE)).respondWith(result)*/
 
         try {
-            onView(withText(com.astoev.cave.survey.R.string.ok)).perform(ViewActions.click())
+            onView(withText(R.string.ok)).perform(ViewActions.click())
         } catch (e: Exception) {
             // storage already initialized
-            Log.i(Constants.LOG_TAG_SERVICE, "Storage already initialized");
+            Log.i(Constants.LOG_TAG_SERVICE, "Storage already initialized")
         }
     }
 
@@ -219,12 +219,12 @@ object Survey {
 
     fun addSketch() {
         Common.openContextMenu()
-        Common.click("Draw");
+        Common.click("Draw")
 
-        onView(withId(R.id.drawingSurface))
+        onView(withId(id.drawingSurface))
             .perform(ViewActions.longClick())
             .perform(ViewActions.swipeRight())
-            .perform(ViewActions.click());
+            .perform(ViewActions.click())
 
         Common.clickWithDescription("Save")
     }
@@ -244,8 +244,8 @@ object Survey {
 
         // request photo
         Common.openContextMenu()
-        Common.click("Photo");
-        checkVisible(R.id.point_photos_table)
+        Common.click("Photo")
+        checkVisible(id.point_photos_table)
     }
 
     fun addCoordinate(lat: Float, lon: Float, altitude: Int, precision: Int) {
