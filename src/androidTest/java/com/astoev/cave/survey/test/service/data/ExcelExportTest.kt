@@ -167,7 +167,7 @@ class ExcelExportTest() : AbstractExportTest() {
         assert(sketch.exists());
     }
 
-    @Ignore
+    @Ignore("not ready")
     @Test
     @Throws(IOException::class)
     fun excelExportPhotos() {
