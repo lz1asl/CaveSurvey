@@ -4,8 +4,8 @@
           android:requestLegacyExternalStorage="true"
           android:preserveLegacyExternalStorage="true"
           android:installLocation="preferExternal"
-          android:versionCode="55"
-          android:versionName="2.2">
+          android:versionCode="56"
+          android:versionName="2.3">
           
     <uses-feature android:name="android.hardware.camera" android:required="false" />
     <uses-feature android:name="android.hardware.bluetooth_le" android:required="false"/>
