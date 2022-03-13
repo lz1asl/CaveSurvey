@@ -648,7 +648,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 
                 Log.i(Constants.LOG_TAG_UI, "PointView for new point");
                 mCurrentLeg = new Leg(newFrom, newTo, getWorkspace().getActiveProject(), currGalleryId);
-            } catch (SQLException sqle) {
+            } catch (Exception sqle) {
                 throw new RuntimeException(sqle);
             }
         }

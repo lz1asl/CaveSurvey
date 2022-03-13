@@ -167,7 +167,7 @@ public class Workspace {
     }
 
     // TODO list need to be sorted, here last id is get, higher number is what we need
-    public Point getLastGalleryPoint(Integer aGalleryId) throws SQLException {
+    public Point getLastGalleryPoint(Integer aGalleryId) throws Exception {
         String lastPointInCurrentGalleryQuery = "select max(id) from points where id in(" +
                 "select from_point_id from legs where gallery_id = " + aGalleryId + " and middle_point_distance is null"
                 + " union select to_point_id from legs where gallery_id = " + aGalleryId + " and middle_point_distance is null)";
@@ -181,6 +181,7 @@ public class Workspace {
     }
 
     public void clean() {
+        getDBHelper().close();
         instance = null;
     }
 

@@ -20,8 +20,7 @@ repositories {
 
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.4.1'
-    implementation 'com.j256.ormlite:ormlite-core:4.48'
-    implementation 'com.j256.ormlite:ormlite-android:4.48'
+    implementation 'com.j256.ormlite:ormlite-android:6.1'
     implementation 'org.apache.poi:poi:3.15'
     implementation 'org.apache.commons:commons-csv:1.9.0'
 

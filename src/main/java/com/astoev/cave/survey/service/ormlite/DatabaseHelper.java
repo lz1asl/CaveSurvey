@@ -1,5 +1,10 @@
 package com.astoev.cave.survey.service.ormlite;
 
+import static com.astoev.cave.survey.util.ConfigUtil.PREF_AUTO_BACKUP;
+import static com.astoev.cave.survey.util.ConfigUtil.PREF_SENSOR_NOISE_REDUCTION;
+import static com.astoev.cave.survey.util.ConfigUtil.PREF_SENSOR_NOISE_REDUCTION_NUM_MEASUREMENTS;
+import static com.astoev.cave.survey.util.ConfigUtil.PREF_SENSOR_SIMULTANEOUSLY;
+
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -23,11 +28,6 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
 import java.sql.SQLException;
-
-import static com.astoev.cave.survey.util.ConfigUtil.PREF_AUTO_BACKUP;
-import static com.astoev.cave.survey.util.ConfigUtil.PREF_SENSOR_NOISE_REDUCTION;
-import static com.astoev.cave.survey.util.ConfigUtil.PREF_SENSOR_NOISE_REDUCTION_NUM_MEASUREMENTS;
-import static com.astoev.cave.survey.util.ConfigUtil.PREF_SENSOR_SIMULTANEOUSLY;
 
 /**
  * Created by IntelliJ IDEA.
@@ -219,5 +219,21 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     public Dao<Vector, Integer> getVectorsDao() {
         return mVectorsDao;
+    }
+
+    @Override
+    public void close() {
+        super.close();
+
+        mLegDao = null;
+        mLocationDao = null;
+        mNoteDao = null;
+        mPhotoDao = null;
+        mPointDao = null;
+        mProjectDao = null;
+        mSketchDao = null;
+        mGalleryDao = null;
+        mOptionsDao = null;
+        mVectorsDao = null;
     }
 }
