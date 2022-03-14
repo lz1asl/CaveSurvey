@@ -6,7 +6,6 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.provider.MediaStore
 import android.util.Log
-import androidx.test.InstrumentationRegistry
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.Espresso.onView
@@ -16,6 +15,7 @@ import androidx.test.espresso.intent.Intents.intending
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasAction
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.platform.app.InstrumentationRegistry
 import com.astoev.cave.survey.Constants
 import com.astoev.cave.survey.R
 import com.astoev.cave.survey.R.id
@@ -235,7 +235,7 @@ object Survey {
         Intents.init()
 
         val icon = BitmapFactory.decodeResource(
-            InstrumentationRegistry.getTargetContext().resources, R.drawable.logo
+            InstrumentationRegistry.getInstrumentation().context.resources, R.drawable.logo
         )
         val resultData = Intent()
         resultData.putExtra("data", icon)
