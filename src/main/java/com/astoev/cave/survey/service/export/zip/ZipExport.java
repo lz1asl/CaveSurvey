@@ -19,6 +19,7 @@ import com.astoev.cave.survey.util.StreamUtil;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.sql.SQLException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -50,6 +51,11 @@ public class ZipExport extends AbstractExport {
 
     @Override
     protected void prepare(Project aProject) {
+    }
+
+    @Override
+    protected void exportData(Project aProject) throws SQLException {
+
     }
 
     @Override

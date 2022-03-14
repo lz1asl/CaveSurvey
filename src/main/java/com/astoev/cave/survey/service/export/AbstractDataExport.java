@@ -47,7 +47,7 @@ public abstract class AbstractDataExport extends AbstractExport {
     protected abstract void setDrawing(Sketch aSketch);
 
 
-    protected void prepare(Project aProject) throws SQLException {
+    protected void exportData(Project aProject) throws SQLException {
         // legs
         List<Leg> legs = DaoUtil.getCurrProjectLegs(false);
 
