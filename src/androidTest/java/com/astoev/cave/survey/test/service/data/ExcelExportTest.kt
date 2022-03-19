@@ -32,7 +32,7 @@ import org.junit.Test
 import java.io.IOException
 
 
-class ExcelExportTest() : AbstractExportTest() {
+class ExcelExportTest : AbstractExportTest() {
 
     @Test
     @Throws(IOException::class)
@@ -50,7 +50,7 @@ class ExcelExportTest() : AbstractExportTest() {
         selectFirstSurveyLeg()
         setLegData(1f, 2f, null)
         openLegWithText("A1")
-        addCoordinate(42.811522f, 23.378906f, 123, 5);
+        addCoordinate(42.811522f, 23.378906f, 123, 5)
         addLeg(1.2f, 2.2f, 1.3f)
         legs = exportAndRead(surveyName, 2)
         assertFirstLegNoSlope(legs)
@@ -115,7 +115,7 @@ class ExcelExportTest() : AbstractExportTest() {
     fun excelExportInNonDefaultUnitsTest() {
 
         // create survey
-        var surveyName = createAndOpenSurvey(null, UNIT_FEET, UNIT_GRADS, UNIT_GRADS);
+        val surveyName = createAndOpenSurvey(null, UNIT_FEET, UNIT_GRADS, UNIT_GRADS)
 
         // empty first leg, units preserved
         var legs = exportAndRead(surveyName, 1, UNIT_FEET, UNIT_GRADS, UNIT_GRADS)
@@ -126,7 +126,7 @@ class ExcelExportTest() : AbstractExportTest() {
         selectFirstSurveyLeg()
         setLegData(1f, 2f, null)
         openLegWithText("A1")
-        addCoordinate(42.811522f, 23.378906f, 123, 5);
+        addCoordinate(42.811522f, 23.378906f, 123, 5)
         addLeg(1.2f, 2.2f, 1.3f)
         legs = exportAndRead(surveyName, 2, UNIT_FEET, UNIT_GRADS, UNIT_GRADS)
         assertFirstLegNoSlope(legs)
@@ -137,7 +137,7 @@ class ExcelExportTest() : AbstractExportTest() {
     @Throws(IOException::class)
     fun excelExportSketches() {
         // create survey
-        var surveyName = createAndOpenSurvey()
+        val surveyName = createAndOpenSurvey()
 
         // fist minimal leg
         selectFirstSurveyLeg()
@@ -161,18 +161,18 @@ class ExcelExportTest() : AbstractExportTest() {
 
         // sketch data exported
         goBack()
-        var legs = exportAndRead(surveyName, 1)
+        val legs = exportAndRead(surveyName, 1)
         assertNotNull(legs[0].sketch)
-        var sketch = Data.getExportFile(surveyName, legs[0].sketch)
-        assert(sketch.exists());
+        val sketch = Data.getExportFile(surveyName, legs[0].sketch)
+        assert(sketch.exists())
     }
 
-    @Ignore
+    @Ignore("not ready")
     @Test
     @Throws(IOException::class)
     fun excelExportPhotos() {
         // create survey
-        var surveyName = createAndOpenSurvey()
+        val surveyName = createAndOpenSurvey()
 
         // fist minimal leg
         selectFirstSurveyLeg()
@@ -196,16 +196,16 @@ class ExcelExportTest() : AbstractExportTest() {
 
         // sketch data exported
         goBack()
-        var legs = exportAndRead(surveyName, 1)
+        val legs = exportAndRead(surveyName, 1)
         assertNotNull(legs[0].photo)
-        var photo = Data.getExportFile(surveyName, legs[0].photo)
-        assert(photo.exists());
+        val photo = Data.getExportFile(surveyName, legs[0].photo)
+        assert(photo.exists())
     }
 
 
     @Throws(IOException::class)
     private fun exportAndRead(aSurveyName: String, aLegsCount: Int): List<LegData> {
-        return exportAndRead(aSurveyName, aLegsCount, UNIT_METERS, UNIT_DEGREES, UNIT_DEGREES);
+        return exportAndRead(aSurveyName, aLegsCount, UNIT_METERS, UNIT_DEGREES, UNIT_DEGREES)
     }
 
     @Throws(IOException::class)
@@ -232,7 +232,7 @@ class ExcelExportTest() : AbstractExportTest() {
     private fun assertFirstLegNoSlope(legs: List<LegData>) {
         assertLeg(legs[0], 1f, 2f, null)
         assertLeg(legs[0], "A", "0", "A", "1", false, false)
-        assertLegLocation(legs[0], 42.811522, 23.378906, 123.0, 5.0);
+        assertLegLocation(legs[0], 42.811522, 23.378906, 123.0, 5.0)
     }
 
     private fun assertSecondSimpleLeg(legs: List<LegData>) {

@@ -1,16 +1,17 @@
 package com.astoev.cave.survey.test.service.bluetooth.device;
 
+import static org.junit.jupiter.api.Assertions.fail;
+
 import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.Measure;
 import com.astoev.cave.survey.service.bluetooth.device.comm.AbstractBluetoothRFCOMMDevice;
 import com.astoev.cave.survey.service.bluetooth.device.comm.LaserAceBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.util.NMEAUtil;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.Assert.fail;
 
 public class LAProtocolTestComm extends AbstractCommDeviceProtocolTest {
 

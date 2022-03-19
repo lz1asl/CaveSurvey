@@ -3,7 +3,6 @@ package com.astoev.cave.survey.test.service.data
 import android.net.Uri
 import androidx.documentfile.provider.DocumentFile
 import com.astoev.cave.survey.service.export.csv.CsvExport
-import com.astoev.cave.survey.test.helper.Common
 import com.astoev.cave.survey.test.helper.Data
 import com.astoev.cave.survey.test.helper.Survey
 import com.astoev.cave.survey.util.ConfigUtil
@@ -31,20 +30,16 @@ class CsvExportTest : AbstractExportTest() {
         Survey.addLegMiddle(3.1f, 3.1f, 3.2f, 3.3f, 3.4f)
         Survey.addLeg(3.4f, 3.5f, 3.6f, 6.1f, 6.2f, 6.3f, 6.4f)
         Survey.openLegWithText("A5")
-//        Survey.addVector(1.1f, 1.2f, 1.3f)
-//        Survey.addVector(1.4f, 1.5f, 1.6f)
-//        Survey.addVector(1.7f, 1.8f, 1.9f)
         Survey.saveLeg()
         Survey.nextGallery()
         Survey.setLegData(4.4f, 4.5f, 4.6f, 0.1f, 0.2f, 0.3f, 0.4f)
         Data.dataScreen()
         Data.caveAR()
-        Common.goBack()
 
         val export = getLastCsvExport(surveyName)
         val exportStream = ConfigUtil.getContext().contentResolver.openInputStream(export)
         assertEquals("""From,To,Length,Compass,Clino,Left,Right,Top,Bottom,I,Note
-            ,,m,deg,deg,m,m,m,m,,
+            ,,meters,degrees,degrees,meters,meters,meters,meters,,
             A0,A1,1.0,2.0,,,,,
             A1,A2,1.2,2.2,1.3,,,,
             A2,A3,2.3,3.4,4.5,1.3,1.4,1.1,1.2

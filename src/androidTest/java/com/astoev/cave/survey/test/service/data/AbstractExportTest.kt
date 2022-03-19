@@ -40,7 +40,7 @@ abstract class AbstractExportTest {
         var content = expected.bufferedReader().use(BufferedReader::readText)
 
         // apply differences
-        differences.forEach { k, v ->
+        differences.forEach { (k, v) ->
             content = content.replace("$" + k, v)
         }
 
@@ -49,11 +49,11 @@ abstract class AbstractExportTest {
         val files = FileStorageUtil.getFolderFiles(home, extension)
         Log.i(Constants.LOG_TAG_SERVICE, "" + files.size + " exported files")
 
-        val exportFile = files.get(files.size - 1)
+        val exportFile = files[files.size - 1]
         val actual = StreamUtil.read(ConfigUtil.getContext().contentResolver.openInputStream(exportFile.uri))
 
         // must match
-        assertEquals(content, String(actual));
+        assertEquals(content, String(actual))
     }
 }
 

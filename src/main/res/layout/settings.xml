@@ -16,6 +16,14 @@
             android:layout_margin="10dp"/>
 
         <TextView
+            android:id="@+id/settingsMeasurements"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_measurements"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_margin="10dp"/>
+
+        <TextView
             android:id="@+id/settingsSensors"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"

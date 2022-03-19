@@ -36,7 +36,7 @@ class CsvExport(aResources: Resources?) : AbstractDataExport(aResources) {
         try {
             Log.i(Constants.LOG_TAG_SERVICE, "CSV export preparing")
             buff = StringWriter()
-            var format = CSVFormat.DEFAULT.builder()
+            val format = CSVFormat.DEFAULT.builder()
                 .setHeader("From", "To", "Length", "Compass", "Clino", "Left",
                         "Right", "Top", "Bottom", "I", "Note")
                 .build()
@@ -94,13 +94,14 @@ class CsvExport(aResources: Resources?) : AbstractDataExport(aResources) {
 
             csvPrinter.print(null)
             csvPrinter.print(null)
-            csvPrinter.print(getOptionValue(Option.CODE_DISTANCE_UNITS))
+            val distanceUnits = getOptionValue(Option.CODE_DISTANCE_UNITS)
+            csvPrinter.print(distanceUnits)
             csvPrinter.print(getOptionValue(Option.CODE_AZIMUTH_UNITS))
             csvPrinter.print(getOptionValue(Option.CODE_SLOPE_UNITS))
-            csvPrinter.print("m")
-            csvPrinter.print("m")
-            csvPrinter.print("m")
-            csvPrinter.print("m")
+            csvPrinter.print(distanceUnits)
+            csvPrinter.print(distanceUnits)
+            csvPrinter.print(distanceUnits)
+            csvPrinter.print(distanceUnits)
             csvPrinter.print(null)
             csvPrinter.print(null)
         } catch (ioe: IOException) {

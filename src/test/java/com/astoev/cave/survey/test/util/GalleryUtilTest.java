@@ -1,10 +1,11 @@
 package com.astoev.cave.survey.test.util;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import com.astoev.cave.survey.util.GalleryUtil;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
 
 /**
  * Created with IntelliJ IDEA.

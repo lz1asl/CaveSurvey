@@ -1,4 +1,4 @@
-package com.astoev.cave.survey.activity;
+package com.astoev.cave.survey.activity.config;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +9,7 @@ import android.widget.ToggleButton;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
+import com.astoev.cave.survey.activity.MainMenuActivity;
 import com.astoev.cave.survey.activity.dialog.LanguageDialog;
 import com.astoev.cave.survey.activity.dialog.VectorsModeDialog;
 import com.astoev.cave.survey.activity.poc.SensorsActivity;
@@ -30,6 +31,7 @@ public class SettingsActivity extends MainMenuActivity {
         setContentView(R.layout.settings);
 
         prepareLanguage();
+        prepareMeasurements();
         prepareSensors();
         prepareVectors();
         prepareAutoBackup();
@@ -50,6 +52,15 @@ public class SettingsActivity extends MainMenuActivity {
         language.setOnClickListener(v -> {
             LanguageDialog languageDialog = new LanguageDialog();
             languageDialog.show(getSupportFragmentManager(), LANGUAGE_DIALOG);
+        });
+    }
+
+    private void prepareMeasurements() {
+
+        TextView language = findViewById(R.id.settingsMeasurements);
+        language.setOnClickListener(v -> {
+            Intent intent = new Intent(SettingsActivity.this, MeasurementsConfigActivity.class);
+            startActivity(intent);
         });
     }
 

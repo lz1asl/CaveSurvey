@@ -29,6 +29,7 @@ public abstract class AbstractExport {
     protected abstract String getMimeType();
 
     protected abstract void prepare(Project aProject) throws SQLException;
+    protected abstract void exportData(Project aProject) throws SQLException;
     protected abstract void writeTo(Project aProject, OutputStream aStream) throws JSONException, Exception;
 
 
@@ -39,6 +40,7 @@ public abstract class AbstractExport {
         OutputStream out = null;
         try {
             prepare(aProject);
+            exportData(aProject);
 
             String exportSuffix = suffix == null ? getExtension() : FileStorageUtil.NAME_DELIMITER + suffix + getExtension();
             DocumentFile exportFile = FileStorageUtil.prepareProjectExport(aProject, getMimeType(), exportSuffix, unique);

@@ -1,13 +1,13 @@
 package com.astoev.cave.survey.util;
 
+import static com.astoev.cave.survey.util.GalleryUtil.generateNextGalleryName;
+
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Point;
 import com.astoev.cave.survey.service.Workspace;
 
 import java.sql.SQLException;
-
-import static com.astoev.cave.survey.util.GalleryUtil.generateNextGalleryName;
 
 /**
  * Created by IntelliJ IDEA.
@@ -33,7 +33,7 @@ public class PointUtil {
         return p;
     }
 
-    public static Point generateNextPoint(Integer aGalleryId) throws SQLException {
+    public static Point generateNextPoint(Integer aGalleryId) throws Exception {
 
         Point lastGalleryPoint = Workspace.getCurrentInstance().getLastGalleryPoint(aGalleryId);
 

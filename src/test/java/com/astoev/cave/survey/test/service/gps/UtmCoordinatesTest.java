@@ -1,10 +1,11 @@
 package com.astoev.cave.survey.test.service.gps;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import com.astoev.cave.survey.service.gps.UtmCoordinate;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
 
 public class UtmCoordinatesTest {
 

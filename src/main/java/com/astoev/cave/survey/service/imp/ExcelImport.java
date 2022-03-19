@@ -7,6 +7,8 @@ import static com.astoev.cave.survey.model.Option.CODE_SLOPE_UNITS;
 import android.net.Uri;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.UIUtilities;
@@ -50,7 +52,7 @@ import java.util.concurrent.Callable;
  */
 public class ExcelImport {
 
-    public static Object importExcelFile(Uri aPath, final Project aProject) throws SQLException, IOException {
+    public static Object importExcelFile(Uri aPath, @NonNull final Project aProject) throws SQLException, IOException {
 
         Log.i(Constants.LOG_TAG_SERVICE, "Requested to import " + aPath + " as " + aProject.getName());
 
@@ -247,11 +249,9 @@ public class ExcelImport {
 
     public static ProjectData loadProjectData(InputStream stream) throws IOException {
         // locate and open
-        HSSFWorkbook workbook = null;
         ProjectData data = new ProjectData();
         int rowNum = 1;
-        try {
-            workbook = new HSSFWorkbook(stream);
+        try (HSSFWorkbook workbook = new HSSFWorkbook(stream)) {
             HSSFSheet sheet = workbook.getSheetAt(0);
             Iterator<Row> rowIterator = sheet.iterator();
 
@@ -331,9 +331,6 @@ public class ExcelImport {
             UIUtilities.showNotification(errorMessage);
         } finally {
             StreamUtil.closeQuietly(stream);
-            if (workbook != null) {
-                workbook.close();
-            }
         }
         return null;
     }
@@ -355,7 +352,7 @@ public class ExcelImport {
         Options.updateOption(CODE_SLOPE_UNITS, options.get(CODE_SLOPE_UNITS));
     }
 
-    private static String getUnitFromHeaderCell(Row aRow, int aCellIndex) {
+    private static String getUnitFromHeaderCell(@NonNull Row aRow, int aCellIndex) {
         Cell header = aRow.getCell(aCellIndex);
         String headerValue = header.getStringCellValue();
         String units = headerValue.substring(
@@ -364,7 +361,7 @@ public class ExcelImport {
         return  units;
     }
 
-    private static Float getNotNullFloatCellValue(Row row, int index) {
+    private static Float getNotNullFloatCellValue(@NonNull Row row, int index) {
         Cell cell = row.getCell(index);
         if (cell != null) {
             String val = getStringCellValue(cell);

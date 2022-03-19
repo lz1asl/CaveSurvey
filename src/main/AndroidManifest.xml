@@ -81,7 +81,12 @@
         <activity android:name="com.astoev.cave.survey.activity.poc.SensorsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.astoev.cave.survey.activity.SettingsActivity" />
+                android:value="com.astoev.cave.survey.activity.config.SettingsActivity" />
+        </activity>
+        <activity android:name=".activity.config.MeasurementsConfigActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.config.SettingsActivity" />
         </activity>
         <activity android:name="com.astoev.cave.survey.activity.poc.SensorTestActivity">
             <meta-data
@@ -90,7 +95,7 @@
         </activity>
         <activity android:name="com.astoev.cave.survey.activity.main.GPSActivity"/>
         <activity android:name="com.astoev.cave.survey.activity.main.GPSManualActivity"/>
-        <activity android:name="com.astoev.cave.survey.activity.SettingsActivity">
+        <activity android:name="com.astoev.cave.survey.activity.config.SettingsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.astoev.cave.survey.activity.home.SurveysActivity" />

@@ -5,7 +5,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.1.1'
+        classpath 'com.android.tools.build:gradle:7.1.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -20,9 +20,8 @@ repositories {
 
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.4.1'
-    implementation 'com.j256.ormlite:ormlite-core:4.48'
-    implementation 'com.j256.ormlite:ormlite-android:4.48'
-    implementation 'org.apache.poi:poi:3.15'
+    implementation 'com.j256.ormlite:ormlite-android:6.1'
+    implementation 'org.apache.poi:poi:3.17'
     implementation 'org.apache.commons:commons-csv:1.9.0'
 
     // Bosch internal protocol
@@ -34,8 +33,9 @@ dependencies {
     implementation 'androidx.documentfile:documentfile:1.0.1'
 
     // unit tests
-    androidTestImplementation 'junit:junit:4.13.2'
-    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+    testImplementation 'org.hamcrest:hamcrest:2.2'
 
     // container tests
     androidTestImplementation 'org.hamcrest:hamcrest-library:2.2'
@@ -46,8 +46,8 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-intents:3.4.0'
     androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
+    androidTestImplementation "androidx.test.espresso:espresso-idling-resource:3.4.0"
 }
-
 
 android {
     compileSdkVersion 32
@@ -101,13 +101,25 @@ android {
     }
 
     testOptions {
-        unitTests.returnDefaultValues = true
+        unitTests{
+            all {
+                useJUnitPlatform()
+            }
+            returnDefaultValues = true
+            includeAndroidResources = true
+        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    buildToolsVersion '30.0.3'
+    buildToolsVersion '32.0.0'
 
+}
+
+kotlin {
+    jvmToolchain {
+        languageVersion.set(JavaLanguageVersion.of(11))
+    }
 }
 
