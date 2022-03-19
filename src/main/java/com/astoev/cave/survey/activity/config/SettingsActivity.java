@@ -31,7 +31,7 @@ public class SettingsActivity extends MainMenuActivity {
         setContentView(R.layout.settings);
 
         prepareLanguage();
-        prepareMeasurements();
+//        prepareMeasurements();
         prepareSensors();
         prepareVectors();
         prepareAutoBackup();
