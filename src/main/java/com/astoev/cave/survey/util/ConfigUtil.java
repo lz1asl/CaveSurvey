@@ -43,48 +43,62 @@ public class ConfigUtil {
     }
 
     public static Integer getIntProperty(String aName, Integer aDefaultValue) {
-        return getPrefs(Context.MODE_PRIVATE).getInt(aName, aDefaultValue);
+        return getPrefs().getInt(aName, aDefaultValue);
     }
 
     public static boolean setIntProperty(String aName, Integer aValue) {
-        SharedPreferences.Editor editor = getPrefs(Context.MODE_PRIVATE).edit();
+        SharedPreferences.Editor editor = getPrefs().edit();
         editor.putInt(aName, aValue);
         return editor.commit();
     }
 
     public static String getStringProperty(String aName) {
-        return getPrefs(Context.MODE_PRIVATE).getString(aName, null);
+        return getPrefs().getString(aName, null);
     }
 
     public static boolean setStringProperty(String aName, String aValue) {
-        SharedPreferences.Editor editor = getPrefs(Context.MODE_PRIVATE).edit();
+        SharedPreferences.Editor editor = getPrefs().edit();
         editor.putString(aName, aValue);
         return editor.commit();
     }
 
     public static Boolean getBooleanProperty(String aName) {
-        return getPrefs(Context.MODE_PRIVATE).getBoolean(aName, false);
+        return getPrefs().getBoolean(aName, false);
     }
 
     public static Boolean getBooleanProperty(String aName, Boolean defaultValue) {
-        return getPrefs(Context.MODE_PRIVATE).getBoolean(aName, defaultValue);
+        return getPrefs().getBoolean(aName, defaultValue);
     }
 
     public static boolean setBooleanProperty(String aName, boolean aValue) {
-        SharedPreferences.Editor editor = getPrefs(Context.MODE_PRIVATE).edit();
+        SharedPreferences.Editor editor = getPrefs().edit();
         editor.putBoolean(aName, aValue);
         return editor.commit();
     }
 
+    public static Float getFloatProperty(String aName) {
+        return getFloatProperty(aName, null);
+    }
+
+    private static Float getFloatProperty(String aName, Float aValue) {
+        return getPrefs().getFloat(aName, aValue);
+    }
+
+    public static boolean setFloatProperty(String aName, Float aValue) {
+        SharedPreferences.Editor editor = getPrefs().edit();
+        editor.putFloat(aName, aValue);
+        return editor.commit();
+    }
+
     public static boolean removeProperty(String aName) {
-        SharedPreferences.Editor editor = getPrefs(Context.MODE_PRIVATE).edit();
+        SharedPreferences.Editor editor = getPrefs().edit();
         editor.remove(aName);
         return editor.commit();
     }
 
 
-    private static SharedPreferences getPrefs(int aMode) {
-        return mAppContext.getSharedPreferences(SHARED_PREFS_KEY, aMode);
+    private static SharedPreferences getPrefs() {
+        return mAppContext.getSharedPreferences(SHARED_PREFS_KEY, Context.MODE_PRIVATE);
     }
 
 }
