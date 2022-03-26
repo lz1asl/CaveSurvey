@@ -27,6 +27,8 @@ public class ConfigUtil {
     public static final String PREF_SENSOR_NOISE_REDUCTION = "sensor_noise_reduction";
     public static final String PREF_SENSOR_NOISE_REDUCTION_NUM_MEASUREMENTS = "sensor_noise_reduction_measurements";
     public static final String PREF_VECTORS_MODE = "vectors_mode";
+    public static final String PREF_MEASUREMENTS_ADJUSTMENT = "measure_adj";
+    public static final String PREF_MEASUREMENTS_ADJUSTMENT_VALUE = "measure_adj_value";
 
     private static Context mAppContext;
 
@@ -77,7 +79,7 @@ public class ConfigUtil {
     }
 
     public static Float getFloatProperty(String aName) {
-        return getFloatProperty(aName, null);
+        return getFloatProperty(aName, 0f);
     }
 
     private static Float getFloatProperty(String aName, Float aValue) {

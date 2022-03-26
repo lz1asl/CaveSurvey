@@ -94,7 +94,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
      */
     private Leg mCurrentLeg = null;
 
-    private BTMeasureResultReceiver mReceiver = new BTMeasureResultReceiver(this);
+    public static BTMeasureResultReceiver mReceiver ;
 
     // swipe detection variables
     private float x1, x2;
@@ -103,6 +103,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mReceiver = new BTMeasureResultReceiver(this);
         setContentView(R.layout.point);
         getWindow().addFlags(FLAG_KEEP_SCREEN_ON);
         MIN_SWIPE_DISTANCE = (int) (250 * getApplicationContext().getResources().getDisplayMetrics().density);

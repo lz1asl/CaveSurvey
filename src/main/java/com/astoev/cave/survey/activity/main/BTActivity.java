@@ -1,5 +1,8 @@
 package com.astoev.cave.survey.activity.main;
 
+import static android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
+import static com.astoev.cave.survey.Constants.LOG_TAG_UI;
+
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -28,9 +31,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
-import static com.astoev.cave.survey.Constants.LOG_TAG_UI;
-
 /**
  * Created with IntelliJ IDEA.
  * User: astoev
@@ -49,6 +49,11 @@ public class BTActivity extends MainMenuActivity implements Refresheable {
 
         BluetoothService.registerListeners(this);
         prepareUI();
+
+        if (ConfigUtil.getBooleanProperty(ConfigUtil.PREF_MEASUREMENTS_ADJUSTMENT)) {
+            float adjustment = ConfigUtil.getFloatProperty(ConfigUtil.PREF_MEASUREMENTS_ADJUSTMENT_VALUE);
+            UIUtilities.showAlertDialog(this, R.string.title_warning, R.string.measurements_adjustment_warning, adjustment);
+        }
     }
 
     private void prepareUI() {

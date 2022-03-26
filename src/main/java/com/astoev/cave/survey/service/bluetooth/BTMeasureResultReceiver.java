@@ -12,6 +12,7 @@ import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.activity.map.MapUtilities;
 import com.astoev.cave.survey.model.Option;
 import com.astoev.cave.survey.service.Options;
+import com.astoev.cave.survey.util.ConfigUtil;
 import com.astoev.cave.survey.util.StringUtils;
 
 import java.util.Arrays;
@@ -25,10 +26,17 @@ public class BTMeasureResultReceiver extends ResultReceiver {
 
     private BTResultAware mTarget;
     private Set<Constants.Measures> mExpectedMeasures = new HashSet<>();
+    private boolean useAdjustment;
+    private float lengthAdjustmentValue;
 
     public BTMeasureResultReceiver(BTResultAware aTarget) {
         super(new Handler());
         mTarget = aTarget;
+        useAdjustment = ConfigUtil.getBooleanProperty(ConfigUtil.PREF_MEASUREMENTS_ADJUSTMENT);
+        if (useAdjustment) {
+            lengthAdjustmentValue = ConfigUtil.getFloatProperty(ConfigUtil.PREF_MEASUREMENTS_ADJUSTMENT_VALUE);
+            Log.d(Constants.LOG_TAG_BT, "Will use length adjustment by " + lengthAdjustmentValue);
+        }
     }
 
     @Override
@@ -60,7 +68,13 @@ public class BTMeasureResultReceiver extends ResultReceiver {
                         case left:
                         case right:
                         case distance:
-                            // communicaiton to Bluetooth devices in meters, convert to feet if needed
+
+                            // adjust if needed
+                            if (useAdjustment) {
+                                measure += lengthAdjustmentValue;
+                            }
+
+                            // communication to Bluetooth devices in meters, convert to feet if needed
                             if (Option.UNIT_FEET.equals(Options.getOptionValue(Option.CODE_DISTANCE_UNITS))) {
                                 measure = MapUtilities.getMetersInFeet(measure);
                             }
@@ -233,5 +247,9 @@ public class BTMeasureResultReceiver extends ResultReceiver {
         awaitMeasure(Constants.Measures.distance);
         awaitMeasures(new Constants.Measures[] {Constants.Measures.angle, Constants.Measures.slope});
         BluetoothService.startScanning(this);
+    }
+
+    public BTResultAware getTarget() {
+        return mTarget;
     }
 }

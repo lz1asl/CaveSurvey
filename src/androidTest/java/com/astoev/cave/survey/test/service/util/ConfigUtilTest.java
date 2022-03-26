@@ -1,17 +1,17 @@
 package com.astoev.cave.survey.test.service.util;
 
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+
 import androidx.test.core.app.ApplicationProvider;
 
 import com.astoev.cave.survey.util.ConfigUtil;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-
-public class ConfigUtilTest {
+public abstract class ConfigUtilTest {
 
     @Test
     public void testConfigUtil() {
@@ -37,5 +37,8 @@ public class ConfigUtilTest {
 
         ConfigUtil.setStringProperty("stringprop", "123");
         assertEquals("123", ConfigUtil.getStringProperty("stringprop"));
+
+        ConfigUtil.setFloatProperty("floatprop", 12.3f);
+        assertEquals(12.3f, ConfigUtil.getFloatProperty("floatprop"), 0.01f);
     }
 }

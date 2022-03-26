@@ -456,6 +456,11 @@
         <item>Averaged values</item>
     </string-array>
     <string name="measurements_error">Error tolerance</string>
+    <string name="measurements_adjustment">Adjustments</string>
+    <string name="measurements_adjust_length">Bluetooth length adjustment (meters)</string>
+    <string name="measurements_adjustment_warning">All BT values will be corrected by %1$sm</string>
+    <string name="measurements_length_boundaries">Length boundaries</string>
+    <string name="measurements_error_handling">Error handling</string>
 
 
     <!--opens topo -->

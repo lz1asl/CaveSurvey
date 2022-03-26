@@ -10,9 +10,11 @@
         android:layout_height="wrap_content"
         android:text="@string/measurements_use_backshots"
         android:layout_margin="10dp"
+        android:enabled="false"
+        android:visibility="gone"
         android:textAppearance="@android:style/TextAppearance.Large"/>
 
-    <View android:id="@+id/measurements_backshot_export_settings"
+ <!--   <View android:id="@+id/measurements_backshot_export_settings"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <TextView
@@ -28,6 +30,62 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"/>
 
-    </View>
+    </View>-->
+
+    <Switch
+        android:id="@+id/measurements_use_adjustment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/measurements_adjustment"
+        android:layout_margin="10dp"
+        android:textAppearance="@android:style/TextAppearance.Large"/>
+
+    <LinearLayout
+        android:id="@+id/peasurements_adjustment_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_margin="20dp"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:text="@string/measurements_adjust_length" />
+
+        <EditText android:id="@+id/measurements_length_adjustment"
+            android:inputType="numberSigned|numberDecimal"
+            android:digits="0123456789-."
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:maxLength="6"
+            android:ems="5"
+            android:gravity="center"
+            android:ellipsize="end"/>
+
+    </LinearLayout>
+
+
+    <Switch
+        android:id="@+id/measurements_length_boundaries"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/measurements_length_boundaries"
+        android:layout_margin="10dp"
+        android:enabled="false"
+        android:visibility="gone"
+        android:textAppearance="@android:style/TextAppearance.Large"/>
+
+    <Switch
+        android:id="@+id/measurements_error_handling"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/measurements_error_handling"
+        android:layout_margin="10dp"
+        android:visibility="gone"
+        android:textAppearance="@android:style/TextAppearance.Large"/>
+
 
 </LinearLayout>

@@ -1,5 +1,9 @@
 package com.astoev.cave.survey.activity;
 
+import static android.os.Build.VERSION.SDK_INT;
+import static android.os.Build.VERSION_CODES.JELLY_BEAN;
+import static android.os.Build.VERSION_CODES.O;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Notification;
@@ -23,10 +27,6 @@ import com.astoev.cave.survey.util.StringUtils;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-
-import static android.os.Build.VERSION.SDK_INT;
-import static android.os.Build.VERSION_CODES.JELLY_BEAN;
-import static android.os.Build.VERSION_CODES.O;
 
 /**
  * Created by IntelliJ IDEA.
@@ -72,10 +72,10 @@ public class UIUtilities {
         builder.show();
     }
 
-    public static void showAlertDialog(Context aContext, int aTitleId, int aMemoId) {
+    public static void showAlertDialog(Context aContext, int aTitleId, int aMemoId, Object... params) {
         AlertDialog.Builder builder = new AlertDialog.Builder(aContext);
         builder.setTitle(aTitleId);
-        builder.setMessage(aMemoId);
+        builder.setMessage(aContext.getResources().getString(aMemoId, params));
         builder.show();
     }
 

@@ -425,6 +425,11 @@
         <item>Прави измервания</item>
         <item>Усреднени стойности</item>
     </string-array>
+    <string name="measurements_adjustment">Корекция</string>
+    <string name="measurements_adjust_length">Корекция Bluetooth дължини (метри)</string>
+    <string name="measurements_adjustment_warning">Всички дължини ще се коригират с %1$sм</string>
+    <string name="measurements_length_boundaries">Лимит на дължина</string>
+    <string name="measurements_error_handling">Обработка на грешки</string>
 
     <!--opens topo -->
     <string name="export_openstopo_title">OpensTopo</string>
