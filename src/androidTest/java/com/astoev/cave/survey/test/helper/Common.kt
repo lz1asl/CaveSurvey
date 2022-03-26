@@ -6,12 +6,13 @@ import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.espresso.web.sugar.Web
 import androidx.test.espresso.web.webdriver.DriverAtoms
 import androidx.test.espresso.web.webdriver.Locator
 import androidx.test.platform.app.InstrumentationRegistry
 import org.hamcrest.CoreMatchers
+import org.hamcrest.Matchers.not
 
 object Common {
     val context: Context
@@ -50,6 +51,7 @@ object Common {
         if (value != null) {
             Espresso.onView(ViewMatchers.withId(id))
                 .perform(ViewActions.click())
+                .perform(ViewActions.clearText())
                 .perform(ViewActions.typeText("" + value))
                 .perform(ViewActions.closeSoftKeyboard())
             checkValue(id, "" + value)
@@ -67,7 +69,7 @@ object Common {
         }
     }
 
-    private fun checkValue(id: Int, value: String) {
+    fun checkValue(id: Int, value: String) {
         Espresso.onView(ViewMatchers.withId(id))
             .check(matches(withText(value)))
     }
@@ -90,5 +92,18 @@ object Common {
 
     fun openContextMenu() {
         Espresso.openActionBarOverflowOrOptionsMenu(context)
+    }
+
+    fun toggleSwitch(id: Int) {
+        click(id)
+    }
+
+    fun verifySwitchState(id: Int, state: Boolean) {
+        if (state) {
+            Espresso.onView(withId(id)).check(matches(isChecked()));
+        } else {
+            Espresso.onView(withId(id)).check(matches(not(isChecked())));
+        }
+
     }
 }
