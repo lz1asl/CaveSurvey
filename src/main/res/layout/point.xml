@@ -18,7 +18,23 @@
 		          android:ems="4"
 		          android:gravity="center"
 		          android:ellipsize="end"/>
-		
+
+		<ImageView
+			android:layout_alignParentRight="true"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="10dp"
+			android:layout_marginLeft="10dp"
+			android:layout_marginTop="10dp"
+			android:layout_marginEnd="10dp"
+			android:layout_marginRight="10dp"
+			android:layout_marginBottom="10dp"
+			android:clickable="true"
+			android:contentDescription="@string/information"
+			android:onClick="onShowMetadata"
+			android:src="@drawable/ic_info_white" />
+
+
 		<LinearLayout android:id="@+id/layout_left_right"
 		    		  android:layout_width="wrap_content"
 		    		  android:layout_height="wrap_content"

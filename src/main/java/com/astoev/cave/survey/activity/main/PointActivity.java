@@ -37,6 +37,7 @@ import com.astoev.cave.survey.activity.dialog.ConfirmationOperation;
 import com.astoev.cave.survey.activity.dialog.DeleteHandler;
 import com.astoev.cave.survey.activity.dialog.GpsTypeDialog;
 import com.astoev.cave.survey.activity.dialog.GpsTypeHandler;
+import com.astoev.cave.survey.activity.dialog.MetadataDialog;
 import com.astoev.cave.survey.activity.dialog.VectorDialog;
 import com.astoev.cave.survey.activity.draw.DrawingActivity;
 import com.astoev.cave.survey.activity.map.MapUtilities;
@@ -84,6 +85,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 
     private static final int PERM_REQ_CODE_CAMERA = 101;
     private static final int PERM_REQ_CODE_GPS = 102;
+    private static final String METADATA_DIALOG = "METADATA_DIALOG";
 
     private String mNewNote = null;
 
@@ -384,6 +386,11 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
             dialog.setArguments(bundle);
             dialog.show(getSupportFragmentManager(), VECTOR_DIALOG);
         }
+    }
+
+    public void onShowMetadata(View viewArg) {
+        MetadataDialog metadataDialog = new MetadataDialog();
+        metadataDialog.show(getSupportFragmentManager(), METADATA_DIALOG);
     }
 
     public void deleteButton() {

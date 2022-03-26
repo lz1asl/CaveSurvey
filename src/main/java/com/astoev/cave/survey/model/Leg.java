@@ -10,6 +10,7 @@ import com.j256.ormlite.table.DatabaseTable;
 
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.util.Date;
 
 /**
  * Created by IntelliJ IDEA.
@@ -29,6 +30,7 @@ public class Leg implements Serializable {
     public static final String COLUMN_TO_POINT = "to_point_id";
     public static final String COLUMN_GALLERY_ID = "gallery_id";
     public static final String COLUMN_MIDDLE_POINT_AT_DISTANCE = "middle_point_distance";
+    public static final String COLUMN_DATE = "date";
 
     @DatabaseField(generatedId = true, columnName = COLUMN_ID)
     private Integer mId;
@@ -56,6 +58,8 @@ public class Leg implements Serializable {
     private Integer mGalleryId;
     @DatabaseField(columnName = COLUMN_MIDDLE_POINT_AT_DISTANCE)
     private Float mMiddlePointDistance;
+    @DatabaseField(columnName = COLUMN_DATE)
+    private Date mDate;
 
 
     public Leg() {
@@ -67,6 +71,7 @@ public class Leg implements Serializable {
         mToPoint = aToPoint;
         mProject = aProject;
         mGalleryId = aGalleryId;
+        mDate = new Date();
     }
 
     public boolean isNew(){
@@ -239,6 +244,10 @@ public class Leg implements Serializable {
 
     public void setMiddlePointDistance(Float aMiddlePointDistance) {
         mMiddlePointDistance = aMiddlePointDistance;
+    }
+
+    public Date getDate() {
+        return mDate;
     }
 
     /**

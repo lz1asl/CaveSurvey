@@ -198,6 +198,10 @@ canBeNull=false
 fieldName=mMiddlePointDistance
 columnName=middle_point_distance
 # --field-end--
+# --field-start--
+fieldName=mDate
+columnName=date
+# --field-end--
 # --table-fields-end--
 # --table-end--
 #################################
@@ -313,4 +317,29 @@ columnName=note
 # --field-end--
 # --table-fields-end--
 # --table-end--
+#################################
+# --table-start--
+dataClass=com.astoev.cave.survey.model.LegMetadata
+tableName=options
+# --table-fields-start--
+# --field-start--
+fieldName=mId
+columnName=id
+generatedId=true
+# --field-end--
+# --field-start--
+fieldName=mLeg
+columnName=leg_id
+canBeNull=false
+foreign=true
+foreignAutoRefresh=true
+# --field-end--
+# --field-start--
+fieldName=mKey
+columnName=key
+# --field-end--
+# --field-start--
+fieldName=mValue
+columnName=value
+# --field-end--
 #################################

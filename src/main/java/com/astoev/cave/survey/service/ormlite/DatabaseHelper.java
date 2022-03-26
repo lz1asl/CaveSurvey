@@ -11,8 +11,10 @@ import android.util.Log;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
+import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.model.Gallery;
 import com.astoev.cave.survey.model.Leg;
+import com.astoev.cave.survey.model.LegMetadata;
 import com.astoev.cave.survey.model.Location;
 import com.astoev.cave.survey.model.Note;
 import com.astoev.cave.survey.model.Option;
@@ -41,7 +43,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static final int DATABASE_VERSION_1 = 1;
     private static final int DATABASE_VERSION_2 = 2;
     private static final int DATABASE_VERSION_3 = 3;
-    private static final int DATABASE_VERSION_LATEST = 4;
+    private static final int DATABASE_VERSION_4 = 4;
+    private static final int DATABASE_VERSION_5 = 5;
+    private static final int DATABASE_VERSION_LATEST = DATABASE_VERSION_4;
     public static final String DATABASE_NAME = "CaveSurvey";
 
     private Dao<Leg, Integer> mLegDao;
@@ -54,6 +58,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private Dao<Gallery, Integer> mGalleryDao;
     private Dao<Option, Integer> mOptionsDao;
     private Dao<Vector, Integer> mVectorsDao;
+    private Dao<LegMetadata, Integer> mLegMetadataDao;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION_LATEST, R.raw.ormlite_config);
@@ -69,6 +74,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             mGalleryDao = getDao(Gallery.class);
             mOptionsDao = getDao(Option.class);
             mVectorsDao = getDao(Vector.class);
+            mLegMetadataDao = getDao(LegMetadata.class);
 
             Log.i(Constants.LOG_TAG_DB, "Dao's created");
         } catch (SQLException e) {
@@ -90,9 +96,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTableIfNotExists(connectionSource, Gallery.class);
             TableUtils.createTableIfNotExists(connectionSource, Option.class);
             TableUtils.createTableIfNotExists(connectionSource, Vector.class);
+            TableUtils.createTableIfNotExists(connectionSource, LegMetadata.class);
             Log.i(Constants.LOG_TAG_DB, "Tables created");
         } catch (SQLException e) {
             Log.e(Constants.LOG_TAG_DB, "Failed to create DB tables", e);
+            UIUtilities.showNotification(R.string.error);
             throw new RuntimeException(e);
         }
     }
@@ -131,12 +139,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                     aSqLiteDatabase.execSQL("update notes set gallery_id = " +
                             "(select min(gallery_id) from legs where from_point_id = id)");
 
-                    aSqLiteDatabase.setTransactionSuccessful();
 
                     Log.i(Constants.LOG_TAG_DB, "Upgrade success");
                 }
 
-                if (aOldVersion < DATABASE_VERSION_3) {
+                if (aOldVersion < DATABASE_VERSION_4) {
                     Log.i(Constants.LOG_TAG_DB, "Upgrading DB to V4");
 
                     // auto backup by default
@@ -167,11 +174,18 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                         ConfigUtil.setIntProperty(PREF_SENSOR_NOISE_REDUCTION_NUM_MEASUREMENTS, 20);
                     }
 
-                    aSqLiteDatabase.setTransactionSuccessful();
                     Log.i(Constants.LOG_TAG_DB, "Upgrade success");
                 }
 
-                } finally {
+                if (aOldVersion < DATABASE_VERSION_5) {
+                    Log.i(Constants.LOG_TAG_DB, "Upgrading DB to V5");
+                    aSqLiteDatabase.execSQL("alter table legs add column date TIMESTAMP default null");
+                    aSqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS 'leg_metadata' ('id' INTEGER PRIMARY KEY AUTOINCREMENT , 'leg_id' INTEGER NOT NULL , 'key' VARCHAR not null, 'value' FLOAT);");
+                    Log.i(Constants.LOG_TAG_DB, "Upgrade success");
+                }
+
+                aSqLiteDatabase.setTransactionSuccessful();
+            } finally {
                 aSqLiteDatabase.endTransaction();
             }
 
@@ -221,6 +235,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return mVectorsDao;
     }
 
+    public Dao<LegMetadata, Integer> getLegMetadataDao() {
+        return mLegMetadataDao;
+    }
+
     @Override
     public void close() {
         super.close();
@@ -235,5 +253,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         mGalleryDao = null;
         mOptionsDao = null;
         mVectorsDao = null;
+        mLegMetadataDao = null;
     }
 }
