@@ -37,7 +37,7 @@ import com.astoev.cave.survey.activity.dialog.ConfirmationOperation;
 import com.astoev.cave.survey.activity.dialog.DeleteHandler;
 import com.astoev.cave.survey.activity.dialog.GpsTypeDialog;
 import com.astoev.cave.survey.activity.dialog.GpsTypeHandler;
-import com.astoev.cave.survey.activity.dialog.MetadataDialog;
+import com.astoev.cave.survey.activity.dialog.LegMetadataDialog;
 import com.astoev.cave.survey.activity.dialog.VectorDialog;
 import com.astoev.cave.survey.activity.draw.DrawingActivity;
 import com.astoev.cave.survey.activity.map.MapUtilities;
@@ -388,9 +388,14 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         }
     }
 
-    public void onShowMetadata(View viewArg) {
-        MetadataDialog metadataDialog = new MetadataDialog();
-        metadataDialog.show(getSupportFragmentManager(), METADATA_DIALOG);
+    public void onShowMetadata(View viewArg) throws SQLException {
+        Log.i(Constants.LOG_TAG_UI, "Show leg metadata");
+        LegMetadataDialog legMetadataDialog = new LegMetadataDialog();
+        Leg currentLeg = getCurrentLeg();
+        legMetadataDialog.setLeg(currentLeg);
+        legMetadataDialog.setTitle(currentLeg.buildLegDescription());
+
+        legMetadataDialog.show(getSupportFragmentManager(), METADATA_DIALOG);
     }
 
     public void deleteButton() {
