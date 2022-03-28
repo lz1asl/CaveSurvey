@@ -1,4 +1,6 @@
-package com.astoev.cave.survey.service.bluetooth.device.ble;
+package com.astoev.cave.survey.service.bluetooth.device.ble.bric4;
+
+import static java.nio.ByteOrder.LITTLE_ENDIAN;
 
 import android.annotation.TargetApi;
 import android.bluetooth.BluetoothGattCharacteristic;
@@ -8,6 +10,7 @@ import android.util.Log;
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.Measure;
+import com.astoev.cave.survey.service.bluetooth.device.ble.AbstractBluetoothLEDevice;
 import com.astoev.cave.survey.service.bluetooth.lecommands.AbstractBluetoothCommand;
 import com.astoev.cave.survey.service.bluetooth.lecommands.WriteCharacteristicCommand;
 
@@ -16,8 +19,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-
-import static java.nio.ByteOrder.LITTLE_ENDIAN;
 
 /**
  * Kris's caving device.
