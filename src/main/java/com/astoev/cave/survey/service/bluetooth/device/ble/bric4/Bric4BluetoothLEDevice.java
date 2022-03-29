@@ -8,6 +8,7 @@ import android.os.Build;
 import android.util.Log;
 
 import com.astoev.cave.survey.Constants;
+import com.astoev.cave.survey.Constants.MetaData;
 import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.Measure;
 import com.astoev.cave.survey.service.bluetooth.device.ble.AbstractBluetoothLEDevice;
@@ -18,6 +19,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -28,6 +30,8 @@ public class Bric4BluetoothLEDevice extends AbstractBluetoothLEDevice {
 
     private static final UUID MEASUREMENT_SERVICE_UUID = UUID.fromString("000058d0-0000-1000-8000-00805f9b34fb");
     public static final UUID MEASUREMENT_PRIMARY_CHARACTERISTIC_UUID = UUID.fromString("000058d1-0000-1000-8000-00805f9b34fb");
+    public static final UUID MEASUREMENT_METADATA_CHARACTERISTIC_UUID = UUID.fromString("000058d2-0000-1000-8000-00805f9b34fb");
+    public static final UUID MEASUREMENT_ERRORS_CHARACTERISTIC_UUID = UUID.fromString("000058d3-0000-1000-8000-00805f9b34fb");
     private static final UUID DEVICE_CONTROL_SERVICE_UUID = UUID.fromString("000058e0-0000-1000-8000-00805f9b34fb");
     private static final UUID DEVICE_COMMAND_CHARACTERISTIC_UUID = UUID.fromString("000058e1-0000-1000-8000-00805f9b34fb");
     private static final byte[] COMMAND_SHOT = "shot".getBytes();
@@ -41,7 +45,9 @@ public class Bric4BluetoothLEDevice extends AbstractBluetoothLEDevice {
 
     @Override
     public List<UUID> getCharacteristics() {
-        return Arrays.asList(MEASUREMENT_PRIMARY_CHARACTERISTIC_UUID);
+        return Arrays.asList(MEASUREMENT_PRIMARY_CHARACTERISTIC_UUID,
+                MEASUREMENT_METADATA_CHARACTERISTIC_UUID,
+                MEASUREMENT_ERRORS_CHARACTERISTIC_UUID);
     }
 
     @Override
@@ -147,5 +153,77 @@ public class Bric4BluetoothLEDevice extends AbstractBluetoothLEDevice {
             Log.e(Constants.LOG_TAG_BT, "Failed to parse message", e);
             return null;
         }
+    }
+
+    private Integer asFourByteInt(byte[] message, int start) {
+        try {
+            return ByteBuffer.wrap(message, start, 4).order(LITTLE_ENDIAN).getInt();
+        } catch (Exception e) {
+            Log.e(Constants.LOG_TAG_BT, "Failed to parse message", e);
+            return null;
+        }
+    }
+
+    private Byte asByte(byte[] message, int start) {
+        try {
+            return ByteBuffer.wrap(message, start, 1).order(LITTLE_ENDIAN).get();
+        } catch (Exception e) {
+            Log.e(Constants.LOG_TAG_BT, "Failed to parse message", e);
+            return null;
+        }
+    }
+
+    @Override
+    public boolean isMetadataCharacteristic(BluetoothGattCharacteristic aCharacteristic) {
+        return MEASUREMENT_METADATA_CHARACTERISTIC_UUID.equals(aCharacteristic.getUuid())
+                || MEASUREMENT_ERRORS_CHARACTERISTIC_UUID.equals(aCharacteristic.getUuid());
+    }
+
+    @Override
+    public Map<String, Object> characteristicToMetadata(BluetoothGattCharacteristic aCharacteristic) throws DataException {
+
+        byte[] rawMessage = aCharacteristic.getValue();
+
+        if (MEASUREMENT_METADATA_CHARACTERISTIC_UUID.equals(aCharacteristic.getUuid())) {
+            Log.i(Constants.LOG_TAG_BT, "Got meta: " + new String(rawMessage));
+
+            Integer refIndex = asFourByteInt(rawMessage, 0);
+            Log.i(Constants.LOG_TAG_BT, "Point " + refIndex);
+
+            Float temperature = asFloat(rawMessage, 12);
+            Log.i(Constants.LOG_TAG_BT, "Temperature " + temperature);
+
+            return Map.of(MetaData.reference.name(), refIndex,MetaData.temperature.name(), temperature);
+        } else if (MEASUREMENT_ERRORS_CHARACTERISTIC_UUID.equals(aCharacteristic.getUuid())) {
+            Log.i(Constants.LOG_TAG_BT, "Got error: " + new String(rawMessage));
+
+            Byte code = asByte(rawMessage, 0);
+            Log.i(Constants.LOG_TAG_BT, "Code " + code);
+            Float data1 = asFloat(rawMessage, 1);
+            Float data2 = asFloat(rawMessage, 5);
+
+            Bric4ErrorCode error1 = new Bric4ErrorCode(code, data1, data2);
+            Log.i(Constants.LOG_TAG_BT, error1.getDescription());
+
+            Byte code2 = asByte(rawMessage, 9);
+            if (code2 != null && code2 != 0) {
+                Log.i(Constants.LOG_TAG_BT, "Code2 " + code2);
+                data1 = asFloat(rawMessage, 10);
+                data2 = asFloat(rawMessage, 4);
+
+                Bric4ErrorCode error2 = new Bric4ErrorCode(code2, data1, data2);
+                Log.i(Constants.LOG_TAG_BT, error2.getDescription());
+                // TODO not returned
+            }
+
+            return Map.of(MetaData.errorCode.name(), code, MetaData.errorDesc.name(), error1.getDescription());
+        } else {
+            Log.i(Constants.LOG_TAG_BT, "Unable to handle " + aCharacteristic.getUuid());
+        }
+//        switch (aCharacteristic.getUuid()) {
+//
+//        }
+
+        return null;
     }
 }
