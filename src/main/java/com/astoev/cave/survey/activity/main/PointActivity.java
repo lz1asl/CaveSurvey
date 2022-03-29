@@ -147,7 +147,9 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        mCurrentPhotoFile = DocumentFile.fromTreeUri(ConfigUtil.getContext(), Uri.parse(savedInstanceState.getString(STATE_PHOTO_PATH)));
+        if (savedInstanceState != null && savedInstanceState.getString(STATE_PHOTO_PATH) != null) {
+            mCurrentPhotoFile = DocumentFile.fromTreeUri(ConfigUtil.getContext(), Uri.parse(savedInstanceState.getString(STATE_PHOTO_PATH)));
+        }
     }
 
     @Override
