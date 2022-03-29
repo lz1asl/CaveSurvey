@@ -1,5 +1,7 @@
 package com.astoev.cave.survey.service.bluetooth.device.ble;
 
+import static android.bluetooth.BluetoothDevice.DEVICE_TYPE_LE;
+
 import android.annotation.TargetApi;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
@@ -14,9 +16,8 @@ import com.astoev.cave.survey.service.bluetooth.lecommands.AbstractBluetoothComm
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
-
-import static android.bluetooth.BluetoothDevice.DEVICE_TYPE_LE;
 
 /**
  * Bluetooth device using Bluetooth 4 LTE communication.
@@ -25,7 +26,6 @@ public abstract class AbstractBluetoothLEDevice extends AbstractBluetoothDevice 
 
 
     // abstract methods to define the LE device
-
     public abstract List<UUID> getServices() ;
     public abstract List<UUID> getCharacteristics();
     public abstract List<UUID> getDescriptors();
@@ -42,9 +42,12 @@ public abstract class AbstractBluetoothLEDevice extends AbstractBluetoothDevice 
     }
     public boolean needCharacteristicPull() { return false; }
 
+    // devices that provide metadata
+    public boolean isMetadataCharacteristic(BluetoothGattCharacteristic aCharacteristic) { return false;}
+    public Map<String, Object> characteristicToMetadata(BluetoothGattCharacteristic aCharacteristic) throws DataException {return null;}
+
 
     // helper methods to reuse between the LE devices
-
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     protected Float asFloat(BluetoothGattCharacteristic aCharacteristic, ByteOrder anOrder) {
         return asFloat(aCharacteristic.getValue(), anOrder);

@@ -64,12 +64,15 @@ import com.astoev.cave.survey.service.bluetooth.lecommands.WriteDescriptorComman
 import com.astoev.cave.survey.util.ConfigUtil;
 import com.astoev.cave.survey.util.StringUtils;
 
+import org.apache.commons.collections4.MapUtils;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -694,14 +697,21 @@ public class BluetoothService {
                     AbstractBluetoothLEDevice leDevice = (AbstractBluetoothLEDevice) mSelectedDeviceSpec;
                     if (leDevice.getCharacteristics().contains(characteristic.getUuid())) {
 
-                        Log.d(LOG_TAG_BT, "processing " + characteristic.getUuid());
-                        // decode
-                        List<Measure> measures = (leDevice.characteristicToMeasures(characteristic, mMeasureTypes));
+                        if (leDevice.isMetadataCharacteristic(characteristic)) {
+                            Log.i(LOG_TAG_BT, "Metadata from " + characteristic.getUuid());
 
-                        // consume
-                        if (measures != null) {
-                            for (Measure measure : measures) {
-                                sendMeasureToUI(measure);
+                            Map<String, Object> meta = leDevice.characteristicToMetadata(characteristic);
+                            sendMetadataToUI(meta);
+                        } else {
+                            Log.d(LOG_TAG_BT, "Processing " + characteristic.getUuid());
+                            // decode
+                            List<Measure> measures = (leDevice.characteristicToMeasures(characteristic, mMeasureTypes));
+
+                            // consume
+                            if (measures != null) {
+                                for (Measure measure : measures) {
+//                                    sendMeasureToUI(measure);
+                                }
                             }
                         }
                     } else {
@@ -743,6 +753,16 @@ public class BluetoothService {
                 mReceiver.send(Activity.RESULT_OK, b);
             }
         }
+
+        private void sendMetadataToUI(Map<String, Object> aMeta) {
+            if (MapUtils.isNotEmpty(aMeta) && expectingMeasurement) {
+                // consume
+                Bundle b = new Bundle();
+//                b.putFloatArray(Constants.MEASURE_METADATA_KEY,  aMeta);
+                mReceiver.send(Activity.RESULT_OK, b);
+            }
+        }
+
 
     }
 }
