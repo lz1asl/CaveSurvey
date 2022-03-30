@@ -69,6 +69,7 @@ import org.apache.commons.collections4.MapUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -710,7 +711,7 @@ public class BluetoothService {
                             // consume
                             if (measures != null) {
                                 for (Measure measure : measures) {
-//                                    sendMeasureToUI(measure);
+                                    sendMeasureToUI(measure);
                                 }
                             }
                         }
@@ -758,11 +759,12 @@ public class BluetoothService {
             if (MapUtils.isNotEmpty(aMeta) && expectingMeasurement) {
                 // consume
                 Bundle b = new Bundle();
-//                b.putFloatArray(Constants.MEASURE_METADATA_KEY,  aMeta);
+                HashMap<String, Object> hashMap = new HashMap<>();
+                hashMap.putAll(aMeta);
+                b.putSerializable(Constants.MEASURE_METADATA_KEY, hashMap);
                 mReceiver.send(Activity.RESULT_OK, b);
             }
         }
-
 
     }
 }

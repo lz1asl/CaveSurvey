@@ -45,55 +45,59 @@ public class BTMeasureResultReceiver extends ResultReceiver {
         switch (aResultCode) {
             case Activity.RESULT_OK:
 
+                if (aResultData.containsKey(Constants.MEASURE_METADATA_KEY)) {
+                    Log.i(Constants.LOG_TAG_SERVICE, "Persist new metadata");
+                    // TODO
+                } else {
 
-                float[] measuresArray = aResultData.getFloatArray(Constants.MEASURE_VALUE_KEY);
-                String[] targetsArray = aResultData.getStringArray(Constants.MEASURE_TARGET_KEY);
-                // not yet used
-//                    String[] typesArray = aResultData.getStringArray(Constants.MEASURE_TYPE_KEY);
-//                    String[] unitsArray = aResultData.getStringArray(Constants.MEASURE_UNIT_KEY);
+                    // display received data
+                    float[] measuresArray = aResultData.getFloatArray(Constants.MEASURE_VALUE_KEY);
+                    String[] targetsArray = aResultData.getStringArray(Constants.MEASURE_TARGET_KEY);
+                    // not yet used
+    //                    String[] typesArray = aResultData.getStringArray(Constants.MEASURE_TYPE_KEY);
+    //                    String[] unitsArray = aResultData.getStringArray(Constants.MEASURE_UNIT_KEY);
 
 
-                for (int i = 0; i < measuresArray.length; i++) {
-                    Constants.Measures type = Constants.Measures.valueOf(targetsArray[i]);
-                    if (!expectsMeasure(type)) {
-                        Log.i(Constants.LOG_TAG_SERVICE, "Unexpected measure " + type + " : " + type);
-                        return;
+                    for (int i = 0; i < measuresArray.length; i++) {
+                        Constants.Measures type = Constants.Measures.valueOf(targetsArray[i]);
+                        if (!expectsMeasure(type)) {
+                            Log.i(Constants.LOG_TAG_SERVICE, "Unexpected measure " + type + " : " + type);
+                            return;
+                        }
+
+                        float measure = measuresArray[i];
+
+                        switch (type) {
+                            case up:
+                            case down:
+                            case left:
+                            case right:
+                            case distance:
+
+                                // adjust if needed
+                                if (useAdjustment) {
+                                    measure += lengthAdjustmentValue;
+                                }
+
+                                // communication to Bluetooth devices in meters, convert to feet if needed
+                                if (Option.UNIT_FEET.equals(Options.getOptionValue(Option.CODE_DISTANCE_UNITS))) {
+                                    measure = MapUtilities.getMetersInFeet(measure);
+                                }
+                                break;
+
+                            default:
+                                // no conversion needed
+                        }
+
+                        // screen specific population of the measures
+                        mTarget.onReceiveMeasures(type, measure);
                     }
-
-                    float measure = measuresArray[i];
-
-                    switch (type) {
-                        case up:
-                        case down:
-                        case left:
-                        case right:
-                        case distance:
-
-                            // adjust if needed
-                            if (useAdjustment) {
-                                measure += lengthAdjustmentValue;
-                            }
-
-                            // communication to Bluetooth devices in meters, convert to feet if needed
-                            if (Option.UNIT_FEET.equals(Options.getOptionValue(Option.CODE_DISTANCE_UNITS))) {
-                                measure = MapUtilities.getMetersInFeet(measure);
-                            }
-                            break;
-
-                        default:
-                            // no conversion needed
-                    }
-
-                    // screen specific population of the measures
-                    mTarget.onReceiveMeasures(type, measure);
                 }
                 break;
 
             default:
                 UIUtilities.showNotification(aResultData.getString("error"));
         }
-
-
     }
 
     public boolean expectsMeasure(Constants.Measures aMeasure) {

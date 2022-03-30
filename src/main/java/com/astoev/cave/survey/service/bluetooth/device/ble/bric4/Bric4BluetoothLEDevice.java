@@ -220,9 +220,6 @@ public class Bric4BluetoothLEDevice extends AbstractBluetoothLEDevice {
         } else {
             Log.i(Constants.LOG_TAG_BT, "Unable to handle " + aCharacteristic.getUuid());
         }
-//        switch (aCharacteristic.getUuid()) {
-//
-//        }
 
         return null;
     }
