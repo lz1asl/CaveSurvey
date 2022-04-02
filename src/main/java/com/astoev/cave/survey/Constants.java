@@ -34,11 +34,16 @@ public class Constants {
     public enum MeasureTypes {distance, slope, angle}
     public enum MeasureUnits {meters, degrees, grads}
 
+    public enum MeasureSource {manual, sensor, bluetooth}
+    public enum MetaData {angleSource, slopeSource, angleAccuracy, slopeAccuracy, reference, temperature, errorCode, errorValue, errorDesc}
+
     public static final String MEASURE_TARGET_KEY = "target";
     public static final String MEASURE_VALUE_KEY = "value";
     public static final String MEASURE_TYPE_KEY = "type";
     public static final String MEASURE_UNIT_KEY = "unit";
-    
+    public static final String MEASURE_METADATA_KEY = "meta";
+    public static final String MEASURE_SOURCE_KEY = "source";
+
     public static final float GRAD_TO_DEC = (Option.MAX_VALUE_AZIMUTH_DEGREES / (float)Option.MAX_VALUE_AZIMUTH_GRADS);
     public static final float DEC_TO_GRAD = (Option.MAX_VALUE_AZIMUTH_GRADS / (float)Option.MAX_VALUE_AZIMUTH_DEGREES);
     public static final float FEETS_TO_METERS = 0.3048F;

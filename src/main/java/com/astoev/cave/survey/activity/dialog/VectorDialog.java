@@ -1,5 +1,8 @@
 package com.astoev.cave.survey.activity.dialog;
 
+import static com.astoev.cave.survey.activity.dialog.VectorsModeDialog.MODE_SAVE_ON_RECEIVE;
+import static com.astoev.cave.survey.activity.dialog.VectorsModeDialog.MODE_SCAN;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -32,9 +35,7 @@ import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.util.StringUtils;
 
 import java.sql.SQLException;
-
-import static com.astoev.cave.survey.activity.dialog.VectorsModeDialog.MODE_SAVE_ON_RECEIVE;
-import static com.astoev.cave.survey.activity.dialog.VectorsModeDialog.MODE_SCAN;
+import java.util.Map;
 
 /**
  *
@@ -258,5 +259,11 @@ public class VectorDialog extends DialogFragment implements BTResultAware, Azimu
         if (parent instanceof PointActivity) {
             ((PointActivity) parent).loadLegVectors(mLeg);
         }
+    }
+
+    @Override
+    public void onReceiveMetadata(Map<String, Object> aMetaData) {
+        // TODO
+        UIUtilities.showNotification(R.string.todo);
     }
 }

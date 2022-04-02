@@ -43,6 +43,7 @@ import com.astoev.cave.survey.activity.draw.DrawingActivity;
 import com.astoev.cave.survey.activity.map.MapUtilities;
 import com.astoev.cave.survey.model.Gallery;
 import com.astoev.cave.survey.model.Leg;
+import com.astoev.cave.survey.model.LegMetadata;
 import com.astoev.cave.survey.model.Note;
 import com.astoev.cave.survey.model.Option;
 import com.astoev.cave.survey.model.Photo;
@@ -66,7 +67,9 @@ import com.j256.ormlite.misc.TransactionManager;
 
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -101,6 +104,8 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
     // swipe detection variables
     private float x1, x2;
     private static int MIN_SWIPE_DISTANCE;
+
+    private Map<String, Object> mNewMetaData = new HashMap<>();
 
 
     public void onCreate(Bundle savedInstanceState) {
@@ -157,6 +162,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         super.onResume();
 
         mReceiver.resetMeasureExpectations();
+        mNewMetaData.clear();
 
         // we need to reload the location if edited
         Leg legEdited = getCurrentLeg();
@@ -294,6 +300,8 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                 return false;
             }
 
+            // TODO validate metadata
+
             Log.i(Constants.LOG_TAG_UI, "Saving leg");
 
             TransactionManager.callInTransaction(getWorkspace().getDBHelper().getConnectionSource(),
@@ -335,6 +343,13 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                             getWorkspace().setActiveLeg(DaoUtil.getLegByToPoint(legEdited.getToPoint()));
                         } else {
                             getWorkspace().setActiveLeg(legEdited);
+                        }
+
+                        if (!mNewMetaData.isEmpty()) {
+                            for (String key : mNewMetaData.keySet()) {
+                                LegMetadata meta = new LegMetadata(legEdited, key, String.valueOf(mNewMetaData.get(key)));
+                                getWorkspace().getDBHelper().getLegMetadataDao().create(meta);
+                            }
                         }
 
                         Log.i(Constants.LOG_TAG_UI, "Saved");
@@ -391,13 +406,15 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
     }
 
     public void onShowMetadata(View viewArg) throws SQLException {
-        Log.i(Constants.LOG_TAG_UI, "Show leg metadata");
-        LegMetadataDialog legMetadataDialog = new LegMetadataDialog();
-        Leg currentLeg = getCurrentLeg();
-        legMetadataDialog.setLeg(currentLeg);
-        legMetadataDialog.setTitle(currentLeg.buildLegDescription());
+        if (saveLeg()) {
+            Log.i(Constants.LOG_TAG_UI, "Show leg metadata");
+            LegMetadataDialog legMetadataDialog = new LegMetadataDialog();
+            Leg currentLeg = getCurrentLeg();
+            legMetadataDialog.setLeg(currentLeg);
+            legMetadataDialog.setTitle(currentLeg.buildLegDescription());
 
-        legMetadataDialog.show(getSupportFragmentManager(), METADATA_DIALOG);
+            legMetadataDialog.show(getSupportFragmentManager(), METADATA_DIALOG);
+        }
     }
 
     public void deleteButton() {
@@ -912,6 +929,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
 
     @Override
     public void onReceiveMeasures(Constants.Measures aMeasureTarget, float aMeasureValue) {
+        mNewMetaData.clear();
         switch (aMeasureTarget) {
             case distance:
                 Log.i(Constants.LOG_TAG_UI, "Got distance " + aMeasureValue);
@@ -1160,5 +1178,10 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
             default:
                 Log.i(Constants.LOG_TAG_SERVICE, "Ignore request " + requestCode);
         }
+    }
+
+    @Override
+    public void onReceiveMetadata(Map<String, Object> aMetaData) {
+        mNewMetaData.putAll(aMetaData);
     }
 }

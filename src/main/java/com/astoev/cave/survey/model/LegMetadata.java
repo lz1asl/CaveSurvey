@@ -73,6 +73,6 @@ public class LegMetadata implements Serializable {
 
     @Override
     public String toString() {
-        return mKey + ': ' + mValue;
+        return mKey + ": " + mValue;
     }
 }

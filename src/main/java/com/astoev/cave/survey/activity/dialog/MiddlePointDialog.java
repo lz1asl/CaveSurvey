@@ -27,6 +27,7 @@ import com.astoev.cave.survey.util.StringUtils;
 import com.j256.ormlite.misc.TransactionManager;
 
 import java.sql.SQLException;
+import java.util.Map;
 
 /**
  * Dialog for chosing middle point length.
@@ -151,6 +152,12 @@ public class MiddlePointDialog extends DialogFragment implements BTResultAware {
             default:
                 Log.i(Constants.LOG_TAG_UI, "Ignore type " + aMeasureTarget);
         }
+    }
+
+    @Override
+    public void onReceiveMetadata(Map<String, Object> aMetaData) {
+        // TODO
+        UIUtilities.showNotification(R.string.todo);
     }
 
     private void populateMeasure(float aMeasure, int anEditTextId) {
