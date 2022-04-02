@@ -8,6 +8,8 @@ import android.os.Build;
 import android.util.Log;
 
 import com.astoev.cave.survey.Constants;
+import com.astoev.cave.survey.Constants.MeasureTypes;
+import com.astoev.cave.survey.Constants.MeasureUnits;
 import com.astoev.cave.survey.Constants.MetaData;
 import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.Measure;
@@ -57,18 +59,18 @@ public class Bric4BluetoothLEDevice extends AbstractBluetoothLEDevice {
     }
 
     @Override
-    public UUID getService(Constants.MeasureTypes aMeasureType) {
+    public UUID getService(MeasureTypes aMeasureType) {
         return MEASUREMENT_SERVICE_UUID;
     }
 
     @Override
-    public UUID getCharacteristic(Constants.MeasureTypes aMeasureType) {
+    public UUID getCharacteristic(MeasureTypes aMeasureType) {
         return MEASUREMENT_PRIMARY_CHARACTERISTIC_UUID;
     }
 
     @Override
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
-    public List<Measure> characteristicToMeasures(BluetoothGattCharacteristic aCharacteristic, List<Constants.MeasureTypes> aMeasureTypes) throws DataException {
+    public List<Measure> characteristicToMeasures(BluetoothGattCharacteristic aCharacteristic, List<MeasureTypes> aMeasureTypes) throws DataException {
 
         byte[] rawMessage = aCharacteristic.getValue();
         Log.i(Constants.LOG_TAG_BT, "Got: " + new String(rawMessage));
@@ -80,23 +82,22 @@ public class Bric4BluetoothLEDevice extends AbstractBluetoothLEDevice {
         List<Measure> measures = new ArrayList<>();
         Float distance = asFloat(rawMessage, 8);
         if (distance != null) {
-            Measure distanceMeasure = new Measure(Constants.MeasureTypes.distance, Constants.MeasureUnits.meters, distance);
+            Measure distanceMeasure = new Measure(MeasureTypes.distance, MeasureUnits.meters, distance);
             measures.add(distanceMeasure);
             Log.d(Constants.LOG_TAG_BT, "Got distance " + distanceMeasure);
         }
         Float azimuth = asFloat(rawMessage, 12);
         if (azimuth != null) {
-            Measure angleMeasure = new Measure(Constants.MeasureTypes.angle, Constants.MeasureUnits.degrees, azimuth);
+            Measure angleMeasure = new Measure(MeasureTypes.angle, MeasureUnits.degrees, azimuth);
             measures.add(angleMeasure);
             Log.d(Constants.LOG_TAG_BT, "Got angle " + angleMeasure);
         }
         Float slope = asFloat(rawMessage, 16);
         if (slope != null) {
-            Measure slopeMeasure = new Measure(Constants.MeasureTypes.slope, Constants.MeasureUnits.degrees, slope);
+            Measure slopeMeasure = new Measure(MeasureTypes.slope, MeasureUnits.degrees, slope);
             measures.add(slopeMeasure);
             Log.d(Constants.LOG_TAG_BT, "Got slope " + slopeMeasure);
         }
-
 
         return measures;
     }
@@ -112,9 +113,9 @@ public class Bric4BluetoothLEDevice extends AbstractBluetoothLEDevice {
     }
 
     @Override
-    protected List<Constants.MeasureTypes> getSupportedMeasureTypes() {
+    protected List<MeasureTypes> getSupportedMeasureTypes() {
         // all measures available on each shot
-        return Arrays.asList(Constants.MeasureTypes.values());
+        return Arrays.asList(MeasureTypes.values());
     }
 
     @Override
@@ -129,7 +130,7 @@ public class Bric4BluetoothLEDevice extends AbstractBluetoothLEDevice {
     }
 
     @Override
-    public AbstractBluetoothCommand getReadCharacteristicCommand(Constants.MeasureTypes aType) {
+    public AbstractBluetoothCommand getReadCharacteristicCommand(MeasureTypes aType) {
         // turn the laser on or take measurement if on
         return new WriteCharacteristicCommand(DEVICE_CONTROL_SERVICE_UUID, DEVICE_COMMAND_CHARACTERISTIC_UUID, COMMAND_SHOT);
     }

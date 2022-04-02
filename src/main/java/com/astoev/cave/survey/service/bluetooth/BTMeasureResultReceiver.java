@@ -1,5 +1,7 @@
 package com.astoev.cave.survey.service.bluetooth;
 
+import static com.astoev.cave.survey.Constants.Measures.distance;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
@@ -8,6 +10,7 @@ import android.util.Log;
 import android.widget.EditText;
 
 import com.astoev.cave.survey.Constants;
+import com.astoev.cave.survey.Constants.Measures;
 import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.activity.map.MapUtilities;
 import com.astoev.cave.survey.model.Option;
@@ -17,7 +20,10 @@ import com.astoev.cave.survey.util.StringUtils;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Common code for screens using Bluetooth communication.
@@ -25,7 +31,7 @@ import java.util.Set;
 public class BTMeasureResultReceiver extends ResultReceiver {
 
     private BTResultAware mTarget;
-    private Set<Constants.Measures> mExpectedMeasures = new HashSet<>();
+    private Set<Measures> mExpectedMeasures = new HashSet<>();
     private boolean useAdjustment;
     private float lengthAdjustmentValue;
 
@@ -46,8 +52,14 @@ public class BTMeasureResultReceiver extends ResultReceiver {
             case Activity.RESULT_OK:
 
                 if (aResultData.containsKey(Constants.MEASURE_METADATA_KEY)) {
-                    Log.i(Constants.LOG_TAG_SERVICE, "Persist new metadata");
-                    // TODO
+                    String[] measureNames = aResultData.getStringArray(Constants.MEASURE_TYPE_KEY);
+                    List<Measures> measures = Arrays.stream(measureNames).map(t -> Measures.valueOf(t)).collect(Collectors.toList());
+                    if (measures.contains(Measures.distance) || measures.contains(Measures.angle)
+                        || measures.contains(Measures.slope)) {
+                        Log.i(Constants.LOG_TAG_SERVICE, "Persist new metadata");
+                        Map<String, Object> metaData = (Map<String, Object>) aResultData.getSerializable(Constants.MEASURE_METADATA_KEY);
+                        mTarget.onReceiveMetadata(metaData);
+                    }
                 } else {
 
                     // display received data
@@ -59,7 +71,7 @@ public class BTMeasureResultReceiver extends ResultReceiver {
 
 
                     for (int i = 0; i < measuresArray.length; i++) {
-                        Constants.Measures type = Constants.Measures.valueOf(targetsArray[i]);
+                        Measures type = Measures.valueOf(targetsArray[i]);
                         if (!expectsMeasure(type)) {
                             Log.i(Constants.LOG_TAG_SERVICE, "Unexpected measure " + type + " : " + type);
                             return;
@@ -100,21 +112,21 @@ public class BTMeasureResultReceiver extends ResultReceiver {
         }
     }
 
-    public boolean expectsMeasure(Constants.Measures aMeasure) {
+    public boolean expectsMeasure(Measures aMeasure) {
         return mExpectedMeasures.contains(aMeasure);
     }
 
-    public void awaitMeasure(Constants.Measures aMeasure) {
+    public void awaitMeasure(Measures aMeasure) {
         mExpectedMeasures.add(aMeasure);
     }
 
-    public void awaitMeasures(Constants.Measures[] aMeasures) {
+    public void awaitMeasures(Measures[] aMeasures) {
         if (aMeasures != null) {
             mExpectedMeasures.addAll(Arrays.asList(aMeasures));
         }
     }
 
-    public void ignoreMeasure(Constants.Measures aMeasure) {
+    public void ignoreMeasure(Measures aMeasure) {
         mExpectedMeasures.remove(aMeasure);
     }
 
@@ -123,7 +135,7 @@ public class BTMeasureResultReceiver extends ResultReceiver {
         BluetoothService.cancelReadCommands();
     }
 
-    public void bindBTMeasures(final EditText text, final Constants.Measures aMeasure, boolean aDirectSendCommandFlag, final Constants.Measures[] otherMeasuresWelcome) {
+    public void bindBTMeasures(final EditText text, final Measures aMeasure, boolean aDirectSendCommandFlag, final Measures[] otherMeasuresWelcome) {
 
         if (BluetoothService.isBluetoothSupported()) {
 
@@ -214,7 +226,7 @@ public class BTMeasureResultReceiver extends ResultReceiver {
         return BluetoothService.isDeviceSelected();
     }
 
-    private void triggerBluetoothMeasure(Constants.Measures aMeasure, Constants.Measures[] otherMeasuresWelcome) {
+    private void triggerBluetoothMeasure(Measures aMeasure, Measures[] otherMeasuresWelcome) {
         // register listeners & send command
         BluetoothService.sendReadMeasureCommand(this, aMeasure, otherMeasuresWelcome);
         Log.i(Constants.LOG_TAG_UI, "Command scheduled for " + aMeasure);
@@ -248,8 +260,8 @@ public class BTMeasureResultReceiver extends ResultReceiver {
 
         Log.i(Constants.LOG_TAG_UI, "Allow scanning");
         resetMeasureExpectations();
-        awaitMeasure(Constants.Measures.distance);
-        awaitMeasures(new Constants.Measures[] {Constants.Measures.angle, Constants.Measures.slope});
+        awaitMeasure(distance);
+        awaitMeasures(new Measures[] {Measures.angle, Measures.slope});
         BluetoothService.startScanning(this);
     }
 

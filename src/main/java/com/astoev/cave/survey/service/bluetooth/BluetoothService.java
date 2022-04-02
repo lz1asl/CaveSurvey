@@ -29,6 +29,7 @@ import android.util.Log;
 import android.util.Pair;
 
 import com.astoev.cave.survey.Constants;
+import com.astoev.cave.survey.Constants.Measures;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.activity.main.BTActivity;
@@ -78,6 +79,7 @@ import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
+import java.util.stream.Collectors;
 
 /**
  * Created with IntelliJ IDEA.
@@ -166,18 +168,18 @@ public class BluetoothService {
     }
 
 
-    public static void sendReadMeasureCommand(final ResultReceiver receiver, final Constants.Measures aMeasure, final Constants.Measures[] aMeasuresWelcome) {
+    public static void sendReadMeasureCommand(final ResultReceiver receiver, final Measures aMeasure, final Measures[] aMeasuresWelcome) {
 
         // measurements requested
         expectingMeasurement = true;
         List<Constants.MeasureTypes> measureTypes = new ArrayList<>();
-        List<Constants.Measures> measureTargets = new ArrayList<>();
+        List<Measures> measureTargets = new ArrayList<>();
 
         measureTypes.add(getMeasureTypeFromTarget(aMeasure));
         measureTargets.add(aMeasure);
 
         if (aMeasuresWelcome != null) {
-            for (Constants.Measures m : aMeasuresWelcome) {
+            for (Measures m : aMeasuresWelcome) {
                 measureTypes.add(getMeasureTypeFromTarget(m));
                 measureTargets.add(m);
             }
@@ -221,7 +223,7 @@ public class BluetoothService {
                 Log.i(LOG_TAG_BT, "Request LE stop scan");
                 expectingMeasurement = true;
                 List<Constants.MeasureTypes> measureTypes = Arrays.asList(Constants.MeasureTypes.distance, Constants.MeasureTypes.angle, Constants.MeasureTypes.slope);
-                List<Constants.Measures> measureTargets = Arrays.asList(Constants.Measures.distance, Constants.Measures.angle, Constants.Measures.slope);
+                List<Measures> measureTargets = Arrays.asList(Measures.distance, Measures.angle, Measures.slope);
                 leDataCallback.awaitMeasures(measureTypes, measureTargets, receiver);
                 enqueueCommand(startScanCommand);
             } else {
@@ -249,7 +251,7 @@ public class BluetoothService {
         }
     }
 
-    public static Constants.MeasureTypes getMeasureTypeFromTarget(Constants.Measures aMeasure) {
+    public static Constants.MeasureTypes getMeasureTypeFromTarget(Measures aMeasure) {
         switch (aMeasure) {
             case distance:
             case up:
@@ -586,10 +588,10 @@ public class BluetoothService {
     static class MyBluetoothGattCallback extends BluetoothGattCallback {
 
         private List<Constants.MeasureTypes> mMeasureTypes = null;
-        private List<Constants.Measures> mTargets = null;
+        private List<Measures> mTargets = null;
         private ResultReceiver mReceiver = null;
 
-        public void awaitMeasures(List<Constants.MeasureTypes> aMeasureTypes, List<Constants.Measures> aTargets, ResultReceiver aReceiver) {
+        public void awaitMeasures(List<Constants.MeasureTypes> aMeasureTypes, List<Measures> aTargets, ResultReceiver aReceiver) {
             expectingMeasurement = true;
             // persist expected measurements
             mTargets = aTargets;
@@ -702,7 +704,7 @@ public class BluetoothService {
                             Log.i(LOG_TAG_BT, "Metadata from " + characteristic.getUuid());
 
                             Map<String, Object> meta = leDevice.characteristicToMetadata(characteristic);
-                            sendMetadataToUI(meta);
+                            sendMetadataToUI(meta, mTargets);
                         } else {
                             Log.d(LOG_TAG_BT, "Processing " + characteristic.getUuid());
                             // decode
@@ -755,13 +757,16 @@ public class BluetoothService {
             }
         }
 
-        private void sendMetadataToUI(Map<String, Object> aMeta) {
+        private void sendMetadataToUI(Map<String, Object> aMeta, List<Measures> aMeasures) {
             if (MapUtils.isNotEmpty(aMeta) && expectingMeasurement) {
+
                 // consume
                 Bundle b = new Bundle();
                 HashMap<String, Object> hashMap = new HashMap<>();
                 hashMap.putAll(aMeta);
                 b.putSerializable(Constants.MEASURE_METADATA_KEY, hashMap);
+                List<String> measureNames = aMeasures.stream().map( m -> m.toString()).collect(Collectors.toList());
+                b.putStringArray(Constants.MEASURE_TYPE_KEY, measureNames.toArray(new String[aMeasures.size()]));
                 mReceiver.send(Activity.RESULT_OK, b);
             }
         }
