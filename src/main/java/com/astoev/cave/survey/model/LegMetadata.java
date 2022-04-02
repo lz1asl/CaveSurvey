@@ -23,10 +23,20 @@ public class LegMetadata implements Serializable {
     private Leg mLeg;
 
     @DatabaseField(columnName = "key", canBeNull = false)
-    private Float mKey;
+    private String mKey;
 
     @DatabaseField(columnName = "value")
-    private Float mValue;
+    private String mValue;
+
+
+    public LegMetadata() {
+    }
+
+    public LegMetadata(Leg aLeg, String aKey, String aValue) {
+        mLeg = aLeg;
+        mKey = aKey;
+        mValue = aValue;
+    }
 
 
     public Integer getId() {
@@ -45,19 +55,24 @@ public class LegMetadata implements Serializable {
         mLeg = aLeg;
     }
 
-    public Float getKey() {
+    public String getKey() {
         return mKey;
     }
 
-    public void setKey(Float aKey) {
+    public void setKey(String aKey) {
         mKey = aKey;
     }
 
-    public Float getValue() {
+    public String getValue() {
         return mValue;
     }
 
-    public void setValue(Float aValue) {
+    public void setValue(String aValue) {
         mValue = aValue;
+    }
+
+    @Override
+    public String toString() {
+        return mKey + ': ' + mValue;
     }
 }

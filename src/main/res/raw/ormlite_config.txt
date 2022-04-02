@@ -320,7 +320,7 @@ columnName=note
 #################################
 # --table-start--
 dataClass=com.astoev.cave.survey.model.LegMetadata
-tableName=options
+tableName=leg_metadata
 # --table-fields-start--
 # --field-start--
 fieldName=mId
