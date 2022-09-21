@@ -37,6 +37,7 @@ public class LanguageDialog extends DialogFragment {
     private static final int LANG_POLISH = 5;
     private static final int LANG_SPANISH = 6;
     private static final int LANG_GERMAN = 7;
+	private static final int LANG_HUNGARIAN = 8;
 
     private SplashActivity parent;
 
@@ -89,6 +90,9 @@ public class LanguageDialog extends DialogFragment {
                 case LANG_GERMAN:
                     locale = new Locale("de", "DE");
                     break;
+				case LANG_HUNGARIAN:
+                    locale = new Locale("hu", "HU");
+                    break;	
 
                 default:
                     locale = ENGLISH;

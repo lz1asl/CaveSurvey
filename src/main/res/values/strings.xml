@@ -425,6 +425,7 @@
         <item>Polski</item>
         <item>Español</item>
         <item>Deutsch</item>
+		<item>Magyar</item>
     </string-array>
 
     <!-- auto backup -->
