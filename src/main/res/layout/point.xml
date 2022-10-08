@@ -123,7 +123,8 @@
         <FrameLayout 
             android:id="@+id/saved_location_container"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" 
+            android:layout_height="wrap_content"
+			android:layout_marginBottom="10dp"
             android:layout_below="@id/point_note_text">
         </FrameLayout>
 
