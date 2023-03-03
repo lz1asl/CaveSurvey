@@ -5,7 +5,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.1.2'
+        classpath 'com.android.tools.build:gradle:7.3.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -88,17 +88,12 @@ android {
             proguardFile 'proguard-rules.txt'
         }
     }
-
     packagingOptions {
-        exclude 'LICENSE.txt'
-        exclude 'META-INF/LICENSE.txt'
-        exclude 'META-INF/NOTICE.txt'
+        resources {
+            excludes += ['LICENSE.txt', 'META-INF/LICENSE.txt', 'META-INF/NOTICE.txt']
+        }
     }
 
-    lintOptions {
-        // if true, stop the gradle build if errors are found
-        abortOnError false
-    }
 
     testOptions {
         unitTests{
@@ -114,6 +109,9 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
     buildToolsVersion '32.0.0'
+    lint {
+        abortOnError false
+    }
 
 }
 
