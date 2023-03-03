@@ -13,12 +13,14 @@ import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.TaskStackBuilder;
 
+import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.main.BTActivity;
 import com.astoev.cave.survey.activity.map.MapUtilities;
@@ -195,7 +197,11 @@ public class UIUtilities {
 
 
     public static void showDeviceConnectedNotification(Context aContext, String aDevice) {
-        showStatusBarMessage(aContext, R.drawable.logo, BTActivity.class, aContext.getString(R.string.bt_device_connected, aDevice));
+        try {
+            showStatusBarMessage(aContext, R.drawable.logo, BTActivity.class, aContext.getString(R.string.bt_device_connected, aDevice));
+        } catch (Exception e) {
+            Log.e(Constants.LOG_TAG_UI, "Notification error", e);
+        }
     }
 
     public static void showDeviceDisconnectedNotification(Context aContext, String aDevice) {
