@@ -5,6 +5,7 @@ import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import com.astoev.cave.survey.service.ormlite.DatabaseHelper
 
 object Database {
+
     fun clearDatabase() {
         val ctx = getApplicationContext<Context>()
         ctx!!.deleteDatabase(DatabaseHelper.DATABASE_NAME)

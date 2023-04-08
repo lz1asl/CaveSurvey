@@ -33,7 +33,22 @@ object Survey {
                      distanceUnits: String? = null, azimuthUnits: String? = null, slopeUnits: String? = null) {
         // open new survey screen
         Common.click(id.action_new_project)
+
+        // enter params
+        Common.type(id.new_projectname, aName)
+        if (distanceUnits != null) {
+            selectDistanceUnits(distanceUnits)
+        }
+        if (azimuthUnits != null) {
+            selectAzimuthUnits(azimuthUnits)
+        }
+        if (slopeUnits != null) {
+            selectSlopeUnits(slopeUnits)
+        }
+
+        // import
         if (importFile != null) {
+            Common.click(id.import_toggle)
             Common.click(id.import_files)
             onData(allOf(
                 `is`(instanceOf(NewProjectActivity.ImportFile::class.java)),
@@ -48,24 +63,9 @@ object Survey {
 
         }
 
-        // enter name
-        Common.type(id.new_projectname, aName)
-        if (distanceUnits != null) {
-            selectDistanceUnits(distanceUnits)
-        }
-        if (azimuthUnits != null) {
-            selectAzimuthUnits(azimuthUnits)
-        }
-        if (slopeUnits != null) {
-            selectSlopeUnits(slopeUnits)
-        }
-
 
         // save & go back
         Common.click(id.new_action_create)
-        if (importFile == null) {
-            onView(withId(id.point_main_view)).perform(ViewActions.pressBack())
-        }
     }
 
     private fun selectSlopeUnits(aSlopeUnits: String) {
@@ -123,7 +123,6 @@ object Survey {
         Home.goHome()
         val surveyName = "" + System.currentTimeMillis()
         createSurvey(surveyName, importFile, distanceUnits, azimuthUnits, slopeUnits)
-        openSurvey(surveyName)
         return surveyName
     }
 
@@ -179,8 +178,12 @@ object Survey {
         setLegData(null, null, null, up, down, left, right)
     }
 
-    fun selectFirstSurveyLeg() {
+    fun addFirstSurveyLeg() {
         Common.click(id.main_action_add)
+    }
+
+    fun selectFirstSurveyLeg() {
+        Common.click("A0")
     }
 
     fun setLegData(length: Float?, azimuth: Float?, slope: Float?) {

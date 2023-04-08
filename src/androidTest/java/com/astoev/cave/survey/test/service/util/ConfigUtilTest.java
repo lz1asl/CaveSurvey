@@ -11,7 +11,7 @@ import com.astoev.cave.survey.util.ConfigUtil;
 
 import org.junit.Test;
 
-public abstract class ConfigUtilTest {
+public class ConfigUtilTest {
 
     @Test
     public void testConfigUtil() {
