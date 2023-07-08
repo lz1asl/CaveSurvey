@@ -7,13 +7,26 @@
               android:orientation="vertical"
               android:layout_margin="10dp">
 
-        <TextView
-            android:id="@+id/settingsLanguage"
-            android:layout_width="fill_parent"
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/home_lang"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_margin="10dp"/>
+            android:layout_margin="10dp">
+
+            <TextView
+                android:id="@+id/settingsLanguage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/home_lang"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:contentDescription="Language icon"
+                android:src="@drawable/ic_baseline_language_24" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/settingsMeasurements"

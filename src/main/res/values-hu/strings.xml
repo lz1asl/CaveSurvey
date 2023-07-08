@@ -1,0 +1,484 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- common -->
+    <string name="app_name">CaveSurvey</string>
+    <string name="button_yes">Igen</string>
+    <string name="button_no">Nem</string>
+    <string name="required">Szükséges</string>
+    <string name="invalid">Érvénytelen</string>
+    <string name="success">Sikeres</string>
+    <string name="any">Akármelyik</string>
+    <string name="ok">OK</string>
+    <string name="retry">Újrapróbálás</string>
+
+    <string name="sk_paldin">Paldin</string>
+
+    <!-- welcome screen -->
+    <string name="home_no_projects">Felmérés létrehozása</string>
+    <string name="home_new_project">Új felmérés</string>
+    <string name="home_button_new_exists">A(z) %1$s felmérés már létezik!</string>
+    <string name="home_delete_project">A(z) %1$s felmérés törlése?</string>
+    <string name="home_lang"><u>Nyelv</u></string>
+
+    <!-- new project screen -->
+    <string name="new_title">Új felmérés</string>
+    <string name="new_button_create">Létrehozás</string>
+
+    <string name="project_header">Felmérés neve</string>
+    <string name="project_name">Név</string>
+    <string name="project_name_required">Írd be a nevet</string>
+    <string name="project_name_characters">Helytelen karaktereket tartalmaz</string>
+    <string name="project_import">Adatok importálása</string>
+    <string name="import_success">Importálás sikeres</string>
+
+
+
+    <!-- survey screen -->
+    <string name="main_leg">Új mérési pont</string>
+    <string name="main_button_change">Kiválasztás</string>
+    <string name="main_button_change_title">Mérési pont kiválasztása</string>
+    <string name="main_button_add">Hozzáad</string>
+    <string name="main_button_data">Adat</string>
+    <string name="main_button_about">Névjegy</string>
+    <string name="main_button_settings">Beállítások</string>
+    <string name="main_button_map">Térkép</string>
+
+    <string name="map_plan">Alaprajz</string>
+    <string name="map_section">Hossz-szelvény</string>
+
+    <string name="main_table_header_from">Innen</string>
+    <string name="main_table_header_to">Ide</string>
+<!--     
+    <string name="main_table_header_distance_from_start">From start</string>
+ -->    
+    <string name="main_table_header_more">Extrák</string>
+    <string name="main_table_header_note">Jegyzet</string>
+    <string name="main_table_header_drawing">Rajz</string>
+<!--     
+    <string name="main_table_header_gps">GPS</string>
+ -->    
+    <string name="main_table_header_photo">Fénykép</string>
+    
+    <string name="leg">Mérési pont</string>
+    <string name="left">Bal</string>
+    <string name="right">Jobb</string>
+    <string name="up">Fent</string>
+    <string name="down">Lent</string>
+    <string name="distance">Hosszúság</string>
+    <string name="azimuth">Irány</string>
+    <string name="slope">Dőlésszög</string>
+
+    <string name="point_photos_header">Fényképek</string>
+    <string name="point_photo_label">%1$s Fénykép </string>
+
+    <string name="point_sketches_header">Vázlat</string>
+    <string name="point_sketch_label">%1$s Vázlat</string>
+
+    <string name="point_vectors_header">Vektorok</string>
+    <string name="point_vectors_counter">Vektor #</string>
+    <string name="point_vectors_delete">%1$s Vektor törlése?</string>
+    <string name="point_swipe_not_possible">Járat határa elérve</string>
+
+    <string name="slope_column">Dőlésmérő:</string>
+    
+    <string name="sensor">Érzékelő</string>
+    <string name="accuracy">Pontosság</string>
+    <string name="value">Érték</string>
+
+    <!-- add popup -->
+    <string name="main_add_title">Hozzáadás</string>
+    <string name="main_add_leg">Következő mérési pont</string>
+    <string name="main_add_gallery">Új járat</string>
+    <string name="main_add_middlepoint">Köztes pont</string>
+    <string name="main_add_note">Jegyzet</string>
+    <string name="main_add_sketch">Rajz</string>
+    <string name="main_add_photo">Fénykép</string>
+    <string name="main_add_gps">GPS</string>
+    <string name="main_add_vector">Vektor hozzáadása</string>
+    <string name="main_reverse">Megfordítani</string>
+    <string name="main_reverse_message">A %1$s mérési pont iránya és dőlése meg lesz fordítva!</string>
+    <string name="table_sketch_prefix">R</string>
+    <string name="table_note_prefix">J</string>
+    <string name="table_photo_prefix">F</string>
+    <string name="table_location_prefix">L</string>
+    <string name="table_vector_prefix">V</string>
+
+    <string name="gallery_after_first_point">Nem elérhető az első mérésnél</string>
+
+    <!-- survey menu -->
+<!--     
+    <string name="menu_help">Help</string>
+ -->    
+    <string name="menu_exit">Kilépés</string>
+
+    <string name="menu_exit_confirmation_question">Mérés befejezése?</string>
+
+    <!-- point -->
+    <string name="point_save">Mentés</string>
+    <string name="point_delete">Törlés</string>
+<!--     
+    <string name="point_read">Read</string>
+ -->
+ 
+    <!-- note screen -->
+    <string name="note_title">Jegyzet</string>
+    <string name="note_save">Mentés</string>
+    <string name="note_saved">Mentve</string>
+
+    <!--vector screen -->
+    <string name="vectors_title">Vektor</string>
+    <string name="vector_button_add_again">Mentés + Új</string>
+
+    
+
+    <string name="sketch_pick_color">Válassz színt</string>
+    <string name="sketch_pick_size">Válassz méretet</string>
+    <string name="sketch_pick_style">Válassz stílust</string>
+    <string name="sketch_pick_style_thick">Vonal</string>
+    <string name="sketch_pick_style_fill">Kitöltés</string>
+    <string name="sketch_pick_style_dash">Szaggatott</string>
+    <string name="sketch_saved">Mentve</string>
+    
+    <string name="sketch_undo">Vissza</string>
+    <string name="sketch_redo">Újra</string>
+    <string name="sketch_save">Mentés</string>
+    <string name="sketch_colorpicker">Színválasztó</string>
+    <string name="sketch_style">Stílus</string>
+    <string name="sketch_size">Méret</string>
+    
+    
+    <string name="map_edit">Szerkesztés</string>
+
+    <!-- info screen -->
+    <string name="update_project">Frissítés</string>
+    <string name="message_project_udpated">Projekt frissítve</string>
+    <string name="statistics">Statisztikák</string>
+    <string name="info_created">Létrehozva</string>
+    <string name="info_galleries"># járatok</string>
+    <string name="info_legs"># mérési pontok</string>
+    <string name="info_total_distance">Nyers hossz</string>
+    <string name="info_chooser_open_folder">Mappa megnyitása</string>
+
+    <string name="info_num_notes"># jegyzetek</string>
+    <string name="info_num_drawings"># rajzok</string>
+    <string name="info_num_coordinates"># koordináták</string>
+    <string name="info_num_photos"># fényképek</string>
+    <string name="info_num_vectors"># vektorok</string>
+
+
+    <string name="export_xls">Exportálás Excel-be (xls)</string>
+    <string name="export_vtopo">Exportálás VisualTopo-ba (tro)</string>
+    <string name="export_view_files">Adatfájlok</string>
+    <string name="export_cavear">Exportálás CaveAR-ba (csv)</string>
+    <string name="export_share">Megosztás</string>
+    <string name="export_cavear_missing">A CaveAR nincs telepítve</string>
+    <string name="export_done">%1$s exportálva</string>
+    <string name="export_io_error">Nem sikerült írni az SD kártyára</string>
+    <string name="io_error">Nem elérhető az SD kártya</string>
+
+    <string name="share_title">Mérési adatok mappája</string>
+    <array name="share_type">
+        <item>Adat</item>
+        <item>Minden</item>
+    </array>
+    
+    <!-- options -->
+    <string name="measures_title">Adatok bevitele</string>
+    <string name="data_input_units">Típus</string>
+    <string name="data_input_source">Forrás</string>
+<!-- 
+    <string-array name="options_modes">
+        <item>Manual enter</item>
+        <item>Build-in sensors</item>
+        <item>Bluetooth sensors</item>
+    </string-array>
+ -->
+ 
+    <string name="options_units_distance">Távolság:</string>
+    <string-array name="distance_units">
+        <item>Méter</item>
+        <item>Láb</item>
+    </string-array>
+    <string-array name="distance_read_type">
+        <item>Kézi bevitel</item>
+        <item>Bluetooth egység</item>
+    </string-array>
+
+    <string name="options_units_azimuth">Irány:</string>
+    <string-array name="azimuth_units">
+        <item>Fok</item>
+        <item>Gradián</item>
+    </string-array>
+
+    <string-array name="azimuth_read_type_manually">
+        <item>Kézi bevitel</item>
+        <item>Bluetooth egység</item>
+    </string-array>
+    
+    <string-array name="azimuth_read_type_all">
+        <item>Kézi bevitel</item>
+        <item>Beépített érzékelő</item>
+        <item>Bluetooth egység</item>
+    </string-array>
+
+    <string name="options_units_slope">Dőlésszög:</string>
+    <string-array name="slope_units">
+        <item>Fok</item>
+        <item>Gradián</item>
+    </string-array>
+
+    <string-array name="slope_read_type">
+        <item>Kézi bevitel</item>
+        <item>Bluetooth egység</item>
+    </string-array>
+    
+    <string-array name="slope_read_type_all">
+        <item>Kézi bevitel</item>
+        <item>Bluetooth egység</item>
+        <item>Beépített érzékelő</item>
+    </string-array>
+
+    <string-array name="latitude_types">
+        <item>É</item>
+        <item>D</item>
+    </string-array>
+    <string-array name="longitude_types">
+        <item>K</item>
+        <item>NY</item>
+    </string-array>
+
+
+    <!-- about screen -->
+    <string name="about_title">A CaveSurvey programról</string>
+    <string name="about_user_guide">Súgó &amp; Használati utasítás</string>
+    <string name="about_paldin">http://sk-paldin.eu</string>
+    <string name="about_help">https://github.com/lz1asl/CaveSurvey/wiki/User-Guide</string>
+
+
+    <!-- info -->
+    <string name="info_distance_in">Távolság</string>
+    <string name="info_azimuth_in">Irány</string>
+    <string name="info_slope_in">Dőlésszög</string>
+    <string name="info_azimuth_build_in_sensor">A Beépített érzékelő konfigurálva</string>
+    
+    <string name="sensor_none">-</string>
+    <string name="rotation_sensor">Forgásérzékelő</string>
+    <string name="magnetic_sensor">Magnetométer/Gyorsulásmérő</string>
+    <string name="orientation_sensor">Tájoló</string>
+
+
+    <!-- popup -->
+    <string name="middle_leg_add">Köztes pont hozzáadása</string>
+    <string name="middle_leg_info">Mérési pont: %1$s</string>
+    <string name="middle_leg_distance">távolságra a %1$s %2$s</string>
+    <string name="middle_split_at">Pont</string>
+    <string name="middle_create">Létrehoz</string>
+    <string name="middle_bad_value">Hibás érték</string>
+    <string name="middle_leg_shorter">Túl kevés</string>
+    <string name="middle_leg_bigger">Túl sok</string>
+    <string name="middle_no_value">Távolság hiányzik</string>
+
+    <string name="error">Hiba</string>
+    <string name="error_no_space">Nincs elég hely a készüléken</string>
+    <string name="busy">Kérlek várj&#8230;</string>
+
+    <string name="todo">TODO</string>
+
+    <string name="permission_required">Engedélyezd a CaveSurvey-t: %1$s</string>
+
+
+    <!-- bluetooth -->
+    <string name="bt_devices">Eszközök</string>
+    <string name="bt_devices_info">Párosított eszközök:</string>
+    <string name="bt_new_device">Új eszköz</string>
+    <string name="bt_paired">Párosítva</string>
+    <string name="bt_connected">Csatlakozás sikeres</string>
+    <string name="bt_not_paired">Nincs párosítva</string>
+    <string name="bt_pair_failed">Az eszköz nincs bekapcsolva, vagy nem kompatibilis</string>
+    <string name="bt_state_unknown">Ismeretlen állapot</string>
+    <string name="bt_state_bonded">Párosított állapot</string>
+    <string name="bt_state_bonding">Párosítási állapot</string>
+    <string name="bt_state_none">Ismeretlen állapt</string>
+    <string name="bt_state_connecting">Csatlakozás...</string>
+    <string name="bt_state_connected">Csatlakozva</string>
+    <string name="bt_not_on">A Bluetooth nincs bekapcsolva</string>
+    <string name="bt_not_selected">Az eszköz nincs kiválasztva</string>
+    <string name="bt_device_connecting">Csatlakozás: %1$s</string>
+    <string name="bt_supported_devices">Kompatibilis ezzel:</string>
+    <string name="bt_device_connected">Csatlakozva ehhez: %1$s</string>
+    <string name="bt_device_lost">Eszköz elvesztve: %1$s</string>
+    <string name="bt_devices_help"><u>Eszköz Információk</u></string>
+    <string name="bt_devices_help_url">https://github.com/lz1asl/CaveSurvey/wiki/Measurement-Devices</string>
+    <string name="bt_scan_failed">Az eszköz keresése sikertelen, indítsd újra az eszközt.</string>
+
+    <!-- device mode validation -->
+    <string name="bt_device_mode">Használd a: %1$s mérési módot</string>
+    <string name="bt_device_mode_single">single</string>
+    <string name="bt_device_mode_single_or_indirect">indirect length or single </string>
+
+    <string name="action_saved">Mentve</string>
+    <string name="action_deleted">Törölve</string>
+    
+    <string name="azimuth_column">Irány:</string>
+    <string name="accuracy_column">Pontosság:</string>
+    <string name="no_value_label">Nincs érték</string>
+    <string name="azimuth_accuracy_no_value">-1</string>
+    <string name="azimuth_orination">Tájolás:</string>
+    <string name="azimuth_magnetic">Mágneses:</string>
+    <string name="azimuth_rotation">Forgás:</string>
+    <string name="azimuth_start">Indítás</string>
+    <string name="azimuth_stop">Megszakítás</string>
+    <string name="sensors_title"><u>Beépített érzékelők</u></string>
+    <string name="sensor_test_title"><u>Érzékelők tesztelése</u></string>
+    <string name="sensor_test_header">Érzékelők tesztelése</string>
+    <string name="sensor_choose_header">Beépített érzékelő választása</string>
+    <string name="sensor_choose_timeout">Mérési idő (másodperc)</string>
+    <string name="sensor_choose_simultaneously">Érzékelők adatainak olvasása</string>
+    <string-array name="sensors_reading_types">
+        <item>Külön</item>
+        <item>Egyszerre</item>
+    </string-array>
+    <string name="sensor_noise_reduction">Beolvasott adatok átlagolása</string>
+    <string-array name="sensor_noise_reduction_types">
+        <item>Tiltva</item>
+        <item>Engedélyezve</item>
+    </string-array>
+    <string name="sensor_num_measurements">Átlagolt Mérések</string>
+    <string-array name="sensor_num_measurements">
+        <item>5</item>
+        <item>10</item>
+        <item>20</item>
+    </string-array>
+    <string name="sensor_device_heading">Irányzék</string>
+    <string-array name="sensor_device_headings">
+        <item>Rámutatás az eszközzel</item>
+<!--
+        <item>Use the camera</item>
+-->
+    </string-array>
+    <string name="no_sensors">Nincs elérhető Beépített érzékelő</string>
+    <string name="sensor_choose_tooltip">Kiválaszthatod a legmegfelelőbb Beépített érzékelőt, mely biztosítani tudja a kívánt pontosságot.</string>
+    <string name="sensor_test_tooltip">Tesztelheted a Beépített érzékelőket. Tartsd észbe, hogy ezek pontatlanok lehetnek, annak ellenére, hogy MAGAS pontosságot jeleznek.\n\n
+        Érzékelők:\n
+        * Irány – Egy program-alapú elévült érzékelő, mely meghatározza az eszköz pozicióját.\n
+        * Mágneses – Magnetométer és Gyorsulásmérő alapú érzékelő. Általában jó pontosságot biztosít, mely külön közli mindkét érzékelő pontossági értékét.\n
+        * Forgás - Egy program-alapú mozgásérzékelő, mely az eszköz giroszkópját használja (a többi érzékelő mellett) annak érdekében, hogy növelni tudja a teljesítményt és a stabilitást.\n\n
+        Pontosság:\n
+        -1 - Az érzékelők által küldött adatok hiányoznak. Hibás a mérés, vagy az érzékelő szar.\n
+        0 - Az érzékelők által küldött adatok nem megbízhatóak. Lehetséges, hogy nem megfelelő a mérési környezet, vagy kalibráció szükséges.\n
+        1 - Az érzékelők által küldött adatok alacsony pontosságot mutatnak, kalibráció szükséges.\n
+        2 - Az érzékelők által küldött adatok átlagos pontosságot mutatnak, egy esetleges kalibráció növelheti a pontosságot.\n
+        3 - Az érzékelők által küldött adatok maximális pontosságot mutatnak.</string>
+
+    <string name="SENSOR_STATUS_UNRELIABLE">MEGBÍZHATATLAN</string>
+    <string name="SENSOR_STATUS_ACCURACY_LOW">ALACSONY</string>
+    <string name="SENSOR_STATUS_ACCURACY_MEDIUM">KÖZEPES</string>
+    <string name="SENSOR_STATUS_ACCURACY_HIGH">MAGAS</string>
+    <string name="SENSOR_STATUS_ACCURACY_UNKNOWN">ISMERETLEN</string>
+    
+    <string name="degrees">\u00B0</string>
+    <string name="grads">grads</string>
+<!--     
+    <string name="meters">m</string>
+ -->
+<!--  
+    <string name="lat_lon_template">%f\u00B0%s</string>
+ -->     
+    <string name="gps_title">GPS Pozíció</string>
+    <string name="gps_altitude">Magasság (m)</string>
+    <string name="gps_latitude">Szélesség</string>
+    <string name="gps_longitude">Hosszúság</string>
+    <string name="gps_accuracy">Pontosság (m)</string>
+    <string name="gps_no_value">Nincs érték</string>
+    <string name="gps_no_value_format">dd.dddddd</string>
+    <string name="gps_save">Mentés</string>
+    <string name="gps_disabled">GPS Kikapcsolva</string>
+    <string name="gps_no_signal">GPS Koordináták keresése ....</string>
+    <string name="gps_saved_location">Mentett pozíció</string>
+    <string name="gps_current_location">Jelenlegi pozíció</string>
+    
+    <string name="gps_error_no_location">Nincs GPS pozíció!</string>
+    <string name="gps_db_error">Nem lehet menteni a GPS pozíciót!</string>
+    
+    <string name="gps_enable_question">A GPS ki van kapcsolva! Be szeretnéd kapcsolni a Beállítások oldalon?</string>
+
+    <string name="gps_type_title">GPS adatok bevitele</string>
+    <string name="gps_type_auto">Automatikus bevitel</string>
+    <string name="gps_type_manual">Kézi bevitel</string>
+
+    <string name="unit_meters">méter</string>
+    <string name="unit_feets">láb</string>
+    <string name="unit_degrees">fok</string>
+    <string name="unit_grads">gradián</string>
+
+    <string name="title_warning">Figyelmeztetés</string>
+    <string name="error_list_legs">Nem lehet létrehozni a mérési pontok listáját</string>
+
+    <string name="lang_title">Nyelv kiválasztása</string>
+    <string-array name="lang_array">
+        <item>English</item>
+        <item>Български</item>
+        <item>简体中文</item>
+        <item>Русский</item>
+        <item>Ελληνικά</item>
+        <item>Polski</item>
+        <item>Español</item>
+        <item>Deutsch</item>
+		<item>Magyar</item>
+    </string-array>
+
+    <!-- auto backup -->
+    <string name="settings_auto_backup">Automatikus biztonsági mentés</string>
+    <string name="settings_auto_backup_info">Exportálja 5 percenként az SD kártyára az aktív projektet</string>
+    <string name="settings_import_title">Importálás (kísérleti)</string>
+    <string name="settings_import_source">Importálás innen:</string>
+    <string name="settings_import_error">Importálás sikertelen a következő sorban %1$d: %2$s:%3$s</string>
+    <string name="settings_import_target_name">Létrehozás mint:</string>
+    <string name="settings_import_no_files">Nem találhatók az exportált mérések</string>
+    <string name="settings_import_info">Mérések létrehozása egy létező fájlból.\nHasználj olyan exportált mérést mely a v1.27 után készült.\nA fényképek és rajzok figyelmen kívül lesznek hagyva.</string>
+    <string name="settings_vectors"><u>Vektorok</u></string>
+    <string name="settings_measurements"><u>Mérések</u></string>
+
+    <!-- vectors -->
+    <string name="settings_vectors_mode">Vektor olvasási mód</string>
+    <string-array name="settings_vectors_modes">
+        <item>Egyszeri</item>
+        <item>Mentés fogadáskor</item>
+        <item>Keresés</item>
+    </string-array>
+
+    <!-- leg measurements -->
+    <string name="measurements_title">Mérések</string>
+    <string name="measurements_use_backshots">Visszamérés</string>
+    <string name="measurements_export">Exportálás:</string>
+    <string-array name="measurements_export_types">
+        <item>Eredeti értékek</item>
+        <item>Átlagolt értékek</item>
+    </string-array>
+    <string name="measurements_error">Hibatűrés</string>
+    <string name="measurements_adjustment">Finomhangolás</string>
+    <string name="measurements_adjust_length">A Bluetooth érzékelő által mért értékek finomhangolása (méter)</string>
+    <string name="measurements_adjustment_warning">A Bluetooth érzékelő által mért értékek korrekciója %1$sm</string>
+    <string name="measurements_length_boundaries">Length boundaries</string>
+    <string name="measurements_error_handling">Hibakezelés</string>
+
+
+    <!--opens topo -->
+    <string name="export_openstopo_title">OpenTopo</string>
+    <string name="information">Információk</string>
+    <string name="info_project_home">Projekt mappa</string>
+
+    <!-- splash -->
+    <string name="splash_loading">Elkészülés ...</string>
+    <string name="splash_error">Sikertelen: %1$s</string>
+    <string name="splash_error_database">A belső adatbázis nem elérhető!</string>
+    <string name="splash_error_storage">A tárolóhely nem elérhető!</string>
+    <string name="splash_internal_storage_warning">A külső tárolóhely nem elérhető, a fájlkezelő nem fér hozzá a projekt fájlokhoz!</string>
+    <string name="splash_internal_storage_anyway">Használd mindenképp a belső tárolóhelyet</string>
+    <string name="splash_storage_warning_title">Új tárolóhely engedélyek</string>
+    <string name="splash_storage_warning_text">Válaszd ki a CaveSurvey munkakönyvtárat.</string>
+    <string name="splash_storage_warning_details"><u>Részletek</u></string>
+
+
+</resources>
