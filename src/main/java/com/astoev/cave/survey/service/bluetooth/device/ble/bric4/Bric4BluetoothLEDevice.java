@@ -36,6 +36,8 @@ public class Bric4BluetoothLEDevice extends AbstractBluetoothLEDevice {
     public static final UUID MEASUREMENT_ERRORS_CHARACTERISTIC_UUID = UUID.fromString("000058d3-0000-1000-8000-00805f9b34fb");
     private static final UUID DEVICE_CONTROL_SERVICE_UUID = UUID.fromString("000058e0-0000-1000-8000-00805f9b34fb");
     private static final UUID DEVICE_COMMAND_CHARACTERISTIC_UUID = UUID.fromString("000058e1-0000-1000-8000-00805f9b34fb");
+    private static final UUID BATTERY_CHARACTERISTIC_UUID = UUID.fromString("000058e1-0000-1000-8000-00805f9b34fb");
+
     private static final byte[] COMMAND_SHOT = "shot".getBytes();
     private static final byte[] COMMAND_SCAN = "scan".getBytes();
 

@@ -678,6 +678,7 @@ public class BluetoothService {
 
                 stopDiscoverBluetoothLEDevices();
                 updateLeDeviceState(R.string.bt_state_connected);
+                configureLeDevice();
             } else {
                 Log.i(LOG_TAG_BT, "Got services error, retry in a while");
                 try {
@@ -686,6 +687,12 @@ public class BluetoothService {
                     Log.e(LOG_TAG_BT, "Interrupted: ", e);
                 }
                 gatt.discoverServices();
+            }
+        }
+
+        private void configureLeDevice() {
+            if (mSelectedDeviceSpec instanceof AbstractBluetoothLEDevice) {
+                ((AbstractBluetoothLEDevice) mSelectedDeviceSpec).configure();
             }
         }
 

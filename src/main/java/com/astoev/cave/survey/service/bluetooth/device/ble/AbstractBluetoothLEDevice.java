@@ -59,17 +59,6 @@ public abstract class AbstractBluetoothLEDevice extends AbstractBluetoothDevice 
     }
 
     private Float asFloat(byte[] buff, ByteOrder anOrder) {
-      /*  // log the bytes
-        if (buff != null) {
-            String description = "[";
-            for (int i = 0; i < buff.length; i++) {
-                description += ", " + buff[i];
-            }
-            description += "]";
-            Log.d(Constants.LOG_TAG_BT, description);
-        }*/
-
-
         ByteBuffer buffer = ByteBuffer.wrap(buff);
         if (anOrder != null) {
             buffer.order(anOrder);
@@ -96,4 +85,9 @@ public abstract class AbstractBluetoothLEDevice extends AbstractBluetoothDevice 
     }
 
     public AbstractBluetoothCommand getStopScanCommand() { return null; };
+
+    public void configure() {
+        // called once after successful connection
+        // does nothing by default
+    }
 }
