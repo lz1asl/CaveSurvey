@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Created by astoev on 7/19/15.
  */
-public class DistoXProtocolTestComm extends AbstractCommDeviceProtocolTest {
+public class DistoXProtocolCommTest extends AbstractCommDeviceProtocolTest {
 
     @Test
     public void testDataPacket() {
