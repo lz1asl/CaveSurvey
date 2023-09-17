@@ -16,6 +16,7 @@ import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.exception.DataException;
+import com.astoev.cave.survey.service.bluetooth.device.DiscoveredBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.comm.AbstractBluetoothRFCOMMDevice;
 import com.astoev.cave.survey.util.ByteUtils;
 import com.astoev.cave.survey.util.ConfigUtil;
@@ -54,9 +55,10 @@ public class CommDeviceCommunicationThread extends Thread {
 
 
     // used to talk to comm devices
-    public CommDeviceCommunicationThread(BluetoothDevice aDevice, AbstractBluetoothRFCOMMDevice aDeviceSpec) {
-        mDevice = aDevice;
-        mDeviceSpec = aDeviceSpec;
+    public CommDeviceCommunicationThread(DiscoveredBluetoothDevice device) {
+
+        mDevice = device.device;
+        mDeviceSpec = (AbstractBluetoothRFCOMMDevice) device.definition;
 
         registerListeners(ConfigUtil.getContext());
     }
@@ -86,7 +88,7 @@ public class CommDeviceCommunicationThread extends Thread {
                 Log.i(Constants.LOG_TAG_BT, "Paired with " + device.getName());
                 mPaired = true;
                 mDevice = device;
-                mDeviceSpec = (AbstractBluetoothRFCOMMDevice) BluetoothService.getSupportedDevice(device);
+                mDeviceSpec = (AbstractBluetoothRFCOMMDevice) BluetoothService.getSupportedDevice(device, null);
 
                 TextView status = ConfigUtil.getContext().findViewById(R.id.bt_status);
                 status.setText(BluetoothService.getCurrDeviceStatusLabel(ConfigUtil.getContext()));

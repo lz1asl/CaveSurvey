@@ -20,13 +20,14 @@ import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
 import android.bluetooth.le.ScanCallback;
+import android.bluetooth.le.ScanRecord;
 import android.bluetooth.le.ScanResult;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.ParcelUuid;
 import android.os.ResultReceiver;
 import android.util.Log;
-import android.util.Pair;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
@@ -35,6 +36,7 @@ import com.astoev.cave.survey.activity.main.BTActivity;
 import com.astoev.cave.survey.activity.main.Refresheable;
 import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.device.AbstractBluetoothDevice;
+import com.astoev.cave.survey.service.bluetooth.device.DiscoveredBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.ble.AbstractBluetoothLEDevice;
 import com.astoev.cave.survey.service.bluetooth.device.ble.Bric4BluetoothLEDevice;
 import com.astoev.cave.survey.service.bluetooth.device.ble.DistoXBleDevice;
@@ -121,8 +123,7 @@ public class BluetoothService {
     }
 
     // generic
-    private static BluetoothDevice mSelectedDevice = null;
-    private static AbstractBluetoothDevice mSelectedDeviceSpec = null;
+    private static DiscoveredBluetoothDevice mSelectedDevice = null;
     private static Activity mCurrContext = null;
 
     // COMM specific
@@ -132,7 +133,7 @@ public class BluetoothService {
     private static BluetoothAdapter.LeScanCallback leCallback = null; // older LE callback
     private static ScanCallback leCallbackLollipop = null; // newer LE callback
     private static BluetoothGatt mBluetoothGatt = null;
-    private static BluetoothDevice mLastLEDevice = null;
+    private static DiscoveredBluetoothDevice mLastLEDevice = null;
     private static MyBluetoothGattCallback leDataCallback = null;
     private static int mLeDeviceState = R.string.bt_state_none;
 
@@ -193,8 +194,8 @@ public class BluetoothService {
             Log.i(LOG_TAG_BT, "Request LE read " + aMeasure);
             leDataCallback.awaitMeasures(measureTypes, measureTargets, receiver);
 
-            AbstractBluetoothLEDevice leDevice = (AbstractBluetoothLEDevice) mSelectedDeviceSpec;
-            if (leDevice.needCharacteristicPull() && SDK_INT >= JELLY_BEAN_MR2) {
+            AbstractBluetoothLEDevice leDevice = (AbstractBluetoothLEDevice) mSelectedDevice.definition;
+            if (SDK_INT >= JELLY_BEAN_MR2 && leDevice.needCharacteristicPull()) {
                 Log.i(LOG_TAG_BT, "Request LE pull");
                 // device specific
                 Constants.MeasureTypes type = getMeasureTypeFromTarget(aMeasure);
@@ -215,7 +216,7 @@ public class BluetoothService {
     public static void startScanning(BTMeasureResultReceiver receiver) {
 
         if (mBluetoothGatt != null) {
-            AbstractBluetoothLEDevice leDevice = (AbstractBluetoothLEDevice) mSelectedDeviceSpec;
+            AbstractBluetoothLEDevice leDevice = (AbstractBluetoothLEDevice) mSelectedDevice.definition;
             AbstractBluetoothCommand startScanCommand = leDevice.getStartScanCommand();
             if (startScanCommand != null) {
                 Log.i(LOG_TAG_BT, "Request LE stop scan");
@@ -236,7 +237,7 @@ public class BluetoothService {
         expectingMeasurement = false;
 
         if (mBluetoothGatt != null) {
-            AbstractBluetoothLEDevice leDevice = (AbstractBluetoothLEDevice) mSelectedDeviceSpec;
+            AbstractBluetoothLEDevice leDevice = (AbstractBluetoothLEDevice) mSelectedDevice.definition;
             AbstractBluetoothCommand stopScanCommand = leDevice.getStopScanCommand();
             if (stopScanCommand != null) {
                 Log.i(LOG_TAG_BT, "Request LE stop scan");
@@ -285,21 +286,18 @@ public class BluetoothService {
         }
     }
 
-    public static synchronized void selectDevice(final String aDeviceAddress) {
-        if (StringUtils.isEmpty(aDeviceAddress)) {
+    public static synchronized void selectDevice(final DiscoveredBluetoothDevice aDevice) {
+        if (StringUtils.isEmpty(aDevice.address)) {
             Log.i(LOG_TAG_BT, "No device selected");
             return;
         }
-        mSelectedDevice = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(aDeviceAddress);
-        mSelectedDeviceSpec = getSupportedDevice(mSelectedDevice);
-        if (mSelectedDeviceSpec == null) {
-            Log.i(LOG_TAG_BT, "No spec found");
-            return;
-        }
+        BluetoothDevice deviceRef = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(aDevice.address);
+        aDevice.device = deviceRef;
+        mSelectedDevice = aDevice;
 
-        Log.i(LOG_TAG_BT, "Selected " + aDeviceAddress + " : " + mSelectedDevice + " of type " + mSelectedDeviceSpec.getDescription());
+        Log.i(LOG_TAG_BT, "Selected " + aDevice.address + " : " + mSelectedDevice + " of type " + aDevice.definition.getDescription());
 
-        if (mSelectedDeviceSpec instanceof AbstractBluetoothRFCOMMDevice) {
+        if (aDevice.definition instanceof AbstractBluetoothRFCOMMDevice) {
             if (mCommunicationThread != null) {
                 mCommunicationThread.cancel();
                 try {
@@ -309,7 +307,7 @@ public class BluetoothService {
                 }
             }
 
-            mCommunicationThread = new CommDeviceCommunicationThread(mSelectedDevice, (AbstractBluetoothRFCOMMDevice) mSelectedDeviceSpec);
+            mCommunicationThread = new CommDeviceCommunicationThread(aDevice);
             mCommunicationThread.start();
         } else {
             // require newer android to work with LE devices
@@ -328,7 +326,7 @@ public class BluetoothService {
                 Log.i(LOG_TAG_BT, "Connecting LE");
                 // connect with remote device
                 leDataCallback = new MyBluetoothGattCallback();
-                mBluetoothGatt = mSelectedDevice.connectGatt(mCurrContext, false, leDataCallback);
+                mBluetoothGatt = deviceRef.connectGatt(mCurrContext, false, leDataCallback);
                 updateLeDeviceState(R.string.bt_state_connecting);
             } else {
                 Log.i(LOG_TAG_BT, "Unsupported version ");
@@ -341,15 +339,20 @@ public class BluetoothService {
         return mCommunicationThread != null && mCommunicationThread.ismPaired();
     }
 
-    public static AbstractBluetoothDevice getSupportedDevice(BluetoothDevice aDevice) {
-        Log.d(LOG_TAG_BT, "Search supported device for " + aDevice.getName());
-        for (AbstractBluetoothRFCOMMDevice device : SUPPORTED_BLUETOOTH_COM_DEVICES) {
-            if (device.isTypeCompatible(aDevice) && device.isNameSupported(aDevice.getName())) {
-                return device;
+    public static AbstractBluetoothDevice getSupportedDevice(BluetoothDevice aDevice, List<ParcelUuid> leServices) {
+        String name = aDevice.getName();
+        if (StringUtils.isNotEmpty(name)) {
+            Log.d(LOG_TAG_BT, "Search supported COM device for " + name);
+            for (AbstractBluetoothRFCOMMDevice device : SUPPORTED_BLUETOOTH_COM_DEVICES) {
+                if (device.isTypeCompatible(aDevice) && device.isNameSupported(name)) {
+                    return device;
+                }
             }
         }
+        Log.d(LOG_TAG_BT, "Search supported LE device for " + name + " and services " + leServices);
         for (AbstractBluetoothLEDevice device : SUPPORTED_BLUETOOTH_LE_DEVICES) {
-            if (device.isTypeCompatible(aDevice) && device.isNameSupported(aDevice.getName())) {
+            if (device.isTypeCompatible(aDevice) &&
+                    ((StringUtils.isNotEmpty(name) && device.isNameSupported(name)) || device.isServiceSupported(leServices))) {
                 return device;
             }
         }
@@ -364,21 +367,21 @@ public class BluetoothService {
     }
 
     public static boolean isSupported(BluetoothDevice aDevice) {
-        return aDevice != null && getSupportedDevice(aDevice) != null;
+        return aDevice != null && getSupportedDevice(aDevice, null) != null;
     }
 
-    public static Set<Pair<String, String>> getPairedCompatibleDevices() {
-        Set<Pair<String, String>> result = new HashSet<>();
+    public static List<DiscoveredBluetoothDevice> getPairedCompatibleDevices() {
+        List<DiscoveredBluetoothDevice> result = new ArrayList<>();
         Set<BluetoothDevice> devices = BluetoothAdapter.getDefaultAdapter().getBondedDevices();
         for (BluetoothDevice d : devices) {
-            if (isSupported(d)) {
-                result.add(new Pair<>(d.getName(), d.getAddress()));
+            AbstractBluetoothDevice deviceDefinition = getSupportedDevice(d, null);
+            if (deviceDefinition != null) {
+                result.add(new DiscoveredBluetoothDevice(deviceDefinition, d.getName(), d.getAddress()));
             }
         }
         if (mLastLEDevice != null) {
-            Pair<String, String> lastLeDevice = new Pair<>(mLastLEDevice.getName(), mLastLEDevice.getAddress());
-            if (!devices.contains(lastLeDevice)) {
-                result.add(lastLeDevice);
+            if (!devices.contains(mLastLEDevice)) {
+                result.add(mLastLEDevice);
             }
         }
         return result;
@@ -393,8 +396,8 @@ public class BluetoothService {
             return mCurrContext.getString(mLeDeviceState);
         }
 
-        if (mSelectedDeviceSpec instanceof AbstractBluetoothRFCOMMDevice) {
-            switch (mSelectedDevice.getBondState()) {
+        if (mSelectedDevice.definition instanceof AbstractBluetoothRFCOMMDevice) {
+            switch (mSelectedDevice.device.getBondState()) {
                 case BluetoothDevice.BOND_BONDED:
                     return mCurrContext.getString(R.string.bt_state_bonded);
 
@@ -436,7 +439,7 @@ public class BluetoothService {
 
     // for the current device
     public static boolean isMeasureSupported(Constants.MeasureTypes aMeasureType) {
-        return mSelectedDeviceSpec != null && mSelectedDeviceSpec.isMeasureSupported(aMeasureType);
+        return mSelectedDevice != null && mSelectedDevice.definition.isMeasureSupported(aMeasureType);
     }
 
     public static void registerListeners(BTActivity btActivity) {
@@ -483,7 +486,7 @@ public class BluetoothService {
     public static BluetoothAdapter.LeScanCallback startLEScanCallback()  {
 
         Log.i(LOG_TAG_BT, "Start discovery for Bluetooth LE devices");
-        BluetoothAdapter.LeScanCallback callback = (device, rssi, scanRecord) -> handleDeviceDiscovered(device, rssi);
+        BluetoothAdapter.LeScanCallback callback = (device, rssi, scanRecord) -> handleDeviceDiscovered(device, rssi, null);
         BluetoothAdapter.getDefaultAdapter().startLeScan(leCallback);
         return callback;
     }
@@ -495,13 +498,13 @@ public class BluetoothService {
         ScanCallback callback = new ScanCallback() {
             @Override
             public void onScanResult(int callbackType, ScanResult result) {
-                handleDeviceDiscovered(result.getDevice(), result.getRssi());
+                handleDeviceDiscovered(result.getDevice(), result.getRssi(), result.getScanRecord());
             }
 
             @Override
             public void onBatchScanResults(List<ScanResult> results) {
                 for (ScanResult result : results) {
-                    handleDeviceDiscovered(result.getDevice(), result.getRssi());
+                    handleDeviceDiscovered(result.getDevice(), result.getRssi(), result.getScanRecord());
                 }
             }
 
@@ -517,21 +520,29 @@ public class BluetoothService {
         };
 
         final BluetoothManager btManager = (BluetoothManager) ConfigUtil.getContext().getSystemService(BLUETOOTH_SERVICE);
+//        List<ScanFilter> filters = Arrays.asList(new ScanFilter.Builder().setServiceUuid(ParcelUuid.fromString(DistoXBleDevice.READ_SERVICE_UUID.toString())).build());
+//        ScanSettings settings = new ScanSettings.Builder()
+//                .setScanMode(SCAN_MODE_BALANCED).setMatchMode(MATCH_MODE_STICKY).setCallbackType(CALLBACK_TYPE_FIRST_MATCH).build();
         btManager.getAdapter().getBluetoothLeScanner().startScan(callback);
+//        btManager.getAdapter().getBluetoothLeScanner().startScan(filters, settings, callback);
         return callback;
     }
 
-    private static void handleDeviceDiscovered(BluetoothDevice device, int rssi) {
-        Log.d(LOG_TAG_BT, "Discovered: " + device.getName());
-        AbstractBluetoothDevice deviceParent = BluetoothService.getSupportedDevice(device);
+    private static void handleDeviceDiscovered(BluetoothDevice device, int rssi, ScanRecord aScanRecord) {
 
-        if (deviceParent != null && deviceParent instanceof AbstractBluetoothLEDevice) {
-            Log.i(LOG_TAG_BT, "Discovered LE device " + rssi + " : " + device.getName());
+        String name = device.getName();
 
-            mLastLEDevice = device;
+        Log.d(LOG_TAG_BT, "Discovered: " + name + " : " + device.getAddress());
+        AbstractBluetoothDevice deviceSpec = BluetoothService.getSupportedDevice(device, aScanRecord.getServiceUuids());
+
+        if (deviceSpec != null && deviceSpec instanceof AbstractBluetoothLEDevice) {
+            Log.i(LOG_TAG_BT, "Discovered LE device " + rssi + " : " + name);
+
+            mLastLEDevice = new DiscoveredBluetoothDevice(deviceSpec, name, device.getAddress());
+            mLastLEDevice.device = device;
             ((Refresheable) mCurrContext).refresh();
         } else {
-            Log.i(LOG_TAG_BT, "Discovered unsupported LE device " + rssi + " : " + device.getName());
+            Log.i(LOG_TAG_BT, "Discovered unsupported LE device " + rssi + " : " + name);
         }
     }
 
@@ -616,7 +627,7 @@ public class BluetoothService {
                 updateLeDeviceState(R.string.bt_state_connecting);
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 Log.i(LOG_TAG_BT, "LE device disconnected");
-                UIUtilities.showDeviceDisconnectedNotification(ConfigUtil.getContext(), mSelectedDeviceSpec.getDescription());
+                UIUtilities.showDeviceDisconnectedNotification(ConfigUtil.getContext(), mSelectedDevice.definition.getDescription());
 
                 updateLeDeviceState(R.string.bt_state_none);
 //                if (mBluetoothGatt != null) {
@@ -630,10 +641,10 @@ public class BluetoothService {
             if (status == GATT_SUCCESS) {
                 // notify connected
                 Log.i(LOG_TAG_BT, "Got services");
-                UIUtilities.showDeviceConnectedNotification(ConfigUtil.getContext(), mSelectedDeviceSpec.getDescription());
+                UIUtilities.showDeviceConnectedNotification(ConfigUtil.getContext(), mSelectedDevice.definition.getDescription());
 
                 // instruct characteristics to notify on change
-                AbstractBluetoothLEDevice leDevice = (AbstractBluetoothLEDevice) mSelectedDeviceSpec;
+                AbstractBluetoothLEDevice leDevice = (AbstractBluetoothLEDevice) mSelectedDevice.definition;
                 for (BluetoothGattService service : mBluetoothGatt.getServices()) {
                     Log.d(LOG_TAG_BT, "Service " + service.getUuid().toString() + " " + service.getType());
 
@@ -695,7 +706,7 @@ public class BluetoothService {
             try {
                 if (mReceiver != null) {
 
-                    AbstractBluetoothLEDevice leDevice = (AbstractBluetoothLEDevice) mSelectedDeviceSpec;
+                    AbstractBluetoothLEDevice leDevice = (AbstractBluetoothLEDevice) mSelectedDevice.definition;
                     if (leDevice.getCharacteristics().contains(characteristic.getUuid())) {
 
                         Log.d(LOG_TAG_BT, "processing " + characteristic.getUuid());
@@ -749,4 +760,6 @@ public class BluetoothService {
         }
 
     }
+
 }
+

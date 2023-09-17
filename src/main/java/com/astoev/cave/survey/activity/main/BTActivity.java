@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.Pair;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -23,13 +22,11 @@ import com.astoev.cave.survey.activity.MainMenuActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.service.bluetooth.BluetoothService;
 import com.astoev.cave.survey.service.bluetooth.device.AbstractBluetoothDevice;
+import com.astoev.cave.survey.service.bluetooth.device.DiscoveredBluetoothDevice;
 import com.astoev.cave.survey.util.ConfigUtil;
-import com.astoev.cave.survey.util.StringUtils;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -40,7 +37,7 @@ import java.util.Set;
  */
 public class BTActivity extends MainMenuActivity implements Refresheable {
 
-    Set<Pair<String, String>> devices = new HashSet<>();
+    List<DiscoveredBluetoothDevice> devices = new ArrayList<>();
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,7 +104,7 @@ public class BTActivity extends MainMenuActivity implements Refresheable {
 
             for (AbstractBluetoothDevice device : BluetoothService.getSupportedDevices()) {
                 TextView deviceLabel = new TextView(getApplicationContext());
-                deviceLabel.setText("\t\u2022 " + device.getDescription());
+                deviceLabel.setText(String.format("\t\u2022 %s", device.getDescription()));
                 deviceLabel.setTextColor(Color.WHITE);
                 devicesList.addView(deviceLabel);
             }
@@ -146,22 +143,14 @@ public class BTActivity extends MainMenuActivity implements Refresheable {
     private void refreshDevicesList() {
 
         devices = BluetoothService.getPairedCompatibleDevices();
-
-        String selectedDeviceName = null;
         String selectedBtDeviceAddress = ConfigUtil.getStringProperty(ConfigUtil.PROP_CURR_BT_DEVICE_ADDRESS);
-        if (StringUtils.isNotEmpty(selectedBtDeviceAddress)) {
-            String selectedBtDeviceName = ConfigUtil.getStringProperty(ConfigUtil.PROP_CURR_BT_DEVICE_NAME);
-            selectedDeviceName = buildDeviceName(new Pair<>(selectedBtDeviceName, selectedBtDeviceAddress));
-        }
 
         List<String> devicesList = new ArrayList<>();
         int index = 0;
         int selectedDeviceIndex = -1;
-        String tempName;
-        for (final Pair<String, String> device : devices) {
-            tempName = buildDeviceName(device);
-            devicesList.add(tempName);
-            if (tempName.equals(selectedDeviceName)) {
+        for (final DiscoveredBluetoothDevice device : devices) {
+            devicesList.add(device.getDisplayName());
+            if (device.address.equals(selectedBtDeviceAddress)) {
                 selectedDeviceIndex = index;
             }
             index++;
@@ -190,22 +179,19 @@ public class BTActivity extends MainMenuActivity implements Refresheable {
         startActivity(intentOpenBluetoothSettings);
     }
 
-    private String buildDeviceName(Pair<String, String> aDevice) {
-        return aDevice.first + " : " + aDevice.second;
-    }
-
     public void selectDevice() {
         // get selected
         Spinner devicesChooser = findViewById(R.id.bt_devices);
-        Pair<String, String> device = new ArrayList<>(devices).get(devicesChooser.getSelectedItemPosition());
-        Log.i(LOG_TAG_UI, "Try to use " + device.first + ":" + device.second);
+        DiscoveredBluetoothDevice device = devices.get(devicesChooser.getSelectedItemPosition());
+        Log.i(LOG_TAG_UI, "Try to use " + device.getDisplayName());
 
-        UIUtilities.showNotification(R.string.bt_device_connecting, device.first);
+        UIUtilities.showNotification(R.string.bt_device_connecting, device.getDisplayName());
 
         // store & propagate
-        ConfigUtil.setStringProperty(ConfigUtil.PROP_CURR_BT_DEVICE_NAME, device.first);
-        ConfigUtil.setStringProperty(ConfigUtil.PROP_CURR_BT_DEVICE_ADDRESS, device.second);
-        BluetoothService.selectDevice(device.second);
+        ConfigUtil.setStringProperty(ConfigUtil.PROP_CURR_BT_DEVICE_NAME, device.name);
+        ConfigUtil.setStringProperty(ConfigUtil.PROP_CURR_BT_DEVICE_ADDRESS, device.address);
+        ConfigUtil.setStringProperty(ConfigUtil.PROP_CURR_BT_DEVICE_DEFINITION, device.definition.getClass().getName());
+        BluetoothService.selectDevice(device);
     }
 
     /**

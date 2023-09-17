@@ -1,9 +1,12 @@
 package com.astoev.cave.survey.service.bluetooth.device.ble;
 
+import static android.bluetooth.BluetoothDevice.DEVICE_TYPE_LE;
+
 import android.annotation.TargetApi;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
 import android.os.Build;
+import android.os.ParcelUuid;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.exception.DataException;
@@ -11,12 +14,12 @@ import com.astoev.cave.survey.service.bluetooth.Measure;
 import com.astoev.cave.survey.service.bluetooth.device.AbstractBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.lecommands.AbstractBluetoothCommand;
 
+import org.apache.commons.collections4.CollectionUtils;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.List;
 import java.util.UUID;
-
-import static android.bluetooth.BluetoothDevice.DEVICE_TYPE_LE;
 
 /**
  * Bluetooth device using Bluetooth 4 LTE communication.
@@ -26,7 +29,7 @@ public abstract class AbstractBluetoothLEDevice extends AbstractBluetoothDevice 
 
     // abstract methods to define the LE device
 
-    public abstract List<UUID> getServices() ;
+    public abstract List<UUID> getServices();
     public abstract List<UUID> getCharacteristics();
     public abstract List<UUID> getDescriptors();
     public abstract UUID getService(Constants.MeasureTypes aMeasureType);
@@ -93,4 +96,17 @@ public abstract class AbstractBluetoothLEDevice extends AbstractBluetoothDevice 
     }
 
     public AbstractBluetoothCommand getStopScanCommand() { return null; };
+
+    public boolean isServiceSupported(List<ParcelUuid> aLeServics) {
+        if (CollectionUtils.isNotEmpty(aLeServics)) {
+            for (ParcelUuid uuid : aLeServics) {
+                for (UUID service : getServices()) {
+                    if (service.equals(uuid.getUuid())) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
 }
