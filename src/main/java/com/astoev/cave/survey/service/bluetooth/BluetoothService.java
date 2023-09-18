@@ -146,6 +146,8 @@ public class BluetoothService {
     // compile time switch to allow processing of all device characteristics
     private static final boolean DEVELOPMENT_MODE = false;
 
+    private static Set<String> mIgnoredDevices = new HashSet<>();
+
     public static boolean isBluetoothSupported() {
         return mCurrContext != null
                 && (mCurrContext.getSystemService(BLUETOOTH_SERVICE) != null || BluetoothAdapter.getDefaultAdapter() != null);
@@ -449,6 +451,7 @@ public class BluetoothService {
         if (mCommunicationThread != null) {
             mCommunicationThread.registerListeners(btActivity);
         }
+        mIgnoredDevices.clear();
     }
 
     public static void unregisterListeners(BTActivity btActivity) {
@@ -529,18 +532,21 @@ public class BluetoothService {
     private static void handleDeviceDiscovered(BluetoothDevice device, int rssi, ScanRecord aScanRecord) {
 
         String name = device.getName();
+        if (!mIgnoredDevices.contains(device.getAddress())) {
 
-        Log.d(LOG_TAG_BT, "Discovered: " + name + " : " + device.getAddress());
-        AbstractBluetoothDevice deviceSpec = BluetoothService.getSupportedDevice(device, aScanRecord.getServiceUuids());
+            Log.d(LOG_TAG_BT, "Discovered: " + name + " : " + device.getAddress());
+            AbstractBluetoothDevice deviceSpec = BluetoothService.getSupportedDevice(device, aScanRecord.getServiceUuids());
 
-        if (deviceSpec != null && deviceSpec instanceof AbstractBluetoothLEDevice) {
-            Log.i(LOG_TAG_BT, "Discovered LE device " + rssi + " : " + name + " : " + aScanRecord.getServiceUuids());
+            if (deviceSpec != null && deviceSpec instanceof AbstractBluetoothLEDevice) {
+                Log.i(LOG_TAG_BT, "Discovered LE device " + rssi + " : " + name + " : " + aScanRecord.getServiceUuids());
 
-            mLastLEDevice = new DiscoveredBluetoothDevice(deviceSpec, name, device.getAddress());
-            mLastLEDevice.device = device;
-            ((Refresheable) mCurrContext).refresh();
-        } else {
-            Log.i(LOG_TAG_BT, "Discovered unsupported LE device " + rssi + " : " + name);
+                mLastLEDevice = new DiscoveredBluetoothDevice(deviceSpec, name, device.getAddress());
+                mLastLEDevice.device = device;
+                ((Refresheable) mCurrContext).refresh();
+            } else {
+                Log.i(LOG_TAG_BT, "Discovered unsupported device " + rssi + " : " + name + ", ignoring");
+                mIgnoredDevices.add(device.getAddress());
+            }
         }
     }
 
