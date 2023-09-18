@@ -231,6 +231,9 @@ public class BTActivity extends MainMenuActivity implements Refresheable {
 
     @Override
     public void refresh() {
-        runOnUiThread(() -> updateDeviceStatus());
+        runOnUiThread(() -> {
+            refreshDevicesList();
+            updateDeviceStatus();
+        });
     }
 }

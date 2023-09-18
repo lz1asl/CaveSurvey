@@ -16,6 +16,10 @@ public class DiscoveredBluetoothDevice {
     }
 
     public String getDisplayName() {
-        return name + " : " + address;
+        if (name != null) {
+            return name + " : " + address;
+        } else {
+            return definition.getDescription() + " : " + address;
+        }
     }
 }

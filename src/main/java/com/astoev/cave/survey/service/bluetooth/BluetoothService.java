@@ -291,9 +291,10 @@ public class BluetoothService {
             Log.i(LOG_TAG_BT, "No device selected");
             return;
         }
+
+        mSelectedDevice = aDevice;
         BluetoothDevice deviceRef = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(aDevice.address);
         aDevice.device = deviceRef;
-        mSelectedDevice = aDevice;
 
         Log.i(LOG_TAG_BT, "Selected " + aDevice.address + " : " + mSelectedDevice + " of type " + aDevice.definition.getDescription());
 
@@ -321,6 +322,7 @@ public class BluetoothService {
                 // check if we need to connect from scratch or just reconnect to previous device
                 if (mBluetoothGatt != null) {// && aDeviceAddress.equals(mBluetoothGatt.getDevice().getAddress())) {
                     Log.i(LOG_TAG_BT, "Reset LE");
+                    stopDiscoverBluetoothLEDevices();
                     mBluetoothGatt.close();
                 }
                 Log.i(LOG_TAG_BT, "Connecting LE");
@@ -349,7 +351,7 @@ public class BluetoothService {
                 }
             }
         }
-        Log.d(LOG_TAG_BT, "Search supported LE device for " + name + " and services " + leServices);
+        Log.d(LOG_TAG_BT, "Search supported LE device for name " + name + " and services " + leServices);
         for (AbstractBluetoothLEDevice device : SUPPORTED_BLUETOOTH_LE_DEVICES) {
             if (device.isTypeCompatible(aDevice) &&
                     ((StringUtils.isNotEmpty(name) && device.isNameSupported(name)) || device.isServiceSupported(leServices))) {
@@ -396,7 +398,7 @@ public class BluetoothService {
             return mCurrContext.getString(mLeDeviceState);
         }
 
-        if (mSelectedDevice.definition instanceof AbstractBluetoothRFCOMMDevice) {
+        if (mSelectedDevice != null && mSelectedDevice.definition instanceof AbstractBluetoothRFCOMMDevice) {
             switch (mSelectedDevice.device.getBondState()) {
                 case BluetoothDevice.BOND_BONDED:
                     return mCurrContext.getString(R.string.bt_state_bonded);
@@ -520,11 +522,7 @@ public class BluetoothService {
         };
 
         final BluetoothManager btManager = (BluetoothManager) ConfigUtil.getContext().getSystemService(BLUETOOTH_SERVICE);
-//        List<ScanFilter> filters = Arrays.asList(new ScanFilter.Builder().setServiceUuid(ParcelUuid.fromString(DistoXBleDevice.READ_SERVICE_UUID.toString())).build());
-//        ScanSettings settings = new ScanSettings.Builder()
-//                .setScanMode(SCAN_MODE_BALANCED).setMatchMode(MATCH_MODE_STICKY).setCallbackType(CALLBACK_TYPE_FIRST_MATCH).build();
         btManager.getAdapter().getBluetoothLeScanner().startScan(callback);
-//        btManager.getAdapter().getBluetoothLeScanner().startScan(filters, settings, callback);
         return callback;
     }
 
@@ -536,7 +534,7 @@ public class BluetoothService {
         AbstractBluetoothDevice deviceSpec = BluetoothService.getSupportedDevice(device, aScanRecord.getServiceUuids());
 
         if (deviceSpec != null && deviceSpec instanceof AbstractBluetoothLEDevice) {
-            Log.i(LOG_TAG_BT, "Discovered LE device " + rssi + " : " + name);
+            Log.i(LOG_TAG_BT, "Discovered LE device " + rssi + " : " + name + " : " + aScanRecord.getServiceUuids());
 
             mLastLEDevice = new DiscoveredBluetoothDevice(deviceSpec, name, device.getAddress());
             mLastLEDevice.device = device;
