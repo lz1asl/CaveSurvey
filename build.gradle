@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = '1.6.21'
+    ext.kotlin_version = '1.8.0'
     repositories {
         google()
         mavenCentral()
@@ -23,6 +23,7 @@ dependencies {
     implementation 'com.j256.ormlite:ormlite-android:6.1'
     implementation 'org.apache.poi:poi:3.15'
     implementation 'org.apache.commons:commons-csv:1.9.0'
+    implementation "androidx.multidex:multidex:2.0.1"
 
     // Bosch internal protocol
     implementation files('../CaveSurveyBoschGLM/binary/CaveSurveyBoschGLM.jar')
@@ -54,6 +55,7 @@ android {
         minSdkVersion 14
         compileSdk 33
         targetSdkVersion 33
+        multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -74,19 +76,16 @@ android {
 
     buildTypes {
         release {
+            minifyEnabled true
+            shrinkResources true
+
             apply plugin: 'idea'
             proguardFile getDefaultProguardFile('proguard-android.txt')
             signingConfig signingConfigs.release
         }
     }
 
-    flavorDimensions ["defaultFlavor"]
 
-    productFlavors {
-        defaultFlavor {
-            proguardFile 'proguard-rules.txt'
-        }
-    }
     packagingOptions {
         resources {
             excludes += ['LICENSE.txt', 'META-INF/LICENSE.txt', 'META-INF/NOTICE.txt']

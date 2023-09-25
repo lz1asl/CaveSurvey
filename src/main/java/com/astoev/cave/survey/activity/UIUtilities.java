@@ -1,5 +1,6 @@
 package com.astoev.cave.survey.activity;
 
+import static android.app.PendingIntent.FLAG_IMMUTABLE;
 import static android.os.Build.VERSION.SDK_INT;
 import static android.os.Build.VERSION_CODES.JELLY_BEAN;
 import static android.os.Build.VERSION_CODES.O;
@@ -156,7 +157,7 @@ public class UIUtilities {
         PendingIntent resultPendingIntent =
                 stackBuilder.getPendingIntent(
                         0,
-                        PendingIntent.FLAG_UPDATE_CURRENT
+                        PendingIntent.FLAG_UPDATE_CURRENT | FLAG_IMMUTABLE
                 );
 
         NotificationManager notificationManager =
