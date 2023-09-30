@@ -15,6 +15,13 @@ public class DiscoveredBluetoothDevice {
         address = aAddress;
     }
 
+    public DiscoveredBluetoothDevice(AbstractBluetoothDevice aDefinition, String aName, String aAddress, BluetoothDevice aDevice) {
+        definition = aDefinition;
+        name = aName;
+        address = aAddress;
+        device = aDevice;
+    }
+
     public String getDisplayName() {
         if (name != null) {
             return name + " : " + address;

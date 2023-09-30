@@ -1,6 +1,7 @@
 package com.astoev.cave.survey.activity.main;
 
 import static android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
+import static android.widget.AdapterView.INVALID_POSITION;
 import static com.astoev.cave.survey.Constants.LOG_TAG_UI;
 
 import android.content.Intent;
@@ -44,13 +45,19 @@ public class BTActivity extends MainMenuActivity implements Refresheable {
         setContentView(R.layout.bluetooth);
         getWindow().addFlags(FLAG_KEEP_SCREEN_ON);
 
-        BluetoothService.registerListeners(this);
-        prepareUI();
+        resetBT(this);
 
         if (ConfigUtil.getBooleanProperty(ConfigUtil.PREF_MEASUREMENTS_ADJUSTMENT)) {
             float adjustment = ConfigUtil.getFloatProperty(ConfigUtil.PREF_MEASUREMENTS_ADJUSTMENT_VALUE);
             UIUtilities.showAlertDialog(this, R.string.title_warning, R.string.measurements_adjustment_warning, adjustment);
         }
+
+        prepareUI();
+    }
+
+    private void resetBT(BTActivity aSavedInstanceState) {
+        BluetoothService.registerListeners(aSavedInstanceState);
+        refreshDevicesList();
     }
 
     private void prepareUI() {
@@ -64,10 +71,18 @@ public class BTActivity extends MainMenuActivity implements Refresheable {
             }
 
             Spinner devicesChooser = findViewById(R.id.bt_devices);
+            devicesChooser.setSelected(false);
             devicesChooser.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    selectDevice();
+                        if (INVALID_POSITION != position) {
+                            DiscoveredBluetoothDevice device = devices.get(position);
+                            Log.i(LOG_TAG_UI, "Try to use " + device.getDisplayName());
+
+                            UIUtilities.showNotification(R.string.bt_device_connecting, device.getDisplayName());
+
+                            BluetoothService.selectDevice(device);
+                        }
                 }
 
                 @Override
@@ -115,21 +130,19 @@ public class BTActivity extends MainMenuActivity implements Refresheable {
     protected void onResume() {
         super.onResume();
 
-        BluetoothService.registerListeners(this);
+        resetBT(this);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
             BluetoothService.discoverBluetoothLEDevices();
         }
 
-        prepareUI();
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
 
-        prepareUI();
-        BluetoothService.registerListeners(this);
+        resetBT(this);
     }
 
     /**
@@ -179,21 +192,6 @@ public class BTActivity extends MainMenuActivity implements Refresheable {
         startActivity(intentOpenBluetoothSettings);
     }
 
-    public void selectDevice() {
-        // get selected
-        Spinner devicesChooser = findViewById(R.id.bt_devices);
-        DiscoveredBluetoothDevice device = devices.get(devicesChooser.getSelectedItemPosition());
-        Log.i(LOG_TAG_UI, "Try to use " + device.getDisplayName());
-
-        UIUtilities.showNotification(R.string.bt_device_connecting, device.getDisplayName());
-
-        // store & propagate
-        ConfigUtil.setStringProperty(ConfigUtil.PROP_CURR_BT_DEVICE_NAME, device.name);
-        ConfigUtil.setStringProperty(ConfigUtil.PROP_CURR_BT_DEVICE_ADDRESS, device.address);
-        ConfigUtil.setStringProperty(ConfigUtil.PROP_CURR_BT_DEVICE_DEFINITION, device.definition.getClass().getName());
-        BluetoothService.selectDevice(device);
-    }
-
     /**
      * @see com.astoev.cave.survey.activity.MainMenuActivity#getChildsOptionsMenu()
      */
@@ -231,9 +229,6 @@ public class BTActivity extends MainMenuActivity implements Refresheable {
 
     @Override
     public void refresh() {
-        runOnUiThread(() -> {
-            refreshDevicesList();
-            updateDeviceStatus();
-        });
+        runOnUiThread(() -> refreshDevicesList());
     }
 }

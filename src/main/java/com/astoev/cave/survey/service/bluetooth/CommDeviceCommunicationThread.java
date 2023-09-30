@@ -196,6 +196,10 @@ public class CommDeviceCommunicationThread extends Thread {
                 Log.i(Constants.LOG_TAG_BT, "Device found!");
                 UIUtilities.showNotification(R.string.bt_connected);
                 UIUtilities.showDeviceConnectedNotification(ConfigUtil.getContext(), mDeviceSpec.getDescription());
+
+                // store & propagate
+                BluetoothService.storeConnectedDevice(new DiscoveredBluetoothDevice(mDeviceSpec, mDevice.getName(), mDevice.getAddress()));
+
                 lastActiveTimestamp = System.currentTimeMillis();
 
                 ByteArrayOutputStream message = new ByteArrayOutputStream();
