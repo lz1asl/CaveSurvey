@@ -1,13 +1,11 @@
 package com.astoev.cave.survey.activity;
 
 import static android.app.PendingIntent.FLAG_IMMUTABLE;
-import static android.os.Build.VERSION.SDK_INT;
-import static android.os.Build.VERSION_CODES.JELLY_BEAN;
-import static android.os.Build.VERSION_CODES.O;
+import static android.os.Build.VERSION;
+import static android.os.Build.VERSION_CODES;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -19,6 +17,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.TaskStackBuilder;
 
 import com.astoev.cave.survey.Constants;
@@ -39,6 +38,8 @@ import java.io.StringWriter;
  * To change this template use File | Settings | File Templates.
  */
 public class UIUtilities {
+
+    private static int mNotificationId = 1;
 
     private static final String NOTIFICATION_CHANNEL_CAVE_SURVEY = "CaveSurvey";
 
@@ -142,17 +143,9 @@ public class UIUtilities {
     // see http://developer.android.com/guide/topics/ui/notifiers/notifications.html
     private static void showStatusBarMessage(Context aContext, int aIcon, Class anActivityClass, String aMessage) {
 
-        // Creates an explicit intent for an Activity in your app
         Intent resultIntent = new Intent(aContext, anActivityClass);
-
-        // The stack builder object will contain an artificial back stack for the
-        // started Activity.
-        // This ensures that navigating backward from the Activity leads out of
-        // your application to the Home screen.
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(aContext);
-        // Adds the back stack for the Intent (but not the Intent itself)
         stackBuilder.addParentStack(anActivityClass);
-        // Adds the Intent that starts the Activity to the top of the stack
         stackBuilder.addNextIntent(resultIntent);
         PendingIntent resultPendingIntent =
                 stackBuilder.getPendingIntent(
@@ -160,42 +153,34 @@ public class UIUtilities {
                         PendingIntent.FLAG_UPDATE_CURRENT | FLAG_IMMUTABLE
                 );
 
-        NotificationManager notificationManager =
-                (NotificationManager) aContext.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.cancelAll();
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(aContext, NOTIFICATION_CHANNEL_CAVE_SURVEY)
+                .setSmallIcon(aIcon)
+                .setContentTitle(aContext.getString(R.string.app_name))
+                .setContentText(aMessage)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setContentIntent(resultPendingIntent);
 
-        if (SDK_INT >= JELLY_BEAN) {
-            Notification.Builder builder;
-            if (SDK_INT >= O) {
-                NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL_CAVE_SURVEY, NOTIFICATION_CHANNEL_CAVE_SURVEY, NotificationManager.IMPORTANCE_DEFAULT);
-                notificationManager.createNotificationChannel(channel);
-                builder = new Notification.Builder(aContext, NOTIFICATION_CHANNEL_CAVE_SURVEY);
-            } else {
-                builder = new Notification.Builder(aContext);
-            }
-
-            builder.setSmallIcon(aIcon);
-            builder.setContentTitle(aContext.getString(R.string.app_name));
-            builder.setContentText(aMessage);
-
-            builder.setContentIntent(resultPendingIntent);
-            builder.setAutoCancel(true);
-
-            notificationManager.notify(1, builder.build());
-        } else {
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(aContext);
-            builder.setSmallIcon(aIcon);
-            builder.setContentTitle(aContext.getString(R.string.app_name));
-            builder.setContentText(aMessage);
-
-            builder.setContentIntent(resultPendingIntent);
-            builder.setAutoCancel(true);
-
-            notificationManager.notify(1, builder.build());
+        if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
+            builder.setColor(aContext.getResources().getColor(android.R.color.notification_color));
         }
 
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(aContext);
+        notificationManager.cancelAll();
+
+        notificationManager.notify(mNotificationId++, builder.build());
     }
 
+    public static void createNotificationChannel(Context aContext) {
+        if (VERSION.SDK_INT >= VERSION_CODES.O) {
+            CharSequence name = aContext.getString(R.string.app_name);
+            String description = aContext.getString(R.string.app_name);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL_CAVE_SURVEY, name, importance);
+            channel.setDescription(description);
+            NotificationManager notificationManager = aContext.getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
 
     public static void showDeviceConnectedNotification(Context aContext, String aDevice) {
         try {

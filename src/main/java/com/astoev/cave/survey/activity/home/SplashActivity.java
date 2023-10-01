@@ -100,21 +100,9 @@ public class SplashActivity extends AppCompatActivity {
             startActivity(new Intent(this, SurveysActivity.class));
             finish();
         }
+
+        UIUtilities.createNotificationChannel(this);
     }
-
-    /*public void ignoreStorageWarning(View aView) {
-        Log.i(Constants.LOG_TAG_UI, "Ignoring ext storage unavailable");
-
-        // TODO
-      *//*  File home = FileStorageUtil.getStorageHome();
-        if (home == null) {
-            displayError(R.string.splash_error_storage);
-            return;
-        }
-
-        // continue
-        loadHomeScreen();*//*
-    }*/
 
     private void loadHomeScreen() {
         Log.i(Constants.LOG_TAG_UI, "Loading surveys");
