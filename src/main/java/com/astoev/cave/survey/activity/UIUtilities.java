@@ -12,6 +12,7 @@ import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -140,8 +141,7 @@ public class UIUtilities {
         return valid;
     }
 
-    // see http://developer.android.com/guide/topics/ui/notifiers/notifications.html
-    private static void showStatusBarMessage(Context aContext, int aIcon, Class anActivityClass, String aMessage) {
+    private static void showStatusBarMessage(Context aContext, int aIcon, Class anActivityClass, String aMessage, int color) {
 
         Intent resultIntent = new Intent(aContext, anActivityClass);
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(aContext);
@@ -155,14 +155,11 @@ public class UIUtilities {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(aContext, NOTIFICATION_CHANNEL_CAVE_SURVEY)
                 .setSmallIcon(aIcon)
+                .setColor(color)
                 .setContentTitle(aContext.getString(R.string.app_name))
                 .setContentText(aMessage)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setContentIntent(resultPendingIntent);
-
-        if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
-            builder.setColor(aContext.getResources().getColor(android.R.color.notification_color));
-        }
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(aContext);
         notificationManager.cancelAll();
@@ -184,14 +181,14 @@ public class UIUtilities {
 
     public static void showDeviceConnectedNotification(Context aContext, String aDevice) {
         try {
-            showStatusBarMessage(aContext, R.drawable.logo, BTActivity.class, aContext.getString(R.string.bt_device_connected, aDevice));
+            showStatusBarMessage(aContext, R.drawable.ic_cave_survey, BTActivity.class, aContext.getString(R.string.bt_device_connected, aDevice), Color.rgb(255, 234, 0));
         } catch (Exception e) {
             Log.e(Constants.LOG_TAG_UI, "Notification error", e);
         }
     }
 
     public static void showDeviceDisconnectedNotification(Context aContext, String aDevice) {
-        showStatusBarMessage(aContext, R.drawable.logo_greyed, BTActivity.class, aContext.getString(R.string.bt_device_lost, aDevice));
+        showStatusBarMessage(aContext, R.drawable.ic_no_cave_survey_, BTActivity.class, aContext.getString(R.string.bt_device_lost, aDevice), Color.rgb(125, 125, 125));
     }
 
     public static void cleanStatusBarMessages(Context aContext) {
