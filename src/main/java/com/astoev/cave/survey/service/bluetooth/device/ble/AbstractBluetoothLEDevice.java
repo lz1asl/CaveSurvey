@@ -109,4 +109,8 @@ public abstract class AbstractBluetoothLEDevice extends AbstractBluetoothDevice 
         }
         return false;
     }
+
+    public AbstractBluetoothCommand getAcknowledgeCommand(BluetoothGattCharacteristic aCharacteristic) {
+        return null;
+    }
 }

@@ -589,9 +589,9 @@ public class BluetoothService {
     // will run the command in async using synchronized queue
     public static void enqueueCommand(final AbstractBluetoothCommand aCommand){
 
-//        if (mBluetoothGatt == null) {
-//            Log.d(LOG_TAG_BT, "Not connected");
-//        }
+        if (mBluetoothGatt == null) {
+            Log.d(LOG_TAG_BT, "Not connected");
+        }
 
         Log.d(LOG_TAG_BT, "Enqueue command " + aCommand.getClass().getSimpleName());
         synchronized (mCommandQueue) {
@@ -769,10 +769,10 @@ public class BluetoothService {
                         List<Measure> measures = (leDevice.characteristicToMeasures(characteristic, mMeasureTypes));
 
                         // acknowledge
-//                        AbstractBluetoothCommand ackCommand = leDevice.getAcknowledgeCommand(characteristic);
-//                        if (ackCommand != null) {
-//                            enqueueCommand(ackCommand);
-//                        }
+                        AbstractBluetoothCommand ackCommand = leDevice.getAcknowledgeCommand(characteristic);
+                        if (ackCommand != null) {
+                            enqueueCommand(ackCommand);
+                        }
 
                         // consume
                         if (measures != null) {
