@@ -136,6 +136,7 @@ public class BluetoothService {
     private static ScanCallback leCallbackLollipop = null; // newer LE callback
     private static BluetoothGatt mBluetoothGatt = null;
     private static List<DiscoveredBluetoothDevice> mCurrentDevices = null;
+    private static List<String> mIgnoredDevices = new ArrayList<>();
     private static boolean mConnectingDevice = false;
     private static MyBluetoothGattCallback leDataCallback = null;
     private static int mLeDeviceState = R.string.bt_state_none;
@@ -337,11 +338,11 @@ public class BluetoothService {
                 mCommandLock.release();
 
                 // check if we need to connect from scratch or just reconnect to previous device
-                if (mBluetoothGatt != null /*&& aDevice.address.equals(mBluetoothGatt.getDevice().getAddress())*/) {
+               /* if (mBluetoothGatt != null *//*&& aDevice.address.equals(mBluetoothGatt.getDevice().getAddress())*//*) {
                     Log.i(LOG_TAG_BT, "Stop LE discovery");
                     stopDiscoverBluetoothLEDevices();
 //                    mBluetoothGatt.close();
-                }
+                }*/
                 Log.i(LOG_TAG_BT, "Connecting LE");
                 // connect with remote device
                 leDataCallback = new MyBluetoothGattCallback();
@@ -377,7 +378,7 @@ public class BluetoothService {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
             Log.d(LOG_TAG_BT, "Search supported LE device for name " + name + " and services " + leServices);
             for (AbstractBluetoothLEDevice device : SUPPORTED_BLUETOOTH_LE_DEVICES) {
-                if (device.isTypeCompatible(aDevice) &&
+                if (/*device.isTypeCompatible(aDevice) &&*/
                         ((StringUtils.isNotEmpty(name) && device.isNameSupported(name)) || device.isServiceSupported(leServices))) {
                     return device;
                 }
@@ -474,6 +475,7 @@ public class BluetoothService {
         }
         mCurrentDevices = null;
         mConnectingDevice = false;
+        mIgnoredDevices.clear();
     }
 
     public static void unregisterListeners(BTActivity btActivity) {
@@ -554,7 +556,7 @@ public class BluetoothService {
     private static void handleDeviceDiscovered(BluetoothDevice device, int rssi, ScanRecord aScanRecord) {
 
         String name = device.getName();
-        if (!isCurrentDeviceAddress(device.getAddress())) {
+        if (!mIgnoredDevices.contains(device.getAddress()) && !isCurrentDeviceAddress(device.getAddress()) ) {
 
             Log.d(LOG_TAG_BT, "Discovered: " + name + " : " + device.getAddress());
             AbstractBluetoothDevice deviceSpec = BluetoothService.getSupportedDevice(device, aScanRecord.getServiceUuids());
@@ -566,6 +568,7 @@ public class BluetoothService {
                 ((Refresheable) mCurrContext).refresh();
             } else {
                 Log.i(LOG_TAG_BT, "Discovered unsupported device " + rssi + " : " + name + " : " + device.getAddress() + ", ignoring");
+                mIgnoredDevices.add(device.getAddress());
             }
         } else {
             Log.d(LOG_TAG_BT, "Already known : " + name + " : " + device.getAddress());
@@ -585,6 +588,10 @@ public class BluetoothService {
 
     // will run the command in async using synchronized queue
     public static void enqueueCommand(final AbstractBluetoothCommand aCommand){
+
+//        if (mBluetoothGatt == null) {
+//            Log.d(LOG_TAG_BT, "Not connected");
+//        }
 
         Log.d(LOG_TAG_BT, "Enqueue command " + aCommand.getClass().getSimpleName());
         synchronized (mCommandQueue) {
@@ -760,6 +767,12 @@ public class BluetoothService {
                         Log.d(LOG_TAG_BT, "processing " + characteristic.getUuid());
                         // decode
                         List<Measure> measures = (leDevice.characteristicToMeasures(characteristic, mMeasureTypes));
+
+                        // acknowledge
+//                        AbstractBluetoothCommand ackCommand = leDevice.getAcknowledgeCommand(characteristic);
+//                        if (ackCommand != null) {
+//                            enqueueCommand(ackCommand);
+//                        }
 
                         // consume
                         if (measures != null) {
