@@ -110,6 +110,7 @@ public abstract class MainMenuActivity extends BaseActivity implements Confirmat
      */
     protected void exit(){
         Log.i(Constants.LOG_TAG_UI, "Exit app");
+        UIUtilities.hideNotifications(this);
         getWorkspace().clean();
         BluetoothService.stop();
         UIUtilities.cleanStatusBarMessages(MainMenuActivity.this);

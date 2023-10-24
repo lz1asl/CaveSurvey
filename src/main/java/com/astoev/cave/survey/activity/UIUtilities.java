@@ -17,6 +17,7 @@ import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.TaskStackBuilder;
@@ -40,7 +41,7 @@ import java.io.StringWriter;
  */
 public class UIUtilities {
 
-    private static int mNotificationId = 1;
+    private static int mNotificationId = 1000;
 
     private static final String NOTIFICATION_CHANNEL_CAVE_SURVEY = "CaveSurvey";
 
@@ -155,16 +156,24 @@ public class UIUtilities {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(aContext, NOTIFICATION_CHANNEL_CAVE_SURVEY)
                 .setSmallIcon(aIcon)
-                .setColor(color)
                 .setContentTitle(aContext.getString(R.string.app_name))
                 .setContentText(aMessage)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setContentIntent(resultPendingIntent);
 
+        if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
+            builder.setColor(color);
+        }
+        hideNotifications(aContext);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(aContext);
+        notificationManager.notify(mNotificationId++, builder.build());
+    }
+
+    @NonNull
+    public static void hideNotifications(Context aContext) {
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(aContext);
         notificationManager.cancelAll();
-
-        notificationManager.notify(mNotificationId++, builder.build());
     }
 
     public static void createNotificationChannel(Context aContext) {
@@ -188,7 +197,7 @@ public class UIUtilities {
     }
 
     public static void showDeviceDisconnectedNotification(Context aContext, String aDevice) {
-        showStatusBarMessage(aContext, R.drawable.ic_no_cave_survey_, BTActivity.class, aContext.getString(R.string.bt_device_lost, aDevice), Color.rgb(125, 125, 125));
+        showStatusBarMessage(aContext, R.drawable.ic_no_cave_survey, BTActivity.class, aContext.getString(R.string.bt_device_lost, aDevice), Color.rgb(125, 125, 125));
     }
 
     public static void cleanStatusBarMessages(Context aContext) {
