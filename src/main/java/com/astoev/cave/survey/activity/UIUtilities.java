@@ -167,7 +167,8 @@ public class UIUtilities {
         hideNotifications(aContext);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(aContext);
-        notificationManager.notify(mNotificationId++, builder.build());
+        mNotificationId = mNotificationId + 1;
+        notificationManager.notify(mNotificationId, builder.build());
     }
 
     @NonNull
