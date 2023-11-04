@@ -40,6 +40,7 @@ import com.astoev.cave.survey.service.bluetooth.device.AbstractBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.DiscoveredBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.ble.AbstractBluetoothLEDevice;
 import com.astoev.cave.survey.service.bluetooth.device.ble.Bric4BluetoothLEDevice;
+import com.astoev.cave.survey.service.bluetooth.device.ble.Bric5BluetoothLEDevice;
 import com.astoev.cave.survey.service.bluetooth.device.ble.DistoXBleDevice;
 import com.astoev.cave.survey.service.bluetooth.device.ble.LeicaDistoBluetoothLEDevice;
 import com.astoev.cave.survey.service.bluetooth.device.ble.StanleyBluetoothLeDevice;
@@ -119,6 +120,7 @@ public class BluetoothService {
         SUPPORTED_BLUETOOTH_LE_DEVICES.add(new SuaokiP7BluetoothLeDevice());
         SUPPORTED_BLUETOOTH_LE_DEVICES.add(new HerschLEM50BluetoothLeDevice());
         SUPPORTED_BLUETOOTH_LE_DEVICES.add(new Bric4BluetoothLEDevice());
+        SUPPORTED_BLUETOOTH_LE_DEVICES.add(new Bric5BluetoothLEDevice());
 //        SUPPORTED_BLUETOOTH_LE_DEVICES.add(new ShetlandAttackPonyLeDevice()); TODO not yet tested
         SUPPORTED_BLUETOOTH_LE_DEVICES.add(new DistoXBleDevice());
 
