@@ -88,13 +88,18 @@ public class DistoXBleDevice extends AbstractBluetoothLEDevice {
         return true;
     }
 
+    @Override
+    public boolean needCharacteristicPull() {
+        // combines with the command below
+        return true;
+    }
 
-    /*@Override
+    @Override
     public AbstractBluetoothCommand getReadCharacteristicCommand(Constants.MeasureTypes aType) {
         // turn the laser on or take measurement if on
-        return new WriteCharacteristicCommand(WRITE_CHARACTERISTIC_UUID, WRITE_CHARACTERISTIC_UUID, COMMAND_LASER_ON);
+        return new WriteCharacteristicCommand(SERVICE_UUID, WRITE_CHARACTERISTIC_UUID, COMMAND_LASER_ON);
     }
-*/
+
     @Override
     public AbstractBluetoothCommand getAcknowledgeCommand(BluetoothGattCharacteristic aCharacteristic) {
         byte[] ackPacket = DistoXBLEProtocol.createAcknowledgementPacket(aCharacteristic.getValue());
