@@ -558,19 +558,22 @@ public class BluetoothService {
     private static void handleDeviceDiscovered(BluetoothDevice device, int rssi, ScanRecord aScanRecord) {
 
         String name = device.getName();
-        if (!mIgnoredDevices.contains(device.getAddress()) && !isCurrentDeviceAddress(device.getAddress()) ) {
+        if (!mIgnoredDevices.contains(device.getAddress()) && !isCurrentDeviceAddress(device.getAddress())
+                && (mSelectedDevice == null || (mSelectedDevice != null && !mSelectedDevice.address.equals(device.getAddress())))) { // skip multiple events for the same device
 
-            Log.d(LOG_TAG_BT, "Discovered: " + name + " : " + device.getAddress());
-            AbstractBluetoothDevice deviceSpec = BluetoothService.getSupportedDevice(device, aScanRecord.getServiceUuids());
+            synchronized (device.getAddress()) {
+                Log.d(LOG_TAG_BT, "Discovered: " + name + " : " + device.getAddress());
+                AbstractBluetoothDevice deviceSpec = BluetoothService.getSupportedDevice(device, aScanRecord.getServiceUuids());
 
-            if (deviceSpec != null && deviceSpec instanceof AbstractBluetoothLEDevice) {
+                if (deviceSpec != null && deviceSpec instanceof AbstractBluetoothLEDevice) {
 
-                Log.i(LOG_TAG_BT, "Discovered LE device " + rssi + " : " + name + " : " + aScanRecord.getServiceUuids());
-                mCurrentDevices.add(new DiscoveredBluetoothDevice(deviceSpec, name, device.getAddress(), device));
-                ((Refresheable) mCurrContext).refresh();
-            } else {
-                Log.i(LOG_TAG_BT, "Discovered unsupported device " + rssi + " : " + name + " : " + device.getAddress() + ", ignoring");
-                mIgnoredDevices.add(device.getAddress());
+                    Log.i(LOG_TAG_BT, "Discovered LE device " + rssi + " : " + name + " : " + aScanRecord.getServiceUuids());
+                    mCurrentDevices.add(new DiscoveredBluetoothDevice(deviceSpec, name, device.getAddress(), device));
+                    ((Refresheable) mCurrContext).refresh();
+                } else {
+                    Log.i(LOG_TAG_BT, "Discovered unsupported device " + rssi + " : " + name + " : " + device.getAddress() + ", ignoring");
+                    mIgnoredDevices.add(device.getAddress());
+                }
             }
         } else {
             Log.d(LOG_TAG_BT, "Already known : " + name + " : " + device.getAddress());
