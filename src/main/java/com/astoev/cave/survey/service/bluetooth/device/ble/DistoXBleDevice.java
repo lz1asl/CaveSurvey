@@ -10,6 +10,7 @@ import com.astoev.cave.survey.service.bluetooth.Measure;
 import com.astoev.cave.survey.service.bluetooth.lecommands.AbstractBluetoothCommand;
 import com.astoev.cave.survey.service.bluetooth.lecommands.WriteCharacteristicCommand;
 import com.astoev.cave.survey.service.bluetooth.util.DistoXBLEProtocol;
+import com.astoev.cave.survey.service.bluetooth.util.DistoXProtocol;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -60,8 +61,8 @@ public class DistoXBleDevice extends AbstractBluetoothLEDevice {
         byte[] rawMessage = aCharacteristic.getValue();
         Log.i(Constants.LOG_TAG_BT, "Got: " + new String(rawMessage));
 
-        if (DistoXBLEProtocol.isDataPacket(rawMessage)) {
-            Log.i(Constants.LOG_TAG_BT, DistoXBLEProtocol.describeDataPacket(rawMessage));
+        if (DistoXProtocol.isDataPacket(rawMessage)) {
+            Log.i(Constants.LOG_TAG_BT, DistoXProtocol.describeDataPacket(rawMessage));
             return DistoXBLEProtocol.parseBleDataPacket(rawMessage);
         }
         return null;

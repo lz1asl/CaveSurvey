@@ -1,11 +1,14 @@
 package com.astoev.cave.survey.test.service.bluetooth.ledevice;
 
+import static org.junit.Assert.assertEquals;
+
 import android.annotation.TargetApi;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.os.Build;
 
 import com.astoev.cave.survey.service.bluetooth.device.AbstractBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.ble.DistoXBleDevice;
+import com.astoev.cave.survey.service.bluetooth.util.DistoXBLEProtocol;
 
 import org.junit.Test;
 
@@ -34,6 +37,18 @@ public class DistoXBleDeviceProtocolTest extends AbstractLeDeviceProtocolTest {
 
         c.setValue( new byte[] {1, 1, -2, 5, 67, -19, -9, -32, 71, -124, 125, 93, 103, 69, -56, -45, 66});
         ensureSucces(c, 1.534f, 333.6f, -43.6f);
+    }
+
+    @Test
+    public void testAck() {
+        byte[] message = new byte[] {1, 1, -2, 5, 67, -19, -9, -32, 71, -124, 125, 93, 103, 69, -56, -45, 66};
+        byte [] ack = DistoXBLEProtocol.createAcknowledgementPacket(message);
+        assertEquals(9, ack.length);
+        byte [] expectedAck =  new byte [] { 0x64, 0x61, 0x74, 0x61, 0x3a, 0x01, 85, 0x0d, 0x0a};
+        for (int i=0; i<9; i++) {
+            assertEquals(expectedAck[i], ack[i]);
+        }
+
     }
 
     @Override

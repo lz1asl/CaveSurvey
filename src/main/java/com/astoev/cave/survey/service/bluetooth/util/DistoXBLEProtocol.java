@@ -8,7 +8,7 @@ import com.astoev.cave.survey.service.bluetooth.Measure;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DistoXBLEProtocol extends DistoXProtocol {
+public class DistoXBLEProtocol {
 
 
     /*
@@ -23,7 +23,7 @@ public class DistoXBLEProtocol extends DistoXProtocol {
 
         byte type = dataPacket[1];
         int op = type & 0x3F;
-        if (isDataPacket(dataPacket)) {
+        if (DistoXProtocol.isDataPacket(dataPacket)) {
             double distance = ((float) (getUnsigned(dataPacket, 2) + (getUnsigned(dataPacket, 3) << 8))) / 1000;
             double azimuth = (getUnsigned(dataPacket, 4) + (getUnsigned(dataPacket, 5) << 8)) * 180.0 / 32768.0;
             double inclinationRad = (getUnsigned(dataPacket, 6) + (getUnsigned(dataPacket, 7) << 8));
@@ -57,10 +57,9 @@ public class DistoXBLEProtocol extends DistoXProtocol {
         return single < 0 ? single + 256 : single;
     }
 
-  /*  public static byte[] createAcknowledgementPacket(byte[] dataPacket) {
-        byte [] ack = new byte [1];
-        ack[0] = (byte) (dataPacket[1] & 0x80 | 0x55);
-        return ack;
-    }*/
+    public static byte[] createAcknowledgementPacket(byte[] dataPacket) {
+        byte ackByte = DistoXProtocol.createAcknowledgementPacket(new byte [] {dataPacket[1]})[0];
+        return new byte [] { 0x64, 0x61, 0x74, 0x61, 0x3a, 0x01, ackByte , 0x0d, 0x0a};
+    }
 
 }
