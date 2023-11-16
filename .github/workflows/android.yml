@@ -20,7 +20,7 @@ jobs:
       uses: actions/upload-artifact@v1
       with:
         name: CaveSurvey-debug.apk
-        path: build/outputs/apk/defaultFlavor/debug
+        path: build/outputs/apk/debug
 
   unit-tests:
     needs: build
