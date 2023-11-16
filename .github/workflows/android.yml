@@ -17,7 +17,7 @@ jobs:
     - name: Assemble Debug
       run: ./gradlew assembleDebug
     - name: Store APK
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v3
       with:
         name: CaveSurvey-debug.apk
         path: build/outputs/apk/debug
@@ -38,7 +38,7 @@ jobs:
     - name: Unit tests
       run: ./gradlew test
     - name: Test reports
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: test-reports
         path: build/reports/
@@ -64,7 +64,7 @@ jobs:
         run: git apply --ignore-space-change --ignore-whitespace no_bosch_library.patch
 
       - name: Gradle cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             ~/.gradle/caches
@@ -72,7 +72,7 @@ jobs:
           key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*') }}-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}-${{ hashFiles('**/buildSrc/**/*.kt') }}
 
       - name: AVD cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         id: avd-cache
         with:
           path: |
@@ -104,7 +104,7 @@ jobs:
           script: ./gradlew connectedCheck
 
       - name: Test reports
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: always()
         with:
           name: test-reports
