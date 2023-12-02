@@ -560,11 +560,12 @@ public class BluetoothService {
 
     private static void handleDeviceDiscovered(BluetoothDevice device, int rssi, ScanRecord aScanRecord) {
 
-        String name = device.getName();
-        if (!mIgnoredDevices.contains(device.getAddress()) && !isCurrentDeviceAddress(device.getAddress())
-                && (mSelectedDevice == null || (mSelectedDevice != null && !mSelectedDevice.address.equals(device.getAddress())))) { // skip multiple events for the same device
+        synchronized (device.getAddress()) {
 
-            synchronized (device.getAddress()) {
+            String name = device.getName();
+            if (!mIgnoredDevices.contains(device.getAddress()) && !isCurrentDeviceAddress(device.getAddress())
+                    && (mSelectedDevice == null || (mSelectedDevice != null && !mSelectedDevice.address.equals(device.getAddress())))) { // skip multiple events for the same device
+
                 Log.d(LOG_TAG_BT, "Discovered: " + name + " : " + device.getAddress());
                 AbstractBluetoothDevice deviceSpec = BluetoothService.getSupportedDevice(device, aScanRecord.getServiceUuids());
 
@@ -577,9 +578,9 @@ public class BluetoothService {
                     Log.i(LOG_TAG_BT, "Discovered unsupported device " + rssi + " : " + name + " : " + device.getAddress() + ", ignoring");
                     mIgnoredDevices.add(device.getAddress());
                 }
+            } else {
+                Log.d(LOG_TAG_BT, "Already known : " + name + " : " + device.getAddress());
             }
-        } else {
-            Log.d(LOG_TAG_BT, "Already known : " + name + " : " + device.getAddress());
         }
     }
 
@@ -823,7 +824,11 @@ public class BluetoothService {
                 b.putFloatArray(Constants.MEASURE_VALUE_KEY,  new float[] {aMeasure.getValue()});
                 b.putStringArray(Constants.MEASURE_TYPE_KEY, new String[] {aMeasure.getMeasureType().toString()});
                 b.putStringArray(Constants.MEASURE_UNIT_KEY, new String[]{aMeasure.getMeasureUnit().toString()});
-                b.putStringArray(Constants.MEASURE_TARGET_KEY, new String[] {mTargets.get(mMeasureTypes.indexOf(aMeasure.getMeasureType())).toString()});
+                if (mTargets.size() == 1) {
+                    b.putStringArray(Constants.MEASURE_TARGET_KEY, new String[] {mTargets.get(0).toString()});
+                } else {
+                    b.putStringArray(Constants.MEASURE_TARGET_KEY, new String[]{mTargets.get(mMeasureTypes.indexOf(aMeasure.getMeasureType())).toString()});
+                }
                 mReceiver.send(Activity.RESULT_OK, b);
             }
         }
