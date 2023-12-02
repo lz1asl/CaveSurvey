@@ -45,6 +45,10 @@ public abstract class AbstractBluetoothLEDevice extends AbstractBluetoothDevice 
     }
     public boolean needCharacteristicPull() { return false; }
 
+    public boolean useServiceMatch() {
+        return false;
+    }
+
 
     // helper methods to reuse between the LE devices
 
@@ -98,11 +102,13 @@ public abstract class AbstractBluetoothLEDevice extends AbstractBluetoothDevice 
     public AbstractBluetoothCommand getStopScanCommand() { return null; };
 
     public boolean isServiceSupported(List<ParcelUuid> aLeServics) {
-        if (CollectionUtils.isNotEmpty(aLeServics)) {
-            for (ParcelUuid uuid : aLeServics) {
-                for (UUID service : getServices()) {
-                    if (service.equals(uuid.getUuid())) {
-                        return true;
+        if (useServiceMatch()) {
+            if (CollectionUtils.isNotEmpty(aLeServics)) {
+                for (ParcelUuid uuid : aLeServics) {
+                    for (UUID service : getServices()) {
+                        if (service.equals(uuid.getUuid())) {
+                            return true;
+                        }
                     }
                 }
             }

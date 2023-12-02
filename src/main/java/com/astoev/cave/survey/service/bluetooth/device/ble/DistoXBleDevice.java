@@ -96,6 +96,11 @@ public class DistoXBleDevice extends AbstractBluetoothLEDevice {
     }
 
     @Override
+    public boolean useServiceMatch() {
+        return true;
+    }
+
+    @Override
     public AbstractBluetoothCommand getReadCharacteristicCommand(Constants.MeasureTypes aType) {
         // turn the laser on or take measurement if on
         return new WriteCharacteristicCommand(SERVICE_UUID, WRITE_CHARACTERISTIC_UUID, COMMAND_LASER_ON);
