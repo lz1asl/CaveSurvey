@@ -122,7 +122,7 @@
 
     <!--vector screen -->
     <string name="vectors_title">Лъч</string>
-    <string name="vector_button_add_again">Save + New</string>
+    <string name="vector_button_add_again">Добави + нов</string>
 
 
     <string name="sketch_pick_color">Избери цвят</string>
