@@ -410,6 +410,9 @@ public class BluetoothService {
                     mCurrentDevices.add(new DiscoveredBluetoothDevice(deviceDefinition, d.getName(), d.getAddress()));
                 }
             }
+            if (mSelectedDevice != null && !mCurrentDevices.contains(mSelectedDevice)) {
+                mCurrentDevices.add(mSelectedDevice);
+            }
         }
 
         return mCurrentDevices;

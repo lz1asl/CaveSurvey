@@ -1,0 +1,2 @@
+-dontwarn java.awt.**
+-dontwarn javax.persistence.**
