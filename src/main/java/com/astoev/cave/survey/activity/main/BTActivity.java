@@ -79,8 +79,6 @@ public class BTActivity extends MainMenuActivity implements Refresheable {
                             DiscoveredBluetoothDevice device = devices.get(position);
                             Log.i(LOG_TAG_UI, "Try to use " + device.getDisplayName());
 
-                            UIUtilities.showNotification(R.string.bt_device_connecting, device.getDisplayName());
-
                             BluetoothService.selectDevice(device);
                         }
                 }

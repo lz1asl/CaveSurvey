@@ -310,55 +310,57 @@ public class BluetoothService {
             } else {
                 mConnectingDevice = true;
             }
-        }
 
-        mSelectedDevice = aDevice;
-        BluetoothDevice deviceRef = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(aDevice.address);
-        aDevice.device = deviceRef;
+            UIUtilities.showNotification(R.string.bt_device_connecting, aDevice.getDisplayName());
 
-        Log.i(LOG_TAG_BT, "Selected " + aDevice.address + " : " + mSelectedDevice + " of type " + aDevice.definition.getDescription());
+            mSelectedDevice = aDevice;
+            BluetoothDevice deviceRef = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(aDevice.address);
+            aDevice.device = deviceRef;
 
-        if (aDevice.definition instanceof AbstractBluetoothRFCOMMDevice) {
-            if (mCommunicationThread != null) {
-                mCommunicationThread.cancel();
-                try {
-                    mCommunicationThread.join();
-                } catch (InterruptedException e) {
-                    Log.e(LOG_TAG_BT, "Interrupted waiting old thread to complete", e);
+            Log.i(LOG_TAG_BT, "Selected " + aDevice.address + " : " + mSelectedDevice + " of type " + aDevice.definition.getDescription());
+
+            if (aDevice.definition instanceof AbstractBluetoothRFCOMMDevice) {
+                if (mCommunicationThread != null) {
+                    mCommunicationThread.cancel();
+                    try {
+                        mCommunicationThread.join();
+                    } catch (InterruptedException e) {
+                        Log.e(LOG_TAG_BT, "Interrupted waiting old thread to complete", e);
+                    }
                 }
-            }
 
-            mCommunicationThread = new CommDeviceCommunicationThread(aDevice);
-            mCommunicationThread.start();
-        } else {
-            // require newer android to work with LE devices
-            if (SDK_INT >= JELLY_BEAN_MR2) {
-
-                // clean up the queue
-                mCommandQueue.clear();
-                mCommandExecutor = Executors.newSingleThreadExecutor();
-                mCommandLock.release();
-
-                // check if we need to connect from scratch or just reconnect to previous device
-               /* if (mBluetoothGatt != null *//*&& aDevice.address.equals(mBluetoothGatt.getDevice().getAddress())*//*) {
-                    Log.i(LOG_TAG_BT, "Stop LE discovery");
-                    stopDiscoverBluetoothLEDevices();
-//                    mBluetoothGatt.close();
-                }*/
-                Log.i(LOG_TAG_BT, "Connecting LE");
-                // connect with remote device
-                leDataCallback = new MyBluetoothGattCallback();
-                try {
-                    mBluetoothGatt = deviceRef.connectGatt(mCurrContext, false, leDataCallback);
-                    storeConnectedDevice(mSelectedDevice);
-                } catch (IllegalArgumentException exception) {
-                    Log.i(LOG_TAG_BT, "Device not found " + exception.getMessage());
-                }
-                updateLeDeviceState(R.string.bt_state_connecting);
-
+                mCommunicationThread = new CommDeviceCommunicationThread(aDevice);
+                mCommunicationThread.start();
             } else {
-                Log.i(LOG_TAG_BT, "Unsupported version ");
-                UIUtilities.showNotification("Unsupported Android version for BLE");
+                // require newer android to work with LE devices
+                if (SDK_INT >= JELLY_BEAN_MR2) {
+
+                    // clean up the queue
+                    mCommandQueue.clear();
+                    mCommandExecutor = Executors.newSingleThreadExecutor();
+                    mCommandLock.release();
+
+                    // check if we need to connect from scratch or just reconnect to previous device
+                   /* if (mBluetoothGatt != null *//*&& aDevice.address.equals(mBluetoothGatt.getDevice().getAddress())*//*) {
+                        Log.i(LOG_TAG_BT, "Stop LE discovery");
+                        stopDiscoverBluetoothLEDevices();
+    //                    mBluetoothGatt.close();
+                    }*/
+                    Log.i(LOG_TAG_BT, "Connecting LE");
+                    // connect with remote device
+                    leDataCallback = new MyBluetoothGattCallback();
+                    try {
+                        mBluetoothGatt = deviceRef.connectGatt(mCurrContext, false, leDataCallback);
+                        storeConnectedDevice(mSelectedDevice);
+                    } catch (IllegalArgumentException exception) {
+                        Log.i(LOG_TAG_BT, "Device not found " + exception.getMessage());
+                    }
+                    updateLeDeviceState(R.string.bt_state_connecting);
+
+                } else {
+                    Log.i(LOG_TAG_BT, "Unsupported version ");
+                    UIUtilities.showNotification("Unsupported Android version for BLE");
+                }
             }
         }
     }
