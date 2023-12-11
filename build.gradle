@@ -13,10 +13,6 @@ buildscript {
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
-repositories {
-    google()
-    mavenCentral()
-}
 
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
@@ -51,10 +47,15 @@ dependencies {
 }
 
 android {
+
+    namespace 'com.astoev.cave.survey'
+    compileSdk 34
+
     defaultConfig {
-        minSdkVersion 14
-        compileSdk 33
-        targetSdkVersion 33
+        minSdk 14
+        targetSdk 34
+        versionCode 59
+        versionName "2.6"
         multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -76,18 +77,14 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled true
-            shrinkResources true
-
-            apply plugin: 'idea'
+//            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
             signingConfig signingConfigs.release
         }
     }
 
-
-    packagingOptions {
+    packaging {
         resources {
             excludes += ['LICENSE.txt', 'META-INF/LICENSE.txt', 'META-INF/NOTICE.txt']
         }
@@ -110,7 +107,6 @@ android {
     lint {
         abortOnError false
     }
-    namespace 'com.astoev.cave.survey'
 
 }
 
