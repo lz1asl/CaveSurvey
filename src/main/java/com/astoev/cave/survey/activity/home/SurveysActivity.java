@@ -6,6 +6,8 @@ import static android.Manifest.permission.BLUETOOTH_ADMIN;
 import static android.Manifest.permission.BLUETOOTH_CONNECT;
 import static android.Manifest.permission.BLUETOOTH_SCAN;
 import static android.Manifest.permission.POST_NOTIFICATIONS;
+import static android.os.Build.VERSION.SDK_INT;
+import static android.os.Build.VERSION_CODES.S;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -186,8 +188,14 @@ public class SurveysActivity extends MainMenuActivity implements DeleteHandler {
      */
     private void pairBtDevice() {
 
-        if (!PermissionUtil.requestPermissions(new String[]{BLUETOOTH, BLUETOOTH_SCAN, BLUETOOTH_CONNECT, BLUETOOTH_ADMIN, ACCESS_FINE_LOCATION, POST_NOTIFICATIONS}, this, 301)) {
-            return;
+        if (SDK_INT >= S) {
+            if (!PermissionUtil.requestPermissions(new String[]{BLUETOOTH, BLUETOOTH_SCAN, BLUETOOTH_CONNECT, BLUETOOTH_ADMIN, ACCESS_FINE_LOCATION, POST_NOTIFICATIONS}, this, 301)) {
+                return;
+            }
+        } else {
+            if (!PermissionUtil.requestPermissions(new String[]{BLUETOOTH, BLUETOOTH_ADMIN, ACCESS_FINE_LOCATION, POST_NOTIFICATIONS}, this, 301)) {
+                return;
+            }
         }
 
         Intent intent = new Intent(this, BTActivity.class);
