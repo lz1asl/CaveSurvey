@@ -1,5 +1,6 @@
 package com.astoev.cave.survey.activity;
 
+import static android.Manifest.permission.POST_NOTIFICATIONS;
 import static android.app.PendingIntent.FLAG_IMMUTABLE;
 import static android.os.Build.VERSION;
 import static android.os.Build.VERSION_CODES;
@@ -12,6 +13,7 @@ import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.util.Log;
 import android.widget.EditText;
@@ -190,15 +192,24 @@ public class UIUtilities {
     }
 
     public static void showDeviceConnectedNotification(Context aContext, String aDevice) {
-        try {
-            showStatusBarMessage(aContext, R.drawable.ic_cave_survey, BTActivity.class, aContext.getString(R.string.bt_device_connected, aDevice), Color.rgb(255, 234, 0));
-        } catch (Exception e) {
-            Log.e(Constants.LOG_TAG_UI, "Notification error", e);
+        if (notificationsAllowed(aContext)) {
+            try {
+                showStatusBarMessage(aContext, R.drawable.ic_cave_survey, BTActivity.class, aContext.getString(R.string.bt_device_connected, aDevice), Color.rgb(255, 234, 0));
+            } catch (Exception e) {
+                Log.e(Constants.LOG_TAG_UI, "Notification error", e);
+            }
+        } else {
+            showNotification(R.string.bt_device_connected, aDevice);
+
         }
     }
 
     public static void showDeviceDisconnectedNotification(Context aContext, String aDevice) {
-        showStatusBarMessage(aContext, R.drawable.ic_no_cave_survey, BTActivity.class, aContext.getString(R.string.bt_device_lost, aDevice), Color.rgb(125, 125, 125));
+        if (notificationsAllowed(aContext)) {
+            showStatusBarMessage(aContext, R.drawable.ic_no_cave_survey, BTActivity.class, aContext.getString(R.string.bt_device_lost, aDevice), Color.rgb(125, 125, 125));
+        } else {
+            showNotification(R.string.bt_device_lost, aDevice);
+        }
     }
 
     public static void cleanStatusBarMessages(Context aContext) {
@@ -206,6 +217,14 @@ public class UIUtilities {
                 (NotificationManager) aContext.getSystemService(Context.NOTIFICATION_SERVICE);
 
         notificationManager.cancelAll();
+    }
+
+    private static boolean notificationsAllowed(Context aContext) {
+        if (VERSION.SDK_INT >= VERSION_CODES.TIRAMISU) {
+            return  aContext.checkSelfPermission(POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED;
+        } else {
+            return true;
+        }
     }
 
 }

@@ -18,7 +18,7 @@
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" android:minSdkVersion="31"/>
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" android:minSdkVersion="31"/>
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" android:minSdkVersion="33"/>
 
     <!-- GPS -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
