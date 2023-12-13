@@ -1,11 +1,15 @@
 package com.astoev.cave.survey.activity.main;
 
+import static android.bluetooth.BluetoothDevice.DEVICE_TYPE_CLASSIC;
+import static android.os.Build.VERSION.SDK_INT;
+import static android.os.Build.VERSION_CODES.JELLY_BEAN_MR2;
 import static android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
 import static android.widget.AdapterView.INVALID_POSITION;
 import static com.astoev.cave.survey.Constants.LOG_TAG_UI;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -119,6 +123,9 @@ public class BTActivity extends MainMenuActivity implements Refresheable {
                 TextView deviceLabel = new TextView(getApplicationContext());
                 deviceLabel.setText(String.format("\t\u2022 %s", device.getDescription()));
                 deviceLabel.setTextColor(Color.WHITE);
+                if (SDK_INT < JELLY_BEAN_MR2 && DEVICE_TYPE_CLASSIC == device.getDeviceType()) {
+                    deviceLabel.setPaintFlags(deviceLabel.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                }
                 devicesList.addView(deviceLabel);
             }
         }
