@@ -16,6 +16,7 @@ import com.astoev.cave.survey.test.helper.Common.verifySwitchState
 import com.astoev.cave.survey.test.helper.Config.openMeasurements
 import com.astoev.cave.survey.test.helper.Config.openSettings
 import com.astoev.cave.survey.test.helper.ExcelTestUtils
+import com.astoev.cave.survey.test.helper.Survey
 import com.astoev.cave.survey.test.helper.Survey.createAndOpenSurvey
 import com.astoev.cave.survey.test.helper.Survey.openSurvey
 import com.astoev.cave.survey.test.helper.Survey.saveLeg
@@ -36,6 +37,7 @@ class BluethootAdjustedMeasureTest : AbstractExportTest() {
     fun testAdjustedBluetoothLength() {
 
         // configure adjustment
+        Survey.initApp()
         openSettings()
         openMeasurements()
         verifySwitchState(R.id.measurements_use_adjustment, false)

@@ -1,18 +1,13 @@
 package com.astoev.cave.survey.test.service.data
 
-import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.filters.LargeTest
 import com.astoev.cave.survey.model.Option.*
 import com.astoev.cave.survey.service.imp.ExcelImport
 import com.astoev.cave.survey.service.imp.ProjectData
 import com.astoev.cave.survey.test.helper.ExcelTestUtils
 import org.junit.Assert
 import org.junit.Test
-import org.junit.runner.RunWith
 import java.io.IOException
 
-@RunWith(AndroidJUnit4::class)
-@LargeTest
 class ExcelImportTest : AbstractExportTest() {
 
     @Test
