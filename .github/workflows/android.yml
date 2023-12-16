@@ -48,7 +48,7 @@ jobs:
     runs-on: macos-latest
     strategy:
       matrix:
-        api-level: [28]
+        api-level: [34]
 #       15, 29, 30
     steps:
       - name: checkout
@@ -109,5 +109,5 @@ jobs:
         uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: test-reports
+          name: test-report
           path: build/reports/

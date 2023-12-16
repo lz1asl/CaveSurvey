@@ -146,10 +146,11 @@ object Survey {
         if (storageDialog.exists()) {
             onView(withText(R.string.ok)).perform(click())
 
-//            val allowPermissions = device.findObject(UiSelector().text("USE THIS FOLDER"));
-            val allowPermissions = device.findObject(UiSelector().text("SELECT"));
+            val allowPermissions = device.findObject(UiSelector().text("USE THIS FOLDER"))
+//            val allowPermissions = device.findObject(UiSelector().text("SELECT"));
             if (allowPermissions.exists()) {
-                    allowPermissions.click();
+                allowPermissions.click()
+                device.findObject(UiSelector().text("ALLOW")).click()
             }
         }
     }
