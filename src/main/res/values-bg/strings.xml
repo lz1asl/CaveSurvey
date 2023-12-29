@@ -446,6 +446,7 @@
     <string name="splash_storage_warning_title">Нов достъп до хранилището</string>
     <string name="splash_storage_warning_text">Моля изберете работна папка за CaveSurvey.</string>
     <string name="splash_storage_warning_details"><u>Подробности</u></string>
+    <string name="bt_state_not_connected">Не е свързан</string>
 
 
 </resources>

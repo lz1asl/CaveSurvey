@@ -38,7 +38,8 @@
                 android:id="@+id/bt_status"
                 android:layout_margin="10dp"
                 android:layout_height="wrap_content"
-                android:layout_width="wrap_content"/>
+                android:layout_width="wrap_content"
+                android:textStyle="bold|italic"/>
 
             <TextView
                 android:layout_marginTop="10dp"

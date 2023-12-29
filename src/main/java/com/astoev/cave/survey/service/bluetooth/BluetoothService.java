@@ -1,5 +1,8 @@
 package com.astoev.cave.survey.service.bluetooth;
 
+import static android.bluetooth.BluetoothDevice.BOND_BONDED;
+import static android.bluetooth.BluetoothDevice.BOND_BONDING;
+import static android.bluetooth.BluetoothDevice.BOND_NONE;
 import static android.bluetooth.BluetoothGatt.GATT_SUCCESS;
 import static android.content.Context.BLUETOOTH_SERVICE;
 import static android.os.Build.VERSION.SDK_INT;
@@ -420,44 +423,38 @@ public class BluetoothService {
         return mCurrentDevices;
     }
 
-    public static String getCurrDeviceStatus() {
-        if (mSelectedDevice == null) {
-            return mCurrContext.getString(R.string.bt_state_unknown);
-        }
-
-        if (mLeDeviceState != R.string.bt_state_none) {
-            return mCurrContext.getString(mLeDeviceState);
-        }
-
-        if (mSelectedDevice != null && mSelectedDevice.definition instanceof AbstractBluetoothRFCOMMDevice) {
-            switch (mSelectedDevice.device.getBondState()) {
-                case BluetoothDevice.BOND_BONDED:
-                    return mCurrContext.getString(R.string.bt_state_bonded);
-
-                case BluetoothDevice.BOND_BONDING:
-                    return mCurrContext.getString(R.string.bt_state_bonding);
-
-                case BluetoothDevice.BOND_NONE:
-                    return mCurrContext.getString(R.string.bt_state_none);
-
-                default:
-                    return mCurrContext.getString(R.string.bt_state_unknown);
-            }
-        } else {
-            return mCurrContext.getString(mLeDeviceState);
-        }
-
-    }
-
     public static String getCurrDeviceStatusLabel(Context aContext) {
 
-        StringBuilder statusText = new StringBuilder();
-        statusText.append(getCurrDeviceStatus());
-        if (mLeDeviceState == R.string.bt_state_none) {
-            statusText.append(" : ");
-            statusText.append(BluetoothService.isPaired() ? aContext.getString(R.string.bt_paired) : aContext.getString(R.string.bt_not_paired));
+        // no device
+        if (mSelectedDevice == null) {
+            return mCurrContext.getString(R.string.bt_state_not_connected);
+        } else {
+            // current device label
+            StringBuilder statusText = new StringBuilder();
+
+            if (mSelectedDevice.definition instanceof AbstractBluetoothRFCOMMDevice) {
+                // comm device
+                statusText.append(switch (mSelectedDevice.device.getBondState()) {
+                    case BOND_BONDED -> mCurrContext.getString(R.string.bt_state_bonded);
+                    case BOND_BONDING -> mCurrContext.getString(R.string.bt_state_bonding);
+                    case BOND_NONE -> mCurrContext.getString(R.string.bt_state_none);
+                    default ->  mCurrContext.getString(R.string.bt_state_unknown);
+                });
+            } else {
+                if (mLeDeviceState == R.string.bt_state_none) {
+                    statusText.append(BluetoothService.isPaired() ? aContext.getString(R.string.bt_connected) : aContext.getString(R.string.bt_state_not_connected));
+                } else {
+                    statusText.append(mCurrContext.getString(mLeDeviceState));
+                }
+            }
+
+            // the name of the current device
+            if (mSelectedDevice != null && mSelectedDevice.name != null) {
+                statusText.append(" : ").append(mSelectedDevice.name);
+            }
+
+            return statusText.toString();
         }
-        return statusText.toString();
     }
 
     public static void updateLeDeviceState(int aStateLabel) {
@@ -571,7 +568,7 @@ public class BluetoothService {
                 Log.d(LOG_TAG_BT, "Discovered: " + name + " : " + device.getAddress());
                 AbstractBluetoothDevice deviceSpec = BluetoothService.getSupportedDevice(device, aScanRecord.getServiceUuids());
 
-                if (deviceSpec != null && deviceSpec instanceof AbstractBluetoothLEDevice) {
+                if (deviceSpec != null && deviceSpec instanceof AbstractBluetoothLEDevice) { // TODO
 
                     Log.i(LOG_TAG_BT, "Discovered LE device " + rssi + " : " + name + " : " + aScanRecord.getServiceUuids());
                     mCurrentDevices.add(new DiscoveredBluetoothDevice(deviceSpec, name, device.getAddress(), device));

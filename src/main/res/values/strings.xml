@@ -302,6 +302,7 @@
     <string name="bt_state_none">Unknown state</string>
     <string name="bt_state_connecting">Connecting...</string>
     <string name="bt_state_connected">Connected</string>
+    <string name="bt_state_not_connected">Not connected</string>
     <string name="bt_not_on">Bluetooth not turned on</string>
     <string name="bt_not_selected">Device not selected</string>
     <string name="bt_device_connecting">Connecting with: %1$s</string>

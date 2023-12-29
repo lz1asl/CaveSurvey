@@ -90,8 +90,7 @@ public class CommDeviceCommunicationThread extends Thread {
                 mDevice = device;
                 mDeviceSpec = (AbstractBluetoothRFCOMMDevice) BluetoothService.getSupportedDevice(device, null);
 
-                TextView status = ConfigUtil.getContext().findViewById(R.id.bt_status);
-                status.setText(BluetoothService.getCurrDeviceStatusLabel(ConfigUtil.getContext()));
+                updateDeviceStatusLabel();
 
             } catch (Exception e) {
                 Log.e(Constants.LOG_TAG_BT, "Failed during pair", e);
@@ -99,6 +98,12 @@ public class CommDeviceCommunicationThread extends Thread {
             }
         }
     };
+
+    private static void updateDeviceStatusLabel() {
+        TextView status = ConfigUtil.getContext().findViewById(R.id.bt_status);
+        status.setText(BluetoothService.getCurrDeviceStatusLabel(ConfigUtil.getContext()));
+    }
+
     private BroadcastReceiver mDisconnectedReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -133,8 +138,7 @@ public class CommDeviceCommunicationThread extends Thread {
 
                     UIUtilities.showDeviceDisconnectedNotification(ConfigUtil.getContext(), mDeviceSpec.getDescription());
 
-                    TextView status = ConfigUtil.getContext().findViewById(R.id.bt_status);
-                    status.setText(BluetoothService.getCurrDeviceStatusLabel(ConfigUtil.getContext()));
+                    updateDeviceStatusLabel();
                 } else {
                     // ignore events for other non paired devices
                     Log.i(Constants.LOG_TAG_BT, "Ignore disconnect, not curr device");
@@ -196,6 +200,7 @@ public class CommDeviceCommunicationThread extends Thread {
                 Log.i(Constants.LOG_TAG_BT, "Device found!");
                 UIUtilities.showNotification(R.string.bt_connected);
                 UIUtilities.showDeviceConnectedNotification(ConfigUtil.getContext(), mDeviceSpec.getDescription());
+                updateDeviceStatusLabel();
 
                 // store & propagate
                 BluetoothService.storeConnectedDevice(new DiscoveredBluetoothDevice(mDeviceSpec, mDevice.getName(), mDevice.getAddress()));
