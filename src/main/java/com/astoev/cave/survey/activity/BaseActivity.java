@@ -12,8 +12,6 @@ import com.astoev.cave.survey.service.Workspace;
 import com.astoev.cave.survey.service.export.AutoExport;
 import com.astoev.cave.survey.util.ConfigUtil;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.Locale;
 
 /**
@@ -30,40 +28,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         Log.i(Constants.LOG_TAG_UI, "Creating activity " + this.getClass().getName());
         super.onCreate(savedInstanceState);
 
-        overrideDefaultExceptionHandler();
-
         updateLocale();
-    }
-
-    private void overrideDefaultExceptionHandler() {
-
-        // store current handler
-        final Thread.UncaughtExceptionHandler initialExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
-
-        // override
-        Thread.setDefaultUncaughtExceptionHandler((paramThread, paramThrowable) -> {
-
-            // log
-            Log.e(Constants.LOG_TAG_SERVICE, "General exception occurred");
-            if (paramThread != null) {
-                Log.e(Constants.LOG_TAG_SERVICE, "In Thread: " + paramThread.getName());
-            }
-            Log.e(Constants.LOG_TAG_SERVICE, "Cause: " + paramThrowable.getCause());
-
-            StringWriter sw = new StringWriter();
-            PrintWriter pw = new PrintWriter(sw, true);
-            paramThrowable.printStackTrace(pw);
-            Log.e(Constants.LOG_TAG_SERVICE, "Trace: " + sw.getBuffer().toString());
-
-            if (initialExceptionHandler != null) {
-                // if possible notify the default handler
-                Log.e(Constants.LOG_TAG_SERVICE, "Escalate");
-                initialExceptionHandler.uncaughtException(paramThread, paramThrowable);
-            } else {
-                Log.e(Constants.LOG_TAG_SERVICE, "Can't retrow");
-                System.exit(1);
-            }
-        });
     }
 
     /**
