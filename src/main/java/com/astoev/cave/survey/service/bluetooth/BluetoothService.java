@@ -645,6 +645,13 @@ public class BluetoothService {
         mCommandLock.release();
     }
 
+    public static void restart() {
+        stop();
+        mCurrentDevices = new ArrayList<>();
+        mSelectedDevice = null;
+        mIgnoredDevices.clear();
+    }
+
     @TargetApi(JELLY_BEAN_MR2)
     static class MyBluetoothGattCallback extends BluetoothGattCallback {
 

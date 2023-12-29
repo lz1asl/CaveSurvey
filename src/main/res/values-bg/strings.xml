@@ -273,6 +273,7 @@
     <string name="bt_devices">Устройства</string>
     <string name="bt_devices_info">Сдвоени съвместими устройства:</string>
     <string name="bt_new_device">Добави устройство</string>
+    <string name="bt_reset">Обнови</string>
     <string name="bt_paired">Сдвоен</string>
     <string name="bt_connected">Установена връзка</string>
     <string name="bt_not_paired">Не е сдвоен</string>

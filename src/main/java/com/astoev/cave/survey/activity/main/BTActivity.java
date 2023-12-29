@@ -60,8 +60,13 @@ public class BTActivity extends MainMenuActivity implements Refresheable {
     }
 
     private void resetBT(BTActivity aSavedInstanceState) {
+        BluetoothService.restart();
         BluetoothService.registerListeners(aSavedInstanceState);
         refreshDevicesList();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            BluetoothService.discoverBluetoothLEDevices();
+        }
     }
 
     private void prepareUI() {
@@ -136,11 +141,6 @@ public class BTActivity extends MainMenuActivity implements Refresheable {
         super.onResume();
 
         resetBT(this);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            BluetoothService.discoverBluetoothLEDevices();
-        }
-
     }
 
     @Override
@@ -214,6 +214,11 @@ public class BTActivity extends MainMenuActivity implements Refresheable {
         switch (item.getItemId()) {
             case R.id.bt_new: {
                 pairNewDevice();
+                return true;
+            }
+
+            case R.id.bt_refresh: {
+                resetBT(this);
                 return true;
             }
 

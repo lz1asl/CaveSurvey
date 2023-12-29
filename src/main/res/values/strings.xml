@@ -292,6 +292,7 @@
     <string name="bt_devices">Devices</string>
     <string name="bt_devices_info">Paired compatible devices:</string>
     <string name="bt_new_device">New Device</string>
+    <string name="bt_reset">Reset</string>
     <string name="bt_paired">Paired</string>
     <string name="bt_connected">Connection success</string>
     <string name="bt_not_paired">Not Paired</string>
