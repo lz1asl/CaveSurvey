@@ -100,8 +100,10 @@ public class CommDeviceCommunicationThread extends Thread {
     };
 
     private static void updateDeviceStatusLabel() {
-        TextView status = ConfigUtil.getContext().findViewById(R.id.bt_status);
-        status.setText(BluetoothService.getCurrDeviceStatusLabel(ConfigUtil.getContext()));
+        ConfigUtil.getContext().runOnUiThread(() -> {
+            TextView status = ConfigUtil.getContext().findViewById(R.id.bt_status);
+            status.setText(BluetoothService.getCurrDeviceStatusLabel(ConfigUtil.getContext()));
+        });
     }
 
     private BroadcastReceiver mDisconnectedReceiver = new BroadcastReceiver() {
@@ -136,6 +138,8 @@ public class CommDeviceCommunicationThread extends Thread {
 
                     running = false;
 
+                    BluetoothService.commDeviceDisconnected(mDevice);
+
                     UIUtilities.showDeviceDisconnectedNotification(ConfigUtil.getContext(), mDeviceSpec.getDescription());
 
                     updateDeviceStatusLabel();
@@ -147,6 +151,7 @@ public class CommDeviceCommunicationThread extends Thread {
             } catch (Exception e) {
                 Log.e(Constants.LOG_TAG_BT, "Failed during disconnect", e);
                 UIUtilities.showNotification(R.string.error);
+                BluetoothService.commDeviceDisconnected(mDevice);
             }
         }
     };
@@ -198,6 +203,7 @@ public class CommDeviceCommunicationThread extends Thread {
                 mDeviceSpec.configure(mIn, mOut);
 
                 Log.i(Constants.LOG_TAG_BT, "Device found!");
+                mPaired = true;
                 UIUtilities.showNotification(R.string.bt_connected);
                 UIUtilities.showDeviceConnectedNotification(ConfigUtil.getContext(), mDeviceSpec.getDescription());
                 updateDeviceStatusLabel();
@@ -254,6 +260,9 @@ public class CommDeviceCommunicationThread extends Thread {
                                         for (int i = 0; i < 100; i++) {
                                             if (mDeviceSpec.isFullPacketAvailable(message.toByteArray())) {
                                                 Log.d(Constants.LOG_TAG_BT, "Last packet ready");
+                                                break;
+                                            }
+                                            if (!running) {
                                                 break;
                                             }
                                             sleep(100);
@@ -360,6 +369,7 @@ public class CommDeviceCommunicationThread extends Thread {
 
     public synchronized void cancel() {
 
+        running = false;
 
         if (mDeviceSpec != null && lastActiveTimestamp != null) {
             // show notification if device expected and only if the device was active
@@ -369,7 +379,6 @@ public class CommDeviceCommunicationThread extends Thread {
 
         try {
             Log.i(Constants.LOG_TAG_BT, "Cancel client");
-            running = false;
             StreamUtil.closeQuietly(mIn);
             StreamUtil.closeQuietly(mOut);
             if (mSocket != null) {
@@ -387,6 +396,7 @@ public class CommDeviceCommunicationThread extends Thread {
             }
         }
         mRegisteredReceivers.clear();
+        BluetoothService.commDeviceDisconnected(mDevice);
     }
 
     public void awaitMeasures(List<Constants.MeasureTypes> aMeasureTypes, List<Constants.Measures> aTargets, ResultReceiver aReceiver) {
@@ -395,7 +405,7 @@ public class CommDeviceCommunicationThread extends Thread {
         mReceiver = aReceiver;
     }
 
-    public boolean ismPaired() {
+    public boolean isPaired() {
         return mPaired;
     }
 }

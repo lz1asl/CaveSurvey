@@ -9,6 +9,7 @@ import static android.os.Build.VERSION.SDK_INT;
 import static android.os.Build.VERSION_CODES.JELLY_BEAN_MR2;
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static com.astoev.cave.survey.Constants.LOG_TAG_BT;
+import static com.astoev.cave.survey.R.string.bt_state_none;
 import static java.lang.Thread.sleep;
 
 import android.annotation.TargetApi;
@@ -144,7 +145,7 @@ public class BluetoothService {
     private static List<String> mIgnoredDevices = new ArrayList<>();
     private static boolean mConnectingDevice = false;
     private static MyBluetoothGattCallback leDataCallback = null;
-    private static int mLeDeviceState = R.string.bt_state_none;
+    private static int mLeDeviceState = bt_state_none;
 
     // needed by le command queueing, details and credit http://www.brendanwhelan.net/2015/bluetooth-command-queuing-for-android
     private static LinkedList<AbstractBluetoothCommand> mCommandQueue = new LinkedList<>();
@@ -283,6 +284,7 @@ public class BluetoothService {
         if (mCommunicationThread != null) {
             mCommunicationThread.cancel();
         }
+        mConnectingDevice = false;
         if (isBluetoothLESupported()) {
             stopLE();
         }
@@ -369,7 +371,7 @@ public class BluetoothService {
     }
 
     public static boolean isPaired() {
-        return mCommunicationThread != null && mCommunicationThread.ismPaired();
+        return mCommunicationThread != null && mCommunicationThread.isPaired();
     }
 
     public static AbstractBluetoothDevice getSupportedDevice(BluetoothDevice aDevice, List<ParcelUuid> leServices) {
@@ -434,14 +436,18 @@ public class BluetoothService {
 
             if (mSelectedDevice.definition instanceof AbstractBluetoothRFCOMMDevice) {
                 // comm device
-                statusText.append(switch (mSelectedDevice.device.getBondState()) {
-                    case BOND_BONDED -> mCurrContext.getString(R.string.bt_state_bonded);
-                    case BOND_BONDING -> mCurrContext.getString(R.string.bt_state_bonding);
-                    case BOND_NONE -> mCurrContext.getString(R.string.bt_state_none);
-                    default ->  mCurrContext.getString(R.string.bt_state_unknown);
-                });
+                statusText.append(
+                    switch (mSelectedDevice.device.getBondState()) {
+                        case BOND_BONDED ->
+                            BluetoothService.isPaired() ? aContext.getString(R.string.bt_paired) : aContext.getString(R.string.bt_not_paired);
+                        case BOND_BONDING -> mCurrContext.getString(R.string.bt_state_bonding);
+                        case BOND_NONE -> mCurrContext.getString(bt_state_none);
+                        default ->  mCurrContext.getString(R.string.bt_state_unknown);
+                    });
+
+
             } else {
-                if (mLeDeviceState == R.string.bt_state_none) {
+                if (mLeDeviceState == bt_state_none) {
                     statusText.append(BluetoothService.isPaired() ? aContext.getString(R.string.bt_connected) : aContext.getString(R.string.bt_state_not_connected));
                 } else {
                     statusText.append(mCurrContext.getString(mLeDeviceState));
@@ -568,9 +574,8 @@ public class BluetoothService {
                 Log.d(LOG_TAG_BT, "Discovered: " + name + " : " + device.getAddress());
                 AbstractBluetoothDevice deviceSpec = BluetoothService.getSupportedDevice(device, aScanRecord.getServiceUuids());
 
-                if (deviceSpec != null && deviceSpec instanceof AbstractBluetoothLEDevice) { // TODO
-
-                    Log.i(LOG_TAG_BT, "Discovered LE device " + rssi + " : " + name + " : " + aScanRecord.getServiceUuids());
+                if (deviceSpec != null) {
+                    Log.i(LOG_TAG_BT, "Discovered device " + rssi + " : " + name + " : " + aScanRecord.getServiceUuids());
                     mCurrentDevices.add(new DiscoveredBluetoothDevice(deviceSpec, name, device.getAddress(), device));
                     ((Refresheable) mCurrContext).refresh();
                 } else {
@@ -649,6 +654,7 @@ public class BluetoothService {
         stop();
         mCurrentDevices = new ArrayList<>();
         mSelectedDevice = null;
+        mConnectingDevice = false;
         mIgnoredDevices.clear();
     }
 
@@ -696,6 +702,8 @@ public class BluetoothService {
                     mCurrentDevices.remove(mSelectedDevice);
                     mSelectedDevice = null;
                 }
+
+                mConnectingDevice = false;
 
                 ((Refresheable) mCurrContext).refresh();
 
@@ -847,6 +855,13 @@ public class BluetoothService {
         ConfigUtil.setStringProperty(ConfigUtil.PROP_CURR_BT_DEVICE_ADDRESS, aDevice.address);
         ConfigUtil.setStringProperty(ConfigUtil.PROP_CURR_BT_DEVICE_DEFINITION, aDevice.definition.getClass().getName());
         mConnectingDevice = false;
+    }
+
+    public static void commDeviceDisconnected(BluetoothDevice device) {
+        mConnectingDevice = false;
+        if (device != null) {
+            mIgnoredDevices.remove(device.getAddress());
+        }
     }
 
 }

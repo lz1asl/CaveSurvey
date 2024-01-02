@@ -60,6 +60,8 @@ public class BTActivity extends MainMenuActivity implements Refresheable {
     }
 
     private void resetBT(BTActivity aSavedInstanceState) {
+        Log.i(LOG_TAG_UI, "BT reset");
+
         BluetoothService.restart();
         BluetoothService.registerListeners(aSavedInstanceState);
         refreshDevicesList();
