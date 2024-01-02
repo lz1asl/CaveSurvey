@@ -8,7 +8,7 @@ import android.os.Build;
 
 import com.astoev.cave.survey.service.bluetooth.device.AbstractBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.ble.DistoXBleDevice;
-import com.astoev.cave.survey.service.bluetooth.util.DistoXBLEProtocol;
+import com.astoev.cave.survey.service.bluetooth.device.protocol.DistoXBLEProtocol;
 
 import org.junit.Test;
 

@@ -5,7 +5,8 @@ import android.util.Log;
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.Measure;
-import com.astoev.cave.survey.service.bluetooth.util.NMEAUtil;
+import com.astoev.cave.survey.service.bluetooth.device.protocol.AbstractDeviceProtocol;
+import com.astoev.cave.survey.service.bluetooth.device.protocol.TruPulseProtocol;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -62,7 +63,7 @@ public class TruPulse360BluetoothDevice extends AbstractBluetoothRFCOMMDevice {
 
     @Override
     public List<Measure> decodeMeasure(byte[] aResponseBytes, List<Constants.MeasureTypes> aMeasures) throws DataException {
-        return NMEAUtil.decodeTruPulse(aResponseBytes);
+        return mProtocol.packetToMeasurements(aResponseBytes);
     }
 
     @Override
@@ -74,6 +75,11 @@ public class TruPulse360BluetoothDevice extends AbstractBluetoothRFCOMMDevice {
 
     @Override
     public boolean isFullPacketAvailable(byte[] aBytesBuffer) {
-        return NMEAUtil.isFullSizeMessage(aBytesBuffer);
+        return mProtocol.isFullMessage(aBytesBuffer);
+    }
+
+    @Override
+    public AbstractDeviceProtocol getProtocol() {
+        return new TruPulseProtocol();
     }
 }

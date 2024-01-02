@@ -6,11 +6,13 @@ import android.os.Build;
 import android.util.Log;
 
 import com.astoev.cave.survey.Constants;
+import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.Measure;
+import com.astoev.cave.survey.service.bluetooth.device.protocol.AbstractDeviceProtocol;
+import com.astoev.cave.survey.service.bluetooth.device.protocol.DistoXBLEProtocol;
+import com.astoev.cave.survey.service.bluetooth.device.protocol.DistoXProtocol;
 import com.astoev.cave.survey.service.bluetooth.lecommands.AbstractBluetoothCommand;
 import com.astoev.cave.survey.service.bluetooth.lecommands.WriteCharacteristicCommand;
-import com.astoev.cave.survey.service.bluetooth.util.DistoXBLEProtocol;
-import com.astoev.cave.survey.service.bluetooth.util.DistoXProtocol;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -57,13 +59,13 @@ public class DistoXBleDevice extends AbstractBluetoothLEDevice {
 
     @Override
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
-    public List<Measure> characteristicToMeasures(BluetoothGattCharacteristic aCharacteristic, List<Constants.MeasureTypes> aMeasureTypes) {
+    public List<Measure> characteristicToMeasures(BluetoothGattCharacteristic aCharacteristic, List<Constants.MeasureTypes> aMeasureTypes) throws DataException {
         byte[] rawMessage = aCharacteristic.getValue();
         Log.i(Constants.LOG_TAG_BT, "Got: " + new String(rawMessage));
 
         if (DistoXProtocol.isDataPacket(rawMessage)) {
             Log.i(Constants.LOG_TAG_BT, DistoXProtocol.describeDataPacket(rawMessage));
-            return DistoXBLEProtocol.parseBleDataPacket(rawMessage);
+            return mProtocol.packetToMeasurements(rawMessage);
         }
         return null;
     }
@@ -110,5 +112,10 @@ public class DistoXBleDevice extends AbstractBluetoothLEDevice {
     public AbstractBluetoothCommand getAcknowledgeCommand(BluetoothGattCharacteristic aCharacteristic) {
         byte[] ackPacket = DistoXBLEProtocol.createAcknowledgementPacket(aCharacteristic.getValue());
         return new WriteCharacteristicCommand(SERVICE_UUID, WRITE_CHARACTERISTIC_UUID, ackPacket);
+    }
+
+    @Override
+    public AbstractDeviceProtocol getProtocol() {
+        return new DistoXBLEProtocol();
     }
 }

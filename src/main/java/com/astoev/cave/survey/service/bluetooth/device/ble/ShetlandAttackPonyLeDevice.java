@@ -8,7 +8,8 @@ import android.util.Log;
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.Measure;
-import com.astoev.cave.survey.service.bluetooth.util.DistoXProtocol;
+import com.astoev.cave.survey.service.bluetooth.device.protocol.AbstractDeviceProtocol;
+import com.astoev.cave.survey.service.bluetooth.device.protocol.DistoXProtocol;
 
 import java.util.Arrays;
 import java.util.List;
@@ -75,7 +76,7 @@ public class ShetlandAttackPonyLeDevice extends AbstractBluetoothLEDevice {
         Log.i(Constants.LOG_TAG_BT, "Data packet : " + DistoXProtocol.isDataPacket(rawMessage));
         if (DistoXProtocol.isDataPacket(rawMessage)) {
             Log.i(Constants.LOG_TAG_BT, DistoXProtocol.describeDataPacket(rawMessage));
-            return DistoXProtocol.parseDataPacket(rawMessage);
+            return mProtocol.packetToMeasurements(rawMessage);
         }
         return null;
     }
@@ -84,4 +85,8 @@ public class ShetlandAttackPonyLeDevice extends AbstractBluetoothLEDevice {
         return true;
     }
 
+    @Override
+    public AbstractDeviceProtocol getProtocol() {
+        return new DistoXProtocol();
+    }
 }

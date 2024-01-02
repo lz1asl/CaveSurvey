@@ -4,14 +4,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.astoev.cave.survey.service.bluetooth.device.comm.AbstractBluetoothRFCOMMDevice;
 import com.astoev.cave.survey.service.bluetooth.device.comm.distox.DistoXv1BluetoothDevice;
-import com.astoev.cave.survey.service.bluetooth.util.DistoXProtocol;
+import com.astoev.cave.survey.service.bluetooth.device.protocol.DistoXProtocol;
 
 import org.junit.jupiter.api.Test;
 
 /**
  * Created by astoev on 7/19/15.
  */
-public class DistoXProtocolCommTest extends AbstractCommDeviceProtocolTest {
+public class DistoXProtocolTest extends AbstractCommDeviceProtocolTest {
 
     @Test
     public void testDataPacket() {

@@ -1,18 +1,11 @@
 package com.astoev.cave.survey.test.service.bluetooth.device;
 
-import static org.junit.jupiter.api.Assertions.fail;
-
-import com.astoev.cave.survey.exception.DataException;
-import com.astoev.cave.survey.service.bluetooth.Measure;
 import com.astoev.cave.survey.service.bluetooth.device.comm.AbstractBluetoothRFCOMMDevice;
 import com.astoev.cave.survey.service.bluetooth.device.comm.TruPulse360BluetoothDevice;
-import com.astoev.cave.survey.service.bluetooth.util.NMEAUtil;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
-public class LTIProtocolTestComm extends AbstractCommDeviceProtocolTest {
+public class LTIProtocolTest extends AbstractCommDeviceProtocolTest {
 
 
     @Test
@@ -44,23 +37,6 @@ public class LTIProtocolTestComm extends AbstractCommDeviceProtocolTest {
         ensureSucces("$PLTIT,HV,6.30,M,156.50,D,-3.50,D,6.30,M*4B", 6.3f, 156.5f, -3.5f);
         ensureSucces("$PLTIT,HV,,,153.50,D,-8.10,D,,*41", null, 153.5f, -8.1f);
         ensureSucces("$PLTIT,HV,,,152.70,D,-7.70,D,,*4B", null, 152.7f, -7.7f);
-    }
-
-    private void ensureFails(String aBadMessage) {
-        try {
-            List<Measure> measures;
-            if (aBadMessage == null) {
-                measures = NMEAUtil.decodeTrimbleLaserAce(null);
-            } else {
-                measures = NMEAUtil.decodeTrimbleLaserAce(aBadMessage.getBytes());
-            }
-
-            if (measures != null) {
-                fail("Measures returned for bad input");
-            }
-        } catch (DataException de) {
-            // error expected here
-        }
     }
 
     @Override

@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Created by astoev on 8/10/15.
  */
-public class CEMProtocolTestComm extends AbstractCommDeviceProtocolTest {
+public class CEMProtocolTest extends AbstractCommDeviceProtocolTest {
 
     @Test
     public void testDataPacket() {

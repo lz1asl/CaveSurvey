@@ -1,4 +1,4 @@
-package com.astoev.cave.survey.service.bluetooth.util;
+package com.astoev.cave.survey.service.bluetooth.device.protocol;
 
 import android.util.Log;
 
@@ -15,7 +15,7 @@ import java.util.List;
  * DistoX protocol implementation.
  * Adopted file from Rich Smith, see https://github.com/richsmith/sexytopo/blob/master/src/main/java/org/hwyl/sexytopo/comms/DistoXProtocol.java.
  */
-public class DistoXProtocol {
+public class DistoXProtocol extends AbstractDeviceProtocol {
 
     private static final int ADMIN = 0;
     private static final int DISTANCE_LOW_BYTE = 1;
@@ -43,7 +43,8 @@ public class DistoXProtocol {
     }
 
 
-    public static List<Measure> parseDataPacket(byte[] dataPacket) {
+    @Override
+    public List<Measure> packetToMeasurements(byte[] dataPacket) {
 
         Log.i(Constants.LOG_TAG_BT, "Decoding distoX : " + Base64.encodeBase64(dataPacket));
 
@@ -99,6 +100,13 @@ public class DistoXProtocol {
         Log.i(Constants.LOG_TAG_BT, "Got distance " + distanceMeasure);
 
         return measures;
+    }
+
+    @Override
+    public boolean isFullMessage(byte[] dataPacket) {
+        // full message expected
+//        Log.i(Constants.LOG_TAG_BT, "Check package " + DistoXProtocol.describeDataPacket(aBytesBuffer));
+        return true;
     }
 
     public static String describeDataPacket(byte[] dataPacket) {

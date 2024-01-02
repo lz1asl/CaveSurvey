@@ -6,7 +6,8 @@ import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.Measure;
 import com.astoev.cave.survey.service.bluetooth.device.comm.AbstractBluetoothRFCOMMDevice;
-import com.astoev.cave.survey.service.bluetooth.util.DistoXProtocol;
+import com.astoev.cave.survey.service.bluetooth.device.protocol.AbstractDeviceProtocol;
+import com.astoev.cave.survey.service.bluetooth.device.protocol.DistoXProtocol;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,7 +34,7 @@ public abstract class AbstractDistoXBluetoothDevice extends AbstractBluetoothRFC
         Log.i(Constants.LOG_TAG_BT, "Data packet : " + DistoXProtocol.isDataPacket(aResponseBytes));
         if (DistoXProtocol.isDataPacket(aResponseBytes)) {
             Log.i(Constants.LOG_TAG_BT, DistoXProtocol.describeDataPacket(aResponseBytes));
-            return DistoXProtocol.parseDataPacket(aResponseBytes);
+            return mProtocol.packetToMeasurements(aResponseBytes);
         }
         return null;
     }
@@ -47,9 +48,7 @@ public abstract class AbstractDistoXBluetoothDevice extends AbstractBluetoothRFC
 
     @Override
     public boolean isFullPacketAvailable(byte[] aBytesBuffer) {
-        // full message expected
-//        Log.i(Constants.LOG_TAG_BT, "Check package " + DistoXProtocol.describeDataPacket(aBytesBuffer));
-        return true;
+        return mProtocol.isFullMessage(aBytesBuffer);
     }
 
     @Override
@@ -58,5 +57,10 @@ public abstract class AbstractDistoXBluetoothDevice extends AbstractBluetoothRFC
         Log.i(Constants.LOG_TAG_BT, "Generate ack " + DistoXProtocol.describeAcknowledgementPacket(ack));
         aStream.write(ack);
         aStream.flush();
+    }
+
+    @Override
+    public AbstractDeviceProtocol getProtocol() {
+        return new DistoXProtocol();
     }
 }

@@ -1,4 +1,4 @@
-package com.astoev.cave.survey.service.bluetooth.util;
+package com.astoev.cave.survey.service.bluetooth.device.protocol;
 
 import android.util.Log;
 
@@ -8,7 +8,7 @@ import com.astoev.cave.survey.service.bluetooth.Measure;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DistoXBLEProtocol {
+public class DistoXBLEProtocol extends AbstractDeviceProtocol {
 
 
     /*
@@ -17,7 +17,8 @@ public class DistoXBLEProtocol {
     1 byte              2 -9 byte               10 -17 byte
     Packet identifier   1 packet of disto x2    2 packet of disto x2
      */
-    public static List<Measure> parseBleDataPacket(byte[] dataPacket) {
+    @Override
+    public List<Measure> packetToMeasurements(byte[] dataPacket) {
 
         List<Measure> measures = new ArrayList<>();
 

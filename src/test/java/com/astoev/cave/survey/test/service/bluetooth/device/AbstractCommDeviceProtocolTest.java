@@ -41,7 +41,7 @@ public abstract class AbstractCommDeviceProtocolTest {
         }
     }
 
-    private void assertMeasurements(Float aDistance, Float anAzimuth, Float anAngle, List<Measure> measures) {
+    protected void assertMeasurements(Float aDistance, Float anAzimuth, Float anAngle, List<Measure> measures) {
         if (measures != null && measures.size() > 0) {
             assertNotNull(measures, "Measurements expected");
         }
@@ -93,6 +93,23 @@ public abstract class AbstractCommDeviceProtocolTest {
                     }
                     break;
             }
+        }
+    }
+
+    protected void ensureFails(String aBadMessage) {
+        try {
+            List<Measure> measures;
+            if (aBadMessage == null) {
+                measures = getDeviceSpec().getProtocol().packetToMeasurements(null);
+            } else {
+                measures = getDeviceSpec().getProtocol().packetToMeasurements(aBadMessage.getBytes());
+            }
+
+            if (measures != null) {
+                fail("Measures returned for bad input");
+            }
+        } catch (DataException de) {
+            // error expected here
         }
     }
 }
