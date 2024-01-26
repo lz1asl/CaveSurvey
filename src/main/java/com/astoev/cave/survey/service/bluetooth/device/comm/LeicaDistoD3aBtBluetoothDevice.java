@@ -1,21 +1,19 @@
 package com.astoev.cave.survey.service.bluetooth.device.comm;
 
-import android.util.Log;
+import static com.astoev.cave.survey.Constants.MeasureTypes.distance;
+import static com.astoev.cave.survey.Constants.MeasureTypes.slope;
 
-import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.Constants.MeasureTypes;
 import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.Measure;
+import com.astoev.cave.survey.service.bluetooth.device.protocol.AbstractDeviceProtocol;
+import com.astoev.cave.survey.service.bluetooth.device.protocol.LeicaDistoD3aProtocol;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import static com.astoev.cave.survey.Constants.MeasureTypes.distance;
-import static com.astoev.cave.survey.Constants.MeasureTypes.slope;
 
 /**
  * Created by astoev on 2/21/14.
@@ -23,7 +21,6 @@ import static com.astoev.cave.survey.Constants.MeasureTypes.slope;
 public class LeicaDistoD3aBtBluetoothDevice extends AbstractBluetoothRFCOMMDevice {
 
 
-    private static final String MESSAGE_REGEX = "(22\\.\\.01[\\+|\\-][0-9]{8} )?31\\.\\.00\\+[0-9]{8}";
 
 
     @Override
@@ -46,40 +43,8 @@ public class LeicaDistoD3aBtBluetoothDevice extends AbstractBluetoothRFCOMMDevic
     }
 
     @Override
-    public List<Measure> decodeMeasure(byte[] aResponseBytes, List<MeasureTypes> aMeasures) throws DataException {
-
-        if (aResponseBytes == null || aResponseBytes.length < 15) {
-            Log.i(Constants.LOG_TAG_BT, "Got empty message");
-            throw new DataException("Bad data");
-        }
-
-        String message = new String(aResponseBytes).trim();
-
-        if (!message.matches(MESSAGE_REGEX)) {
-            Log.i(Constants.LOG_TAG_BT, "Got bad message: " + message);
-            throw new DataException("Bad data");
-        }
-
-        List<Measure> measures = new ArrayList<>();
-        if (message.length() > 15) {
-            // inclination + distance
-
-            float slope = getSlopeInDegrees(message.substring(6, 16));
-            Measure slopeMeasure = new Measure(Constants.MeasureTypes.slope, Constants.MeasureUnits.degrees, slope);
-            measures.add(slopeMeasure);
-
-            float distance = getDistanceInMeters(message.substring(24));
-            Measure distanceMeasure = new Measure(Constants.MeasureTypes.distance, Constants.MeasureUnits.meters, distance);
-            measures.add(distanceMeasure);
-
-        } else {
-            // distance only
-            float distance = getDistanceInMeters(message.substring(7));
-            Measure distanceMeasure = new Measure(Constants.MeasureTypes.distance, Constants.MeasureUnits.meters, distance);
-            measures.add(distanceMeasure);
-        }
-
-        return measures;
+    public List<Measure> decodeMeasure(byte[] aDataPacket, List<MeasureTypes> aMeasures) throws DataException {
+        return mProtocol.packetToMeasurements(aDataPacket);
     }
 
     @Override
@@ -90,15 +55,11 @@ public class LeicaDistoD3aBtBluetoothDevice extends AbstractBluetoothRFCOMMDevic
 
     @Override
     public boolean isFullPacketAvailable(byte[] aBytesBuffer) {
-        return aBytesBuffer != null && new String(aBytesBuffer).endsWith("\n");
+        return mProtocol.isFullMessage(aBytesBuffer);
     }
 
-    private float getDistanceInMeters(String distanceMessage) {
-        return Float.parseFloat(distanceMessage) / 1000;
+    @Override
+    public AbstractDeviceProtocol getProtocol() {
+        return new LeicaDistoD3aProtocol();
     }
-
-    private float getSlopeInDegrees(String slopeMessage) {
-        return Float.parseFloat(slopeMessage) / 100;
-    }
-
 }

@@ -6,34 +6,39 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: set up JDK 11
-      uses: actions/setup-java@v2
+    - uses: actions/checkout@v4
+    - name: set up JDK 17
+      uses: actions/setup-java@v3
       with:
         distribution: zulu
-        java-version: 11
+        java-version: 17
     - name: Patch No Bosch Library
       run: git apply --ignore-space-change --ignore-whitespace no_bosch_library.patch
     - name: Assemble Debug
       run: ./gradlew assembleDebug
     - name: Store APK
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v3
       with:
         name: CaveSurvey-debug.apk
-        path: build/outputs/apk/defaultFlavor/debug
+        path: build/outputs/apk/debug
 
   unit-tests:
     needs: build
     runs-on: ubuntu-latest
     steps:
     - name: checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
+    - name: set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        distribution: zulu
+        java-version: 17
     - name: Patch No Bosch Library
       run: git apply --ignore-space-change --ignore-whitespace no_bosch_library.patch
     - name: Unit tests
       run: ./gradlew test
     - name: Test reports
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: test-reports
         path: build/reports/
@@ -43,23 +48,22 @@ jobs:
     runs-on: macos-latest
     strategy:
       matrix:
-        api-level: [28, 29]
-#       15,  , 30
+        api-level: [28]
     steps:
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
-      - name: set up JDK 11
-        uses: actions/setup-java@v2
+      - name: set up JDK 17
+        uses: actions/setup-java@v3
         with:
           distribution: zulu
-          java-version: 11
+          java-version: 17
 
       - name: Patch No Bosch Library
         run: git apply --ignore-space-change --ignore-whitespace no_bosch_library.patch
 
       - name: Gradle cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             ~/.gradle/caches
@@ -67,7 +71,7 @@ jobs:
           key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*') }}-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}-${{ hashFiles('**/buildSrc/**/*.kt') }}
 
       - name: AVD cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         id: avd-cache
         with:
           path: |
@@ -89,18 +93,14 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: ${{ matrix.api-level }}
-          target: default
-          arch: x86
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          profile: Nexus 6
-          sdcard-path-or-size: 100M
           disable-animations: true
           script: ./gradlew connectedCheck
 
       - name: Test reports
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: test-reports
+          name: test-report
           path: build/reports/

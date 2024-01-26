@@ -6,12 +6,15 @@ import android.annotation.TargetApi;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
 import android.os.Build;
+import android.os.ParcelUuid;
 
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.Measure;
 import com.astoev.cave.survey.service.bluetooth.device.AbstractBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.lecommands.AbstractBluetoothCommand;
+
+import org.apache.commons.collections4.CollectionUtils;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -26,7 +29,7 @@ public abstract class AbstractBluetoothLEDevice extends AbstractBluetoothDevice 
 
 
     // abstract methods to define the LE device
-    public abstract List<UUID> getServices() ;
+    public abstract List<UUID> getServices();
     public abstract List<UUID> getCharacteristics();
     public abstract List<UUID> getDescriptors();
     public abstract UUID getService(Constants.MeasureTypes aMeasureType);
@@ -41,6 +44,10 @@ public abstract class AbstractBluetoothLEDevice extends AbstractBluetoothDevice 
         return false;
     }
     public boolean needCharacteristicPull() { return false; }
+
+    public boolean useServiceMatch() {
+        return false;
+    }
 
     // devices that provide metadata
     public boolean isMetadataCharacteristic(BluetoothGattCharacteristic aCharacteristic) { return false;}
@@ -89,5 +96,24 @@ public abstract class AbstractBluetoothLEDevice extends AbstractBluetoothDevice 
     public void configure() {
         // called once after successful connection
         // does nothing by default
+    }
+
+    public boolean isServiceSupported(List<ParcelUuid> aLeServics) {
+        if (useServiceMatch()) {
+            if (CollectionUtils.isNotEmpty(aLeServics)) {
+                for (ParcelUuid uuid : aLeServics) {
+                    for (UUID service : getServices()) {
+                        if (service.equals(uuid.getUuid())) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public AbstractBluetoothCommand getAcknowledgeCommand(BluetoothGattCharacteristic aCharacteristic) {
+        return null;
     }
 }

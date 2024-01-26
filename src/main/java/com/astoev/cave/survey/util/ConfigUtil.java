@@ -18,6 +18,7 @@ public class ConfigUtil {
     public static final String PROP_CURR_GALLERY = "curr_gallery_id";
     public static final String PROP_CURR_BT_DEVICE_ADDRESS = "curr_bt_device_addr";
     public static final String PROP_CURR_BT_DEVICE_NAME = "curr_bt_device_name";
+    public static final String PROP_CURR_BT_DEVICE_DEFINITION = "curr_bt_device_definition";
     public static final String PREF_LOCALE = "language_pref";
     public static final String PREF_SENSOR = "sensor_pref";
     public static final String PREF_AUTO_BACKUP = "backup_pref";

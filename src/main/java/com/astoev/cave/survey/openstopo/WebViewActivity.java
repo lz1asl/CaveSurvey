@@ -18,8 +18,6 @@ import com.astoev.cave.survey.util.ConfigUtil;
 import com.astoev.cave.survey.util.FileStorageUtil;
 import com.astoev.cave.survey.util.StreamUtil;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
 
 /**
@@ -72,7 +70,7 @@ public class WebViewActivity extends Activity {
 
             webView.getSettings().setDatabasePath(
                     "/data/data/" + this.getPackageName() + "/databases/");
-            webView.getSettings().setAppCacheEnabled(true);
+//            webView.getSettings().setAppCacheEnabled(true);
             webView.getSettings().setDatabaseEnabled(true);
             webView.getSettings().setDomStorageEnabled(true);
             webView.getSettings().setGeolocationEnabled(true);

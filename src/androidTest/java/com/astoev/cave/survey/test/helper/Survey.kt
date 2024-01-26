@@ -5,18 +5,19 @@ import android.app.Instrumentation.ActivityResult
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.provider.MediaStore
-import android.util.Log
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.Intents.intending
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasAction
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.platform.app.InstrumentationRegistry
-import com.astoev.cave.survey.Constants
+import androidx.test.uiautomator.UiDevice
+import androidx.test.uiautomator.UiSelector
 import com.astoev.cave.survey.R
 import com.astoev.cave.survey.R.id
 import com.astoev.cave.survey.activity.home.NewProjectActivity
@@ -24,7 +25,10 @@ import com.astoev.cave.survey.model.Option
 import com.astoev.cave.survey.test.helper.Common.checkVisible
 import org.hamcrest.BaseMatcher
 import org.hamcrest.Description
-import org.hamcrest.Matchers.*
+import org.hamcrest.Matchers.allOf
+import org.hamcrest.Matchers.containsString
+import org.hamcrest.Matchers.instanceOf
+import org.hamcrest.Matchers.`is`
 
 
 object Survey {
@@ -33,7 +37,22 @@ object Survey {
                      distanceUnits: String? = null, azimuthUnits: String? = null, slopeUnits: String? = null) {
         // open new survey screen
         Common.click(id.action_new_project)
+
+        // enter params
+        Common.type(id.new_projectname, aName)
+        if (distanceUnits != null) {
+            selectDistanceUnits(distanceUnits)
+        }
+        if (azimuthUnits != null) {
+            selectAzimuthUnits(azimuthUnits)
+        }
+        if (slopeUnits != null) {
+            selectSlopeUnits(slopeUnits)
+        }
+
+        // import
         if (importFile != null) {
+            Common.click(id.import_toggle)
             Common.click(id.import_files)
             onData(allOf(
                 `is`(instanceOf(NewProjectActivity.ImportFile::class.java)),
@@ -48,24 +67,9 @@ object Survey {
 
         }
 
-        // enter name
-        Common.type(id.new_projectname, aName)
-        if (distanceUnits != null) {
-            selectDistanceUnits(distanceUnits)
-        }
-        if (azimuthUnits != null) {
-            selectAzimuthUnits(azimuthUnits)
-        }
-        if (slopeUnits != null) {
-            selectSlopeUnits(slopeUnits)
-        }
-
 
         // save & go back
         Common.click(id.new_action_create)
-        if (importFile == null) {
-            onView(withId(id.point_main_view)).perform(ViewActions.pressBack())
-        }
     }
 
     private fun selectSlopeUnits(aSlopeUnits: String) {
@@ -123,32 +127,32 @@ object Survey {
         Home.goHome()
         val surveyName = "" + System.currentTimeMillis()
         createSurvey(surveyName, importFile, distanceUnits, azimuthUnits, slopeUnits)
-        openSurvey(surveyName)
         return surveyName
     }
 
-    private fun initApp() {
+    // first time start initialization
+    fun initApp() {
+        val instrumentation = InstrumentationRegistry.getInstrumentation()
+        val device = UiDevice.getInstance(instrumentation);
 
         // language dialog
-        try {
-            onView(withText("English")).perform(ViewActions.click())
-        } catch (e: Exception) {
-            // language already selected
-            Log.i(Constants.LOG_TAG_SERVICE, "Language already initialized")
+        val languageDialog = device.findObject(UiSelector().text("Select language"))
+        if (languageDialog.exists()) {
+            onView(withText("English")).perform(click())
         }
 
         // storage permissions
-      /*  Intents.init()
-        val openDocumentTreeResult = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
-        openDocumentTreeResult.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION and Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-        val result = Instrumentation.ActivityResult(Activity.RESULT_OK, openDocumentTreeResult)
-        intending(hasAction(Intent.ACTION_OPEN_DOCUMENT_TREE)).respondWith(result)*/
+        val storageDialog = device.findObject(UiSelector().text("New storage permissions"))
+        if (storageDialog.exists()) {
+            onView(withText(R.string.ok)).perform(click())
 
-        try {
-            onView(withText(R.string.ok)).perform(ViewActions.click())
-        } catch (e: Exception) {
-            // storage already initialized
-            Log.i(Constants.LOG_TAG_SERVICE, "Storage already initialized")
+//            val allowPermissions = device.findObject(UiSelector().text("ALLOW ACCESS TO 'DOWNLOADS'"))
+//            val allowPermissions = device.findObject(UiSelector().text("USE THIS FOLDER"))
+            val allowPermissions = device.findObject(UiSelector().text("SELECT"));
+            if (allowPermissions.exists()) {
+                allowPermissions.click()
+//                device.findObject(UiSelector().text("ALLOW")).click()
+            }
         }
     }
 
@@ -179,8 +183,12 @@ object Survey {
         setLegData(null, null, null, up, down, left, right)
     }
 
-    fun selectFirstSurveyLeg() {
+    fun addFirstSurveyLeg() {
         Common.click(id.main_action_add)
+    }
+
+    fun selectFirstSurveyLeg() {
+        Common.click("A0")
     }
 
     fun setLegData(length: Float?, azimuth: Float?, slope: Float?) {

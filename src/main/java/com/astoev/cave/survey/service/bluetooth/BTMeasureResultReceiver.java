@@ -46,7 +46,7 @@ public class BTMeasureResultReceiver extends ResultReceiver {
     }
 
     @Override
-    protected void onReceiveResult(int aResultCode, Bundle aResultData) {
+    public void onReceiveResult(int aResultCode, Bundle aResultData) {
 
         switch (aResultCode) {
             case Activity.RESULT_OK:

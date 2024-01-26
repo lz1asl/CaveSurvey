@@ -16,6 +16,7 @@ import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.exception.DataException;
+import com.astoev.cave.survey.service.bluetooth.device.DiscoveredBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.comm.AbstractBluetoothRFCOMMDevice;
 import com.astoev.cave.survey.util.ByteUtils;
 import com.astoev.cave.survey.util.ConfigUtil;
@@ -54,9 +55,10 @@ public class CommDeviceCommunicationThread extends Thread {
 
 
     // used to talk to comm devices
-    public CommDeviceCommunicationThread(BluetoothDevice aDevice, AbstractBluetoothRFCOMMDevice aDeviceSpec) {
-        mDevice = aDevice;
-        mDeviceSpec = aDeviceSpec;
+    public CommDeviceCommunicationThread(DiscoveredBluetoothDevice device) {
+
+        mDevice = device.device;
+        mDeviceSpec = (AbstractBluetoothRFCOMMDevice) device.definition;
 
         registerListeners(ConfigUtil.getContext());
     }
@@ -86,10 +88,9 @@ public class CommDeviceCommunicationThread extends Thread {
                 Log.i(Constants.LOG_TAG_BT, "Paired with " + device.getName());
                 mPaired = true;
                 mDevice = device;
-                mDeviceSpec = (AbstractBluetoothRFCOMMDevice) BluetoothService.getSupportedDevice(device);
+                mDeviceSpec = (AbstractBluetoothRFCOMMDevice) BluetoothService.getSupportedDevice(device, null);
 
-                TextView status = ConfigUtil.getContext().findViewById(R.id.bt_status);
-                status.setText(BluetoothService.getCurrDeviceStatusLabel(ConfigUtil.getContext()));
+                updateDeviceStatusLabel();
 
             } catch (Exception e) {
                 Log.e(Constants.LOG_TAG_BT, "Failed during pair", e);
@@ -97,6 +98,14 @@ public class CommDeviceCommunicationThread extends Thread {
             }
         }
     };
+
+    private static void updateDeviceStatusLabel() {
+        ConfigUtil.getContext().runOnUiThread(() -> {
+            TextView status = ConfigUtil.getContext().findViewById(R.id.bt_status);
+            status.setText(BluetoothService.getCurrDeviceStatusLabel(ConfigUtil.getContext()));
+        });
+    }
+
     private BroadcastReceiver mDisconnectedReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -129,10 +138,11 @@ public class CommDeviceCommunicationThread extends Thread {
 
                     running = false;
 
+                    BluetoothService.commDeviceDisconnected(mDevice);
+
                     UIUtilities.showDeviceDisconnectedNotification(ConfigUtil.getContext(), mDeviceSpec.getDescription());
 
-                    TextView status = ConfigUtil.getContext().findViewById(R.id.bt_status);
-                    status.setText(BluetoothService.getCurrDeviceStatusLabel(ConfigUtil.getContext()));
+                    updateDeviceStatusLabel();
                 } else {
                     // ignore events for other non paired devices
                     Log.i(Constants.LOG_TAG_BT, "Ignore disconnect, not curr device");
@@ -141,6 +151,7 @@ public class CommDeviceCommunicationThread extends Thread {
             } catch (Exception e) {
                 Log.e(Constants.LOG_TAG_BT, "Failed during disconnect", e);
                 UIUtilities.showNotification(R.string.error);
+                BluetoothService.commDeviceDisconnected(mDevice);
             }
         }
     };
@@ -192,8 +203,14 @@ public class CommDeviceCommunicationThread extends Thread {
                 mDeviceSpec.configure(mIn, mOut);
 
                 Log.i(Constants.LOG_TAG_BT, "Device found!");
+                mPaired = true;
                 UIUtilities.showNotification(R.string.bt_connected);
                 UIUtilities.showDeviceConnectedNotification(ConfigUtil.getContext(), mDeviceSpec.getDescription());
+                updateDeviceStatusLabel();
+
+                // store & propagate
+                BluetoothService.storeConnectedDevice(new DiscoveredBluetoothDevice(mDeviceSpec, mDevice.getName(), mDevice.getAddress()));
+
                 lastActiveTimestamp = System.currentTimeMillis();
 
                 ByteArrayOutputStream message = new ByteArrayOutputStream();
@@ -243,6 +260,9 @@ public class CommDeviceCommunicationThread extends Thread {
                                         for (int i = 0; i < 100; i++) {
                                             if (mDeviceSpec.isFullPacketAvailable(message.toByteArray())) {
                                                 Log.d(Constants.LOG_TAG_BT, "Last packet ready");
+                                                break;
+                                            }
+                                            if (!running) {
                                                 break;
                                             }
                                             sleep(100);
@@ -349,6 +369,7 @@ public class CommDeviceCommunicationThread extends Thread {
 
     public synchronized void cancel() {
 
+        running = false;
 
         if (mDeviceSpec != null && lastActiveTimestamp != null) {
             // show notification if device expected and only if the device was active
@@ -358,7 +379,6 @@ public class CommDeviceCommunicationThread extends Thread {
 
         try {
             Log.i(Constants.LOG_TAG_BT, "Cancel client");
-            running = false;
             StreamUtil.closeQuietly(mIn);
             StreamUtil.closeQuietly(mOut);
             if (mSocket != null) {
@@ -376,6 +396,7 @@ public class CommDeviceCommunicationThread extends Thread {
             }
         }
         mRegisteredReceivers.clear();
+        BluetoothService.commDeviceDisconnected(mDevice);
     }
 
     public void awaitMeasures(List<Constants.MeasureTypes> aMeasureTypes, List<Constants.Measures> aTargets, ResultReceiver aReceiver) {
@@ -384,7 +405,7 @@ public class CommDeviceCommunicationThread extends Thread {
         mReceiver = aReceiver;
     }
 
-    public boolean ismPaired() {
+    public boolean isPaired() {
         return mPaired;
     }
 }

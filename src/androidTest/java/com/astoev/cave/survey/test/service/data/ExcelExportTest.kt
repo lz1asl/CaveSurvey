@@ -11,14 +11,15 @@ import com.astoev.cave.survey.test.helper.ExcelTestUtils.assertLeg
 import com.astoev.cave.survey.test.helper.ExcelTestUtils.assertLegLocation
 import com.astoev.cave.survey.test.helper.Survey
 import com.astoev.cave.survey.test.helper.Survey.addCoordinate
+import com.astoev.cave.survey.test.helper.Survey.addFirstSurveyLeg
 import com.astoev.cave.survey.test.helper.Survey.addLeg
 import com.astoev.cave.survey.test.helper.Survey.addLegMiddle
 import com.astoev.cave.survey.test.helper.Survey.addVector
 import com.astoev.cave.survey.test.helper.Survey.createAndOpenSurvey
 import com.astoev.cave.survey.test.helper.Survey.nextGallery
 import com.astoev.cave.survey.test.helper.Survey.openLegWithText
+import com.astoev.cave.survey.test.helper.Survey.openSurvey
 import com.astoev.cave.survey.test.helper.Survey.saveLeg
-import com.astoev.cave.survey.test.helper.Survey.selectFirstSurveyLeg
 import com.astoev.cave.survey.test.helper.Survey.setLegData
 import com.astoev.cave.survey.util.FileStorageUtil.getUniqueExportName
 import org.junit.Assert.assertNotNull
@@ -37,12 +38,14 @@ class ExcelExportTest : AbstractExportTest() {
         var surveyName = createAndOpenSurvey()
 
         // empty first leg
+        goBack()
+        openSurvey(surveyName)
         var legs = exportToXlsAndRead(surveyName, 1)
         assertLeg(legs[0], null, null, null)
         assertLeg(legs[0], "A", "0", "A", "1", false, false)
 
         // fist minimal and base leg
-        selectFirstSurveyLeg()
+        addFirstSurveyLeg()
         setLegData(1f, 2f, null)
         openLegWithText("A1")
         addCoordinate(42.811522f, 23.378906f, 123, 5)
@@ -84,6 +87,7 @@ class ExcelExportTest : AbstractExportTest() {
         // another gallery
         nextGallery()
         setLegData(4.4f, 4.5f, 4.6f, 0.1f, 0.2f, 0.3f, 0.4f)
+
         legs = exportToXlsAndRead(surveyName, 10)
         assertFirstLegNoSlope(legs)
         assertSecondSimpleLeg(legs)
@@ -96,6 +100,8 @@ class ExcelExportTest : AbstractExportTest() {
         goBack()
         val lastExportName = getUniqueExportName(surveyName, 6)
         surveyName = createAndOpenSurvey(lastExportName, null, null, null)
+        goBack()
+        openSurvey(surveyName)
         legs = exportToXlsAndRead(surveyName, 10)
         assertFirstLegNoSlope(legs)
         assertSecondSimpleLeg(legs)
@@ -113,12 +119,14 @@ class ExcelExportTest : AbstractExportTest() {
         val surveyName = createAndOpenSurvey(null, UNIT_FEET, UNIT_GRADS, UNIT_GRADS)
 
         // empty first leg, units preserved
+        goBack()
+        openSurvey(surveyName)
         var legs = exportToXlsAndRead(surveyName, 1, UNIT_FEET, UNIT_GRADS, UNIT_GRADS)
         assertLeg(legs[0], null, null, null)
         assertLeg(legs[0], "A", "0", "A", "1", false, false)
 
         // measurements as they are
-        selectFirstSurveyLeg()
+        addFirstSurveyLeg()
         setLegData(1f, 2f, null)
         openLegWithText("A1")
         addCoordinate(42.811522f, 23.378906f, 123, 5)
@@ -135,8 +143,8 @@ class ExcelExportTest : AbstractExportTest() {
         val surveyName = createAndOpenSurvey()
 
         // fist minimal leg
-        selectFirstSurveyLeg()
         setLegData(1f, 2f, null)
+        openSurvey(surveyName)
         openLegWithText("A1")
 
         // no sketches
@@ -170,7 +178,6 @@ class ExcelExportTest : AbstractExportTest() {
         val surveyName = createAndOpenSurvey()
 
         // fist minimal leg
-        selectFirstSurveyLeg()
         setLegData(1f, 2f, null)
         openLegWithText("A1")
 

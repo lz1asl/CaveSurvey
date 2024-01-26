@@ -1,19 +1,13 @@
 package com.astoev.cave.survey.test.service.bluetooth.device;
 
-import static org.junit.jupiter.api.Assertions.fail;
-
-import com.astoev.cave.survey.exception.DataException;
-import com.astoev.cave.survey.service.bluetooth.Measure;
 import com.astoev.cave.survey.service.bluetooth.device.comm.AbstractBluetoothRFCOMMDevice;
 import com.astoev.cave.survey.service.bluetooth.device.comm.LaserAceBluetoothDevice;
-import com.astoev.cave.survey.service.bluetooth.util.NMEAUtil;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
 
+public class LAProtocolTest extends AbstractCommDeviceProtocolTest {
 
-public class LAProtocolTestComm extends AbstractCommDeviceProtocolTest {
 
     @Test
     public void testLaserAceDecodeErrors() {
@@ -37,25 +31,8 @@ public class LAProtocolTestComm extends AbstractCommDeviceProtocolTest {
         ensureSucces("$PTNLA,HV,,M,085.0,D,-0.7,D,9999.99,9999.99,M*7E", null, 85f, -0.7f);
     }
 
-    private void ensureFails(String aBadMessage) {
-        try {
-            List<Measure> measures;
-            if (aBadMessage == null) {
-                measures = NMEAUtil.decodeTrimbleLaserAce(null);
-            } else {
-                measures = NMEAUtil.decodeTrimbleLaserAce(aBadMessage.getBytes());
-            }
-
-            if (measures != null) {
-                fail("Measures returned for bad input");
-            }
-        } catch (DataException de) {
-            // error expected here
-        }
-    }
-
     @Override
     protected AbstractBluetoothRFCOMMDevice getDeviceSpec() {
-        return  new LaserAceBluetoothDevice();
+        return new LaserAceBluetoothDevice();
     }
 }

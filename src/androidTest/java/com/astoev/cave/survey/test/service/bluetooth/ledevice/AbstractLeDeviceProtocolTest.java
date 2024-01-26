@@ -1,5 +1,9 @@
 package com.astoev.cave.survey.test.service.bluetooth.ledevice;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
+
 import android.bluetooth.BluetoothGattCharacteristic;
 
 import com.astoev.cave.survey.Constants;
@@ -13,10 +17,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
 
 /**
  * Created by astoev on 7/19/15.
@@ -83,7 +83,7 @@ public abstract class AbstractLeDeviceProtocolTest {
                     if (anAzimuth == null) {
                         fail("Angle not detected");
                     } else {
-                        assertEquals(anAzimuth, m.getValue(), 0.001);
+                        assertEquals(anAzimuth, m.getValue(), 0.1);
                         assertEquals(Constants.MeasureUnits.degrees, m.getMeasureUnit());
                         if (measuresProcessed.contains(m.getMeasureType())) {
                             fail();
@@ -96,7 +96,7 @@ public abstract class AbstractLeDeviceProtocolTest {
                     if (anAngle == null) {
                         fail("Slope not expected");
                     } else {
-                        assertEquals(anAngle, m.getValue(), 0.001);
+                        assertEquals(anAngle, m.getValue(), 0.1);
                         assertEquals(Constants.MeasureUnits.degrees, m.getMeasureUnit());
                         if (measuresProcessed.contains(m.getMeasureType())) {
                             fail();

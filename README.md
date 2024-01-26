@@ -19,7 +19,7 @@ There are several approaches for digital surveying and most of them rely on the 
  - allow the creation of simple sketches
 
 
-Where are we now
+Current state
 ================
 
 We have started with an old Android 2.1 phone (cheap and small) and have tested up to Android 9.0 (better hardware and protection). Smartphones are recommended to have water protection, a good compass and a Bluetooth (SPP or LE profile depending on the measurement device). It should also work on BlackBerry Q5 and probably other devices.

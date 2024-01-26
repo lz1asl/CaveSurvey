@@ -4,9 +4,9 @@ import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.Constants.MeasureTypes;
 import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.Measure;
-import com.astoev.cave.survey.service.bluetooth.util.NMEAUtil;
+import com.astoev.cave.survey.service.bluetooth.device.protocol.AbstractDeviceProtocol;
+import com.astoev.cave.survey.service.bluetooth.device.protocol.LaserAceProtocol;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
@@ -28,19 +28,19 @@ public class LaserAceBluetoothDevice extends AbstractBluetoothRFCOMMDevice {
     }
 
     @Override
-    public void triggerMeasures(OutputStream aStream, List<MeasureTypes> aMeasures) throws IOException {
+    public void triggerMeasures(OutputStream aStream, List<MeasureTypes> aMeasures) {
         // should not be required
     }
 
     @Override
-    public void configure(InputStream anInput, OutputStream anOutput) throws IOException {
+    public void configure(InputStream anInput, OutputStream anOutput) {
         // TODO
     }
 
     @Override
     public List<Measure> decodeMeasure(byte[] aResponseBytes, List<MeasureTypes> aMeasures) throws DataException {
         // ignore requested measures for now, we should have full set of measures
-        return NMEAUtil.decodeTrimbleLaserAce(aResponseBytes);
+        return mProtocol.packetToMeasurements(aResponseBytes);
     }
 
     @Override
@@ -52,7 +52,11 @@ public class LaserAceBluetoothDevice extends AbstractBluetoothRFCOMMDevice {
 
     @Override
     public boolean isFullPacketAvailable(byte[] aBytesBuffer) {
-        return NMEAUtil.isFullSizeMessage(aBytesBuffer);
+        return mProtocol.isFullMessage(aBytesBuffer);
     }
 
+    @Override
+    public AbstractDeviceProtocol getProtocol() {
+        return new LaserAceProtocol();
+    }
 }

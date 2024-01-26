@@ -13,8 +13,8 @@ import com.astoev.cave.survey.test.helper.Survey.addVector
 import com.astoev.cave.survey.test.helper.Survey.createAndOpenSurvey
 import com.astoev.cave.survey.test.helper.Survey.nextGallery
 import com.astoev.cave.survey.test.helper.Survey.openLegWithText
+import com.astoev.cave.survey.test.helper.Survey.openSurvey
 import com.astoev.cave.survey.test.helper.Survey.saveLeg
-import com.astoev.cave.survey.test.helper.Survey.selectFirstSurveyLeg
 import com.astoev.cave.survey.test.helper.Survey.setLegData
 import org.junit.Test
 
@@ -27,8 +27,8 @@ class OpensTopoExportTest : AbstractExportTest() {
         val surveyName = createAndOpenSurvey()
 
         // first test legs
-        selectFirstSurveyLeg()
         setLegData(1f, 2f, null)
+        openSurvey(surveyName)
         openLegWithText("A1")
         addCoordinate(42.811522f, 23.378906f, 123, 5)
         addLeg(1.2f, 2.2f, 1.3f)
@@ -60,8 +60,8 @@ class OpensTopoExportTest : AbstractExportTest() {
         val surveyName = createAndOpenSurvey(null, UNIT_FEET, UNIT_GRADS, UNIT_GRADS)
 
         // first test legs - data is the same
-        selectFirstSurveyLeg()
         setLegData(1f, 2f, null)
+        openSurvey(surveyName)
         openLegWithText("A1")
         addCoordinate(42.811522f, 23.378906f, 123, 5)
         addLeg(1.2f, 2.2f, 1.3f)
@@ -77,8 +77,8 @@ class OpensTopoExportTest : AbstractExportTest() {
         val surveyName = createAndOpenSurvey()
 
         // first test legs
-        selectFirstSurveyLeg()
         setLegData(1f, 2f, null)
+        openSurvey(surveyName)
         addLeg(1.2f, 2.2f, 1.3f)
         addLeg(2.3f, 3.4f, 4.5f, 1.1f, 1.2f, 1.3f, 1.4f)
 

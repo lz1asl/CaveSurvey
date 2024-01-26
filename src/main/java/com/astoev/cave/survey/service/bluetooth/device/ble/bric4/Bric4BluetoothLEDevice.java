@@ -2,6 +2,8 @@ package com.astoev.cave.survey.service.bluetooth.device.ble.bric4;
 
 import static java.nio.ByteOrder.LITTLE_ENDIAN;
 
+import static java.nio.ByteOrder.LITTLE_ENDIAN;
+
 import android.annotation.TargetApi;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.os.Build;
@@ -106,6 +108,7 @@ public class Bric4BluetoothLEDevice extends AbstractBluetoothLEDevice {
 
     @Override
     public boolean isNameSupported(String aName) {
+        // 'BRIC4_XXXX'
         return deviceNameStartsWith(aName, "BRIC4_");
     }
 

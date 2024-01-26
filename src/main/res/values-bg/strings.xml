@@ -122,7 +122,7 @@
 
     <!--vector screen -->
     <string name="vectors_title">Лъч</string>
-    <string name="vector_button_add_again">Save + New</string>
+    <string name="vector_button_add_again">Добави + нов</string>
 
 
     <string name="sketch_pick_color">Избери цвят</string>
@@ -273,6 +273,7 @@
     <string name="bt_devices">Устройства</string>
     <string name="bt_devices_info">Сдвоени съвместими устройства:</string>
     <string name="bt_new_device">Добави устройство</string>
+    <string name="bt_reset">Обнови</string>
     <string name="bt_paired">Сдвоен</string>
     <string name="bt_connected">Установена връзка</string>
     <string name="bt_not_paired">Не е сдвоен</string>
@@ -446,6 +447,7 @@
     <string name="splash_storage_warning_title">Нов достъп до хранилището</string>
     <string name="splash_storage_warning_text">Моля изберете работна папка за CaveSurvey.</string>
     <string name="splash_storage_warning_details"><u>Подробности</u></string>
+    <string name="bt_state_not_connected">Не е свързан</string>
 
 
 </resources>

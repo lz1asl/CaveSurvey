@@ -292,6 +292,7 @@
     <string name="bt_devices">Devices</string>
     <string name="bt_devices_info">Paired compatible devices:</string>
     <string name="bt_new_device">New Device</string>
+    <string name="bt_reset">Reset</string>
     <string name="bt_paired">Paired</string>
     <string name="bt_connected">Connection success</string>
     <string name="bt_not_paired">Not Paired</string>
@@ -302,6 +303,7 @@
     <string name="bt_state_none">Unknown state</string>
     <string name="bt_state_connecting">Connecting...</string>
     <string name="bt_state_connected">Connected</string>
+    <string name="bt_state_not_connected">Not connected</string>
     <string name="bt_not_on">Bluetooth not turned on</string>
     <string name="bt_not_selected">Device not selected</string>
     <string name="bt_device_connecting">Connecting with: %1$s</string>

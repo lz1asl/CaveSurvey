@@ -1,20 +1,28 @@
 package com.astoev.cave.survey.service.bluetooth.device;
 
+import static android.bluetooth.BluetoothDevice.DEVICE_TYPE_CLASSIC;
+import static android.bluetooth.BluetoothDevice.DEVICE_TYPE_DUAL;
+
 import android.bluetooth.BluetoothDevice;
 import android.os.Build;
 
 import com.astoev.cave.survey.Constants;
+import com.astoev.cave.survey.service.bluetooth.device.protocol.AbstractDeviceProtocol;
 import com.astoev.cave.survey.util.StringUtils;
 
 import java.util.List;
-
-import static android.bluetooth.BluetoothDevice.DEVICE_TYPE_CLASSIC;
-import static android.bluetooth.BluetoothDevice.DEVICE_TYPE_DUAL;
 
 /**
  * Any Bluetooth device.
  */
 public abstract class AbstractBluetoothDevice implements Comparable {
+
+    protected AbstractDeviceProtocol mProtocol = null;
+
+
+    public AbstractBluetoothDevice() {
+        mProtocol = getProtocol();
+    }
 
     /**
      * Used to filter paired devices by name.
@@ -68,6 +76,10 @@ public abstract class AbstractBluetoothDevice implements Comparable {
             // older devices will simply not see LE
             return getDeviceType() == DEVICE_TYPE_CLASSIC;
         }
+    }
+
+    public AbstractDeviceProtocol getProtocol() {
+        return null;
     }
 
     @Override

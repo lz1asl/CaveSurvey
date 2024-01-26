@@ -7,5 +7,11 @@
 	      android:title="@string/bt_new_device"
 	      android:visible="true"
 	      myapp:showAsAction="ifRoom|withText"/>
-	
+	<item
+		android:id="@+id/bt_refresh"
+		android:icon="@drawable/ic_baseline_refresh_24"
+		android:title="@string/bt_reset"
+		android:visible="true"
+		myapp:showAsAction="ifRoom|withText" />
+
 </menu>

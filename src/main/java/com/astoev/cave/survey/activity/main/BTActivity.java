@@ -1,15 +1,19 @@
 package com.astoev.cave.survey.activity.main;
 
+import static android.bluetooth.BluetoothDevice.DEVICE_TYPE_CLASSIC;
+import static android.os.Build.VERSION.SDK_INT;
+import static android.os.Build.VERSION_CODES.JELLY_BEAN_MR2;
 import static android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
+import static android.widget.AdapterView.INVALID_POSITION;
 import static com.astoev.cave.survey.Constants.LOG_TAG_UI;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.Pair;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -23,13 +27,11 @@ import com.astoev.cave.survey.activity.MainMenuActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.service.bluetooth.BluetoothService;
 import com.astoev.cave.survey.service.bluetooth.device.AbstractBluetoothDevice;
+import com.astoev.cave.survey.service.bluetooth.device.DiscoveredBluetoothDevice;
 import com.astoev.cave.survey.util.ConfigUtil;
-import com.astoev.cave.survey.util.StringUtils;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -40,19 +42,32 @@ import java.util.Set;
  */
 public class BTActivity extends MainMenuActivity implements Refresheable {
 
-    Set<Pair<String, String>> devices = new HashSet<>();
+    List<DiscoveredBluetoothDevice> devices = new ArrayList<>();
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.bluetooth);
         getWindow().addFlags(FLAG_KEEP_SCREEN_ON);
 
-        BluetoothService.registerListeners(this);
-        prepareUI();
+        resetBT(this);
 
         if (ConfigUtil.getBooleanProperty(ConfigUtil.PREF_MEASUREMENTS_ADJUSTMENT)) {
             float adjustment = ConfigUtil.getFloatProperty(ConfigUtil.PREF_MEASUREMENTS_ADJUSTMENT_VALUE);
             UIUtilities.showAlertDialog(this, R.string.title_warning, R.string.measurements_adjustment_warning, adjustment);
+        }
+
+        prepareUI();
+    }
+
+    private void resetBT(BTActivity aSavedInstanceState) {
+        Log.i(LOG_TAG_UI, "BT reset");
+
+        BluetoothService.restart();
+        BluetoothService.registerListeners(aSavedInstanceState);
+        refreshDevicesList();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            BluetoothService.discoverBluetoothLEDevices();
         }
     }
 
@@ -67,10 +82,16 @@ public class BTActivity extends MainMenuActivity implements Refresheable {
             }
 
             Spinner devicesChooser = findViewById(R.id.bt_devices);
+            devicesChooser.setSelected(false);
             devicesChooser.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    selectDevice();
+                        if (INVALID_POSITION != position) {
+                            DiscoveredBluetoothDevice device = devices.get(position);
+                            Log.i(LOG_TAG_UI, "Try to use " + device.getDisplayName());
+
+                            BluetoothService.selectDevice(device);
+                        }
                 }
 
                 @Override
@@ -107,8 +128,11 @@ public class BTActivity extends MainMenuActivity implements Refresheable {
 
             for (AbstractBluetoothDevice device : BluetoothService.getSupportedDevices()) {
                 TextView deviceLabel = new TextView(getApplicationContext());
-                deviceLabel.setText("\t\u2022 " + device.getDescription());
+                deviceLabel.setText(String.format("\t\u2022 %s", device.getDescription()));
                 deviceLabel.setTextColor(Color.WHITE);
+                if (SDK_INT < JELLY_BEAN_MR2 && DEVICE_TYPE_CLASSIC == device.getDeviceType()) {
+                    deviceLabel.setPaintFlags(deviceLabel.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                }
                 devicesList.addView(deviceLabel);
             }
         }
@@ -118,21 +142,14 @@ public class BTActivity extends MainMenuActivity implements Refresheable {
     protected void onResume() {
         super.onResume();
 
-        BluetoothService.registerListeners(this);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            BluetoothService.discoverBluetoothLEDevices();
-        }
-
-        prepareUI();
+        resetBT(this);
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
 
-        prepareUI();
-        BluetoothService.registerListeners(this);
+        resetBT(this);
     }
 
     /**
@@ -146,22 +163,14 @@ public class BTActivity extends MainMenuActivity implements Refresheable {
     private void refreshDevicesList() {
 
         devices = BluetoothService.getPairedCompatibleDevices();
-
-        String selectedDeviceName = null;
         String selectedBtDeviceAddress = ConfigUtil.getStringProperty(ConfigUtil.PROP_CURR_BT_DEVICE_ADDRESS);
-        if (StringUtils.isNotEmpty(selectedBtDeviceAddress)) {
-            String selectedBtDeviceName = ConfigUtil.getStringProperty(ConfigUtil.PROP_CURR_BT_DEVICE_NAME);
-            selectedDeviceName = buildDeviceName(new Pair<>(selectedBtDeviceName, selectedBtDeviceAddress));
-        }
 
         List<String> devicesList = new ArrayList<>();
         int index = 0;
         int selectedDeviceIndex = -1;
-        String tempName;
-        for (final Pair<String, String> device : devices) {
-            tempName = buildDeviceName(device);
-            devicesList.add(tempName);
-            if (tempName.equals(selectedDeviceName)) {
+        for (final DiscoveredBluetoothDevice device : devices) {
+            devicesList.add(device.getDisplayName());
+            if (device.address.equals(selectedBtDeviceAddress)) {
                 selectedDeviceIndex = index;
             }
             index++;
@@ -190,24 +199,6 @@ public class BTActivity extends MainMenuActivity implements Refresheable {
         startActivity(intentOpenBluetoothSettings);
     }
 
-    private String buildDeviceName(Pair<String, String> aDevice) {
-        return aDevice.first + " : " + aDevice.second;
-    }
-
-    public void selectDevice() {
-        // get selected
-        Spinner devicesChooser = findViewById(R.id.bt_devices);
-        Pair<String, String> device = new ArrayList<>(devices).get(devicesChooser.getSelectedItemPosition());
-        Log.i(LOG_TAG_UI, "Try to use " + device.first + ":" + device.second);
-
-        UIUtilities.showNotification(R.string.bt_device_connecting, device.first);
-
-        // store & propagate
-        ConfigUtil.setStringProperty(ConfigUtil.PROP_CURR_BT_DEVICE_NAME, device.first);
-        ConfigUtil.setStringProperty(ConfigUtil.PROP_CURR_BT_DEVICE_ADDRESS, device.second);
-        BluetoothService.selectDevice(device.second);
-    }
-
     /**
      * @see com.astoev.cave.survey.activity.MainMenuActivity#getChildsOptionsMenu()
      */
@@ -228,6 +219,11 @@ public class BTActivity extends MainMenuActivity implements Refresheable {
                 return true;
             }
 
+            case R.id.bt_refresh: {
+                resetBT(this);
+                return true;
+            }
+
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -245,6 +241,6 @@ public class BTActivity extends MainMenuActivity implements Refresheable {
 
     @Override
     public void refresh() {
-        runOnUiThread(() -> updateDeviceStatus());
+        runOnUiThread(() -> refreshDevicesList());
     }
 }
