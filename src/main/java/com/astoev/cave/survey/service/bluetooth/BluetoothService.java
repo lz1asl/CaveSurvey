@@ -44,7 +44,6 @@ import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.device.AbstractBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.DiscoveredBluetoothDevice;
 import com.astoev.cave.survey.service.bluetooth.device.ble.AbstractBluetoothLEDevice;
-import com.astoev.cave.survey.service.bluetooth.device.ble.Bric4BluetoothLEDevice;
 import com.astoev.cave.survey.service.bluetooth.device.ble.Bric5BluetoothLEDevice;
 import com.astoev.cave.survey.service.bluetooth.device.ble.DistoXBleDevice;
 import com.astoev.cave.survey.service.bluetooth.device.ble.LeicaDistoBluetoothLEDevice;
@@ -76,7 +75,6 @@ import com.astoev.cave.survey.util.ConfigUtil;
 import com.astoev.cave.survey.util.StringUtils;
 
 import org.apache.commons.collections4.CollectionUtils;
-
 import org.apache.commons.collections4.MapUtils;
 
 import java.util.ArrayList;
@@ -785,8 +783,8 @@ public class BluetoothService {
         }
 
         private void configureLeDevice() {
-            if (mSelectedDeviceSpec instanceof AbstractBluetoothLEDevice) {
-                ((AbstractBluetoothLEDevice) mSelectedDeviceSpec).configure();
+            if (mSelectedDevice.definition instanceof AbstractBluetoothLEDevice) {
+                ((AbstractBluetoothLEDevice) mSelectedDevice.definition).configure();
             }
         }
 
@@ -811,16 +809,17 @@ public class BluetoothService {
                             // decode
                             List<Measure> measures = (leDevice.characteristicToMeasures(characteristic, mMeasureTypes));
 
-                        // acknowledge
-                        AbstractBluetoothCommand ackCommand = leDevice.getAcknowledgeCommand(characteristic);
-                        if (ackCommand != null) {
-                            enqueueCommand(ackCommand);
-                        }
+                            // acknowledge
+                            AbstractBluetoothCommand ackCommand = leDevice.getAcknowledgeCommand(characteristic);
+                            if (ackCommand != null) {
+                                enqueueCommand(ackCommand);
+                            }
 
-                        // consume
-                        if (measures != null) {
-                            for (Measure measure : measures) {
-                                sendMeasureToUI(measure);
+                            // consume
+                            if (measures != null) {
+                                for (Measure measure : measures) {
+                                    sendMeasureToUI(measure);
+                                }
                             }
                         }
                     } else {
