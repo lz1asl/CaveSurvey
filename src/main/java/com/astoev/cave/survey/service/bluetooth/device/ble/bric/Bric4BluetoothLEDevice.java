@@ -1,6 +1,4 @@
-package com.astoev.cave.survey.service.bluetooth.device.ble.bric4;
-
-import static java.nio.ByteOrder.LITTLE_ENDIAN;
+package com.astoev.cave.survey.service.bluetooth.device.ble.bric;
 
 import static java.nio.ByteOrder.LITTLE_ENDIAN;
 

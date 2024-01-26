@@ -7,8 +7,8 @@ import android.bluetooth.BluetoothGattCharacteristic;
 import android.os.Build;
 
 import com.astoev.cave.survey.service.bluetooth.device.AbstractBluetoothDevice;
-import com.astoev.cave.survey.service.bluetooth.device.ble.bric4.Bric4BluetoothLEDevice;
-import com.astoev.cave.survey.service.bluetooth.device.ble.bric4.Bric4ErrorCode;
+import com.astoev.cave.survey.service.bluetooth.device.ble.bric.Bric4BluetoothLEDevice;
+import com.astoev.cave.survey.service.bluetooth.device.ble.bric.Bric4ErrorCode;
 
 import org.junit.Test;
 

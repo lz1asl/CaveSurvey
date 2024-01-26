@@ -1,4 +1,4 @@
-package com.astoev.cave.survey.service.bluetooth.device.ble.bric4;
+package com.astoev.cave.survey.service.bluetooth.device.ble.bric;
 
 /**
  *  https://www.bricsurvey.com/s/BRIC4-Bluetooth-Protocol-revF.pdf

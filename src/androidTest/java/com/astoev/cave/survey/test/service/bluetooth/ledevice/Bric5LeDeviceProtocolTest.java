@@ -1,7 +1,7 @@
 package com.astoev.cave.survey.test.service.bluetooth.ledevice;
 
 import com.astoev.cave.survey.service.bluetooth.device.AbstractBluetoothDevice;
-import com.astoev.cave.survey.service.bluetooth.device.ble.Bric5BluetoothLEDevice;
+import com.astoev.cave.survey.service.bluetooth.device.ble.bric.Bric5BluetoothLEDevice;
 
 public class Bric5LeDeviceProtocolTest extends Bric4LeDeviceProtocolTest {
 
