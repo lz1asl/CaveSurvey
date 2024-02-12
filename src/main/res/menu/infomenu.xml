@@ -39,4 +39,11 @@
         android:title="@string/export_share"
         android:visible="true"
         myapp:showAsAction="ifRoom|withText" />
+
+    <item
+        android:id="@+id/info_action_upload_grottocenter"
+        android:icon="@drawable/grottocenter_logo"
+        android:title="@string/export_grottocenter"
+        android:visible="true"
+        myapp:showAsAction="ifRoom|withText" />
 </menu>

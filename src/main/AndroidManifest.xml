@@ -24,6 +24,10 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
+    <!--GrottoCenter upload -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+
     <application android:allowBackup="true"
         	     android:label="@string/app_name" 
         		 android:icon="@drawable/logo" 

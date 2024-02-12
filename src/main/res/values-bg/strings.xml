@@ -174,7 +174,12 @@
         <item>Данни</item>
         <item>Всички</item>
     </array>
-    
+
+    <string name="grottocenter_dialog_title">Качване към GrottoCenter</string>
+    <string name="grottocenter_username">потребител</string>
+    <string name="grottocenter_password">парола</string>
+    <string name="grottocenter_login">Вход</string>
+
     <!-- options -->
     <string name="measures_title">Измервания</string>
     <string name="data_input_units">Единици</string>

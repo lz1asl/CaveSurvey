@@ -18,6 +18,7 @@ import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.R;
 import com.astoev.cave.survey.activity.MainMenuActivity;
 import com.astoev.cave.survey.activity.UIUtilities;
+import com.astoev.cave.survey.activity.dialog.GrottoCenterDialog;
 import com.astoev.cave.survey.activity.dialog.ShareDialog;
 import com.astoev.cave.survey.dto.ProjectConfig;
 import com.astoev.cave.survey.fragment.ProjectFragment;
@@ -55,6 +56,7 @@ public class InfoActivity extends MainMenuActivity {
     public static final String MIME_OPEN_DIRECTORY = "vnd.android.document/directory";
     private static final String CAVEAR_APP_ID = "com.pawczak.cavear";
     private static final String SHARE_DIALOG = "share_dialog";
+    private static final String GROTTOCENTER_DIALOG = "grottocenter_dialog";
 
 
     @Override
@@ -346,6 +348,11 @@ public class InfoActivity extends MainMenuActivity {
                 return true;
             }
 
+            case R.id.info_action_upload_grottocenter: {
+                onUploadToGrottoCenter();
+                return true;
+            }
+
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -391,6 +398,13 @@ public class InfoActivity extends MainMenuActivity {
 
         ShareDialog shareDialog = new ShareDialog();
         shareDialog.show(getSupportFragmentManager(), SHARE_DIALOG);
+    }
+
+    private void onUploadToGrottoCenter() {
+        Log.i(Constants.LOG_TAG_SERVICE, "Uploading to GrottoCenter ... ");
+
+        GrottoCenterDialog grottoCenterDialog = new GrottoCenterDialog();
+        grottoCenterDialog.show(getSupportFragmentManager(), GROTTOCENTER_DIALOG);
     }
 
     /**

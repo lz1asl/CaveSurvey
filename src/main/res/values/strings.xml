@@ -182,7 +182,12 @@
         <item>Data</item>
         <item>Everything</item>
     </array>
-    
+
+    <string name="grottocenter_dialog_title">Upload to GrottoCenter</string>
+    <string name="grottocenter_username">Username</string>
+    <string name="grottocenter_password">Password</string>
+    <string name="grottocenter_login">Login</string>
+
     <!-- options -->
     <string name="measures_title">Data Input</string>
     <string name="data_input_units">Units</string>
@@ -481,6 +486,7 @@
     <string name="splash_storage_warning_title">New storage permissions</string>
     <string name="splash_storage_warning_text">Please pick CaveSurvey working directory.</string>
     <string name="splash_storage_warning_details"><u>Details</u></string>
+    <string name="export_grottocenter">GrottoCenter</string>
 
 
 </resources>
