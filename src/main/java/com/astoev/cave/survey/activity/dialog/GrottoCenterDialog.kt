@@ -4,19 +4,17 @@ import android.Manifest.permission
 import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
-import android.util.Log
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Spinner
 import androidx.fragment.app.DialogFragment
-import com.astoev.cave.survey.Constants
 import com.astoev.cave.survey.R
 import com.astoev.cave.survey.activity.UIUtilities
+import com.astoev.cave.survey.service.export.zip.ZipExport
+import com.astoev.cave.survey.service.export.zip.ZipType
+import com.astoev.cave.survey.task.GrottoCenterFileUploadTask
 import com.astoev.cave.survey.util.PermissionUtil
-import org.json.JSONObject
-import java.io.OutputStreamWriter
-import java.net.HttpURLConnection
-import java.net.URL
-import java.util.Scanner
 
 class GrottoCenterDialog : DialogFragment() {
 
@@ -33,7 +31,18 @@ class GrottoCenterDialog : DialogFragment() {
         val view = inflater.inflate(R.layout.grottocenter_upload, null)
         builder.setView(view)
 
-        val loginButton = view.findViewById<Button>(R.id.grottocenter_login)
+
+        // possible values
+        val uploadMode = view.findViewById<Spinner>(R.id.grottocenter_upload_type)
+        val adapterShareModes: ArrayAdapter<*> = ArrayAdapter.createFromResource(
+            view.context,
+            R.array.share_type,
+            android.R.layout.simple_spinner_item
+        )
+        adapterShareModes.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        uploadMode.adapter = adapterShareModes
+
+        val loginButton = view.findViewById<Button>(R.id.grottocenter_upload)
         loginButton.setOnClickListener {
 
             if (PermissionUtil.requestPermission(permission.INTERNET, this.activity, PERMISSION_REQUEST_INTERNET)) {
@@ -48,53 +57,31 @@ class GrottoCenterDialog : DialogFragment() {
 
                 loginButton.isEnabled = false
 
-                exchangeCredentialsForToken(usernameField.text.toString(), passwordField.text.toString()) { token ->
-                    //                uploadFiles(token)
+                val export = ZipExport(this.resources)
+                export.setZipType(ZipType.fromIndex(uploadMode.selectedItemPosition))
 
-                }
+                val uploadTask = GrottoCenterFileUploadTask(usernameField.text.toString(), passwordField.text.toString(),
+                    view.context, export, object : GrottoCenterFileUploadTask.UploadListener {
+
+                    override fun onUploadProgress(progress: Int) {
+                        // Update UI with upload progress
+                    }
+
+                    override fun onUploadComplete(success: Boolean) {
+                        if (success) {
+                            UIUtilities.showNotification(R.string.success)
+                            dismiss()
+                        } else {
+                            UIUtilities.showNotification(R.string.error)
+                            loginButton.isEnabled = true
+                        }
+                    }
+                })
+                uploadTask.execute()
             }
         }
 
         // create the Dialog
         return builder.create()
-    }
-
-    private fun exchangeCredentialsForToken(username: String, password: String, onTokenReceived: (String) -> Unit) {
-        Thread {
-            Log.i(Constants.LOG_TAG_SERVICE, "Authenticate $username")
-            val url = URL("https://api.grottocenter.org/api/v1/login")
-            val connection = url.openConnection() as HttpURLConnection
-            connection.requestMethod = "POST"
-            connection.setRequestProperty("Content-Type", "text/plain;charset=UTF-8")
-            connection.doOutput = true
-
-            val postData = "{\"email\": \"${username}\", \"password\": \"${password}\"}"
-
-            try {
-                val outputStream = OutputStreamWriter(connection.outputStream)
-                outputStream.write(postData)
-                outputStream.flush()
-
-                val responseCode = connection.responseCode
-                if (responseCode == HttpURLConnection.HTTP_OK) {
-                    val inputStream = connection.inputStream
-                    val scanner = Scanner(inputStream).useDelimiter("\\A")
-                    val response = if (scanner.hasNext()) scanner.next() else ""
-                    val token = JSONObject(response).get("token").toString();
-                    Log.i(Constants.LOG_TAG_SERVICE, "authenticated")
-
-                    onTokenReceived(token)
-                } else {
-                    Log.e(Constants.LOG_TAG_SERVICE, "got $responseCode with ${connection.responseMessage}")
-                    UIUtilities.showNotification("Got $responseCode")
-                }
-                connection.disconnect()
-            } catch (e: Exception) {
-                Log.e(Constants.LOG_TAG_SERVICE, "got ${e.message} ", e)
-                UIUtilities.showNotification("Got ${e.message}")
-            } finally {
-                connection.disconnect()
-            }
-        }.start()
     }
 }

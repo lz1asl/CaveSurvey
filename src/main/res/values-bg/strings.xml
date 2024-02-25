@@ -178,7 +178,10 @@
     <string name="grottocenter_dialog_title">Качване към GrottoCenter</string>
     <string name="grottocenter_username">потребител</string>
     <string name="grottocenter_password">парола</string>
-    <string name="grottocenter_login">Вход</string>
+    <string name="grottocenter_authenticating">Аутентикация ...</string>
+    <string name="grottocenter_preparing">Подготовка ...</string>
+    <string name="grottocenter_uploading">Качване ...</string>
+    <string name="grottocenter_upload">Качи</string>
 
     <!-- options -->
     <string name="measures_title">Измервания</string>

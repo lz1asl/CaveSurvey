@@ -186,7 +186,10 @@
     <string name="grottocenter_dialog_title">Upload to GrottoCenter</string>
     <string name="grottocenter_username">Username</string>
     <string name="grottocenter_password">Password</string>
-    <string name="grottocenter_login">Login</string>
+    <string name="grottocenter_authenticating">Authenticating ...</string>
+    <string name="grottocenter_preparing">Preparing ...</string>
+    <string name="grottocenter_uploading">Uploading ...</string>
+    <string name="grottocenter_upload">Upload</string>
 
     <!-- options -->
     <string name="measures_title">Data Input</string>
