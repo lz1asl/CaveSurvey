@@ -9,6 +9,18 @@
         android:visible="true"
         myapp:showAsAction="ifRoom|withText" />
     <item
+        android:id="@+id/info_action_view_files"
+        android:icon="@drawable/ic_action_collection"
+        android:title="@string/export_view_files"
+        android:visible="true"
+        myapp:showAsAction="ifRoom|withText" />
+    <item
+        android:id="@+id/info_action_cavear"
+        android:icon="@drawable/cavear_logo"
+        android:title="@string/export_cavear"
+        android:visible="true"
+        myapp:showAsAction="ifRoom|withText" />
+    <item
         android:id="@+id/info_action_openstopo"
         android:icon="@drawable/speleotux_logo"
         android:title="@string/export_openstopo_title"
@@ -21,29 +33,15 @@
         android:visible="true"
         myapp:showAsAction="ifRoom|withText" />
     <item
-        android:id="@+id/info_action_cavear"
-        android:icon="@drawable/cavear_logo"
-        android:title="@string/export_cavear"
+        android:id="@+id/info_action_upload_grottocenter"
+        android:icon="@drawable/grottocenter_logo"
+        android:title="@string/export_grottocenter"
         android:visible="true"
         myapp:showAsAction="ifRoom|withText" />
-    <item
-        android:id="@+id/info_action_view_files"
-        android:icon="@drawable/ic_action_collection"
-        android:title="@string/export_view_files"
-        android:visible="true"
-        myapp:showAsAction="ifRoom|withText" />
-
     <item
         android:id="@+id/info_action_share"
         android:icon="@drawable/ic_baseline_share_24"
         android:title="@string/export_share"
-        android:visible="true"
-        myapp:showAsAction="ifRoom|withText" />
-
-    <item
-        android:id="@+id/info_action_upload_grottocenter"
-        android:icon="@drawable/grottocenter_logo"
-        android:title="@string/export_grottocenter"
         android:visible="true"
         myapp:showAsAction="ifRoom|withText" />
 </menu>

@@ -168,7 +168,7 @@
 
 
     <string name="export_xls">Exportálás Excel-be (xls)</string>
-    <string name="export_vtopo">Exportálás VisualTopo-ba (tro)</string>
+    <string name="export_vtopo">VisualTopo (tro)</string>
     <string name="export_view_files">Adatfájlok</string>
     <string name="export_cavear">Exportálás CaveAR-ba (csv)</string>
     <string name="export_share">Megosztás</string>

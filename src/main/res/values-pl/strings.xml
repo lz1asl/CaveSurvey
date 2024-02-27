@@ -161,7 +161,7 @@
 
 
     <string name="export_xls">Eksportuj do Excela</string>
-    <string name="export_vtopo">Eksportuj do Visual Topo</string>
+    <string name="export_vtopo">Visual Topo</string>
     <string name="export_view_files">Pliki danych</string>
     <string name="export_done">Wyeksportowano do %1$s</string>
     <string name="export_io_error">Błąd zapisu na kartę SD</string>

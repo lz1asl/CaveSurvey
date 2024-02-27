@@ -161,7 +161,7 @@
 
 
     <string name="export_xls">Εξαγωγή στο Excel</string>
-    <string name="export_vtopo">Εξαγωγή στο Visual Topo</string>
+    <string name="export_vtopo">Visual Topo</string>
     <string name="export_view_files">Αρχεία δεδομένων</string>
     <string name="export_done">Εξήχθη στο %1$s</string>
     <string name="export_io_error">Αποτυχία εγγραφής στην κάρτα SD</string>

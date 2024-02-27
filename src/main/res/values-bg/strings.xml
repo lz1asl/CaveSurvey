@@ -161,7 +161,7 @@
 
 
     <string name="export_xls">Excel eкспорт</string>
-    <string name="export_vtopo">Visual Topo eкспорт</string>
+    <string name="export_vtopo">Visual Topo</string>
     <string name="export_cavear_missing">CaveAR не е инсталиран</string>
     <string name="export_view_files">Файлове</string>
     <string name="export_share">Споделяне</string>

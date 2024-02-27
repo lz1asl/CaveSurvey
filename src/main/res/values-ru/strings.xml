@@ -155,7 +155,7 @@
 
 
     <string name="export_xls">Excel eкспорт</string>
-    <string name="export_vtopo">Visual Topo eкспорт</string>
+    <string name="export_vtopo">Visual Topo</string>
     <string name="export_view_files">Файлы</string>
     <string name="export_done">Експорт в %1$s</string>
     <string name="export_io_error">Неуспешное сохранение на SD карт</string>
