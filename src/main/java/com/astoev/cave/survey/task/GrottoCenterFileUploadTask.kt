@@ -18,7 +18,6 @@ import java.io.DataOutputStream
 import java.io.OutputStreamWriter
 import java.net.HttpURLConnection
 import java.net.URL
-import java.net.URLEncoder
 import java.util.Scanner
 
 class GrottoCenterFileUploadTask(
@@ -48,7 +47,7 @@ class GrottoCenterFileUploadTask(
             progressDialog.show()
         }
 
-        override fun doInBackground(vararg params: Void?): Boolean {
+    override fun doInBackground(vararg params: Void?): Boolean {
 
             Log.i(Constants.LOG_TAG_SERVICE, "Authenticate $username")
             val authConnection = URL(GROTTOCENTER_URL_PREFIX + "/api/v1/login").openConnection() as HttpURLConnection
@@ -96,18 +95,20 @@ class GrottoCenterFileUploadTask(
                             uploadConnection.useCaches = false
                             uploadConnection.requestMethod = "POST"
                             uploadConnection.setRequestProperty("Connection", "Keep-Alive")
-                            uploadConnection.setRequestProperty("Content-Type", "multipart/form-data; boundary=$boundary")
+                            uploadConnection.setRequestProperty("Content-Type", "multipart/form-data; boundary=$boundary; charset=UTF-8")
                             uploadConnection.setRequestProperty("Authorization", "Bearer $token")
 
                             val projectName = Workspace.getCurrentInstance().activeProject.name;
-                            val formData = mapOf(
+                            val formData = mutableMapOf(
                                 "type" to "Dataset",
-                                "title" to "$projectName export files",
-                                "description" to "CaveSurvey ${AndroidUtil.getAppVersion()} generated upload",
-                                "mainLanguage" to "000", // TODO what are the corresponding languages?
+                                "title" to "$projectName survey files",
+                                "description" to "CaveSurvey ${AndroidUtil.getAppVersion()} generated export",
+                                "mainLanguage" to getLanguage(),
                                 "option" to "Author created this document",
                                 "license" to "{ \"id\": 1, \"isCopyrighted\": true, \"name\": \"CC-BY-SA\", \"text\": \"Attribution-ShareAlike\", \"url\": \"https://creativecommons.org/licenses/by-sa/3.0/\" }"
                             )
+
+//                            addLocation(formData);
 
                             try {
                              val outputStream = DataOutputStream(uploadConnection.outputStream)
@@ -116,7 +117,7 @@ class GrottoCenterFileUploadTask(
                                     outputStream.writeBytes(twoHyphens + boundary + lineEnd)
                                     outputStream.writeBytes("Content-Disposition: form-data; name=\"$key\"$lineEnd")
                                     outputStream.writeBytes(lineEnd)
-                                    outputStream.writeBytes(URLEncoder.encode(value, "UTF-8") + lineEnd)
+                                    outputStream.writeBytes(value + lineEnd)
                                 }
 
                                 outputStream.writeBytes(twoHyphens + boundary + lineEnd)
@@ -197,4 +198,29 @@ class GrottoCenterFileUploadTask(
             progressDialog.dismiss()
             listener.onUploadComplete(result)
         }
-    }
+
+        private fun getLanguage() : String {
+
+            return when (ConfigUtil.getStringProperty(ConfigUtil.PREF_LOCALE)) {
+                "bg" -> "bul"
+                "de" -> "ger"
+                "el" -> "gre"
+                "en" -> "eng"
+                "es" -> "spa"
+                else -> "000" // hu, pl, ru, zh not present in GrottoCenter
+            }
+        }
+
+   /* private fun addLocation(formData: MutableMap<String, String>) {
+
+        DaoUtil.getCurrProjectLegs(false).forEach {
+            val location = DaoUtil.getLocationByPoint(it.fromPoint)
+            if (location != null) {
+                formData["latitude"] = LocationUtil.formatLatitude(location.latitude)
+                formData["longitude"] = LocationUtil.formatLongitude(location.longitude)
+                return
+            }
+        }
+    }*/
+
+}
