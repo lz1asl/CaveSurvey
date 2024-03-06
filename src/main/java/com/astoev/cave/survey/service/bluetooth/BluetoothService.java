@@ -799,9 +799,7 @@ public class BluetoothService {
 
                         // consume
                         if (measures != null) {
-                            for (Measure measure : measures) {
-                                sendMeasureToUI(measure);
-                            }
+                            sendMeasuresToUI(measures);
                         }
                     } else {
                         Log.i(LOG_TAG_BT, "Ignore characteristic update: " + characteristic.getUuid() + " : " + new String(characteristic.getValue()));
@@ -831,22 +829,33 @@ public class BluetoothService {
             }
         }
 
-        private void sendMeasureToUI(Measure aMeasure) {
-            if (aMeasure != null && expectingMeasurement) {
-                // consume
-                Bundle b = new Bundle();
-                b.putFloatArray(Constants.MEASURE_VALUE_KEY,  new float[] {aMeasure.getValue()});
-                b.putStringArray(Constants.MEASURE_TYPE_KEY, new String[] {aMeasure.getMeasureType().toString()});
-                b.putStringArray(Constants.MEASURE_UNIT_KEY, new String[]{aMeasure.getMeasureUnit().toString()});
-                if (mTargets.size() == 1) {
-                    b.putStringArray(Constants.MEASURE_TARGET_KEY, new String[] {mTargets.get(0).toString()});
-                } else {
-                    b.putStringArray(Constants.MEASURE_TARGET_KEY, new String[]{mTargets.get(mMeasureTypes.indexOf(aMeasure.getMeasureType())).toString()});
+        private void sendMeasuresToUI(List<Measure> aMeasures) {
+            if (aMeasures != null && expectingMeasurement) {
+
+                for (int targetIndex = 0; targetIndex < mTargets.size(); targetIndex++) {
+                    // relate with the target
+                    Constants.Measures target = mTargets.get(targetIndex);
+                    Constants.MeasureTypes measureType = mMeasureTypes.get(targetIndex);
+                    Measure measurement = null;
+                    for (Measure measure : aMeasures) {
+                        if (measure.getMeasureType().equals(measureType)) {
+                            measurement = measure;
+                            break;
+                        }
+                    }
+
+                    // consume
+                    if (measurement != null) {
+                        Bundle b = new Bundle();
+                        b.putFloatArray(Constants.MEASURE_VALUE_KEY, new float[]{measurement.getValue()});
+                        b.putStringArray(Constants.MEASURE_TYPE_KEY, new String[]{measurement.getMeasureType().toString()});
+                        b.putStringArray(Constants.MEASURE_UNIT_KEY, new String[]{measurement.getMeasureUnit().toString()});
+                        b.putStringArray(Constants.MEASURE_TARGET_KEY, new String[]{target.toString()});
+                        mReceiver.send(Activity.RESULT_OK, b);
+                    }
                 }
-                mReceiver.send(Activity.RESULT_OK, b);
             }
         }
-
     }
 
     public static void storeConnectedDevice(DiscoveredBluetoothDevice aDevice) {
