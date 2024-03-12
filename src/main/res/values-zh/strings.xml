@@ -162,7 +162,7 @@
 
 
     <string name="export_xls">导出Excel</string>
-    <string name="export_vtopo">导出Visual Topo</string>
+    <string name="export_vtopo">Visual Topo</string>
     <string name="export_view_files">数据文件</string>
     <string name="export_done">导出到 %1$s</string>
     <string name="export_io_error">无法写入SD卡</string>

@@ -161,7 +161,7 @@
 
 
     <string name="export_xls">Excel eкспорт</string>
-    <string name="export_vtopo">Visual Topo eкспорт</string>
+    <string name="export_vtopo">Visual Topo</string>
     <string name="export_cavear_missing">CaveAR не е инсталиран</string>
     <string name="export_view_files">Файлове</string>
     <string name="export_share">Споделяне</string>
@@ -174,7 +174,15 @@
         <item>Данни</item>
         <item>Всички</item>
     </array>
-    
+
+    <string name="grottocenter_dialog_title">Качване към GrottoCenter</string>
+    <string name="grottocenter_username">потребител</string>
+    <string name="grottocenter_password">парола</string>
+    <string name="grottocenter_authenticating">Аутентикация ...</string>
+    <string name="grottocenter_preparing">Подготовка ...</string>
+    <string name="grottocenter_uploading">Качване ...</string>
+    <string name="grottocenter_upload">Качи</string>
+
     <!-- options -->
     <string name="measures_title">Измервания</string>
     <string name="data_input_units">Единици</string>

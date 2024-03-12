@@ -122,6 +122,16 @@ public class UIUtilities {
         }
     }
 
+    public static boolean validateLength(EditText aEditField, int length) {
+        String value = aEditField.getText().toString();
+        if (StringUtils.isEmpty(value) || value.length() < length) {
+            aEditField.setError(aEditField.getContext().getString(R.string.required));
+            aEditField.requestFocus();
+            return false;
+        }
+        return true;
+    }
+
     public static boolean checkAzimuth(EditText aEditText) {
         boolean valid = MapUtilities.isAzimuthValid(StringUtils.getFromEditTextNotNull(aEditText));
 

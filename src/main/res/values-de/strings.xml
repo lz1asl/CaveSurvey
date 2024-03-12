@@ -149,7 +149,7 @@
 
 
     <string name="export_xls">Als .xls exportieren</string>
-    <string name="export_vtopo">Für Visual Topo exportieren </string>
+    <string name="export_vtopo">Visual Topo</string>
     <string name="export_view_files">Dateien</string>
     <string name="export_done">Exportiert nach %1$s</string>
     <string name="export_io_error">Schreiben zur SD-Karte gescheitert</string>
