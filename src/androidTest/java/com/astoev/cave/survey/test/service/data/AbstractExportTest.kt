@@ -1,48 +1,28 @@
 package com.astoev.cave.survey.test.service.data
 
 import android.util.Log
-import androidx.test.ext.junit.rules.ActivityScenarioRule
-import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.filters.LargeTest
 import com.astoev.cave.survey.Constants
-import com.astoev.cave.survey.activity.home.SplashActivity
 import com.astoev.cave.survey.model.Option
 import com.astoev.cave.survey.service.imp.ExcelImport
 import com.astoev.cave.survey.service.imp.LegData
 import com.astoev.cave.survey.test.helper.Common
 import com.astoev.cave.survey.test.helper.Data
 import com.astoev.cave.survey.test.helper.ExcelTestUtils
-import com.astoev.cave.survey.test.helper.Survey
 import com.astoev.cave.survey.util.ConfigUtil
 import com.astoev.cave.survey.util.FileStorageUtil
 import com.astoev.cave.survey.util.StreamUtil
 import org.junit.Assert.assertEquals
-import org.junit.Before
-import org.junit.Rule
-import org.junit.runner.RunWith
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStream
 
-@RunWith(AndroidJUnit4::class)
-@LargeTest
-abstract class AbstractExportTest {
+
+abstract class AbstractExportTest : AbstractUiTest() {
 
     var PARAM_PROJECT_NAME = "PROJECT_NAME"
     var PARAM_TODAY = "TODAY"
     var PARAM_CAVESURVEY_VERSION = "CAVESURVEY_VERSION"
 
-    @get:Rule
-    var activityRule = ActivityScenarioRule(SplashActivity::class.java)
-
-    @Before
-    fun initApp() {
-        Survey.initApp()
-    }
-
-    fun findAsset(path: String): InputStream {
-        return Common.context.assets.open(path)
-    }
 
     @Throws(IOException::class)
     fun exportToXlsAndRead(aSurveyName: String, aLegsCount: Int): List<LegData> {

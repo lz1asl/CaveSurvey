@@ -232,7 +232,7 @@ object Survey {
         onView(withId(id.drawingSurface))
             .perform(ViewActions.longClick())
             .perform(ViewActions.swipeRight())
-            .perform(ViewActions.click())
+            .perform(click())
 
         Common.clickWithDescription("Save")
     }
@@ -277,7 +277,7 @@ object Survey {
     }
 
     fun openLegWithText(text: String?) {
-        onView(withText(text)).perform(ViewActions.click())
+        onView(withText(text)).perform(click())
     }
 
     fun saveLeg() {

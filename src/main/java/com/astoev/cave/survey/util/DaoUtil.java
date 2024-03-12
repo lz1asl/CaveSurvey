@@ -370,6 +370,13 @@ public class DaoUtil {
                 int deletedPoint = dbHelper.getPointDao().delete(toPoint);
                 Log.d(Constants.LOG_TAG_DB, "Deleted point:" + deletedPoint);
 
+                // delete gallery if orphan
+                Leg prevLeg = getGalleryPrevLeg(aLegToDelete);
+                if (prevLeg == null) {
+                    Log.d(Constants.LOG_TAG_DB, "Deleted gallery:" + aLegToDelete.getGalleryId());
+                    dbHelper.getGalleryDao().deleteById(aLegToDelete.getGalleryId());
+                }
+
                 workspace.setActiveLeg(workspace.getLastLeg());
             }
 
