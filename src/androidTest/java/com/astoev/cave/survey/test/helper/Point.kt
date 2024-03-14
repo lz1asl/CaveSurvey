@@ -5,14 +5,31 @@ import com.astoev.cave.survey.R
 object Point {
 
     fun delete() {
+        delete(true)
+    }
+
+    fun delete(confirm: Boolean) {
         Common.openContextMenu()
         Common.click("Delete")
+        confirm(confirm)
     }
 
     fun reverse() {
+        reverse(true)
+    }
+
+    fun reverse(confirm: Boolean) {
         Common.openContextMenu()
         Common.click("Reverse")
-        Common.click("YES")
+        confirm(confirm)
+    }
+
+    private fun confirm(confirm: Boolean) {
+        if (confirm) {
+            Common.click("YES")
+        } else {
+            Common.click("NO")
+        }
     }
 
     fun nextLeg() {

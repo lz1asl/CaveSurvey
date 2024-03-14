@@ -3,6 +3,8 @@ package com.astoev.cave.survey.activity.main;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.Manifest.permission.CAMERA;
 import static android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
+import static com.astoev.cave.survey.activity.dialog.ConfirmationOperation.DELETE_LEG;
+import static com.astoev.cave.survey.activity.dialog.ConfirmationOperation.REVERSE_LEG;
 import static com.astoev.cave.survey.util.FileStorageUtil.JPG_FILE_EXTENSION;
 import static com.astoev.cave.survey.util.FileStorageUtil.MIME_TYPE_JPG;
 
@@ -386,7 +388,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         }
     }
 
-    public void deleteButton() {
+    public void deleteLeg() {
         try {
             Leg legEdited = getCurrentLeg();
             boolean deleted = DaoUtil.deleteLeg(legEdited);
@@ -552,7 +554,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                 vectorButton();
                 return true;
             case R.id.point_action_delete:
-                deleteButton();
+                confirmDeleteLeg();
                 return true;
             case R.id.point_action_reverse:
                 confirmReverseLeg();
@@ -1009,7 +1011,7 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
                 // build and show confirmation dialog
                 String message = getString(R.string.main_reverse_message, mCurrentLeg.buildLegDescription());
                 Bundle bundle = new Bundle();
-                bundle.putSerializable(ConfirmationDialog.OPERATION, ConfirmationOperation.REVERSE_LEG);
+                bundle.putSerializable(ConfirmationDialog.OPERATION, REVERSE_LEG);
                 bundle.putString(ConfirmationDialog.MESSAGE, message);
                 bundle.putString(ConfirmationDialog.TITLE, getString(R.string.title_warning));
 
@@ -1026,10 +1028,31 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
         }
     }
 
+    private void confirmDeleteLeg() {
+        try {
+            // build and show confirmation dialog
+            String message = getString(R.string.main_delete_message, mCurrentLeg.buildLegDescription());
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(ConfirmationDialog.OPERATION, DELETE_LEG);
+            bundle.putString(ConfirmationDialog.MESSAGE, message);
+            bundle.putString(ConfirmationDialog.TITLE, getString(R.string.title_warning));
+
+            ConfirmationDialog confirmationDialog = new ConfirmationDialog();
+            confirmationDialog.setArguments(bundle);
+            confirmationDialog.show(getSupportFragmentManager(), ConfirmationDialog.CONFIRM_DIALOG);
+        } catch (Exception e) {
+            Log.e(Constants.LOG_TAG_UI, "Failed to build reverse dialog", e);
+            UIUtilities.showNotification(R.string.error);
+        }
+    }
+
     @Override
     public boolean confirmOperation(ConfirmationOperation operationArg) {
-        if (ConfirmationOperation.REVERSE_LEG.equals(operationArg)){
+        if (REVERSE_LEG.equals(operationArg)) {
             reverseLeg();
+            return true;
+        } else if (DELETE_LEG.equals(operationArg)) {
+            deleteLeg();
             return true;
         } else {
             return super.confirmOperation(operationArg);
