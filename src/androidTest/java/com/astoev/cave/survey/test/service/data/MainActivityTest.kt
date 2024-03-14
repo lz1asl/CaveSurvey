@@ -3,6 +3,7 @@ package com.astoev.cave.survey.test.service.data
 import com.astoev.cave.survey.model.Option.UNIT_GRADS
 import com.astoev.cave.survey.model.Option.UNIT_METERS
 import com.astoev.cave.survey.test.helper.Common.checkVisible
+import com.astoev.cave.survey.test.helper.Common.goBack
 import com.astoev.cave.survey.test.helper.Point
 import com.astoev.cave.survey.test.helper.Point.nextLeg
 import com.astoev.cave.survey.test.helper.Survey
@@ -26,6 +27,16 @@ class MainActivityTest : AbstractUiTest() {
         nextLeg()
         checkVisible("A1->A2")
         Survey.setLegData(1.2f, 2.2f, null)
+
+        // quick gallery test
+        Survey.nextGallery()
+        checkVisible("A1->B1")
+        Survey.setLegData(3f, 3f, null)
+        Survey.openLegWithText("B1")
+        Point.delete()
+        Survey.nextGallery()
+        checkVisible("A1->B1")
+        goBack()
 
         // A2->A3
         nextLeg()
