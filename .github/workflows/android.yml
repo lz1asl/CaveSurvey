@@ -3,104 +3,33 @@ name: CaveSurvey Build
 on: [push]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    - name: set up JDK 17
-      uses: actions/setup-java@v3
-      with:
-        distribution: zulu
-        java-version: 17
-    - name: Patch No Bosch Library
-      run: git apply --ignore-space-change --ignore-whitespace no_bosch_library.patch
-    - name: Assemble Debug
-      run: ./gradlew assembleDebug
-    - name: Store APK
-      uses: actions/upload-artifact@v3
-      with:
-        name: CaveSurvey-debug.apk
-        path: build/outputs/apk/debug
-
-  unit-tests:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-    - name: checkout
-      uses: actions/checkout@v4
-    - name: set up JDK 17
-      uses: actions/setup-java@v3
-      with:
-        distribution: zulu
-        java-version: 17
-    - name: Patch No Bosch Library
-      run: git apply --ignore-space-change --ignore-whitespace no_bosch_library.patch
-    - name: Unit tests
-      run: ./gradlew test
-    - name: Test reports
-      uses: actions/upload-artifact@v3
-      with:
-        name: test-reports
-        path: build/reports/
-
-  espresso-tests:
-    needs: unit-tests
-    runs-on: macos-latest
-    strategy:
-      matrix:
-        api-level: [28]
     steps:
       - name: checkout
         uses: actions/checkout@v4
 
-      - name: set up JDK 17
-        uses: actions/setup-java@v3
-        with:
-          distribution: zulu
-          java-version: 17
-
       - name: Patch No Bosch Library
         run: git apply --ignore-space-change --ignore-whitespace no_bosch_library.patch
 
-      - name: Gradle cache
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*') }}-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}-${{ hashFiles('**/buildSrc/**/*.kt') }}
 
-      - name: AVD cache
-        uses: actions/cache@v3
-        id: avd-cache
+      - name: Set up Java
+        uses: actions/setup-java@v2
         with:
-          path: |
-            ~/.android/avd/*
-            ~/.android/adb*
-          key: avd-${{ matrix.api-level }}
+          distribution: "temurin"
+          java-version: 17
 
-      - name: create AVD and generate snapshot for caching
-        if: steps.avd-cache.outputs.cache-hit != 'true'
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: run tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: ${{ matrix.api-level }}
-          force-avd-creation: false
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          disable-animations: false
-          script: echo "Generated AVD snapshot for caching."
-
-      - name: Espresso tests
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: ${{ matrix.api-level }}
+          api-level: 28
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
           script: ./gradlew connectedCheck
-
-      - name: Test reports
-        uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: test-report
-          path: build/reports/
