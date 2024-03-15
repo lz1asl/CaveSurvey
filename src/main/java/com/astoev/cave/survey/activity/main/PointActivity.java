@@ -441,9 +441,12 @@ public class PointActivity extends MainMenuActivity implements AzimuthChangedLis
             Log.i(Constants.LOG_TAG_SERVICE, "Going to capture image in: " + photoFile.getUri());
             mCurrentPhotoFile = photoFile;
             final Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoFile.getUri());
-            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoFile.getUri());
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            } else {
+                Log.i(Constants.LOG_TAG_SERVICE, "No camera on the device");
+                UIUtilities.showNotification(R.string.error);
             }
         }
     }
