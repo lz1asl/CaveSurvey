@@ -64,9 +64,7 @@ class GrottoCenterFileUploadTask(
 
                 val responseCode = authConnection.responseCode
                 if (responseCode == HttpURLConnection.HTTP_OK) {
-                    val inputStream = authConnection.inputStream
-                    val scanner = Scanner(inputStream).useDelimiter("\\A")
-                    val response = if (scanner.hasNext()) scanner.next() else ""
+                    val response = readResponse(authConnection)
                     val token = JSONObject(response).get("token").toString();
                     Log.i(Constants.LOG_TAG_SERVICE, "authenticated")
                     authConnection.disconnect()
@@ -108,8 +106,6 @@ class GrottoCenterFileUploadTask(
                                 "license" to "{ \"id\": 1, \"isCopyrighted\": true, \"name\": \"CC-BY-SA\", \"text\": \"Attribution-ShareAlike\", \"url\": \"https://creativecommons.org/licenses/by-sa/3.0/\" }"
                             )
 
-//                            addLocation(formData);
-
                             try {
                              val outputStream = DataOutputStream(uploadConnection.outputStream)
 
@@ -150,6 +146,8 @@ class GrottoCenterFileUploadTask(
 
                                 val responseCode = uploadConnection.responseCode
                                 if (responseCode == HttpURLConnection.HTTP_OK) {
+                                    val responseBody = readResponse(uploadConnection)
+                                    Log.i(Constants.LOG_TAG_SERVICE, "Got $responseBody")
                                     return true
                                 } else {
                                     Log.e(Constants.LOG_TAG_SERVICE, "got $responseCode with ${uploadConnection.responseMessage}")
@@ -211,16 +209,10 @@ class GrottoCenterFileUploadTask(
             }
         }
 
-   /* private fun addLocation(formData: MutableMap<String, String>) {
-
-        DaoUtil.getCurrProjectLegs(false).forEach {
-            val location = DaoUtil.getLocationByPoint(it.fromPoint)
-            if (location != null) {
-                formData["latitude"] = LocationUtil.formatLatitude(location.latitude)
-                formData["longitude"] = LocationUtil.formatLongitude(location.longitude)
-                return
-            }
-        }
-    }*/
+   private fun readResponse(connection: HttpURLConnection) : String {
+       val inputStream = connection.inputStream
+       val scanner = Scanner(inputStream).useDelimiter("\\A")
+       return if (scanner.hasNext()) scanner.next() else ""
+   }
 
 }
