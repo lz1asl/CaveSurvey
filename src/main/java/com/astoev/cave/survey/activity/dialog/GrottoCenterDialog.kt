@@ -18,7 +18,7 @@ import com.astoev.cave.survey.util.PermissionUtil
 
 class GrottoCenterDialog : DialogFragment() {
 
-    private val PERMISSION_REQUEST_INTERNET: Int = 1001;
+    private val PERMISSION_REQUEST_INTERNET: Int = 1001
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         super.onCreateDialog(savedInstanceState)
@@ -57,10 +57,12 @@ class GrottoCenterDialog : DialogFragment() {
 
                 loginButton.isEnabled = false
 
+                val entranceId = view.findViewById<EditText>(R.id.grottocenter_entrance_id).text.toString()
+
                 val export = ZipExport(this.resources)
                 export.setZipType(ZipType.fromIndex(uploadMode.selectedItemPosition))
 
-                val uploadTask = GrottoCenterFileUploadTask(usernameField.text.toString(), passwordField.text.toString(),
+                val uploadTask = GrottoCenterFileUploadTask(usernameField.text.toString(), passwordField.text.toString(), entranceId,
                     view.context, export, object : GrottoCenterFileUploadTask.UploadListener {
 
                     override fun onUploadProgress(progress: Int) {
@@ -84,4 +86,5 @@ class GrottoCenterDialog : DialogFragment() {
         // create the Dialog
         return builder.create()
     }
+
 }

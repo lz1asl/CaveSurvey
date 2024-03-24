@@ -177,12 +177,16 @@
     </array>
 
     <string name="grottocenter_dialog_title">Качване към GrottoCenter</string>
+    <string name="grottocenter_entrance_id">Идентификатор на вход</string>
     <string name="grottocenter_username">потребител</string>
     <string name="grottocenter_password">парола</string>
     <string name="grottocenter_authenticating">Аутентикация ...</string>
     <string name="grottocenter_preparing">Подготовка ...</string>
     <string name="grottocenter_uploading">Качване ...</string>
+    <string name="grottocenter_assign_to_entrance">Добавяне към вход ...</string>
     <string name="grottocenter_upload">Качи</string>
+    <string name="grottocenter_info">Изпраща данните за проекта към https://grottocenter.org като документ.\nАрхивът може да бъде асоцииран със съществуваш вход и за да е видим е необходимо одобрение.</string>
+
 
     <!-- options -->
     <string name="measures_title">Измервания</string>

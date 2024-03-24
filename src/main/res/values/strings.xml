@@ -185,12 +185,15 @@
     </array>
 
     <string name="grottocenter_dialog_title">Upload to GrottoCenter</string>
+    <string name="grottocenter_entrance_id">Entrance Identifier</string>
     <string name="grottocenter_username">Username</string>
     <string name="grottocenter_password">Password</string>
     <string name="grottocenter_authenticating">Authenticating ...</string>
     <string name="grottocenter_preparing">Preparing ...</string>
     <string name="grottocenter_uploading">Uploading ...</string>
+    <string name="grottocenter_assign_to_entrance">Assign to entrance ...</string>
     <string name="grottocenter_upload">Upload</string>
+    <string name="grottocenter_info">Uploads current project data to https://grottocenter.org as a document.\nIt can be assigned to existing entrance and needs approval to be visible.</string>
 
     <!-- options -->
     <string name="measures_title">Data Input</string>

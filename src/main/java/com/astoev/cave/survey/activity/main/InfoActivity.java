@@ -21,6 +21,7 @@ import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.activity.dialog.GrottoCenterDialog;
 import com.astoev.cave.survey.activity.dialog.ShareDialog;
 import com.astoev.cave.survey.dto.ProjectConfig;
+import com.astoev.cave.survey.fragment.InfoDialogFragment;
 import com.astoev.cave.survey.fragment.ProjectFragment;
 import com.astoev.cave.survey.manager.ProjectManager;
 import com.astoev.cave.survey.model.Option;
@@ -57,6 +58,8 @@ public class InfoActivity extends MainMenuActivity {
     private static final String CAVEAR_APP_ID = "com.pawczak.cavear";
     private static final String SHARE_DIALOG = "share_dialog";
     private static final String GROTTOCENTER_DIALOG = "grottocenter_dialog";
+    private static final String GROTTOCENTER_TOOLTIP_DIALOG = "GROTTOCENTER_INFO_DIALOG";
+
 
 
     @Override
@@ -405,6 +408,15 @@ public class InfoActivity extends MainMenuActivity {
 
         GrottoCenterDialog grottoCenterDialog = new GrottoCenterDialog();
         grottoCenterDialog.show(getSupportFragmentManager(), GROTTOCENTER_DIALOG);
+    }
+
+    public void onGrottoCenterInfo(View view) {
+        InfoDialogFragment infoDialog = new InfoDialogFragment();
+        Bundle bundle = new Bundle();
+        String message = getString(R.string.grottocenter_info);
+        bundle.putString(InfoDialogFragment.MESSAGE, message);
+        infoDialog.setArguments(bundle);
+        infoDialog.show(getSupportFragmentManager(), GROTTOCENTER_TOOLTIP_DIALOG);
     }
 
     /**

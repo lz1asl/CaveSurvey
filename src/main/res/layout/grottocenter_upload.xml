@@ -6,12 +6,36 @@
     android:orientation="vertical"
     android:padding="16dp">
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:src="@drawable/ic_info_white"
+        android:layout_gravity="end"
+        android:contentDescription="@string/information"
+        android:onClick="onGrottoCenterInfo" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginBottom="5dp"
+        android:text="@string/share_title"/>
     <Spinner
         android:id="@+id/grottocenter_upload_type"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"/>
+        android:layout_marginBottom="40dp"/>
+
+    <EditText
+        android:id="@+id/grottocenter_entrance_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/grottocenter_entrance_id"
+        android:layout_marginBottom="20dp"
+        android:inputType="numberDecimal"
+        android:maxLength="10"/>
 
     <EditText
         android:id="@+id/grottocenter_username"
@@ -33,7 +57,7 @@
         android:id="@+id/grottocenter_upload"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="20dp"
         android:text="@string/grottocenter_upload" />
 
     <ProgressBar

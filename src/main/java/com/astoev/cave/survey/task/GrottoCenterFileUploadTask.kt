@@ -18,11 +18,13 @@ import java.io.DataOutputStream
 import java.io.OutputStreamWriter
 import java.net.HttpURLConnection
 import java.net.URL
+import java.util.Date
 import java.util.Scanner
 
 class GrottoCenterFileUploadTask(
     private val username: String,
     private val password: String,
+    private val entranceId: String?,
     private val context: Context,
     private val export: ZipExport,
     private val listener: UploadListener
@@ -83,7 +85,7 @@ class GrottoCenterFileUploadTask(
                             progressDialog.setMessage(context.getString(R.string.grottocenter_uploading))
                             publishProgress(20)
 
-                            Log.i(Constants.LOG_TAG_SERVICE, "Uploading $exportFile.uri")
+                            Log.i(Constants.LOG_TAG_SERVICE, "Uploading ${exportFile.uri}")
                             val boundary = "*****"
                             val lineEnd = "\r\n"
                             val twoHyphens = "--"
@@ -100,7 +102,7 @@ class GrottoCenterFileUploadTask(
                             val formData = mutableMapOf(
                                 "type" to "Dataset",
                                 "title" to "$projectName survey files",
-                                "description" to "CaveSurvey ${AndroidUtil.getAppVersion()} generated export",
+                                "description" to "CaveSurvey ${AndroidUtil.getAppVersion()} generated export on ${Date()}",
                                 "mainLanguage" to getLanguage(),
                                 "option" to "Author created this document",
                                 "license" to "{ \"id\": 1, \"isCopyrighted\": true, \"name\": \"CC-BY-SA\", \"text\": \"Attribution-ShareAlike\", \"url\": \"https://creativecommons.org/licenses/by-sa/3.0/\" }"
@@ -117,7 +119,8 @@ class GrottoCenterFileUploadTask(
                                 }
 
                                 outputStream.writeBytes(twoHyphens + boundary + lineEnd)
-                                outputStream.writeBytes("Content-Disposition: form-data; name=\"files\";filename=\"${exportFile.name}\"$lineEnd")
+                                outputStream.writeBytes("Content-Disposition: form-data; name=\"files\"; filename=\"${exportFile.name}\"$lineEnd")
+                                outputStream.writeBytes("Content-Type: application/zip$lineEnd")
                                 outputStream.writeBytes(lineEnd)
 
                                 val fileInputStream = ConfigUtil.getContext().contentResolver.openInputStream(exportFile.uri)
@@ -147,7 +150,30 @@ class GrottoCenterFileUploadTask(
                                 val responseCode = uploadConnection.responseCode
                                 if (responseCode == HttpURLConnection.HTTP_OK) {
                                     val responseBody = readResponse(uploadConnection)
+                                    val documentId = JSONObject(responseBody).getJSONObject("document").getLong("id")
+
                                     Log.i(Constants.LOG_TAG_SERVICE, "Got $responseBody")
+                                    UIUtilities.showNotification("Created document $documentId")
+
+                                    if (entranceId != null && entranceId.isNotBlank()) {
+                                        progressDialog.setMessage(context.getString(R.string.grottocenter_assign_to_entrance))
+                                        Log.i(Constants.LOG_TAG_SERVICE, "Assign $documentId to entrance $entranceId")
+                                        val assignConnection = URL("$GROTTOCENTER_URL_PREFIX/api/v1/entrances/$entranceId/documents/$documentId").openConnection() as HttpURLConnection
+                                        assignConnection.requestMethod = "PUT"
+                                        assignConnection.setRequestProperty("Authorization", "Bearer $token")
+                                        assignConnection.disconnect()
+
+                                        val responseCode = assignConnection.responseCode
+                                        if (responseCode == HttpURLConnection.HTTP_NO_CONTENT) {
+                                            val responseBody = readResponse(assignConnection)
+                                            Log.i(Constants.LOG_TAG_SERVICE, "Success $responseBody")
+                                            return true
+                                        } else {
+                                            Log.e(Constants.LOG_TAG_SERVICE, "got $responseCode with ${assignConnection.responseMessage}")
+                                            UIUtilities.showNotification("Got HTTP $responseCode, ${assignConnection.responseMessage}")
+                                            return false
+                                        }
+                                    }
                                     return true
                                 } else {
                                     Log.e(Constants.LOG_TAG_SERVICE, "got $responseCode with ${uploadConnection.responseMessage}")
