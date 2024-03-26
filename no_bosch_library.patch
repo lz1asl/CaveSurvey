@@ -1,10 +1,10 @@
-From 7c61accd42f262f57339360e47bb09d0d7ad2ecc Mon Sep 17 00:00:00 2001
+From 4cf28e710adce20708b9cf8d3fe0ef76a799ed45 Mon Sep 17 00:00:00 2001
 From: lz1asl <alexander.stoev@gmail.com>
-Date: Thu, 16 Nov 2023 11:18:07 +0200
-Subject: [PATCH] fix no bosch library patch
+Date: Tue, 26 Mar 2024 23:35:22 +0200
+Subject: [PATCH] bosch patch update
 
 ---
- build.gradle                                  |   2 -
+ build.gradle                                  |   3 -
  .../service/bluetooth/BluetoothService.java   |  10 -
  .../glm/AbstractBoschGLMBluetoothDevice.java  | 208 ------------------
  .../glm/BoschGLM100CBluetoothDevice.java      |  58 -----
@@ -13,7 +13,7 @@ Subject: [PATCH] fix no bosch library patch
  .../bosch/glm/BoschPLR40CBluetoothDevice.java |  55 -----
  .../bosch/glm/BoschPLR50CBluetoothDevice.java |  57 -----
  .../glm/GLMBluetoothConnectionWrapper.java    |  75 -------
- 9 files changed, 578 deletions(-)
+ 9 files changed, 579 deletions(-)
  delete mode 100644 src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/AbstractBoschGLMBluetoothDevice.java
  delete mode 100644 src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschGLM100CBluetoothDevice.java
  delete mode 100644 src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/BoschGLM50CBluetoothDevice.java
@@ -23,23 +23,24 @@ Subject: [PATCH] fix no bosch library patch
  delete mode 100644 src/main/java/com/astoev/cave/survey/service/bluetooth/device/comm/bosch/glm/GLMBluetoothConnectionWrapper.java
 
 diff --git a/build.gradle b/build.gradle
-index 8d1f3088..0676d6e6 100644
+index 1664f1b7..75239d15 100644
 --- a/build.gradle
 +++ b/build.gradle
-@@ -25,8 +25,6 @@ dependencies {
+@@ -21,9 +21,6 @@ dependencies {
      implementation 'org.apache.commons:commons-csv:1.9.0'
      implementation "androidx.multidex:multidex:2.0.1"
  
 -    // Bosch internal protocol
 -    implementation files('../CaveSurveyBoschGLM/binary/CaveSurveyBoschGLM.jar')
- 
+-
      // kotlin
-     implementation 'androidx.core:core-ktx:1.10.1'
+     implementation 'androidx.core:core-ktx:1.12.0'
+     implementation "org.jetbrains.kotlin:kotlin-stdlib"
 diff --git a/src/main/java/com/astoev/cave/survey/service/bluetooth/BluetoothService.java b/src/main/java/com/astoev/cave/survey/service/bluetooth/BluetoothService.java
-index 70837c93..4ad443b3 100644
+index 01a3549b..10082aae 100644
 --- a/src/main/java/com/astoev/cave/survey/service/bluetooth/BluetoothService.java
 +++ b/src/main/java/com/astoev/cave/survey/service/bluetooth/BluetoothService.java
-@@ -55,11 +55,6 @@ import com.astoev.cave.survey.service.bluetooth.device.comm.CEMILDMBluetoothDevi
+@@ -59,11 +59,6 @@ import com.astoev.cave.survey.service.bluetooth.device.comm.CEMILDMBluetoothDevi
  import com.astoev.cave.survey.service.bluetooth.device.comm.LaserAceBluetoothDevice;
  import com.astoev.cave.survey.service.bluetooth.device.comm.LeicaDistoD3aBtBluetoothDevice;
  import com.astoev.cave.survey.service.bluetooth.device.comm.TruPulse360BluetoothDevice;
@@ -51,7 +52,7 @@ index 70837c93..4ad443b3 100644
  import com.astoev.cave.survey.service.bluetooth.device.comm.distox.DistoXv1BluetoothDevice;
  import com.astoev.cave.survey.service.bluetooth.device.comm.distox.DistoXv2BluetoothDevice;
  import com.astoev.cave.survey.service.bluetooth.lecommands.AbstractBluetoothCommand;
-@@ -103,11 +98,6 @@ public class BluetoothService {
+@@ -107,11 +102,6 @@ public class BluetoothService {
          SUPPORTED_BLUETOOTH_COM_DEVICES.add(new TruPulse360BluetoothDevice());
          SUPPORTED_BLUETOOTH_COM_DEVICES.add(new DistoXv1BluetoothDevice());
          SUPPORTED_BLUETOOTH_COM_DEVICES.add(new DistoXv2BluetoothDevice());
@@ -672,5 +673,5 @@ index 2f8e4b2d..00000000
 -    }
 -}
 -- 
-2.34.1
+2.40.1
 
