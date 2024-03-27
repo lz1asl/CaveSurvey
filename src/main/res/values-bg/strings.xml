@@ -401,7 +401,7 @@
     <string name="gps_type_manual">Ръчно въвеждане</string>
 
     <string name="unit_meters">метри</string>
-    <string name="unit_feets">футове</string>
+    <string name="unit_feet">футове</string>
     <string name="unit_degrees">градуси</string>
     <string name="unit_grads">гради</string>
 

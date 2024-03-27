@@ -422,7 +422,7 @@
     <string name="gps_type_manual">GPS Manual</string>
 
     <string name="unit_meters">meters</string>
-    <string name="unit_feets">feet</string>
+    <string name="unit_feet">feet</string>
     <string name="unit_degrees">degrees</string>
     <string name="unit_grads">grads</string>
 
