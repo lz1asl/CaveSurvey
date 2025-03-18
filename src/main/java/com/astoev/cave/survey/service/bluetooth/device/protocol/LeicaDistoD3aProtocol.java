@@ -9,7 +9,7 @@ import com.astoev.cave.survey.service.bluetooth.Measure;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LeicaDistoD3aProtocol extends AbstractDeviceProtocol {
+public class LeicaDistoD3aProtocol extends AbstractPacketBasedDeviceProtocol {
 
     private static final String MESSAGE_REGEX = "(22\\.\\.01[\\+|\\-][0-9]{8} )?31\\.\\.00\\+[0-9]{8}";
 

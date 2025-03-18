@@ -1,6 +1,6 @@
 package com.astoev.cave.survey.service.bluetooth.device.protocol;
 
-public abstract class AbstractNMEADeviceProtocol extends AbstractDeviceProtocol {
+public abstract class AbstractNMEADeviceProtocol extends AbstractPacketBasedDeviceProtocol {
 
     public static final String NEW_LINE = "\n";
 

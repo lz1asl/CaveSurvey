@@ -6,7 +6,7 @@ import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.Measure;
 import com.astoev.cave.survey.service.bluetooth.device.comm.AbstractBluetoothRFCOMMDevice;
-import com.astoev.cave.survey.service.bluetooth.device.protocol.AbstractDeviceProtocol;
+import com.astoev.cave.survey.service.bluetooth.device.protocol.AbstractPacketBasedDeviceProtocol;
 import com.astoev.cave.survey.service.bluetooth.device.protocol.DistoXProtocol;
 
 import java.io.IOException;
@@ -60,7 +60,7 @@ public abstract class AbstractDistoXBluetoothDevice extends AbstractBluetoothRFC
     }
 
     @Override
-    public AbstractDeviceProtocol getProtocol() {
+    public AbstractPacketBasedDeviceProtocol getProtocol() {
         return new DistoXProtocol();
     }
 }

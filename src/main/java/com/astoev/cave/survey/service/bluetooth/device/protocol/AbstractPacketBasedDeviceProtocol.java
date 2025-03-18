@@ -5,7 +5,7 @@ import com.astoev.cave.survey.service.bluetooth.Measure;
 
 import java.util.List;
 
-public abstract class AbstractDeviceProtocol {
+public abstract class AbstractPacketBasedDeviceProtocol {
 
     public abstract List<Measure> packetToMeasurements(byte[] dataPacket) throws DataException;
 

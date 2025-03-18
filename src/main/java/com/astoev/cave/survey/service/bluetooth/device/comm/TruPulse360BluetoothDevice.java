@@ -5,7 +5,7 @@ import android.util.Log;
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.Measure;
-import com.astoev.cave.survey.service.bluetooth.device.protocol.AbstractDeviceProtocol;
+import com.astoev.cave.survey.service.bluetooth.device.protocol.AbstractPacketBasedDeviceProtocol;
 import com.astoev.cave.survey.service.bluetooth.device.protocol.TruPulseProtocol;
 
 import java.io.IOException;
@@ -79,7 +79,7 @@ public class TruPulse360BluetoothDevice extends AbstractBluetoothRFCOMMDevice {
     }
 
     @Override
-    public AbstractDeviceProtocol getProtocol() {
+    public AbstractPacketBasedDeviceProtocol getProtocol() {
         return new TruPulseProtocol();
     }
 }

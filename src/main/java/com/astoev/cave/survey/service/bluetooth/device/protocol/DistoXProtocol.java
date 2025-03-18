@@ -15,7 +15,7 @@ import java.util.List;
  * DistoX protocol implementation.
  * Adopted file from Rich Smith, see https://github.com/richsmith/sexytopo/blob/master/src/main/java/org/hwyl/sexytopo/comms/DistoXProtocol.java.
  */
-public class DistoXProtocol extends AbstractDeviceProtocol {
+public class DistoXProtocol extends AbstractPacketBasedDeviceProtocol {
 
     private static final int ADMIN = 0;
     private static final int DISTANCE_LOW_BYTE = 1;

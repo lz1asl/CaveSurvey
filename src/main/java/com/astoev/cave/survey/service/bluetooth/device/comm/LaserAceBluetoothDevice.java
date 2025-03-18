@@ -4,7 +4,7 @@ import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.Constants.MeasureTypes;
 import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.Measure;
-import com.astoev.cave.survey.service.bluetooth.device.protocol.AbstractDeviceProtocol;
+import com.astoev.cave.survey.service.bluetooth.device.protocol.AbstractPacketBasedDeviceProtocol;
 import com.astoev.cave.survey.service.bluetooth.device.protocol.LaserAceProtocol;
 
 import java.io.InputStream;
@@ -56,7 +56,7 @@ public class LaserAceBluetoothDevice extends AbstractBluetoothRFCOMMDevice {
     }
 
     @Override
-    public AbstractDeviceProtocol getProtocol() {
+    public AbstractPacketBasedDeviceProtocol getProtocol() {
         return new LaserAceProtocol();
     }
 }

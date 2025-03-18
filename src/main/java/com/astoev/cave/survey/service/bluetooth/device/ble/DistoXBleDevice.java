@@ -8,7 +8,7 @@ import android.util.Log;
 import com.astoev.cave.survey.Constants;
 import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.Measure;
-import com.astoev.cave.survey.service.bluetooth.device.protocol.AbstractDeviceProtocol;
+import com.astoev.cave.survey.service.bluetooth.device.protocol.AbstractPacketBasedDeviceProtocol;
 import com.astoev.cave.survey.service.bluetooth.device.protocol.DistoXBLEProtocol;
 import com.astoev.cave.survey.service.bluetooth.device.protocol.DistoXProtocol;
 import com.astoev.cave.survey.service.bluetooth.lecommands.AbstractBluetoothCommand;
@@ -115,7 +115,7 @@ public class DistoXBleDevice extends AbstractBluetoothLEDevice {
     }
 
     @Override
-    public AbstractDeviceProtocol getProtocol() {
+    public AbstractPacketBasedDeviceProtocol getProtocol() {
         return new DistoXBLEProtocol();
     }
 }

@@ -7,7 +7,7 @@ import android.bluetooth.BluetoothDevice;
 import android.os.Build;
 
 import com.astoev.cave.survey.Constants;
-import com.astoev.cave.survey.service.bluetooth.device.protocol.AbstractDeviceProtocol;
+import com.astoev.cave.survey.service.bluetooth.device.protocol.AbstractPacketBasedDeviceProtocol;
 import com.astoev.cave.survey.util.StringUtils;
 
 import java.util.List;
@@ -17,7 +17,7 @@ import java.util.List;
  */
 public abstract class AbstractBluetoothDevice implements Comparable {
 
-    protected AbstractDeviceProtocol mProtocol = null;
+    protected AbstractPacketBasedDeviceProtocol mProtocol = null;
 
 
     public AbstractBluetoothDevice() {
@@ -78,7 +78,7 @@ public abstract class AbstractBluetoothDevice implements Comparable {
         }
     }
 
-    public AbstractDeviceProtocol getProtocol() {
+    public AbstractPacketBasedDeviceProtocol getProtocol() {
         return null;
     }
 

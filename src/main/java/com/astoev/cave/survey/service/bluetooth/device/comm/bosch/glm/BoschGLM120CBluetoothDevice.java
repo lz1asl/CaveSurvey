@@ -51,7 +51,7 @@ public class BoschGLM120CBluetoothDevice extends AbstractBoschGLMBluetoothDevice
     }
 
     @Override
-    protected int getGLMModesLabel() {
+    public int getGLMModesLabel() {
         return R.string.bt_device_mode_single;
     }
 

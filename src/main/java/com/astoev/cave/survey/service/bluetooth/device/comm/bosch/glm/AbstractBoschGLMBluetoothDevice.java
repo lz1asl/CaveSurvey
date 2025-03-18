@@ -8,6 +8,7 @@ import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.Measure;
 import com.astoev.cave.survey.service.bluetooth.device.comm.AbstractBluetoothRFCOMMDevice;
+import com.astoev.cave.survey.service.bluetooth.device.protocol.BoschGlmDeviceProtocol;
 import com.astoev.cave.survey.util.ConfigUtil;
 import com.bosch.mtprotocol.MtMessage;
 import com.bosch.mtprotocol.MtProtocol;
@@ -21,8 +22,6 @@ import com.bosch.mtprotocol.glm100C.message.sync.SyncInputMessage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -32,7 +31,7 @@ import java.util.List;
 public abstract class AbstractBoschGLMBluetoothDevice extends AbstractBluetoothRFCOMMDevice
         implements MtProtocol.MTProtocolEventObserver {
 
-    protected MtProtocolImpl protocol;
+    protected MtProtocol protocol;
     private MtMessage lastMessage = null;
     private boolean initSyncRequest;
     private boolean ownReadError = false;
@@ -45,41 +44,11 @@ public abstract class AbstractBoschGLMBluetoothDevice extends AbstractBluetoothR
     @Override
     public List<Measure> decodeMeasure(byte[] aResponseBytes, List<Constants.MeasureTypes> aMeasures) throws DataException {
 
-        List<Measure> measures = null;
-
-        if (lastMessage != null && lastMessage instanceof SyncInputMessage) {
-            SyncInputMessage syncMessage = (SyncInputMessage) lastMessage;
-
-            Log.d(Constants.LOG_TAG_BT, "Decoding sync message: " + syncMessage.toString());
-
-            measures = Arrays.asList(
-                    new Measure(Constants.MeasureTypes.distance, Constants.MeasureUnits.meters, syncMessage.getResult()),
-                    new Measure(Constants.MeasureTypes.slope, Constants.MeasureUnits.degrees, syncMessage.getAngle()));
-
-        } else if (lastMessage != null && lastMessage instanceof EDCInputMessage) {
-            EDCInputMessage message = (EDCInputMessage) lastMessage;
-
-            Log.d(Constants.LOG_TAG_BT, "Decoding edc message: " + message.toString());
-
-            measures = new ArrayList<>();
-            if (EDCInputMessage.MODE_SINGLE_DISTANCE == message.getDevMode()) {
-                // PLR 30 C and PLR 40 C - only distance available
-                measures.add(new Measure(Constants.MeasureTypes.distance, Constants.MeasureUnits.meters, message.getResult()));
-            } else if (EDCInputMessage.MODE_INDIRECT_LENGTH == message.getDevMode()) {
-                // PLR 50 C, GLM 50 C - distance and clino in indirect length mode
-                measures.add(new Measure(Constants.MeasureTypes.distance, Constants.MeasureUnits.meters, message.getComp1()));
-                if (isMeasureSupported(Constants.MeasureTypes.slope)) { // just in case
-                    measures.add(new Measure(Constants.MeasureTypes.slope, Constants.MeasureUnits.degrees, message.getComp2()));
-                }
-            } else {
-                warnToUseProperMode();
-            }
+        try {
+            return BoschGlmDeviceProtocol.decodeMessage(lastMessage, this);
+        } finally {
+            lastMessage = null;
         }
-
-        // reset last message
-        lastMessage = null;
-
-        return measures;
     }
 
     @Override
@@ -109,7 +78,7 @@ public abstract class AbstractBoschGLMBluetoothDevice extends AbstractBluetoothR
     protected abstract List<Integer> getGLMModes();
 
     // displayed to the user
-    protected abstract int getGLMModesLabel();
+    public abstract int getGLMModesLabel();
 
     @Override
     public void onEvent(MtProtocol.MTProtocolEvent event) {

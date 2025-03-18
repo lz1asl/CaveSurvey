@@ -8,7 +8,7 @@ import com.astoev.cave.survey.service.bluetooth.Measure;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DistoXBLEProtocol extends AbstractDeviceProtocol {
+public class DistoXBLEProtocol extends AbstractPacketBasedDeviceProtocol {
 
 
     /*
