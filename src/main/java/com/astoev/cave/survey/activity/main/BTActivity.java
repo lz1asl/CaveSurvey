@@ -75,8 +75,6 @@ public class BTActivity extends MainMenuActivity implements Refresheable {
         try {
             // BT disabled?
             if (!BluetoothService.askBluetoothOn(this)) {
-                Log.i(LOG_TAG_UI, "BT disabled");
-                UIUtilities.showNotification(R.string.bt_not_on);
                 finish();
                 return;
             }

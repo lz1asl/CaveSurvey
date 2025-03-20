@@ -30,6 +30,7 @@ import com.astoev.cave.survey.activity.main.BTActivity;
 import com.astoev.cave.survey.activity.main.SurveyMainActivity;
 import com.astoev.cave.survey.model.Leg;
 import com.astoev.cave.survey.model.Project;
+import com.astoev.cave.survey.service.bluetooth.BluetoothService;
 import com.astoev.cave.survey.util.DaoUtil;
 import com.astoev.cave.survey.util.PermissionUtil;
 
@@ -197,6 +198,10 @@ public class SurveysActivity extends MainMenuActivity implements DeleteHandler {
             if (!PermissionUtil.requestPermissions(new String[]{BLUETOOTH, BLUETOOTH_ADMIN, ACCESS_FINE_LOCATION}, this, 301)) {
                 return;
             }
+        }
+
+        if (!BluetoothService.askBluetoothOn(this)) {
+            return;
         }
 
         if (SDK_INT >= TIRAMISU) {
