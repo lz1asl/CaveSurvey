@@ -8,6 +8,7 @@ import com.astoev.cave.survey.activity.UIUtilities;
 import com.astoev.cave.survey.exception.DataException;
 import com.astoev.cave.survey.service.bluetooth.Measure;
 import com.astoev.cave.survey.service.bluetooth.device.AbstractBluetoothDevice;
+import com.astoev.cave.survey.service.bluetooth.device.ble.bosch.AbstractBoschGLMBleDevice;
 import com.astoev.cave.survey.service.bluetooth.device.comm.bosch.glm.AbstractBoschGLMBluetoothDevice;
 import com.astoev.cave.survey.util.ConfigUtil;
 import com.bosch.mtprotocol.MtMessage;
@@ -55,7 +56,15 @@ public class BoschGlmDeviceProtocol {
 
     private static void warnToUseProperMode(AbstractBluetoothDevice aDevice) {
         // warn user to use proper device mode
-        String requiredMode = ConfigUtil.getContext().getString(((AbstractBoschGLMBluetoothDevice)aDevice).getGLMModesLabel());
+        int label;
+        if (aDevice instanceof AbstractBoschGLMBluetoothDevice comDevice) {
+            label = comDevice.getGLMModesLabel();
+        } else if (aDevice instanceof AbstractBoschGLMBleDevice leDevice) {
+            label = leDevice.getGLMModesLabel();
+        } else {
+            throw new RuntimeException("Implementation not supported " + aDevice);
+        }
+        String requiredMode = ConfigUtil.getContext().getString(label);
         UIUtilities.showNotification(R.string.bt_device_mode, requiredMode);
     }
 }
