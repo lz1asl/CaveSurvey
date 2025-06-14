@@ -3,6 +3,7 @@ package com.astoev.cave.survey.service.bluetooth.device.ble;
 import static android.bluetooth.BluetoothDevice.DEVICE_TYPE_LE;
 
 import android.annotation.TargetApi;
+import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
 import android.os.Build;
@@ -119,4 +120,6 @@ public abstract class AbstractBluetoothLEDevice extends AbstractBluetoothDevice 
     public AbstractBluetoothCommand getAcknowledgeCommand(BluetoothGattCharacteristic aCharacteristic) {
         return null;
     }
+
+    public abstract void configure(BluetoothDevice aDevice);
 }

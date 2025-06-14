@@ -9,6 +9,7 @@ import static android.os.Build.VERSION.SDK_INT;
 import static android.os.Build.VERSION_CODES.JELLY_BEAN_MR2;
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static com.astoev.cave.survey.Constants.LOG_TAG_BT;
+import static com.astoev.cave.survey.Constants.LOG_TAG_UI;
 import static com.astoev.cave.survey.R.string.bt_state_none;
 import static java.lang.Thread.sleep;
 
@@ -129,6 +130,8 @@ public class BluetoothService {
         SUPPORTED_BLUETOOTH_LE_DEVICES.add(new Bric5BluetoothLEDevice());
 //        SUPPORTED_BLUETOOTH_LE_DEVICES.add(new ShetlandAttackPonyLeDevice()); TODO not yet tested
         SUPPORTED_BLUETOOTH_LE_DEVICES.add(new DistoXBleDevice());
+        SUPPORTED_BLUETOOTH_LE_DEVICES.add(new BoschGLM50_27CDevice());
+
 
     }
 
@@ -152,7 +155,7 @@ public class BluetoothService {
     // needed by le command queueing, details and credit http://www.brendanwhelan.net/2015/bluetooth-command-queuing-for-android
     private static LinkedList<AbstractBluetoothCommand> mCommandQueue = new LinkedList<>();
     private static Executor mCommandExecutor = Executors.newSingleThreadExecutor();
-    private static Semaphore mCommandLock = new Semaphore(1,true);
+    private static Semaphore mCommandLock = new Semaphore(1, true);
     private static boolean expectingMeasurement = false;
 
     // compile time switch to allow processing of all device characteristics
@@ -160,11 +163,15 @@ public class BluetoothService {
 
     public static boolean isBluetoothSupported() {
         return mCurrContext != null
-                && (mCurrContext.getSystemService(BLUETOOTH_SERVICE) != null || BluetoothAdapter.getDefaultAdapter() != null);
+                && (mCurrContext.getSystemService(BLUETOOTH_SERVICE) != null || getDefaultBtAdapter() != null);
     }
 
     public static boolean isBluetoothLESupported() {
         return isBluetoothSupported() && mCurrContext.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE);
+    }
+
+    private static BluetoothAdapter getDefaultBtAdapter() {
+        return BluetoothAdapter.getDefaultAdapter();
     }
 
     public static boolean isDeviceSelected() {
@@ -172,9 +179,16 @@ public class BluetoothService {
     }
 
     public static boolean askBluetoothOn(Activity aParentActivity) {
+        mCurrContext = aParentActivity;
         if (isBluetoothSupported()) {
-            return BluetoothAdapter.getDefaultAdapter().isEnabled();
+            boolean enabled = getDefaultBtAdapter().isEnabled();
+            Log.i(LOG_TAG_UI, "BT enabled : " + enabled);
+            if (!enabled) {
+                UIUtilities.showNotification(R.string.bt_not_on);
+            }
+            return enabled;
         }
+
         return false;
     }
 
@@ -321,7 +335,7 @@ public class BluetoothService {
             UIUtilities.showNotification(R.string.bt_device_connecting, aDevice.getDisplayName());
 
             mSelectedDevice = aDevice;
-            BluetoothDevice deviceRef = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(aDevice.address);
+            BluetoothDevice deviceRef = getDefaultBtAdapter().getRemoteDevice(aDevice.address);
             aDevice.device = deviceRef;
 
             Log.i(LOG_TAG_BT, "Selected " + aDevice.address + " : " + mSelectedDevice + " of type " + aDevice.definition.getDescription());
@@ -348,7 +362,7 @@ public class BluetoothService {
                     mCommandLock.release();
 
                     // check if we need to connect from scratch or just reconnect to previous device
-                   /* if (mBluetoothGatt != null *//*&& aDevice.address.equals(mBluetoothGatt.getDevice().getAddress())*//*) {
+                    /* if (mBluetoothGatt != null *//*&& aDevice.address.equals(mBluetoothGatt.getDevice().getAddress())*//*) {
                         Log.i(LOG_TAG_BT, "Stop LE discovery");
                         stopDiscoverBluetoothLEDevices();
     //                    mBluetoothGatt.close();
@@ -412,7 +426,7 @@ public class BluetoothService {
     public static List<DiscoveredBluetoothDevice> getPairedCompatibleDevices() {
         if (mCurrentDevices == null) {
             mCurrentDevices = new ArrayList<>();
-            Set<BluetoothDevice> devices = BluetoothAdapter.getDefaultAdapter().getBondedDevices();
+            Set<BluetoothDevice> devices = getDefaultBtAdapter().getBondedDevices();
             for (BluetoothDevice d : devices) {
                 AbstractBluetoothDevice deviceDefinition = getSupportedDevice(d, null);
                 if (deviceDefinition != null) {
@@ -439,13 +453,13 @@ public class BluetoothService {
             if (mSelectedDevice.definition instanceof AbstractBluetoothRFCOMMDevice) {
                 // comm device
                 statusText.append(
-                    switch (mSelectedDevice.device.getBondState()) {
-                        case BOND_BONDED ->
-                            BluetoothService.isPaired() ? aContext.getString(R.string.bt_paired) : aContext.getString(R.string.bt_not_paired);
-                        case BOND_BONDING -> mCurrContext.getString(R.string.bt_state_bonding);
-                        case BOND_NONE -> mCurrContext.getString(bt_state_none);
-                        default ->  mCurrContext.getString(R.string.bt_state_unknown);
-                    });
+                        switch (mSelectedDevice.device.getBondState()) {
+                            case BOND_BONDED ->
+                                    BluetoothService.isPaired() ? aContext.getString(R.string.bt_paired) : aContext.getString(R.string.bt_not_paired);
+                            case BOND_BONDING -> mCurrContext.getString(R.string.bt_state_bonding);
+                            case BOND_NONE -> mCurrContext.getString(bt_state_none);
+                            default -> mCurrContext.getString(R.string.bt_state_unknown);
+                        });
 
 
             } else {
@@ -513,7 +527,7 @@ public class BluetoothService {
         Log.i(LOG_TAG_BT, "Stop discovery for Bluetooth LE devices");
 
         if (leCallback != null) {
-            BluetoothAdapter.getDefaultAdapter().stopLeScan(leCallback);
+            getDefaultBtAdapter().stopLeScan(leCallback);
             leCallback = null;
         }
         if (leCallbackLollipop != null && SDK_INT >= LOLLIPOP) {
@@ -524,11 +538,11 @@ public class BluetoothService {
     }
 
     @TargetApi(JELLY_BEAN_MR2)
-    public static BluetoothAdapter.LeScanCallback startLEScanCallback()  {
+    public static BluetoothAdapter.LeScanCallback startLEScanCallback() {
 
         Log.i(LOG_TAG_BT, "Start discovery for Bluetooth LE devices");
         BluetoothAdapter.LeScanCallback callback = (device, rssi, scanRecord) -> handleDeviceDiscovered(device, rssi, null);
-        BluetoothAdapter.getDefaultAdapter().startLeScan(leCallback);
+        getDefaultBtAdapter().startLeScan(leCallback);
         return callback;
     }
 
@@ -602,7 +616,7 @@ public class BluetoothService {
     }
 
     // will run the command in async using synchronized queue
-    public static void enqueueCommand(final AbstractBluetoothCommand aCommand){
+    public static void enqueueCommand(final AbstractBluetoothCommand aCommand) {
 
         if (mBluetoothGatt == null) {
             Log.d(LOG_TAG_BT, "Not connected");
@@ -644,7 +658,7 @@ public class BluetoothService {
         expectingMeasurement = false;
     }
 
-    public static void dequeueCommand(){
+    public static void dequeueCommand() {
         Log.d(LOG_TAG_BT, "Dequeue command");
         if (!mCommandQueue.isEmpty()) {
             mCommandQueue.pop();
@@ -740,6 +754,8 @@ public class BluetoothService {
                             Log.d(LOG_TAG_BT, "Ignored");
                             continue;
                         }
+
+                        leDevice.configure(mSelectedDevice.device);
 
                         if (leDevice.needCharacteristicIndication() || leDevice.needCharacteristicNotification()) {
                             enqueueCommand(new EnableNotificationCommand(c));
