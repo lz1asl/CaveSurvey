@@ -64,5 +64,6 @@ Related Projects
 
 [OpensTopo](http://www.openspeleo.org/openspeleo/openstopo.en.html)'s export is used.
 
-[Underwater survey](https://github.com/f0xdude/cave-mapper/) app by fellow diver
+[~Underwater survey~](https://github.com/f0xdude/cave-mapper/) app by fellow diver
 
+[CaveDiveMap](https://github.com/f0xdude/CaveDiveMap) app by fellow diver
