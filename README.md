@@ -46,7 +46,7 @@ Developed by members of caving club [Paldin](http://sk-paldin.eu/) Plovdiv, Bulg
 
 ![Picture](src/main/res/drawable/paldin_logo.jpg)
 
-You can use ~the official version at [Google Play](https://play.google.com/store/apps/details?id=com.astoev.cave.survey),~ the [latest builds](https://github.com/lz1asl/CaveSurvey/actions?query=is%3Asuccess%2C+branch%3Amaster) or [Releases](https://github.com/lz1asl/CaveSurvey/releases).
+You can use ~the official version at [Google Play](https://play.google.com/store/apps/details?id=com.astoev.cave.survey),~ the [latest builds](https://github.com/lz1asl/CaveSurvey/actions?query=is%3Asuccess%2C+branch%3Amaster) or [Releases](https://github.com/lz1asl/CaveSurvey/releases). Installing and keeping the app up to date can be automated with [Obtainium](https://github.com/ImranR98/Obtainium) by pointing to the repo or directly importing [this](https://github.com/lz1asl/CaveSurvey/blob/master/doc/cavesurvey_obtainium.json) configuration.
 
 
 This software is free to use and modify.
