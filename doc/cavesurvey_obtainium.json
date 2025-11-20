@@ -1,0 +1,24 @@
+{
+    "apps": [
+        
+        {
+            "id": "com.astoev.cave.survey",
+            "url": "https://github.com/lz1asl/CaveSurvey",
+            "author": "lz1asl",
+            "name": "CaveSurvey",
+            "installedVersion": "Release_v2.10",
+            "latestVersion": "Release_v2.10",
+            "apkUrls": "[[\"CaveSurvey-release.apk\",\"https://api.github.com/repos/lz1asl/CaveSurvey/releases/assets/158943387\"]]",
+            "otherAssetUrls": "[[\"Release_v2.10.tar.gz\",\"https://api.github.com/repos/lz1asl/CaveSurvey/tarball/Release_v2.10\"],[\"Release_v2.10.zip\",\"https://api.github.com/repos/lz1asl/CaveSurvey/zipball/Release_v2.10\"]]",
+            "preferredApkIndex": 0,
+            "additionalSettings": "{\"includePrereleases\":false,\"fallbackToOlderReleases\":true,\"filterReleaseTitlesByRegEx\":\"\",\"filterReleaseNotesByRegEx\":\"\",\"verifyLatestTag\":false,\"sortMethodChoice\":\"date\",\"useLatestAssetDateAsReleaseDate\":false,\"releaseTitleAsVersion\":false,\"trackOnly\":false,\"versionExtractionRegEx\":\"\",\"matchGroupToUse\":\"\",\"versionDetection\":true,\"releaseDateAsVersion\":false,\"useVersionCodeAsOSVersion\":false,\"apkFilterRegEx\":\"\",\"invertAPKFilter\":false,\"autoApkFilterByArch\":true,\"appName\":\"\",\"appAuthor\":\"\",\"shizukuPretendToBeGooglePlay\":false,\"allowInsecure\":false,\"exemptFromBackgroundUpdates\":false,\"skipUpdateNotifications\":false,\"about\":\"\",\"refreshBeforeDownload\":false}",
+            "lastUpdateCheck": 1758951770041832,
+            "pinned": false,
+            "categories": [],
+            "releaseDate": 1711564306000000,
+            "changeLog": " - Allow direct upload to GrottoCenter\r\n - Fix middle point dialog crashing when using feets",
+            "overrideSource": "GitHub",
+            "allowIdChange": false
+        }
+    ]
+}
